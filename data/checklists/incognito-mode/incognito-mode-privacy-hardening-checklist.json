@@ -1,0 +1,127 @@
+{
+  "niche": "incognito-mode",
+  "slug": "incognito-mode-privacy-hardening-checklist",
+  "title": "Incognito Mode Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to maximize privacy in incognito mode across all browsers. Learn essential steps to enhance private browsing security.",
+  "difficulty": "beginner",
+  "estimatedTime": "15-20 minutes",
+  "intro": "Incognito mode provides basic privacy protection, but it's not bulletproof. This checklist helps you maximize your privacy when using private browsing across different browsers and scenarios.",
+  "sections": [
+    {
+      "title": "Basic Incognito Setup",
+      "items": [
+        {
+          "id": "enable-incognito",
+          "task": "Enable incognito mode in your browser",
+          "why": "Prevents local storage of browsing history, cookies, and form data on your device.",
+          "howTo": "Press Ctrl+Shift+N (Chrome), Ctrl+Shift+P (Firefox), or Ctrl+Shift+N (Edge). On mobile, tap the tabs button and select 'Incognito' or 'Private'.",
+          "priority": "critical"
+        },
+        {
+          "id": "close-regular-tabs",
+          "task": "Close all regular browsing tabs before going incognito",
+          "why": "Prevents accidental cross-contamination between regular and private sessions.",
+          "howTo": "Close all non-incognito tabs or use a separate browser window entirely for private browsing sessions.",
+          "priority": "high"
+        },
+        {
+          "id": "verify-incognito-indicators",
+          "task": "Confirm incognito mode visual indicators are active",
+          "why": "Ensures you're actually in private browsing mode and not accidentally browsing normally.",
+          "howTo": "Look for dark theme, incognito icon, or 'Private' label in the address bar. Each browser has distinct visual cues.",
+          "priority": "critical"
+        },
+        {
+          "id": "disable-extensions",
+          "task": "Disable extensions in incognito mode",
+          "why": "Extensions can track your activity even in private browsing mode unless specifically blocked.",
+          "howTo": "Go to browser settings > Extensions. Disable 'Allow in incognito' for all extensions, or use Incognito Browser which blocks extensions by default.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Privacy Configuration",
+      "items": [
+        {
+          "id": "disable-location-services",
+          "task": "Block location access in incognito mode",
+          "why": "Prevents websites from tracking your physical location during private browsing sessions.",
+          "howTo": "Go to browser settings > Privacy > Location. Set to 'Block' or 'Ask before accessing' for incognito mode specifically.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-microphone-camera",
+          "task": "Block microphone and camera access",
+          "why": "Protects against unauthorized audio/video recording during private browsing.",
+          "howTo": "In browser settings > Privacy, set microphone and camera permissions to 'Block' for incognito sessions.",
+          "priority": "medium"
+        },
+        {
+          "id": "clear-dns-cache",
+          "task": "Clear DNS cache before incognito sessions",
+          "why": "Removes traces of previously visited websites that could compromise your privacy.",
+          "howTo": "Run 'ipconfig /flushdns' in Windows Command Prompt or 'sudo dscacheutil -flushcache' on Mac before starting private browsing.",
+          "priority": "medium"
+        },
+        {
+          "id": "use-private-dns",
+          "task": "Configure private DNS servers",
+          "why": "Prevents your ISP from logging DNS queries and adds an extra layer of privacy protection.",
+          "howTo": "Set DNS to 1.1.1.1 (Cloudflare) or 8.8.8.8 (Google) in your network settings, or use Incognito Browser with built-in DNS protection.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Session Management",
+      "items": [
+        {
+          "id": "avoid-login-accounts",
+          "task": "Avoid logging into personal accounts in incognito mode",
+          "why": "Logging in defeats the purpose of private browsing as it directly identifies you to websites.",
+          "howTo": "Use incognito mode only for anonymous browsing. If you must log in, consider the session no longer truly private.",
+          "priority": "critical"
+        },
+        {
+          "id": "close-tabs-promptly",
+          "task": "Close incognito tabs immediately after use",
+          "why": "Minimizes the window of opportunity for data collection and ensures session data is cleared.",
+          "howTo": "Close individual tabs with Ctrl+W or close entire incognito window with Alt+F4 to end the private session completely.",
+          "priority": "high"
+        },
+        {
+          "id": "restart-browser-periodically",
+          "task": "Restart browser between sensitive incognito sessions",
+          "why": "Ensures complete memory cleanup and prevents any potential data leakage between sessions.",
+          "howTo": "Completely close and reopen your browser between different private browsing activities, especially for sensitive tasks.",
+          "priority": "medium"
+        },
+        {
+          "id": "monitor-background-apps",
+          "task": "Close unnecessary background applications",
+          "why": "Prevents other apps from potentially monitoring or interfering with your private browsing session.",
+          "howTo": "Close social media apps, messaging clients, and other unnecessary software before starting sensitive incognito sessions.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Browser Privacy Settings Guide",
+      "url": "/guides/browser-privacy-settings",
+      "type": "internal"
+    },
+    {
+      "title": "Cookie Management Best Practices",
+      "url": "/guides/cookie-management",
+      "type": "internal"
+    },
+    {
+      "title": "Ad Tracking Prevention Methods",
+      "url": "/guides/ad-tracking-prevention",
+      "type": "internal"
+    }
+  ]
+}

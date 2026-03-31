@@ -1,0 +1,165 @@
+{
+  "niche": "journalist-privacy",
+  "slug": "journalist-whistleblower-privacy-hardening-checklist",
+  "title": "Journalist & Whistleblower Privacy Hardening Checklist",
+  "metaDescription": "Essential privacy and security checklist for journalists and whistleblowers to protect sources, communications, and sensitive information.",
+  "difficulty": "intermediate",
+  "estimatedTime": "2-3 hours",
+  "intro": "Journalists and whistleblowers face unique privacy challenges when handling sensitive information and protecting sources. This comprehensive checklist covers essential security measures to safeguard communications, maintain anonymity, and protect against surveillance.",
+  "sections": [
+    {
+      "title": "Communication Security",
+      "items": [
+        {
+          "id": "secure-messaging",
+          "task": "Use Signal for encrypted messaging",
+          "why": "Signal provides end-to-end encryption and disappearing messages to protect source communications from interception.",
+          "howTo": "Download Signal, enable disappearing messages for all conversations, and verify safety numbers with contacts. Always use Signal over regular SMS or email for sensitive communications.",
+          "priority": "critical"
+        },
+        {
+          "id": "secure-email",
+          "task": "Set up ProtonMail or Tutanota for secure email",
+          "why": "Encrypted email services protect sensitive correspondence and prevent unauthorized access to your communications.",
+          "howTo": "Create accounts with ProtonMail or Tutanota using a pseudonym. Enable two-factor authentication and use only over Tor for maximum anonymity.",
+          "priority": "critical"
+        },
+        {
+          "id": "secure-calling",
+          "task": "Use Signal or Jami for voice calls",
+          "why": "Encrypted voice calls prevent eavesdropping on sensitive conversations with sources or colleagues.",
+          "howTo": "Install Signal or Jami for voice calls. Always verify you're using the encrypted calling feature, not regular phone service.",
+          "priority": "high"
+        },
+        {
+          "id": "burner-phones",
+          "task": "Use dedicated devices for sensitive work",
+          "why": "Separate devices prevent cross-contamination of personal and professional communications and reduce tracking risks.",
+          "howTo": "Purchase phones with cash, use prepaid service, and avoid linking to personal accounts. Replace devices regularly and dispose of them securely.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Anonymous Browsing & Research",
+      "items": [
+        {
+          "id": "tor-browser",
+          "task": "Use Tor Browser for sensitive research",
+          "why": "Tor Browser routes traffic through multiple servers to hide your IP address and browsing activity from surveillance.",
+          "howTo": "Download Tor Browser from the official website. Always use it for researching sensitive topics or accessing sources. Never log into personal accounts while using Tor.",
+          "priority": "critical"
+        },
+        {
+          "id": "vpn-setup",
+          "task": "Install a no-logs VPN service",
+          "why": "VPNs encrypt your internet connection and hide your real IP address from ISPs and potential surveillance.",
+          "howTo": "Choose services like Mullvad or IVPN that don't keep logs. Pay with cryptocurrency if possible. Use VPN in combination with Tor for maximum protection.",
+          "priority": "high"
+        },
+        {
+          "id": "incognito-browser",
+          "task": "Use Incognito Browser for privacy-focused browsing",
+          "why": "Incognito Browser provides built-in privacy features and blocks tracking without requiring complex configuration.",
+          "howTo": "Download Incognito Browser for daily browsing activities. It automatically blocks trackers and ads while providing a clean browsing experience for research.",
+          "priority": "medium"
+        },
+        {
+          "id": "search-engines",
+          "task": "Switch to private search engines",
+          "why": "Private search engines don't track your searches or build profiles about your research interests.",
+          "howTo": "Use DuckDuckGo, Startpage, or Searx instead of Google. Set one as your default search engine in all browsers.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Device & Data Security",
+      "items": [
+        {
+          "id": "full-disk-encryption",
+          "task": "Enable full disk encryption on all devices",
+          "why": "Disk encryption protects all data on your device if it's lost, stolen, or seized by authorities.",
+          "howTo": "Enable FileVault on Mac or BitLocker on Windows. For Linux, use LUKS encryption. Always use strong passwords for encryption keys.",
+          "priority": "critical"
+        },
+        {
+          "id": "secure-backups",
+          "task": "Create encrypted backups of important data",
+          "why": "Encrypted backups ensure you don't lose critical information while maintaining security if devices are compromised.",
+          "howTo": "Use VeraCrypt to create encrypted backup drives. Store backups in secure locations separate from your main devices. Test restore procedures regularly.",
+          "priority": "high"
+        },
+        {
+          "id": "secure-deletion",
+          "task": "Use secure file deletion tools",
+          "why": "Normal deletion doesn't actually remove files from storage, leaving sensitive data recoverable by adversaries.",
+          "howTo": "Use BleachBit on Linux, Eraser on Windows, or built-in secure empty trash on Mac. Regularly wipe free space to remove deleted file traces.",
+          "priority": "high"
+        },
+        {
+          "id": "metadata-removal",
+          "task": "Remove metadata from documents and images",
+          "why": "Metadata can reveal location, device information, and editing history that could compromise your identity or sources.",
+          "howTo": "Use tools like ExifTool or MAT2 to strip metadata before sharing files. Check document properties and remove personal information before publishing.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Source Protection",
+      "items": [
+        {
+          "id": "secure-meetings",
+          "task": "Plan secure in-person meetings",
+          "why": "Face-to-face meetings may be necessary but require careful planning to avoid surveillance and protect source identity.",
+          "howTo": "Meet in public spaces with multiple exits, leave phones at home, vary meeting locations, and use counter-surveillance techniques. Consider using coded language.",
+          "priority": "critical"
+        },
+        {
+          "id": "document-handling",
+          "task": "Establish secure document transfer protocols",
+          "why": "Physical and digital documents from sources need special handling to prevent tracing back to the original source.",
+          "howTo": "Use SecureDrop if available, or encrypted USB drives passed through intermediaries. Scan and digitize physical documents, then securely destroy originals.",
+          "priority": "high"
+        },
+        {
+          "id": "operational-security",
+          "task": "Maintain strict operational security (OPSEC)",
+          "why": "Consistent security practices prevent patterns that could expose your sources or compromise ongoing investigations.",
+          "howTo": "Vary your routines, use different routes and locations, avoid discussing work in unsecured locations, and train colleagues on security protocols.",
+          "priority": "high"
+        },
+        {
+          "id": "legal-protection",
+          "task": "Understand legal protections and risks",
+          "why": "Knowledge of shield laws and legal risks helps you better protect sources and prepare for potential legal challenges.",
+          "howTo": "Consult with media lawyers, understand local shield laws, document your newsgathering process, and prepare for potential subpoenas or searches.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Freedom of the Press Foundation - Digital Security",
+      "url": "https://freedom.press/training/",
+      "type": "training"
+    },
+    {
+      "title": "Committee to Protect Journalists - Safety Kit",
+      "url": "https://cpj.org/safety-kit/",
+      "type": "guide"
+    },
+    {
+      "title": "SecureDrop Directory",
+      "url": "https://securedrop.org/directory/",
+      "type": "tool"
+    },
+    {
+      "title": "Tor Project - Journalist Resources",
+      "url": "https://www.torproject.org/audience/journalist/",
+      "type": "resource"
+    }
+  ]
+}

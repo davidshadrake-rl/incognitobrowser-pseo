@@ -1,0 +1,32 @@
+{
+  "term": "Man in the Middle",
+  "slug": "man-in-the-middle",
+  "definition": "A cyberattack where an attacker secretly intercepts and potentially alters communications between two parties who believe they are communicating directly with each other.",
+  "metaDescription": "Learn about man-in-the-middle attacks, how attackers intercept communications, and ways to protect yourself from these privacy threats.",
+  "simpleExplanation": "Imagine someone secretly listening to your phone conversation and potentially changing what you say before passing it along. A man-in-the-middle attack works similarly online, where a hacker positions themselves between you and a website or service to spy on or manipulate your data.",
+  "whyItMatters": "These attacks can steal sensitive information like passwords, credit card numbers, and personal messages. They're particularly dangerous because victims often don't realize their communications are being intercepted, making it easy for attackers to gather valuable data undetected.",
+  "technicalDetail": "Attackers position themselves in the communication path between client and server, often using techniques like ARP spoofing, DNS hijacking, or rogue Wi-Fi hotspots. They can passively eavesdrop on encrypted traffic or actively modify data packets, potentially bypassing security measures if proper certificate validation isn't implemented.",
+  "examples": [
+    {
+      "scenario": "Public Wi-Fi interception",
+      "explanation": "An attacker sets up a fake Wi-Fi hotspot at a coffee shop with a name like 'Free Coffee WiFi.' When you connect, they can see all your unencrypted web traffic and potentially steal login credentials."
+    },
+    {
+      "scenario": "Email compromise",
+      "explanation": "A hacker intercepts communications between you and your bank, modifying the bank's legitimate emails to include malicious links that steal your banking information when clicked."
+    },
+    {
+      "scenario": "HTTPS certificate spoofing",
+      "explanation": "An attacker presents a fake security certificate when you visit a website, making their malicious site appear legitimate so they can capture your login details and personal information."
+    }
+  ],
+  "relatedTerms": [
+    "encryption",
+    "ssl-tls",
+    "vpn",
+    "phishing",
+    "network-security",
+    "digital-certificate"
+  ],
+  "category": "attack"
+}

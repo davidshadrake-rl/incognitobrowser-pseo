@@ -1,0 +1,453 @@
+{
+  "niches": [
+    {
+      "id": "incognito-mode",
+      "name": "Incognito Mode",
+      "slug": "incognito-mode",
+      "description": "Understanding and maximizing private browsing modes across all browsers",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["incognito mode", "private browsing", "incognito browser", "private mode", "how to go incognito"],
+      "relatedNiches": ["browser-privacy", "cookie-management", "ad-tracking"]
+    },
+    {
+      "id": "browser-privacy",
+      "name": "Browser Privacy",
+      "slug": "browser-privacy",
+      "description": "Privacy features and settings across Chrome, Firefox, Safari, Brave, and other browsers",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["private browser", "best privacy browser", "secure browser", "privacy browser comparison"],
+      "relatedNiches": ["incognito-mode", "browser-extensions", "device-fingerprinting"]
+    },
+    {
+      "id": "ad-tracking",
+      "name": "Ad Tracking & Targeted Advertising",
+      "slug": "ad-tracking",
+      "description": "How advertisers track you online and how to prevent targeted advertising",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["targeted ads", "behavioral advertising", "ad tracking", "personalized ads", "stop ad tracking"],
+      "relatedNiches": ["cookie-management", "device-fingerprinting", "browser-privacy"]
+    },
+    {
+      "id": "cookie-management",
+      "name": "Cookie Management & Tracking Prevention",
+      "slug": "cookie-management",
+      "description": "Understanding browser cookies, third-party tracking, and cookie management strategies",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["browser cookies", "third-party cookies", "tracking cookies", "cookie management", "delete cookies"],
+      "relatedNiches": ["ad-tracking", "browser-privacy", "incognito-mode"]
+    },
+    {
+      "id": "device-fingerprinting",
+      "name": "Device Fingerprinting",
+      "slug": "device-fingerprinting",
+      "description": "How websites identify you through browser and device fingerprinting techniques",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["device fingerprinting", "browser fingerprinting", "canvas fingerprinting", "fingerprint protection"],
+      "relatedNiches": ["browser-privacy", "ad-tracking", "cookie-management"]
+    },
+    {
+      "id": "digital-footprint",
+      "name": "Digital Footprint",
+      "slug": "digital-footprint",
+      "description": "Understanding, managing, and reducing your active and passive digital footprints",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["digital footprint", "passive digital footprint", "active digital footprint", "reduce digital footprint", "online footprint"],
+      "relatedNiches": ["data-brokers", "social-media-privacy", "search-history"]
+    },
+    {
+      "id": "vpn-privacy",
+      "name": "VPN & Proxy",
+      "slug": "vpn-privacy",
+      "description": "Using VPNs and proxy services for online privacy and anonymity",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["VPN privacy", "best VPN", "free VPN risks", "VPN vs proxy", "VPN security"],
+      "relatedNiches": ["isp-tracking", "public-wifi", "tor-privacy"]
+    },
+    {
+      "id": "password-security",
+      "name": "Password Security & Management",
+      "slug": "password-security",
+      "description": "Creating strong passwords, using password managers, and authentication best practices",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["password manager", "strong password", "password security", "two-factor authentication", "password generator"],
+      "relatedNiches": ["online-banking", "email-privacy", "phishing"]
+    },
+    {
+      "id": "encrypted-messaging",
+      "name": "Encrypted Messaging",
+      "slug": "encrypted-messaging",
+      "description": "Secure messaging apps with end-to-end encryption for private communications",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["encrypted messaging", "Signal app", "WhatsApp privacy", "Telegram security", "end-to-end encryption"],
+      "relatedNiches": ["email-privacy", "password-security", "social-media-privacy"]
+    },
+    {
+      "id": "private-search",
+      "name": "Private Search Engines",
+      "slug": "private-search",
+      "description": "Search engines that don't track your queries or build profiles on you",
+      "tier": 1,
+      "parentId": null,
+      "keywords": ["DuckDuckGo", "private search engine", "anonymous search", "Startpage", "search privacy"],
+      "relatedNiches": ["browser-privacy", "incognito-mode", "ad-tracking"]
+    },
+    {
+      "id": "data-brokers",
+      "name": "Data Brokers & Data Collection",
+      "slug": "data-brokers",
+      "description": "How data brokers collect, sell, and profit from your personal information",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["data broker", "data collection", "personal data selling", "remove data broker", "data broker opt out"],
+      "relatedNiches": ["digital-footprint", "privacy-laws", "ad-tracking"]
+    },
+    {
+      "id": "isp-tracking",
+      "name": "ISP Tracking & DNS Privacy",
+      "slug": "isp-tracking",
+      "description": "How internet service providers monitor your activity and how to prevent it",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["ISP tracking", "DNS privacy", "DNS over HTTPS", "ISP monitoring", "internet provider spying"],
+      "relatedNiches": ["vpn-privacy", "incognito-mode", "browser-privacy"]
+    },
+    {
+      "id": "location-tracking",
+      "name": "Location Tracking & GPS Privacy",
+      "slug": "location-tracking",
+      "description": "How apps and services track your physical location and how to protect yourself",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["location tracking", "GPS privacy", "geolocation tracking", "stop location tracking", "geofence warrants"],
+      "relatedNiches": ["smart-home-privacy", "social-media-privacy", "dating-privacy"]
+    },
+    {
+      "id": "public-wifi",
+      "name": "Wi-Fi Security & Public Wi-Fi",
+      "slug": "public-wifi",
+      "description": "Staying safe on public Wi-Fi networks and securing your wireless connections",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["public wifi security", "wifi privacy", "secure wifi", "wifi tracking", "hotspot security"],
+      "relatedNiches": ["vpn-privacy", "browser-privacy", "password-security"]
+    },
+    {
+      "id": "phishing",
+      "name": "Phishing & Social Engineering",
+      "slug": "phishing",
+      "description": "Recognizing and protecting against phishing attacks and social engineering tactics",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["phishing scam", "social engineering", "phishing protection", "email scam", "spear phishing"],
+      "relatedNiches": ["email-privacy", "password-security", "browser-privacy"]
+    },
+    {
+      "id": "malware-protection",
+      "name": "Malware & Browser Security",
+      "slug": "malware-protection",
+      "description": "Protecting your browser and devices from malware, spyware, and other threats",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["malware protection", "browser security", "spyware", "adware removal", "safe browsing"],
+      "relatedNiches": ["browser-privacy", "phishing", "browser-extensions"]
+    },
+    {
+      "id": "email-privacy",
+      "name": "Email Privacy & Encryption",
+      "slug": "email-privacy",
+      "description": "Securing your email communications with encryption and privacy-focused providers",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["email privacy", "encrypted email", "ProtonMail", "email security", "anonymous email"],
+      "relatedNiches": ["encrypted-messaging", "password-security", "phishing"]
+    },
+    {
+      "id": "social-media-privacy",
+      "name": "Social Media Privacy",
+      "slug": "social-media-privacy",
+      "description": "Protecting your privacy on Facebook, Instagram, TikTok, X, and other platforms",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["social media privacy", "Facebook privacy", "Instagram privacy", "TikTok privacy", "Twitter privacy settings"],
+      "relatedNiches": ["digital-footprint", "ad-tracking", "data-brokers"]
+    },
+    {
+      "id": "online-shopping",
+      "name": "Online Shopping Privacy",
+      "slug": "online-shopping",
+      "description": "Protecting your privacy and financial data while shopping online",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["online shopping privacy", "secure shopping", "price tracking", "shopping incognito", "private shopping"],
+      "relatedNiches": ["cookie-management", "ad-tracking", "online-banking"]
+    },
+    {
+      "id": "online-banking",
+      "name": "Online Banking Security",
+      "slug": "online-banking",
+      "description": "Securing your online banking and financial transactions",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["online banking security", "secure banking", "financial privacy", "banking protection", "transaction privacy"],
+      "relatedNiches": ["password-security", "phishing", "public-wifi"]
+    },
+    {
+      "id": "workplace-privacy",
+      "name": "Workplace Surveillance & Employee Privacy",
+      "slug": "workplace-privacy",
+      "description": "Understanding employer monitoring, workplace surveillance, and protecting employee privacy",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["workplace surveillance", "employee monitoring", "employer tracking", "workplace privacy rights", "boss spying"],
+      "relatedNiches": ["incognito-mode", "vpn-privacy", "email-privacy"]
+    },
+    {
+      "id": "student-privacy",
+      "name": "Student Privacy & Campus Surveillance",
+      "slug": "student-privacy",
+      "description": "Protecting student data rights and understanding campus monitoring systems",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["student privacy", "campus surveillance", "student data", "educational privacy", "digital proctoring"],
+      "relatedNiches": ["children-safety", "privacy-laws", "digital-footprint"]
+    },
+    {
+      "id": "children-safety",
+      "name": "Children's Online Safety",
+      "slug": "children-safety",
+      "description": "Protecting children's privacy online, COPPA compliance, and parental controls",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["children online safety", "COPPA", "kids online privacy", "parental controls", "child internet safety"],
+      "relatedNiches": ["student-privacy", "social-media-privacy", "privacy-laws"]
+    },
+    {
+      "id": "healthcare-privacy",
+      "name": "Healthcare & Medical Privacy",
+      "slug": "healthcare-privacy",
+      "description": "HIPAA compliance, health app privacy, and protecting medical data",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["HIPAA privacy", "health app privacy", "medical data privacy", "reproductive health privacy", "healthcare data"],
+      "relatedNiches": ["privacy-laws", "data-brokers", "location-tracking"]
+    },
+    {
+      "id": "dating-privacy",
+      "name": "Dating App Privacy",
+      "slug": "dating-privacy",
+      "description": "Protecting your privacy on Tinder, Grindr, Bumble, and other dating platforms",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["dating app privacy", "Tinder privacy", "Grindr incognito", "Bumble privacy", "online dating safety"],
+      "relatedNiches": ["social-media-privacy", "location-tracking", "digital-footprint"]
+    },
+    {
+      "id": "smart-home-privacy",
+      "name": "Smart Home & IoT Privacy",
+      "slug": "smart-home-privacy",
+      "description": "Privacy risks of smart home devices, IoT security, and voice assistants",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["smart home privacy", "IoT security", "Alexa privacy", "smart device tracking", "voice assistant privacy"],
+      "relatedNiches": ["location-tracking", "webcam-privacy", "data-brokers"]
+    },
+    {
+      "id": "webcam-privacy",
+      "name": "Webcam & Microphone Privacy",
+      "slug": "webcam-privacy",
+      "description": "Protecting against unauthorized webcam and microphone access",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["webcam privacy", "microphone privacy", "webcam hacking", "camera cover", "webcam security"],
+      "relatedNiches": ["malware-protection", "smart-home-privacy", "workplace-privacy"]
+    },
+    {
+      "id": "ai-privacy",
+      "name": "AI & Machine Learning Privacy",
+      "slug": "ai-privacy",
+      "description": "Privacy implications of AI, ChatGPT, and machine learning data collection",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["AI privacy", "ChatGPT privacy", "machine learning data", "AI data collection", "AI surveillance"],
+      "relatedNiches": ["data-brokers", "facial-recognition", "social-media-privacy"]
+    },
+    {
+      "id": "cloud-privacy",
+      "name": "Cloud Storage Privacy",
+      "slug": "cloud-privacy",
+      "description": "Securing your data in cloud storage services and understanding cloud privacy risks",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["cloud storage privacy", "Google Drive privacy", "Dropbox security", "encrypted cloud storage", "cloud data protection"],
+      "relatedNiches": ["email-privacy", "password-security", "encrypted-messaging"]
+    },
+    {
+      "id": "gaming-privacy",
+      "name": "Gaming & VR Privacy",
+      "slug": "gaming-privacy",
+      "description": "Privacy risks in online gaming, VR headsets, and gaming platforms",
+      "tier": 3,
+      "parentId": null,
+      "keywords": ["gaming privacy", "VR privacy", "online gaming tracking", "gaming data collection", "virtual reality data"],
+      "relatedNiches": ["children-safety", "social-media-privacy", "smart-home-privacy"]
+    },
+    {
+      "id": "gdpr",
+      "name": "GDPR Compliance",
+      "slug": "gdpr",
+      "description": "Understanding the EU General Data Protection Regulation and your rights",
+      "tier": 4,
+      "parentId": "privacy-laws",
+      "keywords": ["GDPR", "GDPR compliance", "GDPR rights", "EU data protection", "right to erasure"],
+      "relatedNiches": ["ccpa", "international-privacy", "data-brokers"]
+    },
+    {
+      "id": "ccpa",
+      "name": "CCPA & California Privacy",
+      "slug": "ccpa",
+      "description": "California Consumer Privacy Act rights and protections",
+      "tier": 4,
+      "parentId": "privacy-laws",
+      "keywords": ["CCPA", "California privacy law", "CPRA", "California consumer privacy", "CCPA compliance"],
+      "relatedNiches": ["gdpr", "us-state-privacy", "data-brokers"]
+    },
+    {
+      "id": "us-state-privacy",
+      "name": "US State Privacy Laws",
+      "slug": "us-state-privacy",
+      "description": "Overview of privacy laws across US states including Texas, Virginia, Colorado, and more",
+      "tier": 4,
+      "parentId": "privacy-laws",
+      "keywords": ["state privacy laws", "Texas data privacy", "Virginia privacy law", "state data protection", "APRA"],
+      "relatedNiches": ["ccpa", "data-brokers", "healthcare-privacy"]
+    },
+    {
+      "id": "international-privacy",
+      "name": "International Privacy Laws",
+      "slug": "international-privacy",
+      "description": "Privacy regulations around the world including UK, Australia, Canada, India, and more",
+      "tier": 4,
+      "parentId": "privacy-laws",
+      "keywords": ["international privacy laws", "UK data protection", "Australia privacy", "Canada privacy law", "India data privacy"],
+      "relatedNiches": ["gdpr", "data-brokers", "social-media-privacy"]
+    },
+    {
+      "id": "data-breach",
+      "name": "Data Breach Response",
+      "slug": "data-breach",
+      "description": "What to do when your data is breached and how to minimize damage",
+      "tier": 4,
+      "parentId": null,
+      "keywords": ["data breach", "data breach response", "identity theft", "breach notification", "data leak"],
+      "relatedNiches": ["password-security", "data-brokers", "email-privacy"]
+    },
+    {
+      "id": "right-to-forget",
+      "name": "Right to Be Forgotten",
+      "slug": "right-to-forget",
+      "description": "Exercising your right to have personal data deleted from online services",
+      "tier": 4,
+      "parentId": null,
+      "keywords": ["right to be forgotten", "data deletion", "remove personal data", "right to erasure", "delete my data"],
+      "relatedNiches": ["gdpr", "data-brokers", "digital-footprint"]
+    },
+    {
+      "id": "privacy-policies",
+      "name": "Privacy Policies & Terms of Service",
+      "slug": "privacy-policies",
+      "description": "Understanding and evaluating privacy policies and terms of service agreements",
+      "tier": 4,
+      "parentId": null,
+      "keywords": ["privacy policy", "terms of service", "dark patterns", "consent management", "privacy notice"],
+      "relatedNiches": ["data-brokers", "ad-tracking", "social-media-privacy"]
+    },
+    {
+      "id": "crypto-privacy",
+      "name": "Cryptocurrency & Blockchain Privacy",
+      "slug": "crypto-privacy",
+      "description": "Privacy in cryptocurrency transactions, blockchain anonymity, and privacy coins",
+      "tier": 5,
+      "parentId": null,
+      "keywords": ["crypto privacy", "blockchain privacy", "privacy coins", "Bitcoin anonymity", "Monero"],
+      "relatedNiches": ["vpn-privacy", "tor-privacy", "online-banking"]
+    },
+    {
+      "id": "tor-privacy",
+      "name": "Tor & Dark Web Privacy",
+      "slug": "tor-privacy",
+      "description": "Using Tor browser for anonymous browsing and understanding the dark web",
+      "tier": 5,
+      "parentId": null,
+      "keywords": ["Tor browser", "dark web", "onion routing", "anonymous browsing", "Tor privacy"],
+      "relatedNiches": ["vpn-privacy", "browser-privacy", "incognito-mode"]
+    },
+    {
+      "id": "facial-recognition",
+      "name": "Facial Recognition & Biometric Privacy",
+      "slug": "facial-recognition",
+      "description": "Protecting against facial recognition surveillance and biometric data collection",
+      "tier": 5,
+      "parentId": null,
+      "keywords": ["facial recognition", "biometric privacy", "Clearview AI", "biometric data", "face scanning"],
+      "relatedNiches": ["ai-privacy", "location-tracking", "privacy-laws"]
+    },
+    {
+      "id": "drone-surveillance",
+      "name": "Drone Surveillance",
+      "slug": "drone-surveillance",
+      "description": "Privacy implications of drone technology and aerial surveillance",
+      "tier": 5,
+      "parentId": null,
+      "keywords": ["drone surveillance", "drone privacy", "aerial surveillance", "drone laws", "spy drones"],
+      "relatedNiches": ["location-tracking", "facial-recognition", "privacy-laws"]
+    },
+    {
+      "id": "browser-extensions",
+      "name": "Browser Extensions & Privacy Add-ons",
+      "slug": "browser-extensions",
+      "description": "Privacy-focused browser extensions, ad blockers, and security add-ons",
+      "tier": 5,
+      "parentId": null,
+      "keywords": ["privacy extensions", "ad blocker", "browser add-ons", "uBlock Origin", "Privacy Badger"],
+      "relatedNiches": ["browser-privacy", "ad-tracking", "cookie-management"]
+    },
+    {
+      "id": "journalist-privacy",
+      "name": "Journalist & Whistleblower Privacy",
+      "slug": "journalist-privacy",
+      "description": "Tools and practices for journalists and whistleblowers to communicate securely",
+      "tier": 5,
+      "parentId": null,
+      "keywords": ["journalist privacy", "whistleblower protection", "source protection", "SecureDrop", "press freedom"],
+      "relatedNiches": ["encrypted-messaging", "tor-privacy", "vpn-privacy"]
+    },
+    {
+      "id": "search-history",
+      "name": "Search History Privacy",
+      "slug": "search-history",
+      "description": "Managing, deleting, and protecting your search history across platforms",
+      "tier": 2,
+      "parentId": null,
+      "keywords": ["delete search history", "search history privacy", "Google search history", "clear browsing data"],
+      "relatedNiches": ["incognito-mode", "browser-privacy", "private-search"]
+    }
+  ],
+  "contentTypes": [
+    { "id": "checklists", "name": "Checklists", "slug": "checklists", "description": "Interactive privacy and security checklists" },
+    { "id": "tools", "name": "Tools", "slug": "tools", "description": "Working interactive privacy tools" },
+    { "id": "guides", "name": "Guides", "slug": "guides", "description": "Step-by-step privacy guides" },
+    { "id": "comparisons", "name": "Comparisons", "slug": "comparisons", "description": "Side-by-side privacy product comparisons" },
+    { "id": "glossary", "name": "Glossary", "slug": "glossary", "description": "Privacy and security term definitions" },
+    { "id": "templates", "name": "Templates", "slug": "templates", "description": "Downloadable privacy document templates" },
+    { "id": "calculators", "name": "Calculators", "slug": "calculators", "description": "Interactive privacy calculators and analyzers" }
+  ]
+}

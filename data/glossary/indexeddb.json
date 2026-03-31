@@ -1,0 +1,32 @@
+{
+  "term": "IndexedDB",
+  "slug": "indexeddb",
+  "definition": "A client-side database built into web browsers that allows websites to store large amounts of structured data locally on a user's device for offline access and improved performance.",
+  "metaDescription": "Learn about IndexedDB, a browser database that stores your data locally. Understand privacy implications and how websites use it to track users.",
+  "simpleExplanation": "IndexedDB is like a filing cabinet inside your web browser where websites can store information on your computer. This helps websites work faster and function offline, but it also means your personal data stays on your device even after browsing.",
+  "whyItMatters": "IndexedDB can store sensitive personal information indefinitely on your device, potentially creating privacy risks. Malicious websites could access this data, and it may persist even after clearing browser history, making user tracking possible.",
+  "technicalDetail": "IndexedDB is an asynchronous, transactional database API that stores JavaScript objects indexed by keys. Unlike cookies, it can store megabytes of data including files, blobs, and complex data structures. Data persists until explicitly deleted by the user or website, and follows same-origin policy for security.",
+  "examples": [
+    {
+      "scenario": "Gmail offline access",
+      "explanation": "Gmail stores your recent emails in IndexedDB so you can read them without an internet connection, but this means your email content remains on your device."
+    },
+    {
+      "scenario": "Online banking application",
+      "explanation": "A banking app might store your transaction history locally for faster loading, potentially exposing sensitive financial data if your device is compromised."
+    },
+    {
+      "scenario": "Social media tracking",
+      "explanation": "A social platform could use IndexedDB to store detailed user behavior patterns and preferences for targeted advertising, creating a persistent tracking mechanism."
+    }
+  ],
+  "relatedTerms": [
+    "local-storage",
+    "cookies",
+    "browser-fingerprinting",
+    "client-side-storage",
+    "web-storage"
+  ],
+  "niche": "Web Privacy",
+  "category": "technology"
+}

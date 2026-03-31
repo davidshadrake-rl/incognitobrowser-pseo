@@ -1,0 +1,32 @@
+{
+  "term": "Zero Knowledge Proof",
+  "slug": "zero-knowledge-proof",
+  "definition": "A cryptographic method that allows one party to prove they know a secret or possess certain information to another party without revealing the actual secret or information itself.",
+  "metaDescription": "Learn about zero knowledge proofs - cryptographic methods that prove knowledge without revealing secrets. Understand how they protect privacy in digital systems.",
+  "simpleExplanation": "Imagine proving you know the password to an account without actually telling anyone the password. Zero knowledge proofs work like a magic trick that convinces someone you have secret knowledge without ever sharing that secret.",
+  "whyItMatters": "Zero knowledge proofs enable privacy-preserving verification in digital systems. They allow authentication, identity verification, and data validation while keeping sensitive information completely private from verifiers and third parties.",
+  "technicalDetail": "Zero knowledge proofs must satisfy three properties: completeness (honest provers can convince honest verifiers), soundness (dishonest provers cannot convince honest verifiers), and zero-knowledge (verifiers learn nothing beyond the validity of the statement). Modern implementations use advanced cryptographic techniques like zk-SNARKs and zk-STARKs.",
+  "examples": [
+    {
+      "scenario": "Age verification for online services",
+      "explanation": "You can prove you're over 18 to access a website without revealing your exact age, birth date, or any other personal information from your ID."
+    },
+    {
+      "scenario": "Cryptocurrency transactions",
+      "explanation": "Blockchain networks like Zcash use zero knowledge proofs to verify transactions are valid without revealing the sender, receiver, or transaction amounts."
+    },
+    {
+      "scenario": "Password authentication",
+      "explanation": "A system can verify you know the correct password without you actually transmitting the password over the network, protecting against interception."
+    }
+  ],
+  "relatedTerms": [
+    "cryptography",
+    "authentication",
+    "privacy-preserving-technologies",
+    "blockchain",
+    "digital-identity"
+  ],
+  "niche": "Advanced cryptographic privacy technique gaining mainstream adoption",
+  "category": "technology"
+}

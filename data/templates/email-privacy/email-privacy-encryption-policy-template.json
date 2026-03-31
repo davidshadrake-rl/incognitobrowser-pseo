@@ -1,0 +1,128 @@
+{
+  "niche": "email-privacy",
+  "slug": "email-privacy-encryption-policy-template",
+  "title": "Email Privacy & Encryption Policy Template",
+  "metaDescription": "Comprehensive email privacy policy template covering encryption standards, secure providers, and data protection for organizations.",
+  "description": "A complete email privacy and encryption policy template to help organizations establish secure email communication standards, protect sensitive data, and ensure compliance with privacy regulations.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Purpose and Scope",
+      "content": "This Email Privacy and Encryption Policy establishes guidelines for secure email communications at {{organizationName}}. This policy applies to all employees, contractors, and third parties who access our email systems. Our commitment to email privacy protects sensitive information, maintains client confidentiality, and ensures compliance with data protection regulations.",
+      "placeholders": [
+        {
+          "key": "organizationName",
+          "label": "Organization Name",
+          "defaultValue": "[Your Organization]"
+        }
+      ]
+    },
+    {
+      "heading": "Email Security Requirements",
+      "content": "All employees must use encrypted email services for sensitive communications. Approved providers include ProtonMail, Tutanota, and our enterprise-grade encrypted email system. Personal email accounts (Gmail, Yahoo, Outlook) are prohibited for business communications containing confidential information. When accessing email through web browsers, use privacy-focused browsers like Incognito Browser to prevent tracking and maintain session security.",
+      "placeholders": []
+    },
+    {
+      "heading": "Encryption Standards",
+      "content": "All emails containing {{sensitiveDataTypes}} must be encrypted using end-to-end encryption (E2EE). Minimum encryption standards require AES-256 encryption for data at rest and TLS 1.3 for data in transit. Employees must verify recipient encryption capabilities before sending sensitive information. Use PGP/GPG encryption for external communications when end-to-end encrypted providers are not available.",
+      "placeholders": [
+        {
+          "key": "sensitiveDataTypes",
+          "label": "Types of Sensitive Data",
+          "defaultValue": "personal data, financial information, proprietary business information, or client communications"
+        }
+      ]
+    },
+    {
+      "heading": "Password and Account Security",
+      "content": "Email accounts must use strong, unique passwords with a minimum of {{minimumPasswordLength}} characters. Multi-factor authentication (MFA) is mandatory for all email accounts. Passwords must be stored in approved password managers only. Account sharing is strictly prohibited. Regular password updates are required every {{passwordUpdateFrequency}}.",
+      "placeholders": [
+        {
+          "key": "minimumPasswordLength",
+          "label": "Minimum Password Length",
+          "defaultValue": "12"
+        },
+        {
+          "key": "passwordUpdateFrequency",
+          "label": "Password Update Frequency",
+          "defaultValue": "90 days"
+        }
+      ]
+    },
+    {
+      "heading": "Data Retention and Privacy",
+      "content": "Email data is retained for {{retentionPeriod}} unless legal or business requirements dictate longer retention. Emails containing personal data are automatically purged after the retention period. Employees must not store sensitive emails on local devices without encryption. Regular data audits ensure compliance with privacy regulations including GDPR, CCPA, and applicable local laws.",
+      "placeholders": [
+        {
+          "key": "retentionPeriod",
+          "label": "Email Retention Period",
+          "defaultValue": "7 years"
+        }
+      ]
+    },
+    {
+      "heading": "Prohibited Practices",
+      "content": "The following practices are strictly prohibited: forwarding encrypted emails to unencrypted accounts, using public Wi-Fi for accessing sensitive emails without VPN protection, sharing login credentials, auto-forwarding to personal accounts, and storing business emails on personal devices. Phishing awareness training is mandatory, and suspicious emails must be reported to {{securityContact}} immediately.",
+      "placeholders": [
+        {
+          "key": "securityContact",
+          "label": "Security Contact Email",
+          "defaultValue": "security@yourorganization.com"
+        }
+      ]
+    },
+    {
+      "heading": "Compliance and Monitoring",
+      "content": "Email communications are subject to monitoring for security and compliance purposes. Regular security audits assess policy adherence and system vulnerabilities. Non-compliance may result in disciplinary action up to and including termination. This policy is reviewed annually or following significant security incidents. All employees must acknowledge understanding and agree to comply with this policy.",
+      "placeholders": []
+    },
+    {
+      "heading": "Incident Response",
+      "content": "Suspected email security breaches must be reported to {{incidentResponseTeam}} within {{reportingTimeframe}}. Document all relevant details including sender information, timestamps, and potential data exposure. Do not forward suspicious emails or click unknown links. The incident response team will investigate and coordinate appropriate remediation measures including user notification and regulatory reporting if required.",
+      "placeholders": [
+        {
+          "key": "incidentResponseTeam",
+          "label": "Incident Response Contact",
+          "defaultValue": "security@yourorganization.com"
+        },
+        {
+          "key": "reportingTimeframe",
+          "label": "Incident Reporting Timeframe",
+          "defaultValue": "2 hours"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "Corporate email security policy development",
+    "GDPR and privacy regulation compliance",
+    "Remote work email security guidelines",
+    "Healthcare organizations handling patient communications",
+    "Legal firms protecting attorney-client privilege",
+    "Financial services securing client data",
+    "Small business email security standardization",
+    "Non-profit organizations protecting donor information"
+  ],
+  "relatedLinks": [
+    {
+      "title": "ProtonMail Business Security Guide",
+      "url": "/guides/protonmail-business-setup",
+      "type": "guide"
+    },
+    {
+      "title": "Email Encryption Best Practices",
+      "url": "/guides/email-encryption-best-practices",
+      "type": "guide"
+    },
+    {
+      "title": "Phishing Prevention Training Template",
+      "url": "/templates/phishing-prevention-training",
+      "type": "template"
+    },
+    {
+      "title": "Password Security Policy Template",
+      "url": "/templates/password-security-policy",
+      "type": "template"
+    }
+  ]
+}

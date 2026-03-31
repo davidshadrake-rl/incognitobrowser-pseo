@@ -1,0 +1,33 @@
+{
+  "term": "Public Key Cryptography",
+  "slug": "public-key-cryptography",
+  "definition": "A cryptographic system using two mathematically linked keys: a public key for encryption that anyone can access, and a private key for decryption that only the owner knows.",
+  "metaDescription": "Learn about public key cryptography, the security technology that uses paired public and private keys to encrypt data and verify digital identities.",
+  "simpleExplanation": "Think of it like a digital mailbox system. You give everyone your public key (like your mailbox address) so they can send you encrypted messages. Only you have the private key (like your mailbox key) to open and read those messages.",
+  "whyItMatters": "This technology enables secure communication over the internet without sharing secret keys beforehand. It's essential for online banking, secure messaging, digital signatures, and verifying website authenticity through HTTPS.",
+  "technicalDetail": "Uses asymmetric algorithms like RSA, ECC, or Diffie-Hellman where the public and private keys are mathematically related but computationally infeasible to derive one from the other. The public key encrypts data that only the corresponding private key can decrypt, and vice versa for digital signatures.",
+  "examples": [
+    {
+      "scenario": "HTTPS websites",
+      "explanation": "When you visit a secure website, your browser uses the site's public key to encrypt data you send, ensuring only the website can decrypt it with their private key."
+    },
+    {
+      "scenario": "Digital signatures",
+      "explanation": "Software updates are signed with a company's private key. Your device uses the company's public key to verify the signature, confirming the update is authentic and unchanged."
+    },
+    {
+      "scenario": "Encrypted messaging",
+      "explanation": "Apps like Signal use your contact's public key to encrypt messages that only their private key can decrypt, ensuring message privacy even if intercepted."
+    }
+  ],
+  "relatedTerms": [
+    "encryption",
+    "digital-signature",
+    "private-key",
+    "certificate-authority",
+    "tls-ssl",
+    "end-to-end-encryption"
+  ],
+  "niche": "foundational",
+  "category": "technology"
+}

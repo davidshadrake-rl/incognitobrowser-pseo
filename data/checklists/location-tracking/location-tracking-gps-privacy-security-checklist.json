@@ -1,0 +1,127 @@
+{
+  "niche": "location-tracking",
+  "slug": "location-tracking-gps-privacy-security-checklist",
+  "title": "Location Tracking & GPS Privacy Security Checklist",
+  "metaDescription": "Protect your location privacy with this comprehensive checklist. Stop apps and services from tracking your GPS data and physical movements.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45 minutes",
+  "intro": "Your location data is one of the most sensitive pieces of information you share. Apps, services, and even governments use GPS tracking to monitor your movements, creating detailed profiles of your daily life. This checklist helps you regain control over your location privacy.",
+  "sections": [
+    {
+      "title": "Mobile Device Location Settings",
+      "items": [
+        {
+          "id": "disable-system-location",
+          "task": "Turn off system-wide location services when not needed",
+          "why": "Prevents your device from constantly broadcasting your location to apps and services, reducing battery drain and privacy risks.",
+          "howTo": "iPhone: Settings > Privacy & Security > Location Services > toggle off. Android: Settings > Location > toggle off. Enable only when using navigation apps.",
+          "priority": "high"
+        },
+        {
+          "id": "review-app-permissions",
+          "task": "Audit location permissions for all installed apps",
+          "why": "Many apps request location access unnecessarily. Weather apps, games, and shopping apps often don't need your precise location to function.",
+          "howTo": "Review each app's location permission. Set to 'Never' for unnecessary apps, 'While Using App' for essential ones, and avoid 'Always' unless absolutely needed.",
+          "priority": "critical"
+        },
+        {
+          "id": "disable-precise-location",
+          "task": "Turn off precise location for non-essential apps",
+          "why": "Approximate location provides enough functionality for most apps while revealing less about your exact whereabouts.",
+          "howTo": "iPhone: Location Services > select app > toggle off 'Precise Location'. Android: App permissions > Location > choose 'Approximate' instead of 'Precise'.",
+          "priority": "high"
+        },
+        {
+          "id": "location-history-off",
+          "task": "Disable location history and tracking",
+          "why": "Prevents your device from storing a detailed timeline of everywhere you've been, which can be accessed by law enforcement or hackers.",
+          "howTo": "iPhone: Settings > Privacy > Location Services > System Services > disable 'Significant Locations'. Android: Google Account > Data & Privacy > Location History > turn off.",
+          "priority": "critical"
+        }
+      ]
+    },
+    {
+      "title": "App-Specific Location Controls",
+      "items": [
+        {
+          "id": "social-media-location",
+          "task": "Turn off location sharing in social media apps",
+          "why": "Geotagged posts reveal your location to followers and can be used to track your patterns, putting you at risk for stalking or burglary.",
+          "howTo": "Facebook/Instagram: disable location services in app settings. Twitter: turn off 'Precise location' in privacy settings. Remove location from existing posts.",
+          "priority": "high"
+        },
+        {
+          "id": "photo-location-data",
+          "task": "Disable GPS coordinates in camera apps",
+          "why": "Photos with embedded GPS data can reveal your home address, workplace, and travel patterns when shared online.",
+          "howTo": "iPhone: Settings > Camera > toggle off 'View Outside the Frame' and check Privacy settings. Android: Camera app > Settings > disable 'Save location'.",
+          "priority": "medium"
+        },
+        {
+          "id": "browser-location-blocking",
+          "task": "Block location requests in web browsers",
+          "why": "Websites often request your location for targeted advertising and tracking, even when unnecessary for their service.",
+          "howTo": "Use Incognito Browser which blocks location requests by default. In other browsers: Settings > Privacy > Location > set to 'Block' or 'Ask first'.",
+          "priority": "medium"
+        },
+        {
+          "id": "find-my-device",
+          "task": "Configure find-my-device features securely",
+          "why": "While useful for finding lost devices, these features can be exploited by stalkers or used in domestic abuse situations.",
+          "howTo": "iPhone: Settings > Apple ID > Find My > configure who can see your location. Android: Settings > Security > Find My Device > review sharing settings.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Privacy Protections",
+      "items": [
+        {
+          "id": "ad-tracking-opt-out",
+          "task": "Opt out of advertising location tracking",
+          "why": "Ad networks create detailed profiles of your movements to serve targeted ads and sell your data to third parties.",
+          "howTo": "iPhone: Settings > Privacy > Apple Advertising > turn off 'Personalized Ads'. Android: Settings > Privacy > Ads > turn on 'Opt out of Ads Personalization'.",
+          "priority": "high"
+        },
+        {
+          "id": "wifi-bluetooth-scanning",
+          "task": "Disable Wi-Fi and Bluetooth scanning",
+          "why": "Even with Wi-Fi/Bluetooth off, devices can still scan for networks and beacons, allowing location tracking through these signals.",
+          "howTo": "Android: Settings > Location > Location Services > Wi-Fi scanning and Bluetooth scanning > turn both off. iPhone: handled automatically in recent iOS versions.",
+          "priority": "medium"
+        },
+        {
+          "id": "google-location-controls",
+          "task": "Configure Google location settings",
+          "why": "Google collects extensive location data across all their services, creating detailed movement profiles for advertising and other purposes.",
+          "howTo": "Visit myactivity.google.com > Location History > turn off. Also disable Web & App Activity location tracking and delete existing location data.",
+          "priority": "critical"
+        },
+        {
+          "id": "carrier-location-services",
+          "task": "Opt out of carrier location services",
+          "why": "Cell phone carriers track your location for marketing purposes and may share this data with third parties.",
+          "howTo": "Contact your carrier to opt out of location-based marketing. Verizon, AT&T, T-Mobile all have opt-out processes. Check your carrier's privacy portal online.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Smart Home Privacy Checklist",
+      "url": "/checklists/smart-home-privacy",
+      "type": "related-checklist"
+    },
+    {
+      "title": "Social Media Privacy Guide",
+      "url": "/checklists/social-media-privacy",
+      "type": "related-checklist"
+    },
+    {
+      "title": "Dating App Privacy Protection",
+      "url": "/checklists/dating-privacy",
+      "type": "related-checklist"
+    }
+  ]
+}

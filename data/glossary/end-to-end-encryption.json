@@ -1,0 +1,31 @@
+{
+  "term": "End-to-End Encryption",
+  "slug": "end-to-end-encryption",
+  "definition": "A security method where data is encrypted on the sender's device and only decrypted on the recipient's device, preventing anyone in between from reading the content.",
+  "metaDescription": "End-to-end encryption protects your messages by encrypting them so only you and the recipient can read them. Learn how it works and why it matters.",
+  "simpleExplanation": "Think of end-to-end encryption like a locked box that only you and your friend have keys to. When you send a message, it gets locked in this box, travels through the internet, and only your friend can unlock it to read it.",
+  "whyItMatters": "It ensures your private communications stay private, even from the service provider, hackers, or government surveillance. Without it, your messages could be read by anyone who intercepts them during transmission.",
+  "technicalDetail": "End-to-end encryption uses public-key cryptography where each user has a pair of keys. Messages are encrypted with the recipient's public key and can only be decrypted with their corresponding private key, which never leaves their device. This ensures the service provider and intermediaries cannot access the plaintext.",
+  "examples": [
+    {
+      "scenario": "WhatsApp messaging",
+      "explanation": "When you send a WhatsApp message, it's encrypted on your phone and only decrypted on your recipient's phone. Even WhatsApp cannot read your messages."
+    },
+    {
+      "scenario": "Signal app calls",
+      "explanation": "Voice and video calls on Signal are encrypted end-to-end, meaning your conversations cannot be intercepted or listened to by anyone else."
+    },
+    {
+      "scenario": "ProtonMail email",
+      "explanation": "Emails between ProtonMail users are encrypted end-to-end, so even ProtonMail cannot access the content of your messages."
+    }
+  ],
+  "relatedTerms": [
+    "encryption",
+    "public-key-cryptography",
+    "private-key",
+    "data-in-transit",
+    "zero-knowledge"
+  ],
+  "category": "technology"
+}

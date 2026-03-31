@@ -1,0 +1,33 @@
+{
+  "term": "Mixnet",
+  "slug": "mixnet",
+  "definition": "A privacy network that shuffles and encrypts messages through multiple relay servers to hide who is communicating with whom, making it nearly impossible to trace messages back to their origin.",
+  "metaDescription": "Learn about mixnets - privacy networks that shuffle encrypted messages through multiple servers to protect communication metadata and anonymity.",
+  "simpleExplanation": "Think of a mixnet like a postal system where your letter gets shuffled with hundreds of others at each post office, repackaged in new envelopes, and sent in random order. By the time it reaches its destination, no one can tell which original sender it came from.",
+  "whyItMatters": "Mixnets protect against traffic analysis attacks that can reveal communication patterns even when message content is encrypted. They're essential for journalists, activists, and anyone needing strong anonymity protection in surveillance-heavy environments.",
+  "technicalDetail": "Mixnets use cryptographic techniques like onion encryption and batching to process messages. Each mix node decrypts one layer, shuffles messages with others in the batch, adds random delays, and forwards them. This process breaks the timing correlation between incoming and outgoing messages, providing stronger anonymity than simple proxy chains.",
+  "examples": [
+    {
+      "scenario": "Whistleblower protection",
+      "explanation": "A government whistleblower uses a mixnet to anonymously send documents to journalists, ensuring that even network monitoring cannot reveal their identity or timing patterns."
+    },
+    {
+      "scenario": "Anonymous messaging",
+      "explanation": "Activists in authoritarian countries use mixnet-based messaging apps to coordinate safely, knowing that traffic analysis cannot reveal their communication networks."
+    },
+    {
+      "scenario": "Private voting systems",
+      "explanation": "Electronic voting systems use mixnets to shuffle encrypted ballots, ensuring votes remain secret while allowing public verification of election results."
+    }
+  ],
+  "relatedTerms": [
+    "onion-routing",
+    "traffic-analysis",
+    "anonymity",
+    "metadata",
+    "tor",
+    "encryption"
+  ],
+  "niche": "Advanced privacy infrastructure used by privacy-focused applications and high-security communication systems",
+  "category": "technology"
+}

@@ -1,0 +1,222 @@
+{
+  "niche": "children-safety",
+  "slug": "childrens-online-safety-risk-calculator",
+  "title": "Children's Online Safety Risk Calculator",
+  "metaDescription": "Assess your child's online safety risk level. Get personalized recommendations for parental controls, privacy settings, and COPPA compliance.",
+  "description": "Evaluate potential online risks your children face and receive tailored safety recommendations. This calculator helps parents identify vulnerabilities in their child's digital activities and provides actionable steps to enhance protection.",
+  "inputs": [
+    {
+      "id": "childAge",
+      "label": "Child's Age",
+      "type": "select",
+      "defaultValue": "8-12",
+      "options": [
+        {
+          "value": "under-6",
+          "label": "Under 6 years old"
+        },
+        {
+          "value": "6-8",
+          "label": "6-8 years old"
+        },
+        {
+          "value": "8-12",
+          "label": "8-12 years old"
+        },
+        {
+          "value": "13-15",
+          "label": "13-15 years old"
+        },
+        {
+          "value": "16-17",
+          "label": "16-17 years old"
+        }
+      ],
+      "helpText": "Different age groups face different online risks and have varying levels of digital literacy"
+    },
+    {
+      "id": "dailyScreenTime",
+      "label": "Daily Screen Time (hours)",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 0,
+      "max": 12,
+      "step": 0.5,
+      "helpText": "Total hours spent on devices with internet access per day"
+    },
+    {
+      "id": "socialMediaUse",
+      "label": "Uses Social Media Platforms",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Including platforms like Instagram, TikTok, Snapchat, YouTube, etc."
+    },
+    {
+      "id": "parentalControls",
+      "label": "Parental Control Level",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No parental controls"
+        },
+        {
+          "value": "basic",
+          "label": "Basic controls (screen time limits)"
+        },
+        {
+          "value": "moderate",
+          "label": "Moderate (content filtering + time limits)"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive (monitoring + filtering + limits)"
+        }
+      ],
+      "helpText": "Current level of parental control software or settings in use"
+    },
+    {
+      "id": "deviceType",
+      "label": "Primary Device Used",
+      "type": "select",
+      "defaultValue": "tablet",
+      "options": [
+        {
+          "value": "shared-computer",
+          "label": "Shared family computer"
+        },
+        {
+          "value": "tablet",
+          "label": "Personal tablet"
+        },
+        {
+          "value": "smartphone",
+          "label": "Personal smartphone"
+        },
+        {
+          "value": "gaming-console",
+          "label": "Gaming console"
+        },
+        {
+          "value": "multiple",
+          "label": "Multiple personal devices"
+        }
+      ],
+      "helpText": "The main device your child uses to access the internet"
+    },
+    {
+      "id": "onlineActivities",
+      "label": "Primary Online Activities",
+      "type": "select",
+      "defaultValue": "mixed",
+      "options": [
+        {
+          "value": "educational",
+          "label": "Primarily educational content"
+        },
+        {
+          "value": "entertainment",
+          "label": "Videos and games only"
+        },
+        {
+          "value": "social",
+          "label": "Social interaction and messaging"
+        },
+        {
+          "value": "mixed",
+          "label": "Mix of activities"
+        },
+        {
+          "value": "unrestricted",
+          "label": "Unrestricted browsing"
+        }
+      ],
+      "helpText": "What your child primarily does online"
+    },
+    {
+      "id": "privacyEducation",
+      "label": "Has received online safety education",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Child has been taught about online privacy, stranger danger, and safe browsing"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Risk Score",
+      "format": "score",
+      "description": "Your child's overall online safety risk level out of 100"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Categorized risk assessment with recommended actions"
+    },
+    {
+      "id": "priorityActions",
+      "label": "Priority Actions Needed",
+      "format": "number",
+      "description": "Number of high-priority safety measures to implement immediately"
+    }
+  ],
+  "formula": "let baseRisk = 20; if (childAge === 'under-6') baseRisk = 15; else if (childAge === '6-8') baseRisk = 25; else if (childAge === '8-12') baseRisk = 35; else if (childAge === '13-15') baseRisk = 50; else if (childAge === '16-17') baseRisk = 45; baseRisk += Math.min(dailyScreenTime * 3, 25); if (socialMediaUse) baseRisk += 20; if (parentalControls === 'none') baseRisk += 25; else if (parentalControls === 'basic') baseRisk += 10; else if (parentalControls === 'moderate') baseRisk -= 5; else if (parentalControls === 'comprehensive') baseRisk -= 15; if (deviceType === 'smartphone' || deviceType === 'multiple') baseRisk += 15; else if (deviceType === 'shared-computer') baseRisk -= 10; if (onlineActivities === 'unrestricted') baseRisk += 20; else if (onlineActivities === 'social') baseRisk += 15; else if (onlineActivities === 'educational') baseRisk -= 10; if (privacyEducation) baseRisk -= 15; const riskScore = Math.max(0, Math.min(100, baseRisk)); let riskLevel = 'Low Risk'; let priorityActions = 1; if (riskScore >= 70) { riskLevel = 'High Risk'; priorityActions = 4; } else if (riskScore >= 50) { riskLevel = 'Moderate Risk'; priorityActions = 3; } else if (riskScore >= 30) { riskLevel = 'Low-Moderate Risk'; priorityActions = 2; } return { riskScore, riskLevel, priorityActions };",
+  "educational": {
+    "methodology": "This calculator evaluates online safety risks based on key factors including age-appropriate digital exposure, device usage patterns, parental supervision levels, and safety education. Risk scores are calculated using established child development and cybersecurity guidelines.",
+    "tips": [
+      "Use Incognito Browser for family web browsing to prevent tracking and maintain privacy",
+      "Enable safe search filters on all search engines your child uses",
+      "Create separate user accounts with appropriate restrictions for each child",
+      "Regularly review and update privacy settings on all platforms your child uses",
+      "Teach children to never share personal information like full name, address, or school online",
+      "Set up content filtering at the router level to protect all devices on your network",
+      "Monitor friend lists and followers on social media platforms regularly",
+      "Use family-friendly DNS services to block inappropriate content automatically"
+    ],
+    "interpretation": [
+      {
+        "range": "0-29",
+        "label": "Low Risk",
+        "description": "Good safety practices in place. Continue monitoring and maintain current protections.",
+        "color": "green"
+      },
+      {
+        "range": "30-49",
+        "label": "Low-Moderate Risk",
+        "description": "Some safety measures needed. Consider additional parental controls and privacy education.",
+        "color": "yellow"
+      },
+      {
+        "range": "50-69",
+        "label": "Moderate Risk",
+        "description": "Several risk factors present. Implement stronger parental controls and increase supervision.",
+        "color": "orange"
+      },
+      {
+        "range": "70-100",
+        "label": "High Risk",
+        "description": "Multiple serious risk factors. Immediate action needed to secure your child's online activities.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "COPPA Compliance Guide for Parents",
+      "url": "/privacy-guides/coppa-compliance",
+      "type": "guide"
+    },
+    {
+      "title": "Setting Up Parental Controls",
+      "url": "/privacy-guides/parental-controls-setup",
+      "type": "tutorial"
+    },
+    {
+      "title": "Social Media Privacy Calculator",
+      "url": "/calculators/social-media-privacy",
+      "type": "calculator"
+    }
+  ]
+}

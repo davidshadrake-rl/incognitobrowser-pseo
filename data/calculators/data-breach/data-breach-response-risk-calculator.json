@@ -1,0 +1,239 @@
+{
+  "niche": "data-breach",
+  "slug": "data-breach-response-risk-calculator",
+  "title": "Data Breach Response Risk Calculator",
+  "metaDescription": "Calculate your risk level after a data breach and get personalized response steps to protect your identity and minimize damage.",
+  "description": "Assess your personal risk level following a data breach and receive tailored recommendations for immediate action. This calculator helps you prioritize response steps based on the type of data compromised and your current security posture.",
+  "inputs": [
+    {
+      "id": "dataTypes",
+      "label": "What type of data was compromised?",
+      "type": "select",
+      "defaultValue": "email",
+      "options": [
+        {
+          "value": "email",
+          "label": "Email addresses only"
+        },
+        {
+          "value": "passwords",
+          "label": "Passwords or login credentials"
+        },
+        {
+          "value": "personal",
+          "label": "Personal info (name, address, phone)"
+        },
+        {
+          "value": "financial",
+          "label": "Financial data (credit cards, bank info)"
+        },
+        {
+          "value": "ssn",
+          "label": "Social Security Numbers"
+        },
+        {
+          "value": "medical",
+          "label": "Medical records"
+        },
+        {
+          "value": "multiple",
+          "label": "Multiple data types"
+        }
+      ],
+      "helpText": "Select the most sensitive type of data that was compromised in the breach"
+    },
+    {
+      "id": "timeSinceBreach",
+      "label": "How long ago did the breach occur?",
+      "type": "select",
+      "defaultValue": "recent",
+      "options": [
+        {
+          "value": "hours",
+          "label": "Within 24 hours"
+        },
+        {
+          "value": "recent",
+          "label": "1-7 days ago"
+        },
+        {
+          "value": "weeks",
+          "label": "1-4 weeks ago"
+        },
+        {
+          "value": "months",
+          "label": "1-6 months ago"
+        },
+        {
+          "value": "old",
+          "label": "More than 6 months ago"
+        }
+      ],
+      "helpText": "Earlier action reduces risk - immediate response is most effective"
+    },
+    {
+      "id": "passwordReuse",
+      "label": "Do you reuse the compromised password elsewhere?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "no",
+          "label": "No, it's unique"
+        },
+        {
+          "value": "few",
+          "label": "On 1-2 other sites"
+        },
+        {
+          "value": "sometimes",
+          "label": "On several sites"
+        },
+        {
+          "value": "everywhere",
+          "label": "I use it everywhere"
+        }
+      ],
+      "helpText": "Password reuse significantly increases your risk exposure"
+    },
+    {
+      "id": "twoFactorAuth",
+      "label": "Do you have two-factor authentication enabled?",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "none",
+          "label": "Not on any accounts"
+        },
+        {
+          "value": "some",
+          "label": "On some important accounts"
+        },
+        {
+          "value": "most",
+          "label": "On most accounts"
+        },
+        {
+          "value": "all",
+          "label": "On all possible accounts"
+        }
+      ],
+      "helpText": "2FA provides crucial additional protection even if passwords are compromised"
+    },
+    {
+      "id": "monitoringServices",
+      "label": "Do you use identity/credit monitoring services?",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Active monitoring helps detect fraudulent activity quickly"
+    },
+    {
+      "id": "actionsTaken",
+      "label": "Have you taken any response actions yet?",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No action taken yet"
+        },
+        {
+          "value": "password",
+          "label": "Changed passwords only"
+        },
+        {
+          "value": "some",
+          "label": "Changed passwords and enabled 2FA"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Full response (passwords, monitoring, alerts)"
+        }
+      ],
+      "helpText": "Previous actions reduce your current risk level"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Risk Level",
+      "format": "score",
+      "description": "Your current risk level on a scale of 1-100"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Risk Grade",
+      "format": "grade",
+      "description": "Letter grade indicating your risk category"
+    },
+    {
+      "id": "urgencyLevel",
+      "label": "Response Urgency",
+      "format": "text",
+      "description": "How quickly you should take action"
+    },
+    {
+      "id": "priorityActions",
+      "label": "Immediate Actions Needed",
+      "format": "number",
+      "description": "Number of critical actions you should take immediately"
+    }
+  ],
+  "formula": "let baseRisk = 20; const dataTypeRisk = {email: 10, passwords: 30, personal: 25, financial: 40, ssn: 50, medical: 35, multiple: 45}; const timeRisk = {hours: 0, recent: 5, weeks: 10, months: 15, old: 5}; const passwordRisk = {no: 0, few: 15, sometimes: 25, everywhere: 35}; const authProtection = {none: 20, some: 10, most: 5, all: 0}; const monitoringReduction = monitoringServices ? -5 : 0; const actionReduction = {none: 0, password: -10, some: -20, comprehensive: -35}; let riskScore = Math.max(5, Math.min(95, baseRisk + dataTypeRisk[dataTypes] + timeRisk[timeSinceBreach] + passwordRisk[passwordReuse] + authProtection[twoFactorAuth] + monitoringReduction + actionReduction[actionsTaken])); let riskGrade = riskScore >= 80 ? 'F' : riskScore >= 65 ? 'D' : riskScore >= 50 ? 'C' : riskScore >= 35 ? 'B' : 'A'; let urgencyLevel = riskScore >= 70 ? 'IMMEDIATE' : riskScore >= 50 ? 'Within 24 hours' : riskScore >= 30 ? 'Within a week' : 'Monitor regularly'; let priorityActions = Math.ceil(riskScore / 20); return {riskScore, riskGrade, urgencyLevel, priorityActions};",
+  "educational": {
+    "methodology": "This calculator assesses your data breach risk based on the sensitivity of compromised data, time elapsed since breach discovery, your current security practices, and actions already taken. Higher scores indicate greater vulnerability to identity theft and fraud.",
+    "tips": [
+      "Change passwords immediately on the breached service and any accounts using the same password",
+      "Enable two-factor authentication on all critical accounts (banking, email, social media)",
+      "Monitor your credit reports and consider placing fraud alerts or credit freezes",
+      "Use a password manager to generate unique passwords for each account",
+      "Browse privately with Incognito Browser to prevent further data collection",
+      "Sign up for identity monitoring services if you haven't already",
+      "Document all breach-related communications for potential future reference"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Your risk is minimal. Continue monitoring and maintain good security practices.",
+        "color": "green"
+      },
+      {
+        "range": "26-45",
+        "label": "Moderate Risk",
+        "description": "Take precautionary steps and improve your security posture within a week.",
+        "color": "yellow"
+      },
+      {
+        "range": "46-65",
+        "label": "High Risk",
+        "description": "Significant risk present. Take immediate action within 24 hours.",
+        "color": "orange"
+      },
+      {
+        "range": "66-100",
+        "label": "Critical Risk",
+        "description": "Extreme vulnerability. Take all protective measures immediately.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Password Security Best Practices",
+      "url": "/password-security",
+      "type": "internal"
+    },
+    {
+      "title": "Data Broker Removal Guide",
+      "url": "/data-brokers",
+      "type": "internal"
+    },
+    {
+      "title": "Email Privacy Protection",
+      "url": "/email-privacy",
+      "type": "internal"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "niche": "device-fingerprinting",
+  "slug": "device-fingerprinting-privacy-hardening-checklist",
+  "title": "Device Fingerprinting Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to protect against device fingerprinting and browser tracking. Stop websites from identifying you through digital fingerprints.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45 minutes",
+  "intro": "Device fingerprinting allows websites to identify and track you even without cookies by collecting unique information about your browser and device. This comprehensive checklist will help you protect against these tracking techniques.",
+  "sections": [
+    {
+      "title": "Browser Configuration",
+      "items": [
+        {
+          "id": "disable-webgl",
+          "task": "Disable WebGL rendering",
+          "why": "WebGL can reveal detailed graphics card information that creates a unique fingerprint for tracking purposes.",
+          "howTo": "In Firefox: type about:config, set webgl.disabled to true. In Chrome: use flags --disable-webgl. Consider using Incognito Browser which has WebGL protection built-in.",
+          "priority": "high"
+        },
+        {
+          "id": "canvas-protection",
+          "task": "Enable canvas fingerprinting protection",
+          "why": "Canvas fingerprinting uses your device's rendering capabilities to create a unique identifier that persists across sessions.",
+          "howTo": "Use Firefox with privacy.resistFingerprinting set to true, or install uBlock Origin. Incognito Browser automatically blocks canvas fingerprinting attempts.",
+          "priority": "critical"
+        },
+        {
+          "id": "user-agent-spoofing",
+          "task": "Randomize or spoof User-Agent string",
+          "why": "Your User-Agent reveals browser version, operating system, and device details that contribute to fingerprinting.",
+          "howTo": "Install User-Agent Switcher extension or use Tor Browser. Set to common combinations like Chrome/Windows to blend in with majority users.",
+          "priority": "medium"
+        },
+        {
+          "id": "timezone-spoofing",
+          "task": "Mask timezone information",
+          "why": "Timezone data narrows down your geographic location and adds to your unique fingerprint profile.",
+          "howTo": "Use browser extensions like Timezone Spoofing or configure Firefox privacy.resistFingerprinting. Set timezone to UTC or common zones like EST/PST.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "System-Level Protection",
+      "items": [
+        {
+          "id": "font-blocking",
+          "task": "Limit available system fonts",
+          "why": "Installed fonts create a unique signature since different users have different font collections installed on their systems.",
+          "howTo": "Use Firefox's font restrictions in about:config (gfx.downloadable_fonts.enabled = false) or browser extensions that limit font enumeration.",
+          "priority": "high"
+        },
+        {
+          "id": "audio-context-blocking",
+          "task": "Block audio context fingerprinting",
+          "why": "Audio fingerprinting analyzes how your device processes audio to create a unique hardware-based identifier.",
+          "howTo": "Install AudioContext Fingerprint Defender extension or use browsers with built-in protection. Disable Web Audio API if not needed.",
+          "priority": "high"
+        },
+        {
+          "id": "screen-resolution-masking",
+          "task": "Standardize screen resolution data",
+          "why": "Screen dimensions, color depth, and pixel ratio create unique identifiers that persist even with cleared cookies.",
+          "howTo": "Use browser extensions to report common resolutions like 1920x1080. Tor Browser automatically standardizes screen data to common values.",
+          "priority": "medium"
+        },
+        {
+          "id": "javascript-restrictions",
+          "task": "Restrict JavaScript fingerprinting APIs",
+          "why": "JavaScript can access numerous device properties through various APIs to build comprehensive fingerprints.",
+          "howTo": "Use uBlock Origin in advanced mode, NoScript extension, or configure Firefox to block specific APIs. Consider Incognito Browser for automatic API protection.",
+          "priority": "critical"
+        }
+      ]
+    },
+    {
+      "title": "Network and Tracking Prevention",
+      "items": [
+        {
+          "id": "vpn-setup",
+          "task": "Use VPN with consistent exit points",
+          "why": "IP addresses are major fingerprinting components, and consistent VPN usage helps mask your real location and ISP.",
+          "howTo": "Choose reputable VPN providers like ExpressVPN or NordVPN. Always connect before browsing and use same server locations for consistency.",
+          "priority": "high"
+        },
+        {
+          "id": "dns-protection",
+          "task": "Configure private DNS servers",
+          "why": "DNS queries can leak location information and browsing patterns even when using other privacy tools.",
+          "howTo": "Use DNS services like Cloudflare (1.1.1.1), Quad9 (9.9.9.9), or configure DNS-over-HTTPS in your browser settings.",
+          "priority": "medium"
+        },
+        {
+          "id": "tracking-protection",
+          "task": "Enable comprehensive tracking protection",
+          "why": "Third-party trackers combine fingerprinting with other techniques to create persistent cross-site tracking profiles.",
+          "howTo": "Enable strict tracking protection in Firefox, use uBlock Origin with all filter lists, or switch to privacy-focused browsers like Incognito Browser.",
+          "priority": "critical"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Browser Privacy Settings Guide",
+      "url": "/checklists/browser-privacy-checklist",
+      "type": "internal"
+    },
+    {
+      "title": "Cookie Management Best Practices",
+      "url": "/checklists/cookie-management-checklist",
+      "type": "internal"
+    },
+    {
+      "title": "EFF's Cover Your Tracks Tool",
+      "url": "https://coveryourtracks.eff.org/",
+      "type": "external"
+    },
+    {
+      "title": "AmIUnique Fingerprint Test",
+      "url": "https://amiunique.org/",
+      "type": "external"
+    }
+  ]
+}

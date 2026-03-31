@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["niche", "slug", "title", "metaDescription", "difficulty", "estimatedTime", "sections", "relatedLinks"],
+  "properties": {
+    "niche": { "type": "string", "description": "Niche ID from taxonomy" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string", "maxLength": 70 },
+    "metaDescription": { "type": "string", "maxLength": 160 },
+    "difficulty": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] },
+    "estimatedTime": { "type": "string" },
+    "intro": { "type": "string", "maxLength": 300 },
+    "sections": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["title", "items"],
+        "properties": {
+          "title": { "type": "string" },
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "required": ["id", "task", "why", "howTo", "priority"],
+              "properties": {
+                "id": { "type": "string" },
+                "task": { "type": "string" },
+                "why": { "type": "string", "maxLength": 200 },
+                "howTo": { "type": "string", "maxLength": 300 },
+                "priority": { "type": "string", "enum": ["critical", "high", "medium", "low"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "relatedLinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string" },
+          "type": { "type": "string" }
+        }
+      }
+    }
+  }
+}

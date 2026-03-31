@@ -1,0 +1,243 @@
+{
+  "niche": "workplace-privacy",
+  "slug": "workplace-surveillance-employee-privacy-risk-calculator",
+  "title": "Workplace Surveillance & Employee Privacy Risk Calculator",
+  "metaDescription": "Calculate your workplace privacy risk score based on employer monitoring practices. Get personalized tips to protect your employee privacy rights.",
+  "description": "Assess your workplace privacy exposure with our comprehensive calculator. Evaluate employer monitoring practices, surveillance tools, and get actionable recommendations to protect your personal privacy while maintaining professional productivity.",
+  "inputs": [
+    {
+      "id": "emailMonitoring",
+      "label": "Does your employer monitor work emails?",
+      "type": "select",
+      "defaultValue": "unknown",
+      "options": [
+        {
+          "value": "none",
+          "label": "No monitoring"
+        },
+        {
+          "value": "metadata",
+          "label": "Basic metadata only"
+        },
+        {
+          "value": "content",
+          "label": "Full email content"
+        },
+        {
+          "value": "unknown",
+          "label": "Unknown/Not disclosed"
+        }
+      ],
+      "helpText": "Check your employee handbook or IT policy for email monitoring disclosures"
+    },
+    {
+      "id": "screenMonitoring",
+      "label": "Screen monitoring frequency",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No screen monitoring"
+        },
+        {
+          "value": "periodic",
+          "label": "Periodic screenshots"
+        },
+        {
+          "value": "continuous",
+          "label": "Continuous monitoring"
+        },
+        {
+          "value": "keystroke",
+          "label": "Keystroke logging included"
+        }
+      ],
+      "helpText": "Screen monitoring software may capture everything you do on work devices"
+    },
+    {
+      "id": "internetTracking",
+      "label": "Internet usage tracking level",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No tracking"
+        },
+        {
+          "value": "basic",
+          "label": "Basic URL logging"
+        },
+        {
+          "value": "detailed",
+          "label": "Detailed browsing history"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Full web activity analysis"
+        }
+      ],
+      "helpText": "Most employers track at least basic internet usage for security purposes"
+    },
+    {
+      "id": "personalDeviceUse",
+      "label": "Do you use personal devices for work?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "sometimes",
+          "label": "Occasionally"
+        },
+        {
+          "value": "regularly",
+          "label": "Regularly"
+        },
+        {
+          "value": "primarily",
+          "label": "Primarily personal devices"
+        }
+      ],
+      "helpText": "Personal devices used for work may be subject to monitoring policies"
+    },
+    {
+      "id": "workLocation",
+      "label": "Primary work location",
+      "type": "select",
+      "defaultValue": "hybrid",
+      "options": [
+        {
+          "value": "office",
+          "label": "Office only"
+        },
+        {
+          "value": "remote",
+          "label": "Remote only"
+        },
+        {
+          "value": "hybrid",
+          "label": "Hybrid (office + remote)"
+        }
+      ],
+      "helpText": "Remote work often involves additional monitoring software"
+    },
+    {
+      "id": "privacyAwareness",
+      "label": "How well do you know your workplace privacy rights?",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "helpText": "1 = No knowledge, 5 = Very knowledgeable about rights and policies"
+    },
+    {
+      "id": "personalBrowsing",
+      "label": "Do you browse personal sites during work hours?",
+      "type": "select",
+      "defaultValue": "limited",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "limited",
+          "label": "Limited personal browsing"
+        },
+        {
+          "value": "moderate",
+          "label": "Moderate personal use"
+        },
+        {
+          "value": "frequent",
+          "label": "Frequent personal browsing"
+        }
+      ],
+      "helpText": "Personal browsing on work devices increases privacy exposure"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "privacyRiskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall workplace privacy risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your workplace privacy risk category"
+    },
+    {
+      "id": "exposureAreas",
+      "label": "Primary Exposure Areas",
+      "format": "number",
+      "description": "Number of high-risk privacy areas identified"
+    }
+  ],
+  "formula": "const monitoringScores = { none: 0, metadata: 20, basic: 20, content: 40, periodic: 30, continuous: 50, keystroke: 60, detailed: 35, comprehensive: 45, unknown: 25 }; const locationMultiplier = { office: 1, remote: 1.2, hybrid: 1.1 }; const personalDeviceRisk = { never: 0, sometimes: 10, regularly: 20, primarily: 30 }; const personalBrowsingRisk = { never: 0, limited: 10, moderate: 20, frequent: 30 }; const baseScore = (monitoringScores[emailMonitoring] || 0) + (monitoringScores[screenMonitoring] || 0) + (monitoringScores[internetTracking] || 0) + personalDeviceRisk[personalDeviceUse] + personalBrowsingRisk[personalBrowsing]; const awarenessReduction = (privacyAwareness - 1) * 5; const adjustedScore = Math.max(0, (baseScore * locationMultiplier[workLocation]) - awarenessReduction); const privacyRiskScore = Math.min(100, Math.round(adjustedScore)); const riskLevel = privacyRiskScore < 30 ? 'Low' : privacyRiskScore < 60 ? 'Moderate' : privacyRiskScore < 80 ? 'High' : 'Critical'; const exposureAreas = [emailMonitoring !== 'none', screenMonitoring !== 'none', internetTracking !== 'none' && internetTracking !== 'basic', personalDeviceUse !== 'never', personalBrowsing !== 'never'].filter(Boolean).length; return { privacyRiskScore, riskLevel, exposureAreas };",
+  "educational": {
+    "methodology": "This calculator evaluates workplace privacy risks based on common employer monitoring practices, your work environment, and personal usage patterns. The score considers email monitoring, screen surveillance, internet tracking, device usage, and your privacy awareness level to provide a comprehensive risk assessment.",
+    "tips": [
+      "Review your employee handbook and privacy policies to understand monitoring practices",
+      "Use Incognito Browser for personal browsing to minimize tracking footprints",
+      "Keep personal and work activities strictly separated on different devices when possible",
+      "Be aware that work devices and networks can monitor most of your digital activity",
+      "Consider using a personal mobile hotspot for truly private internet access",
+      "Understand your local privacy laws and employee rights in your jurisdiction",
+      "Regularly clear browser data and use private browsing modes for personal activities",
+      "Avoid accessing sensitive personal accounts (banking, medical) on work devices",
+      "Use strong, unique passwords and enable two-factor authentication on personal accounts"
+    ],
+    "interpretation": [
+      {
+        "range": "0-29",
+        "label": "Low Risk",
+        "description": "Your workplace has minimal privacy intrusions. Maintain good digital hygiene practices.",
+        "color": "green"
+      },
+      {
+        "range": "30-59",
+        "label": "Moderate Risk",
+        "description": "Some monitoring is present. Separate personal and work activities more strictly.",
+        "color": "yellow"
+      },
+      {
+        "range": "60-79",
+        "label": "High Risk",
+        "description": "Significant monitoring detected. Take active steps to protect personal privacy.",
+        "color": "orange"
+      },
+      {
+        "range": "80-100",
+        "label": "Critical Risk",
+        "description": "Extensive workplace surveillance. Consider using personal devices exclusively for private matters.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Guide",
+      "url": "/vpn-privacy",
+      "type": "guide"
+    },
+    {
+      "title": "Email Privacy Calculator",
+      "url": "/email-privacy",
+      "type": "calculator"
+    },
+    {
+      "title": "Incognito Mode Benefits",
+      "url": "/incognito-mode",
+      "type": "guide"
+    }
+  ]
+}

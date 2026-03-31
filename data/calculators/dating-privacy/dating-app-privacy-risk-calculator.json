@@ -1,0 +1,261 @@
+{
+  "niche": "dating-privacy",
+  "slug": "dating-app-privacy-risk-calculator",
+  "title": "Dating App Privacy Risk Calculator - Check Your Safety Score",
+  "metaDescription": "Calculate your privacy risk on Tinder, Bumble, Grindr and other dating apps. Get personalized safety recommendations and improve your protection.",
+  "description": "Assess your privacy vulnerability across dating platforms with our comprehensive risk calculator. Analyze your current settings, sharing habits, and security measures to get a personalized privacy score and actionable safety recommendations.",
+  "inputs": [
+    {
+      "id": "appsUsed",
+      "label": "Number of dating apps you actively use",
+      "type": "select",
+      "defaultValue": 2,
+      "options": [
+        {
+          "value": 1,
+          "label": "1 app"
+        },
+        {
+          "value": 2,
+          "label": "2 apps"
+        },
+        {
+          "value": 3,
+          "label": "3 apps"
+        },
+        {
+          "value": 4,
+          "label": "4 apps"
+        },
+        {
+          "value": 5,
+          "label": "5+ apps"
+        }
+      ],
+      "helpText": "More apps increase your exposure across platforms"
+    },
+    {
+      "id": "locationSharing",
+      "label": "Location sharing settings",
+      "type": "select",
+      "defaultValue": "precise",
+      "options": [
+        {
+          "value": "disabled",
+          "label": "Location disabled"
+        },
+        {
+          "value": "approximate",
+          "label": "Approximate location only"
+        },
+        {
+          "value": "precise",
+          "label": "Precise location enabled"
+        },
+        {
+          "value": "always",
+          "label": "Always share exact location"
+        }
+      ],
+      "helpText": "Location data is often the biggest privacy risk"
+    },
+    {
+      "id": "photoPrivacy",
+      "label": "Photo privacy practices",
+      "type": "select",
+      "defaultValue": "some_identifying",
+      "options": [
+        {
+          "value": "anonymous",
+          "label": "No identifying features visible"
+        },
+        {
+          "value": "limited_identifying",
+          "label": "Minimal identifying details"
+        },
+        {
+          "value": "some_identifying",
+          "label": "Some identifying features shown"
+        },
+        {
+          "value": "highly_identifying",
+          "label": "Clear face, workplace, home visible"
+        }
+      ],
+      "helpText": "Photos can reveal more personal information than you realize"
+    },
+    {
+      "id": "profileInfo",
+      "label": "Personal information shared in profile",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Basic info only (age, general interests)"
+        },
+        {
+          "value": "moderate",
+          "label": "Some details (workplace, school, hobbies)"
+        },
+        {
+          "value": "detailed",
+          "label": "Extensive info (full name, specific locations)"
+        },
+        {
+          "value": "oversharing",
+          "label": "Very detailed (social media links, phone)"
+        }
+      ],
+      "helpText": "More details make you easier to find and track"
+    },
+    {
+      "id": "socialMediaLinked",
+      "label": "Social media accounts linked",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Linked social accounts dramatically increase data exposure"
+    },
+    {
+      "id": "premiumFeatures",
+      "label": "Use of premium/paid features",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Premium features often require additional personal data"
+    },
+    {
+      "id": "privacySettings",
+      "label": "Privacy settings configuration",
+      "type": "select",
+      "defaultValue": "default",
+      "options": [
+        {
+          "value": "maximum",
+          "label": "Maximum privacy settings enabled"
+        },
+        {
+          "value": "enhanced",
+          "label": "Some privacy settings customized"
+        },
+        {
+          "value": "default",
+          "label": "Default settings (never changed)"
+        },
+        {
+          "value": "minimal",
+          "label": "Most features enabled for visibility"
+        }
+      ],
+      "helpText": "Default settings are usually not privacy-friendly"
+    },
+    {
+      "id": "browserSecurity",
+      "label": "Browser security when using dating apps",
+      "type": "select",
+      "defaultValue": "standard",
+      "options": [
+        {
+          "value": "private",
+          "label": "Always use private/incognito browsing"
+        },
+        {
+          "value": "vpn",
+          "label": "Use VPN and privacy browser"
+        },
+        {
+          "value": "standard",
+          "label": "Standard browser with some precautions"
+        },
+        {
+          "value": "none",
+          "label": "No special browser security measures"
+        }
+      ],
+      "helpText": "Browser security affects web-based dating platforms"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "percentage",
+      "description": "Your overall privacy vulnerability level across dating platforms"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Categorized risk assessment with specific recommendations"
+    },
+    {
+      "id": "topConcerns",
+      "label": "Primary Privacy Concerns",
+      "format": "text",
+      "description": "Most critical privacy issues to address immediately"
+    }
+  ],
+  "formula": "const appMultiplier = appsUsed * 8; const locationRisk = locationSharing === 'disabled' ? 0 : locationSharing === 'approximate' ? 15 : locationSharing === 'precise' ? 25 : 35; const photoRisk = photoPrivacy === 'anonymous' ? 0 : photoPrivacy === 'limited_identifying' ? 10 : photoPrivacy === 'some_identifying' ? 20 : 30; const profileRisk = profileInfo === 'minimal' ? 5 : profileInfo === 'moderate' ? 15 : profileInfo === 'detailed' ? 25 : 35; const socialRisk = socialMediaLinked ? 20 : 0; const premiumRisk = premiumFeatures ? 10 : 0; const settingsRisk = privacySettings === 'maximum' ? 0 : privacySettings === 'enhanced' ? 5 : privacySettings === 'default' ? 15 : 20; const browserRisk = browserSecurity === 'private' || browserSecurity === 'vpn' ? 0 : browserSecurity === 'standard' ? 8 : 15; const totalRisk = Math.min(100, appMultiplier + locationRisk + photoRisk + profileRisk + socialRisk + premiumRisk + settingsRisk + browserRisk); const riskLevel = totalRisk <= 30 ? 'Low Risk' : totalRisk <= 60 ? 'Moderate Risk' : totalRisk <= 80 ? 'High Risk' : 'Critical Risk'; const concerns = []; if (locationRisk > 20) concerns.push('Location tracking'); if (photoRisk > 15) concerns.push('Photo identification'); if (socialRisk > 0) concerns.push('Social media exposure'); if (profileRisk > 20) concerns.push('Information oversharing'); if (settingsRisk > 10) concerns.push('Weak privacy settings'); return { riskScore: totalRisk, riskLevel: riskLevel, topConcerns: concerns.length > 0 ? concerns.join(', ') : 'Good privacy practices' };",
+  "educational": {
+    "methodology": "This calculator evaluates key privacy risk factors including app proliferation, location sharing, photo identification risks, information disclosure, social media linking, and security practices. Scores are weighted based on real-world privacy breach patterns and data harvesting methods used by dating platforms.",
+    "tips": [
+      "Disable precise location sharing and use approximate location only",
+      "Avoid linking social media accounts to dating profiles",
+      "Use photos that don't reveal identifying landmarks or workplaces",
+      "Regularly audit and tighten privacy settings on all dating apps",
+      "Consider using Incognito Browser when accessing dating sites",
+      "Limit personal details in your profile to reduce tracking risks",
+      "Use different photos across platforms to prevent cross-platform tracking",
+      "Enable two-factor authentication where available",
+      "Regularly review what data dating apps have collected about you",
+      "Consider using a separate email address for dating apps"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30%",
+        "label": "Low Risk",
+        "description": "Good privacy practices with minimal exposure. Continue monitoring settings and stay vigilant about new features that may affect privacy.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "31-60%",
+        "label": "Moderate Risk",
+        "description": "Some privacy vulnerabilities present. Review location settings, photo choices, and consider reducing information shared across platforms.",
+        "color": "#f59e0b"
+      },
+      {
+        "range": "61-80%",
+        "label": "High Risk",
+        "description": "Significant privacy exposure detected. Immediate action recommended to secure accounts, limit data sharing, and review all connected services.",
+        "color": "#ef4444"
+      },
+      {
+        "range": "81-100%",
+        "label": "Critical Risk",
+        "description": "Severe privacy vulnerabilities across multiple areas. Urgent privacy overhaul needed including settings review, account cleanup, and enhanced security measures.",
+        "color": "#dc2626"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Tinder Privacy Settings Guide",
+      "url": "/guides/tinder-privacy-settings",
+      "type": "internal"
+    },
+    {
+      "title": "Dating App Location Safety",
+      "url": "/guides/dating-app-location-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Incognito Browser for Dating Privacy",
+      "url": "/tools/incognito-browser",
+      "type": "internal"
+    },
+    {
+      "title": "Social Media Privacy Calculator",
+      "url": "/calculators/social-media-privacy-risk",
+      "type": "internal"
+    }
+  ]
+}

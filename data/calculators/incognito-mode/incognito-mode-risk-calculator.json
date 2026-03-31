@@ -1,0 +1,226 @@
+{
+  "niche": "incognito-mode",
+  "slug": "incognito-mode-risk-calculator",
+  "title": "Incognito Mode Risk Calculator - Check Your Privacy Level",
+  "metaDescription": "Calculate your privacy risks when using incognito mode. Discover what data might still be tracked and get tips to improve your browsing privacy.",
+  "description": "Assess your privacy protection level based on your browsing habits and incognito mode usage. This calculator helps identify potential data leaks and provides recommendations for better private browsing security.",
+  "inputs": [
+    {
+      "id": "browserType",
+      "label": "Primary Browser Used",
+      "type": "select",
+      "defaultValue": "chrome",
+      "options": [
+        {
+          "value": "chrome",
+          "label": "Google Chrome"
+        },
+        {
+          "value": "firefox",
+          "label": "Mozilla Firefox"
+        },
+        {
+          "value": "safari",
+          "label": "Apple Safari"
+        },
+        {
+          "value": "edge",
+          "label": "Microsoft Edge"
+        },
+        {
+          "value": "incognito-browser",
+          "label": "Incognito Browser"
+        },
+        {
+          "value": "other",
+          "label": "Other"
+        }
+      ],
+      "helpText": "Different browsers offer varying levels of private browsing protection"
+    },
+    {
+      "id": "incognitoFrequency",
+      "label": "How Often Do You Use Incognito Mode?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (once a month)"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes (weekly)"
+        },
+        {
+          "value": "often",
+          "label": "Often (daily)"
+        },
+        {
+          "value": "always",
+          "label": "Always"
+        }
+      ],
+      "helpText": "Regular use of private browsing reduces tracking accumulation"
+    },
+    {
+      "id": "loginWhileIncognito",
+      "label": "Do You Log Into Accounts in Incognito Mode?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        }
+      ],
+      "helpText": "Logging in can compromise incognito mode's privacy benefits"
+    },
+    {
+      "id": "publicWifiUsage",
+      "label": "How Often Do You Browse on Public WiFi?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        }
+      ],
+      "helpText": "Public networks increase privacy risks even in incognito mode"
+    },
+    {
+      "id": "vpnUsage",
+      "label": "Do You Use a VPN While Browsing?",
+      "type": "select",
+      "defaultValue": "no",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "always",
+          "label": "Always"
+        }
+      ],
+      "helpText": "VPNs provide additional privacy protection beyond incognito mode"
+    },
+    {
+      "id": "extensionsInstalled",
+      "label": "Do You Have Browser Extensions Installed?",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "none",
+          "label": "No extensions"
+        },
+        {
+          "value": "few",
+          "label": "1-3 extensions"
+        },
+        {
+          "value": "some",
+          "label": "4-10 extensions"
+        },
+        {
+          "value": "many",
+          "label": "More than 10"
+        }
+      ],
+      "helpText": "Some extensions can still track you in incognito mode"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk level (0-100, lower is better)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your privacy protection level rating"
+    },
+    {
+      "id": "recommendations",
+      "label": "Key Recommendations",
+      "format": "text",
+      "description": "Personalized tips to improve your privacy"
+    }
+  ],
+  "formula": "const browserRisk = {'chrome': 20, 'firefox': 15, 'safari': 18, 'edge': 22, 'incognito-browser': 5, 'other': 25}[browserType] || 25; const freqRisk = {'never': 40, 'rarely': 30, 'sometimes': 20, 'often': 10, 'always': 0}[incognitoFrequency] || 20; const loginRisk = {'never': 0, 'rarely': 10, 'sometimes': 20, 'often': 35}[loginWhileIncognito] || 20; const wifiRisk = {'never': 0, 'rarely': 5, 'sometimes': 15, 'often': 25}[publicWifiUsage] || 15; const vpnBonus = {'never': 0, 'sometimes': -10, 'always': -20}[vpnUsage] || 0; const extensionRisk = {'none': 0, 'few': 5, 'some': 15, 'many': 25}[extensionsInstalled] || 15; const riskScore = Math.max(0, Math.min(100, browserRisk + freqRisk + loginRisk + wifiRisk + vpnBonus + extensionRisk)); const riskLevel = riskScore <= 25 ? 'Low Risk' : riskScore <= 50 ? 'Medium Risk' : riskScore <= 75 ? 'High Risk' : 'Very High Risk'; let recommendations = []; if (browserType !== 'incognito-browser') recommendations.push('Consider using Incognito Browser for enhanced privacy'); if (incognitoFrequency === 'never' || incognitoFrequency === 'rarely') recommendations.push('Use incognito mode more frequently'); if (loginWhileIncognito === 'often') recommendations.push('Avoid logging into accounts in incognito mode'); if (vpnUsage === 'never') recommendations.push('Use a VPN for additional privacy protection'); if (publicWifiUsage === 'often') recommendations.push('Minimize browsing on public WiFi networks'); return {riskScore, riskLevel, recommendations: recommendations.slice(0, 3).join('; ') || 'Keep up your good privacy practices!'};",
+  "educational": {
+    "methodology": "This calculator evaluates your privacy risks based on browser choice, incognito mode usage patterns, login behavior, network security, and browser extensions. It considers factors that can compromise incognito mode's effectiveness and provides a comprehensive risk assessment.",
+    "tips": [
+      "Incognito mode only prevents local storage of browsing data, not network-level tracking",
+      "Always log out of accounts before switching to incognito mode",
+      "Use Incognito Browser for enhanced privacy features beyond standard browsers",
+      "Combine incognito mode with a VPN for maximum privacy protection",
+      "Disable browser extensions or use browsers that block them in private mode",
+      "Avoid downloading files or bookmarking sites in incognito mode",
+      "Remember that your ISP and websites can still see your activity"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Excellent privacy practices. You're well-protected while browsing.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Medium Risk",
+        "description": "Good privacy habits with room for improvement. Consider the recommendations.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Your browsing privacy needs attention. Follow the recommendations to reduce risks.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Very High Risk",
+        "description": "Significant privacy vulnerabilities detected. Immediate action recommended.",
+        "color": "red"
+      }
+    ]
+  }
+}

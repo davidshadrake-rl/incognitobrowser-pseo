@@ -1,0 +1,191 @@
+{
+  "niche": "gdpr",
+  "slug": "gdpr-compliance-risk-calculator",
+  "title": "GDPR Compliance Risk Calculator - Assess Your Privacy Risk Score",
+  "metaDescription": "Calculate your GDPR compliance risk score. Assess data protection practices, consent management, and regulatory requirements with our free tool.",
+  "description": "Evaluate your organization's GDPR compliance risk level based on data processing activities, security measures, and regulatory requirements. Get actionable insights to improve your data protection posture and avoid potential fines.",
+  "inputs": [
+    {
+      "id": "dataVolume",
+      "label": "Personal Data Processing Volume",
+      "type": "select",
+      "defaultValue": "medium",
+      "options": [
+        {
+          "value": "low",
+          "label": "Low (< 1,000 records)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (1,000 - 100,000 records)"
+        },
+        {
+          "value": "high",
+          "label": "High (> 100,000 records)"
+        }
+      ],
+      "helpText": "Approximate number of personal data records your organization processes"
+    },
+    {
+      "id": "dataTypes",
+      "label": "Types of Data Processed",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic personal data only"
+        },
+        {
+          "value": "sensitive",
+          "label": "Some sensitive data"
+        },
+        {
+          "value": "special",
+          "label": "Special category data (health, biometric, etc.)"
+        }
+      ],
+      "helpText": "Select the most sensitive type of personal data you process"
+    },
+    {
+      "id": "consentManagement",
+      "label": "Consent Management System",
+      "type": "select",
+      "defaultValue": "partial",
+      "options": [
+        {
+          "value": "none",
+          "label": "No formal system"
+        },
+        {
+          "value": "partial",
+          "label": "Basic consent tracking"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Full consent management platform"
+        }
+      ],
+      "helpText": "How do you track and manage user consent?"
+    },
+    {
+      "id": "dataProtectionOfficer",
+      "label": "Data Protection Officer (DPO)",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you have a designated Data Protection Officer?"
+    },
+    {
+      "id": "securityMeasures",
+      "label": "Technical Security Measures",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "Rate your data security measures (1 = basic, 10 = advanced)"
+    },
+    {
+      "id": "incidentResponse",
+      "label": "Data Breach Response Plan",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No formal plan"
+        },
+        {
+          "value": "basic",
+          "label": "Basic incident procedures"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive 72-hour response plan"
+        }
+      ],
+      "helpText": "Do you have procedures for handling data breaches within 72 hours?"
+    },
+    {
+      "id": "dataSubjectRights",
+      "label": "Data Subject Rights Implementation",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "How well do you handle data subject requests (access, deletion, portability)?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "GDPR Compliance Risk Score",
+      "format": "score",
+      "description": "Overall risk score from 0-100 (lower is better)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your compliance risk category"
+    },
+    {
+      "id": "priorityActions",
+      "label": "Priority Actions Needed",
+      "format": "number",
+      "description": "Number of high-priority compliance areas to address"
+    }
+  ],
+  "formula": "const dataVolumeScore = dataVolume === 'low' ? 10 : dataVolume === 'medium' ? 20 : 30; const dataTypeScore = dataTypes === 'basic' ? 10 : dataTypes === 'sensitive' ? 20 : 30; const consentScore = consentManagement === 'comprehensive' ? 5 : consentManagement === 'partial' ? 15 : 25; const dpoScore = dataProtectionOfficer ? 0 : 15; const securityScore = (10 - securityMeasures) * 2; const incidentScore = incidentResponse === 'comprehensive' ? 0 : incidentResponse === 'basic' ? 10 : 20; const rightsScore = (10 - dataSubjectRights) * 1.5; const totalRisk = Math.min(100, dataVolumeScore + dataTypeScore + consentScore + dpoScore + securityScore + incidentScore + rightsScore); const riskLevel = totalRisk <= 30 ? 'Low Risk' : totalRisk <= 60 ? 'Medium Risk' : 'High Risk'; const priorityActions = [consentManagement === 'none', !dataProtectionOfficer && (dataVolume === 'high' || dataTypes === 'special'), securityMeasures < 5, incidentResponse === 'none', dataSubjectRights < 5].filter(Boolean).length; return { riskScore: Math.round(totalRisk), riskLevel: riskLevel, priorityActions: priorityActions };",
+  "educational": {
+    "methodology": "This calculator evaluates GDPR compliance risk based on data processing volume, data sensitivity, consent management, security measures, and procedural safeguards. The scoring system weighs factors according to GDPR enforcement patterns and regulatory guidance from supervisory authorities.",
+    "tips": [
+      "Implement a comprehensive consent management system to track user preferences",
+      "Designate a Data Protection Officer if you process large amounts or sensitive data",
+      "Develop a 72-hour data breach notification procedure as required by Article 33",
+      "Create processes to handle data subject rights requests within 30 days",
+      "Conduct regular data protection impact assessments for high-risk processing",
+      "Use privacy-focused tools like Incognito Browser to minimize data collection during research",
+      "Maintain detailed records of processing activities as required by Article 30",
+      "Implement privacy by design principles in all new systems and processes"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Good compliance posture with minor improvements needed. Continue monitoring and regular reviews.",
+        "color": "green"
+      },
+      {
+        "range": "31-60",
+        "label": "Medium Risk",
+        "description": "Several compliance gaps that should be addressed promptly to avoid potential regulatory action.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-100",
+        "label": "High Risk",
+        "description": "Significant compliance deficiencies requiring immediate attention. Consider consulting with data protection experts.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Official GDPR Text - EUR-Lex",
+      "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+      "type": "regulation"
+    },
+    {
+      "title": "EDPB Guidelines and Recommendations",
+      "url": "https://edpb.europa.eu/our-work-tools/general-guidance/gdpr-guidelines-recommendations-best-practices_en",
+      "type": "guidance"
+    },
+    {
+      "title": "ICO GDPR Guide (UK)",
+      "url": "https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/",
+      "type": "guide"
+    }
+  ]
+}

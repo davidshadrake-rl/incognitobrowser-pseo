@@ -1,0 +1,31 @@
+{
+  "term": "Supercookie",
+  "slug": "supercookie",
+  "definition": "A persistent tracking mechanism that's harder to detect and delete than regular cookies, using alternative browser storage methods to recreate deleted tracking data.",
+  "metaDescription": "Learn about supercookies - persistent tracking tools that survive regular cookie deletion and use alternative storage methods to monitor users.",
+  "simpleExplanation": "Unlike regular cookies that you can easily delete, supercookies use sneaky techniques to hide tracking data in different parts of your browser. Even when you clear your cookies, supercookies can restore themselves and continue tracking your online activity.",
+  "whyItMatters": "Supercookies are particularly invasive because they're designed to be permanent and difficult to remove. They can track users even when they think they've cleared their browsing data, undermining user privacy choices and consent.",
+  "technicalDetail": "Supercookies exploit various browser storage mechanisms like Flash cookies, HTML5 local storage, ETags, canvas fingerprinting, and browser cache. They often use multiple storage methods simultaneously and can regenerate from backup copies when one method is cleared.",
+  "examples": [
+    {
+      "scenario": "Flash Cookie Respawning",
+      "explanation": "A website stores your user ID in both a regular HTTP cookie and a Flash cookie. When you delete cookies, the Flash cookie recreates the HTTP cookie, maintaining tracking continuity."
+    },
+    {
+      "scenario": "Canvas Fingerprinting",
+      "explanation": "A tracking script uses your browser's canvas element to create a unique 'fingerprint' based on how your device renders graphics, creating an identifier that persists across sessions."
+    },
+    {
+      "scenario": "ETag Tracking",
+      "explanation": "A server assigns unique ETag values to cached resources for each user, allowing it to recognize returning visitors even after they clear all cookies and browsing data."
+    }
+  ],
+  "relatedTerms": [
+    "cookies",
+    "tracking-pixels",
+    "browser-fingerprinting",
+    "cross-site-tracking",
+    "third-party-cookies"
+  ],
+  "category": "technology"
+}

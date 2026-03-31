@@ -1,0 +1,32 @@
+{
+  "term": "Global Privacy Control",
+  "slug": "global-privacy-control",
+  "definition": "A web standard that allows users to automatically signal their privacy preferences to websites, requesting to opt out of data sales and targeted advertising.",
+  "metaDescription": "Global Privacy Control (GPC) is a web standard that lets users automatically opt out of data sales and targeted advertising across websites.",
+  "simpleExplanation": "Global Privacy Control is like a universal 'do not sell my data' button built into your web browser. When enabled, it automatically tells every website you visit that you don't want them to sell your personal information or use it for targeted ads.",
+  "whyItMatters": "GPC gives users a simple way to exercise their privacy rights across all websites without having to manually opt out on each site. It's legally recognized in California and other jurisdictions, meaning websites must respect these signals.",
+  "technicalDetail": "GPC works by sending an HTTP header (Sec-GPC: 1) and JavaScript API signal to websites. It's built into browsers like Firefox and Safari, and available as extensions for Chrome. Websites that receive GPC signals are legally required to honor them in jurisdictions with applicable privacy laws.",
+  "examples": [
+    {
+      "scenario": "Shopping online with GPC enabled",
+      "explanation": "When you visit an e-commerce site, your browser automatically sends a GPC signal telling the site not to sell your browsing data to advertising companies or create detailed profiles for targeted marketing."
+    },
+    {
+      "scenario": "Reading news websites",
+      "explanation": "News sites that normally track your reading habits and sell that data to data brokers must respect your GPC signal and refrain from selling your information, though they may still show you ads."
+    },
+    {
+      "scenario": "Using social media platforms",
+      "explanation": "When GPC is enabled, social media platforms in California must honor your request to not sell your personal data to third parties, though they may continue using your data for their own advertising purposes."
+    }
+  ],
+  "relatedTerms": [
+    "do-not-track",
+    "ccpa",
+    "opt-out",
+    "data-broker",
+    "targeted-advertising",
+    "privacy-rights"
+  ],
+  "category": "protocol"
+}

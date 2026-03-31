@@ -1,0 +1,253 @@
+{
+  "niche": "cloud-privacy",
+  "slug": "cloud-storage-privacy-risk-calculator",
+  "title": "Cloud Storage Privacy Risk Calculator",
+  "metaDescription": "Calculate your cloud storage privacy risk score. Assess Google Drive, Dropbox, and other services for data protection and security vulnerabilities.",
+  "description": "Evaluate your cloud storage privacy risk by analyzing encryption, provider policies, data sensitivity, and security practices. Get personalized recommendations to protect your files in Google Drive, Dropbox, OneDrive, and other cloud services.",
+  "inputs": [
+    {
+      "id": "provider",
+      "label": "Primary Cloud Storage Provider",
+      "type": "select",
+      "defaultValue": "google-drive",
+      "options": [
+        {
+          "value": "google-drive",
+          "label": "Google Drive"
+        },
+        {
+          "value": "dropbox",
+          "label": "Dropbox"
+        },
+        {
+          "value": "onedrive",
+          "label": "Microsoft OneDrive"
+        },
+        {
+          "value": "icloud",
+          "label": "Apple iCloud"
+        },
+        {
+          "value": "encrypted-provider",
+          "label": "Encrypted provider (pCloud, Tresorit, etc.)"
+        },
+        {
+          "value": "other",
+          "label": "Other/Multiple providers"
+        }
+      ],
+      "helpText": "Select your main cloud storage service"
+    },
+    {
+      "id": "dataTypes",
+      "label": "Types of Data Stored",
+      "type": "select",
+      "defaultValue": "personal",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic files (photos, documents)"
+        },
+        {
+          "value": "personal",
+          "label": "Personal documents (taxes, contracts)"
+        },
+        {
+          "value": "sensitive",
+          "label": "Sensitive data (passwords, medical records)"
+        },
+        {
+          "value": "business",
+          "label": "Business/work files"
+        },
+        {
+          "value": "mixed",
+          "label": "Mix of personal and business"
+        }
+      ],
+      "helpText": "What type of files do you primarily store?"
+    },
+    {
+      "id": "encryptionUsed",
+      "label": "Do you encrypt files before uploading?",
+      "type": "select",
+      "defaultValue": "no",
+      "options": [
+        {
+          "value": "no",
+          "label": "No encryption"
+        },
+        {
+          "value": "sometimes",
+          "label": "Only sensitive files"
+        },
+        {
+          "value": "yes",
+          "label": "All files encrypted"
+        }
+      ],
+      "helpText": "Client-side encryption before uploading to cloud"
+    },
+    {
+      "id": "twoFactorAuth",
+      "label": "Two-Factor Authentication Enabled",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Is 2FA enabled on your cloud storage account?"
+    },
+    {
+      "id": "sharingFrequency",
+      "label": "File Sharing Frequency",
+      "type": "select",
+      "defaultValue": "rarely",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never share files"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (few times per year)"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "daily",
+          "label": "Daily"
+        }
+      ],
+      "helpText": "How often do you share files or folders with others?"
+    },
+    {
+      "id": "passwordStrength",
+      "label": "Account Password Strength",
+      "type": "select",
+      "defaultValue": "medium",
+      "options": [
+        {
+          "value": "weak",
+          "label": "Simple password"
+        },
+        {
+          "value": "medium",
+          "label": "Moderately complex"
+        },
+        {
+          "value": "strong",
+          "label": "Very strong/unique password"
+        }
+      ],
+      "helpText": "Rate the strength of your cloud storage password"
+    },
+    {
+      "id": "accessDevices",
+      "label": "Number of Devices with Access",
+      "type": "select",
+      "defaultValue": "2-3",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 device"
+        },
+        {
+          "value": "2-3",
+          "label": "2-3 devices"
+        },
+        {
+          "value": "4-5",
+          "label": "4-5 devices"
+        },
+        {
+          "value": "6+",
+          "label": "6+ devices"
+        }
+      ],
+      "helpText": "How many devices can access your cloud storage?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk assessment (0-100 scale)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your cloud storage privacy risk category"
+    },
+    {
+      "id": "recommendation",
+      "label": "Primary Recommendation",
+      "format": "text",
+      "description": "Most important action to improve your privacy"
+    }
+  ],
+  "formula": "let providerScore = { 'encrypted-provider': 15, 'dropbox': 25, 'onedrive': 30, 'icloud': 35, 'google-drive': 40, 'other': 35 }[inputs.provider] || 35; let dataScore = { 'basic': 10, 'personal': 20, 'sensitive': 40, 'business': 30, 'mixed': 35 }[inputs.dataTypes] || 20; let encryptScore = { 'yes': 0, 'sometimes': 15, 'no': 30 }[inputs.encryptionUsed] || 30; let authScore = inputs.twoFactorAuth ? 0 : 15; let shareScore = { 'never': 0, 'rarely': 5, 'monthly': 10, 'weekly': 15, 'daily': 20 }[inputs.sharingFrequency] || 5; let passScore = { 'strong': 0, 'medium': 10, 'weak': 20 }[inputs.passwordStrength] || 10; let deviceScore = { '1': 0, '2-3': 5, '4-5': 10, '6+': 15 }[inputs.accessDevices] || 5; let riskScore = Math.min(100, providerScore + dataScore + encryptScore + authScore + shareScore + passScore + deviceScore); let riskLevel = riskScore <= 30 ? 'Low Risk' : riskScore <= 60 ? 'Medium Risk' : riskScore <= 80 ? 'High Risk' : 'Critical Risk'; let recommendation = riskScore >= 80 ? 'Switch to encrypted cloud storage immediately' : !inputs.twoFactorAuth ? 'Enable two-factor authentication now' : inputs.encryptionUsed === 'no' ? 'Start encrypting sensitive files before upload' : inputs.passwordStrength === 'weak' ? 'Use a strong, unique password' : 'Review and limit file sharing permissions'; return { riskScore, riskLevel, recommendation };",
+  "educational": {
+    "methodology": "This calculator evaluates your cloud storage privacy risk based on provider security policies, encryption practices, authentication methods, data sensitivity, and access patterns. Risk factors are weighted according to their impact on data privacy and security vulnerabilities.",
+    "tips": [
+      "Use encrypted cloud storage providers like Tresorit, pCloud Crypto, or SpiderOak for sensitive data",
+      "Enable two-factor authentication on all cloud storage accounts immediately",
+      "Encrypt sensitive files locally before uploading using tools like AxCrypt or 7-Zip",
+      "Regularly review and revoke unnecessary file sharing permissions",
+      "Use strong, unique passwords and consider a password manager",
+      "Access cloud storage through Incognito Browser to minimize tracking and data collection",
+      "Limit the number of devices with cloud storage access",
+      "Read provider privacy policies and understand data handling practices",
+      "Consider geographic location of data centers and applicable privacy laws",
+      "Regularly audit and delete unnecessary files from cloud storage"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Good privacy practices in place. Continue monitoring and maintaining security measures.",
+        "color": "green"
+      },
+      {
+        "range": "31-60",
+        "label": "Medium Risk",
+        "description": "Some privacy vulnerabilities exist. Implement recommended security improvements.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-80",
+        "label": "High Risk",
+        "description": "Significant privacy risks identified. Take immediate action to secure your data.",
+        "color": "orange"
+      },
+      {
+        "range": "81-100",
+        "label": "Critical Risk",
+        "description": "Severe privacy vulnerabilities. Urgent action required to protect sensitive information.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Email Privacy Calculator",
+      "url": "/calculators/email-privacy",
+      "type": "calculator"
+    },
+    {
+      "title": "Password Security Assessment",
+      "url": "/calculators/password-security",
+      "type": "calculator"
+    },
+    {
+      "title": "Encrypted Messaging Privacy Score",
+      "url": "/calculators/encrypted-messaging",
+      "type": "calculator"
+    }
+  ]
+}

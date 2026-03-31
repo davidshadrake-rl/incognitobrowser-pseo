@@ -1,0 +1,275 @@
+{
+  "niche": "tor-privacy",
+  "slug": "tor-dark-web-privacy-risk-calculator",
+  "title": "Tor & Dark Web Privacy Risk Calculator",
+  "metaDescription": "Calculate your privacy risk when using Tor browser and accessing the dark web. Get personalized security recommendations and risk assessment.",
+  "description": "Evaluate your privacy and security risks when using Tor browser for anonymous browsing and dark web access. This calculator analyzes your setup, browsing habits, and security practices to provide a comprehensive risk score and actionable recommendations.",
+  "inputs": [
+    {
+      "id": "torUsage",
+      "label": "How often do you use Tor?",
+      "type": "select",
+      "defaultValue": "occasionally",
+      "options": [
+        {
+          "value": "daily",
+          "label": "Daily"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly"
+        },
+        {
+          "value": "occasionally",
+          "label": "Occasionally"
+        },
+        {
+          "value": "first-time",
+          "label": "First time user"
+        }
+      ],
+      "helpText": "Frequency affects your familiarity with security practices"
+    },
+    {
+      "id": "torConfiguration",
+      "label": "Tor browser configuration",
+      "type": "select",
+      "defaultValue": "default",
+      "options": [
+        {
+          "value": "hardened",
+          "label": "Hardened with custom settings"
+        },
+        {
+          "value": "default",
+          "label": "Default installation"
+        },
+        {
+          "value": "modified",
+          "label": "Modified with add-ons/extensions"
+        },
+        {
+          "value": "outdated",
+          "label": "Outdated version"
+        }
+      ],
+      "helpText": "Custom modifications can compromise anonymity"
+    },
+    {
+      "id": "vpnUsage",
+      "label": "Do you use a VPN with Tor?",
+      "type": "select",
+      "defaultValue": "no-vpn",
+      "options": [
+        {
+          "value": "vpn-over-tor",
+          "label": "VPN over Tor"
+        },
+        {
+          "value": "tor-over-vpn",
+          "label": "Tor over VPN"
+        },
+        {
+          "value": "no-vpn",
+          "label": "No VPN"
+        },
+        {
+          "value": "unsure",
+          "label": "Not sure"
+        }
+      ],
+      "helpText": "VPN configuration affects your anonymity setup"
+    },
+    {
+      "id": "darkWebAccess",
+      "label": "Do you access dark web marketplaces?",
+      "type": "select",
+      "defaultValue": "no",
+      "options": [
+        {
+          "value": "frequently",
+          "label": "Frequently"
+        },
+        {
+          "value": "occasionally",
+          "label": "Occasionally"
+        },
+        {
+          "value": "browsing-only",
+          "label": "Browsing only, no purchases"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        }
+      ],
+      "helpText": "Marketplace access increases legal and security risks"
+    },
+    {
+      "id": "personalInfo",
+      "label": "Do you share personal information while using Tor?",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "frequently",
+          "label": "Yes, frequently"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "minimal",
+          "label": "Only minimal info"
+        },
+        {
+          "value": "never",
+          "label": "Never"
+        }
+      ],
+      "helpText": "Personal info sharing defeats anonymity purpose"
+    },
+    {
+      "id": "downloadFiles",
+      "label": "Do you download files through Tor?",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "File downloads can expose your real IP and contain malware"
+    },
+    {
+      "id": "javascriptEnabled",
+      "label": "Is JavaScript enabled in your Tor browser?",
+      "type": "select",
+      "defaultValue": "default",
+      "options": [
+        {
+          "value": "disabled",
+          "label": "Completely disabled"
+        },
+        {
+          "value": "default",
+          "label": "Default Tor settings"
+        },
+        {
+          "value": "enabled",
+          "label": "Fully enabled"
+        }
+      ],
+      "helpText": "JavaScript can be used for tracking and deanonymization"
+    },
+    {
+      "id": "operatingSystem",
+      "label": "What operating system do you use?",
+      "type": "select",
+      "defaultValue": "windows",
+      "options": [
+        {
+          "value": "tails",
+          "label": "Tails (amnesic OS)"
+        },
+        {
+          "value": "linux",
+          "label": "Linux"
+        },
+        {
+          "value": "mac",
+          "label": "macOS"
+        },
+        {
+          "value": "windows",
+          "label": "Windows"
+        }
+      ],
+      "helpText": "Some OS provide better privacy and security for Tor usage"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "overallRisk",
+      "label": "Overall Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall risk level when using Tor (0-100, lower is better)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorized risk assessment based on your configuration and habits"
+    },
+    {
+      "id": "anonymityScore",
+      "label": "Anonymity Protection",
+      "format": "percentage",
+      "description": "How well your current setup protects your anonymity"
+    },
+    {
+      "id": "recommendations",
+      "label": "Security Recommendations",
+      "format": "text",
+      "description": "Personalized recommendations to improve your Tor privacy and security"
+    }
+  ],
+  "formula": "// Calculate base risk score\nlet riskScore = 20;\n\n// Tor usage frequency (experience factor)\nif (torUsage === 'first-time') riskScore += 25;\nelse if (torUsage === 'occasionally') riskScore += 15;\nelse if (torUsage === 'monthly') riskScore += 10;\nelse if (torUsage === 'weekly') riskScore += 5;\n\n// Tor configuration\nif (torConfiguration === 'outdated') riskScore += 30;\nelse if (torConfiguration === 'modified') riskScore += 20;\nelse if (torConfiguration === 'default') riskScore += 5;\nelse if (torConfiguration === 'hardened') riskScore -= 10;\n\n// VPN usage\nif (vpnUsage === 'unsure') riskScore += 15;\nelse if (vpnUsage === 'vpn-over-tor') riskScore += 10;\nelse if (vpnUsage === 'tor-over-vpn') riskScore += 5;\n\n// Dark web marketplace access\nif (darkWebAccess === 'frequently') riskScore += 35;\nelse if (darkWebAccess === 'occasionally') riskScore += 25;\nelse if (darkWebAccess === 'browsing-only') riskScore += 10;\n\n// Personal information sharing\nif (personalInfo === 'frequently') riskScore += 40;\nelse if (personalInfo === 'sometimes') riskScore += 25;\nelse if (personalInfo === 'minimal') riskScore += 10;\n\n// File downloads\nif (downloadFiles) riskScore += 20;\n\n// JavaScript settings\nif (javascriptEnabled === 'enabled') riskScore += 25;\nelse if (javascriptEnabled === 'default') riskScore += 5;\nelse if (javascriptEnabled === 'disabled') riskScore -= 5;\n\n// Operating system\nif (operatingSystem === 'tails') riskScore -= 20;\nelse if (operatingSystem === 'linux') riskScore -= 5;\nelse if (operatingSystem === 'mac') riskScore += 10;\nelse if (operatingSystem === 'windows') riskScore += 15;\n\n// Ensure score is within bounds\nconst overallRisk = Math.max(0, Math.min(100, riskScore));\nconst anonymityScore = Math.max(0, 100 - overallRisk);\n\n// Determine risk level\nlet riskLevel;\nif (overallRisk <= 20) riskLevel = 'A';\nelse if (overallRisk <= 35) riskLevel = 'B';\nelse if (overallRisk <= 50) riskLevel = 'C';\nelse if (overallRisk <= 70) riskLevel = 'D';\nelse riskLevel = 'F';\n\n// Generate recommendations\nlet recommendations = [];\nif (torConfiguration === 'outdated') recommendations.push('Update to the latest Tor browser version immediately');\nif (torConfiguration === 'modified') recommendations.push('Remove all browser extensions and use default Tor settings');\nif (personalInfo !== 'never') recommendations.push('Never share personal information while using Tor');\nif (downloadFiles) recommendations.push('Avoid downloading files through Tor to prevent IP leaks');\nif (javascriptEnabled === 'enabled') recommendations.push('Disable JavaScript or use default Tor security settings');\nif (operatingSystem === 'windows') recommendations.push('Consider using Tails OS or Linux for better security');\nif (darkWebAccess === 'frequently') recommendations.push('Limit dark web marketplace access and understand legal risks');\nif (vpnUsage === 'unsure') recommendations.push('Research proper VPN configuration or use Tor alone');\nrecommendations.push('Consider using Incognito Browser for additional privacy layers in regular browsing');\n\nreturn {\n  overallRisk: Math.round(overallRisk),\n  riskLevel: riskLevel,\n  anonymityScore: Math.round(anonymityScore),\n  recommendations: recommendations.slice(0, 5).join('; ')\n};",
+  "educational": {
+    "methodology": "This calculator evaluates your Tor privacy risk based on configuration settings, usage patterns, operating system security, and browsing habits. It considers factors like software versions, JavaScript settings, VPN usage, personal information sharing, and dark web access patterns to provide a comprehensive risk assessment.",
+    "tips": [
+      "Always use the latest version of Tor browser with default security settings",
+      "Never install browser extensions or plugins in Tor browser",
+      "Use Tails OS or a dedicated Linux system for maximum anonymity",
+      "Disable JavaScript and avoid downloading files through Tor",
+      "Never log into personal accounts or share identifying information",
+      "Consider the legal implications of accessing certain dark web content",
+      "Use Incognito Browser for everyday privacy needs and reserve Tor for specific anonymity requirements",
+      "Regularly restart Tor browser to get new circuit paths"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Low Risk (A)",
+        "description": "Excellent Tor privacy setup with minimal risk exposure",
+        "color": "#22c55e"
+      },
+      {
+        "range": "21-35",
+        "label": "Moderate Risk (B)",
+        "description": "Good privacy practices with minor security improvements needed",
+        "color": "#84cc16"
+      },
+      {
+        "range": "36-50",
+        "label": "Medium Risk (C)",
+        "description": "Adequate privacy but several security issues should be addressed",
+        "color": "#eab308"
+      },
+      {
+        "range": "51-70",
+        "label": "High Risk (D)",
+        "description": "Significant privacy vulnerabilities requiring immediate attention",
+        "color": "#f97316"
+      },
+      {
+        "range": "71-100",
+        "label": "Critical Risk (F)",
+        "description": "Severe security risks that compromise your anonymity and safety",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Calculator",
+      "url": "/vpn-privacy-risk-calculator",
+      "type": "internal"
+    },
+    {
+      "title": "Browser Privacy Calculator",
+      "url": "/browser-privacy-calculator",
+      "type": "internal"
+    }
+  ]
+}

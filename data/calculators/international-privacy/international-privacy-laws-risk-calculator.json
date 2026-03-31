@@ -1,0 +1,241 @@
+{
+  "niche": "international-privacy",
+  "slug": "international-privacy-laws-risk-calculator",
+  "title": "International Privacy Laws Risk Calculator",
+  "metaDescription": "Assess your privacy risk across international data protection laws including GDPR, UK GDPR, PIPEDA, and more. Get personalized recommendations.",
+  "description": "Calculate your privacy compliance risk across major international data protection regulations. This tool evaluates your exposure to privacy laws in the UK, Australia, Canada, India, and other jurisdictions to help you understand potential compliance gaps.",
+  "inputs": [
+    {
+      "id": "businessType",
+      "label": "Business Type",
+      "type": "select",
+      "defaultValue": "small-business",
+      "options": [
+        {
+          "value": "individual",
+          "label": "Individual/Personal Use"
+        },
+        {
+          "value": "small-business",
+          "label": "Small Business (1-49 employees)"
+        },
+        {
+          "value": "medium-business",
+          "label": "Medium Business (50-249 employees)"
+        },
+        {
+          "value": "large-enterprise",
+          "label": "Large Enterprise (250+ employees)"
+        },
+        {
+          "value": "nonprofit",
+          "label": "Non-profit Organization"
+        }
+      ],
+      "helpText": "Select the type of organization you're assessing"
+    },
+    {
+      "id": "operatingRegions",
+      "label": "Operating Regions (select all that apply)",
+      "type": "select",
+      "defaultValue": "eu-uk",
+      "options": [
+        {
+          "value": "eu-uk",
+          "label": "EU/UK (GDPR/UK GDPR)"
+        },
+        {
+          "value": "canada",
+          "label": "Canada (PIPEDA)"
+        },
+        {
+          "value": "australia",
+          "label": "Australia (Privacy Act)"
+        },
+        {
+          "value": "india",
+          "label": "India (DPDP Act)"
+        },
+        {
+          "value": "multiple",
+          "label": "Multiple Jurisdictions"
+        },
+        {
+          "value": "global",
+          "label": "Global Operations"
+        }
+      ],
+      "helpText": "Which regions do you operate in or serve customers from?"
+    },
+    {
+      "id": "dataTypes",
+      "label": "Types of Personal Data Processed",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic contact information only"
+        },
+        {
+          "value": "marketing",
+          "label": "Marketing and behavioral data"
+        },
+        {
+          "value": "financial",
+          "label": "Financial or payment data"
+        },
+        {
+          "value": "health",
+          "label": "Health or medical data"
+        },
+        {
+          "value": "sensitive",
+          "label": "Sensitive personal data (race, religion, etc.)"
+        },
+        {
+          "value": "biometric",
+          "label": "Biometric or location data"
+        }
+      ],
+      "helpText": "What types of personal data does your organization collect?"
+    },
+    {
+      "id": "dataVolume",
+      "label": "Volume of Personal Data Records",
+      "type": "select",
+      "defaultValue": "small",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Under 100 records"
+        },
+        {
+          "value": "small",
+          "label": "100-1,000 records"
+        },
+        {
+          "value": "medium",
+          "label": "1,000-10,000 records"
+        },
+        {
+          "value": "large",
+          "label": "10,000-100,000 records"
+        },
+        {
+          "value": "massive",
+          "label": "Over 100,000 records"
+        }
+      ],
+      "helpText": "Approximate number of individual personal data records you maintain"
+    },
+    {
+      "id": "complianceMeasures",
+      "label": "Current Privacy Compliance Level",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "helpText": "Rate your current privacy compliance measures (1=None, 5=Comprehensive)"
+    },
+    {
+      "id": "hasPrivacyPolicy",
+      "label": "Has Updated Privacy Policy",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you have a current, comprehensive privacy policy?"
+    },
+    {
+      "id": "hasDataProtectionOfficer",
+      "label": "Has Data Protection Officer/Privacy Officer",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you have a designated privacy/data protection officer?"
+    },
+    {
+      "id": "conductsRiskAssessments",
+      "label": "Conducts Privacy Impact Assessments",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you regularly conduct privacy impact assessments?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "overallRisk",
+      "label": "Overall Privacy Risk Score",
+      "format": "percentage",
+      "description": "Your overall risk level across international privacy laws"
+    },
+    {
+      "id": "riskCategory",
+      "label": "Risk Category",
+      "format": "text",
+      "description": "Your risk level classification"
+    },
+    {
+      "id": "priorityActions",
+      "label": "Priority Actions Needed",
+      "format": "number",
+      "description": "Number of high-priority compliance actions recommended"
+    }
+  ],
+  "formula": "const businessMultiplier = { 'individual': 1, 'small-business': 1.2, 'medium-business': 1.5, 'large-enterprise': 2, 'nonprofit': 1.1 }[businessType] || 1; const regionRisk = { 'eu-uk': 25, 'canada': 15, 'australia': 12, 'india': 18, 'multiple': 35, 'global': 45 }[operatingRegions] || 20; const dataRisk = { 'basic': 5, 'marketing': 15, 'financial': 25, 'health': 35, 'sensitive': 40, 'biometric': 45 }[dataTypes] || 10; const volumeRisk = { 'minimal': 2, 'small': 5, 'medium': 12, 'large': 20, 'massive': 30 }[dataVolume] || 5; const complianceReduction = (complianceMeasures - 1) * 8; const policyReduction = hasPrivacyPolicy ? 10 : 0; const officerReduction = hasDataProtectionOfficer ? 8 : 0; const assessmentReduction = conductsRiskAssessments ? 6 : 0; const baseRisk = (regionRisk + dataRisk + volumeRisk) * businessMultiplier; const totalReductions = complianceReduction + policyReduction + officerReduction + assessmentReduction; const overallRisk = Math.max(5, Math.min(95, baseRisk - totalReductions)); const riskCategory = overallRisk >= 70 ? 'High Risk' : overallRisk >= 40 ? 'Medium Risk' : 'Low Risk'; const priorityActions = overallRisk >= 70 ? 5 : overallRisk >= 40 ? 3 : 1; return { overallRisk, riskCategory, priorityActions };",
+  "educational": {
+    "methodology": "This calculator evaluates your privacy risk by analyzing your business type, operating regions, data processing activities, and current compliance measures. It considers the strictness of different international privacy laws and assigns risk scores based on regulatory requirements, potential penalties, and compliance complexity.",
+    "tips": [
+      "Use Incognito Browser to research privacy laws privately without tracking",
+      "Keep detailed records of all personal data processing activities",
+      "Implement privacy by design principles in all new systems and processes",
+      "Regularly train staff on privacy requirements in all operating jurisdictions",
+      "Establish clear data retention and deletion policies",
+      "Consider appointing a Data Protection Officer even if not legally required",
+      "Conduct regular privacy audits and impact assessments",
+      "Maintain an updated privacy policy that covers all applicable laws"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25%",
+        "label": "Low Risk",
+        "description": "Your privacy practices appear to be generally compliant with international laws. Continue monitoring for regulatory changes.",
+        "color": "green"
+      },
+      {
+        "range": "26-50%",
+        "label": "Medium Risk",
+        "description": "Some compliance gaps exist that should be addressed. Prioritize key areas like privacy policies and data processing documentation.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75%",
+        "label": "High Risk",
+        "description": "Significant compliance issues identified. Immediate action recommended to avoid potential penalties and legal issues.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100%",
+        "label": "Critical Risk",
+        "description": "Major compliance gaps across multiple areas. Consider consulting with privacy law experts and implementing comprehensive compliance program immediately.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "GDPR Compliance Guide",
+      "url": "/privacy/gdpr",
+      "type": "internal"
+    },
+    {
+      "title": "Data Brokers and Privacy",
+      "url": "/privacy/data-brokers",
+      "type": "internal"
+    },
+    {
+      "title": "Social Media Privacy Settings",
+      "url": "/privacy/social-media-privacy",
+      "type": "internal"
+    }
+  ]
+}

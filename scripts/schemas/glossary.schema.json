@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["term", "slug", "definition", "metaDescription", "simpleExplanation", "whyItMatters", "examples", "relatedTerms"],
+  "properties": {
+    "term": { "type": "string" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "definition": { "type": "string", "maxLength": 200 },
+    "metaDescription": { "type": "string", "maxLength": 160 },
+    "simpleExplanation": { "type": "string", "maxLength": 300 },
+    "whyItMatters": { "type": "string", "maxLength": 300 },
+    "technicalDetail": { "type": "string", "maxLength": 400 },
+    "examples": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["scenario", "explanation"],
+        "properties": {
+          "scenario": { "type": "string" },
+          "explanation": { "type": "string" }
+        }
+      }
+    },
+    "relatedTerms": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "niche": { "type": "string" },
+    "category": { "type": "string", "enum": ["concept", "technology", "regulation", "attack", "tool", "protocol"] }
+  }
+}

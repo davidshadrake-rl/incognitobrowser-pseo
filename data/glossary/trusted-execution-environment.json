@@ -1,0 +1,31 @@
+{
+  "term": "Trusted Execution Environment",
+  "slug": "trusted-execution-environment",
+  "definition": "A secure area within a device's main processor that provides hardware-based protection for sensitive code and data, isolated from the main operating system and applications.",
+  "metaDescription": "Learn about Trusted Execution Environments (TEEs) - secure hardware areas that protect sensitive data and code from unauthorized access and tampering.",
+  "simpleExplanation": "Think of a TEE as a secure vault inside your device's processor. It creates a protected space where sensitive operations like payment processing or biometric authentication can run safely, even if the main system is compromised.",
+  "whyItMatters": "TEEs provide hardware-level security that software alone cannot achieve. They protect your most sensitive data like passwords, payment information, and biometrics from malware, hackers, and even privileged system access.",
+  "technicalDetail": "TEEs use hardware features like ARM TrustZone or Intel SGX to create isolated execution environments with their own secure memory, storage, and processing capabilities. They maintain a small trusted computing base and communicate with the main system through carefully controlled interfaces.",
+  "examples": [
+    {
+      "scenario": "Mobile payment security",
+      "explanation": "When you use Apple Pay or Google Pay, your payment credentials are stored and processed within the phone's TEE, keeping them separate from apps and the main operating system."
+    },
+    {
+      "scenario": "Biometric authentication",
+      "explanation": "Fingerprint and face recognition data on smartphones is typically stored and processed in a TEE, ensuring this sensitive biometric information cannot be accessed by malicious apps."
+    },
+    {
+      "scenario": "Digital rights management",
+      "explanation": "Streaming services use TEEs to decrypt and play premium content while preventing unauthorized copying or screen recording of protected media."
+    }
+  ],
+  "relatedTerms": [
+    "hardware-security-module",
+    "secure-enclave",
+    "biometric-data",
+    "encryption",
+    "zero-trust-architecture"
+  ],
+  "category": "technology"
+}

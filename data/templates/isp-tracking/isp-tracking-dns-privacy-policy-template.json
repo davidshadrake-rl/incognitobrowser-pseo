@@ -1,0 +1,140 @@
+{
+  "niche": "isp-tracking",
+  "slug": "isp-tracking-dns-privacy-policy-template",
+  "title": "ISP Tracking & DNS Privacy Policy Template",
+  "metaDescription": "Comprehensive privacy policy template covering ISP tracking, DNS monitoring, and data protection. Protect your users from internet provider spying.",
+  "description": "A complete privacy policy template that addresses ISP tracking, DNS monitoring, and user data protection. Perfect for websites, apps, and services that prioritize user privacy and want to clearly communicate their stance on ISP surveillance and DNS privacy practices.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "ISP Tracking and Monitoring Disclosure",
+      "content": "We acknowledge that Internet Service Providers (ISPs) may monitor and track your online activities, including DNS requests and browsing patterns. {{COMPANY_NAME}} is committed to protecting your privacy from ISP surveillance through the following measures:\n\n• We implement DNS over HTTPS (DoH) and DNS over TLS (DoT) protocols where possible\n• We encourage users to use privacy-focused browsers like Incognito Browser\n• We support encrypted connections (HTTPS) across our entire platform\n• We do not share user activity logs with ISPs beyond legal requirements",
+      "placeholders": [
+        {
+          "key": "COMPANY_NAME",
+          "label": "Company Name",
+          "defaultValue": "[Your Company Name]"
+        }
+      ]
+    },
+    {
+      "heading": "DNS Privacy Protection",
+      "content": "Your DNS requests reveal which websites you visit, creating a detailed profile of your online activities. {{COMPANY_NAME}} protects your DNS privacy by:\n\n• Using encrypted DNS protocols (DNS over HTTPS/TLS) when available\n• Not logging or storing DNS query information\n• Recommending secure DNS providers like Cloudflare (1.1.1.1) or Quad9 (9.9.9.9)\n• Supporting DNS filtering and ad-blocking features\n• Providing guidance on configuring private DNS settings\n\nWe strongly recommend users configure secure DNS settings in their devices and use privacy-focused browsers to prevent DNS leaks.",
+      "placeholders": [
+        {
+          "key": "COMPANY_NAME",
+          "label": "Company Name",
+          "defaultValue": "[Your Company Name]"
+        }
+      ]
+    },
+    {
+      "heading": "ISP Data Collection Practices",
+      "content": "ISPs typically collect the following information about your internet usage:\n\n• Websites visited and time spent on each site\n• DNS queries and domain name requests\n• Connection timestamps and duration\n• Device information and IP addresses\n• Bandwidth usage patterns\n• Location data based on network access points\n\n{{COMPANY_NAME}} cannot prevent your ISP from collecting this information, but we provide tools and recommendations to minimize tracking, including the use of VPN services and privacy-focused browsers like Incognito Browser.",
+      "placeholders": [
+        {
+          "key": "COMPANY_NAME",
+          "label": "Company Name",
+          "defaultValue": "[Your Company Name]"
+        }
+      ]
+    },
+    {
+      "heading": "User Protection Recommendations",
+      "content": "To protect yourself from ISP tracking and DNS monitoring, we recommend:\n\n• Use a reputable VPN service to encrypt your internet traffic\n• Configure secure DNS servers (1.1.1.1, 9.9.9.9, or 8.8.8.8)\n• Enable DNS over HTTPS in your browser settings\n• Use privacy-focused browsers like Incognito Browser\n• Regularly clear browser data and cookies\n• Avoid using ISP-provided DNS servers\n• Consider using Tor browser for sensitive activities\n• Enable HTTPS-only mode in your browser\n\n{{COMPANY_NAME}} supports these privacy practices and provides resources to help users implement these protections.",
+      "placeholders": [
+        {
+          "key": "COMPANY_NAME",
+          "label": "Company Name",
+          "defaultValue": "[Your Company Name]"
+        }
+      ]
+    },
+    {
+      "heading": "Data Sharing with ISPs",
+      "content": "{{COMPANY_NAME}} limits data sharing with ISPs to the minimum required for service operation:\n\n• We do not voluntarily share user activity logs with ISPs\n• Technical data necessary for content delivery may be transmitted\n• We comply with legal requests but will notify users when permitted\n• We use CDNs and edge servers to minimize direct ISP exposure\n• User IP addresses are anonymized in our logs after {{RETENTION_PERIOD}}\n\nWe will never sell, rent, or voluntarily provide detailed user browsing data to ISPs for commercial purposes.",
+      "placeholders": [
+        {
+          "key": "COMPANY_NAME",
+          "label": "Company Name",
+          "defaultValue": "[Your Company Name]"
+        },
+        {
+          "key": "RETENTION_PERIOD",
+          "label": "Data Retention Period",
+          "defaultValue": "30 days"
+        }
+      ]
+    },
+    {
+      "heading": "Encrypted Communications",
+      "content": "All communications between your device and {{COMPANY_NAME}} services are encrypted using industry-standard protocols:\n\n• TLS 1.3 encryption for all web traffic\n• Certificate pinning to prevent man-in-the-middle attacks\n• HTTP Strict Transport Security (HSTS) enabled\n• DNS over HTTPS (DoH) support where available\n• End-to-end encryption for sensitive data\n\nThis encryption prevents ISPs from reading the content of your communications with our services, though they may still see connection metadata.",
+      "placeholders": [
+        {
+          "key": "COMPANY_NAME",
+          "label": "Company Name",
+          "defaultValue": "[Your Company Name]"
+        }
+      ]
+    },
+    {
+      "heading": "User Rights and Control",
+      "content": "You have the following rights regarding ISP tracking and DNS privacy:\n\n• Right to use encrypted DNS services of your choice\n• Right to access information about how your data flows through ISPs\n• Right to request deletion of any data we've shared with ISPs\n• Right to opt-out of non-essential data processing\n• Right to receive notifications about data breaches affecting ISP-shared data\n\nTo exercise these rights, contact us at {{CONTACT_EMAIL}}. We will respond within {{RESPONSE_TIME}} business days.",
+      "placeholders": [
+        {
+          "key": "CONTACT_EMAIL",
+          "label": "Contact Email",
+          "defaultValue": "[privacy@yourcompany.com]"
+        },
+        {
+          "key": "RESPONSE_TIME",
+          "label": "Response Time",
+          "defaultValue": "5"
+        }
+      ]
+    },
+    {
+      "heading": "Policy Updates and Changes",
+      "content": "This ISP Tracking and DNS Privacy Policy may be updated to reflect changes in technology, regulations, or our privacy practices. We will:\n\n• Notify users of material changes via email or prominent website notice\n• Provide 30 days advance notice for significant policy changes\n• Maintain an archive of previous policy versions\n• Clearly highlight what has changed in each update\n\nContinued use of {{COMPANY_NAME}} services after policy changes constitutes acceptance of the updated terms. Last updated: {{LAST_UPDATED}}.",
+      "placeholders": [
+        {
+          "key": "COMPANY_NAME",
+          "label": "Company Name",
+          "defaultValue": "[Your Company Name]"
+        },
+        {
+          "key": "LAST_UPDATED",
+          "label": "Last Updated Date",
+          "defaultValue": "[Date]"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "Web applications handling sensitive user data",
+    "Privacy-focused services and platforms",
+    "VPN providers and security companies",
+    "Educational institutions protecting student privacy",
+    "Healthcare organizations with HIPAA requirements",
+    "Financial services with strict privacy regulations",
+    "E-commerce sites processing customer information",
+    "Social media platforms and communication apps"
+  ],
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Policy Template",
+      "url": "/templates/vpn-privacy",
+      "type": "template"
+    },
+    {
+      "title": "Browser Privacy Guide",
+      "url": "/guides/browser-privacy",
+      "type": "guide"
+    },
+    {
+      "title": "Incognito Mode Privacy Tips",
+      "url": "/templates/incognito-mode",
+      "type": "template"
+    }
+  ]
+}

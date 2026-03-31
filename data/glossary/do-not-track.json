@@ -1,0 +1,31 @@
+{
+  "term": "Do Not Track",
+  "slug": "do-not-track",
+  "definition": "A web browser setting that sends a signal to websites requesting they do not track the user's browsing activity for advertising or analytics purposes.",
+  "metaDescription": "Learn about Do Not Track (DNT) - a browser privacy setting that requests websites not to track your online activity for ads or analytics.",
+  "simpleExplanation": "Do Not Track is like putting up a 'no soliciting' sign for your web browser. When enabled, it tells websites 'please don't follow me around the internet to show me targeted ads.' However, websites can choose whether or not to honor this request.",
+  "whyItMatters": "While Do Not Track was designed to give users more control over online tracking, it has limited effectiveness since websites aren't legally required to respect the signal. Many major sites ignore DNT requests entirely.",
+  "technicalDetail": "DNT works by sending an HTTP header (DNT: 1) with every web request. The signal indicates user preference but relies on voluntary compliance. Most major browsers support DNT, but implementation varies, and the W3C discontinued the standard in 2019 due to lack of adoption.",
+  "examples": [
+    {
+      "scenario": "Browser Privacy Settings",
+      "explanation": "You enable Do Not Track in Chrome's privacy settings, and your browser sends a DNT signal to every website you visit, though most advertising networks continue tracking anyway."
+    },
+    {
+      "scenario": "News Website Compliance",
+      "explanation": "A privacy-focused news site detects your DNT signal and disables third-party analytics trackers, showing only generic ads instead of personalized ones."
+    },
+    {
+      "scenario": "Social Media Tracking",
+      "explanation": "Despite having DNT enabled, Facebook and Google continue collecting data about your browsing habits because they don't honor DNT requests from their tracking pixels on other sites."
+    }
+  ],
+  "relatedTerms": [
+    "web-tracking",
+    "third-party-cookies",
+    "behavioral-advertising",
+    "privacy-settings",
+    "tracking-pixels"
+  ],
+  "category": "technology"
+}

@@ -1,0 +1,132 @@
+{
+  "niche": "private-search",
+  "slug": "private-search-engines-security-checklist",
+  "title": "Private Search Engines Security Checklist",
+  "metaDescription": "Complete security checklist for using private search engines like DuckDuckGo and Startpage safely. Protect your search privacy today.",
+  "difficulty": "beginner",
+  "estimatedTime": "15-20 minutes",
+  "intro": "Private search engines don't track your queries or build profiles, but proper setup is essential for maximum security. This checklist ensures you're using DuckDuckGo, Startpage, and other private search engines safely.",
+  "sections": [
+    {
+      "title": "Search Engine Setup",
+      "items": [
+        {
+          "id": "choose-private-engine",
+          "task": "Select a reputable private search engine",
+          "why": "Not all search engines that claim privacy actually protect you. Established providers have proven track records and transparent privacy policies.",
+          "howTo": "Choose DuckDuckGo, Startpage, or Searx. Research their privacy policies and verify they don't log searches. Set your chosen engine as default in browser settings.",
+          "priority": "critical"
+        },
+        {
+          "id": "set-default-engine",
+          "task": "Set private search as your default search engine",
+          "why": "Using it as default prevents accidental searches through tracking engines like Google when typing in the address bar.",
+          "howTo": "In browser settings, find 'Search Engine' or 'Default Search' section. Select your private engine from the dropdown or add it manually if not listed.",
+          "priority": "high"
+        },
+        {
+          "id": "remove-tracking-engines",
+          "task": "Remove or disable tracking search engines",
+          "why": "Having Google, Bing, or Yahoo as options makes it easy to accidentally use them and expose your search queries.",
+          "howTo": "In browser search settings, delete or disable Google, Bing, Yahoo, and other tracking engines. Keep only your chosen private engine active.",
+          "priority": "high"
+        },
+        {
+          "id": "verify-https",
+          "task": "Ensure searches use HTTPS encryption",
+          "why": "HTTPS prevents your ISP and network administrators from seeing your search terms, even when using private engines.",
+          "howTo": "Check that your search engine URL starts with 'https://' not 'http://'. Most private engines use HTTPS by default, but verify in settings.",
+          "priority": "critical"
+        }
+      ]
+    },
+    {
+      "title": "Browser Configuration",
+      "items": [
+        {
+          "id": "disable-suggestions",
+          "task": "Turn off search suggestions and autocomplete",
+          "why": "Search suggestions are often powered by Google or Bing, defeating the purpose of using a private engine by leaking your partial queries.",
+          "howTo": "In browser settings, find 'Search' or 'Privacy' sections. Disable 'Show search suggestions', 'Autocomplete', and 'Search predictions'.",
+          "priority": "high"
+        },
+        {
+          "id": "clear-search-history",
+          "task": "Clear existing search history and disable logging",
+          "why": "Previous searches may be stored locally in your browser, creating a privacy risk if someone accesses your device.",
+          "howTo": "Go to browser history, delete all search-related entries. In privacy settings, disable 'Remember search and form history' or similar options.",
+          "priority": "medium"
+        },
+        {
+          "id": "use-private-browsing",
+          "task": "Consider using private/incognito browsing for searches",
+          "why": "Private browsing prevents search history from being saved locally and provides additional isolation from tracking scripts.",
+          "howTo": "Use Incognito Browser or your browser's private mode. This prevents local storage of searches while still benefiting from private search engines.",
+          "priority": "medium"
+        },
+        {
+          "id": "block-referrer-headers",
+          "task": "Configure browser to limit referrer information",
+          "why": "Referrer headers can leak your search terms to websites you visit from search results, compromising privacy even with private engines.",
+          "howTo": "In advanced browser settings, set referrer policy to 'strict-origin-when-cross-origin' or use extensions that block referrer headers automatically.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Additional Security Measures",
+      "items": [
+        {
+          "id": "use-vpn",
+          "task": "Use a VPN when searching",
+          "why": "VPNs hide your IP address from the search engine and prevent your ISP from knowing which search engine you're using.",
+          "howTo": "Connect to a reputable VPN service before searching. Choose servers in privacy-friendly countries. Ensure VPN doesn't log activity.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-location-services",
+          "task": "Turn off location-based search results",
+          "why": "Location data can be used to build profiles and track you across sessions, even on private search engines.",
+          "howTo": "In search engine settings, disable location services, local results, and geographical personalization. Use generic location if required.",
+          "priority": "medium"
+        },
+        {
+          "id": "regular-settings-check",
+          "task": "Regularly review and update search privacy settings",
+          "why": "Browser updates, extensions, or system changes can reset your privacy configurations back to less secure defaults.",
+          "howTo": "Monthly, check that your default search engine hasn't changed, privacy settings remain configured, and no new tracking features were enabled.",
+          "priority": "low"
+        },
+        {
+          "id": "educate-household",
+          "task": "Train family members on private search practices",
+          "why": "Other users of shared devices might unknowingly use tracking search engines, compromising everyone's privacy on that device.",
+          "howTo": "Show others how to verify they're using the private search engine. Create separate browser profiles if needed. Explain why search privacy matters.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Browser Privacy Settings Guide",
+      "url": "/guides/browser-privacy-settings",
+      "type": "internal"
+    },
+    {
+      "title": "Ad Tracking Protection Methods",
+      "url": "/guides/ad-tracking-protection",
+      "type": "internal"
+    },
+    {
+      "title": "DuckDuckGo Privacy Policy",
+      "url": "https://duckduckgo.com/privacy",
+      "type": "external"
+    },
+    {
+      "title": "Startpage Privacy Features",
+      "url": "https://startpage.com/privacy-policy",
+      "type": "external"
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "niche": "social-media-privacy",
+  "slug": "social-media-privacy-risk-calculator",
+  "title": "Social Media Privacy Risk Calculator - Check Your Exposure",
+  "metaDescription": "Calculate your social media privacy risk across Facebook, Instagram, TikTok, and X. Get personalized recommendations to protect your data.",
+  "description": "Assess your privacy exposure across major social media platforms. This calculator evaluates your settings, sharing habits, and data permissions to provide a comprehensive privacy risk score with actionable improvement suggestions.",
+  "inputs": [
+    {
+      "id": "platformsUsed",
+      "label": "Number of Social Media Platforms You Use",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "Count Facebook, Instagram, TikTok, X (Twitter), LinkedIn, Snapchat, etc."
+    },
+    {
+      "id": "profileVisibility",
+      "label": "Most Common Profile Setting",
+      "type": "select",
+      "defaultValue": "mixed",
+      "options": [
+        {
+          "value": "public",
+          "label": "Public - Anyone can see my posts"
+        },
+        {
+          "value": "mixed",
+          "label": "Mixed - Some public, some private"
+        },
+        {
+          "value": "friends",
+          "label": "Friends/Followers only"
+        },
+        {
+          "value": "private",
+          "label": "Completely private"
+        }
+      ]
+    },
+    {
+      "id": "personalInfoShared",
+      "label": "Personal Information You Share",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "helpText": "Count: real name, phone, email, location, workplace, relationship status, photos with family, etc."
+    },
+    {
+      "id": "locationSharing",
+      "label": "Location Sharing Settings",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always share location/check-ins"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes share location"
+        },
+        {
+          "value": "rare",
+          "label": "Rarely share location"
+        },
+        {
+          "value": "never",
+          "label": "Never share location"
+        }
+      ]
+    },
+    {
+      "id": "thirdPartyApps",
+      "label": "Connected Third-Party Apps/Games",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "helpText": "Apps that connect to your social media accounts for login or data access"
+    },
+    {
+      "id": "adPersonalization",
+      "label": "Ad Personalization Enabled",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Whether you allow platforms to use your data for targeted advertising"
+    },
+    {
+      "id": "dataDownloadCheck",
+      "label": "Have you downloaded your data from platforms?",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never checked"
+        },
+        {
+          "value": "once",
+          "label": "Once or twice"
+        },
+        {
+          "value": "regularly",
+          "label": "Check regularly"
+        }
+      ]
+    },
+    {
+      "id": "privacySettings",
+      "label": "Privacy Settings Review Frequency",
+      "type": "select",
+      "defaultValue": "rarely",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never review settings"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (once a year or less)"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes (few times a year)"
+        },
+        {
+          "value": "regularly",
+          "label": "Regularly (monthly or more)"
+        }
+      ]
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall privacy risk level (0-100, higher = more risk)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorized risk assessment"
+    },
+    {
+      "id": "dataExposure",
+      "label": "Data Exposure Rating",
+      "format": "percentage",
+      "description": "Estimated percentage of personal data potentially exposed"
+    }
+  ],
+  "formula": "const platformWeight = Math.min(inputs.platformsUsed * 5, 25); const visibilityRisk = inputs.profileVisibility === 'public' ? 20 : inputs.profileVisibility === 'mixed' ? 15 : inputs.profileVisibility === 'friends' ? 8 : 3; const personalInfoRisk = Math.min(inputs.personalInfoShared * 3, 20); const locationRisk = inputs.locationSharing === 'always' ? 15 : inputs.locationSharing === 'sometimes' ? 10 : inputs.locationSharing === 'rare' ? 5 : 0; const appsRisk = Math.min(inputs.thirdPartyApps * 1.5, 15); const adRisk = inputs.adPersonalization ? 8 : 2; const downloadBonus = inputs.dataDownloadCheck === 'regularly' ? -5 : inputs.dataDownloadCheck === 'once' ? -2 : 0; const settingsBonus = inputs.privacySettings === 'regularly' ? -10 : inputs.privacySettings === 'sometimes' ? -5 : inputs.privacySettings === 'rarely' ? -2 : 0; const rawScore = platformWeight + visibilityRisk + personalInfoRisk + locationRisk + appsRisk + adRisk + downloadBonus + settingsBonus; const riskScore = Math.max(0, Math.min(100, rawScore)); const riskLevel = riskScore >= 70 ? 'High Risk' : riskScore >= 40 ? 'Medium Risk' : riskScore >= 20 ? 'Low Risk' : 'Very Low Risk'; const dataExposure = Math.min(95, Math.max(5, riskScore * 0.8 + (inputs.personalInfoShared * 2))); return { riskScore: Math.round(riskScore), riskLevel, dataExposure: Math.round(dataExposure) };",
+  "educational": {
+    "methodology": "This calculator evaluates your social media privacy risk based on platform usage, privacy settings, data sharing habits, and security practices. The scoring considers the cumulative effect of multiple platforms, visibility settings, personal information exposure, location sharing, third-party app permissions, and advertising personalization. Regular privacy audits and restrictive settings significantly reduce your risk score.",
+    "tips": [
+      "Review and tighten privacy settings on all platforms at least quarterly",
+      "Limit personal information in profiles - avoid phone numbers, addresses, and workplace details",
+      "Disable location sharing and remove location data from past posts",
+      "Regularly audit and remove unused third-party apps and games",
+      "Turn off ad personalization to reduce data collection for marketing",
+      "Use Incognito Browser when accessing social media to prevent additional tracking",
+      "Download your data from platforms annually to see what information they have",
+      "Enable two-factor authentication on all social media accounts",
+      "Be selective about friend/follower requests from unknown people",
+      "Consider using different email addresses for social media accounts"
+    ],
+    "interpretation": [
+      {
+        "range": "0-19",
+        "label": "Very Low Risk",
+        "description": "Excellent privacy practices. Your social media presence has minimal privacy exposure.",
+        "color": "green"
+      },
+      {
+        "range": "20-39",
+        "label": "Low Risk",
+        "description": "Good privacy awareness with minor areas for improvement. Most data is well-protected.",
+        "color": "lightgreen"
+      },
+      {
+        "range": "40-69",
+        "label": "Medium Risk",
+        "description": "Moderate privacy exposure. Several settings need attention to better protect your data.",
+        "color": "yellow"
+      },
+      {
+        "range": "70-100",
+        "label": "High Risk",
+        "description": "Significant privacy exposure across multiple areas. Immediate action needed to secure your data.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Facebook Privacy Settings Guide",
+      "url": "/guides/facebook-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "Instagram Privacy Controls",
+      "url": "/guides/instagram-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "TikTok Privacy and Safety",
+      "url": "/guides/tiktok-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "Twitter/X Privacy Settings",
+      "url": "/guides/twitter-privacy-settings",
+      "type": "guide"
+    }
+  ]
+}

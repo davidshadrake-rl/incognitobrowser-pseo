@@ -1,0 +1,241 @@
+{
+  "niche": "public-wifi",
+  "slug": "wifi-security-public-wifi-risk-calculator",
+  "title": "Wi-Fi Security & Public Wi-Fi Risk Calculator",
+  "metaDescription": "Calculate your public Wi-Fi security risk and learn how to protect your data on wireless networks. Get personalized security recommendations.",
+  "description": "Assess your vulnerability when using public Wi-Fi networks. This calculator evaluates your current security practices and provides a risk score with actionable recommendations to keep your data safe on wireless connections.",
+  "inputs": [
+    {
+      "id": "networkType",
+      "label": "Type of Wi-Fi Network",
+      "type": "select",
+      "defaultValue": "public-open",
+      "options": [
+        {
+          "value": "public-open",
+          "label": "Public Open Network (no password)"
+        },
+        {
+          "value": "public-password",
+          "label": "Public Network with Password"
+        },
+        {
+          "value": "hotel-business",
+          "label": "Hotel/Business Network"
+        },
+        {
+          "value": "home-secured",
+          "label": "Home Network (WPA2/WPA3)"
+        },
+        {
+          "value": "mobile-hotspot",
+          "label": "Personal Mobile Hotspot"
+        }
+      ],
+      "helpText": "Select the type of Wi-Fi network you're connecting to"
+    },
+    {
+      "id": "vpnUsage",
+      "label": "VPN Usage",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always use VPN on public Wi-Fi"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes use VPN"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely use VPN"
+        },
+        {
+          "value": "never",
+          "label": "Never use VPN"
+        }
+      ],
+      "helpText": "How often do you use a VPN when on public Wi-Fi?"
+    },
+    {
+      "id": "activitiesRisk",
+      "label": "Online Activities",
+      "type": "select",
+      "defaultValue": "medium",
+      "options": [
+        {
+          "value": "low",
+          "label": "Basic browsing, social media"
+        },
+        {
+          "value": "medium",
+          "label": "Email, shopping, general web use"
+        },
+        {
+          "value": "high",
+          "label": "Banking, work documents, sensitive data"
+        },
+        {
+          "value": "very-high",
+          "label": "Business transactions, confidential work"
+        }
+      ],
+      "helpText": "What type of activities do you perform on public Wi-Fi?"
+    },
+    {
+      "id": "browserSecurity",
+      "label": "Browser Security",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "advanced",
+          "label": "Privacy-focused browser (Incognito Browser, Tor)"
+        },
+        {
+          "value": "good",
+          "label": "Standard browser with privacy extensions"
+        },
+        {
+          "value": "basic",
+          "label": "Standard browser with default settings"
+        },
+        {
+          "value": "poor",
+          "label": "Outdated browser or no security measures"
+        }
+      ],
+      "helpText": "What browser and security measures do you use?"
+    },
+    {
+      "id": "deviceSecurity",
+      "label": "Device Security",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "excellent",
+          "label": "Updated OS, firewall, antivirus, auto-connect disabled"
+        },
+        {
+          "value": "good",
+          "label": "Updated OS with basic security software"
+        },
+        {
+          "value": "basic",
+          "label": "Somewhat updated with minimal security"
+        },
+        {
+          "value": "poor",
+          "label": "Outdated system with no security measures"
+        }
+      ],
+      "helpText": "How secure is your device configuration?"
+    },
+    {
+      "id": "fileSharing",
+      "label": "File Sharing Settings",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you have file sharing or AirDrop enabled on your device?"
+    },
+    {
+      "id": "autoConnect",
+      "label": "Auto-Connect to Wi-Fi",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Does your device automatically connect to available Wi-Fi networks?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Security Risk Score",
+      "format": "score",
+      "description": "Overall risk level from 0 (lowest risk) to 100 (highest risk)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your overall security risk category"
+    },
+    {
+      "id": "vulnerabilityCount",
+      "label": "Security Vulnerabilities",
+      "format": "number",
+      "description": "Number of identified security vulnerabilities"
+    },
+    {
+      "id": "recommendationPriority",
+      "label": "Priority Recommendation",
+      "format": "text",
+      "description": "Most important security improvement you should make"
+    }
+  ],
+  "formula": "const networkRisk = networkType === 'public-open' ? 40 : networkType === 'public-password' ? 30 : networkType === 'hotel-business' ? 25 : networkType === 'home-secured' ? 5 : 10; const vpnRisk = vpnUsage === 'never' ? 25 : vpnUsage === 'rarely' ? 20 : vpnUsage === 'sometimes' ? 10 : 0; const activityRisk = activitiesRisk === 'very-high' ? 20 : activitiesRisk === 'high' ? 15 : activitiesRisk === 'medium' ? 10 : 5; const browserRisk = browserSecurity === 'poor' ? 15 : browserSecurity === 'basic' ? 10 : browserSecurity === 'good' ? 5 : 0; const deviceRisk = deviceSecurity === 'poor' ? 15 : deviceSecurity === 'basic' ? 10 : deviceSecurity === 'good' ? 5 : 0; const fileSharingRisk = fileSharing ? 10 : 0; const autoConnectRisk = autoConnect ? 8 : 0; const riskScore = Math.min(100, networkRisk + vpnRisk + activityRisk + browserRisk + deviceRisk + fileSharingRisk + autoConnectRisk); const riskLevel = riskScore >= 70 ? 'Very High Risk' : riskScore >= 50 ? 'High Risk' : riskScore >= 30 ? 'Medium Risk' : riskScore >= 15 ? 'Low Risk' : 'Very Low Risk'; const vulnerabilities = [vpnUsage === 'never', browserSecurity === 'poor' || browserSecurity === 'basic', deviceSecurity === 'poor' || deviceSecurity === 'basic', fileSharing, autoConnect, networkType === 'public-open'].filter(Boolean).length; const topRecommendation = vpnUsage === 'never' ? 'Use a VPN on public networks' : browserSecurity === 'poor' ? 'Upgrade to a privacy-focused browser like Incognito Browser' : deviceSecurity === 'poor' ? 'Update your device security settings' : fileSharing ? 'Disable file sharing on public networks' : 'Review your Wi-Fi auto-connect settings'; return { riskScore, riskLevel, vulnerabilityCount: vulnerabilities, recommendationPriority: topRecommendation };",
+  "educational": {
+    "methodology": "This calculator evaluates your Wi-Fi security risk based on network type, protective measures (VPN, browser security), device configuration, and online activities. The risk score combines factors like encryption level, data sensitivity, and security practices to provide an overall vulnerability assessment.",
+    "tips": [
+      "Always use a VPN when connecting to public Wi-Fi networks to encrypt your internet traffic",
+      "Use privacy-focused browsers like Incognito Browser that block tracking and enhance security",
+      "Disable auto-connect to Wi-Fi networks to prevent connecting to malicious hotspots",
+      "Turn off file sharing and AirDrop when on public networks",
+      "Avoid accessing sensitive information like banking on unsecured public Wi-Fi",
+      "Verify network names with staff - hackers often create fake hotspots with similar names",
+      "Keep your device's operating system and security software updated",
+      "Use HTTPS websites only (look for the lock icon in your browser)"
+    ],
+    "interpretation": [
+      {
+        "range": "0-14",
+        "label": "Very Low Risk",
+        "description": "Excellent security practices. You're well-protected on Wi-Fi networks with minimal vulnerability to attacks.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "15-29",
+        "label": "Low Risk",
+        "description": "Good security practices with minor vulnerabilities. Consider implementing additional protective measures.",
+        "color": "#84cc16"
+      },
+      {
+        "range": "30-49",
+        "label": "Medium Risk",
+        "description": "Moderate security risk. Several improvements needed to better protect your data on public networks.",
+        "color": "#eab308"
+      },
+      {
+        "range": "50-69",
+        "label": "High Risk",
+        "description": "Significant security vulnerabilities. Your data is at considerable risk on public Wi-Fi networks.",
+        "color": "#f97316"
+      },
+      {
+        "range": "70-100",
+        "label": "Very High Risk",
+        "description": "Critical security gaps. Immediate action needed to protect your data from potential cyber attacks.",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Download Incognito Browser for Enhanced Wi-Fi Security",
+      "url": "/incognito-browser",
+      "type": "internal"
+    },
+    {
+      "title": "VPN Privacy Calculator",
+      "url": "/calculators/vpn-privacy",
+      "type": "calculator"
+    },
+    {
+      "title": "Password Security Assessment",
+      "url": "/calculators/password-security",
+      "type": "calculator"
+    }
+  ]
+}

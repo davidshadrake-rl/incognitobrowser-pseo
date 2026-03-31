@@ -1,0 +1,32 @@
+{
+  "term": "DNS over TLS",
+  "slug": "dns-over-tls",
+  "definition": "A security protocol that encrypts DNS queries and responses using Transport Layer Security (TLS), preventing third parties from monitoring or tampering with your web browsing requests.",
+  "metaDescription": "DNS over TLS encrypts DNS queries to protect your browsing privacy from ISPs and network monitors. Learn how DoT secures your internet traffic.",
+  "simpleExplanation": "When you visit a website, your device asks a DNS server for the site's address. DNS over TLS encrypts these requests so your internet provider and others can't see which websites you're trying to visit, making your browsing more private.",
+  "whyItMatters": "Without DNS encryption, anyone monitoring your network can see every website you visit, even if the site itself uses HTTPS. DNS over TLS prevents ISPs, governments, and hackers from tracking your browsing habits or blocking specific sites.",
+  "technicalDetail": "DoT operates on port 853 and establishes a TLS connection before sending DNS queries. Unlike DNS over HTTPS (DoH), DoT uses a dedicated port making it easily identifiable but also potentially blockable by network administrators. It provides authentication, integrity, and confidentiality for DNS communications.",
+  "examples": [
+    {
+      "scenario": "Coffee shop browsing protection",
+      "explanation": "When using public Wi-Fi, DNS over TLS prevents other users or the cafe owner from seeing which websites you're visiting by encrypting your DNS requests."
+    },
+    {
+      "scenario": "ISP privacy protection",
+      "explanation": "Your internet provider can normally see every website you visit through DNS queries. With DoT enabled, they only see encrypted traffic to your DNS server, not your actual browsing destinations."
+    },
+    {
+      "scenario": "Corporate network monitoring",
+      "explanation": "In office networks where IT departments monitor internet usage, DNS over TLS prevents them from easily tracking employee web browsing through DNS query inspection."
+    }
+  ],
+  "relatedTerms": [
+    "dns-over-https",
+    "dns-server",
+    "tls-encryption",
+    "dns-poisoning",
+    "recursive-dns-resolver"
+  ],
+  "niche": "Network Security",
+  "category": "protocol"
+}

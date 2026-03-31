@@ -1,0 +1,114 @@
+{
+  "niche": "isp-tracking",
+  "slug": "isp-tracking-dns-privacy-beginners-guide",
+  "title": "ISP Tracking & DNS Privacy Guide for Beginners",
+  "metaDescription": "Learn how ISPs track your online activity through DNS monitoring and discover simple steps to protect your privacy with DNS over HTTPS and secure browsers.",
+  "difficulty": "beginner",
+  "estimatedTime": "15-20 minutes",
+  "intro": "Your Internet Service Provider (ISP) can see every website you visit through DNS requests, creating a detailed log of your browsing habits. This guide explains how ISP tracking works and provides simple steps to protect your DNS privacy using secure protocols and privacy-focused tools.",
+  "prerequisites": [
+    "Basic understanding of web browsing",
+    "Access to your device's network settings",
+    "No technical expertise required"
+  ],
+  "steps": [
+    {
+      "stepNumber": 1,
+      "title": "Understand How ISP Tracking Works",
+      "description": "When you visit a website, your device sends a DNS query to translate domain names into IP addresses. By default, these queries go through your ISP's DNS servers, allowing them to log every site you visit.",
+      "actions": [
+        "Check your current DNS settings in network preferences",
+        "Note that ISPs can see domain names but not specific pages or content",
+        "Understand that DNS logs can be stored for months or years"
+      ],
+      "proTip": "Even in incognito mode, your ISP can still see your DNS requests unless you take additional privacy measures."
+    },
+    {
+      "stepNumber": 2,
+      "title": "Enable DNS over HTTPS (DoH)",
+      "description": "DNS over HTTPS encrypts your DNS queries, preventing your ISP from seeing which websites you're visiting. Most modern browsers support this feature and it's easy to enable.",
+      "actions": [
+        "Open your browser settings and search for 'DNS' or 'Security'",
+        "Enable 'Use secure DNS' or 'DNS over HTTPS'",
+        "Choose a privacy-focused DNS provider like Cloudflare (1.1.1.1) or Quad9",
+        "Test your DNS privacy using online tools to confirm it's working"
+      ],
+      "proTip": "Cloudflare's 1.1.1.1 DNS service is fast, free, and doesn't log your queries, making it an excellent choice for privacy."
+    },
+    {
+      "stepNumber": 3,
+      "title": "Use a Privacy-Focused Browser",
+      "description": "Switch to a browser that prioritizes privacy and has built-in protection against ISP tracking. These browsers often enable secure DNS by default and include additional privacy features.",
+      "actions": [
+        "Download Incognito Browser for comprehensive privacy protection",
+        "Enable built-in VPN features if available",
+        "Configure strict tracking protection settings",
+        "Verify that DNS over HTTPS is enabled by default"
+      ],
+      "proTip": "Incognito Browser combines secure DNS, VPN protection, and ad blocking to provide multi-layered privacy protection against ISP monitoring."
+    },
+    {
+      "stepNumber": 4,
+      "title": "Configure System-Wide DNS Protection",
+      "description": "Protect all applications on your device by changing your system's DNS settings. This ensures that not just your browser, but all internet-connected apps use secure DNS.",
+      "actions": [
+        "Access your device's network settings",
+        "Change DNS servers to privacy-focused options (1.1.1.1, 9.9.9.9)",
+        "Enable DNS over HTTPS at the system level if supported",
+        "Restart your network connection to apply changes"
+      ],
+      "warning": "Some ISPs may block or slow down third-party DNS servers. If you experience connectivity issues, you may need to use a VPN as well."
+    },
+    {
+      "stepNumber": 5,
+      "title": "Test and Verify Your DNS Privacy",
+      "description": "Confirm that your DNS privacy measures are working correctly by using online testing tools and monitoring your network traffic.",
+      "actions": [
+        "Visit DNS leak test websites to check for privacy leaks",
+        "Verify that your DNS queries are encrypted",
+        "Test browsing speed to ensure performance isn't significantly impacted",
+        "Document your settings for future reference"
+      ],
+      "proTip": "Regularly test your DNS privacy settings, especially after system updates or when connecting to new networks."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can my ISP still track me if I use incognito mode?",
+      "answer": "Yes, incognito mode only prevents your browser from storing local history. Your ISP can still see your DNS requests and connection data unless you use additional privacy measures like secure DNS and VPNs."
+    },
+    {
+      "question": "Is DNS over HTTPS legal and safe to use?",
+      "answer": "Yes, DNS over HTTPS is completely legal and safe. It's a standard privacy technology supported by major browsers and recommended by privacy advocates. It simply encrypts your DNS queries like HTTPS encrypts web traffic."
+    },
+    {
+      "question": "Will changing my DNS servers slow down my internet?",
+      "answer": "Quality DNS providers like Cloudflare (1.1.1.1) are often faster than ISP DNS servers. You may actually experience improved browsing speed along with better privacy protection."
+    },
+    {
+      "question": "Do I need a VPN if I use secure DNS?",
+      "answer": "Secure DNS protects your domain name queries, but your ISP can still see that you're connected to specific IP addresses. A VPN provides additional protection by encrypting all your internet traffic."
+    },
+    {
+      "question": "Can I use secure DNS on mobile devices?",
+      "answer": "Yes, both iOS and Android support DNS over HTTPS. You can enable it in system settings or use privacy-focused browsers like Incognito Browser that include this protection by default."
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Guide",
+      "url": "/guides/vpn-privacy-beginners",
+      "type": "internal"
+    },
+    {
+      "title": "Browser Privacy Settings",
+      "url": "/guides/browser-privacy-settings",
+      "type": "internal"
+    },
+    {
+      "title": "Cloudflare DNS Privacy",
+      "url": "https://1.1.1.1/",
+      "type": "external"
+    }
+  ]
+}

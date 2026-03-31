@@ -1,0 +1,265 @@
+{
+  "niche": "search-history",
+  "slug": "search-history-privacy-risk-calculator",
+  "title": "Search History Privacy Risk Calculator - Check Your Risk Level",
+  "metaDescription": "Calculate your search history privacy risk across platforms. Get personalized recommendations to protect your browsing data and improve privacy.",
+  "description": "Assess your search history privacy risk level based on your browsing habits, platform usage, and current protection measures. Get actionable recommendations to better protect your personal data from tracking and profiling.",
+  "inputs": [
+    {
+      "id": "searchVolume",
+      "label": "Daily searches performed",
+      "type": "select",
+      "defaultValue": "50-100",
+      "options": [
+        {
+          "value": "0-10",
+          "label": "0-10 searches"
+        },
+        {
+          "value": "10-25",
+          "label": "10-25 searches"
+        },
+        {
+          "value": "25-50",
+          "label": "25-50 searches"
+        },
+        {
+          "value": "50-100",
+          "label": "50-100 searches"
+        },
+        {
+          "value": "100+",
+          "label": "100+ searches"
+        }
+      ],
+      "helpText": "Estimate how many searches you perform daily across all platforms"
+    },
+    {
+      "id": "platforms",
+      "label": "Primary search platforms used",
+      "type": "select",
+      "defaultValue": "google-only",
+      "options": [
+        {
+          "value": "google-only",
+          "label": "Google only"
+        },
+        {
+          "value": "google-bing",
+          "label": "Google + Bing"
+        },
+        {
+          "value": "multiple-mainstream",
+          "label": "Multiple mainstream (Google, Bing, Yahoo)"
+        },
+        {
+          "value": "includes-private",
+          "label": "Includes private engines (DuckDuckGo, Startpage)"
+        },
+        {
+          "value": "mostly-private",
+          "label": "Mostly private search engines"
+        }
+      ],
+      "helpText": "Which search engines do you regularly use?"
+    },
+    {
+      "id": "accountLogin",
+      "label": "Signed into search accounts",
+      "type": "select",
+      "defaultValue": "always",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always signed in"
+        },
+        {
+          "value": "usually",
+          "label": "Usually signed in"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes signed in"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely signed in"
+        },
+        {
+          "value": "never",
+          "label": "Never signed in"
+        }
+      ],
+      "helpText": "How often are you logged into your Google/Microsoft accounts while searching?"
+    },
+    {
+      "id": "historyDeletion",
+      "label": "Search history deletion frequency",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never delete"
+        },
+        {
+          "value": "yearly",
+          "label": "Once a year or less"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "daily",
+          "label": "Daily or auto-delete enabled"
+        }
+      ],
+      "helpText": "How often do you clear your search history?"
+    },
+    {
+      "id": "incognitoUsage",
+      "label": "Private/incognito browsing usage",
+      "type": "select",
+      "defaultValue": "rarely",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never use"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (special occasions)"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes (sensitive searches)"
+        },
+        {
+          "value": "often",
+          "label": "Often (50%+ of searches)"
+        },
+        {
+          "value": "always",
+          "label": "Always use private browsing"
+        }
+      ],
+      "helpText": "How frequently do you use incognito/private browsing mode?"
+    },
+    {
+      "id": "sensitiveSearches",
+      "label": "Sensitive search frequency",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never search sensitive topics"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        },
+        {
+          "value": "very-often",
+          "label": "Very often"
+        }
+      ],
+      "helpText": "How often do you search for personal, medical, financial, or other sensitive information?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall search history privacy risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorical assessment of your privacy risk"
+    },
+    {
+      "id": "dataExposure",
+      "label": "Estimated Data Exposure",
+      "format": "text",
+      "description": "How much of your search data is potentially exposed"
+    },
+    {
+      "id": "recommendation",
+      "label": "Primary Recommendation",
+      "format": "text",
+      "description": "Most important action you can take to improve privacy"
+    }
+  ],
+  "formula": "const volumeScores = {'0-10': 5, '10-25': 15, '25-50': 25, '50-100': 35, '100+': 45}; const platformScores = {'google-only': 25, 'google-bing': 23, 'multiple-mainstream': 20, 'includes-private': 10, 'mostly-private': 5}; const loginScores = {'always': 25, 'usually': 20, 'sometimes': 12, 'rarely': 6, 'never': 0}; const deletionScores = {'never': 20, 'yearly': 15, 'monthly': 10, 'weekly': 5, 'daily': 0}; const incognitoScores = {'never': 15, 'rarely': 12, 'sometimes': 8, 'often': 4, 'always': 0}; const sensitiveScores = {'never': 0, 'rarely': 2, 'sometimes': 5, 'often': 8, 'very-often': 12}; const score = volumeScores[searchVolume] + platformScores[platforms] + loginScores[accountLogin] + deletionScores[historyDeletion] + incognitoScores[incognitoUsage] + sensitiveScores[sensitiveSearches]; let level, exposure, recommendation; if (score <= 30) { level = 'Low Risk'; exposure = 'Minimal data exposure'; recommendation = 'Continue current privacy practices and consider using Incognito Browser for enhanced protection'; } else if (score <= 60) { level = 'Moderate Risk'; exposure = 'Some data collection occurring'; recommendation = 'Enable auto-delete for search history and use private browsing more frequently'; } else if (score <= 85) { level = 'High Risk'; exposure = 'Significant data profiling likely'; recommendation = 'Switch to private search engines like DuckDuckGo and use Incognito Browser'; } else { level = 'Very High Risk'; exposure = 'Extensive data collection and profiling'; recommendation = 'Immediately delete search history, switch to private search engines, and use Incognito Browser exclusively'; } return { riskScore: Math.min(score, 100), riskLevel: level, dataExposure: exposure, recommendation: recommendation };",
+  "educational": {
+    "methodology": "This calculator evaluates your search history privacy risk based on six key factors: search volume, platform choice, account login status, history deletion habits, private browsing usage, and sensitive search frequency. Each factor contributes to a composite risk score that reflects your exposure to data collection and profiling by search engines and third parties.",
+    "tips": [
+      "Use private search engines like DuckDuckGo or Startpage that don't track users",
+      "Enable auto-delete for your Google search history (3, 18, or 36 months)",
+      "Search while logged out of your accounts when possible",
+      "Use Incognito Browser for sensitive searches and enhanced privacy protection",
+      "Regularly clear your browser's search suggestions and form data",
+      "Consider using a VPN to mask your IP address during searches",
+      "Review and delete old search history periodically from all your accounts"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Your search habits show good privacy awareness with minimal data exposure.",
+        "color": "green"
+      },
+      {
+        "range": "31-60",
+        "label": "Moderate Risk",
+        "description": "Some privacy concerns exist. Consider implementing additional protective measures.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-85",
+        "label": "High Risk",
+        "description": "Significant privacy risks detected. Take immediate action to protect your search data.",
+        "color": "orange"
+      },
+      {
+        "range": "86-100",
+        "label": "Very High Risk",
+        "description": "Critical privacy exposure. Your search data is likely being extensively collected and profiled.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "How to Delete Google Search History",
+      "url": "/guides/delete-google-search-history",
+      "type": "guide"
+    },
+    {
+      "title": "Private Search Engines Comparison",
+      "url": "/guides/private-search-engines",
+      "type": "guide"
+    },
+    {
+      "title": "Incognito Browser - Enhanced Private Browsing",
+      "url": "https://incognitobrowser.com",
+      "type": "tool"
+    }
+  ]
+}

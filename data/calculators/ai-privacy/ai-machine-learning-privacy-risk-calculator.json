@@ -1,0 +1,245 @@
+{
+  "niche": "ai-privacy",
+  "slug": "ai-machine-learning-privacy-risk-calculator",
+  "title": "AI & Machine Learning Privacy Risk Calculator",
+  "metaDescription": "Calculate your privacy risk exposure from AI tools, machine learning platforms, and automated data collection. Get personalized protection tips.",
+  "description": "Assess how AI services and machine learning platforms may be collecting, analyzing, and using your personal data. Get a personalized privacy risk score and actionable steps to protect yourself from AI-powered surveillance and data harvesting.",
+  "inputs": [
+    {
+      "id": "aiToolUsage",
+      "label": "How frequently do you use AI tools (ChatGPT, Bard, etc.)?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (once a month or less)"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes (weekly)"
+        },
+        {
+          "value": "often",
+          "label": "Often (daily)"
+        },
+        {
+          "value": "constantly",
+          "label": "Constantly (multiple times daily)"
+        }
+      ],
+      "helpText": "AI chatbots and tools collect conversation data to improve their models"
+    },
+    {
+      "id": "personalDataSharing",
+      "label": "Do you share personal information with AI tools?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never share personal details"
+        },
+        {
+          "value": "minimal",
+          "label": "Only basic non-sensitive info"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes share personal details"
+        },
+        {
+          "value": "often",
+          "label": "Often share personal information"
+        },
+        {
+          "value": "everything",
+          "label": "Share sensitive personal data"
+        }
+      ],
+      "helpText": "Personal data in AI prompts can be stored and used for training"
+    },
+    {
+      "id": "faceRecognitionExposure",
+      "label": "How often are you exposed to facial recognition systems?",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Rarely (avoid public cameras)"
+        },
+        {
+          "value": "low",
+          "label": "Occasionally (some public places)"
+        },
+        {
+          "value": "moderate",
+          "label": "Moderately (regular public spaces)"
+        },
+        {
+          "value": "high",
+          "label": "Frequently (airports, workplaces)"
+        },
+        {
+          "value": "constant",
+          "label": "Constantly (high-surveillance areas)"
+        }
+      ],
+      "helpText": "Public cameras with AI increasingly use facial recognition technology"
+    },
+    {
+      "id": "socialMediaUsage",
+      "label": "How much do you use AI-powered social media platforms?",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "none",
+          "label": "Don't use social media"
+        },
+        {
+          "value": "minimal",
+          "label": "Limited use, privacy settings on"
+        },
+        {
+          "value": "moderate",
+          "label": "Regular use, some privacy controls"
+        },
+        {
+          "value": "heavy",
+          "label": "Heavy use, default privacy settings"
+        },
+        {
+          "value": "maximum",
+          "label": "Constant use, public profiles"
+        }
+      ],
+      "helpText": "Social platforms use AI to analyze your behavior, posts, and connections"
+    },
+    {
+      "id": "devicePermissions",
+      "label": "How many app permissions do you typically grant?",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Very few, only essential"
+        },
+        {
+          "value": "limited",
+          "label": "Limited, I review carefully"
+        },
+        {
+          "value": "some",
+          "label": "Some, I check occasionally"
+        },
+        {
+          "value": "many",
+          "label": "Many, I rarely review"
+        },
+        {
+          "value": "all",
+          "label": "Most/all requested permissions"
+        }
+      ],
+      "helpText": "App permissions enable AI-powered data collection from your device"
+    },
+    {
+      "id": "privacyTools",
+      "label": "Do you use privacy-focused browsers or tools?",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Privacy browsers like Incognito Browser reduce AI tracking and data collection"
+    },
+    {
+      "id": "dataOptOuts",
+      "label": "Have you opted out of AI training data collection?",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Many AI services allow you to opt out of using your data for model training"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall privacy risk from AI and machine learning systems (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Your privacy risk category with recommendations"
+    },
+    {
+      "id": "dataExposure",
+      "label": "Data Exposure Rating",
+      "format": "grade",
+      "description": "How much personal data you're potentially exposing to AI systems"
+    }
+  ],
+  "formula": "const aiUsageScore = { never: 0, rarely: 10, sometimes: 25, often: 40, constantly: 60 }[aiToolUsage]; const personalDataScore = { never: 0, minimal: 5, sometimes: 15, often: 30, everything: 50 }[personalDataSharing]; const faceRecScore = { minimal: 0, low: 5, moderate: 15, high: 25, constant: 35 }[faceRecognitionExposure]; const socialScore = { none: 0, minimal: 5, moderate: 15, heavy: 25, maximum: 35 }[socialMediaUsage]; const permissionScore = { minimal: 0, limited: 5, some: 10, many: 20, all: 30 }[devicePermissions]; const privacyReduction = privacyTools ? -15 : 0; const optOutReduction = dataOptOuts ? -10 : 0; const riskScore = Math.max(0, Math.min(100, aiUsageScore + personalDataScore + faceRecScore + socialScore + permissionScore + privacyReduction + optOutReduction)); const riskLevel = riskScore < 20 ? 'Low Risk' : riskScore < 40 ? 'Moderate Risk' : riskScore < 60 ? 'High Risk' : 'Very High Risk'; const dataExposure = riskScore < 25 ? 'A' : riskScore < 45 ? 'B' : riskScore < 65 ? 'C' : riskScore < 80 ? 'D' : 'F'; return { riskScore, riskLevel, dataExposure };",
+  "educational": {
+    "methodology": "This calculator evaluates your privacy risk based on AI tool usage patterns, personal data sharing habits, exposure to AI-powered surveillance systems, and current privacy protection measures. Scores are weighted based on the privacy impact of different AI technologies and data collection methods.",
+    "tips": [
+      "Use privacy-focused browsers like Incognito Browser when interacting with AI tools",
+      "Avoid sharing personal, sensitive, or identifying information in AI chat prompts",
+      "Regularly review and limit app permissions on your devices",
+      "Opt out of AI training data collection in service settings when possible",
+      "Use strong privacy settings on social media platforms",
+      "Consider wearing face coverings in high-surveillance areas",
+      "Read AI service privacy policies before using new tools",
+      "Use VPNs when accessing AI services to mask your location data"
+    ],
+    "interpretation": [
+      {
+        "range": "0-19",
+        "label": "Low Risk",
+        "description": "You have good privacy practices with AI services. Continue being cautious with personal data sharing.",
+        "color": "green"
+      },
+      {
+        "range": "20-39",
+        "label": "Moderate Risk",
+        "description": "Some privacy concerns with AI usage. Consider implementing additional privacy measures.",
+        "color": "yellow"
+      },
+      {
+        "range": "40-59",
+        "label": "High Risk",
+        "description": "Significant privacy exposure to AI systems. Review your data sharing practices and increase privacy protections.",
+        "color": "orange"
+      },
+      {
+        "range": "60-100",
+        "label": "Very High Risk",
+        "description": "Extensive privacy exposure to AI data collection. Immediate action needed to protect your personal information.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Data Brokers Privacy Calculator",
+      "url": "/calculators/data-brokers",
+      "type": "internal"
+    },
+    {
+      "title": "Facial Recognition Privacy Calculator",
+      "url": "/calculators/facial-recognition",
+      "type": "internal"
+    },
+    {
+      "title": "Social Media Privacy Calculator",
+      "url": "/calculators/social-media-privacy",
+      "type": "internal"
+    }
+  ]
+}

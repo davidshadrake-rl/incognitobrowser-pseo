@@ -1,0 +1,116 @@
+{
+  "niche": "tor-privacy",
+  "slug": "tor-dark-web-privacy-policy-template",
+  "title": "Tor & Dark Web Privacy Policy Template",
+  "metaDescription": "Complete privacy policy template for Tor browser and dark web services. Covers anonymous browsing, onion routing, and user data protection.",
+  "description": "Professional privacy policy template designed specifically for services operating on Tor networks and the dark web. Addresses anonymous browsing, onion routing protocols, and unique privacy considerations for darknet services.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Information Collection and Anonymous Browsing",
+      "content": "This privacy policy governs how {{SERVICE_NAME}} collects, uses, and protects information when you access our service through the Tor network or other anonymous browsing methods.\n\nWe recognize that users accessing our service through Tor browser, onion routing, or other privacy tools expect enhanced anonymity. We do not collect IP addresses, browser fingerprints, or other identifying information that could compromise your anonymous browsing session.\n\nThe following data may be collected:\n- Session tokens (temporary, non-identifying)\n- Service usage statistics (aggregated and anonymized)\n- Error logs (stripped of identifying information)\n- User-provided content (only if voluntarily submitted)\n\nWe recommend using Incognito Browser or similar privacy-focused browsers in conjunction with Tor for maximum anonymity protection.",
+      "placeholders": [
+        {
+          "key": "SERVICE_NAME",
+          "label": "Service Name",
+          "defaultValue": "[Your Service Name]"
+        }
+      ]
+    },
+    {
+      "heading": "Onion Routing and Network Privacy",
+      "content": "Our service is designed to work seamlessly with Tor's onion routing protocol. We understand that users rely on the three-layer encryption and routing through multiple nodes to maintain anonymity.\n\nNetwork-level protections we implement:\n- No logging of connection attempts or timing analysis\n- Protection against traffic correlation attacks\n- Secure handling of .onion domain requests\n- No integration with clearnet tracking services\n- Elimination of JavaScript or plugins that could compromise Tor security\n\nWe do not attempt to de-anonymize users or correlate Tor sessions with real-world identities. Our infrastructure is configured to respect and enhance the privacy protections provided by the Tor network.",
+      "placeholders": []
+    },
+    {
+      "heading": "Data Retention and Deletion",
+      "content": "Given the privacy-sensitive nature of dark web and Tor usage, we maintain strict data retention policies:\n\n- Session data is automatically deleted within {{RETENTION_PERIOD}}\n- No permanent storage of user activity logs\n- Regular purging of temporary files and cache\n- Secure deletion methods for any stored data\n- No backup retention of potentially identifying information\n\nUsers may request immediate data deletion by contacting {{CONTACT_METHOD}}. We will process deletion requests within 24 hours and provide confirmation when possible without compromising anonymity.",
+      "placeholders": [
+        {
+          "key": "RETENTION_PERIOD",
+          "label": "Data Retention Period",
+          "defaultValue": "24 hours"
+        },
+        {
+          "key": "CONTACT_METHOD",
+          "label": "Contact Method",
+          "defaultValue": "our secure contact form"
+        }
+      ]
+    },
+    {
+      "heading": "Security Measures and Threat Protection",
+      "content": "We implement additional security measures beyond standard web services to protect against threats common in dark web environments:\n\n- End-to-end encryption for all communications\n- Protection against malicious exit nodes\n- Regular security audits of our .onion infrastructure\n- Anti-fingerprinting measures\n- Protection against timing correlation attacks\n- Secure handling of cryptocurrency transactions (if applicable)\n\nWe recommend users also employ additional privacy tools such as:\n- VPN services before connecting to Tor\n- Privacy-focused operating systems like Tails\n- Incognito Browser for additional browsing protection\n- Regular security updates for all privacy tools",
+      "placeholders": []
+    },
+    {
+      "heading": "Third-Party Services and External Links",
+      "content": "We minimize third-party integrations to protect user anonymity. Any external services used are carefully vetted for privacy compliance:\n\n- No social media tracking pixels or analytics\n- No content delivery networks that could log requests\n- Limited use of external resources that could compromise anonymity\n- Clear disclosure of any necessary third-party connections\n\nWhen linking to external sites, we provide warnings about potential privacy risks when leaving our service. Users should verify that external links maintain .onion domains when possible to stay within the Tor network.",
+      "placeholders": []
+    },
+    {
+      "heading": "Legal Compliance and Law Enforcement",
+      "content": "{{SERVICE_NAME}} operates in compliance with applicable laws while respecting user privacy rights:\n\n- We cannot provide user identification information we do not collect\n- Legal requests are evaluated for validity and scope\n- We provide transparency reports when legally permissible\n- Users are notified of legal requests when possible and legal\n- We challenge overbroad or legally questionable requests\n\nOur technical architecture is designed to minimize data available for legal disclosure while maintaining compliance with applicable regulations in {{JURISDICTION}}.",
+      "placeholders": [
+        {
+          "key": "SERVICE_NAME",
+          "label": "Service Name",
+          "defaultValue": "[Your Service Name]"
+        },
+        {
+          "key": "JURISDICTION",
+          "label": "Legal Jurisdiction",
+          "defaultValue": "[Your Jurisdiction]"
+        }
+      ]
+    },
+    {
+      "heading": "User Responsibilities and Best Practices",
+      "content": "While we provide privacy protections, users must also take steps to maintain their anonymity:\n\n- Keep Tor browser updated to the latest version\n- Disable JavaScript and plugins that could reveal identity\n- Use additional privacy tools like VPNs or Incognito Browser\n- Avoid providing personally identifiable information\n- Be cautious of file downloads that could contain tracking elements\n- Regularly clear browser data and cookies\n\nUsers should understand that perfect anonymity requires proper operational security practices beyond just using our service.",
+      "placeholders": []
+    },
+    {
+      "heading": "Policy Updates and Notifications",
+      "content": "Changes to this privacy policy will be communicated through:\n\n- Prominent notices on our .onion site\n- Updates to our last modified date\n- Anonymous notification systems when possible\n\nMajor changes affecting privacy protections will be announced with {{NOTICE_PERIOD}} advance notice when feasible. Users are encouraged to regularly review this policy for updates.\n\nThis policy was last updated on {{LAST_UPDATED}} and is effective immediately.",
+      "placeholders": [
+        {
+          "key": "NOTICE_PERIOD",
+          "label": "Advance Notice Period",
+          "defaultValue": "30 days"
+        },
+        {
+          "key": "LAST_UPDATED",
+          "label": "Last Updated Date",
+          "defaultValue": "[Current Date]"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "Dark web marketplaces and services",
+    "Anonymous communication platforms",
+    "Privacy-focused web applications on Tor",
+    "Whistleblowing and journalism platforms",
+    "Research services requiring user anonymity",
+    ".onion websites and hidden services",
+    "Cryptocurrency and privacy-focused financial services",
+    "Anonymous file sharing platforms"
+  ],
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Policy Template",
+      "url": "/templates/vpn-privacy-policy",
+      "type": "template"
+    },
+    {
+      "title": "Browser Privacy Settings Guide",
+      "url": "/guides/browser-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "Incognito Mode Privacy Facts",
+      "url": "/guides/incognito-mode-privacy",
+      "type": "guide"
+    }
+  ]
+}

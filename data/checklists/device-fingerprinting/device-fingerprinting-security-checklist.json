@@ -1,0 +1,151 @@
+{
+  "niche": "device-fingerprinting",
+  "slug": "device-fingerprinting-security-checklist",
+  "title": "Device Fingerprinting Security Checklist",
+  "metaDescription": "Complete checklist to protect against device fingerprinting. Learn browser settings, tools, and techniques to prevent tracking.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45 minutes",
+  "intro": "Device fingerprinting allows websites to track you by collecting unique characteristics of your browser and device. This checklist helps you implement essential protections against canvas fingerprinting, browser profiling, and other tracking techniques.",
+  "sections": [
+    {
+      "title": "Browser Configuration",
+      "items": [
+        {
+          "id": "disable-webgl",
+          "task": "Disable WebGL in your browser",
+          "why": "WebGL reveals detailed graphics card information that creates a unique fingerprint for tracking purposes.",
+          "howTo": "In Firefox: go to about:config and set webgl.disabled to true. In Chrome: use flags or extensions to disable WebGL rendering.",
+          "priority": "high"
+        },
+        {
+          "id": "block-canvas-fingerprinting",
+          "task": "Enable canvas fingerprinting protection",
+          "why": "Canvas fingerprinting uses HTML5 canvas to create unique identifiers based on how your system renders graphics.",
+          "howTo": "Use Firefox's enhanced tracking protection or install extensions like Canvas Blocker. Consider Incognito Browser for built-in fingerprint protection.",
+          "priority": "critical"
+        },
+        {
+          "id": "disable-javascript",
+          "task": "Configure JavaScript permissions selectively",
+          "why": "JavaScript enables most fingerprinting techniques by accessing system information and browser capabilities.",
+          "howTo": "Use NoScript or uBlock Origin to block JavaScript on untrusted sites. Enable only on sites you actively use.",
+          "priority": "high"
+        },
+        {
+          "id": "standardize-user-agent",
+          "task": "Spoof or standardize your user agent string",
+          "why": "User agent strings reveal your exact browser version, operating system, and device type to websites.",
+          "howTo": "Install User-Agent Switcher extensions or use browsers like Tor that standardize user agents automatically.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Privacy Extensions and Tools",
+      "items": [
+        {
+          "id": "install-fingerprint-blocker",
+          "task": "Install a dedicated fingerprinting protection extension",
+          "why": "Specialized extensions can block multiple fingerprinting vectors that standard ad blockers might miss.",
+          "howTo": "Install extensions like ClearURLs, Decentraleyes, or Privacy Badger. For comprehensive protection, consider switching to Incognito Browser.",
+          "priority": "critical"
+        },
+        {
+          "id": "configure-ublock-origin",
+          "task": "Set up uBlock Origin with anti-fingerprinting filters",
+          "why": "Advanced ad blockers can prevent fingerprinting scripts from loading and executing on websites.",
+          "howTo": "Install uBlock Origin and enable the 'AdGuard URL Tracking Protection' and 'EasyPrivacy' filter lists in settings.",
+          "priority": "high"
+        },
+        {
+          "id": "use-chameleon-extension",
+          "task": "Install Chameleon or similar spoofing extension",
+          "why": "Randomizing browser characteristics makes it difficult for sites to create consistent fingerprints.",
+          "howTo": "Install Chameleon extension and configure it to randomize screen resolution, timezone, and language settings periodically.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "System-Level Protection",
+      "items": [
+        {
+          "id": "use-vpn-consistently",
+          "task": "Always browse with a VPN enabled",
+          "why": "IP addresses are a primary component of device fingerprints and can link your browsing sessions.",
+          "howTo": "Subscribe to a no-logs VPN service and ensure it's connected before browsing. Choose servers in different locations regularly.",
+          "priority": "high"
+        },
+        {
+          "id": "standardize-screen-resolution",
+          "task": "Use common screen resolutions",
+          "why": "Unusual screen resolutions make your device easily identifiable among millions of users.",
+          "howTo": "Set your browser window to common sizes like 1920x1080 or 1366x768. Use extensions to spoof screen resolution.",
+          "priority": "medium"
+        },
+        {
+          "id": "disable-hardware-acceleration",
+          "task": "Turn off hardware acceleration in browsers",
+          "why": "Hardware acceleration exposes detailed information about your graphics card and system capabilities.",
+          "howTo": "In Chrome: Settings > Advanced > System > disable 'Use hardware acceleration'. In Firefox: Preferences > Performance > uncheck hardware acceleration.",
+          "priority": "medium"
+        },
+        {
+          "id": "clear-browser-data",
+          "task": "Regularly clear all browser data and cookies",
+          "why": "Persistent data can be used to link new fingerprints with previous browsing sessions.",
+          "howTo": "Set browsers to clear all data on exit or use private browsing mode exclusively. Clear data manually at least weekly.",
+          "priority": "low"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Protection Measures",
+      "items": [
+        {
+          "id": "use-tor-browser",
+          "task": "Browse sensitive content through Tor Browser",
+          "why": "Tor Browser is specifically designed to prevent fingerprinting by making all users appear identical.",
+          "howTo": "Download Tor Browser for sensitive browsing. Never resize the window or install additional extensions that could compromise anonymity.",
+          "priority": "high"
+        },
+        {
+          "id": "rotate-browsers",
+          "task": "Use multiple browsers with different configurations",
+          "why": "Different browsers have distinct fingerprints, making it harder to track you across sessions.",
+          "howTo": "Maintain separate browsers for different activities. Use Incognito Browser for privacy-focused browsing and mainstream browsers for general use.",
+          "priority": "medium"
+        },
+        {
+          "id": "test-fingerprint-uniqueness",
+          "task": "Regularly test your browser fingerprint",
+          "why": "Understanding how unique your fingerprint is helps you adjust protection measures effectively.",
+          "howTo": "Visit sites like AmIUnique.org or Panopticlick.eff.org monthly to test your fingerprint uniqueness and adjust settings accordingly.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Browser Privacy Settings Guide",
+      "url": "/guides/browser-privacy-settings",
+      "type": "internal"
+    },
+    {
+      "title": "Cookie Management Best Practices",
+      "url": "/guides/cookie-management",
+      "type": "internal"
+    },
+    {
+      "title": "EFF's Panopticlick Test",
+      "url": "https://panopticlick.eff.org",
+      "type": "external"
+    },
+    {
+      "title": "Firefox Privacy Features",
+      "url": "https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop",
+      "type": "external"
+    }
+  ]
+}

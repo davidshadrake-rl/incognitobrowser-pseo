@@ -1,0 +1,200 @@
+{
+  "niche": "location-tracking",
+  "slug": "location-tracking-gps-privacy-risk-calculator",
+  "title": "Location Tracking & GPS Privacy Risk Calculator",
+  "metaDescription": "Calculate your location privacy risk score. Assess how apps and services track your GPS data and get personalized tips to protect your location.",
+  "description": "Evaluate your location privacy exposure across devices, apps, and services. This calculator analyzes your GPS tracking risk factors and provides actionable steps to protect your physical location data from unwanted surveillance.",
+  "inputs": [
+    {
+      "id": "mobileApps",
+      "label": "Number of apps with location permissions",
+      "type": "range",
+      "defaultValue": 15,
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "helpText": "Check your phone's location permissions to count apps with access"
+    },
+    {
+      "id": "locationAccuracy",
+      "label": "Location services accuracy setting",
+      "type": "select",
+      "defaultValue": "high",
+      "options": [
+        {
+          "value": "off",
+          "label": "Location services disabled"
+        },
+        {
+          "value": "low",
+          "label": "Approximate location only"
+        },
+        {
+          "value": "high",
+          "label": "Precise location enabled"
+        }
+      ],
+      "helpText": "Found in your device's location/privacy settings"
+    },
+    {
+      "id": "socialSharing",
+      "label": "Social media location sharing",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never share location"
+        },
+        {
+          "value": "sometimes",
+          "label": "Occasionally share location"
+        },
+        {
+          "value": "always",
+          "label": "Always share location"
+        }
+      ],
+      "helpText": "How often you tag locations or share whereabouts on social media"
+    },
+    {
+      "id": "googleTracking",
+      "label": "Google Location History enabled",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Check your Google Account > Data & Privacy > Location History settings"
+    },
+    {
+      "id": "adTracking",
+      "label": "Ad personalization based on location",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Whether you allow location-based advertising"
+    },
+    {
+      "id": "smartDevices",
+      "label": "Number of connected smart devices",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "helpText": "Smart home devices, wearables, car systems that track location"
+    },
+    {
+      "id": "wifiTracking",
+      "label": "WiFi and Bluetooth always enabled",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "These can be used for location tracking even when location services are off"
+    },
+    {
+      "id": "publicWifi",
+      "label": "Frequency of public WiFi use",
+      "type": "select",
+      "defaultValue": "weekly",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never use public WiFi"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly or less"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "daily",
+          "label": "Daily"
+        }
+      ],
+      "helpText": "Public WiFi networks can track and log your location visits"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Location Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall location tracking risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your privacy risk category"
+    },
+    {
+      "id": "trackingVectors",
+      "label": "Active Tracking Methods",
+      "format": "number",
+      "description": "Number of ways your location is being tracked"
+    },
+    {
+      "id": "recommendation",
+      "label": "Primary Recommendation",
+      "format": "text",
+      "description": "Most important step to improve your location privacy"
+    }
+  ],
+  "formula": "const appRisk = Math.min(mobileApps * 2, 40); const accuracyRisk = locationAccuracy === 'high' ? 20 : locationAccuracy === 'low' ? 10 : 0; const socialRisk = socialSharing === 'always' ? 15 : socialSharing === 'sometimes' ? 8 : 0; const googleRisk = googleTracking ? 15 : 0; const adRisk = adTracking ? 10 : 0; const deviceRisk = Math.min(smartDevices * 2, 20); const wifiRisk = wifiTracking ? 10 : 0; const publicWifiRisk = publicWifi === 'daily' ? 15 : publicWifi === 'weekly' ? 10 : publicWifi === 'monthly' ? 5 : 0; const riskScore = Math.min(appRisk + accuracyRisk + socialRisk + googleRisk + adRisk + deviceRisk + wifiRisk + publicWifiRisk, 100); const trackingVectors = (mobileApps > 0 ? 1 : 0) + (locationAccuracy !== 'off' ? 1 : 0) + (socialSharing !== 'never' ? 1 : 0) + (googleTracking ? 1 : 0) + (adTracking ? 1 : 0) + (smartDevices > 0 ? 1 : 0) + (wifiTracking ? 1 : 0) + (publicWifi !== 'never' ? 1 : 0); let riskLevel, recommendation; if (riskScore <= 25) { riskLevel = 'A'; recommendation = 'Excellent privacy! Consider using Incognito Browser for additional web browsing privacy.'; } else if (riskScore <= 50) { riskLevel = 'B'; recommendation = 'Good privacy. Review app permissions and disable location for unnecessary apps.'; } else if (riskScore <= 75) { riskLevel = 'C'; recommendation = 'Moderate risk. Turn off Google Location History and limit social media location sharing.'; } else { riskLevel = 'D'; recommendation = 'High risk! Disable precise location services and review all app permissions immediately.'; } return { riskScore, riskLevel, trackingVectors, recommendation };",
+  "educational": {
+    "methodology": "This calculator evaluates multiple location tracking vectors including app permissions, device settings, social media habits, and connected devices. Each factor is weighted based on its privacy impact and data collection potential. The risk score reflects how extensively your location data may be collected, stored, and potentially shared.",
+    "tips": [
+      "Regularly audit app location permissions - remove access for apps that don't need it",
+      "Turn off Google Location History and Timeline in your Google Account settings",
+      "Use 'Precise Location' sparingly - many apps work fine with approximate location",
+      "Disable location-based ads in your device's privacy settings",
+      "Turn off WiFi and Bluetooth when not needed to prevent beacon tracking",
+      "Use Incognito Browser to prevent location-based web tracking",
+      "Avoid checking in or tagging locations on social media",
+      "Review smart device privacy settings and disable unnecessary location features"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk (A)",
+        "description": "Excellent location privacy practices. You have minimal tracking exposure.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk (B)",
+        "description": "Good privacy with room for improvement. Some tracking vectors are active.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk (C)",
+        "description": "Significant location tracking exposure. Multiple privacy improvements needed.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Very High Risk (D)",
+        "description": "Extensive location tracking across multiple services. Immediate action recommended.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Smart Home Privacy Calculator",
+      "url": "/smart-home-privacy",
+      "type": "calculator"
+    },
+    {
+      "title": "Social Media Privacy Assessment",
+      "url": "/social-media-privacy",
+      "type": "calculator"
+    },
+    {
+      "title": "Dating App Privacy Guide",
+      "url": "/dating-privacy",
+      "type": "guide"
+    }
+  ]
+}

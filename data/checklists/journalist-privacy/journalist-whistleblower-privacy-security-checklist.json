@@ -1,0 +1,165 @@
+{
+  "niche": "journalist-privacy",
+  "slug": "journalist-whistleblower-privacy-security-checklist",
+  "title": "Journalist & Whistleblower Privacy Security Checklist",
+  "metaDescription": "Essential security checklist for journalists and whistleblowers to protect sources, communicate securely, and maintain privacy while reporting.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Protecting sources and maintaining secure communications is crucial for journalists and whistleblowers. This checklist covers essential privacy and security measures to safeguard sensitive information, protect your identity, and ensure secure reporting.",
+  "sections": [
+    {
+      "title": "Essential Communication Security",
+      "items": [
+        {
+          "id": "secure-messaging",
+          "task": "Set up encrypted messaging apps",
+          "why": "Standard messaging apps can be intercepted. Encrypted messaging protects conversations with sources from surveillance and data breaches.",
+          "howTo": "Install Signal, Wire, or Element. Enable disappearing messages, verify contact keys, and use separate devices for sensitive communications when possible.",
+          "priority": "critical"
+        },
+        {
+          "id": "secure-email",
+          "task": "Use encrypted email services",
+          "why": "Regular email providers can be compelled to hand over messages. Encrypted email services protect communications from government and corporate surveillance.",
+          "howTo": "Create accounts with ProtonMail or Tutanota. Use PGP encryption for additional security. Always verify recipient keys before sending sensitive information.",
+          "priority": "critical"
+        },
+        {
+          "id": "secure-voice-calls",
+          "task": "Make encrypted voice calls",
+          "why": "Phone calls can be intercepted by law enforcement and intelligence agencies. Encrypted calls protect verbal communications with sources.",
+          "howTo": "Use Signal for voice calls, or Jami for completely decentralized calls. Avoid regular phone networks for sensitive conversations.",
+          "priority": "high"
+        },
+        {
+          "id": "burner-devices",
+          "task": "Use dedicated devices for sensitive work",
+          "why": "Separating sensitive communications from personal devices reduces the risk of cross-contamination and makes surveillance more difficult.",
+          "howTo": "Purchase a separate phone or laptop with cash. Use it only for sensitive reporting work. Keep it powered off when not in use.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Anonymous Browsing & Research",
+      "items": [
+        {
+          "id": "tor-browser",
+          "task": "Use Tor Browser for anonymous research",
+          "why": "Regular browsers reveal your location and identity. Tor Browser routes traffic through multiple servers to hide your real IP address.",
+          "howTo": "Download Tor Browser from the official website. Use it for all sensitive research. Never log into personal accounts while using Tor.",
+          "priority": "critical"
+        },
+        {
+          "id": "vpn-service",
+          "task": "Install a no-logs VPN service",
+          "why": "VPNs add an extra layer of protection and can help bypass censorship. No-logs policies ensure your browsing history isn't stored.",
+          "howTo": "Subscribe to Mullvad, IVPN, or ExpressVPN. Pay with cryptocurrency if possible. Always connect to VPN before accessing sensitive sites.",
+          "priority": "high"
+        },
+        {
+          "id": "incognito-browser",
+          "task": "Use Incognito Browser for enhanced privacy",
+          "why": "Standard browsers track your activity and store data. Incognito Browser provides built-in privacy features and reduces digital footprints.",
+          "howTo": "Download Incognito Browser for mobile devices. Use it for research that requires privacy but doesn't need Tor-level anonymity.",
+          "priority": "medium"
+        },
+        {
+          "id": "search-engines",
+          "task": "Switch to private search engines",
+          "why": "Google and other major search engines track and store your searches. Private search engines don't collect personal information.",
+          "howTo": "Use DuckDuckGo, Startpage, or Searx for all searches. Set them as default in your browsers and bookmark them for easy access.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Source Protection",
+      "items": [
+        {
+          "id": "securedrop-setup",
+          "task": "Learn to use SecureDrop systems",
+          "why": "SecureDrop allows sources to submit documents anonymously. It's designed specifically for journalist-source communications.",
+          "howTo": "If your organization has SecureDrop, learn the proper procedures. If not, direct sources to news organizations that do, like The Guardian or The New York Times.",
+          "priority": "critical"
+        },
+        {
+          "id": "meeting-security",
+          "task": "Practice secure meeting protocols",
+          "why": "In-person meetings can be surveilled. Proper protocols protect both you and your sources from being identified or monitored.",
+          "howTo": "Meet in public places with multiple exits. Leave phones at home or in Faraday bags. Vary meeting locations and times. Use code words if necessary.",
+          "priority": "high"
+        },
+        {
+          "id": "document-handling",
+          "task": "Secure document handling procedures",
+          "why": "Documents from sources often contain identifying metadata or unique characteristics that can reveal the source's identity.",
+          "howTo": "Remove metadata using tools like MAT2. Scan paper documents instead of photocopying. Store documents on encrypted drives separate from other files.",
+          "priority": "high"
+        },
+        {
+          "id": "air-gapped-systems",
+          "task": "Set up air-gapped document review",
+          "why": "Internet-connected devices can be compromised remotely. Air-gapped systems ensure sensitive documents can't be accessed by attackers.",
+          "howTo": "Use a computer never connected to the internet for reviewing sensitive documents. Transfer files via encrypted USB drives that are wiped after use.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Digital Security Fundamentals",
+      "items": [
+        {
+          "id": "full-disk-encryption",
+          "task": "Enable full disk encryption",
+          "why": "If your device is seized or stolen, encryption prevents unauthorized access to your files, sources, and communications.",
+          "howTo": "Enable FileVault on Mac or BitLocker on Windows. Use strong, unique passwords. For Linux, use LUKS encryption during installation.",
+          "priority": "critical"
+        },
+        {
+          "id": "password-manager",
+          "task": "Use a password manager",
+          "why": "Strong, unique passwords prevent account compromises. Password managers make it practical to use different passwords for every account.",
+          "howTo": "Install Bitwarden or 1Password. Generate strong passwords for all accounts. Enable two-factor authentication where possible.",
+          "priority": "high"
+        },
+        {
+          "id": "secure-cloud-storage",
+          "task": "Use encrypted cloud storage",
+          "why": "Regular cloud services can be accessed by authorities. Encrypted cloud storage protects your files even if the service is compromised.",
+          "howTo": "Use SpiderOak, Tresorit, or encrypt files locally before uploading to any cloud service using tools like Cryptomator.",
+          "priority": "high"
+        },
+        {
+          "id": "regular-updates",
+          "task": "Keep all software updated",
+          "why": "Software updates often include security fixes. Outdated software can be exploited by attackers to gain access to your systems.",
+          "howTo": "Enable automatic updates for operating systems and applications. Regularly check for updates to browsers, messaging apps, and security tools.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Freedom of the Press Foundation Security Training",
+      "url": "https://freedom.press/training/",
+      "type": "external"
+    },
+    {
+      "title": "Committee to Protect Journalists Safety Kit",
+      "url": "https://cpj.org/safety-kit/",
+      "type": "external"
+    },
+    {
+      "title": "Tor Project for Journalists",
+      "url": "https://blog.torproject.org/tor-heart-journalists/",
+      "type": "external"
+    },
+    {
+      "title": "SecureDrop Directory",
+      "url": "https://securedrop.org/directory/",
+      "type": "external"
+    }
+  ]
+}

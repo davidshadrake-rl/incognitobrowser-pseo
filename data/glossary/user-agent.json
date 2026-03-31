@@ -1,0 +1,31 @@
+{
+  "term": "User Agent",
+  "slug": "user-agent",
+  "definition": "A string of text that identifies the browser, operating system, and device being used to access a website, sent automatically with every web request.",
+  "metaDescription": "Learn what a user agent is, how it identifies your browser and device to websites, and why it matters for your online privacy and security.",
+  "simpleExplanation": "Think of a user agent as your browser's business card. Every time you visit a website, your browser automatically introduces itself by sharing details like 'I'm Chrome on Windows' or 'I'm Safari on iPhone.'",
+  "whyItMatters": "User agents can be used for device fingerprinting to track you across websites. They also reveal information about your system that could be used to identify vulnerabilities or serve targeted content.",
+  "technicalDetail": "User agents are HTTP headers sent with every request containing details like browser name/version, rendering engine, operating system, and device type. While useful for compatibility, they contribute to browser fingerprinting by creating unique device signatures.",
+  "examples": [
+    {
+      "scenario": "Chrome browser on Windows",
+      "explanation": "Your browser sends something like 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/91.0.4472.124' revealing your OS version and browser details."
+    },
+    {
+      "scenario": "Mobile Safari on iPhone",
+      "explanation": "An iPhone user's browser identifies itself with details about iOS version and device model, helping websites serve mobile-optimized content but also enabling tracking."
+    },
+    {
+      "scenario": "Website compatibility",
+      "explanation": "A website uses your user agent to determine if your browser supports certain features, serving different code for Chrome versus Internet Explorer."
+    }
+  ],
+  "relatedTerms": [
+    "browser-fingerprinting",
+    "http-headers",
+    "device-fingerprinting",
+    "tracking",
+    "cookies"
+  ],
+  "category": "technology"
+}

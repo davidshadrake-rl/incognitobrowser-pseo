@@ -1,0 +1,31 @@
+{
+  "term": "Local Storage",
+  "slug": "local-storage",
+  "definition": "A web browser feature that allows websites to store data directly on your device, persisting even after you close the browser or restart your computer.",
+  "metaDescription": "Learn about local storage - how websites store data on your device, privacy implications, and what information might be saved locally.",
+  "simpleExplanation": "Local storage is like a filing cabinet on your computer that websites can use to remember things about you. Unlike cookies, this data doesn't expire and stays until you or the website removes it.",
+  "whyItMatters": "Local storage can contain sensitive personal information and browsing habits. Since it persists indefinitely and isn't automatically cleared, it can be used for tracking across sessions and may accumulate large amounts of data.",
+  "technicalDetail": "Local storage provides websites with typically 5-10MB of storage space per domain using the localStorage API. Data is stored as key-value pairs in plain text and is accessible only to the domain that created it, but remains persistent across browser sessions until manually cleared.",
+  "examples": [
+    {
+      "scenario": "Online shopping cart",
+      "explanation": "An e-commerce site saves items you've added to your cart in local storage, so they're still there when you return to the site days later, even without logging in."
+    },
+    {
+      "scenario": "Game progress saving",
+      "explanation": "A web-based game stores your level progress, high scores, and game settings locally so you can continue where you left off on subsequent visits."
+    },
+    {
+      "scenario": "Form draft saving",
+      "explanation": "A blog platform automatically saves your draft blog post in local storage as you type, preventing loss of work if your browser crashes."
+    }
+  ],
+  "relatedTerms": [
+    "cookies",
+    "session-storage",
+    "browser-fingerprinting",
+    "tracking",
+    "web-storage"
+  ],
+  "category": "technology"
+}

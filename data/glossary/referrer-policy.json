@@ -1,0 +1,31 @@
+{
+  "term": "Referrer Policy",
+  "slug": "referrer-policy",
+  "definition": "A web security mechanism that controls how much information about the previous webpage (referrer) is shared when a user navigates to a new site or clicks a link.",
+  "metaDescription": "Learn about referrer policy, a web security feature that controls what information websites share about where visitors came from.",
+  "simpleExplanation": "When you click a link from one website to another, your browser normally tells the new site where you came from. Referrer policy lets websites control whether this information is shared, helping protect your browsing privacy.",
+  "whyItMatters": "Referrer information can reveal your browsing habits and the path you took to reach a website. Proper referrer policies prevent sensitive information from leaking between sites and protect user privacy during web navigation.",
+  "technicalDetail": "Referrer policy is implemented via HTTP headers or HTML meta tags with values like 'no-referrer', 'same-origin', 'strict-origin', or 'unsafe-url'. It determines what referrer information is sent in the Referer header when making requests to external resources or following links.",
+  "examples": [
+    {
+      "scenario": "Banking website protection",
+      "explanation": "A bank sets a 'no-referrer' policy so when customers click external links, those sites won't know they came from the bank's website, protecting customer privacy."
+    },
+    {
+      "scenario": "Social media sharing",
+      "explanation": "A social platform uses 'strict-origin' policy, sharing only the domain name (not the full URL with personal feed data) when users click shared links."
+    },
+    {
+      "scenario": "Search engine results",
+      "explanation": "A search engine uses 'origin-when-cross-origin' to share full referrer info with same-site pages but only the domain with external sites."
+    }
+  ],
+  "relatedTerms": [
+    "http-headers",
+    "cross-site-tracking",
+    "web-privacy",
+    "data-minimization",
+    "browser-security"
+  ],
+  "category": "technology"
+}

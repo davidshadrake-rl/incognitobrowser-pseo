@@ -1,0 +1,130 @@
+{
+  "niche": "smart-home-privacy",
+  "slug": "smart-home-iot-privacy-policy-template",
+  "title": "Smart Home & IoT Privacy Policy Template",
+  "metaDescription": "Professional privacy policy template for smart home devices and IoT products. Covers data collection, voice recordings, and user rights.",
+  "description": "Comprehensive privacy policy template specifically designed for smart home devices and IoT products. Addresses data collection from sensors, voice recordings, device interactions, and third-party integrations while ensuring compliance with privacy regulations.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Information We Collect",
+      "content": "We collect the following types of information through your smart home devices:\n\n**Device Data**: Usage patterns, device settings, connectivity status, and performance metrics from your {{DEVICE_TYPE}}.\n\n**Environmental Data**: Temperature, humidity, motion detection, and other sensor readings as applicable to device functionality.\n\n**Voice Data**: Audio recordings and transcriptions when you interact with voice-enabled features (stored for {{VOICE_RETENTION_PERIOD}}).\n\n**Network Information**: Wi-Fi network names, IP addresses, and connection quality data.\n\n**Usage Analytics**: How and when you use device features, app interactions, and automation preferences.",
+      "placeholders": [
+        {
+          "key": "DEVICE_TYPE",
+          "label": "Device Type",
+          "defaultValue": "smart home devices"
+        },
+        {
+          "key": "VOICE_RETENTION_PERIOD",
+          "label": "Voice Data Retention Period",
+          "defaultValue": "30 days unless deleted earlier"
+        }
+      ]
+    },
+    {
+      "heading": "How We Use Your Information",
+      "content": "Your information is used to:\n\n• Operate and maintain your smart home devices\n• Provide requested services and respond to voice commands\n• Send device notifications and system updates\n• Improve product functionality through usage analysis\n• Provide customer support and troubleshooting\n• Detect and prevent security threats or unauthorized access\n• Comply with legal obligations and safety requirements\n\nWe do not sell your personal information to third parties. Voice recordings are processed locally when possible, with cloud processing used only for complex requests requiring our AI services."
+    },
+    {
+      "heading": "Data Sharing and Third Parties",
+      "content": "We may share your information with:\n\n**Service Providers**: Cloud hosting, analytics, and customer support services under strict data protection agreements.\n\n**Smart Home Integrations**: When you connect to platforms like {{INTEGRATION_PLATFORMS}}, data sharing is governed by your explicit consent and their privacy policies.\n\n**Legal Requirements**: When required by law, court order, or to protect rights and safety.\n\n**Business Transfers**: In the event of a merger or acquisition, with advance notice to users.\n\nWe never share voice recordings with advertisers or use them for marketing purposes without explicit consent.",
+      "placeholders": [
+        {
+          "key": "INTEGRATION_PLATFORMS",
+          "label": "Integration Platforms",
+          "defaultValue": "Google Home, Amazon Alexa, or Apple HomeKit"
+        }
+      ]
+    },
+    {
+      "heading": "Your Privacy Rights and Controls",
+      "content": "You have the following rights regarding your data:\n\n**Access and Download**: Request copies of your data through your account dashboard or by contacting {{SUPPORT_EMAIL}}.\n\n**Deletion**: Delete voice recordings, usage history, and account data. Some operational data may be retained for device functionality.\n\n**Correction**: Update or correct inaccurate personal information.\n\n**Voice Recording Controls**: \n• Mute microphones using physical switches\n• Delete individual recordings or entire history\n• Opt out of voice improvement programs\n\n**Data Portability**: Export your device settings and automation configurations.\n\n**Opt-Out Rights**: Disable data analytics, marketing communications, and non-essential data processing.",
+      "placeholders": [
+        {
+          "key": "SUPPORT_EMAIL",
+          "label": "Support Email",
+          "defaultValue": "privacy@company.com"
+        }
+      ]
+    },
+    {
+      "heading": "Data Security and Storage",
+      "content": "We protect your information through:\n\n**Encryption**: All data transmitted between devices and our servers uses TLS encryption. Voice recordings and sensitive data are encrypted at rest.\n\n**Access Controls**: Strict employee access controls with regular security training and background checks.\n\n**Network Security**: Regular security audits, penetration testing, and firmware updates to address vulnerabilities.\n\n**Data Retention**: \n• Voice recordings: {{VOICE_RETENTION}}\n• Usage analytics: {{ANALYTICS_RETENTION}}\n• Account data: Retained until account deletion\n\n**Incident Response**: Immediate notification procedures for any security breaches affecting personal data.\n\nFor enhanced privacy while managing your devices, consider using privacy-focused browsers like Incognito Browser when accessing web dashboards.",
+      "placeholders": [
+        {
+          "key": "VOICE_RETENTION",
+          "label": "Voice Data Retention",
+          "defaultValue": "30 days or until manually deleted"
+        },
+        {
+          "key": "ANALYTICS_RETENTION",
+          "label": "Analytics Retention",
+          "defaultValue": "2 years for product improvement"
+        }
+      ]
+    },
+    {
+      "heading": "Children's Privacy",
+      "content": "Our smart home devices are designed for household use but we take special care regarding children's privacy:\n\n• We do not knowingly collect personal information from children under 13\n• Voice recognition technology cannot distinguish between adult and child users\n• Parents can review and delete any recordings that may include children's voices\n• Child safety features include content filtering and usage time restrictions where applicable\n• Parents have full control over data collection and can disable voice recording features\n\nIf you believe we have inadvertently collected information from a child, please contact us immediately for removal."
+    },
+    {
+      "heading": "International Data Transfers",
+      "content": "Your data may be processed and stored in countries other than your residence, including {{PRIMARY_LOCATIONS}}. We ensure adequate protection through:\n\n• Standard Contractual Clauses for EU data transfers\n• Adequacy decisions where available\n• Equivalent privacy protections regardless of location\n• Right to object to international transfers where legally permitted\n\nVoice data processing prioritizes local servers when possible to minimize international transfers.",
+      "placeholders": [
+        {
+          "key": "PRIMARY_LOCATIONS",
+          "label": "Primary Data Locations",
+          "defaultValue": "the United States and European Union"
+        }
+      ]
+    },
+    {
+      "heading": "Contact Information and Updates",
+      "content": "For privacy-related questions or requests:\n\n**Privacy Officer**: {{PRIVACY_CONTACT}}\n**Mailing Address**: {{COMPANY_ADDRESS}}\n**Phone**: {{SUPPORT_PHONE}}\n**Online**: Privacy settings in your device app or web dashboard\n\nWe will notify you of material privacy policy changes through:\n• Email notification to your registered address\n• In-app notifications\n• Device announcements for significant changes\n• 30-day advance notice for material changes affecting data use\n\nContinued use of devices after policy updates constitutes acceptance of changes.",
+      "placeholders": [
+        {
+          "key": "PRIVACY_CONTACT",
+          "label": "Privacy Contact Email",
+          "defaultValue": "privacy@company.com"
+        },
+        {
+          "key": "COMPANY_ADDRESS",
+          "label": "Company Address",
+          "defaultValue": "[Company Address]"
+        },
+        {
+          "key": "SUPPORT_PHONE",
+          "label": "Support Phone",
+          "defaultValue": "[Support Phone Number]"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "Smart home device manufacturers creating privacy policies",
+    "IoT product companies ensuring regulatory compliance",
+    "Voice assistant developers addressing data collection concerns",
+    "Home automation platforms establishing user privacy rights",
+    "Connected appliance manufacturers protecting customer data",
+    "Smart security system providers managing sensitive recordings",
+    "IoT startups developing privacy-compliant products"
+  ],
+  "relatedLinks": [
+    {
+      "title": "Voice Assistant Privacy Guide",
+      "url": "/guides/voice-assistant-privacy-protection",
+      "type": "guide"
+    },
+    {
+      "title": "IoT Security Checklist",
+      "url": "/templates/iot-security-checklist",
+      "type": "template"
+    },
+    {
+      "title": "Smart Device Privacy Settings",
+      "url": "/guides/smart-device-privacy-settings",
+      "type": "guide"
+    }
+  ]
+}

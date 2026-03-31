@@ -1,0 +1,32 @@
+{
+  "term": "CNAME Cloaking",
+  "slug": "cname-cloaking",
+  "definition": "A technique where third-party tracking domains disguise themselves as first-party domains using DNS CNAME records to bypass browser privacy protections and ad blockers.",
+  "metaDescription": "Learn about CNAME cloaking, a tracking technique that disguises third-party domains as first-party to bypass privacy protections and ad blockers.",
+  "simpleExplanation": "CNAME cloaking makes tracking scripts appear to come from the website you're visiting instead of third-party companies. It's like a tracker wearing a disguise to sneak past security guards that would normally block it.",
+  "whyItMatters": "This technique undermines user privacy by bypassing browser protections and ad blockers. It allows companies to continue tracking users even when they've taken steps to protect their privacy, making online surveillance harder to detect and block.",
+  "technicalDetail": "CNAME cloaking uses DNS CNAME records to create subdomains that point to third-party tracking services. When a browser requests analytics.example.com, it's actually redirected to googleanalytics.com, but appears as first-party traffic, bypassing same-origin policy protections and many privacy tools.",
+  "examples": [
+    {
+      "scenario": "News website tracking bypass",
+      "explanation": "A news site creates 'metrics.newssite.com' that secretly points to Facebook's tracking servers, making Facebook's pixel appear as first-party content that ad blockers won't catch."
+    },
+    {
+      "scenario": "E-commerce analytics cloaking",
+      "explanation": "An online store uses 'data.shop.com' to mask Google Analytics tracking, allowing detailed user behavior tracking even when users have privacy settings enabled."
+    },
+    {
+      "scenario": "Marketing platform disguise",
+      "explanation": "A company creates 'insights.brand.com' that actually connects to a third-party marketing automation platform, bypassing browser restrictions on cross-site tracking."
+    }
+  ],
+  "relatedTerms": [
+    "first-party-data",
+    "third-party-tracking",
+    "cross-site-tracking",
+    "tracking-pixels",
+    "fingerprinting"
+  ],
+  "niche": "Web tracking and privacy evasion techniques",
+  "category": "attack"
+}

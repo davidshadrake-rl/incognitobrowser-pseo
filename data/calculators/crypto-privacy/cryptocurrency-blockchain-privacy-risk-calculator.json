@@ -1,0 +1,274 @@
+{
+  "niche": "crypto-privacy",
+  "slug": "cryptocurrency-blockchain-privacy-risk-calculator",
+  "title": "Cryptocurrency & Blockchain Privacy Risk Calculator",
+  "metaDescription": "Assess your crypto privacy risks with our calculator. Evaluate transaction anonymity, blockchain exposure, and improve your cryptocurrency privacy.",
+  "description": "Evaluate your cryptocurrency privacy risks across different blockchains and transaction methods. Get personalized recommendations to enhance your crypto anonymity and protect your financial privacy from blockchain analysis.",
+  "inputs": [
+    {
+      "id": "primaryCrypto",
+      "label": "Primary Cryptocurrency Used",
+      "type": "select",
+      "defaultValue": "bitcoin",
+      "options": [
+        {
+          "value": "bitcoin",
+          "label": "Bitcoin (BTC)"
+        },
+        {
+          "value": "ethereum",
+          "label": "Ethereum (ETH)"
+        },
+        {
+          "value": "monero",
+          "label": "Monero (XMR)"
+        },
+        {
+          "value": "zcash",
+          "label": "Zcash (ZEC)"
+        },
+        {
+          "value": "litecoin",
+          "label": "Litecoin (LTC)"
+        },
+        {
+          "value": "other",
+          "label": "Other"
+        }
+      ],
+      "helpText": "Select the cryptocurrency you use most frequently"
+    },
+    {
+      "id": "transactionFrequency",
+      "label": "Transaction Frequency (per month)",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "helpText": "How many cryptocurrency transactions do you make monthly?"
+    },
+    {
+      "id": "exchangeType",
+      "label": "Exchange Usage",
+      "type": "select",
+      "defaultValue": "centralized",
+      "options": [
+        {
+          "value": "centralized",
+          "label": "Centralized Exchanges (KYC required)"
+        },
+        {
+          "value": "decentralized",
+          "label": "Decentralized Exchanges (DEX)"
+        },
+        {
+          "value": "both",
+          "label": "Both centralized and DEX"
+        },
+        {
+          "value": "p2p",
+          "label": "Peer-to-peer only"
+        },
+        {
+          "value": "none",
+          "label": "No exchanges used"
+        }
+      ],
+      "helpText": "What type of exchanges do you primarily use?"
+    },
+    {
+      "id": "walletReuse",
+      "label": "Address Reuse Frequency",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never reuse addresses"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely reuse addresses"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes reuse addresses"
+        },
+        {
+          "value": "often",
+          "label": "Often reuse addresses"
+        },
+        {
+          "value": "always",
+          "label": "Always use same address"
+        }
+      ],
+      "helpText": "How often do you reuse cryptocurrency addresses?"
+    },
+    {
+      "id": "privacyTools",
+      "label": "Privacy Tools Used",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use mixing services, tumblers, or other privacy enhancement tools?"
+    },
+    {
+      "id": "browserPrivacy",
+      "label": "Browser Privacy for Crypto Activities",
+      "type": "select",
+      "defaultValue": "standard",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard browser"
+        },
+        {
+          "value": "private",
+          "label": "Private browsing mode"
+        },
+        {
+          "value": "incognito-browser",
+          "label": "Incognito Browser"
+        },
+        {
+          "value": "tor",
+          "label": "Tor Browser"
+        },
+        {
+          "value": "vpn",
+          "label": "VPN + standard browser"
+        }
+      ],
+      "helpText": "What browser setup do you use for cryptocurrency activities?"
+    },
+    {
+      "id": "kycCompliance",
+      "label": "KYC/AML Verification Level",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "helpText": "How many services have your full identity verification? (1=few, 5=many)"
+    },
+    {
+      "id": "publicDisclosure",
+      "label": "Public Address Disclosure",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never shared publicly"
+        },
+        {
+          "value": "social",
+          "label": "Shared on social media"
+        },
+        {
+          "value": "business",
+          "label": "Used for business/donations"
+        },
+        {
+          "value": "forums",
+          "label": "Posted on forums/websites"
+        },
+        {
+          "value": "multiple",
+          "label": "Multiple public exposures"
+        }
+      ],
+      "helpText": "Have you shared crypto addresses publicly?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "overallRisk",
+      "label": "Overall Privacy Risk Score",
+      "format": "score",
+      "description": "Your comprehensive cryptocurrency privacy risk assessment (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your privacy risk category based on current practices"
+    },
+    {
+      "id": "anonymityScore",
+      "label": "Transaction Anonymity",
+      "format": "percentage",
+      "description": "Estimated level of transaction anonymity you currently maintain"
+    },
+    {
+      "id": "exposureRisk",
+      "label": "Identity Exposure Risk",
+      "format": "percentage",
+      "description": "Likelihood of your real identity being linked to crypto activities"
+    }
+  ],
+  "formula": "// Calculate base risk from cryptocurrency type\nlet cryptoRisk = 0;\nswitch(primaryCrypto) {\n  case 'bitcoin': cryptoRisk = 70; break;\n  case 'ethereum': cryptoRisk = 75; break;\n  case 'monero': cryptoRisk = 20; break;\n  case 'zcash': cryptoRisk = 35; break;\n  case 'litecoin': cryptoRisk = 70; break;\n  default: cryptoRisk = 65;\n}\n\n// Frequency multiplier\nlet freqMultiplier = Math.min(transactionFrequency / 10, 2);\n\n// Exchange risk\nlet exchangeRisk = 0;\nswitch(exchangeType) {\n  case 'centralized': exchangeRisk = 40; break;\n  case 'decentralized': exchangeRisk = 15; break;\n  case 'both': exchangeRisk = 25; break;\n  case 'p2p': exchangeRisk = 10; break;\n  case 'none': exchangeRisk = 0; break;\n}\n\n// Address reuse risk\nlet reuseRisk = 0;\nswitch(walletReuse) {\n  case 'never': reuseRisk = 0; break;\n  case 'rarely': reuseRisk = 10; break;\n  case 'sometimes': reuseRisk = 25; break;\n  case 'often': reuseRisk = 40; break;\n  case 'always': reuseRisk = 60; break;\n}\n\n// Privacy tools reduction\nlet privacyReduction = privacyTools ? -20 : 0;\n\n// Browser privacy impact\nlet browserRisk = 0;\nswitch(browserPrivacy) {\n  case 'standard': browserRisk = 30; break;\n  case 'private': browserRisk = 20; break;\n  case 'incognito-browser': browserRisk = 5; break;\n  case 'tor': browserRisk = 0; break;\n  case 'vpn': browserRisk = 10; break;\n}\n\n// KYC risk\nlet kycRisk = kycCompliance * 8;\n\n// Public disclosure risk\nlet disclosureRisk = 0;\nswitch(publicDisclosure) {\n  case 'never': disclosureRisk = 0; break;\n  case 'social': disclosureRisk = 30; break;\n  case 'business': disclosureRisk = 20; break;\n  case 'forums': disclosureRisk = 25; break;\n  case 'multiple': disclosureRisk = 50; break;\n}\n\n// Calculate overall risk\nlet baseRisk = (cryptoRisk + exchangeRisk + reuseRisk + browserRisk + kycRisk + disclosureRisk) / 6;\nlet overallRisk = Math.max(0, Math.min(100, baseRisk * freqMultiplier + privacyReduction));\n\n// Determine risk level\nlet riskLevel = '';\nif(overallRisk <= 25) riskLevel = 'A';\nelse if(overallRisk <= 45) riskLevel = 'B';\nelse if(overallRisk <= 65) riskLevel = 'C';\nelse if(overallRisk <= 80) riskLevel = 'D';\nelse riskLevel = 'F';\n\n// Calculate anonymity and exposure\nlet anonymityScore = Math.max(0, 100 - overallRisk);\nlet exposureRisk = Math.min(100, overallRisk + (kycRisk * 0.5) + (disclosureRisk * 0.3));\n\nreturn {\n  overallRisk: Math.round(overallRisk),\n  riskLevel: riskLevel,\n  anonymityScore: Math.round(anonymityScore),\n  exposureRisk: Math.round(exposureRisk)\n};",
+  "educational": {
+    "methodology": "This calculator evaluates your cryptocurrency privacy risks by analyzing blockchain transparency, transaction patterns, exchange usage, and privacy practices. It considers the inherent privacy features of different cryptocurrencies, your behavioral patterns, and the tools you use to protect your financial privacy.",
+    "tips": [
+      "Use privacy-focused cryptocurrencies like Monero or Zcash for better anonymity",
+      "Never reuse cryptocurrency addresses - generate a new address for each transaction",
+      "Use Incognito Browser or Tor when accessing cryptocurrency services",
+      "Prefer decentralized exchanges (DEX) over centralized KYC exchanges when possible",
+      "Consider using mixing services or privacy tools for Bitcoin transactions",
+      "Avoid sharing cryptocurrency addresses on social media or public forums",
+      "Use a VPN when conducting cryptocurrency transactions",
+      "Keep separate wallets for different purposes (trading, long-term storage, privacy)"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Excellent Privacy (A)",
+        "description": "You maintain strong cryptocurrency privacy with minimal exposure risks. Continue current practices.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "26-45",
+        "label": "Good Privacy (B)",
+        "description": "Good privacy practices with some room for improvement. Consider additional privacy tools.",
+        "color": "#84cc16"
+      },
+      {
+        "range": "46-65",
+        "label": "Moderate Risk (C)",
+        "description": "Moderate privacy risks present. Review address reuse habits and consider privacy coins.",
+        "color": "#f59e0b"
+      },
+      {
+        "range": "66-80",
+        "label": "High Risk (D)",
+        "description": "Significant privacy vulnerabilities. Immediate improvements needed in multiple areas.",
+        "color": "#f97316"
+      },
+      {
+        "range": "81-100",
+        "label": "Critical Risk (F)",
+        "description": "Critical privacy exposure. Your cryptocurrency activities are highly traceable and linkable.",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Calculator",
+      "url": "/vpn-privacy-risk-calculator",
+      "type": "internal"
+    },
+    {
+      "title": "Tor Browser Privacy Guide",
+      "url": "/tor-browser-privacy-guide",
+      "type": "internal"
+    },
+    {
+      "title": "Online Banking Privacy Assessment",
+      "url": "/online-banking-privacy-calculator",
+      "type": "internal"
+    }
+  ]
+}

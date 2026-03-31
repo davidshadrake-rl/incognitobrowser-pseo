@@ -1,0 +1,117 @@
+{
+  "niche": "private-search",
+  "slug": "private-search-engines-policy-template",
+  "title": "Private Search Engines Policy Template",
+  "metaDescription": "Create a comprehensive policy for using private search engines. Protect your organization's search privacy with DuckDuckGo, Startpage & more.",
+  "description": "A ready-to-use policy template for organizations implementing private search engines. Covers search privacy requirements, approved platforms like DuckDuckGo and Startpage, and guidelines for protecting search activity from tracking and profiling.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Policy Overview and Purpose",
+      "content": "This policy establishes guidelines for using private search engines to protect {{ORGANIZATION_NAME}}'s search privacy and prevent unauthorized data collection. Private search engines don't track queries, store personal information, or build user profiles, ensuring confidential research remains secure.",
+      "placeholders": [
+        {
+          "key": "ORGANIZATION_NAME",
+          "label": "Organization Name",
+          "defaultValue": "[Your Organization]"
+        }
+      ]
+    },
+    {
+      "heading": "Approved Private Search Engines",
+      "content": "Employees must use the following approved private search engines for work-related searches:\n\n• DuckDuckGo - No tracking, no search history storage\n• Startpage - Google results without tracking\n• Searx - Open-source, self-hostable option\n• {{ADDITIONAL_ENGINES}}\n\nThese platforms are verified to not collect IP addresses, user agents, or search queries for commercial purposes.",
+      "placeholders": [
+        {
+          "key": "ADDITIONAL_ENGINES",
+          "label": "Additional Approved Engines",
+          "defaultValue": ""
+        }
+      ]
+    },
+    {
+      "heading": "Implementation Requirements",
+      "content": "All work devices must be configured with private search engines as default options. Use privacy-focused browsers like Incognito Browser which supports private search integration. Disable search suggestions and autocomplete features that may leak queries to third parties. Configure DNS settings to use privacy-respecting resolvers like {{DNS_PROVIDER}}.",
+      "placeholders": [
+        {
+          "key": "DNS_PROVIDER",
+          "label": "Preferred DNS Provider",
+          "defaultValue": "Cloudflare (1.1.1.1) or Quad9"
+        }
+      ]
+    },
+    {
+      "heading": "Prohibited Search Practices",
+      "content": "The following search practices are prohibited:\n\n• Using Google, Bing, or Yahoo for sensitive research\n• Enabling search history or personalization features\n• Searching for confidential project information on tracking search engines\n• Using company accounts to log into search platforms\n• Conducting competitive research on platforms that may alert competitors"
+    },
+    {
+      "heading": "Browser and Device Configuration",
+      "content": "Configure devices with the following privacy settings:\n\n• Set DuckDuckGo or Startpage as default search engine\n• Enable private/incognito browsing mode for sensitive searches\n• Install privacy-focused browsers like Incognito Browser\n• Block search engine tracking scripts using content blockers\n• Regular clear cookies and search data every {{CLEANUP_FREQUENCY}}\n• Use VPN when conducting market research",
+      "placeholders": [
+        {
+          "key": "CLEANUP_FREQUENCY",
+          "label": "Data Cleanup Frequency",
+          "defaultValue": "24 hours"
+        }
+      ]
+    },
+    {
+      "heading": "Training and Awareness",
+      "content": "All employees will receive training on:\n\n• How private search engines protect organizational privacy\n• Proper configuration of browsers and search settings\n• Identifying when search privacy is critical for business operations\n• Regular updates on new private search tools and threats\n\nTraining will be conducted {{TRAINING_SCHEDULE}} and updated as new privacy tools emerge.",
+      "placeholders": [
+        {
+          "key": "TRAINING_SCHEDULE",
+          "label": "Training Schedule",
+          "defaultValue": "quarterly"
+        }
+      ]
+    },
+    {
+      "heading": "Monitoring and Compliance",
+      "content": "IT department will monitor compliance through:\n\n• Regular browser configuration audits\n• Network traffic analysis to identify tracking search engine usage\n• Employee self-assessment surveys\n• Incident reporting for privacy breaches\n\nViolations will be addressed through {{ENFORCEMENT_PROCESS}} and may result in additional privacy training or disciplinary action.",
+      "placeholders": [
+        {
+          "key": "ENFORCEMENT_PROCESS",
+          "label": "Enforcement Process",
+          "defaultValue": "progressive disciplinary procedure"
+        }
+      ]
+    },
+    {
+      "heading": "Exceptions and Special Circumstances",
+      "content": "Exceptions to this policy may be granted for:\n\n• Academic research requiring specific search platforms\n• Technical troubleshooting that requires mainstream search engines\n• Client work that specifically requires non-private search tools\n\nAll exceptions must be approved by {{APPROVAL_AUTHORITY}} and documented with business justification and additional privacy safeguards.",
+      "placeholders": [
+        {
+          "key": "APPROVAL_AUTHORITY",
+          "label": "Exception Approval Authority",
+          "defaultValue": "IT Security Manager"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "Corporate privacy policies for search engine usage",
+    "Educational institution guidelines for private research",
+    "Healthcare organizations protecting patient-related searches",
+    "Legal firms maintaining client confidentiality in research",
+    "Startups protecting competitive research and strategy",
+    "Government agencies requiring search privacy compliance",
+    "Remote work policies ensuring employee search privacy"
+  ],
+  "relatedLinks": [
+    {
+      "title": "DuckDuckGo Privacy Features Guide",
+      "url": "/guides/duckduckgo-privacy-features",
+      "type": "guide"
+    },
+    {
+      "title": "Browser Privacy Settings Checklist",
+      "url": "/templates/browser-privacy-checklist",
+      "type": "template"
+    },
+    {
+      "title": "Anonymous Search Best Practices",
+      "url": "/guides/anonymous-search-practices",
+      "type": "guide"
+    }
+  ]
+}

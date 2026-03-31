@@ -1,0 +1,106 @@
+{
+  "niche": "public-wifi",
+  "slug": "wifi-security-public-wifi-policy-template",
+  "title": "Wi-Fi Security & Public Wi-Fi Policy Template",
+  "metaDescription": "Create comprehensive Wi-Fi security policies for your organization. Protect against public Wi-Fi risks with our customizable policy template.",
+  "description": "A comprehensive policy template to establish Wi-Fi security guidelines for organizations, covering public Wi-Fi usage, secure connection protocols, and employee safety measures to protect sensitive data and maintain network security.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Policy Overview and Purpose",
+      "content": "This Wi-Fi Security Policy establishes guidelines for safe wireless network usage within [ORGANIZATION_NAME]. This policy aims to protect organizational data, employee privacy, and network infrastructure from security threats associated with Wi-Fi connections, particularly when using public hotspots. All employees, contractors, and authorized users must comply with these guidelines when accessing wireless networks for business purposes.",
+      "placeholders": [
+        {
+          "key": "ORGANIZATION_NAME",
+          "label": "Organization Name",
+          "defaultValue": "Your Organization"
+        }
+      ]
+    },
+    {
+      "heading": "Corporate Wi-Fi Network Security",
+      "content": "Our corporate wireless network [NETWORK_NAME] is secured with WPA3 encryption and requires authentication. Users must: 1) Use only company-issued devices or approved personal devices enrolled in our Mobile Device Management (MDM) system, 2) Connect using provided credentials and never share network passwords, 3) Enable automatic device locking with strong passwords or biometric authentication, 4) Keep devices updated with latest security patches, 5) Report any suspicious network activity or unauthorized access attempts immediately to IT security team at [IT_CONTACT].",
+      "placeholders": [
+        {
+          "key": "NETWORK_NAME",
+          "label": "Corporate Network Name",
+          "defaultValue": "CompanyWiFi"
+        },
+        {
+          "key": "IT_CONTACT",
+          "label": "IT Contact Information",
+          "defaultValue": "it-security@company.com"
+        }
+      ]
+    },
+    {
+      "heading": "Public Wi-Fi Usage Restrictions",
+      "content": "Public Wi-Fi networks pose significant security risks and should be used with extreme caution. When using public hotspots: 1) Never access sensitive company data, customer information, or confidential systems, 2) Always use a company-approved VPN service before connecting to any public network, 3) Avoid accessing financial accounts, email, or cloud storage containing business data, 4) Use privacy-focused browsers like Incognito Browser to minimize tracking and data exposure, 5) Disable automatic Wi-Fi connection and forget networks after use, 6) Verify network names with venue staff to avoid connecting to malicious hotspots with similar names.",
+      "placeholders": []
+    },
+    {
+      "heading": "Mandatory VPN and Security Tools",
+      "content": "All remote work and public Wi-Fi usage requires VPN protection. Employees must: 1) Install and activate [VPN_SERVICE] on all devices used for business purposes, 2) Connect to VPN before accessing any company resources on public networks, 3) Use company-approved security software including antivirus and firewall protection, 4) Enable automatic updates for VPN software and security tools, 5) Never disable VPN or security software without IT approval, 6) Report VPN connectivity issues immediately rather than proceeding without protection. Personal hotspots from cellular devices are preferred over public Wi-Fi when VPN is unavailable.",
+      "placeholders": [
+        {
+          "key": "VPN_SERVICE",
+          "label": "Approved VPN Service",
+          "defaultValue": "Company VPN"
+        }
+      ]
+    },
+    {
+      "heading": "Prohibited Activities and Risk Mitigation",
+      "content": "The following activities are strictly prohibited on any wireless network: 1) Downloading or installing unauthorized software, especially on public Wi-Fi, 2) Accessing inappropriate, illegal, or non-business related content, 3) Creating unauthorized wireless hotspots or sharing company internet connections, 4) Connecting unsecured devices or IoT equipment to corporate networks, 5) Using file-sharing applications or peer-to-peer services, 6) Storing company credentials in browsers or apps on personal devices. Employees should use strong, unique passwords for all accounts and enable two-factor authentication where available.",
+      "placeholders": []
+    },
+    {
+      "heading": "Incident Reporting and Response",
+      "content": "Security incidents must be reported immediately to prevent data breaches. Report the following situations within [REPORTING_TIMEFRAME]: 1) Suspected unauthorized access to accounts or company data, 2) Device theft, loss, or compromise while connected to Wi-Fi, 3) Discovery of malware, suspicious emails, or security warnings, 4) Accidental connection to unsecured or suspicious networks, 5) Any indication that company data may have been accessed by unauthorized parties. Contact the incident response team at [INCIDENT_CONTACT] and follow up with written documentation of the incident circumstances.",
+      "placeholders": [
+        {
+          "key": "REPORTING_TIMEFRAME",
+          "label": "Incident Reporting Timeframe",
+          "defaultValue": "24 hours"
+        },
+        {
+          "key": "INCIDENT_CONTACT",
+          "label": "Incident Response Contact",
+          "defaultValue": "security-incidents@company.com"
+        }
+      ]
+    },
+    {
+      "heading": "Policy Compliance and Enforcement",
+      "content": "Compliance with this Wi-Fi Security Policy is mandatory for all personnel. Violations may result in disciplinary action, including termination of employment or contract. Regular security training will be provided to ensure understanding of Wi-Fi risks and safe practices. IT security will conduct periodic audits of wireless network usage and device compliance. This policy will be reviewed annually and updated as needed to address emerging threats. By acknowledging this policy, users agree to follow all guidelines and accept responsibility for maintaining security when using wireless networks for business purposes.",
+      "placeholders": []
+    }
+  ],
+  "useCases": [
+    "Corporate IT departments establishing wireless security guidelines",
+    "Small businesses creating employee Wi-Fi usage policies",
+    "Remote work organizations protecting distributed teams",
+    "Educational institutions securing campus and student networks",
+    "Healthcare facilities protecting patient data on wireless networks",
+    "Legal firms safeguarding confidential client information",
+    "Financial services companies preventing data breaches on public Wi-Fi",
+    "Consulting firms with mobile workforce security needs"
+  ],
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Guide",
+      "url": "/vpn-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Browser Privacy Settings",
+      "url": "/browser-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Password Security Best Practices",
+      "url": "/password-security",
+      "type": "internal"
+    }
+  ]
+}

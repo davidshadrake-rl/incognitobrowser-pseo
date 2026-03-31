@@ -1,0 +1,132 @@
+{
+  "niche": "browser-extensions",
+  "slug": "browser-extensions-privacy-addons-security-checklist",
+  "title": "Browser Extensions & Privacy Add-ons Security Checklist",
+  "metaDescription": "Essential security checklist for privacy-focused browser extensions, ad blockers, and security add-ons. Protect your browsing with uBlock Origin and more.",
+  "difficulty": "intermediate",
+  "estimatedTime": "30-45 minutes",
+  "intro": "Browser extensions can enhance privacy but also create security risks. This checklist helps you choose, configure, and maintain privacy-focused extensions safely while avoiding malicious add-ons that could compromise your data.",
+  "sections": [
+    {
+      "title": "Extension Selection & Installation",
+      "items": [
+        {
+          "id": "verify-extension-source",
+          "task": "Only install extensions from official browser stores",
+          "why": "Official stores have security reviews and can remove malicious extensions quickly, reducing malware risk.",
+          "howTo": "Use Chrome Web Store, Firefox Add-ons, or Edge Add-ons. Avoid downloading .crx or .xpi files from third-party sites unless absolutely necessary.",
+          "priority": "critical"
+        },
+        {
+          "id": "check-extension-permissions",
+          "task": "Review all requested permissions before installing",
+          "why": "Extensions requesting excessive permissions may access sensitive data beyond their stated purpose.",
+          "howTo": "Read the permissions list carefully. Ad blockers need site access, but a calculator shouldn't need to read browsing history. Reject extensions with suspicious permission requests.",
+          "priority": "critical"
+        },
+        {
+          "id": "research-extension-reputation",
+          "task": "Verify extension developer and user reviews",
+          "why": "Established developers with good reputations are less likely to create malicious extensions.",
+          "howTo": "Check developer history, read recent reviews, look for red flags like sudden permission changes or suspicious behavior reports. Prefer extensions with 1000+ users and 4+ star ratings.",
+          "priority": "high"
+        },
+        {
+          "id": "install-essential-privacy-extensions",
+          "task": "Install core privacy extensions: uBlock Origin, Privacy Badger",
+          "why": "These proven extensions block ads, trackers, and malicious content without compromising security.",
+          "howTo": "Install uBlock Origin for ad/tracker blocking and Privacy Badger for additional tracker protection. Both are open-source and regularly updated.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Extension Configuration & Management",
+      "items": [
+        {
+          "id": "configure-ublock-origin",
+          "task": "Properly configure uBlock Origin settings",
+          "why": "Default settings may not provide maximum protection against ads, trackers, and malicious content.",
+          "howTo": "Enable additional filter lists like 'Annoyances' and 'Privacy'. Turn on 'Block remote fonts' and 'Disable JavaScript' for sensitive browsing. Use medium or hard mode for advanced users.",
+          "priority": "high"
+        },
+        {
+          "id": "limit-extension-count",
+          "task": "Keep installed extensions to minimum necessary",
+          "why": "Each extension increases attack surface and potential privacy risks. More extensions mean more data access points.",
+          "howTo": "Regularly audit your extensions. Remove unused ones. Aim for 5-10 essential extensions maximum. Consider Incognito Browser which has built-in privacy features reducing extension needs.",
+          "priority": "medium"
+        },
+        {
+          "id": "disable-extensions-incognito",
+          "task": "Disable non-essential extensions in private browsing",
+          "why": "Extensions can track activity even in incognito mode unless explicitly disabled.",
+          "howTo": "Go to browser extension settings and uncheck 'Allow in incognito/private' for all extensions except essential privacy tools like uBlock Origin.",
+          "priority": "high"
+        },
+        {
+          "id": "regular-extension-updates",
+          "task": "Enable automatic updates for all extensions",
+          "why": "Updates patch security vulnerabilities and improve protection against new tracking methods.",
+          "howTo": "In browser settings, ensure 'Update extensions automatically' is enabled. Manually check for updates monthly in extension management page.",
+          "priority": "critical"
+        }
+      ]
+    },
+    {
+      "title": "Security Monitoring & Maintenance",
+      "items": [
+        {
+          "id": "monitor-extension-behavior",
+          "task": "Watch for suspicious extension behavior or changes",
+          "why": "Extensions can be sold to malicious actors or updated with harmful code after installation.",
+          "howTo": "Notice if extensions request new permissions, show unexpected ads, or slow browsing significantly. Remove any extension exhibiting suspicious behavior immediately.",
+          "priority": "high"
+        },
+        {
+          "id": "review-extension-permissions-quarterly",
+          "task": "Quarterly review of all extension permissions",
+          "why": "Extensions may request additional permissions through updates, expanding their data access.",
+          "howTo": "Every 3 months, check each extension's current permissions in browser settings. Remove any that gained unnecessary permissions or are no longer needed.",
+          "priority": "medium"
+        },
+        {
+          "id": "backup-extension-settings",
+          "task": "Export and backup extension configurations",
+          "why": "Losing custom filter lists and settings requires time-consuming reconfiguration and may reduce protection temporarily.",
+          "howTo": "Use uBlock Origin's backup feature to export settings. Document custom filter rules. Consider browser sync but be aware of privacy trade-offs.",
+          "priority": "low"
+        },
+        {
+          "id": "test-extension-effectiveness",
+          "task": "Regularly test ad blocker and privacy extension effectiveness",
+          "why": "Extensions may become less effective over time as advertisers and trackers develop new techniques.",
+          "howTo": "Monthly, visit sites like d3ward.github.io/toolz/adblock.html to test ad blocking effectiveness. Check for missed ads or trackers and adjust settings accordingly.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "uBlock Origin Official",
+      "url": "https://github.com/gorhill/uBlock",
+      "type": "tool"
+    },
+    {
+      "title": "Privacy Badger by EFF",
+      "url": "https://privacybadger.org/",
+      "type": "tool"
+    },
+    {
+      "title": "Browser Extension Security Guide",
+      "url": "https://www.mozilla.org/en-US/firefox/extensions/",
+      "type": "guide"
+    },
+    {
+      "title": "Incognito Browser",
+      "url": "https://incognitobrowser.com",
+      "type": "tool"
+    }
+  ]
+}

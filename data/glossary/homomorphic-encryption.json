@@ -1,0 +1,32 @@
+{
+  "term": "Homomorphic Encryption",
+  "slug": "homomorphic-encryption",
+  "definition": "A cryptographic technique that allows computations to be performed on encrypted data without decrypting it first, producing encrypted results that match operations on plain data.",
+  "metaDescription": "Learn about homomorphic encryption - advanced cryptography that enables secure computation on encrypted data without revealing the original information.",
+  "simpleExplanation": "Think of it like a locked box where you can perform math operations on the contents without opening the box. The results stay locked, but when you eventually unlock them, they're correct as if you did the math on unlocked data.",
+  "whyItMatters": "This technology enables organizations to analyze sensitive data while keeping it encrypted throughout the entire process, allowing for privacy-preserving analytics, secure cloud computing, and confidential data sharing between parties.",
+  "technicalDetail": "Homomorphic encryption uses mathematical operations that preserve the algebraic structure of data. Partially homomorphic schemes support either addition or multiplication, while fully homomorphic encryption (FHE) supports arbitrary computations, though with significant computational overhead currently limiting practical applications.",
+  "examples": [
+    {
+      "scenario": "Healthcare Research",
+      "explanation": "Hospitals can share encrypted patient data with researchers who can analyze patterns and compute statistics without ever seeing individual medical records, maintaining patient privacy while enabling medical discoveries."
+    },
+    {
+      "scenario": "Financial Analytics",
+      "explanation": "Banks can outsource encrypted transaction analysis to cloud providers who can detect fraud patterns and calculate risk scores without accessing actual financial details or customer identities."
+    },
+    {
+      "scenario": "Private Voting Systems",
+      "explanation": "Electronic voting systems can tally encrypted votes to determine election results without revealing individual voter choices, ensuring both accuracy and ballot secrecy."
+    }
+  ],
+  "relatedTerms": [
+    "end-to-end-encryption",
+    "zero-knowledge-proof",
+    "differential-privacy",
+    "secure-multiparty-computation",
+    "data-minimization"
+  ],
+  "niche": "Advanced cryptographic method primarily used in research and specialized enterprise applications",
+  "category": "technology"
+}

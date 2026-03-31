@@ -1,0 +1,254 @@
+{
+  "niche": "gaming-privacy",
+  "slug": "gaming-vr-privacy-risk-calculator",
+  "title": "Gaming & VR Privacy Risk Calculator",
+  "metaDescription": "Calculate your privacy risk exposure from gaming platforms, VR headsets, and online gaming. Get personalized protection tips and privacy scores.",
+  "description": "Assess your privacy exposure from gaming platforms, VR devices, and online gaming activities. This calculator evaluates data collection risks and provides actionable steps to protect your gaming privacy.",
+  "inputs": [
+    {
+      "id": "gamingHours",
+      "label": "Hours spent gaming per week",
+      "type": "range",
+      "defaultValue": 10,
+      "min": 0,
+      "max": 80,
+      "step": 1,
+      "helpText": "Include console, PC, mobile, and VR gaming time"
+    },
+    {
+      "id": "platforms",
+      "label": "Number of gaming platforms you use",
+      "type": "select",
+      "defaultValue": 2,
+      "options": [
+        {
+          "value": 1,
+          "label": "1 platform"
+        },
+        {
+          "value": 2,
+          "label": "2-3 platforms"
+        },
+        {
+          "value": 3,
+          "label": "4-5 platforms"
+        },
+        {
+          "value": 4,
+          "label": "6+ platforms"
+        }
+      ],
+      "helpText": "Steam, PlayStation, Xbox, Nintendo, Epic Games, mobile app stores, etc."
+    },
+    {
+      "id": "vrUsage",
+      "label": "VR headset usage frequency",
+      "type": "select",
+      "defaultValue": 0,
+      "options": [
+        {
+          "value": 0,
+          "label": "Never/Rarely"
+        },
+        {
+          "value": 1,
+          "label": "Monthly"
+        },
+        {
+          "value": 2,
+          "label": "Weekly"
+        },
+        {
+          "value": 3,
+          "label": "Daily"
+        }
+      ],
+      "helpText": "VR devices collect biometric data including eye tracking and movement patterns"
+    },
+    {
+      "id": "onlineGaming",
+      "label": "Online multiplayer gaming frequency",
+      "type": "select",
+      "defaultValue": 1,
+      "options": [
+        {
+          "value": 0,
+          "label": "Rarely/Never"
+        },
+        {
+          "value": 1,
+          "label": "Sometimes"
+        },
+        {
+          "value": 2,
+          "label": "Frequently"
+        },
+        {
+          "value": 3,
+          "label": "Always online"
+        }
+      ],
+      "helpText": "Online gaming exposes your IP address and gaming patterns"
+    },
+    {
+      "id": "dataSharing",
+      "label": "Do you share gameplay content?",
+      "type": "select",
+      "defaultValue": 1,
+      "options": [
+        {
+          "value": 0,
+          "label": "Never"
+        },
+        {
+          "value": 1,
+          "label": "Occasionally"
+        },
+        {
+          "value": 2,
+          "label": "Regularly"
+        },
+        {
+          "value": 3,
+          "label": "Constantly streaming/sharing"
+        }
+      ],
+      "helpText": "Screenshots, streams, clips shared on social media or streaming platforms"
+    },
+    {
+      "id": "inGamePurchases",
+      "label": "Monthly in-game purchases",
+      "type": "select",
+      "defaultValue": 1,
+      "options": [
+        {
+          "value": 0,
+          "label": "$0"
+        },
+        {
+          "value": 1,
+          "label": "$1-25"
+        },
+        {
+          "value": 2,
+          "label": "$26-100"
+        },
+        {
+          "value": 3,
+          "label": "$100+"
+        }
+      ],
+      "helpText": "Financial data creates detailed consumer profiles"
+    },
+    {
+      "id": "voiceChat",
+      "label": "Voice chat usage",
+      "type": "select",
+      "defaultValue": 1,
+      "options": [
+        {
+          "value": 0,
+          "label": "Never"
+        },
+        {
+          "value": 1,
+          "label": "With friends only"
+        },
+        {
+          "value": 2,
+          "label": "Public lobbies"
+        },
+        {
+          "value": 3,
+          "label": "Always on"
+        }
+      ],
+      "helpText": "Voice data may be recorded and analyzed for various purposes"
+    },
+    {
+      "id": "childrenUse",
+      "label": "Children use gaming devices",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Children's gaming data requires extra protection under privacy laws"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk from 0-100, where higher scores indicate greater privacy exposure"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your privacy risk category based on gaming and VR usage patterns"
+    },
+    {
+      "id": "dataPoints",
+      "label": "Estimated Data Points Collected",
+      "format": "number",
+      "description": "Approximate number of data points gaming companies collect about you monthly"
+    }
+  ],
+  "formula": "const platformWeight = platforms * 8; const vrWeight = vrUsage * 15; const onlineWeight = onlineGaming * 10; const sharingWeight = dataSharing * 12; const purchaseWeight = inGamePurchases * 8; const voiceWeight = voiceChat * 10; const hoursWeight = Math.min(gamingHours * 0.5, 20); const childrenWeight = childrenUse ? 15 : 0; const riskScore = Math.min(Math.round(platformWeight + vrWeight + onlineWeight + sharingWeight + purchaseWeight + voiceWeight + hoursWeight + childrenWeight), 100); const dataPoints = Math.round((riskScore * 50) + (platforms * 1000) + (gamingHours * 100)); let riskLevel = 'Low'; if (riskScore >= 70) riskLevel = 'Critical'; else if (riskScore >= 50) riskLevel = 'High'; else if (riskScore >= 30) riskLevel = 'Medium'; return { riskScore, riskLevel, dataPoints };",
+  "educational": {
+    "methodology": "This calculator evaluates privacy risks based on gaming platform usage, VR device data collection, online gaming exposure, content sharing habits, financial transactions, and voice data sharing. Scores are weighted by data sensitivity and collection frequency typical of gaming companies.",
+    "tips": [
+      "Review and adjust privacy settings on all gaming platforms regularly",
+      "Use Incognito Browser when accessing gaming websites to prevent tracking",
+      "Limit voice chat to friends-only when possible to reduce audio data collection",
+      "Turn off gameplay recording and sharing features you don't actively use",
+      "Use separate payment methods for gaming purchases to limit financial profiling",
+      "Read VR privacy policies carefully - they often collect biometric data",
+      "Set up parental controls and restricted accounts for children's gaming",
+      "Regularly delete old gaming clips and screenshots from cloud storage",
+      "Use VPN services when gaming online to protect your IP address location"
+    ],
+    "interpretation": [
+      {
+        "range": "0-29",
+        "label": "Low Risk",
+        "description": "Minimal privacy exposure from gaming activities. Your data collection is limited.",
+        "color": "green"
+      },
+      {
+        "range": "30-49",
+        "label": "Medium Risk",
+        "description": "Moderate privacy concerns. Consider reviewing platform settings and reducing data sharing.",
+        "color": "yellow"
+      },
+      {
+        "range": "50-69",
+        "label": "High Risk",
+        "description": "Significant privacy exposure. Immediate action recommended to limit data collection.",
+        "color": "orange"
+      },
+      {
+        "range": "70-100",
+        "label": "Critical Risk",
+        "description": "Extensive data collection across multiple platforms. Urgent privacy protection measures needed.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Gaming Platform Privacy Settings Guide",
+      "url": "/guides/gaming-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "VR Data Collection: What You Need to Know",
+      "url": "/articles/vr-privacy-risks",
+      "type": "article"
+    },
+    {
+      "title": "Children's Gaming Privacy Protection",
+      "url": "/guides/kids-gaming-privacy",
+      "type": "guide"
+    }
+  ]
+}

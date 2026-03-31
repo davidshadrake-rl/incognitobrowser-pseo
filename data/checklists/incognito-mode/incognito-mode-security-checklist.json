@@ -1,0 +1,132 @@
+{
+  "niche": "incognito-mode",
+  "slug": "incognito-mode-security-checklist",
+  "title": "Incognito Mode Security Checklist: Maximum Privacy Guide",
+  "metaDescription": "Essential security checklist for incognito mode and private browsing. Learn to maximize your privacy across all browsers with actionable steps.",
+  "difficulty": "beginner",
+  "estimatedTime": "15 minutes",
+  "intro": "Incognito mode provides basic privacy protection, but many users don't realize its limitations or how to maximize its effectiveness. This checklist helps you secure your private browsing sessions and understand what incognito mode does and doesn't protect.",
+  "sections": [
+    {
+      "title": "Before Starting Incognito Mode",
+      "items": [
+        {
+          "id": "pre-check-extensions",
+          "task": "Review browser extensions allowed in incognito mode",
+          "why": "Extensions can track your activity even in private browsing mode, defeating the purpose of incognito sessions.",
+          "howTo": "Go to your browser's extension settings and disable or restrict extensions from running in incognito mode. Only allow essential privacy-focused extensions.",
+          "priority": "critical"
+        },
+        {
+          "id": "pre-check-dns",
+          "task": "Configure secure DNS settings",
+          "why": "Your DNS provider can still see which websites you visit, even in incognito mode.",
+          "howTo": "Switch to privacy-focused DNS providers like Cloudflare (1.1.1.1) or Quad9 (9.9.9.9) in your system or router settings.",
+          "priority": "high"
+        },
+        {
+          "id": "pre-close-regular-tabs",
+          "task": "Close all regular browser tabs and windows",
+          "why": "Open regular tabs can share data with incognito sessions through cross-tab communication and shared browser processes.",
+          "howTo": "Close all non-incognito browser windows before starting your private browsing session, or use a dedicated incognito browser like Incognito Browser.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "During Incognito Sessions",
+      "items": [
+        {
+          "id": "during-avoid-logins",
+          "task": "Avoid logging into personal accounts",
+          "why": "Logging into accounts directly links your identity to the browsing session, negating privacy benefits.",
+          "howTo": "If you must log in, use temporary or dedicated accounts. Consider using separate browsers or profiles for different activities.",
+          "priority": "critical"
+        },
+        {
+          "id": "during-check-https",
+          "task": "Verify HTTPS connections for all websites",
+          "why": "Without HTTPS, your ISP and network administrators can still monitor your activity in incognito mode.",
+          "howTo": "Look for the padlock icon in the address bar. Avoid entering sensitive information on HTTP-only sites. Use HTTPS Everywhere extensions if available.",
+          "priority": "high"
+        },
+        {
+          "id": "during-disable-location",
+          "task": "Block location sharing requests",
+          "why": "Location data can be used to identify and track you across sessions, even in private browsing mode.",
+          "howTo": "Always click 'Block' when websites request your location. Check browser settings to disable location services by default for incognito mode.",
+          "priority": "high"
+        },
+        {
+          "id": "during-avoid-downloads",
+          "task": "Minimize file downloads",
+          "why": "Downloaded files remain on your device after the incognito session ends, creating a permanent record of your activity.",
+          "howTo": "If you must download files, use a temporary folder and delete files immediately after use. Consider using cloud-based viewers instead.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Network and Connection Security",
+      "items": [
+        {
+          "id": "network-avoid-public-wifi",
+          "task": "Avoid using public Wi-Fi for sensitive incognito browsing",
+          "why": "Public networks expose your traffic to potential monitoring, regardless of incognito mode protection.",
+          "howTo": "Use your mobile data, a trusted network, or a VPN when accessing sensitive content in incognito mode on public Wi-Fi.",
+          "priority": "critical"
+        },
+        {
+          "id": "network-consider-vpn",
+          "task": "Consider using a VPN with incognito mode",
+          "why": "VPNs add an extra layer of privacy by hiding your IP address and encrypting traffic from your ISP.",
+          "howTo": "Choose a reputable no-logs VPN service and connect before starting incognito sessions. Ensure the VPN doesn't leak DNS or IP information.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "After Incognito Sessions",
+      "items": [
+        {
+          "id": "post-clear-clipboard",
+          "task": "Clear your clipboard if you copied sensitive information",
+          "why": "Clipboard data persists after incognito sessions end and can be accessed by other applications.",
+          "howTo": "Copy some harmless text or restart your browser to clear the clipboard. On mobile, manually clear clipboard in system settings.",
+          "priority": "medium"
+        },
+        {
+          "id": "post-check-downloads",
+          "task": "Delete any files downloaded during the session",
+          "why": "Downloaded files create permanent traces of your incognito browsing activity on your device.",
+          "howTo": "Check your default download folder and delete any files from the incognito session. Empty your trash/recycle bin for complete removal.",
+          "priority": "high"
+        },
+        {
+          "id": "post-restart-browser",
+          "task": "Restart your browser after sensitive sessions",
+          "why": "Browser restart ensures all temporary data, cached information, and potential memory traces are cleared.",
+          "howTo": "Close all browser windows completely and reopen the browser. This is especially important after accessing highly sensitive information.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Understanding Browser Privacy Settings",
+      "url": "/guides/browser-privacy-settings",
+      "type": "internal"
+    },
+    {
+      "title": "Cookie Management Best Practices",
+      "url": "/guides/cookie-management",
+      "type": "internal"
+    },
+    {
+      "title": "VPN Setup Guide for Privacy",
+      "url": "/guides/vpn-privacy-setup",
+      "type": "internal"
+    }
+  ]
+}

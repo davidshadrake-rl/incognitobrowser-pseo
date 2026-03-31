@@ -1,0 +1,216 @@
+{
+  "niche": "email-privacy",
+  "slug": "email-privacy-encryption-risk-calculator",
+  "title": "Email Privacy & Encryption Risk Calculator",
+  "metaDescription": "Calculate your email privacy risk score. Assess encryption, provider security, and habits to protect your communications from surveillance.",
+  "description": "Evaluate your email privacy and security posture with our comprehensive risk assessment. Get personalized recommendations to improve your email encryption and protect sensitive communications.",
+  "inputs": [
+    {
+      "id": "emailProvider",
+      "label": "Current Email Provider",
+      "type": "select",
+      "defaultValue": "gmail",
+      "options": [
+        {
+          "value": "protonmail",
+          "label": "ProtonMail"
+        },
+        {
+          "value": "tutanota",
+          "label": "Tutanota"
+        },
+        {
+          "value": "startmail",
+          "label": "StartMail"
+        },
+        {
+          "value": "hushmail",
+          "label": "Hushmail"
+        },
+        {
+          "value": "gmail",
+          "label": "Gmail"
+        },
+        {
+          "value": "outlook",
+          "label": "Outlook/Hotmail"
+        },
+        {
+          "value": "yahoo",
+          "label": "Yahoo Mail"
+        },
+        {
+          "value": "other-mainstream",
+          "label": "Other mainstream provider"
+        }
+      ],
+      "helpText": "Choose your primary email service provider"
+    },
+    {
+      "id": "encryptionUsage",
+      "label": "Email Encryption Usage",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always use encryption (PGP/S-MIME)"
+        },
+        {
+          "value": "sensitive",
+          "label": "Only for sensitive emails"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely use encryption"
+        },
+        {
+          "value": "never",
+          "label": "Never use encryption"
+        }
+      ],
+      "helpText": "How often do you encrypt your emails?"
+    },
+    {
+      "id": "sensitiveEmails",
+      "label": "Sensitive Email Frequency (per week)",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "helpText": "How many emails containing sensitive information do you send weekly?"
+    },
+    {
+      "id": "twoFactorAuth",
+      "label": "Two-Factor Authentication",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you have 2FA enabled on your email account?"
+    },
+    {
+      "id": "publicWifiUsage",
+      "label": "Public WiFi Email Access",
+      "type": "select",
+      "defaultValue": "often",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (1-2 times/month)"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes (weekly)"
+        },
+        {
+          "value": "often",
+          "label": "Often (daily)"
+        }
+      ],
+      "helpText": "How often do you check email on public WiFi?"
+    },
+    {
+      "id": "passwordStrength",
+      "label": "Email Password Strength",
+      "type": "select",
+      "defaultValue": "medium",
+      "options": [
+        {
+          "value": "strong",
+          "label": "Strong (12+ chars, mixed case, symbols)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (8-11 chars, some complexity)"
+        },
+        {
+          "value": "weak",
+          "label": "Weak (short or common password)"
+        }
+      ],
+      "helpText": "Rate the strength of your email password"
+    },
+    {
+      "id": "emailForwarding",
+      "label": "Email Forwarding/Aliases",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use email aliases or forwarding services for privacy?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall email privacy risk (0-100, lower is better)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Your current email privacy risk category"
+    },
+    {
+      "id": "encryptionGrade",
+      "label": "Encryption Grade",
+      "format": "grade",
+      "description": "Your email encryption implementation grade"
+    }
+  ],
+  "formula": "// Calculate provider security score\nlet providerScore = 0;\nswitch(emailProvider) {\n  case 'protonmail': case 'tutanota': providerScore = 10; break;\n  case 'startmail': case 'hushmail': providerScore = 8; break;\n  case 'gmail': case 'outlook': providerScore = 4; break;\n  case 'yahoo': case 'other-mainstream': providerScore = 2; break;\n}\n\n// Calculate encryption score\nlet encryptionScore = 0;\nswitch(encryptionUsage) {\n  case 'always': encryptionScore = 20; break;\n  case 'sensitive': encryptionScore = 15; break;\n  case 'rarely': encryptionScore = 5; break;\n  case 'never': encryptionScore = 0; break;\n}\n\n// Calculate security practices score\nlet securityScore = 0;\nsecurityScore += twoFactorAuth ? 15 : 0;\nswitch(passwordStrength) {\n  case 'strong': securityScore += 10; break;\n  case 'medium': securityScore += 5; break;\n  case 'weak': securityScore += 0; break;\n}\nsecurityScore += emailForwarding ? 5 : 0;\n\n// Calculate risk from behaviors\nlet behaviorRisk = 0;\nswitch(publicWifiUsage) {\n  case 'never': behaviorRisk = 0; break;\n  case 'rarely': behaviorRisk = 5; break;\n  case 'sometimes': behaviorRisk = 10; break;\n  case 'often': behaviorRisk = 20; break;\n}\nbehaviorRisk += Math.min(sensitiveEmails * 0.5, 15);\n\n// Calculate total score (higher is better security)\nconst totalSecurity = providerScore + encryptionScore + securityScore;\nconst riskScore = Math.max(0, Math.min(100, 100 - totalSecurity + behaviorRisk));\n\n// Determine risk level\nlet riskLevel = '';\nif(riskScore <= 30) riskLevel = 'Low Risk';\nelse if(riskScore <= 60) riskLevel = 'Medium Risk';\nelse riskLevel = 'High Risk';\n\n// Calculate encryption grade\nlet encryptionGrade = 'F';\nif(encryptionScore >= 18) encryptionGrade = 'A';\nelse if(encryptionScore >= 12) encryptionGrade = 'B';\nelse if(encryptionScore >= 6) encryptionGrade = 'C';\nelse if(encryptionScore >= 2) encryptionGrade = 'D';\n\nreturn { riskScore: Math.round(riskScore), riskLevel, encryptionGrade };",
+  "educational": {
+    "methodology": "This calculator evaluates email privacy risk based on provider security, encryption usage, authentication methods, password strength, and communication habits. Scores are weighted to reflect real-world privacy threats.",
+    "tips": [
+      "Switch to privacy-focused email providers like ProtonMail or Tutanota for better security",
+      "Enable two-factor authentication on all email accounts immediately",
+      "Use PGP encryption for sensitive communications, even with secure providers",
+      "Avoid checking email on public WiFi or use Incognito Browser with VPN",
+      "Create strong, unique passwords and consider using a password manager",
+      "Set up email aliases to compartmentalize different aspects of your digital life",
+      "Regularly audit email account permissions and connected third-party apps",
+      "Consider using Tor Browser or Incognito Browser for accessing email anonymously"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Good email privacy practices. Continue monitoring and stay updated on new threats.",
+        "color": "green"
+      },
+      {
+        "range": "31-60",
+        "label": "Medium Risk",
+        "description": "Some privacy vulnerabilities exist. Consider upgrading your email provider and enabling encryption.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-100",
+        "label": "High Risk",
+        "description": "Significant privacy risks. Immediate action needed: switch providers, enable 2FA, and start encrypting emails.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "ProtonMail - Encrypted Email Service",
+      "url": "https://protonmail.com",
+      "type": "tool"
+    },
+    {
+      "title": "Email Encryption Guide (EFF)",
+      "url": "https://ssd.eff.org/en/module/how-use-pgp-linux",
+      "type": "guide"
+    },
+    {
+      "title": "Password Security Best Practices",
+      "url": "/password-security",
+      "type": "internal"
+    }
+  ]
+}

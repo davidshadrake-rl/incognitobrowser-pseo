@@ -1,0 +1,163 @@
+{
+  "niche": "smart-home-privacy",
+  "slug": "smart-home-iot-privacy-security-checklist",
+  "title": "Smart Home & IoT Privacy Security Checklist",
+  "metaDescription": "Complete privacy and security checklist for smart home devices, IoT gadgets, and voice assistants. Protect your home from data tracking and breaches.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Smart homes offer convenience but expose your personal data to privacy risks. This comprehensive checklist helps you secure IoT devices, voice assistants, and connected gadgets while maintaining functionality and protecting your family's privacy.",
+  "sections": [
+    {
+      "title": "Initial Setup & Network Security",
+      "items": [
+        {
+          "id": "wifi-network-separation",
+          "task": "Create a separate Wi-Fi network for IoT devices",
+          "why": "Isolates smart devices from your main network containing sensitive data like computers and phones, limiting potential breach impact.",
+          "howTo": "Set up a guest network on your router specifically for IoT devices. Name it differently from your main network and use WPA3 encryption with a strong password.",
+          "priority": "critical"
+        },
+        {
+          "id": "default-passwords",
+          "task": "Change all default passwords on smart devices",
+          "why": "Default passwords are widely known by hackers and make devices vulnerable to unauthorized access and control.",
+          "howTo": "Access each device's settings through its app or web interface. Create unique, strong passwords for each device. Use a password manager to track them all.",
+          "priority": "critical"
+        },
+        {
+          "id": "firmware-updates",
+          "task": "Enable automatic firmware updates",
+          "why": "Outdated firmware contains security vulnerabilities that hackers exploit to gain access to your devices and network.",
+          "howTo": "Check each device's app or settings menu for automatic update options. If unavailable, set monthly reminders to manually check for updates.",
+          "priority": "high"
+        },
+        {
+          "id": "unnecessary-features",
+          "task": "Disable unnecessary features and permissions",
+          "why": "Extra features like remote access, location tracking, or microphone access increase your privacy risk without adding value.",
+          "howTo": "Review each device's privacy settings and turn off features you don't use, such as voice recording, location services, or third-party integrations.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Voice Assistant Privacy",
+      "items": [
+        {
+          "id": "voice-recording-settings",
+          "task": "Review and limit voice recording storage",
+          "why": "Voice assistants store your conversations, which can be accessed by employees or hackers, revealing personal information and routines.",
+          "howTo": "In your Alexa, Google, or Siri app, find voice recording settings. Set recordings to delete automatically after 3 months or turn off storage entirely.",
+          "priority": "high"
+        },
+        {
+          "id": "mute-when-private",
+          "task": "Use physical mute buttons during private conversations",
+          "why": "Voice assistants can accidentally activate and record sensitive discussions, creating privacy risks for personal and professional matters.",
+          "howTo": "Press the mute button on your device during important calls, personal discussions, or when discussing sensitive topics. Establish this as a household habit.",
+          "priority": "medium"
+        },
+        {
+          "id": "third-party-skills",
+          "task": "Audit and remove unused voice assistant skills/apps",
+          "why": "Third-party skills often request broad permissions and may collect more data than necessary, expanding your privacy exposure.",
+          "howTo": "Open your voice assistant app, go to Skills or Apps section, and remove any you don't actively use. Review permissions for remaining skills.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Smart Camera & Monitoring Devices",
+      "items": [
+        {
+          "id": "camera-placement",
+          "task": "Position cameras to avoid private areas",
+          "why": "Poorly placed cameras can capture private moments and create uncomfortable surveillance of family members and guests.",
+          "howTo": "Install cameras only at entry points and common areas. Avoid bedrooms, bathrooms, and private spaces. Test viewing angles before final installation.",
+          "priority": "critical"
+        },
+        {
+          "id": "local-storage",
+          "task": "Use local storage instead of cloud storage when possible",
+          "why": "Cloud storage means your footage is stored on company servers, potentially accessible to employees, hackers, or government requests.",
+          "howTo": "Configure cameras to save to local SD cards or network-attached storage (NAS) devices. Only use cloud storage for essential remote access needs.",
+          "priority": "high"
+        },
+        {
+          "id": "motion-zones",
+          "task": "Set up privacy zones and motion detection areas",
+          "why": "Unrestricted recording creates excessive footage and may capture neighbors or private activities, raising privacy concerns.",
+          "howTo": "Use your camera app to define specific motion detection zones and exclude private areas like neighbor's windows or family relaxation spaces.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Data Management & Privacy Controls",
+      "items": [
+        {
+          "id": "data-sharing-review",
+          "task": "Review and opt-out of data sharing agreements",
+          "why": "Many smart devices share your usage data with third parties for marketing and analytics, creating additional privacy risks.",
+          "howTo": "Check each device manufacturer's privacy settings and opt-out of data sharing, analytics, and marketing programs wherever possible.",
+          "priority": "high"
+        },
+        {
+          "id": "account-monitoring",
+          "task": "Regularly monitor connected accounts and permissions",
+          "why": "Smart home accounts often integrate with multiple services, creating complex permission chains that can expose your data unexpectedly.",
+          "howTo": "Monthly, review connected accounts in your smart home apps. Remove unused integrations and check what data permissions you've granted to each service.",
+          "priority": "medium"
+        },
+        {
+          "id": "secure-browsing",
+          "task": "Use privacy-focused browsers for device management",
+          "why": "Regular browsers may track your smart home management activities, revealing your devices, routines, and security setup to advertisers.",
+          "howTo": "Use Incognito Browser when accessing smart home device web interfaces and accounts. This prevents tracking cookies and protects your management activities.",
+          "priority": "low"
+        }
+      ]
+    },
+    {
+      "title": "Ongoing Maintenance & Monitoring",
+      "items": [
+        {
+          "id": "regular-audits",
+          "task": "Conduct quarterly privacy and security audits",
+          "why": "Smart home ecosystems change frequently with new devices, updates, and features that may introduce new privacy risks.",
+          "howTo": "Every three months, review all connected devices, check for new privacy settings, update passwords, and remove unused devices or accounts.",
+          "priority": "medium"
+        },
+        {
+          "id": "network-monitoring",
+          "task": "Monitor network traffic for unusual device behavior",
+          "why": "Compromised IoT devices often show unusual network activity, and early detection can prevent data breaches or botnet participation.",
+          "howTo": "Use router admin panels or network monitoring apps to check device data usage. Investigate any devices showing unexpected high traffic or new connections.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Location Tracking Privacy Guide",
+      "url": "/guides/location-tracking-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Webcam Privacy Protection",
+      "url": "/guides/webcam-privacy-protection",
+      "type": "internal"
+    },
+    {
+      "title": "Data Brokers and Personal Information",
+      "url": "/guides/data-brokers-personal-information",
+      "type": "internal"
+    },
+    {
+      "title": "IoT Security Foundation Guidelines",
+      "url": "https://www.iotsecurityfoundation.org/best-practice-guidelines/",
+      "type": "external"
+    }
+  ]
+}

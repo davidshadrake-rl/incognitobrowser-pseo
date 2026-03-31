@@ -1,0 +1,127 @@
+{
+  "niche": "email-privacy",
+  "slug": "email-privacy-encryption-security-checklist",
+  "title": "Email Privacy & Encryption Security Checklist",
+  "metaDescription": "Complete checklist to secure your email with encryption, privacy-focused providers, and anonymous communication best practices.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Email remains one of the most vulnerable communication channels, with most providers scanning content and storing data indefinitely. This checklist guides you through securing your email communications with encryption, choosing privacy-focused providers, and implementing best practices to protect your digital correspondence from surveillance and data breaches.",
+  "sections": [
+    {
+      "title": "Email Provider & Account Security",
+      "items": [
+        {
+          "id": "secure-email-provider",
+          "task": "Switch to a privacy-focused email provider",
+          "why": "Mainstream providers like Gmail scan emails for advertising and store data indefinitely, compromising your privacy.",
+          "howTo": "Choose providers like ProtonMail, Tutanota, or StartMail that offer end-to-end encryption and zero-knowledge architecture. Create your new account using Incognito Browser to prevent tracking during signup.",
+          "priority": "critical"
+        },
+        {
+          "id": "strong-master-password",
+          "task": "Create a strong, unique master password",
+          "why": "Your email password protects access to password resets for all other accounts, making it a critical security point.",
+          "howTo": "Use a password manager to generate a 16+ character password with mixed case, numbers, and symbols. Never reuse this password elsewhere.",
+          "priority": "critical"
+        },
+        {
+          "id": "enable-2fa",
+          "task": "Enable two-factor authentication",
+          "why": "2FA prevents account access even if your password is compromised through breaches or phishing attacks.",
+          "howTo": "Enable 2FA in your email provider's security settings. Use an authenticator app like Authy or hardware keys rather than SMS when possible.",
+          "priority": "critical"
+        },
+        {
+          "id": "review-account-permissions",
+          "task": "Audit connected apps and permissions",
+          "why": "Third-party apps may have unnecessary access to read, send, or manage your emails without your awareness.",
+          "howTo": "Review your account's connected applications and revoke access for unused services. Check OAuth permissions and remove any suspicious or unnecessary integrations.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Email Encryption & Security Settings",
+      "items": [
+        {
+          "id": "enable-pgp-encryption",
+          "task": "Set up PGP/GPG encryption for sensitive emails",
+          "why": "End-to-end encryption ensures only intended recipients can read your messages, even if intercepted.",
+          "howTo": "Generate a PGP key pair using tools like GPG4Win or built-in features in ProtonMail. Share your public key with contacts and always encrypt sensitive communications.",
+          "priority": "high"
+        },
+        {
+          "id": "secure-email-client",
+          "task": "Configure secure email client settings",
+          "why": "Default email client settings often prioritize convenience over security, leaving communications vulnerable.",
+          "howTo": "Enable SSL/TLS encryption, disable automatic image loading, turn off HTML email rendering, and configure IMAP/SMTP with encryption protocols.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-tracking",
+          "task": "Block email tracking and read receipts",
+          "why": "Email tracking pixels and read receipts reveal when and where you open emails, compromising your privacy.",
+          "howTo": "Disable automatic image loading in your email client, use privacy-focused clients like Thunderbird with tracking protection, or browser extensions that block email trackers.",
+          "priority": "medium"
+        },
+        {
+          "id": "secure-backup",
+          "task": "Create encrypted email backups",
+          "why": "Losing access to important emails can be devastating, but unencrypted backups create security risks.",
+          "howTo": "Export emails to encrypted archives using your email client's export function, then store backups on encrypted external drives or secure cloud storage with zero-knowledge encryption.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Anonymous Communication & Privacy Practices",
+      "items": [
+        {
+          "id": "anonymous-email-account",
+          "task": "Create anonymous email accounts for sensitive use",
+          "why": "Separating sensitive communications from your main identity protects against correlation attacks and reduces exposure.",
+          "howTo": "Create accounts using Incognito Browser over Tor, provide minimal personal information, and use temporary email services for one-time registrations or sensitive communications.",
+          "priority": "high"
+        },
+        {
+          "id": "email-aliases",
+          "task": "Use email aliases and forwarding services",
+          "why": "Aliases prevent your real email address from being exposed and allow you to track which services share your data.",
+          "howTo": "Use services like AnonAddy, SimpleLogin, or built-in alias features from providers like ProtonMail to create unique addresses for different services.",
+          "priority": "medium"
+        },
+        {
+          "id": "metadata-protection",
+          "task": "Minimize email metadata exposure",
+          "why": "Email headers reveal sender/receiver relationships, timing patterns, and location data that can compromise privacy.",
+          "howTo": "Use delayed sending features, access email through Tor or VPN, and avoid including location services or calendar integration that adds metadata to messages.",
+          "priority": "medium"
+        },
+        {
+          "id": "secure-communication-habits",
+          "task": "Develop secure email communication practices",
+          "why": "Even encrypted emails can be compromised through social engineering, timing attacks, or endpoint security issues.",
+          "howTo": "Verify recipient identities before sending sensitive information, use code words for sensitive topics, regularly delete old emails, and never discuss highly sensitive matters over email.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Encrypted Messaging Security Guide",
+      "url": "/checklists/encrypted-messaging",
+      "type": "internal"
+    },
+    {
+      "title": "Password Security Best Practices",
+      "url": "/checklists/password-security",
+      "type": "internal"
+    },
+    {
+      "title": "Phishing Protection Checklist",
+      "url": "/checklists/phishing-protection",
+      "type": "internal"
+    }
+  ]
+}

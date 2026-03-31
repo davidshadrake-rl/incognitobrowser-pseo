@@ -1,0 +1,248 @@
+{
+  "niche": "privacy-policies",
+  "slug": "privacy-policies-terms-service-risk-calculator",
+  "title": "Privacy Policies & Terms of Service Risk Calculator",
+  "metaDescription": "Evaluate privacy risks in terms of service agreements. Check for dark patterns, data collection practices, and consent management issues.",
+  "description": "Assess the privacy risks and potential red flags in privacy policies and terms of service agreements. Our calculator helps you identify concerning clauses, dark patterns, and data collection practices that could impact your privacy.",
+  "inputs": [
+    {
+      "id": "policyLength",
+      "label": "Policy Length (in pages or screens)",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "helpText": "Longer policies are often harder to understand and may hide concerning clauses"
+    },
+    {
+      "id": "readingLevel",
+      "label": "Reading Difficulty Level",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Easy to understand (Plain English)"
+        },
+        {
+          "value": "moderate",
+          "label": "Moderate difficulty (Some legal terms)"
+        },
+        {
+          "value": "complex",
+          "label": "Very difficult (Heavy legal jargon)"
+        }
+      ],
+      "helpText": "Complex language can obscure important privacy implications"
+    },
+    {
+      "id": "dataTypes",
+      "label": "Types of Data Collected",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "Count personal info, browsing data, location, biometrics, contacts, etc."
+    },
+    {
+      "id": "thirdPartySharing",
+      "label": "Third-Party Data Sharing",
+      "type": "select",
+      "defaultValue": "limited",
+      "options": [
+        {
+          "value": "none",
+          "label": "No sharing mentioned"
+        },
+        {
+          "value": "limited",
+          "label": "Limited sharing with partners"
+        },
+        {
+          "value": "broad",
+          "label": "Broad sharing with affiliates"
+        },
+        {
+          "value": "unrestricted",
+          "label": "Unrestricted sharing allowed"
+        }
+      ],
+      "helpText": "More sharing increases privacy risks"
+    },
+    {
+      "id": "consentMechanism",
+      "label": "Consent Management Quality",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "excellent",
+          "label": "Clear opt-in with granular controls"
+        },
+        {
+          "value": "good",
+          "label": "Clear consent with some options"
+        },
+        {
+          "value": "basic",
+          "label": "Basic consent mechanism"
+        },
+        {
+          "value": "poor",
+          "label": "Unclear or pre-checked boxes"
+        }
+      ],
+      "helpText": "Poor consent mechanisms may indicate dark patterns"
+    },
+    {
+      "id": "dataRetention",
+      "label": "Data Retention Policy Clarity",
+      "type": "select",
+      "defaultValue": "vague",
+      "options": [
+        {
+          "value": "specific",
+          "label": "Specific timeframes provided"
+        },
+        {
+          "value": "general",
+          "label": "General timeframes mentioned"
+        },
+        {
+          "value": "vague",
+          "label": "Vague or indefinite retention"
+        },
+        {
+          "value": "none",
+          "label": "No retention policy mentioned"
+        }
+      ],
+      "helpText": "Vague retention policies allow indefinite data storage"
+    },
+    {
+      "id": "userRights",
+      "label": "User Privacy Rights Mentioned",
+      "type": "range",
+      "defaultValue": 2,
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "helpText": "Access, deletion, portability, correction, objection, restriction, etc."
+    },
+    {
+      "id": "changeNotification",
+      "label": "Policy Change Notification",
+      "type": "select",
+      "defaultValue": "website",
+      "options": [
+        {
+          "value": "direct",
+          "label": "Direct notification (email/app)"
+        },
+        {
+          "value": "website",
+          "label": "Website notification only"
+        },
+        {
+          "value": "minimal",
+          "label": "Minimal notification"
+        },
+        {
+          "value": "none",
+          "label": "No notification promised"
+        }
+      ],
+      "helpText": "Poor change notification can lead to unexpected privacy changes"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk assessment (0-100, lower is better)"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Risk Grade",
+      "format": "grade",
+      "description": "Letter grade summarizing privacy risk level"
+    },
+    {
+      "id": "primaryConcerns",
+      "label": "Primary Concerns",
+      "format": "text",
+      "description": "Main privacy issues identified in the agreement"
+    },
+    {
+      "id": "recommendedActions",
+      "label": "Recommended Actions",
+      "format": "text",
+      "description": "Steps to protect your privacy with this service"
+    }
+  ],
+  "formula": "const lengthRisk = Math.min(policyLength * 1.5, 30); const difficultyRisk = readingLevel === 'simple' ? 5 : readingLevel === 'moderate' ? 15 : 25; const dataRisk = dataTypes * 3; const sharingRisk = thirdPartySharing === 'none' ? 0 : thirdPartySharing === 'limited' ? 10 : thirdPartySharing === 'broad' ? 20 : 30; const consentRisk = consentMechanism === 'excellent' ? 0 : consentMechanism === 'good' ? 5 : consentMechanism === 'basic' ? 15 : 25; const retentionRisk = dataRetention === 'specific' ? 0 : dataRetention === 'general' ? 5 : dataRetention === 'vague' ? 15 : 20; const rightsBonus = Math.max(0, 15 - userRights * 2); const notificationRisk = changeNotification === 'direct' ? 0 : changeNotification === 'website' ? 5 : changeNotification === 'minimal' ? 10 : 15; const riskScore = Math.min(100, lengthRisk + difficultyRisk + dataRisk + sharingRisk + consentRisk + retentionRisk + rightsBonus + notificationRisk); const riskGrade = riskScore <= 25 ? 'A' : riskScore <= 40 ? 'B' : riskScore <= 60 ? 'C' : riskScore <= 80 ? 'D' : 'F'; let concerns = []; if (lengthRisk > 15) concerns.push('Excessively long policy'); if (difficultyRisk > 15) concerns.push('Complex legal language'); if (dataRisk > 15) concerns.push('Extensive data collection'); if (sharingRisk > 15) concerns.push('Broad third-party sharing'); if (consentRisk > 10) concerns.push('Poor consent mechanisms'); if (retentionRisk > 10) concerns.push('Unclear data retention'); if (rightsBonus > 10) concerns.push('Limited user rights'); const primaryConcerns = concerns.length > 0 ? concerns.join(', ') : 'No major concerns identified'; let actions = []; if (riskScore > 60) actions.push('Consider avoiding this service if possible'); if (consentRisk > 10) actions.push('Review all consent options carefully'); if (sharingRisk > 15) actions.push('Use Incognito Browser to limit tracking'); if (dataRisk > 15) actions.push('Minimize data sharing in account settings'); actions.push('Regularly review and update privacy settings'); const recommendedActions = actions.join('; '); return { riskScore, riskGrade, primaryConcerns, recommendedActions };",
+  "educational": {
+    "methodology": "This calculator evaluates privacy policies and terms of service based on key risk factors including policy complexity, data collection scope, sharing practices, consent mechanisms, and user rights. The assessment helps identify potential privacy risks and dark patterns commonly found in legal agreements.",
+    "tips": [
+      "Always read privacy policies before accepting, even if they're long",
+      "Look for specific data retention timeframes rather than vague language",
+      "Check if the service offers granular privacy controls and consent options",
+      "Be wary of pre-checked boxes or unclear consent mechanisms",
+      "Use tools like Incognito Browser to limit tracking regardless of policies",
+      "Regularly review your privacy settings as policies can change",
+      "Consider the reputation of the company and their privacy track record"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk (A)",
+        "description": "The privacy policy demonstrates good privacy practices with clear language, limited data collection, and strong user rights.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "26-40",
+        "label": "Moderate Risk (B)",
+        "description": "Generally acceptable privacy practices with some areas for improvement. Review settings carefully.",
+        "color": "#84cc16"
+      },
+      {
+        "range": "41-60",
+        "label": "Elevated Risk (C)",
+        "description": "Several privacy concerns present. Take extra precautions and limit data sharing where possible.",
+        "color": "#eab308"
+      },
+      {
+        "range": "61-80",
+        "label": "High Risk (D)",
+        "description": "Significant privacy risks identified. Consider alternatives or use additional privacy protection tools.",
+        "color": "#f97316"
+      },
+      {
+        "range": "81-100",
+        "label": "Very High Risk (F)",
+        "description": "Major privacy concerns present. Strongly consider avoiding this service or use maximum privacy protections.",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Dark Patterns in Privacy Policies",
+      "url": "/privacy-guides/dark-patterns-privacy-policies",
+      "type": "guide"
+    },
+    {
+      "title": "Understanding Data Broker Practices",
+      "url": "/privacy-guides/data-brokers",
+      "type": "guide"
+    },
+    {
+      "title": "Social Media Privacy Settings",
+      "url": "/privacy-guides/social-media-privacy",
+      "type": "guide"
+    }
+  ]
+}

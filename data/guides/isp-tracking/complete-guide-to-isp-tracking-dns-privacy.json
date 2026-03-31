@@ -1,0 +1,117 @@
+{
+  "niche": "isp-tracking",
+  "slug": "complete-guide-isp-tracking-dns-privacy",
+  "title": "Complete Guide to ISP Tracking & DNS Privacy",
+  "metaDescription": "Learn how ISPs track your online activity and discover practical methods to protect your DNS privacy and browsing data from monitoring.",
+  "difficulty": "beginner",
+  "estimatedTime": "15-20 minutes",
+  "intro": "Your internet service provider can see every website you visit through DNS requests. This guide explains how ISP tracking works and provides actionable steps to protect your browsing privacy using DNS encryption and other proven methods.",
+  "prerequisites": [
+    "Basic understanding of how internet browsing works",
+    "Access to your device's network settings",
+    "Administrative privileges on your device"
+  ],
+  "steps": [
+    {
+      "stepNumber": 1,
+      "title": "Understand How ISP Tracking Works",
+      "description": "ISPs monitor your internet activity primarily through DNS requests and traffic analysis. Every time you visit a website, your device asks your ISP's DNS server to translate domain names into IP addresses, creating a detailed log of your browsing habits.",
+      "actions": [
+        "Recognize that ISPs can see all unencrypted DNS queries",
+        "Understand that metadata collection happens even with HTTPS",
+        "Learn that ISPs may log, store, and potentially sell your browsing data"
+      ],
+      "proTip": "Even with HTTPS, your ISP can still see which websites you visit through DNS requests and connection metadata."
+    },
+    {
+      "stepNumber": 2,
+      "title": "Configure Secure DNS Servers",
+      "description": "Replace your ISP's default DNS servers with privacy-focused alternatives that don't log your queries. Popular options include Cloudflare (1.1.1.1) and Quad9 (9.9.9.9).",
+      "actions": [
+        "Open your device's network settings",
+        "Navigate to DNS configuration",
+        "Replace ISP DNS with Cloudflare: Primary 1.1.1.1, Secondary 1.0.0.1",
+        "Test your new DNS settings by visiting a website"
+      ],
+      "proTip": "Configure DNS on your router to protect all devices on your network automatically."
+    },
+    {
+      "stepNumber": 3,
+      "title": "Enable DNS over HTTPS (DoH)",
+      "description": "DNS over HTTPS encrypts your DNS queries, preventing your ISP from seeing which websites you're visiting. Most modern browsers support DoH natively.",
+      "actions": [
+        "Open your browser settings",
+        "Search for 'DNS' or 'Privacy' settings",
+        "Enable 'Use secure DNS' or 'DNS over HTTPS'",
+        "Select Cloudflare or another trusted provider",
+        "Test DoH functionality using online DNS leak tests"
+      ],
+      "proTip": "Incognito Browser includes built-in DoH support for enhanced privacy protection during private browsing sessions."
+    },
+    {
+      "stepNumber": 4,
+      "title": "Implement Additional Privacy Measures",
+      "description": "Layer additional privacy tools to minimize ISP visibility into your online activities. Combine multiple methods for comprehensive protection.",
+      "actions": [
+        "Use a reputable VPN service to encrypt all traffic",
+        "Browse in private/incognito mode when possible",
+        "Enable HTTPS-only mode in your browser",
+        "Consider using Tor browser for sensitive activities",
+        "Regularly clear cookies and browsing data"
+      ],
+      "proTip": "Combining a VPN with DNS over HTTPS provides dual-layer protection against ISP tracking."
+    },
+    {
+      "stepNumber": 5,
+      "title": "Verify Your Privacy Configuration",
+      "description": "Test your privacy setup to ensure ISP tracking protection is working correctly. Regular verification helps maintain your privacy over time.",
+      "actions": [
+        "Run DNS leak tests to verify your DNS provider",
+        "Check if DoH is active using browser tools",
+        "Test your IP address visibility with VPN enabled",
+        "Monitor network traffic for unencrypted DNS queries",
+        "Review and update privacy settings monthly"
+      ],
+      "warning": "DNS leak tests should show your chosen DNS provider, not your ISP's servers, if properly configured."
+    }
+  ],
+  "faqs": [
+    {
+      "question": "Can my ISP see what I'm doing if I use HTTPS websites?",
+      "answer": "While HTTPS encrypts the content of your communication, your ISP can still see which websites you visit through DNS requests and connection metadata. They know you visited example.com but not what you did there."
+    },
+    {
+      "question": "Is DNS over HTTPS enough to stop ISP tracking?",
+      "answer": "DNS over HTTPS prevents ISPs from seeing your DNS queries, but they can still monitor connection patterns and metadata. For complete protection, combine DoH with a VPN and privacy-focused browsing habits."
+    },
+    {
+      "question": "Will changing my DNS slow down my internet?",
+      "answer": "Quality DNS providers like Cloudflare often provide faster response times than ISP DNS servers. You may actually experience improved browsing speed along with better privacy."
+    },
+    {
+      "question": "Can I set up DNS privacy protection on my router?",
+      "answer": "Yes, configuring secure DNS on your router protects all devices on your network automatically. Look for DNS settings in your router's admin panel and enter privacy-focused DNS server addresses."
+    },
+    {
+      "question": "Do mobile devices support DNS over HTTPS?",
+      "answer": "Most modern mobile browsers support DoH. Additionally, you can configure private DNS in Android settings or use DNS profiles on iOS devices for system-wide protection."
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Guide",
+      "url": "/guides/vpn-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Browser Privacy Settings",
+      "url": "/guides/browser-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Incognito Mode Best Practices",
+      "url": "/guides/incognito-mode",
+      "type": "internal"
+    }
+  ]
+}

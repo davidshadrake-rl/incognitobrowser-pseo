@@ -1,0 +1,132 @@
+{
+  "niche": "crypto-privacy",
+  "slug": "cryptocurrency-blockchain-privacy-hardening-checklist",
+  "title": "Cryptocurrency & Blockchain Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to maximize your cryptocurrency privacy and blockchain anonymity. Protect your crypto transactions from tracking and surveillance.",
+  "difficulty": "intermediate",
+  "estimatedTime": "2-3 hours",
+  "intro": "Cryptocurrency transactions are permanently recorded on public blockchains, making privacy protection essential. This checklist covers practical steps to enhance your crypto privacy, from choosing privacy-focused coins to securing your transaction methods.",
+  "sections": [
+    {
+      "title": "Browser & Network Security",
+      "items": [
+        {
+          "id": "private-browser",
+          "task": "Use Incognito Browser for all crypto activities",
+          "why": "Standard browsers leak data that can link your identity to crypto addresses through tracking scripts and fingerprinting.",
+          "howTo": "Download Incognito Browser and use it exclusively for cryptocurrency exchanges, wallets, and research. Never mix crypto activities with regular browsing.",
+          "priority": "critical"
+        },
+        {
+          "id": "vpn-tor",
+          "task": "Connect through VPN or Tor network",
+          "why": "Your IP address can be linked to blockchain transactions, revealing your location and potentially your identity to observers.",
+          "howTo": "Use a no-logs VPN service or Tor browser before accessing any crypto services. For maximum privacy, use VPN + Tor combination.",
+          "priority": "critical"
+        },
+        {
+          "id": "disable-webrtc",
+          "task": "Disable WebRTC in your browser",
+          "why": "WebRTC can leak your real IP address even when using a VPN, compromising your location privacy.",
+          "howTo": "In browser settings, disable WebRTC or use browser extensions like WebRTC Leak Shield to block WebRTC requests completely.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Wallet Privacy Configuration",
+      "items": [
+        {
+          "id": "non-custodial-wallet",
+          "task": "Use non-custodial privacy-focused wallets",
+          "why": "Custodial exchanges require KYC verification and can freeze funds, while privacy wallets offer better transaction anonymity features.",
+          "howTo": "Choose wallets like Wasabi, Samourai (Bitcoin) or official Monero wallet. Avoid exchange wallets for long-term storage.",
+          "priority": "critical"
+        },
+        {
+          "id": "new-addresses",
+          "task": "Generate new receiving addresses for each transaction",
+          "why": "Address reuse creates a transaction history that can be analyzed to reveal spending patterns and wallet balances.",
+          "howTo": "Enable HD (Hierarchical Deterministic) wallets and use the 'generate new address' feature for every incoming payment.",
+          "priority": "high"
+        },
+        {
+          "id": "coin-mixing",
+          "task": "Use coin mixing services for Bitcoin transactions",
+          "why": "Bitcoin transactions are pseudonymous but traceable. Mixing breaks the transaction chain linking your addresses.",
+          "howTo": "Use CoinJoin through Wasabi Wallet or Whirlpool through Samourai Wallet. Mix coins before major transactions.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Privacy Coins & Exchanges",
+      "items": [
+        {
+          "id": "privacy-coins",
+          "task": "Consider using privacy-focused cryptocurrencies",
+          "why": "Privacy coins like Monero and Zcash offer built-in transaction anonymity that Bitcoin lacks by design.",
+          "howTo": "Research Monero (XMR), Zcash (ZEC), or Dash for private transactions. Use atomic swaps or privacy exchanges for conversion.",
+          "priority": "medium"
+        },
+        {
+          "id": "decentralized-exchanges",
+          "task": "Use decentralized exchanges (DEXs) when possible",
+          "why": "Centralized exchanges require identity verification and maintain transaction records that can be subpoenaed or hacked.",
+          "howTo": "Use DEXs like Bisq, LocalMonero, or Uniswap that don't require KYC. Trade peer-to-peer when possible.",
+          "priority": "high"
+        },
+        {
+          "id": "kyc-separation",
+          "task": "Separate KYC and non-KYC crypto activities",
+          "why": "Mixing verified exchange coins with privacy activities can compromise your anonymity efforts.",
+          "howTo": "Keep separate wallets for KYC exchange purchases and private transactions. Never directly transfer between them.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Transaction Privacy Best Practices",
+      "items": [
+        {
+          "id": "timing-analysis",
+          "task": "Randomize transaction timing and amounts",
+          "why": "Consistent transaction patterns in timing and amounts can be used to identify and track your wallet activity.",
+          "howTo": "Vary transaction times, use random delays, and avoid round numbers. Don't empty wallets in single transactions.",
+          "priority": "medium"
+        },
+        {
+          "id": "fee-privacy",
+          "task": "Use variable transaction fees",
+          "why": "Consistent fee patterns can be used as a fingerprint to link transactions from the same user or wallet.",
+          "howTo": "Manually adjust fees instead of using wallet defaults. Use different fee levels for different transactions.",
+          "priority": "low"
+        },
+        {
+          "id": "metadata-cleanup",
+          "task": "Remove transaction metadata and labels",
+          "why": "Wallet labels and transaction notes can leak sensitive information if your wallet file is compromised.",
+          "howTo": "Avoid labeling transactions with personal information. Regularly clean wallet metadata and export clean copies.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "VPN Privacy Checklist",
+      "url": "/checklists/vpn-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Tor Browser Privacy Guide",
+      "url": "/checklists/tor-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Online Banking Security",
+      "url": "/checklists/online-banking",
+      "type": "internal"
+    }
+  ]
+}

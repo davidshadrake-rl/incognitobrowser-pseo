@@ -1,0 +1,144 @@
+{
+  "niche": "facial-recognition",
+  "slug": "facial-recognition-biometric-privacy-hardening-checklist",
+  "title": "Facial Recognition & Biometric Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to protect against facial recognition surveillance and biometric data collection. Secure your identity from face scanning.",
+  "difficulty": "intermediate",
+  "estimatedTime": "2-3 hours",
+  "intro": "Facial recognition technology is increasingly used by governments, retailers, and tech companies to identify and track individuals. This checklist helps you protect your biometric data and reduce your exposure to facial recognition surveillance systems.",
+  "sections": [
+    {
+      "title": "Device & Account Settings",
+      "items": [
+        {
+          "id": "disable-face-unlock",
+          "task": "Disable facial recognition unlock on all devices",
+          "why": "Face unlock creates biometric templates stored on your device that could be accessed by authorities or hackers.",
+          "howTo": "Go to Settings > Security/Face ID and disable facial recognition unlock. Use strong PINs or passwords instead. Also disable 'Smart Lock' features that use face detection.",
+          "priority": "critical"
+        },
+        {
+          "id": "review-photo-tagging",
+          "task": "Turn off automatic face tagging in photo apps",
+          "why": "Photo apps create facial recognition databases from your images, which can be shared with third parties or law enforcement.",
+          "howTo": "In Google Photos, Facebook, Apple Photos, and other apps, disable 'face grouping', 'people recognition', or 'suggested tagging' features in privacy settings.",
+          "priority": "high"
+        },
+        {
+          "id": "limit-photo-uploads",
+          "task": "Disable automatic photo backup to cloud services",
+          "why": "Cloud services scan uploaded photos for faces, building profiles that could be used for identification across platforms.",
+          "howTo": "Turn off auto-backup in Google Photos, iCloud Photos, OneDrive, and Dropbox. Manually select non-identifying photos if you need cloud storage.",
+          "priority": "high"
+        },
+        {
+          "id": "social-media-tagging",
+          "task": "Disable face recognition on social media platforms",
+          "why": "Social platforms use facial recognition to suggest tags and build advertising profiles, which can be accessed by data brokers.",
+          "howTo": "On Facebook: Settings > Privacy > Face Recognition > No. On Instagram: disable photo tagging. Review and delete existing face tags on all platforms.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Physical Privacy Protection",
+      "items": [
+        {
+          "id": "wear-face-covering",
+          "task": "Use face coverings in public spaces with cameras",
+          "why": "Physical barriers are the most effective way to prevent facial recognition systems from identifying you.",
+          "howTo": "Wear masks, sunglasses, or hats in areas with heavy surveillance. Consider IR-blocking glasses or clothing designed to interfere with facial recognition cameras.",
+          "priority": "medium"
+        },
+        {
+          "id": "avoid-biometric-services",
+          "task": "Opt out of biometric identification at airports and stores",
+          "why": "Biometric systems at TSA, retail stores, and venues create permanent records that are shared with law enforcement databases.",
+          "howTo": "Use traditional ID checks instead of Clear or biometric lanes. Refuse biometric scanning at stores. Research your rights to opt-out in your jurisdiction.",
+          "priority": "high"
+        },
+        {
+          "id": "camera-awareness",
+          "task": "Identify and avoid high-surveillance areas",
+          "why": "Some locations have dense camera networks specifically designed for facial recognition and tracking.",
+          "howTo": "Research surveillance camera locations in your area. Avoid unnecessary visits to casinos, major retail chains, and government buildings. Use alternate routes when possible.",
+          "priority": "low"
+        }
+      ]
+    },
+    {
+      "title": "Digital Footprint Management",
+      "items": [
+        {
+          "id": "limit-photo-sharing",
+          "task": "Minimize sharing photos with your face online",
+          "why": "Every photo containing your face can be scraped by companies like Clearview AI to build facial recognition databases.",
+          "howTo": "Avoid posting selfies or clear face photos on social media. Use privacy settings to limit photo visibility. Consider photos from angles that obscure facial features.",
+          "priority": "high"
+        },
+        {
+          "id": "private-browsing",
+          "task": "Use Incognito Browser for sensitive online activities",
+          "why": "Private browsing prevents tracking that could be correlated with facial recognition data to build comprehensive profiles.",
+          "howTo": "Use Incognito Browser when researching sensitive topics or accessing services that might collect biometric data. Enable VPN and tracker blocking features.",
+          "priority": "medium"
+        },
+        {
+          "id": "data-removal-requests",
+          "task": "Request removal from facial recognition databases",
+          "why": "Some companies allow you to opt-out of their facial recognition systems and delete existing data.",
+          "howTo": "Submit opt-out requests to Clearview AI, major retailers, and tech companies. Use services like DeleteMe for broader data removal. Document your requests.",
+          "priority": "medium"
+        },
+        {
+          "id": "review-app-permissions",
+          "task": "Audit camera permissions for all apps",
+          "why": "Apps with camera access could potentially capture and analyze your face without explicit consent.",
+          "howTo": "Review camera permissions in Settings. Remove access for apps that don't need it. Use 'Ask every time' option when available rather than 'Always allow'.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Legal & Rights Protection",
+      "items": [
+        {
+          "id": "know-your-rights",
+          "task": "Research biometric privacy laws in your area",
+          "why": "Understanding your legal rights helps you make informed decisions and take action when your privacy is violated.",
+          "howTo": "Research state laws like Illinois BIPA, California CCPA, and local ordinances. Know your rights regarding consent, data deletion, and law enforcement access.",
+          "priority": "medium"
+        },
+        {
+          "id": "document-violations",
+          "task": "Document unauthorized biometric data collection",
+          "why": "Evidence of privacy violations can support legal action and help protect others from similar violations.",
+          "howTo": "Keep records of when and where you encounter facial recognition systems. Screenshot privacy policies. Report violations to relevant authorities and privacy organizations.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "AI Privacy Protection Guide",
+      "url": "/privacy-guides/ai-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Location Tracking Prevention",
+      "url": "/privacy-guides/location-tracking",
+      "type": "internal"
+    },
+    {
+      "title": "Electronic Frontier Foundation - Face Recognition",
+      "url": "https://www.eff.org/pages/face-recognition",
+      "type": "external"
+    },
+    {
+      "title": "Clearview AI Opt-Out Request",
+      "url": "https://clearview.ai/privacy/requests",
+      "type": "external"
+    }
+  ]
+}

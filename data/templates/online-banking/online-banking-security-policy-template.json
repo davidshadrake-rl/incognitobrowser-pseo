@@ -1,0 +1,133 @@
+{
+  "niche": "online-banking",
+  "slug": "online-banking-security-policy-template",
+  "title": "Online Banking Security Policy Template",
+  "metaDescription": "Comprehensive security policy template for online banking. Protect your financial data with proven security practices and privacy safeguards.",
+  "description": "Create a robust online banking security policy with this comprehensive template. Covers authentication, device security, network protection, and incident response to safeguard your financial transactions and personal data.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Purpose and Scope",
+      "content": "This Online Banking Security Policy establishes security standards and procedures for {{ORGANIZATION_NAME}} to protect customer financial data and ensure secure online banking operations. This policy applies to all employees, contractors, and third-party vendors who access or handle online banking systems and customer financial information.",
+      "placeholders": [
+        {
+          "key": "ORGANIZATION_NAME",
+          "label": "Organization Name",
+          "defaultValue": "[Organization Name]"
+        }
+      ]
+    },
+    {
+      "heading": "Authentication and Access Control",
+      "content": "All online banking access must use multi-factor authentication (MFA) including at least two of the following: password/PIN, SMS/email verification, biometric authentication, or hardware tokens. Customer passwords must be at least 12 characters with complexity requirements. Account lockout occurs after {{MAX_LOGIN_ATTEMPTS}} failed attempts. Administrative access requires additional approval and logging.",
+      "placeholders": [
+        {
+          "key": "MAX_LOGIN_ATTEMPTS",
+          "label": "Maximum Login Attempts",
+          "defaultValue": "3"
+        }
+      ]
+    },
+    {
+      "heading": "Device and Browser Security",
+      "content": "Customers must use updated browsers with current security patches. We recommend using privacy-focused browsers like Incognito Browser for enhanced security. Shared or public computers should never be used for banking. Mobile banking requires device PIN/biometric locks and app-specific authentication. Automatic logout occurs after {{TIMEOUT_MINUTES}} minutes of inactivity.",
+      "placeholders": [
+        {
+          "key": "TIMEOUT_MINUTES",
+          "label": "Session Timeout (Minutes)",
+          "defaultValue": "15"
+        }
+      ]
+    },
+    {
+      "heading": "Network and Connection Security",
+      "content": "Online banking must only occur over secure HTTPS connections with TLS 1.3 or higher encryption. Public Wi-Fi networks are prohibited for banking activities. Customers using public networks must use a VPN with strong encryption. All data transmission uses end-to-end encryption. Network monitoring detects and blocks suspicious connection attempts.",
+      "placeholders": []
+    },
+    {
+      "heading": "Transaction Security and Monitoring",
+      "content": "All transactions require confirmation via secondary authentication. Daily transaction limits of ${{DAILY_LIMIT}} apply unless pre-authorized. Real-time fraud monitoring analyzes transaction patterns. Customers receive immediate notifications for all transactions via SMS and email. Suspicious activities trigger automatic account reviews and potential temporary restrictions.",
+      "placeholders": [
+        {
+          "key": "DAILY_LIMIT",
+          "label": "Daily Transaction Limit",
+          "defaultValue": "5,000"
+        }
+      ]
+    },
+    {
+      "heading": "Data Protection and Privacy",
+      "content": "Customer financial data is encrypted at rest using AES-256 encryption and in transit using TLS 1.3. Personal information access follows least-privilege principles. Data retention periods comply with regulatory requirements and are limited to {{RETENTION_YEARS}} years. Third-party data sharing requires explicit customer consent and contractual privacy protections.",
+      "placeholders": [
+        {
+          "key": "RETENTION_YEARS",
+          "label": "Data Retention Period (Years)",
+          "defaultValue": "7"
+        }
+      ]
+    },
+    {
+      "heading": "Phishing and Fraud Prevention",
+      "content": "{{ORGANIZATION_NAME}} will never request sensitive information via email, phone, or text. Official communications include verification methods and direct login links are never provided. Customer education programs cover phishing recognition and reporting procedures. All suspected phishing attempts must be reported to {{SECURITY_EMAIL}} within 24 hours.",
+      "placeholders": [
+        {
+          "key": "SECURITY_EMAIL",
+          "label": "Security Team Email",
+          "defaultValue": "security@[organization].com"
+        }
+      ]
+    },
+    {
+      "heading": "Incident Response and Reporting",
+      "content": "Security incidents must be reported immediately to the incident response team. Customer accounts are automatically secured upon detection of unauthorized access. Incident response includes immediate containment, investigation, customer notification within {{NOTIFICATION_HOURS}} hours, and regulatory reporting as required. Post-incident reviews identify improvements and update security measures.",
+      "placeholders": [
+        {
+          "key": "NOTIFICATION_HOURS",
+          "label": "Customer Notification Timeframe (Hours)",
+          "defaultValue": "24"
+        }
+      ]
+    },
+    {
+      "heading": "Employee Security Requirements",
+      "content": "All staff handling customer financial data must complete annual security training and background checks. Access to banking systems requires role-based permissions and regular review. Employees must report security concerns immediately and follow clean desk policies. Personal device usage for banking operations is prohibited unless approved and secured according to organizational standards.",
+      "placeholders": []
+    },
+    {
+      "heading": "Compliance and Audit",
+      "content": "This policy complies with applicable regulations including PCI DSS, FFIEC guidelines, and relevant privacy laws. Regular security audits occur {{AUDIT_FREQUENCY}} and include penetration testing and vulnerability assessments. Policy reviews occur annually or following significant security incidents. Compliance violations result in immediate investigation and corrective action.",
+      "placeholders": [
+        {
+          "key": "AUDIT_FREQUENCY",
+          "label": "Audit Frequency",
+          "defaultValue": "quarterly"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "Financial institutions establishing online banking security standards",
+    "Credit unions developing digital banking protection policies",
+    "Corporate finance teams securing business banking operations",
+    "Compliance officers ensuring regulatory adherence",
+    "IT security teams implementing banking system protections",
+    "Risk management departments assessing online banking threats"
+  ],
+  "relatedLinks": [
+    {
+      "title": "Password Security Best Practices",
+      "url": "/templates/password-security",
+      "type": "template"
+    },
+    {
+      "title": "Phishing Protection Guide",
+      "url": "/templates/phishing-protection",
+      "type": "template"
+    },
+    {
+      "title": "Public Wi-Fi Security Policy",
+      "url": "/templates/public-wifi-security",
+      "type": "template"
+    }
+  ]
+}

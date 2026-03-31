@@ -1,0 +1,249 @@
+{
+  "niche": "online-shopping",
+  "slug": "online-shopping-privacy-risk-calculator",
+  "title": "Online Shopping Privacy Risk Calculator",
+  "metaDescription": "Assess your privacy risk while shopping online. Calculate your security score based on browsing habits, payment methods, and data protection.",
+  "description": "Calculate your privacy risk level when shopping online based on your browsing habits, payment methods, and security practices. Get personalized recommendations to shop more securely and protect your financial data from trackers and data brokers.",
+  "inputs": [
+    {
+      "id": "browserType",
+      "label": "Primary Browser for Shopping",
+      "type": "select",
+      "defaultValue": "chrome",
+      "options": [
+        {
+          "value": "incognito-browser",
+          "label": "Incognito Browser"
+        },
+        {
+          "value": "firefox-strict",
+          "label": "Firefox (Strict Privacy)"
+        },
+        {
+          "value": "safari-private",
+          "label": "Safari (Private Browsing)"
+        },
+        {
+          "value": "chrome",
+          "label": "Chrome (Default)"
+        },
+        {
+          "value": "edge",
+          "label": "Edge (Default)"
+        }
+      ],
+      "helpText": "Different browsers offer varying levels of privacy protection"
+    },
+    {
+      "id": "shoppingFrequency",
+      "label": "Online Shopping Frequency (per month)",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "helpText": "How often you shop online affects your exposure to tracking"
+    },
+    {
+      "id": "cookieHandling",
+      "label": "Cookie Management",
+      "type": "select",
+      "defaultValue": "accept-all",
+      "options": [
+        {
+          "value": "block-all",
+          "label": "Block All Non-Essential Cookies"
+        },
+        {
+          "value": "selective",
+          "label": "Review and Accept Selectively"
+        },
+        {
+          "value": "accept-all",
+          "label": "Accept All Cookies"
+        },
+        {
+          "value": "ignore",
+          "label": "Ignore Cookie Notifications"
+        }
+      ],
+      "helpText": "How you handle cookie consent affects tracking"
+    },
+    {
+      "id": "paymentMethod",
+      "label": "Primary Payment Method",
+      "type": "select",
+      "defaultValue": "credit-card",
+      "options": [
+        {
+          "value": "crypto",
+          "label": "Cryptocurrency"
+        },
+        {
+          "value": "virtual-card",
+          "label": "Virtual Credit Card"
+        },
+        {
+          "value": "paypal",
+          "label": "PayPal/Digital Wallet"
+        },
+        {
+          "value": "credit-card",
+          "label": "Direct Credit Card"
+        },
+        {
+          "value": "debit-card",
+          "label": "Direct Debit Card"
+        }
+      ],
+      "helpText": "Different payment methods offer varying privacy levels"
+    },
+    {
+      "id": "accountCreation",
+      "label": "Account Creation Habits",
+      "type": "select",
+      "defaultValue": "always-create",
+      "options": [
+        {
+          "value": "guest-only",
+          "label": "Always Shop as Guest"
+        },
+        {
+          "value": "temporary-email",
+          "label": "Use Temporary/Alias Emails"
+        },
+        {
+          "value": "minimal-info",
+          "label": "Create Accounts with Minimal Info"
+        },
+        {
+          "value": "always-create",
+          "label": "Create Full Accounts with Real Info"
+        }
+      ],
+      "helpText": "Account creation affects long-term data collection"
+    },
+    {
+      "id": "publicWifi",
+      "label": "Shopping on Public WiFi",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "vpn-protected",
+          "label": "Yes, but with VPN"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes without Protection"
+        },
+        {
+          "value": "frequently",
+          "label": "Frequently without Protection"
+        }
+      ],
+      "helpText": "Public WiFi shopping increases security risks"
+    },
+    {
+      "id": "priceTracking",
+      "label": "Use Price Tracking Extensions/Apps",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Price tracking tools often collect browsing data"
+    },
+    {
+      "id": "socialLogin",
+      "label": "Use Social Media Login (Google, Facebook, etc.)",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Social logins create additional data sharing"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall privacy risk level (0-100, lower is better)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your privacy risk category"
+    },
+    {
+      "id": "trackingExposure",
+      "label": "Tracking Exposure",
+      "format": "percentage",
+      "description": "Estimated exposure to behavioral tracking"
+    },
+    {
+      "id": "dataLeakage",
+      "label": "Data Leakage Risk",
+      "format": "percentage",
+      "description": "Risk of personal data being collected and sold"
+    }
+  ],
+  "formula": "let browserScore = { 'incognito-browser': 5, 'firefox-strict': 15, 'safari-private': 25, 'chrome': 45, 'edge': 40 }[browserType]; let frequencyScore = Math.min(shoppingFrequency * 1.5, 30); let cookieScore = { 'block-all': 5, 'selective': 15, 'accept-all': 35, 'ignore': 40 }[cookieHandling]; let paymentScore = { 'crypto': 5, 'virtual-card': 10, 'paypal': 20, 'credit-card': 25, 'debit-card': 30 }[paymentMethod]; let accountScore = { 'guest-only': 5, 'temporary-email': 10, 'minimal-info': 20, 'always-create': 35 }[accountCreation]; let wifiScore = { 'never': 0, 'vpn-protected': 5, 'sometimes': 20, 'frequently': 35 }[publicWifi]; let trackingPenalty = priceTracking ? 10 : 0; let socialPenalty = socialLogin ? 15 : 0; let baseScore = browserScore + cookieScore + paymentScore + accountScore + wifiScore + trackingPenalty + socialPenalty; let riskScore = Math.min(Math.round(baseScore + frequencyScore), 100); let trackingExposure = Math.min(Math.round((cookieScore + trackingPenalty + socialPenalty) * 2.5), 100); let dataLeakage = Math.min(Math.round((accountScore + socialPenalty) * 2.8), 100); let riskLevel = riskScore <= 25 ? 'Low Risk' : riskScore <= 50 ? 'Moderate Risk' : riskScore <= 75 ? 'High Risk' : 'Critical Risk'; return { riskScore, riskLevel, trackingExposure, dataLeakage };",
+  "educational": {
+    "methodology": "This calculator evaluates your online shopping privacy risk based on browser choice, shopping frequency, cookie management, payment methods, account creation habits, and network security. The scoring system weighs each factor's impact on data collection and tracking exposure.",
+    "tips": [
+      "Use Incognito Browser for maximum shopping privacy with built-in tracking protection",
+      "Shop as a guest when possible to minimize data collection",
+      "Use virtual credit cards or privacy-focused payment methods",
+      "Always decline non-essential cookies and use strict privacy settings",
+      "Avoid shopping on public WiFi networks without VPN protection",
+      "Create accounts with temporary email addresses when registration is required",
+      "Regularly clear browser data and cookies after shopping sessions",
+      "Disable social media login options to prevent data cross-sharing"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Excellent privacy practices. You're well-protected from tracking and data collection while shopping online.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk",
+        "description": "Good privacy awareness with room for improvement. Consider upgrading your browser and payment methods.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant privacy exposure. Your shopping habits create opportunities for extensive data collection and tracking.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Critical Risk",
+        "description": "Maximum privacy risk. Immediate changes needed to protect your financial data and shopping behavior from extensive tracking.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Incognito Browser - Private Shopping",
+      "url": "https://incognito.org",
+      "type": "tool"
+    },
+    {
+      "title": "Cookie Management Guide",
+      "url": "/privacy-guides/cookie-management",
+      "type": "guide"
+    },
+    {
+      "title": "Secure Payment Methods",
+      "url": "/privacy-guides/secure-payments",
+      "type": "guide"
+    }
+  ]
+}

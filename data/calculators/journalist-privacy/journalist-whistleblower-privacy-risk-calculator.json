@@ -1,0 +1,271 @@
+{
+  "niche": "journalist-privacy",
+  "slug": "journalist-whistleblower-privacy-risk-calculator",
+  "title": "Journalist & Whistleblower Privacy Risk Calculator",
+  "metaDescription": "Assess your privacy risk level as a journalist or whistleblower. Get personalized security recommendations to protect sources and communications.",
+  "description": "Evaluate your digital privacy risks and get tailored security recommendations for protecting sources, communications, and sensitive information as a journalist or whistleblower.",
+  "inputs": [
+    {
+      "id": "workType",
+      "label": "Type of Work",
+      "type": "select",
+      "defaultValue": "local-news",
+      "options": [
+        {
+          "value": "local-news",
+          "label": "Local News Reporter"
+        },
+        {
+          "value": "investigative",
+          "label": "Investigative Journalist"
+        },
+        {
+          "value": "foreign-correspondent",
+          "label": "Foreign Correspondent"
+        },
+        {
+          "value": "freelance",
+          "label": "Freelance Journalist"
+        },
+        {
+          "value": "whistleblower",
+          "label": "Whistleblower"
+        }
+      ],
+      "helpText": "Your role affects the level of scrutiny you may face"
+    },
+    {
+      "id": "sensitiveTopics",
+      "label": "Coverage of Sensitive Topics",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "low",
+          "label": "General news, low sensitivity"
+        },
+        {
+          "value": "moderate",
+          "label": "Some political/corporate coverage"
+        },
+        {
+          "value": "high",
+          "label": "Government corruption, corporate crime"
+        },
+        {
+          "value": "extreme",
+          "label": "National security, organized crime"
+        }
+      ],
+      "helpText": "More sensitive topics increase surveillance risk"
+    },
+    {
+      "id": "location",
+      "label": "Operating Location",
+      "type": "select",
+      "defaultValue": "democratic",
+      "options": [
+        {
+          "value": "democratic",
+          "label": "Democratic country with press freedom"
+        },
+        {
+          "value": "restricted",
+          "label": "Country with some press restrictions"
+        },
+        {
+          "value": "authoritarian",
+          "label": "Authoritarian regime"
+        },
+        {
+          "value": "conflict-zone",
+          "label": "Conflict zone or war zone"
+        }
+      ],
+      "helpText": "Geographic location affects legal protections and threats"
+    },
+    {
+      "id": "communicationMethods",
+      "label": "Primary Communication Methods",
+      "type": "select",
+      "defaultValue": "mixed",
+      "options": [
+        {
+          "value": "insecure",
+          "label": "Regular email, SMS, phone calls"
+        },
+        {
+          "value": "mixed",
+          "label": "Mix of secure and standard methods"
+        },
+        {
+          "value": "secure",
+          "label": "Encrypted messaging, secure email"
+        },
+        {
+          "value": "advanced",
+          "label": "Tor, air-gapped systems, dead drops"
+        }
+      ],
+      "helpText": "Secure communication methods reduce interception risk"
+    },
+    {
+      "id": "deviceSecurity",
+      "label": "Device Security Practices",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "poor",
+          "label": "No special security measures"
+        },
+        {
+          "value": "basic",
+          "label": "Strong passwords, regular updates"
+        },
+        {
+          "value": "good",
+          "label": "Encryption, VPN, secure browsers"
+        },
+        {
+          "value": "excellent",
+          "label": "Burner devices, full disk encryption, Tails"
+        }
+      ],
+      "helpText": "Better device security reduces compromise risk"
+    },
+    {
+      "id": "sourceProtection",
+      "label": "Source Protection Methods",
+      "type": "select",
+      "defaultValue": "standard",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Basic confidentiality practices"
+        },
+        {
+          "value": "standard",
+          "label": "Encrypted communication with sources"
+        },
+        {
+          "value": "advanced",
+          "label": "SecureDrop, anonymous tip systems"
+        },
+        {
+          "value": "expert",
+          "label": "Multiple secure channels, operational security"
+        }
+      ],
+      "helpText": "Stronger source protection reduces exposure for both parties"
+    },
+    {
+      "id": "targetProfile",
+      "label": "Public Profile/Visibility",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "low",
+          "label": "Local/regional recognition"
+        },
+        {
+          "value": "moderate",
+          "label": "National recognition"
+        },
+        {
+          "value": "high",
+          "label": "International recognition"
+        },
+        {
+          "value": "very-high",
+          "label": "High-profile investigations/exposures"
+        }
+      ],
+      "helpText": "Higher visibility increases targeting risk"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk level (0-100 scale)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Categorized risk assessment"
+    },
+    {
+      "id": "primaryThreats",
+      "label": "Primary Threats",
+      "format": "text",
+      "description": "Main privacy and security threats you face"
+    },
+    {
+      "id": "recommendations",
+      "label": "Priority Recommendations",
+      "format": "text",
+      "description": "Most important security improvements to implement"
+    }
+  ],
+  "formula": "const riskWeights = { workType: { 'local-news': 10, 'investigative': 25, 'foreign-correspondent': 30, 'freelance': 20, 'whistleblower': 35 }, sensitiveTopics: { 'low': 5, 'moderate': 15, 'high': 30, 'extreme': 40 }, location: { 'democratic': 5, 'restricted': 20, 'authoritarian': 35, 'conflict-zone': 40 }, communicationMethods: { 'insecure': 25, 'mixed': 15, 'secure': 5, 'advanced': -5 }, deviceSecurity: { 'poor': 20, 'basic': 10, 'good': -5, 'excellent': -15 }, sourceProtection: { 'minimal': 20, 'standard': 10, 'advanced': -5, 'expert': -15 }, targetProfile: { 'low': 5, 'moderate': 15, 'high': 25, 'very-high': 35 } }; let score = Object.keys(riskWeights).reduce((total, key) => total + (riskWeights[key][inputs[key]] || 0), 0); score = Math.max(0, Math.min(100, score)); const level = score >= 70 ? 'Critical' : score >= 50 ? 'High' : score >= 30 ? 'Moderate' : 'Low'; const threats = []; if (inputs.workType === 'whistleblower') threats.push('retaliation', 'legal action'); if (inputs.sensitiveTopics === 'high' || inputs.sensitiveTopics === 'extreme') threats.push('surveillance', 'intimidation'); if (inputs.location === 'authoritarian' || inputs.location === 'conflict-zone') threats.push('arrest', 'violence'); if (inputs.communicationMethods === 'insecure') threats.push('communication interception'); const recs = []; if (inputs.deviceSecurity === 'poor' || inputs.deviceSecurity === 'basic') recs.push('Upgrade device security with full encryption and Incognito Browser'); if (inputs.communicationMethods === 'insecure' || inputs.communicationMethods === 'mixed') recs.push('Switch to encrypted messaging and secure email'); if (inputs.sourceProtection === 'minimal' || inputs.sourceProtection === 'standard') recs.push('Implement SecureDrop or similar anonymous communication systems'); if (score >= 50) recs.push('Consider using Tor network and VPN for all communications'); return { riskScore: score, riskLevel: level, primaryThreats: threats.join(', ') || 'Digital surveillance, source exposure', recommendations: recs.slice(0, 3).join('; ') || 'Continue current security practices' };",
+  "educational": {
+    "methodology": "This calculator evaluates privacy risks based on your work type, operating environment, security practices, and threat exposure. It considers factors like geographic location, topic sensitivity, communication methods, and existing security measures to provide a comprehensive risk assessment.",
+    "tips": [
+      "Use Incognito Browser or Tor Browser for research on sensitive topics",
+      "Set up SecureDrop or similar systems for anonymous source communication",
+      "Use burner phones and devices for high-risk communications",
+      "Regularly update all devices and use full disk encryption",
+      "Consider operational security (OPSEC) training for high-risk situations",
+      "Develop secure backup and storage systems for sensitive materials",
+      "Use VPN services that don't log user activity",
+      "Practice digital hygiene: separate work and personal accounts"
+    ],
+    "interpretation": [
+      {
+        "range": "0-29",
+        "label": "Low Risk",
+        "description": "Basic privacy risks. Standard security practices should be sufficient.",
+        "color": "green"
+      },
+      {
+        "range": "30-49",
+        "label": "Moderate Risk",
+        "description": "Elevated privacy concerns. Implement enhanced security measures.",
+        "color": "yellow"
+      },
+      {
+        "range": "50-69",
+        "label": "High Risk",
+        "description": "Significant privacy threats. Advanced security practices essential.",
+        "color": "orange"
+      },
+      {
+        "range": "70-100",
+        "label": "Critical Risk",
+        "description": "Extreme privacy dangers. Maximum security protocols required.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "SecureDrop - Anonymous Document Submission",
+      "url": "https://securedrop.org",
+      "type": "tool"
+    },
+    {
+      "title": "Tor Browser for Anonymous Browsing",
+      "url": "https://www.torproject.org",
+      "type": "tool"
+    },
+    {
+      "title": "Committee to Protect Journalists Security Guide",
+      "url": "https://cpj.org/safety-kit",
+      "type": "guide"
+    }
+  ]
+}

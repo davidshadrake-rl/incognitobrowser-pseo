@@ -1,0 +1,32 @@
+{
+  "term": "Secure Multi Party Computation",
+  "slug": "secure-multi-party-computation",
+  "definition": "A cryptographic method that allows multiple parties to jointly compute a function over their private inputs while keeping those inputs secret from each other.",
+  "metaDescription": "Learn about Secure Multi Party Computation (MPC) - a privacy technology that enables collaborative data analysis without revealing sensitive information.",
+  "simpleExplanation": "Imagine you and your friends want to find out who earns the highest salary without revealing your actual salaries to each other. Secure multi party computation makes this possible by allowing calculations on private data without exposing it.",
+  "whyItMatters": "This technology enables organizations to collaborate and gain insights from combined datasets while maintaining privacy compliance and protecting sensitive information from competitors, partners, or even the computing platforms themselves.",
+  "technicalDetail": "MPC uses cryptographic protocols like secret sharing, garbled circuits, or homomorphic encryption to distribute computations across multiple parties. Each party holds fragments of data that are meaningless individually but collectively enable the desired computation without reconstructing the original inputs.",
+  "examples": [
+    {
+      "scenario": "Salary benchmarking between companies",
+      "explanation": "Multiple companies can determine industry salary averages for specific roles without revealing their individual employee compensation data to competitors."
+    },
+    {
+      "scenario": "Medical research across hospitals",
+      "explanation": "Hospitals can collaborate on treatment effectiveness studies by analyzing combined patient data while keeping individual patient records private and complying with HIPAA regulations."
+    },
+    {
+      "scenario": "Financial fraud detection",
+      "explanation": "Banks can jointly identify suspicious transaction patterns across their networks without sharing customer transaction details or account information with each other."
+    }
+  ],
+  "relatedTerms": [
+    "homomorphic-encryption",
+    "differential-privacy",
+    "zero-knowledge-proof",
+    "federated-learning",
+    "privacy-preserving-computation"
+  ],
+  "niche": "Advanced cryptographic privacy technique primarily used in enterprise and research contexts",
+  "category": "technology"
+}

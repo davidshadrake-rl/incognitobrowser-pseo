@@ -1,0 +1,102 @@
+{
+  "niche": "encrypted-messaging",
+  "slug": "encrypted-messaging-policy-template",
+  "title": "Encrypted Messaging Policy Template - Secure Communication Guidelines",
+  "metaDescription": "Create a comprehensive encrypted messaging policy with our template. Establish secure communication guidelines for organizations and teams.",
+  "description": "A complete policy template for establishing encrypted messaging guidelines in your organization. Covers app selection, security protocols, and best practices for maintaining private communications across teams.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Policy Overview and Purpose",
+      "content": "This Encrypted Messaging Policy establishes guidelines for secure communication within [ORGANIZATION_NAME]. The purpose is to protect sensitive information, maintain privacy, and ensure all team communications are conducted through verified end-to-end encrypted platforms. This policy applies to all employees, contractors, and authorized users accessing organizational messaging systems.",
+      "placeholders": [
+        {
+          "key": "ORGANIZATION_NAME",
+          "label": "Organization Name",
+          "defaultValue": "[Your Organization]"
+        }
+      ]
+    },
+    {
+      "heading": "Approved Encrypted Messaging Applications",
+      "content": "The following messaging applications are approved for organizational use based on their security protocols and end-to-end encryption standards:\n\n• Signal - Recommended for highly sensitive communications\n• WhatsApp Business - Approved for general business communications\n• Element/Matrix - Approved for team collaboration\n• Wire - Approved for professional messaging\n\nProhibited applications include SMS/text messaging, unencrypted email, and any messaging platform that does not provide verified end-to-end encryption. All communications should also utilize secure browsing through tools like Incognito Browser to prevent tracking.",
+      "placeholders": []
+    },
+    {
+      "heading": "Security Requirements and Protocols",
+      "content": "All users must implement the following security measures:\n\n1. Enable two-factor authentication on all approved messaging apps\n2. Use strong, unique passwords for each messaging account\n3. Verify contact identities through safety numbers or verification codes\n4. Enable disappearing messages for sensitive conversations\n5. Regular security updates and app version maintenance\n6. Immediate reporting of any suspicious activity or security breaches\n\nDevices used for encrypted messaging must be secured with screen locks, biometric authentication where available, and automatic lock timers set to [LOCK_TIMEOUT] minutes.",
+      "placeholders": [
+        {
+          "key": "LOCK_TIMEOUT",
+          "label": "Screen Lock Timeout (minutes)",
+          "defaultValue": "5"
+        }
+      ]
+    },
+    {
+      "heading": "Data Handling and Retention",
+      "content": "Message retention and data handling guidelines:\n\n• Sensitive communications must use disappearing messages with maximum retention of [RETENTION_PERIOD]\n• Regular backup procedures must not compromise message encryption\n• Messages containing confidential information should be deleted after business need expires\n• Screenshot and forwarding of sensitive messages requires explicit authorization\n• Personal use of organizational messaging accounts is prohibited\n\nAll message data remains encrypted at rest and in transit, with no organizational access to private message content unless legally required and technically feasible.",
+      "placeholders": [
+        {
+          "key": "RETENTION_PERIOD",
+          "label": "Message Retention Period",
+          "defaultValue": "7 days"
+        }
+      ]
+    },
+    {
+      "heading": "Compliance and Monitoring",
+      "content": "While respecting privacy rights, [ORGANIZATION_NAME] maintains the right to:\n\n• Monitor compliance with approved messaging applications\n• Conduct security audits of messaging practices\n• Investigate suspected policy violations\n• Require additional security measures based on role and access level\n\nEmployees are responsible for self-monitoring their messaging security and reporting any potential breaches immediately to [SECURITY_CONTACT]. Regular training sessions will be provided to ensure ongoing compliance and security awareness.",
+      "placeholders": [
+        {
+          "key": "SECURITY_CONTACT",
+          "label": "Security Contact",
+          "defaultValue": "IT Security Team"
+        }
+      ]
+    },
+    {
+      "heading": "Violations and Consequences",
+      "content": "Policy violations may result in:\n\n1. Mandatory security training\n2. Temporary suspension of messaging privileges\n3. Progressive disciplinary action\n4. Termination for severe or repeated violations\n\nAll violations will be documented and reviewed by [REVIEW_AUTHORITY]. Employees may appeal decisions through standard organizational grievance procedures. This policy is effective as of [EFFECTIVE_DATE] and will be reviewed annually for updates and improvements.",
+      "placeholders": [
+        {
+          "key": "REVIEW_AUTHORITY",
+          "label": "Review Authority",
+          "defaultValue": "Human Resources and IT Security"
+        },
+        {
+          "key": "EFFECTIVE_DATE",
+          "label": "Policy Effective Date",
+          "defaultValue": "[Current Date]"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "Corporate communication security policies",
+    "Remote work messaging guidelines",
+    "Healthcare organization HIPAA compliance",
+    "Legal firm client communication protocols",
+    "Non-profit secure advocacy communications",
+    "Small business privacy protection",
+    "Educational institution secure messaging",
+    "Government contractor communication standards"
+  ],
+  "relatedLinks": [
+    {
+      "title": "Signal Security Features Guide",
+      "url": "/guides/signal-security-features",
+      "type": "guide"
+    },
+    {
+      "title": "WhatsApp Privacy Settings Template",
+      "url": "/templates/whatsapp-privacy-settings",
+      "type": "template"
+    },
+    {
+      "title": "End-to-End Encryption Explained",
+      "url": "/guides/end-to-end-encryption-guide",
+      "type": "guide"
+    }
+  ]
+}

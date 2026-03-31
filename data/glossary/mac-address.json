@@ -1,0 +1,31 @@
+{
+  "term": "MAC Address",
+  "slug": "mac-address",
+  "definition": "A unique identifier assigned to network interfaces like Wi-Fi or Ethernet adapters, consisting of 12 hexadecimal characters that can be used to track devices across networks.",
+  "metaDescription": "Learn about MAC addresses - unique device identifiers that can track your location and activity across Wi-Fi networks and pose privacy risks.",
+  "simpleExplanation": "Every device that connects to networks has a MAC address - think of it as a permanent serial number for your phone's Wi-Fi chip or laptop's network card. Unlike IP addresses that change, MAC addresses stay the same and can be used to identify and track your device.",
+  "whyItMatters": "MAC addresses can be used to track your movements between locations, build profiles of your behavior, and identify you even when you use different networks. Retailers, advertisers, and others may collect MAC addresses to monitor foot traffic and target ads.",
+  "technicalDetail": "MAC addresses are 48-bit identifiers typically displayed as six groups of two hexadecimal digits (e.g., 00:1B:44:11:3A:B7). The first three octets identify the manufacturer, while the last three provide a unique device identifier. Modern devices often use MAC randomization to generate temporary addresses for privacy protection.",
+  "examples": [
+    {
+      "scenario": "Retail store tracking",
+      "explanation": "A shopping mall scans for MAC addresses from nearby phones to track how long customers spend in different stores and how often they return, even without connecting to Wi-Fi."
+    },
+    {
+      "scenario": "Wi-Fi network identification",
+      "explanation": "When you connect to your home Wi-Fi, your router logs your device's MAC address to remember and automatically reconnect it, but this same identifier could be collected by other networks you pass by."
+    },
+    {
+      "scenario": "Corporate network monitoring",
+      "explanation": "An office building uses MAC addresses to track which employees are in the building based on their devices connecting to the corporate Wi-Fi network throughout the day."
+    }
+  ],
+  "relatedTerms": [
+    "device-fingerprinting",
+    "wi-fi-tracking",
+    "bluetooth-beacons",
+    "location-tracking",
+    "unique-identifier"
+  ],
+  "category": "technology"
+}

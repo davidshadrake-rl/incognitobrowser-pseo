@@ -1,0 +1,132 @@
+{
+  "niche": "search-history",
+  "slug": "search-history-privacy-hardening-checklist",
+  "title": "Search History Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to delete search history, secure your browsing data, and protect privacy across Google, browsers, and search platforms.",
+  "difficulty": "beginner",
+  "estimatedTime": "45 minutes",
+  "intro": "Your search history reveals your interests, concerns, and personal details. This checklist helps you delete existing search data, configure privacy settings, and prevent future tracking across Google, browsers, and other platforms.",
+  "sections": [
+    {
+      "title": "Clear Existing Search History",
+      "items": [
+        {
+          "id": "google-search-history",
+          "task": "Delete Google Search history",
+          "why": "Google stores all your searches and uses them for ad targeting and profiling.",
+          "howTo": "Go to myactivity.google.com, select 'Delete activity by' and choose 'All time' for Search. Confirm deletion and turn off Web & App Activity.",
+          "priority": "critical"
+        },
+        {
+          "id": "browser-history",
+          "task": "Clear browser search and browsing history",
+          "why": "Browser history contains search queries and visited sites that can reveal personal information.",
+          "howTo": "Press Ctrl+Shift+Delete (Cmd+Shift+Delete on Mac). Select 'All time' and check browsing history, cookies, and cached data. Click Clear Data.",
+          "priority": "critical"
+        },
+        {
+          "id": "youtube-search",
+          "task": "Delete YouTube search history",
+          "why": "YouTube search history reveals interests and can influence recommendations and ads.",
+          "howTo": "Go to myactivity.google.com, filter by YouTube, select all YouTube search activity, and delete. Turn off YouTube History in settings.",
+          "priority": "high"
+        },
+        {
+          "id": "bing-history",
+          "task": "Clear Bing search history",
+          "why": "Microsoft stores Bing searches linked to your account for personalization.",
+          "howTo": "Visit bing.com, sign in, go to Privacy dashboard, find Search history, and click Clear all. Disable search history collection.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Configure Privacy Settings",
+      "items": [
+        {
+          "id": "google-activity-controls",
+          "task": "Disable Google activity tracking",
+          "why": "Prevents Google from storing future searches and building detailed profiles.",
+          "howTo": "Go to myaccount.google.com/activitycontrols. Turn off Web & App Activity, Location History, and YouTube History. Confirm all changes.",
+          "priority": "critical"
+        },
+        {
+          "id": "browser-privacy-mode",
+          "task": "Enable private browsing by default",
+          "why": "Private mode prevents search history from being saved locally.",
+          "howTo": "Set your browser to always open in incognito/private mode. Consider using Incognito Browser for enhanced privacy features and automatic private browsing.",
+          "priority": "high"
+        },
+        {
+          "id": "search-engine-settings",
+          "task": "Configure search engine privacy settings",
+          "why": "Default search engines often track and store your queries.",
+          "howTo": "Switch to privacy-focused search engines like DuckDuckGo or Startpage. In browser settings, change default search engine and remove tracking-based options.",
+          "priority": "high"
+        },
+        {
+          "id": "auto-suggestions",
+          "task": "Disable search suggestions and autocomplete",
+          "why": "These features send partial queries to servers and can reveal search patterns.",
+          "howTo": "In browser settings, find Search or Privacy section. Disable 'Show suggestions from search engine' and 'Use prediction service'. Clear existing suggestions.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Protection Measures",
+      "items": [
+        {
+          "id": "dns-settings",
+          "task": "Use privacy-focused DNS servers",
+          "why": "Default DNS servers can log and track your website visits and searches.",
+          "howTo": "Change DNS to privacy-focused providers like Cloudflare (1.1.1.1) or Quad9 (9.9.9.9) in your router or device network settings.",
+          "priority": "medium"
+        },
+        {
+          "id": "cookies-tracking",
+          "task": "Block search engine tracking cookies",
+          "why": "Cookies help search engines track you across sessions and websites.",
+          "howTo": "Enable 'Block third-party cookies' in browser settings. Use extensions like uBlock Origin or Privacy Badger to block tracking scripts from search engines.",
+          "priority": "high"
+        },
+        {
+          "id": "account-disconnection",
+          "task": "Search without being signed in to accounts",
+          "why": "Signed-in searches are directly linked to your identity and profile.",
+          "howTo": "Sign out of Google, Microsoft, and other accounts before searching. Use separate browsers or profiles for signed-in activities vs. searching.",
+          "priority": "medium"
+        },
+        {
+          "id": "regular-cleanup",
+          "task": "Set up automatic history deletion",
+          "why": "Regular cleanup prevents accumulation of search data over time.",
+          "howTo": "In Google account settings, enable auto-delete for Web & App Activity (set to 3 or 18 months). Set browser to clear history on exit.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Incognito Mode Privacy Guide",
+      "url": "/guides/incognito-mode",
+      "type": "internal"
+    },
+    {
+      "title": "Browser Privacy Checklist",
+      "url": "/checklists/browser-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Private Search Engines Comparison",
+      "url": "/guides/private-search",
+      "type": "internal"
+    },
+    {
+      "title": "Google My Activity Dashboard",
+      "url": "https://myactivity.google.com",
+      "type": "external"
+    }
+  ]
+}

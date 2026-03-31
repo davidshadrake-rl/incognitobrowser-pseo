@@ -1,0 +1,31 @@
+{
+  "term": "Differential Privacy",
+  "slug": "differential-privacy",
+  "definition": "A mathematical framework that adds carefully calibrated noise to datasets to prevent identification of individuals while preserving overall statistical accuracy.",
+  "metaDescription": "Learn about differential privacy, a technique that protects individual privacy in datasets by adding mathematical noise while preserving data utility.",
+  "simpleExplanation": "Imagine adding just enough static to a radio broadcast so you can't make out individual voices, but can still hear the music clearly. Differential privacy works similarly - it adds mathematical 'noise' to data so you can't identify specific people, but the overall patterns remain useful for analysis.",
+  "whyItMatters": "As organizations collect massive amounts of personal data, differential privacy provides a rigorous way to analyze and share insights without compromising individual privacy. It's becoming the gold standard for privacy-preserving data analysis in tech companies and government agencies.",
+  "technicalDetail": "Differential privacy provides mathematical guarantees by ensuring that the probability of any output changes by at most a multiplicative factor of e^ε when one individual's data is added or removed. The privacy parameter ε (epsilon) controls the privacy-utility tradeoff, with smaller values providing stronger privacy protection.",
+  "examples": [
+    {
+      "scenario": "Apple's iOS usage statistics",
+      "explanation": "Apple uses differential privacy to collect insights about how users interact with their devices without learning about any individual user's specific behavior patterns."
+    },
+    {
+      "scenario": "Census data publication",
+      "explanation": "The U.S. Census Bureau applies differential privacy to published statistics, ensuring that even with access to multiple datasets, researchers cannot determine if a specific person participated in the census."
+    },
+    {
+      "scenario": "Medical research databases",
+      "explanation": "Hospitals can share patient data for research by adding differential privacy noise, allowing scientists to study disease patterns while protecting patient identities."
+    }
+  ],
+  "relatedTerms": [
+    "anonymization",
+    "data-masking",
+    "privacy-preserving-analytics",
+    "statistical-disclosure-control",
+    "federated-learning"
+  ],
+  "category": "technology"
+}

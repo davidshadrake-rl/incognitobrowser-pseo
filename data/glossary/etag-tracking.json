@@ -1,0 +1,28 @@
+{
+  "term": "ETag Tracking",
+  "slug": "etag-tracking",
+  "definition": "A web tracking technique that exploits HTTP ETags (entity tags) to create persistent identifiers that follow users across browsing sessions, even after clearing cookies.",
+  "metaDescription": "Learn about ETag tracking, a persistent web tracking method that uses HTTP entity tags to identify users even after clearing cookies.",
+  "simpleExplanation": "ETags are normally used to help websites load faster by checking if content has changed. However, trackers can abuse this feature by creating unique ETags for each visitor, turning them into invisible tracking tags that persist even when you delete cookies.",
+  "whyItMatters": "ETag tracking is particularly concerning because it's invisible to users and survives typical privacy actions like clearing cookies. It can be used to rebuild deleted tracking profiles and circumvent privacy settings, making it harder to browse anonymously.",
+  "technicalDetail": "ETags are HTTP headers that act as version identifiers for web resources. Malicious sites can generate unique ETags per visitor and store tracking data on their servers keyed to these ETags. When users return, the site checks the ETag to retrieve their tracking profile, creating a 'supercookie' that's difficult to detect or remove.",
+  "examples": [
+    {
+      "scenario": "Advertising network tracking",
+      "explanation": "An ad network serves tracking pixels with unique ETags to each visitor. Even after users clear all cookies, the network can still identify them when they visit any site in their network by checking the stored ETag values."
+    },
+    {
+      "scenario": "Cross-site user profiling",
+      "explanation": "A analytics company embeds tracking scripts across multiple websites, using ETags to link a user's browsing activity across different sites, building a comprehensive profile that persists across browser cleaning sessions."
+    }
+  ],
+  "relatedTerms": [
+    "supercookies",
+    "fingerprinting",
+    "persistent-tracking",
+    "http-headers",
+    "cross-site-tracking",
+    "cookie-syncing"
+  ],
+  "category": "attack"
+}

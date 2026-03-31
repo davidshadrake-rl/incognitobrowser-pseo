@@ -1,0 +1,168 @@
+{
+  "niche": "data-breach",
+  "slug": "data-breach-response-security-checklist",
+  "title": "Data Breach Response Security Checklist",
+  "metaDescription": "Complete checklist for responding to data breaches. Learn how to minimize damage, protect your identity, and secure your accounts after a breach.",
+  "difficulty": "beginner",
+  "estimatedTime": "2-3 hours",
+  "intro": "When a data breach affects your personal information, quick action is essential to minimize damage. This comprehensive checklist guides you through immediate response steps and long-term protection measures to safeguard your identity and accounts.",
+  "sections": [
+    {
+      "title": "Immediate Response (First 24 Hours)",
+      "items": [
+        {
+          "id": "assess-breach-scope",
+          "task": "Determine what information was compromised",
+          "why": "Understanding the scope helps you prioritize which accounts and information need immediate protection.",
+          "howTo": "Check breach notifications, company statements, and breach databases like HaveIBeenPwned to identify what personal data was exposed (passwords, SSN, credit cards, etc.).",
+          "priority": "critical"
+        },
+        {
+          "id": "change-passwords",
+          "task": "Change passwords for affected accounts immediately",
+          "why": "Compromised passwords can give attackers access to your accounts and personal information.",
+          "howTo": "Log into each affected account and create strong, unique passwords. Use a password manager to generate and store secure passwords. Change related accounts that use similar passwords.",
+          "priority": "critical"
+        },
+        {
+          "id": "enable-2fa",
+          "task": "Enable two-factor authentication on all affected accounts",
+          "why": "2FA adds an extra security layer that makes it much harder for attackers to access your accounts even with stolen passwords.",
+          "howTo": "Go to security settings for each account and enable 2FA using an authenticator app (Google Authenticator, Authy) or SMS. Avoid SMS when possible as it's less secure.",
+          "priority": "critical"
+        },
+        {
+          "id": "monitor-accounts",
+          "task": "Check all financial accounts for unauthorized activity",
+          "why": "Early detection of fraudulent transactions allows you to report them quickly and limit financial damage.",
+          "howTo": "Log into bank accounts, credit cards, and payment services. Review recent transactions for any unauthorized charges. Set up account alerts for future transactions.",
+          "priority": "critical"
+        }
+      ]
+    },
+    {
+      "title": "Credit and Identity Protection",
+      "items": [
+        {
+          "id": "place-fraud-alerts",
+          "task": "Place fraud alerts with credit bureaus",
+          "why": "Fraud alerts require creditors to verify your identity before opening new accounts, preventing identity thieves from opening credit in your name.",
+          "howTo": "Contact one of the three credit bureaus (Experian, Equifax, TransUnion) to place a 90-day fraud alert. The bureau you contact will notify the other two automatically.",
+          "priority": "high"
+        },
+        {
+          "id": "freeze-credit",
+          "task": "Consider freezing your credit reports",
+          "why": "Credit freezes prevent new credit accounts from being opened in your name, providing stronger protection than fraud alerts.",
+          "howTo": "Contact all three credit bureaus online or by phone to place free credit freezes. Keep your PIN/passwords safe as you'll need them to temporarily lift freezes when applying for credit.",
+          "priority": "high"
+        },
+        {
+          "id": "order-credit-reports",
+          "task": "Request free credit reports from all three bureaus",
+          "why": "Reviewing credit reports helps identify any fraudulent accounts or inquiries that may have been made using your stolen information.",
+          "howTo": "Visit annualcreditreport.com to get free reports from Experian, Equifax, and TransUnion. Review each report carefully for unfamiliar accounts or inquiries.",
+          "priority": "high"
+        },
+        {
+          "id": "identity-monitoring",
+          "task": "Sign up for identity monitoring services",
+          "why": "Monitoring services alert you to potential misuse of your personal information across various databases and the dark web.",
+          "howTo": "Consider services like IdentityForce, LifeLock, or free options from credit card companies. Many breached companies also offer free monitoring services to affected customers.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Account Security and Recovery",
+      "items": [
+        {
+          "id": "update-security-questions",
+          "task": "Change security questions and answers",
+          "why": "Personal information used in security questions is often exposed in data breaches, making these questions vulnerable to attackers.",
+          "howTo": "Log into important accounts and update security questions. Use non-obvious answers that aren't easily guessable from social media or public records. Store answers in your password manager.",
+          "priority": "high"
+        },
+        {
+          "id": "review-account-permissions",
+          "task": "Review and revoke unnecessary app permissions",
+          "why": "Limiting third-party access reduces your attack surface and prevents compromised apps from accessing your data.",
+          "howTo": "Check social media accounts, Google, Apple, and Microsoft accounts for connected apps. Revoke access for apps you no longer use or don't recognize.",
+          "priority": "medium"
+        },
+        {
+          "id": "secure-email",
+          "task": "Secure your email accounts",
+          "why": "Email accounts are often the key to resetting passwords and accessing other accounts, making them high-value targets.",
+          "howTo": "Change email passwords, enable 2FA, review forwarding rules and connected apps. Consider using Incognito Browser when accessing email from public computers to prevent session hijacking.",
+          "priority": "high"
+        },
+        {
+          "id": "backup-recovery-codes",
+          "task": "Save backup codes for important accounts",
+          "why": "Backup codes ensure you can regain access to accounts if you lose your 2FA device during a security incident.",
+          "howTo": "When setting up 2FA, download and securely store backup recovery codes. Print them or save in a password manager, but never store them on the same device as your authenticator app.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Documentation and Follow-up",
+      "items": [
+        {
+          "id": "document-everything",
+          "task": "Keep detailed records of the breach and your response",
+          "why": "Documentation helps with insurance claims, tax deductions, and provides evidence if you need to dispute fraudulent charges later.",
+          "howTo": "Save breach notifications, create a timeline of your actions, keep receipts for monitoring services, and document any financial losses or time spent on recovery.",
+          "priority": "medium"
+        },
+        {
+          "id": "report-to-authorities",
+          "task": "Report identity theft to appropriate agencies",
+          "why": "Official reports help law enforcement track cybercrime and may be required for disputing fraudulent accounts or charges.",
+          "howTo": "File reports with the FTC at IdentityTheft.gov, your local police department, and the FBI's IC3.gov if significant financial loss occurred. Get report numbers for your records.",
+          "priority": "medium"
+        },
+        {
+          "id": "ongoing-monitoring",
+          "task": "Set up ongoing security monitoring",
+          "why": "Data breach impacts can surface months later as criminals sell information or use it for targeted attacks.",
+          "howTo": "Set calendar reminders to check credit reports quarterly, monitor bank statements monthly, and stay alert for phishing attempts. Use Incognito Browser for sensitive browsing to reduce tracking.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Password Security Best Practices",
+      "url": "/checklists/password-security",
+      "type": "internal"
+    },
+    {
+      "title": "Email Privacy Protection Guide",
+      "url": "/checklists/email-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Data Broker Removal Checklist",
+      "url": "/checklists/data-brokers",
+      "type": "internal"
+    },
+    {
+      "title": "Have I Been Pwned - Check Your Email",
+      "url": "https://haveibeenpwned.com",
+      "type": "external"
+    },
+    {
+      "title": "Free Annual Credit Report",
+      "url": "https://www.annualcreditreport.com",
+      "type": "external"
+    },
+    {
+      "title": "FTC Identity Theft Reporting",
+      "url": "https://www.identitytheft.gov",
+      "type": "external"
+    }
+  ]
+}

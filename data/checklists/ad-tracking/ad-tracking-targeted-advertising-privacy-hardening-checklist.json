@@ -1,0 +1,151 @@
+{
+  "niche": "ad-tracking",
+  "slug": "ad-tracking-privacy-hardening-checklist",
+  "title": "Ad Tracking & Targeted Advertising Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to stop ad tracking and prevent targeted advertising. Protect your privacy with actionable steps and browser settings.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Advertisers use sophisticated tracking methods to build detailed profiles about your online behavior. This checklist helps you block targeted ads, prevent behavioral tracking, and reclaim your digital privacy through browser settings, extensions, and privacy-focused tools.",
+  "sections": [
+    {
+      "title": "Browser Privacy Settings",
+      "items": [
+        {
+          "id": "disable-third-party-cookies",
+          "task": "Disable third-party cookies in your browser",
+          "why": "Third-party cookies allow advertisers to track you across multiple websites and build detailed behavioral profiles.",
+          "howTo": "In Chrome/Edge: Settings > Privacy > Cookies > Block third-party cookies. In Firefox: Settings > Privacy > Strict mode. Or switch to Incognito Browser which blocks tracking by default.",
+          "priority": "critical"
+        },
+        {
+          "id": "enable-do-not-track",
+          "task": "Enable Do Not Track requests",
+          "why": "Sends a signal to websites requesting they don't track your browsing activity, though compliance is voluntary.",
+          "howTo": "Chrome: Settings > Privacy > Send 'Do Not Track' request. Firefox: Settings > Privacy > Send websites a 'Do Not Track' signal. Enable in all browsers you use.",
+          "priority": "medium"
+        },
+        {
+          "id": "disable-ad-personalization",
+          "task": "Turn off ad personalization in browser settings",
+          "why": "Prevents browsers from creating advertising profiles based on your browsing history and sharing data with advertisers.",
+          "howTo": "Chrome: Settings > Privacy > Ad privacy > Turn off all options. Edge: Settings > Privacy > Choose what to clear > Turn off personalized ads.",
+          "priority": "high"
+        },
+        {
+          "id": "clear-advertising-data",
+          "task": "Clear existing advertising ID and reset ad preferences",
+          "why": "Removes accumulated tracking data that advertisers have already collected about your browsing habits.",
+          "howTo": "Clear browser data including cookies, site data, and cached files. Visit aboutads.info/choices to opt out of behavioral advertising from major ad networks.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Ad Blocking & Extensions",
+      "items": [
+        {
+          "id": "install-ad-blocker",
+          "task": "Install a comprehensive ad blocker extension",
+          "why": "Blocks display ads, tracking scripts, and behavioral advertising networks before they can load and collect your data.",
+          "howTo": "Install uBlock Origin from your browser's extension store. Enable all filter lists including privacy filters. Consider Incognito Browser which has built-in ad blocking.",
+          "priority": "critical"
+        },
+        {
+          "id": "enable-tracking-protection",
+          "task": "Add dedicated tracking protection extensions",
+          "why": "Specialized tools block sophisticated tracking methods that basic ad blockers might miss, including fingerprinting attempts.",
+          "howTo": "Install Privacy Badger or Ghostery. Configure to block all trackers automatically. Enable anti-fingerprinting features in extension settings.",
+          "priority": "high"
+        },
+        {
+          "id": "block-social-trackers",
+          "task": "Block social media tracking widgets",
+          "why": "Facebook, Twitter, and other social platforms track you across the web even when you're not using their services directly.",
+          "howTo": "Use uBlock Origin's social media filters or install dedicated extensions like 'Facebook Container' for Firefox. Block social widgets on websites.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Search & Platform Settings",
+      "items": [
+        {
+          "id": "private-search-engine",
+          "task": "Switch to a privacy-focused search engine",
+          "why": "Google and Bing track your searches to build advertising profiles. Private search engines don't store or track search history.",
+          "howTo": "Set DuckDuckGo or Startpage as your default search engine. Change in browser settings > Search engine. Avoid Google for sensitive searches.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-google-ads-personalization",
+          "task": "Turn off Google Ads personalization",
+          "why": "Google uses data from all their services to create detailed advertising profiles used across the entire Google ad network.",
+          "howTo": "Visit myaccount.google.com/data-and-privacy > Ad personalization > Turn off. Also visit adssettings.google.com and disable all personalization options.",
+          "priority": "critical"
+        },
+        {
+          "id": "facebook-ad-preferences",
+          "task": "Disable Facebook ad tracking and personalization",
+          "why": "Facebook tracks users across millions of websites and apps, even if you don't have an account, to serve targeted advertising.",
+          "howTo": "In Facebook: Settings > Ads > Ad preferences > Turn off ads based on data from partners. Also disable 'Ads based on your activity' and location-based ads.",
+          "priority": "high"
+        },
+        {
+          "id": "opt-out-data-brokers",
+          "task": "Opt out of major advertising data brokers",
+          "why": "Data brokers collect and sell your personal information to advertisers, creating detailed profiles for targeted advertising campaigns.",
+          "howTo": "Visit optoutprescreen.com, dmachoice.org, and individual broker sites like Acxiom, LexisNexis, and Epsilon to request removal from their databases.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Mobile Device Protection",
+      "items": [
+        {
+          "id": "disable-mobile-ad-tracking",
+          "task": "Turn off mobile advertising tracking",
+          "why": "Mobile devices have unique advertising IDs that apps use to track you across different applications and build behavioral profiles.",
+          "howTo": "iOS: Settings > Privacy > Apple Advertising > Turn off Personalized Ads. Android: Settings > Privacy > Ads > Delete advertising ID or opt out of personalization.",
+          "priority": "critical"
+        },
+        {
+          "id": "app-tracking-transparency",
+          "task": "Enable app tracking transparency controls",
+          "why": "Many mobile apps share your data with advertising networks without clear disclosure, enabling cross-app tracking.",
+          "howTo": "iOS: Settings > Privacy > Tracking > Allow Apps to Request to Track (turn off). Review and deny tracking requests from individual apps in the same menu.",
+          "priority": "high"
+        },
+        {
+          "id": "location-based-ads",
+          "task": "Disable location-based advertising",
+          "why": "Location data enables highly targeted advertising and can reveal sensitive information about your daily routines and interests.",
+          "howTo": "iOS: Settings > Privacy > Location Services > System Services > Location-Based Apple Ads (off). Android: Settings > Location > Location Services > Google Location Accuracy (off).",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Cookie Management Guide",
+      "url": "/privacy-guides/cookie-management",
+      "type": "internal"
+    },
+    {
+      "title": "Browser Privacy Settings",
+      "url": "/privacy-guides/browser-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Device Fingerprinting Protection",
+      "url": "/privacy-guides/device-fingerprinting",
+      "type": "internal"
+    },
+    {
+      "title": "Digital Advertising Alliance Opt-Out",
+      "url": "https://optout.aboutads.info/",
+      "type": "external"
+    }
+  ]
+}

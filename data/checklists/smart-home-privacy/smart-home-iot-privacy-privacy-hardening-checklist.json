@@ -1,0 +1,186 @@
+{
+  "niche": "smart-home-privacy",
+  "slug": "smart-home-iot-privacy-hardening-checklist",
+  "title": "Smart Home & IoT Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to secure your smart home devices, protect IoT privacy, and stop voice assistants from tracking you. Essential privacy steps.",
+  "difficulty": "intermediate",
+  "estimatedTime": "2-3 hours",
+  "intro": "Smart home devices offer convenience but can expose your personal data, listening habits, and daily routines to companies and hackers. This checklist helps you secure your IoT devices, limit data collection, and protect your home network from privacy invasions.",
+  "sections": [
+    {
+      "title": "Network & Router Security",
+      "items": [
+        {
+          "id": "change-default-passwords",
+          "task": "Change all default passwords on router and devices",
+          "why": "Default passwords are easily guessed by hackers and provide no security for your smart home network.",
+          "howTo": "Access each device's settings and create unique, strong passwords. Use a password manager to generate and store them securely.",
+          "priority": "critical"
+        },
+        {
+          "id": "separate-iot-network",
+          "task": "Create a separate network for IoT devices",
+          "why": "Isolates smart devices from computers and phones, preventing hackers from accessing sensitive data if devices are compromised.",
+          "howTo": "Set up a guest network on your router dedicated to IoT devices. Connect all smart home devices to this separate network instead of your main WiFi.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-wps",
+          "task": "Disable WPS (WiFi Protected Setup) on router",
+          "why": "WPS has security vulnerabilities that allow easy unauthorized access to your network.",
+          "howTo": "Log into your router's admin panel, find WiFi settings, and turn off WPS. Save the configuration changes.",
+          "priority": "high"
+        },
+        {
+          "id": "update-router-firmware",
+          "task": "Update router firmware to latest version",
+          "why": "Firmware updates patch security vulnerabilities that could be exploited to access your smart home devices.",
+          "howTo": "Check your router manufacturer's website for firmware updates. Follow their instructions to download and install the latest version.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Voice Assistant Privacy",
+      "items": [
+        {
+          "id": "review-voice-recordings",
+          "task": "Delete stored voice recordings and disable saving",
+          "why": "Voice assistants store your conversations and commands, creating a detailed record of your activities and preferences.",
+          "howTo": "Go to Alexa, Google, or Siri privacy settings. Delete all stored recordings and turn off voice recording storage for future interactions.",
+          "priority": "critical"
+        },
+        {
+          "id": "disable-voice-purchasing",
+          "task": "Turn off voice purchasing and payments",
+          "why": "Prevents accidental or unauthorized purchases through voice commands, protecting your financial information.",
+          "howTo": "In your voice assistant app, find Shopping or Payment settings and disable voice purchasing. Require confirmation codes for any transactions.",
+          "priority": "high"
+        },
+        {
+          "id": "limit-smart-skills",
+          "task": "Remove unnecessary third-party skills and apps",
+          "why": "Third-party voice apps can access your data and conversations, expanding your privacy exposure beyond the main company.",
+          "howTo": "Review installed skills in your voice assistant app. Remove any you don't actively use and check permissions for remaining skills.",
+          "priority": "medium"
+        },
+        {
+          "id": "mute-when-not-needed",
+          "task": "Use physical mute buttons during private conversations",
+          "why": "Prevents accidental activation and ensures sensitive conversations aren't recorded or transmitted.",
+          "howTo": "Press the mute button on your device during private calls, discussions, or when entertaining guests. Develop a habit of muting when privacy is important.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Smart Device Configuration",
+      "items": [
+        {
+          "id": "disable-data-sharing",
+          "task": "Turn off data sharing with third parties",
+          "why": "Smart device companies often share usage data with advertisers and partners, expanding tracking beyond your home.",
+          "howTo": "Check each device's privacy settings in their respective apps. Look for data sharing, analytics, or advertising options and disable them.",
+          "priority": "critical"
+        },
+        {
+          "id": "limit-location-tracking",
+          "task": "Disable location tracking and geofencing",
+          "why": "Location data reveals your daily routines, work schedule, and travel patterns to device manufacturers.",
+          "howTo": "In smart home apps, turn off location services, geofencing, and home/away detection features unless absolutely necessary for device function.",
+          "priority": "high"
+        },
+        {
+          "id": "update-device-firmware",
+          "task": "Enable automatic security updates for all devices",
+          "why": "Keeps devices protected against newly discovered security vulnerabilities that could expose your data.",
+          "howTo": "Check each smart device app for firmware update settings. Enable automatic updates where available, or set monthly reminders to update manually.",
+          "priority": "high"
+        },
+        {
+          "id": "review-app-permissions",
+          "task": "Audit mobile app permissions for smart home apps",
+          "why": "Smart home apps often request excessive permissions to access contacts, location, microphone, and camera data.",
+          "howTo": "Review app permissions in your phone settings. Revoke unnecessary permissions like contacts, calendar, or location for smart home control apps.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Camera & Monitoring Devices",
+      "items": [
+        {
+          "id": "change-camera-passwords",
+          "task": "Set strong, unique passwords for all cameras",
+          "why": "Weak camera passwords allow hackers to spy on your home and family activities.",
+          "howTo": "Access each camera's settings through its app or web interface. Create strong, unique passwords and enable two-factor authentication if available.",
+          "priority": "critical"
+        },
+        {
+          "id": "disable-cloud-storage",
+          "task": "Use local storage instead of cloud recording",
+          "why": "Cloud storage means your private recordings are stored on company servers and could be accessed by employees or hackers.",
+          "howTo": "Configure cameras to save recordings to local SD cards or network storage instead of cloud services. Turn off automatic cloud backup features.",
+          "priority": "high"
+        },
+        {
+          "id": "set-activity-zones",
+          "task": "Configure privacy zones and recording schedules",
+          "why": "Prevents cameras from recording private areas like bedrooms or when family members are home.",
+          "howTo": "Use your camera app to set up privacy zones that won't be recorded. Create schedules to only record when away from home or during specific hours.",
+          "priority": "medium"
+        },
+        {
+          "id": "check-camera-sharing",
+          "task": "Review who has access to camera feeds",
+          "why": "Ensures only authorized family members can view camera footage and prevents unauthorized access.",
+          "howTo": "Check camera app settings for shared users. Remove any unknown accounts and verify that sharing permissions are set to your preferences.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "General Privacy Measures",
+      "items": [
+        {
+          "id": "use-privacy-browser",
+          "task": "Use Incognito Browser when managing smart home accounts",
+          "why": "Prevents your smart home management activities from being tracked by other websites and advertisers.",
+          "howTo": "Download Incognito Browser for private browsing when accessing smart home device web portals, reviewing settings, or researching device privacy options.",
+          "priority": "low"
+        },
+        {
+          "id": "regular-privacy-audit",
+          "task": "Schedule monthly privacy settings review",
+          "why": "Device manufacturers often change privacy policies and reset settings during updates, requiring regular monitoring.",
+          "howTo": "Set a monthly calendar reminder to check privacy settings across all smart home devices and apps. Document any changes in policies or default settings.",
+          "priority": "medium"
+        },
+        {
+          "id": "research-before-buying",
+          "task": "Research privacy practices before buying new smart devices",
+          "why": "Some manufacturers have better privacy practices than others, and choosing privacy-focused brands protects your data from the start.",
+          "howTo": "Before purchasing, research the company's privacy policy, data collection practices, and security track record. Choose devices with strong privacy reputations.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Location Tracking Protection Guide",
+      "url": "/location-tracking-protection",
+      "type": "internal"
+    },
+    {
+      "title": "Webcam Privacy Security Checklist",
+      "url": "/webcam-privacy-security",
+      "type": "internal"
+    },
+    {
+      "title": "Data Broker Opt-Out Guide",
+      "url": "/data-broker-opt-out-guide",
+      "type": "internal"
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "niche": "device-fingerprinting",
+  "slug": "device-fingerprinting-risk-calculator",
+  "title": "Device Fingerprinting Risk Calculator - Check Your Privacy Risk",
+  "metaDescription": "Calculate your device fingerprinting risk score. Assess how easily websites can track you through browser and device fingerprinting techniques.",
+  "description": "Evaluate your vulnerability to device fingerprinting attacks. This calculator assesses how uniquely identifiable your browser and device are to websites, helping you understand your tracking risk and take steps to improve your privacy.",
+  "inputs": [
+    {
+      "id": "browserType",
+      "label": "Browser Type",
+      "type": "select",
+      "defaultValue": "chrome",
+      "options": [
+        {
+          "value": "chrome",
+          "label": "Chrome"
+        },
+        {
+          "value": "firefox",
+          "label": "Firefox"
+        },
+        {
+          "value": "safari",
+          "label": "Safari"
+        },
+        {
+          "value": "edge",
+          "label": "Edge"
+        },
+        {
+          "value": "incognito",
+          "label": "Incognito Browser"
+        },
+        {
+          "value": "other",
+          "label": "Other"
+        }
+      ],
+      "helpText": "Your primary web browser"
+    },
+    {
+      "id": "pluginsEnabled",
+      "label": "Browser Plugins/Extensions Count",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "helpText": "Number of active browser plugins or extensions"
+    },
+    {
+      "id": "screenResolution",
+      "label": "Screen Resolution Uniqueness",
+      "type": "select",
+      "defaultValue": "common",
+      "options": [
+        {
+          "value": "common",
+          "label": "Common (1920x1080, 1366x768)"
+        },
+        {
+          "value": "uncommon",
+          "label": "Uncommon (2560x1440, 3840x2160)"
+        },
+        {
+          "value": "unique",
+          "label": "Very Unique (custom/unusual)"
+        }
+      ],
+      "helpText": "How common your screen resolution is"
+    },
+    {
+      "id": "languageSettings",
+      "label": "Language/Locale Settings",
+      "type": "select",
+      "defaultValue": "common",
+      "options": [
+        {
+          "value": "common",
+          "label": "English (US/UK)"
+        },
+        {
+          "value": "regional",
+          "label": "Other Major Languages"
+        },
+        {
+          "value": "unique",
+          "label": "Rare Languages/Multiple"
+        }
+      ],
+      "helpText": "Your browser's language and locale configuration"
+    },
+    {
+      "id": "timezoneUnique",
+      "label": "Timezone Uniqueness",
+      "type": "select",
+      "defaultValue": "common",
+      "options": [
+        {
+          "value": "common",
+          "label": "Major Timezone (EST, PST, GMT)"
+        },
+        {
+          "value": "regional",
+          "label": "Regional Timezone"
+        },
+        {
+          "value": "unique",
+          "label": "Rare/Unusual Timezone"
+        }
+      ],
+      "helpText": "How common your timezone is globally"
+    },
+    {
+      "id": "canvasBlocking",
+      "label": "Canvas Fingerprint Protection",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use canvas fingerprint blocking?"
+    },
+    {
+      "id": "webglBlocking",
+      "label": "WebGL Fingerprint Protection",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you block WebGL fingerprinting?"
+    },
+    {
+      "id": "userAgentSpoofing",
+      "label": "User Agent Spoofing/Randomization",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you randomize or spoof your user agent?"
+    },
+    {
+      "id": "deviceSpecs",
+      "label": "Device Hardware Uniqueness",
+      "type": "select",
+      "defaultValue": "common",
+      "options": [
+        {
+          "value": "common",
+          "label": "Standard Desktop/Laptop"
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile Device"
+        },
+        {
+          "value": "unique",
+          "label": "High-end/Gaming/Custom PC"
+        }
+      ],
+      "helpText": "How unique your device hardware specifications are"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Fingerprinting Risk Score",
+      "format": "score",
+      "description": "Overall risk score from 0-100 (higher = more trackable)"
+    },
+    {
+      "id": "uniquenessLevel",
+      "label": "Device Uniqueness Level",
+      "format": "text",
+      "description": "How easily you can be identified among web users"
+    },
+    {
+      "id": "protectionGrade",
+      "label": "Protection Grade",
+      "format": "grade",
+      "description": "Letter grade for your fingerprinting protection"
+    },
+    {
+      "id": "estimatedUsers",
+      "label": "Estimated Similar Users",
+      "format": "text",
+      "description": "Approximate number of users with similar fingerprint"
+    }
+  ],
+  "formula": "const browserRisk = { chrome: 20, firefox: 15, safari: 18, edge: 22, incognito: 5, other: 25 }; const resolutionRisk = { common: 10, uncommon: 20, unique: 35 }; const languageRisk = { common: 5, regional: 15, unique: 30 }; const timezoneRisk = { common: 5, regional: 10, unique: 20 }; const deviceRisk = { common: 10, mobile: 15, unique: 25 }; let baseRisk = browserRisk[browserType] + Math.min(pluginsEnabled * 0.8, 25) + resolutionRisk[screenResolution] + languageRisk[languageSettings] + timezoneRisk[timezoneUnique] + deviceRisk[deviceSpecs]; const protections = (canvasBlocking ? -15 : 0) + (webglBlocking ? -10 : 0) + (userAgentSpoofing ? -12 : 0); const riskScore = Math.max(0, Math.min(100, baseRisk + protections)); const uniquenessLevel = riskScore > 80 ? 'Highly Unique' : riskScore > 60 ? 'Very Trackable' : riskScore > 40 ? 'Moderately Trackable' : riskScore > 20 ? 'Low Risk' : 'Well Protected'; const protectionGrade = riskScore > 80 ? 'F' : riskScore > 70 ? 'D' : riskScore > 60 ? 'C' : riskScore > 40 ? 'B' : 'A'; const similarUsers = riskScore > 80 ? '1 in 10,000+' : riskScore > 60 ? '1 in 1,000-10,000' : riskScore > 40 ? '1 in 100-1,000' : riskScore > 20 ? '1 in 10-100' : '1 in 1-10'; return { riskScore, uniquenessLevel, protectionGrade, estimatedUsers: similarUsers };",
+  "educational": {
+    "methodology": "This calculator evaluates your device fingerprinting risk by analyzing browser characteristics, device specifications, and protection measures. It considers factors like browser type, plugins, screen resolution, language settings, and active privacy protections to estimate how uniquely identifiable you are to tracking websites.",
+    "tips": [
+      "Use privacy-focused browsers like Incognito Browser to reduce fingerprinting risk",
+      "Enable canvas and WebGL fingerprint blocking in your browser settings",
+      "Minimize the number of browser plugins and extensions you install",
+      "Consider using common screen resolutions and language settings",
+      "Regularly clear cookies and use private browsing modes",
+      "Use VPN services to mask your IP address and location data",
+      "Keep your browser updated but avoid beta or unusual versions",
+      "Disable JavaScript on sensitive sites where possible"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Low Risk",
+        "description": "Well protected against fingerprinting. You blend in well with other users.",
+        "color": "green"
+      },
+      {
+        "range": "21-40",
+        "label": "Moderate Risk",
+        "description": "Some fingerprinting vulnerability. Consider additional privacy measures.",
+        "color": "yellow"
+      },
+      {
+        "range": "41-60",
+        "label": "High Risk",
+        "description": "Easily trackable through device fingerprinting. Privacy improvements needed.",
+        "color": "orange"
+      },
+      {
+        "range": "61-100",
+        "label": "Very High Risk",
+        "description": "Highly unique fingerprint. You're easily identifiable across websites.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Canvas Fingerprinting Protection Guide",
+      "url": "/privacy-guides/canvas-fingerprinting-protection",
+      "type": "guide"
+    },
+    {
+      "title": "Browser Privacy Settings Optimizer",
+      "url": "/calculators/browser-privacy-optimizer",
+      "type": "calculator"
+    },
+    {
+      "title": "Download Incognito Browser",
+      "url": "/incognito-browser",
+      "type": "tool"
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "niche": "vpn-privacy",
+  "slug": "vpn-proxy-privacy-hardening-checklist",
+  "title": "VPN & Proxy Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to maximize your VPN and proxy privacy protection. Essential steps to secure your online anonymity and prevent data leaks.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "VPNs and proxies are powerful privacy tools, but they require proper configuration to truly protect your anonymity. This checklist ensures your connection is leak-proof, your provider is trustworthy, and your setup maximizes privacy protection against ISP tracking and surveillance.",
+  "sections": [
+    {
+      "title": "VPN Provider Selection & Setup",
+      "items": [
+        {
+          "id": "vpn-provider-audit",
+          "task": "Choose a no-logs VPN with proven track record",
+          "why": "Many VPN providers claim no-logs policies but haven't been independently audited. Proven providers protect you even under legal pressure.",
+          "howTo": "Research providers with third-party audits, court cases proving no-logs claims, and jurisdiction outside 5/9/14 Eyes countries. Avoid free VPNs that sell your data.",
+          "priority": "critical"
+        },
+        {
+          "id": "kill-switch-enable",
+          "task": "Enable VPN kill switch on all devices",
+          "why": "Without a kill switch, your real IP address can leak if the VPN connection drops, exposing your identity and location to websites and ISPs.",
+          "howTo": "In your VPN app settings, enable 'Kill Switch' or 'Network Lock'. Test by disconnecting VPN while browsing - internet should stop working until VPN reconnects.",
+          "priority": "critical"
+        },
+        {
+          "id": "dns-leak-protection",
+          "task": "Configure DNS leak protection",
+          "why": "DNS requests can reveal your browsing activity to your ISP even when using a VPN, completely bypassing your privacy protection.",
+          "howTo": "Enable DNS leak protection in VPN settings. Use your VPN's DNS servers or configure secure DNS (1.1.1.1, 9.9.9.9). Test for leaks at dnsleaktest.com.",
+          "priority": "critical"
+        },
+        {
+          "id": "protocol-selection",
+          "task": "Choose optimal VPN protocol",
+          "why": "Different protocols offer varying levels of security, speed, and stealth. Some protocols are easier to block or detect by governments and ISPs.",
+          "howTo": "Use WireGuard for best performance, OpenVPN for maximum compatibility, or stealth protocols if facing VPN blocking. Avoid PPTP and old protocols.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Connection Security & Leak Prevention",
+      "items": [
+        {
+          "id": "ip-leak-testing",
+          "task": "Test for IP and WebRTC leaks",
+          "why": "WebRTC and other browser features can leak your real IP address even through VPNs, revealing your true location to websites.",
+          "howTo": "Visit ipleak.net and browserleaks.com with VPN connected. Ensure only VPN IP shows, no local IPs. Disable WebRTC in browser or use Incognito Browser for automatic protection.",
+          "priority": "critical"
+        },
+        {
+          "id": "auto-connect-setup",
+          "task": "Enable auto-connect on untrusted networks",
+          "why": "Public WiFi and untrusted networks can intercept your data. Auto-connect ensures you're always protected before any data is transmitted.",
+          "howTo": "Configure VPN to auto-connect on startup and when joining new networks. Set trusted home networks as exceptions if desired for performance.",
+          "priority": "high"
+        },
+        {
+          "id": "ipv6-disable",
+          "task": "Disable IPv6 or ensure VPN IPv6 support",
+          "why": "Many VPNs only route IPv4 traffic, leaving IPv6 requests exposed to your ISP and potentially revealing your real location.",
+          "howTo": "Either choose a VPN with full IPv6 support or disable IPv6 on your devices. On Windows: Network settings > Adapter options > IPv6 unchecked.",
+          "priority": "high"
+        },
+        {
+          "id": "split-tunneling-review",
+          "task": "Review split tunneling configuration",
+          "why": "Split tunneling can accidentally expose sensitive apps to your ISP while others use the VPN, creating privacy inconsistencies.",
+          "howTo": "Disable split tunneling for maximum privacy, or carefully configure only non-sensitive apps to bypass VPN. Never exclude browsers or messaging apps.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Proxy Configuration & Usage",
+      "items": [
+        {
+          "id": "proxy-type-selection",
+          "task": "Choose appropriate proxy type for your needs",
+          "why": "Different proxy types offer varying privacy levels. HTTP proxies don't encrypt data, while SOCKS5 proxies provide better security and application support.",
+          "howTo": "Use SOCKS5 proxies for better security and protocol support. Avoid HTTP proxies for sensitive browsing. Consider Tor for maximum anonymity when needed.",
+          "priority": "high"
+        },
+        {
+          "id": "proxy-chain-setup",
+          "task": "Configure proxy chains for enhanced anonymity",
+          "why": "Single proxies can still track your activity. Chaining proxies through different providers and countries makes traffic analysis much more difficult.",
+          "howTo": "Use tools like ProxyChains or configure multiple proxy layers. Ensure each proxy is from different providers and jurisdictions for maximum protection.",
+          "priority": "medium"
+        },
+        {
+          "id": "proxy-authentication",
+          "task": "Secure proxy authentication credentials",
+          "why": "Weak or reused proxy credentials can be compromised, allowing others to use your proxy access and potentially monitor your traffic.",
+          "howTo": "Use strong, unique passwords for proxy authentication. Store credentials securely and rotate them regularly. Enable 2FA where available.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Browser & Application Integration",
+      "items": [
+        {
+          "id": "browser-proxy-config",
+          "task": "Configure browser proxy settings properly",
+          "why": "Incorrect browser proxy configuration can leak DNS requests or bypass the proxy entirely for certain types of traffic.",
+          "howTo": "Configure proxy in browser network settings or use browser extensions like FoxyProxy. Test configuration at whatismyipaddress.com. Consider using Incognito Browser with built-in proxy support.",
+          "priority": "high"
+        },
+        {
+          "id": "app-specific-routing",
+          "task": "Route specific applications through VPN/proxy",
+          "why": "Some applications may bypass system-wide VPN settings, sending data through your regular connection and exposing your activity.",
+          "howTo": "Use VPN's app-specific routing features or proxy-aware applications. Monitor network connections to ensure all desired traffic routes through VPN/proxy.",
+          "priority": "medium"
+        },
+        {
+          "id": "fallback-protection",
+          "task": "Configure fallback protection for connection failures",
+          "why": "When VPN or proxy connections fail, applications may automatically fall back to direct connections, exposing your real IP and data.",
+          "howTo": "Enable strict firewall rules to block direct connections. Use applications that fail-closed rather than falling back to direct connections when proxy fails.",
+          "priority": "high"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "ISP Tracking Protection Guide",
+      "url": "/privacy-guides/isp-tracking-protection",
+      "type": "guide"
+    },
+    {
+      "title": "Public WiFi Security Checklist",
+      "url": "/checklists/public-wifi-security",
+      "type": "checklist"
+    },
+    {
+      "title": "Tor Privacy Setup Guide",
+      "url": "/privacy-guides/tor-privacy-setup",
+      "type": "guide"
+    },
+    {
+      "title": "DNS Leak Test Tool",
+      "url": "https://dnsleaktest.com",
+      "type": "tool"
+    }
+  ]
+}

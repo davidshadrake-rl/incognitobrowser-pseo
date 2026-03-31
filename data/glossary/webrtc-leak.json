@@ -1,0 +1,32 @@
+{
+  "term": "WebRTC Leak",
+  "slug": "webrtc-leak",
+  "definition": "A vulnerability where WebRTC technology exposes a user's real IP address, bypassing VPNs and proxy servers during real-time communication applications.",
+  "metaDescription": "WebRTC leaks expose your real IP address even when using a VPN. Learn how this browser vulnerability compromises privacy and how to prevent it.",
+  "simpleExplanation": "WebRTC leak happens when your browser reveals your true IP address while using video calls or messaging apps, even if you're connected to a VPN. It's like your browser accidentally showing your real home address when you're trying to stay anonymous online.",
+  "whyItMatters": "WebRTC leaks can completely undermine your privacy protection efforts. Even with a VPN active, websites can discover your real location, ISP, and identity, potentially exposing you to tracking, targeted attacks, or bypassing geo-restrictions you thought were secure.",
+  "technicalDetail": "WebRTC uses STUN servers to establish peer-to-peer connections by discovering the user's local and public IP addresses. This process occurs at the browser level and often bypasses system-wide proxy settings, creating a direct path that reveals the real IP address even when other traffic is routed through VPNs or proxies.",
+  "examples": [
+    {
+      "scenario": "VPN bypass detection",
+      "explanation": "You're using a VPN to access geo-blocked content, but the streaming service detects your real IP through WebRTC and blocks access anyway."
+    },
+    {
+      "scenario": "Anonymous browsing compromise",
+      "explanation": "While browsing anonymously through Tor, a website uses WebRTC to discover your actual ISP and location, potentially identifying you."
+    },
+    {
+      "scenario": "Corporate network exposure",
+      "explanation": "An employee using a personal VPN on company WiFi accidentally reveals the internal corporate network IP address through WebRTC to external websites."
+    }
+  ],
+  "relatedTerms": [
+    "vpn",
+    "ip-address",
+    "proxy-server",
+    "browser-fingerprinting",
+    "dns-leak",
+    "anonymity"
+  ],
+  "category": "attack"
+}

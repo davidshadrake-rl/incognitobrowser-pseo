@@ -1,0 +1,153 @@
+{
+  "niche": "cloud-privacy",
+  "slug": "cloud-storage-privacy-security-checklist",
+  "title": "Cloud Storage Privacy Security Checklist",
+  "metaDescription": "Secure your cloud storage data with our comprehensive privacy checklist. Protect files in Google Drive, Dropbox & more from unauthorized access.",
+  "difficulty": "beginner",
+  "estimatedTime": "30-45 minutes",
+  "intro": "Cloud storage services like Google Drive, Dropbox, and OneDrive make file sharing convenient, but they also expose your data to privacy risks. This checklist helps you secure your cloud storage accounts and protect sensitive files from unauthorized access.",
+  "sections": [
+    {
+      "title": "Account Security Setup",
+      "items": [
+        {
+          "id": "enable-2fa",
+          "task": "Enable two-factor authentication (2FA)",
+          "why": "Adds an extra security layer preventing unauthorized access even if your password is compromised.",
+          "howTo": "Go to your cloud storage account settings, find Security or Privacy section, and enable 2FA using an authenticator app like Google Authenticator or Authy rather than SMS.",
+          "priority": "critical"
+        },
+        {
+          "id": "review-passwords",
+          "task": "Use strong, unique passwords",
+          "why": "Weak or reused passwords are the most common way accounts get compromised.",
+          "howTo": "Create a unique password with at least 12 characters including numbers, symbols, and mixed case letters. Use a password manager to generate and store secure passwords.",
+          "priority": "critical"
+        },
+        {
+          "id": "check-login-activity",
+          "task": "Review recent login activity",
+          "why": "Helps identify unauthorized access attempts or suspicious login locations.",
+          "howTo": "Check your account's security or activity section for recent logins. Look for unfamiliar locations, devices, or IP addresses and revoke access if needed.",
+          "priority": "high"
+        },
+        {
+          "id": "recovery-options",
+          "task": "Set up secure account recovery options",
+          "why": "Ensures you can regain access if locked out while preventing attackers from using recovery methods.",
+          "howTo": "Add a secure recovery email (not your main email) and backup authentication methods. Remove old phone numbers or emails you no longer control.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Privacy Settings Configuration",
+      "items": [
+        {
+          "id": "sharing-permissions",
+          "task": "Audit file sharing permissions",
+          "why": "Files shared publicly or with too many people create privacy risks and potential data leaks.",
+          "howTo": "Review all shared files and folders. Remove public links, limit sharing to specific people only, and set expiration dates on temporary shares when possible.",
+          "priority": "critical"
+        },
+        {
+          "id": "app-permissions",
+          "task": "Review connected app permissions",
+          "why": "Third-party apps may have excessive access to your files, creating additional privacy risks.",
+          "howTo": "Go to your account's app permissions or connected apps section. Remove apps you don't recognize or use, and limit permissions for remaining apps to minimum necessary access.",
+          "priority": "high"
+        },
+        {
+          "id": "sync-settings",
+          "task": "Configure selective sync carefully",
+          "why": "Syncing sensitive files to multiple devices increases exposure risk if devices are lost or compromised.",
+          "howTo": "Only sync necessary folders to each device. Keep highly sensitive files in non-synced folders that require manual access through secure browsers like Incognito Browser.",
+          "priority": "medium"
+        },
+        {
+          "id": "version-history",
+          "task": "Enable version history and set retention limits",
+          "why": "Protects against accidental deletion or malicious file changes while limiting long-term data retention.",
+          "howTo": "Enable file version history in your cloud storage settings. Set reasonable retention periods (30-90 days) to balance protection with privacy by not keeping old versions indefinitely.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Data Protection Measures",
+      "items": [
+        {
+          "id": "encrypt-sensitive-files",
+          "task": "Encrypt sensitive files before uploading",
+          "why": "Provides an additional security layer even if your cloud account is compromised or the provider has a data breach.",
+          "howTo": "Use tools like 7-Zip with password protection or dedicated encryption software like AxCrypt to encrypt sensitive files before uploading to cloud storage.",
+          "priority": "high"
+        },
+        {
+          "id": "organize-by-sensitivity",
+          "task": "Organize files by sensitivity level",
+          "why": "Makes it easier to apply appropriate security measures and sharing restrictions based on data sensitivity.",
+          "howTo": "Create separate folders for public, internal, confidential, and highly sensitive files. Apply different sharing and access controls to each category.",
+          "priority": "medium"
+        },
+        {
+          "id": "backup-strategy",
+          "task": "Implement 3-2-1 backup rule",
+          "why": "Protects against data loss from provider outages, account suspension, or malicious deletion.",
+          "howTo": "Keep 3 copies of important data: 1 in cloud storage, 1 on local device, 1 in a different cloud service or external drive. Test backups regularly.",
+          "priority": "high"
+        },
+        {
+          "id": "clean-old-data",
+          "task": "Regularly delete unnecessary files",
+          "why": "Reduces your data footprint and limits exposure of outdated information that could be compromising.",
+          "howTo": "Schedule monthly reviews to delete old files, empty trash folders completely, and remove outdated shared links. Focus on removing files with personal information first.",
+          "priority": "low"
+        }
+      ]
+    },
+    {
+      "title": "Ongoing Security Monitoring",
+      "items": [
+        {
+          "id": "security-notifications",
+          "task": "Enable security notifications",
+          "why": "Alerts you immediately to suspicious activity, unauthorized access attempts, or security changes.",
+          "howTo": "Turn on all security-related email notifications in your account settings. Ensure notifications go to a secure email account you check regularly.",
+          "priority": "critical"
+        },
+        {
+          "id": "regular-audits",
+          "task": "Schedule monthly security audits",
+          "why": "Regular reviews help catch security issues early and maintain good privacy hygiene over time.",
+          "howTo": "Set calendar reminders to monthly review sharing permissions, connected apps, login activity, and file organization. Use privacy-focused browsers like Incognito Browser for these security reviews.",
+          "priority": "medium"
+        },
+        {
+          "id": "breach-monitoring",
+          "task": "Monitor for data breaches",
+          "why": "Knowing if your cloud provider has been breached allows you to take protective action quickly.",
+          "howTo": "Use services like Have I Been Pwned to monitor if your email appears in data breaches. Follow security news about your cloud storage providers.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Email Privacy Protection Guide",
+      "url": "/guides/email-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Password Security Best Practices",
+      "url": "/guides/password-security",
+      "type": "internal"
+    },
+    {
+      "title": "Encrypted Messaging Setup",
+      "url": "/guides/encrypted-messaging",
+      "type": "internal"
+    }
+  ]
+}

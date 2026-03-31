@@ -1,0 +1,178 @@
+{
+  "niche": "browser-extensions",
+  "slug": "browser-extensions-privacy-risk-calculator",
+  "title": "Browser Extensions & Privacy Add-ons Risk Calculator",
+  "metaDescription": "Calculate your browser extension privacy risk. Assess permissions, sources, and data access to protect your browsing privacy and security.",
+  "description": "Evaluate the privacy and security risks of your browser extensions. Our calculator analyzes extension permissions, update frequency, sources, and data access to provide a comprehensive risk assessment for your browser add-ons.",
+  "inputs": [
+    {
+      "id": "extensionCount",
+      "label": "Number of installed extensions",
+      "type": "number",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "helpText": "Total number of browser extensions currently installed"
+    },
+    {
+      "id": "unknownSourceCount",
+      "label": "Extensions from unknown sources",
+      "type": "number",
+      "defaultValue": 0,
+      "min": 0,
+      "max": 50,
+      "helpText": "Extensions not from official browser stores"
+    },
+    {
+      "id": "highPermissionCount",
+      "label": "Extensions with broad permissions",
+      "type": "number",
+      "defaultValue": 2,
+      "min": 0,
+      "max": 50,
+      "helpText": "Extensions that can read/modify all websites or access browsing history"
+    },
+    {
+      "id": "outdatedCount",
+      "label": "Outdated extensions (6+ months)",
+      "type": "number",
+      "defaultValue": 1,
+      "min": 0,
+      "max": 50,
+      "helpText": "Extensions not updated in the last 6 months"
+    },
+    {
+      "id": "privacyExtensions",
+      "label": "Privacy-focused extensions installed",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "some",
+          "label": "1-2 privacy extensions"
+        },
+        {
+          "value": "many",
+          "label": "3+ privacy extensions"
+        }
+      ],
+      "helpText": "Ad blockers, privacy badgers, cookie managers, etc."
+    },
+    {
+      "id": "reviewsCheck",
+      "label": "Do you check extension reviews before installing?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "always",
+          "label": "Always"
+        }
+      ]
+    },
+    {
+      "id": "dataCollection",
+      "label": "Extensions that collect personal data",
+      "type": "number",
+      "defaultValue": 1,
+      "min": 0,
+      "max": 50,
+      "helpText": "Extensions that explicitly collect or share user data"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall extension privacy risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Categorized risk assessment"
+    },
+    {
+      "id": "securityGrade",
+      "label": "Security Grade",
+      "format": "grade",
+      "description": "Letter grade for your extension security posture"
+    },
+    {
+      "id": "recommendedActions",
+      "label": "Priority Actions",
+      "format": "number",
+      "description": "Number of immediate actions recommended"
+    }
+  ],
+  "formula": "const baseRisk = Math.min(extensionCount * 2, 20); const unknownSourceRisk = unknownSourceCount * 15; const permissionRisk = highPermissionCount * 10; const outdatedRisk = outdatedCount * 8; const dataRisk = dataCollection * 12; const privacyBonus = privacyExtensions === 'none' ? 0 : privacyExtensions === 'some' ? -5 : -10; const reviewBonus = reviewsCheck === 'never' ? 10 : reviewsCheck === 'sometimes' ? 5 : -5; const riskScore = Math.max(0, Math.min(100, baseRisk + unknownSourceRisk + permissionRisk + outdatedRisk + dataRisk + privacyBonus + reviewBonus)); const riskLevel = riskScore < 20 ? 'Low Risk' : riskScore < 40 ? 'Moderate Risk' : riskScore < 65 ? 'High Risk' : 'Critical Risk'; const securityGrade = riskScore < 20 ? 'A' : riskScore < 35 ? 'B' : riskScore < 50 ? 'C' : riskScore < 70 ? 'D' : 'F'; const recommendedActions = (unknownSourceCount > 0 ? 1 : 0) + (outdatedCount > 2 ? 1 : 0) + (highPermissionCount > 3 ? 1 : 0) + (privacyExtensions === 'none' ? 1 : 0); return { riskScore, riskLevel, securityGrade, recommendedActions };",
+  "educational": {
+    "methodology": "This calculator evaluates browser extension privacy risks based on key factors: extension count, source reliability, permissions scope, update frequency, and data collection practices. The scoring system weighs unknown sources and broad permissions most heavily, as these pose the greatest privacy threats.",
+    "tips": [
+      "Only install extensions from official browser stores like Chrome Web Store or Firefox Add-ons",
+      "Regularly review and remove unused extensions to minimize your attack surface",
+      "Check extension permissions before installing - avoid those requesting excessive access",
+      "Use reputable privacy extensions like uBlock Origin, Privacy Badger, or DuckDuckGo Privacy Essentials",
+      "Keep all extensions updated to the latest versions for security patches",
+      "Read user reviews and check developer reputation before installing new extensions",
+      "Consider using Incognito Browser for sensitive browsing to limit extension access",
+      "Audit your extensions quarterly and remove any that haven't been updated recently"
+    ],
+    "interpretation": [
+      {
+        "range": "0-19",
+        "label": "Low Risk",
+        "description": "Excellent extension hygiene. Your browser extensions pose minimal privacy risk.",
+        "color": "green"
+      },
+      {
+        "range": "20-39",
+        "label": "Moderate Risk",
+        "description": "Generally safe setup with room for improvement. Review permissions and sources.",
+        "color": "yellow"
+      },
+      {
+        "range": "40-64",
+        "label": "High Risk",
+        "description": "Significant privacy concerns. Immediate action needed to reduce extension risks.",
+        "color": "orange"
+      },
+      {
+        "range": "65-100",
+        "label": "Critical Risk",
+        "description": "Dangerous extension setup. Your privacy and security are seriously compromised.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "uBlock Origin - Best Ad Blocker",
+      "url": "https://ublockorigin.com/",
+      "type": "tool"
+    },
+    {
+      "title": "Privacy Badger by EFF",
+      "url": "https://privacybadger.org/",
+      "type": "tool"
+    },
+    {
+      "title": "Incognito Browser - Privacy-First Browsing",
+      "url": "https://incognitobrowser.com/",
+      "type": "browser"
+    }
+  ]
+}

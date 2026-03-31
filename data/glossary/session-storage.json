@@ -1,0 +1,31 @@
+{
+  "term": "Session Storage",
+  "slug": "session-storage",
+  "definition": "A web browser storage mechanism that temporarily stores data for a single browsing session, automatically deleting all stored information when the browser tab is closed.",
+  "metaDescription": "Learn about session storage - temporary browser data storage that keeps information only while your tab is open and deletes it when closed.",
+  "simpleExplanation": "Session storage is like a temporary notepad that websites use to remember things about your visit. It only works while you have that specific tab open - once you close the tab, everything stored there disappears automatically.",
+  "whyItMatters": "Session storage affects your privacy because it allows websites to track your actions during a visit, but offers better privacy than permanent storage since data is automatically deleted when you close the tab.",
+  "technicalDetail": "Session storage provides 5-10MB of client-side storage per origin, accessible only to the same tab and domain that created it. Data persists through page refreshes and navigation within the tab but is isolated from other tabs and completely cleared when the tab closes, making it more privacy-friendly than localStorage.",
+  "examples": [
+    {
+      "scenario": "Shopping cart contents",
+      "explanation": "An e-commerce site stores your cart items in session storage so they remain if you refresh the page, but the cart empties when you close the tab"
+    },
+    {
+      "scenario": "Form progress tracking",
+      "explanation": "A multi-step application form saves your progress in session storage, allowing you to navigate between steps without losing data, but clears everything if you accidentally close the tab"
+    },
+    {
+      "scenario": "User interface preferences",
+      "explanation": "A website remembers your sidebar collapse state or theme selection for that session only, resetting to defaults when you open a new tab"
+    }
+  ],
+  "relatedTerms": [
+    "local-storage",
+    "cookies",
+    "browser-storage",
+    "web-tracking",
+    "client-side-storage"
+  ],
+  "category": "technology"
+}

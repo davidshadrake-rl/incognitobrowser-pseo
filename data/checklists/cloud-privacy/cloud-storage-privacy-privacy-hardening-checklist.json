@@ -1,0 +1,132 @@
+{
+  "niche": "cloud-privacy",
+  "slug": "cloud-storage-privacy-hardening-checklist",
+  "title": "Cloud Storage Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to secure your cloud storage data. Protect files in Google Drive, Dropbox, and other services from privacy risks.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Cloud storage services make file sharing convenient but expose your data to privacy risks. This checklist helps you configure secure settings, encrypt sensitive files, and minimize data exposure across popular cloud storage platforms.",
+  "sections": [
+    {
+      "title": "Account Security Fundamentals",
+      "items": [
+        {
+          "id": "enable-2fa",
+          "task": "Enable two-factor authentication on all cloud storage accounts",
+          "why": "Prevents unauthorized access even if your password is compromised, adding a critical second layer of security.",
+          "howTo": "Go to security settings in your cloud storage account. Enable 2FA using an authenticator app like Authy or Google Authenticator rather than SMS for better security.",
+          "priority": "critical"
+        },
+        {
+          "id": "strong-passwords",
+          "task": "Use unique, strong passwords for each cloud storage service",
+          "why": "Weak or reused passwords are the most common way accounts get compromised, exposing all your stored files.",
+          "howTo": "Generate unique 12+ character passwords using a password manager. Include uppercase, lowercase, numbers, and symbols. Never reuse passwords across services.",
+          "priority": "critical"
+        },
+        {
+          "id": "review-sessions",
+          "task": "Regularly audit active login sessions",
+          "why": "Unknown active sessions could indicate unauthorized access to your account and files.",
+          "howTo": "Check active sessions in your account settings monthly. Log out unfamiliar devices or locations immediately. Some services show login history and device details.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Privacy Settings Configuration",
+      "items": [
+        {
+          "id": "default-sharing",
+          "task": "Set default file sharing to private/restricted",
+          "why": "Prevents accidentally making files public when sharing, which could expose sensitive documents to anyone with the link.",
+          "howTo": "In sharing settings, change default visibility to 'Restricted' or 'Only people with access'. Disable public link sharing by default in Google Drive, Dropbox, OneDrive settings.",
+          "priority": "high"
+        },
+        {
+          "id": "link-permissions",
+          "task": "Configure shared link permissions to expire and require authentication",
+          "why": "Permanent public links can be accessed indefinitely, even after you forget about them, creating long-term privacy risks.",
+          "howTo": "Set shared links to expire after 7-30 days. Require viewer authentication when possible. Regularly audit and revoke old shared links in your sharing history.",
+          "priority": "high"
+        },
+        {
+          "id": "sync-settings",
+          "task": "Limit device sync and selective sync sensitive folders",
+          "why": "Syncing to multiple devices increases exposure risk. Selective sync prevents sensitive files from being stored locally on all devices.",
+          "howTo": "Use selective sync to exclude sensitive folders from certain devices. Limit sync to trusted devices only. Consider online-only storage for highly sensitive files.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Data Protection & Encryption",
+      "items": [
+        {
+          "id": "client-side-encryption",
+          "task": "Encrypt sensitive files before uploading to cloud storage",
+          "why": "Cloud providers can access your unencrypted files. Client-side encryption ensures only you can decrypt and view sensitive documents.",
+          "howTo": "Use tools like AxCrypt, 7-Zip with encryption, or Cryptomator to encrypt files before upload. Store encryption keys separately from cloud storage.",
+          "priority": "critical"
+        },
+        {
+          "id": "zero-knowledge-services",
+          "task": "Consider switching to zero-knowledge cloud storage providers",
+          "why": "Services like Tresorit, pCloud Crypto, or SpiderOak encrypt data with keys only you control, preventing provider access.",
+          "howTo": "Research zero-knowledge providers that fit your needs. Gradually migrate sensitive data from mainstream services. Keep encryption keys backed up securely.",
+          "priority": "medium"
+        },
+        {
+          "id": "data-classification",
+          "task": "Classify and separate sensitive data from general files",
+          "why": "Not all files need the same protection level. Separating sensitive data allows targeted security measures and reduces overall risk exposure.",
+          "howTo": "Create separate folders or accounts for sensitive documents. Use different cloud services for different data types. Apply stricter security to high-sensitivity files.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Privacy Monitoring & Maintenance",
+      "items": [
+        {
+          "id": "access-logs",
+          "task": "Regularly review file access logs and sharing activity",
+          "why": "Monitoring access helps detect unauthorized viewing of your files and identify potential security breaches early.",
+          "howTo": "Check activity logs monthly in your cloud storage settings. Look for unfamiliar access times, locations, or IP addresses. Set up email notifications for file access when available.",
+          "priority": "medium"
+        },
+        {
+          "id": "third-party-apps",
+          "task": "Audit and remove unnecessary third-party app permissions",
+          "why": "Apps connected to your cloud storage can access your files even when you're not actively using them, creating ongoing privacy risks.",
+          "howTo": "Review connected apps in account settings. Remove apps you no longer use. Limit permissions to 'read-only' when possible for apps you keep.",
+          "priority": "high"
+        },
+        {
+          "id": "privacy-browsing",
+          "task": "Use privacy-focused browsers when accessing cloud storage",
+          "why": "Standard browsers may leak information about your cloud storage usage through cookies, tracking, and data collection.",
+          "howTo": "Access cloud storage through Incognito Browser or other privacy-focused browsers. Clear cookies and cache regularly. Consider using VPN for additional privacy protection.",
+          "priority": "low"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Email Privacy Checklist",
+      "url": "/checklists/email-privacy",
+      "type": "checklist"
+    },
+    {
+      "title": "Password Security Best Practices",
+      "url": "/checklists/password-security",
+      "type": "checklist"
+    },
+    {
+      "title": "Encrypted Messaging Setup Guide",
+      "url": "/checklists/encrypted-messaging",
+      "type": "checklist"
+    }
+  ]
+}

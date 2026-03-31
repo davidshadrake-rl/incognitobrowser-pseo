@@ -1,0 +1,29 @@
+{
+  "niche": "digital-footprint",
+  "slug": "digital-footprint-risk-calculator",
+  "title": "Digital Footprint Risk Calculator",
+  "metaDescription": "Calculate your digital footprint risk score. Assess how exposed your personal data is online.",
+  "description": "Estimate your digital footprint exposure risk based on your online habits.",
+  "inputs": [
+    {"id": "socialAccounts", "label": "Number of social media accounts", "type": "number", "defaultValue": 5, "min": 0, "max": 20, "helpText": "Count all active social media profiles"},
+    {"id": "passwordReuse", "label": "Do you reuse passwords?", "type": "select", "defaultValue": "sometimes", "options": [{"value": "never", "label": "Never"}, {"value": "rarely", "label": "Rarely"}, {"value": "sometimes", "label": "Sometimes"}, {"value": "always", "label": "Always"}]},
+    {"id": "vpnUsage", "label": "VPN usage frequency", "type": "range", "defaultValue": 50, "min": 0, "max": 100, "step": 10, "helpText": "0 = never, 100 = always"},
+    {"id": "dataBrokerOptOut", "label": "Opted out of data brokers?", "type": "checkbox", "defaultValue": false}
+  ],
+  "outputFields": [
+    {"id": "riskScore", "label": "Risk Score", "format": "score", "description": "Your overall digital footprint risk (lower is better)"},
+    {"id": "riskLevel", "label": "Risk Level", "format": "text"},
+    {"id": "dataPoints", "label": "Estimated Data Points Exposed", "format": "number"}
+  ],
+  "formula": "const pwScore = {never: 0, rarely: 20, sometimes: 50, always: 80}; const socialRisk = Math.min(inputs.socialAccounts * 8, 40); const pwRisk = pwScore[inputs.passwordReuse] || 50; const vpnProtection = inputs.vpnUsage * 0.2; const brokerBonus = inputs.dataBrokerOptOut ? 15 : 0; const score = Math.max(0, Math.min(100, Math.round(socialRisk + pwRisk - vpnProtection - brokerBonus))); const level = score >= 70 ? 'High Risk' : score >= 40 ? 'Moderate Risk' : 'Low Risk'; const points = Math.round(score * 50); return { riskScore: score, riskLevel: level, dataPoints: points };",
+  "educational": {
+    "methodology": "This calculator estimates risk based on online accounts, password hygiene, VPN usage, and data broker opt-out status.",
+    "tips": ["Reduce social media accounts to minimize data exposure", "Use a password manager to eliminate password reuse", "Use a VPN on public Wi-Fi networks", "Regularly opt out of data broker sites"],
+    "interpretation": [
+      {"range": "0-30", "label": "Low Risk", "description": "Good privacy habits!", "color": "#22c55e"},
+      {"range": "31-60", "label": "Moderate Risk", "description": "Some improvements needed.", "color": "#eab308"},
+      {"range": "61-100", "label": "High Risk", "description": "Significant exposure. Take action.", "color": "#ef4444"}
+    ]
+  },
+  "relatedLinks": []
+}

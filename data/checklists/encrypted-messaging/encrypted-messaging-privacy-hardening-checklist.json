@@ -1,0 +1,146 @@
+{
+  "niche": "encrypted-messaging",
+  "slug": "encrypted-messaging-privacy-hardening-checklist",
+  "title": "Encrypted Messaging Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to maximize privacy and security in encrypted messaging apps like Signal, WhatsApp, and Telegram. Essential privacy hardening tips.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Secure your private communications with this comprehensive privacy hardening checklist for encrypted messaging apps. Learn to properly configure Signal, WhatsApp, Telegram, and other messaging platforms to maximize your privacy protection.",
+  "sections": [
+    {
+      "title": "App Selection & Installation",
+      "items": [
+        {
+          "id": "choose-signal",
+          "task": "Use Signal as your primary encrypted messaging app",
+          "why": "Signal offers the strongest end-to-end encryption with minimal metadata collection and open-source transparency.",
+          "howTo": "Download Signal from official app stores only. Verify the developer is Signal Foundation. Enable automatic updates for security patches.",
+          "priority": "critical"
+        },
+        {
+          "id": "verify-app-authenticity",
+          "task": "Verify app authenticity before installation",
+          "why": "Fake messaging apps can steal your data and compromise your communications.",
+          "howTo": "Only download from official app stores. Check developer names match official sources. Read recent reviews for security concerns. Verify app signatures when possible.",
+          "priority": "high"
+        },
+        {
+          "id": "enable-app-lock",
+          "task": "Enable app lock with biometric or PIN protection",
+          "why": "Prevents unauthorized access to your messages if someone gains physical access to your device.",
+          "howTo": "Go to app Privacy settings. Enable Screen Lock or App Lock. Choose biometric authentication (fingerprint/face) or strong PIN. Set lock timer to immediate.",
+          "priority": "critical"
+        }
+      ]
+    },
+    {
+      "title": "Account & Profile Configuration",
+      "items": [
+        {
+          "id": "minimize-profile-info",
+          "task": "Minimize profile information and visibility",
+          "why": "Reduces your digital footprint and limits information available to strangers and potential attackers.",
+          "howTo": "Use initials or nickname instead of full name. Remove or limit profile photo visibility. Hide 'last seen' status, read receipts, and online status from non-contacts.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-phone-discovery",
+          "task": "Disable phone number discovery features",
+          "why": "Prevents others from finding your account using your phone number, reducing unwanted contact attempts.",
+          "howTo": "In Privacy settings, disable 'Allow others to find me by phone number' or similar options. Turn off contact syncing if not needed.",
+          "priority": "medium"
+        },
+        {
+          "id": "configure-disappearing-messages",
+          "task": "Enable disappearing messages by default",
+          "why": "Automatically deletes messages after a set time, reducing data retention and potential exposure in device compromises.",
+          "howTo": "Set default disappearing message timer to 1 week or less. Enable for all new conversations. Regularly review and enable for existing chats.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Communication Security",
+      "items": [
+        {
+          "id": "verify-safety-numbers",
+          "task": "Verify safety numbers for important contacts",
+          "why": "Confirms you're communicating with the intended person and prevents man-in-the-middle attacks.",
+          "howTo": "Open contact info, tap safety number or encryption keys. Compare numbers in person, via video call, or through another secure channel. Mark as verified.",
+          "priority": "critical"
+        },
+        {
+          "id": "enable-sealed-sender",
+          "task": "Enable sealed sender or similar privacy features",
+          "why": "Hides message sender information from the messaging service, providing additional metadata protection.",
+          "howTo": "In Signal Privacy settings, enable 'Sealed Sender'. For other apps, look for similar metadata protection features in privacy settings.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-message-backups",
+          "task": "Disable cloud backups or use encrypted backups only",
+          "why": "Cloud backups often aren't end-to-end encrypted, potentially exposing your message history to service providers or attackers.",
+          "howTo": "Turn off iCloud/Google Drive backups in app settings. If backups needed, use only encrypted local backups or Signal's encrypted backup feature.",
+          "priority": "critical"
+        },
+        {
+          "id": "review-linked-devices",
+          "task": "Regularly audit and remove unnecessary linked devices",
+          "why": "Compromised or forgotten linked devices can provide access to your messages.",
+          "howTo": "Check Linked Devices in settings monthly. Remove any unrecognized devices immediately. Sign out from devices you no longer use regularly.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Privacy Settings",
+      "items": [
+        {
+          "id": "disable-read-receipts",
+          "task": "Disable read receipts and typing indicators",
+          "why": "Prevents others from knowing when you've read messages or are typing, enhancing your privacy and reducing pressure to respond immediately.",
+          "howTo": "In Privacy settings, turn off read receipts, typing indicators, and online status. Note this is mutual - you won't see others' status either.",
+          "priority": "medium"
+        },
+        {
+          "id": "configure-notification-privacy",
+          "task": "Configure notification privacy to hide message content",
+          "why": "Prevents message previews from appearing on lock screen where others might see them.",
+          "howTo": "In Notifications settings, disable message preview or set to 'Name only'. Configure system notifications to hide sensitive content on lock screen.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-link-previews",
+          "task": "Disable automatic link previews",
+          "why": "Link previews can leak metadata to websites and may expose your IP address or other identifying information.",
+          "howTo": "In Privacy or Chat settings, disable 'Generate Link Previews' or similar options. Manually preview links using Incognito Browser when needed.",
+          "priority": "medium"
+        },
+        {
+          "id": "enable-relay-calls",
+          "task": "Enable privacy-focused calling features",
+          "why": "Protects your IP address during voice calls and prevents direct peer-to-peer connections that could reveal location.",
+          "howTo": "In Signal, enable 'Always Relay Calls' in Privacy settings. For other apps, look for similar IP protection or relay features during calls.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Email Privacy Checklist",
+      "url": "/checklists/email-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Password Security Guide",
+      "url": "/checklists/password-security",
+      "type": "internal"
+    },
+    {
+      "title": "Social Media Privacy Settings",
+      "url": "/checklists/social-media-privacy",
+      "type": "internal"
+    }
+  ]
+}

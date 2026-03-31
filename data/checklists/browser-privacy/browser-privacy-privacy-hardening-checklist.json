@@ -1,0 +1,137 @@
+{
+  "niche": "browser-privacy",
+  "slug": "browser-privacy-hardening-checklist",
+  "title": "Browser Privacy Hardening Checklist - Complete Security Guide",
+  "metaDescription": "Complete browser privacy hardening checklist for Chrome, Firefox, Safari & Brave. Essential settings to protect your data and browsing privacy.",
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Protect your online privacy with this comprehensive browser hardening checklist. Learn essential settings and configurations for Chrome, Firefox, Safari, Brave, and privacy-focused browsers like Incognito Browser to minimize tracking and secure your browsing data.",
+  "sections": [
+    {
+      "title": "Essential Privacy Settings",
+      "items": [
+        {
+          "id": "disable-third-party-cookies",
+          "task": "Disable third-party cookies and tracking",
+          "why": "Third-party cookies allow advertisers and trackers to follow you across websites, building detailed profiles of your browsing habits.",
+          "howTo": "Chrome: Settings > Privacy and security > Cookies > Block third-party cookies. Firefox: Settings > Privacy & Security > Enhanced Tracking Protection > Strict. Safari: Preferences > Privacy > Prevent cross-site tracking.",
+          "priority": "critical"
+        },
+        {
+          "id": "enable-do-not-track",
+          "task": "Enable Do Not Track signals",
+          "why": "Sends a signal to websites requesting they don't track your browsing activity, though compliance is voluntary.",
+          "howTo": "Chrome: Settings > Privacy and security > Send a 'Do Not Track' request. Firefox: Settings > Privacy & Security > Send websites a 'Do Not Track' signal. Safari: Preferences > Privacy > Website tracking > Ask websites not to track me.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-location-sharing",
+          "task": "Disable automatic location sharing",
+          "why": "Prevents websites from accessing your precise location data without explicit permission for each request.",
+          "howTo": "Chrome: Settings > Privacy and security > Site Settings > Location > Don't allow sites to see your location. Firefox: Settings > Privacy & Security > Permissions > Location > Settings > Block new requests. Safari: Preferences > Websites > Location.",
+          "priority": "high"
+        },
+        {
+          "id": "clear-browsing-data",
+          "task": "Configure automatic browsing data clearing",
+          "why": "Regularly removes cookies, cache, and browsing history that can be used to track you or reconstruct your online activities.",
+          "howTo": "Set browsers to clear data on exit or use private/incognito mode by default. Consider switching to Incognito Browser for automatic privacy protection without manual configuration.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Security Configuration",
+      "items": [
+        {
+          "id": "disable-javascript-tracking",
+          "task": "Block JavaScript-based tracking and fingerprinting",
+          "why": "JavaScript can be used for sophisticated tracking techniques including device fingerprinting that uniquely identify your browser.",
+          "howTo": "Firefox: about:config > privacy.resistFingerprinting = true. Use browser extensions like uBlock Origin or NoScript. Brave blocks fingerprinting by default.",
+          "priority": "critical"
+        },
+        {
+          "id": "configure-dns-over-https",
+          "task": "Enable DNS over HTTPS (DoH)",
+          "why": "Encrypts DNS queries to prevent ISPs and network administrators from seeing which websites you visit.",
+          "howTo": "Chrome: Settings > Privacy and security > Security > Use secure DNS. Firefox: Settings > General > Network Settings > Enable DNS over HTTPS. Use providers like Cloudflare (1.1.1.1) or Quad9.",
+          "priority": "high"
+        },
+        {
+          "id": "disable-webrtc",
+          "task": "Disable WebRTC to prevent IP leaks",
+          "why": "WebRTC can reveal your real IP address even when using a VPN, compromising your privacy and location anonymity.",
+          "howTo": "Chrome: Use extension to disable WebRTC. Firefox: about:config > media.peerconnection.enabled = false. Consider browsers like Incognito Browser that have WebRTC disabled by default.",
+          "priority": "medium"
+        },
+        {
+          "id": "configure-search-engine",
+          "task": "Switch to privacy-focused search engine",
+          "why": "Default search engines like Google track and store your search queries, building profiles for advertising purposes.",
+          "howTo": "Change default search engine to DuckDuckGo, Startpage, or Searx. Chrome/Firefox: Settings > Search engine > Manage search engines. Set as default and remove tracking-based engines.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Browser Extensions and Add-ons",
+      "items": [
+        {
+          "id": "install-ad-blocker",
+          "task": "Install comprehensive ad and tracker blocker",
+          "why": "Blocks advertisements, trackers, and malicious scripts that compromise privacy and can contain malware.",
+          "howTo": "Install uBlock Origin (recommended) or similar privacy-focused ad blocker. Configure with additional filter lists like EasyPrivacy and Fanboy's Annoyance List for maximum protection.",
+          "priority": "critical"
+        },
+        {
+          "id": "install-privacy-extensions",
+          "task": "Add privacy-enhancing browser extensions",
+          "why": "Provides additional layers of protection against tracking, fingerprinting, and privacy violations that built-in browser settings might miss.",
+          "howTo": "Install Privacy Badger (blocks trackers), Decentraleyes (protects against tracking via CDNs), and ClearURLs (removes tracking parameters from URLs). Avoid installing too many extensions to prevent fingerprinting.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Browser-Specific Hardening",
+      "items": [
+        {
+          "id": "firefox-about-config",
+          "task": "Configure Firefox advanced privacy settings",
+          "why": "Firefox offers extensive privacy configuration options through about:config that aren't available in the standard settings interface.",
+          "howTo": "Type about:config in address bar. Set privacy.firstparty.isolate = true, network.cookie.cookieBehavior = 1, geo.enabled = false, and privacy.resistFingerprinting = true for maximum privacy.",
+          "priority": "medium"
+        },
+        {
+          "id": "chrome-privacy-sandbox",
+          "task": "Disable Chrome Privacy Sandbox features",
+          "why": "Google's Privacy Sandbox still enables tracking through Topics API and other mechanisms, just in a different way than traditional cookies.",
+          "howTo": "Chrome: Settings > Privacy and security > Privacy Sandbox > Turn off Ad topics, Site-suggested ads, and Ad measurement. Consider switching to privacy-first browsers like Incognito Browser instead.",
+          "priority": "high"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Incognito Browser - Privacy by Default",
+      "url": "/browsers/incognito-browser",
+      "type": "tool"
+    },
+    {
+      "title": "Browser Fingerprinting Protection Guide",
+      "url": "/guides/device-fingerprinting-protection",
+      "type": "guide"
+    },
+    {
+      "title": "Privacy Browser Comparison",
+      "url": "/comparisons/best-privacy-browsers",
+      "type": "comparison"
+    },
+    {
+      "title": "Essential Browser Extensions for Privacy",
+      "url": "/guides/privacy-browser-extensions",
+      "type": "guide"
+    }
+  ]
+}

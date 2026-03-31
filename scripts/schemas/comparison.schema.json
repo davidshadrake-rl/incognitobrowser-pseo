@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["niche", "slug", "title", "metaDescription", "intro", "products", "features", "verdict", "faqs"],
+  "properties": {
+    "niche": { "type": "string" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string", "maxLength": 70 },
+    "metaDescription": { "type": "string", "maxLength": 160 },
+    "intro": { "type": "string", "maxLength": 300 },
+    "products": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "required": ["name", "slug", "tagline", "pros", "cons", "rating"],
+        "properties": {
+          "name": { "type": "string" },
+          "slug": { "type": "string" },
+          "tagline": { "type": "string" },
+          "website": { "type": "string" },
+          "pricing": { "type": "string" },
+          "pros": { "type": "array", "items": { "type": "string" }, "minItems": 2 },
+          "cons": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+          "rating": { "type": "number", "minimum": 1, "maximum": 10 }
+        }
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "scores"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "scores": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "value": { "type": "string", "enum": ["yes", "no", "partial", "excellent", "good", "fair", "poor"] },
+                "note": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": ["summary", "bestFor"],
+      "properties": {
+        "summary": { "type": "string" },
+        "bestFor": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "useCase": { "type": "string" },
+              "product": { "type": "string" },
+              "reason": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "faqs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["question", "answer"],
+        "properties": {
+          "question": { "type": "string" },
+          "answer": { "type": "string" }
+        }
+      }
+    }
+  }
+}

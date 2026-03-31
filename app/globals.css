@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+@import "@fontsource/ibm-plex-mono/700.css";
+
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+  --muted: #B8B8D4;
+  --muted-dark: #cfcfcf;
+  --surface: #2b2b36;
+  --surface-dark: #191b1c;
+  --border: rgba(255, 255, 255, 0.2);
+  --border-hover: rgba(255, 255, 255, 0.5);
+  --accent: #3d3d52;
+  --accent-gradient: linear-gradient(-41deg, rgba(61,61,82,0) 10%, rgba(61,61,82,0.75) 40%);
+  --green: #4ade80;
+  --green-muted: rgba(74, 222, 128, 0.15);
+  --red: #f87171;
+  --red-muted: rgba(248, 113, 113, 0.15);
+  --yellow: #facc15;
+  --yellow-muted: rgba(250, 204, 21, 0.15);
+  --blue: #60a5fa;
+  --blue-muted: rgba(96, 165, 250, 0.15);
+  --purple: #c084fc;
+  --purple-muted: rgba(192, 132, 252, 0.15);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3d3d52 #212223;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #212223;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3d3d52;
+  border-radius: 4px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "IBM Plex Mono", monospace;
+}
+
+/* Pill button base */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.5rem;
+  border: 2px solid #ffffff;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  background: transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #cfcfcf;
+  color: #191b1c;
+  border-color: #cfcfcf;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #B8B8D4;
+  background: transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+}
+
+/* Form inputs dark theme */
+input[type="text"],
+input[type="url"],
+input[type="email"],
+input[type="number"],
+textarea,
+select {
+  background: var(--surface-dark) !important;
+  border-color: var(--border) !important;
+  color: #ffffff !important;
+}
+
+input[type="text"]:focus,
+input[type="url"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--border-hover) !important;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--green);
+}
+
+input[type="range"] {
+  accent-color: #ffffff;
+}
+
+details summary {
+  cursor: pointer;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}

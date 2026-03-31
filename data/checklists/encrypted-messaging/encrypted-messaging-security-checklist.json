@@ -1,0 +1,153 @@
+{
+  "niche": "encrypted-messaging",
+  "slug": "encrypted-messaging-security-checklist",
+  "title": "Encrypted Messaging Security Checklist",
+  "metaDescription": "Complete security checklist for encrypted messaging apps. Learn to secure Signal, WhatsApp, and Telegram with end-to-end encryption best practices.",
+  "difficulty": "beginner",
+  "estimatedTime": "20-30 minutes",
+  "intro": "Secure your private communications with this comprehensive encrypted messaging checklist. Whether you use Signal, WhatsApp, or Telegram, these steps will help protect your conversations from prying eyes and ensure maximum privacy.",
+  "sections": [
+    {
+      "title": "App Selection and Setup",
+      "items": [
+        {
+          "id": "choose-secure-app",
+          "task": "Choose a reputable encrypted messaging app",
+          "why": "Not all messaging apps offer true end-to-end encryption. Signal, WhatsApp, and Element are trusted options with strong security records.",
+          "howTo": "Download Signal for maximum security, or use WhatsApp if you need broader compatibility. Avoid SMS and unencrypted apps like standard email or basic chat apps.",
+          "priority": "critical"
+        },
+        {
+          "id": "verify-encryption",
+          "task": "Verify end-to-end encryption is enabled",
+          "why": "Some apps require manual activation of encryption features or only encrypt certain types of messages.",
+          "howTo": "In WhatsApp, look for 'Messages to this chat and calls are now secured with end-to-end encryption' notice. In Signal, all messages are encrypted by default. Check app settings for encryption status.",
+          "priority": "critical"
+        },
+        {
+          "id": "update-app",
+          "task": "Keep your messaging app updated",
+          "why": "Updates often include critical security patches and improved encryption protocols.",
+          "howTo": "Enable automatic updates in your app store, or manually check for updates weekly. Always install security updates immediately when available.",
+          "priority": "high"
+        },
+        {
+          "id": "secure-registration",
+          "task": "Use a secure phone number for registration",
+          "why": "Your phone number is tied to your messaging identity and used for account recovery.",
+          "howTo": "Use your primary phone number for trusted contacts. Consider a separate number for sensitive communications. Avoid using VoIP numbers that may be less secure.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Privacy and Security Settings",
+      "items": [
+        {
+          "id": "disable-cloud-backup",
+          "task": "Disable or encrypt cloud backups",
+          "why": "Cloud backups often store messages without encryption, making them vulnerable to breaches or government requests.",
+          "howTo": "In WhatsApp, go to Settings > Chats > Chat Backup and disable or use end-to-end encrypted backups. In Signal, backups are optional and locally encrypted.",
+          "priority": "high"
+        },
+        {
+          "id": "enable-disappearing-messages",
+          "task": "Enable disappearing messages for sensitive conversations",
+          "why": "Auto-deleting messages reduces the window of exposure if your device is compromised.",
+          "howTo": "In Signal or WhatsApp, open chat settings and set messages to disappear after 1 week or less for sensitive conversations. Use shorter times for highly sensitive content.",
+          "priority": "medium"
+        },
+        {
+          "id": "disable-read-receipts",
+          "task": "Consider disabling read receipts",
+          "why": "Read receipts can reveal when and if you've seen messages, which may compromise your privacy in certain situations.",
+          "howTo": "In WhatsApp, go to Settings > Privacy > Read Receipts and toggle off. Note that you won't see others' read receipts either.",
+          "priority": "low"
+        },
+        {
+          "id": "configure-last-seen",
+          "task": "Limit 'last seen' and online status visibility",
+          "why": "Broadcasting when you're online can reveal your activity patterns and availability to unwanted contacts.",
+          "howTo": "In WhatsApp, go to Settings > Privacy > Last Seen and set to 'My Contacts' or 'Nobody'. In Signal, this information is not shared by default.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Authentication and Verification",
+      "items": [
+        {
+          "id": "verify-contacts",
+          "task": "Verify security numbers/keys with important contacts",
+          "why": "Verification ensures you're actually communicating with the intended person and not someone impersonating them.",
+          "howTo": "In Signal/WhatsApp, open contact info and tap 'Verify Security Number'. Compare numbers in person, via phone call, or through another secure channel. Mark as verified.",
+          "priority": "high"
+        },
+        {
+          "id": "enable-registration-lock",
+          "task": "Enable registration lock or PIN",
+          "why": "Prevents others from registering your messaging account on their device using your phone number.",
+          "howTo": "In WhatsApp, go to Settings > Account > Two-Step Verification and create a PIN. In Signal, enable Registration Lock in Privacy settings with a secure PIN.",
+          "priority": "critical"
+        },
+        {
+          "id": "secure-device-lock",
+          "task": "Enable app lock and device lock",
+          "why": "Physical access to your unlocked device gives complete access to your messages and contacts.",
+          "howTo": "Set a strong device passcode/biometric lock. Enable app-specific locks in Signal (Settings > Privacy > App Lock) or WhatsApp using built-in or third-party app lockers.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Operational Security",
+      "items": [
+        {
+          "id": "review-group-members",
+          "task": "Regularly review group chat members",
+          "why": "Unknown or untrusted members in groups can compromise the privacy of all participants.",
+          "howTo": "Periodically check group member lists. Remove unknown participants and verify new members before sharing sensitive information. Use admin controls to restrict who can add members.",
+          "priority": "medium"
+        },
+        {
+          "id": "secure-media-sharing",
+          "task": "Be cautious when sharing media files",
+          "why": "Photos and files can contain metadata revealing location, device information, and timestamps.",
+          "howTo": "Review photos before sending and remove location data if needed. Use Incognito Browser to research metadata removal tools. Avoid sharing sensitive documents through messaging apps.",
+          "priority": "medium"
+        },
+        {
+          "id": "manage-notifications",
+          "task": "Configure notification privacy",
+          "why": "Message previews in notifications can expose private content on your lock screen.",
+          "howTo": "Disable message previews in lock screen notifications. In iOS/Android settings, set messaging apps to show 'Message' or sender name only, not content.",
+          "priority": "high"
+        },
+        {
+          "id": "regular-security-audit",
+          "task": "Perform monthly security reviews",
+          "why": "Regular audits help identify potential security issues and ensure settings haven't changed with app updates.",
+          "howTo": "Monthly: review active sessions, check for unauthorized devices, verify important contacts' security numbers, update apps, and review privacy settings for any changes.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Email Privacy Guide",
+      "url": "/guides/email-privacy",
+      "type": "guide"
+    },
+    {
+      "title": "Password Security Checklist",
+      "url": "/checklists/password-security",
+      "type": "checklist"
+    },
+    {
+      "title": "Social Media Privacy Settings",
+      "url": "/guides/social-media-privacy",
+      "type": "guide"
+    }
+  ]
+}

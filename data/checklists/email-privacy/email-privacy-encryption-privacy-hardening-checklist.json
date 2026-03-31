@@ -1,0 +1,132 @@
+{
+  "niche": "email-privacy",
+  "slug": "email-privacy-encryption-hardening-checklist",
+  "title": "Email Privacy & Encryption Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to secure your email with encryption, privacy-focused providers, and best practices for anonymous communications.",
+  "difficulty": "intermediate",
+  "estimatedTime": "2-3 hours",
+  "intro": "Email is one of the most vulnerable forms of digital communication. This comprehensive checklist will help you secure your email communications with encryption, switch to privacy-focused providers, and implement best practices to protect your personal information from surveillance and data breaches.",
+  "sections": [
+    {
+      "title": "Email Provider & Account Setup",
+      "items": [
+        {
+          "id": "secure-email-provider",
+          "task": "Switch to a privacy-focused email provider",
+          "why": "Traditional email providers like Gmail and Yahoo scan emails for advertising and may share data with third parties or government agencies.",
+          "howTo": "Sign up for ProtonMail, Tutanota, or Fastmail. These providers offer end-to-end encryption, are based in privacy-friendly jurisdictions, and don't scan your emails for ads.",
+          "priority": "critical"
+        },
+        {
+          "id": "strong-master-password",
+          "task": "Create a strong, unique password for your email account",
+          "why": "Your email is often the recovery method for other accounts, making it a high-value target for attackers.",
+          "howTo": "Use a password manager to generate a unique 16+ character password with mixed case, numbers, and symbols. Never reuse this password elsewhere.",
+          "priority": "critical"
+        },
+        {
+          "id": "enable-2fa",
+          "task": "Enable two-factor authentication (2FA)",
+          "why": "2FA adds an extra security layer, protecting your account even if your password is compromised.",
+          "howTo": "In your email provider's security settings, enable 2FA using an authenticator app like Authy or hardware security key rather than SMS.",
+          "priority": "critical"
+        },
+        {
+          "id": "recovery-options",
+          "task": "Set up secure account recovery options",
+          "why": "Insecure recovery methods can be exploited by attackers to gain access to your account.",
+          "howTo": "Remove phone numbers as recovery options. Use a secondary encrypted email address or write down recovery codes and store them securely offline.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Email Encryption & Security",
+      "items": [
+        {
+          "id": "pgp-encryption",
+          "task": "Set up PGP encryption for sensitive communications",
+          "why": "Even with secure providers, additional encryption ensures only intended recipients can read your messages.",
+          "howTo": "Generate a PGP key pair using tools like GPG or your email client's built-in encryption. Share your public key with contacts and always verify their keys before use.",
+          "priority": "high"
+        },
+        {
+          "id": "email-aliases",
+          "task": "Use email aliases for different purposes",
+          "why": "Aliases help compartmentalize your digital identity and make it harder to track your activities across services.",
+          "howTo": "Create separate aliases for shopping, social media, work, and personal use. Many secure providers offer unlimited aliases or use services like AnonAddy.",
+          "priority": "medium"
+        },
+        {
+          "id": "disable-auto-loading",
+          "task": "Disable automatic image and content loading",
+          "why": "External images and content can contain tracking pixels that reveal when and where you open emails.",
+          "howTo": "In your email client settings, turn off automatic image loading and HTML content. Review emails in plain text when possible.",
+          "priority": "medium"
+        },
+        {
+          "id": "secure-email-client",
+          "task": "Use a privacy-focused email client",
+          "why": "Many email clients collect data about your usage patterns and may have security vulnerabilities.",
+          "howTo": "Use clients like Thunderbird with privacy extensions, or your secure provider's web interface through Incognito Browser for better privacy protection.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Communication Practices",
+      "items": [
+        {
+          "id": "verify-recipients",
+          "task": "Always verify recipient addresses before sending sensitive information",
+          "why": "Typos in email addresses can send sensitive information to unintended recipients, and attackers may use similar addresses to deceive you.",
+          "howTo": "Double-check email addresses, especially for sensitive communications. Be wary of slight variations in familiar addresses that could indicate spoofing attempts.",
+          "priority": "high"
+        },
+        {
+          "id": "avoid-sensitive-content",
+          "task": "Avoid sending highly sensitive information via email",
+          "why": "Email is inherently less secure than dedicated encrypted messaging platforms, even with encryption enabled.",
+          "howTo": "For highly sensitive communications, use Signal or other encrypted messaging apps. If you must use email, use PGP encryption and consider self-destructing messages.",
+          "priority": "high"
+        },
+        {
+          "id": "regular-cleanup",
+          "task": "Regularly delete old emails and empty trash",
+          "why": "Old emails contain personal information that can be valuable to attackers and increase your exposure if your account is compromised.",
+          "howTo": "Set up automatic deletion of emails older than 1-2 years. Regularly empty your trash and sent folders. Archive important emails locally if needed.",
+          "priority": "low"
+        },
+        {
+          "id": "phishing-awareness",
+          "task": "Implement anti-phishing practices",
+          "why": "Email is the primary vector for phishing attacks that can compromise your accounts and steal personal information.",
+          "howTo": "Never click links in unexpected emails. Verify sender authenticity through other channels. Check URLs carefully and use Incognito Browser to safely investigate suspicious links.",
+          "priority": "critical"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Encrypted Messaging Best Practices",
+      "url": "/checklists/encrypted-messaging",
+      "type": "internal"
+    },
+    {
+      "title": "Password Security Checklist",
+      "url": "/checklists/password-security",
+      "type": "internal"
+    },
+    {
+      "title": "Phishing Protection Guide",
+      "url": "/checklists/phishing-protection",
+      "type": "internal"
+    },
+    {
+      "title": "ProtonMail Official Site",
+      "url": "https://protonmail.com",
+      "type": "external"
+    }
+  ]
+}

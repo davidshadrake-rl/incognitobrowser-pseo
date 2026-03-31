@@ -1,0 +1,231 @@
+{
+  "niche": "smart-home-privacy",
+  "slug": "smart-home-iot-privacy-risk-calculator",
+  "title": "Smart Home & IoT Privacy Risk Calculator",
+  "metaDescription": "Calculate your smart home privacy risk score. Assess IoT devices, voice assistants, and data collection to protect your digital privacy.",
+  "description": "Evaluate the privacy risks of your smart home setup. This calculator analyzes your IoT devices, voice assistants, and security practices to provide a comprehensive privacy risk score and personalized recommendations.",
+  "inputs": [
+    {
+      "id": "deviceCount",
+      "label": "Number of Smart Devices",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "helpText": "Include smart speakers, cameras, thermostats, lights, locks, and other connected devices"
+    },
+    {
+      "id": "voiceAssistants",
+      "label": "Voice Assistant Usage",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "none",
+          "label": "No voice assistants"
+        },
+        {
+          "value": "light",
+          "label": "Minimal use (basic commands)"
+        },
+        {
+          "value": "moderate",
+          "label": "Regular use (multiple daily interactions)"
+        },
+        {
+          "value": "heavy",
+          "label": "Heavy use (constant conversations, shopping)"
+        }
+      ],
+      "helpText": "How frequently do you interact with Alexa, Google Assistant, or Siri?"
+    },
+    {
+      "id": "camerasCount",
+      "label": "Smart Cameras/Doorbells",
+      "type": "range",
+      "defaultValue": 2,
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "helpText": "Security cameras, baby monitors, smart doorbells, and webcams"
+    },
+    {
+      "id": "networkSecurity",
+      "label": "Network Security Level",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "poor",
+          "label": "Default router settings, weak passwords"
+        },
+        {
+          "value": "basic",
+          "label": "Changed default passwords, basic security"
+        },
+        {
+          "value": "good",
+          "label": "Strong passwords, guest network for IoT"
+        },
+        {
+          "value": "excellent",
+          "label": "VPN, segmented network, enterprise-grade security"
+        }
+      ],
+      "helpText": "Rate your home network's security configuration"
+    },
+    {
+      "id": "dataSharing",
+      "label": "Data Sharing Preferences",
+      "type": "select",
+      "defaultValue": "default",
+      "options": [
+        {
+          "value": "maximal",
+          "label": "All sharing enabled for convenience"
+        },
+        {
+          "value": "default",
+          "label": "Default settings (some sharing enabled)"
+        },
+        {
+          "value": "limited",
+          "label": "Opted out of most data sharing"
+        },
+        {
+          "value": "minimal",
+          "label": "Strict privacy settings, local processing only"
+        }
+      ],
+      "helpText": "How much data do you allow your devices to share with manufacturers?"
+    },
+    {
+      "id": "updateFrequency",
+      "label": "Device Update Management",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Rarely or never update devices"
+        },
+        {
+          "value": "sometimes",
+          "label": "Update when reminded or convenient"
+        },
+        {
+          "value": "regularly",
+          "label": "Check for updates monthly"
+        },
+        {
+          "value": "automatic",
+          "label": "Auto-updates enabled on all devices"
+        }
+      ],
+      "helpText": "How often do you update your smart device firmware?"
+    },
+    {
+      "id": "locationTracking",
+      "label": "Location-Based Features",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Do you use geofencing, location-based automation, or GPS tracking features?"
+    },
+    {
+      "id": "thirdPartyIntegrations",
+      "label": "Third-Party Integrations",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "helpText": "Connected services like IFTTT, SmartThings, Nest, Ring partnerships"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk level (0-100, lower is better)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Your smart home privacy risk category"
+    },
+    {
+      "id": "dataExposure",
+      "label": "Data Exposure Risk",
+      "format": "percentage",
+      "description": "Likelihood of personal data being collected and shared"
+    },
+    {
+      "id": "securityVulnerability",
+      "label": "Security Vulnerability",
+      "format": "percentage",
+      "description": "Risk of unauthorized access to your devices"
+    }
+  ],
+  "formula": "const deviceRisk = Math.min(inputs.deviceCount * 1.5, 25); const voiceRisk = { none: 0, light: 8, moderate: 15, heavy: 25 }[inputs.voiceAssistants]; const cameraRisk = Math.min(inputs.camerasCount * 3, 20); const networkRisk = { excellent: 0, good: 5, basic: 15, poor: 25 }[inputs.networkSecurity]; const sharingRisk = { minimal: 0, limited: 5, default: 15, maximal: 25 }[inputs.dataSharing]; const updateRisk = { automatic: 0, regularly: 5, sometimes: 15, never: 25 }[inputs.updateFrequency]; const locationRisk = inputs.locationTracking ? 10 : 0; const integrationRisk = Math.min(inputs.thirdPartyIntegrations * 1.2, 15); const totalRisk = deviceRisk + voiceRisk + cameraRisk + networkRisk + sharingRisk + updateRisk + locationRisk + integrationRisk; const riskScore = Math.min(Math.round(totalRisk), 100); const riskLevel = riskScore <= 25 ? 'Low Risk' : riskScore <= 50 ? 'Moderate Risk' : riskScore <= 75 ? 'High Risk' : 'Critical Risk'; const dataExposure = Math.min(Math.round((deviceRisk + voiceRisk + sharingRisk + integrationRisk) * 1.3), 100); const securityVulnerability = Math.min(Math.round((cameraRisk + networkRisk + updateRisk) * 1.8), 100); return { riskScore, riskLevel, dataExposure, securityVulnerability };",
+  "educational": {
+    "methodology": "This calculator evaluates smart home privacy risks based on device count, security practices, data sharing settings, and network configuration. Risk factors include data collection potential, third-party integrations, security vulnerabilities, and manufacturer tracking capabilities. Scores are weighted based on privacy research and common IoT security frameworks.",
+    "tips": [
+      "Use a dedicated guest network for all IoT devices to isolate them from personal computers",
+      "Regularly review and disable unnecessary data sharing in device privacy settings",
+      "Enable two-factor authentication on all smart home accounts and use unique passwords",
+      "Consider using Incognito Browser when managing device settings to prevent tracking",
+      "Mute voice assistants when having private conversations or discussing sensitive topics",
+      "Place smart cameras away from bedrooms and private areas, or use privacy shutters",
+      "Check device permissions regularly and revoke access to unnecessary features like location",
+      "Research device manufacturers' privacy policies before purchasing new smart home products",
+      "Use local processing options when available instead of cloud-based services",
+      "Regularly audit connected third-party services and remove unused integrations"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Good privacy practices in place. Your smart home setup has minimal privacy risks with proper security measures.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk",
+        "description": "Some privacy concerns exist. Review device settings and consider implementing additional security measures.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant privacy risks detected. Immediate attention needed to secure your smart home and limit data exposure.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Critical Risk",
+        "description": "Major privacy and security vulnerabilities. Consider disconnecting devices and implementing comprehensive security overhaul.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "IoT Security Best Practices Guide",
+      "url": "/guides/iot-security-best-practices",
+      "type": "internal"
+    },
+    {
+      "title": "Voice Assistant Privacy Settings",
+      "url": "/guides/voice-assistant-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Smart Camera Privacy Calculator",
+      "url": "/calculators/smart-camera-privacy-risk",
+      "type": "internal"
+    }
+  ]
+}

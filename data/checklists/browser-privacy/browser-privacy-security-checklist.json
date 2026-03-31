@@ -1,0 +1,144 @@
+{
+  "niche": "browser-privacy",
+  "slug": "browser-privacy-security-checklist",
+  "title": "Browser Privacy Security Checklist - Complete Setup Guide",
+  "metaDescription": "Essential browser privacy and security checklist. Step-by-step guide to configure Chrome, Firefox, Safari, and Brave for maximum privacy protection.",
+  "difficulty": "beginner",
+  "estimatedTime": "30-45 minutes",
+  "intro": "Your browser is your gateway to the internet, but it can also be a privacy risk. This comprehensive checklist will help you secure any browser - Chrome, Firefox, Safari, Brave, or privacy-focused options like Incognito Browser - with essential settings and best practices.",
+  "sections": [
+    {
+      "title": "Essential Privacy Settings",
+      "items": [
+        {
+          "id": "disable-tracking",
+          "task": "Enable enhanced tracking protection",
+          "why": "Blocks trackers, ads, and fingerprinting scripts that follow you across websites and collect your browsing data.",
+          "howTo": "Firefox: Settings > Privacy & Security > Enhanced Tracking Protection (Strict). Chrome: Settings > Privacy and Security > Cookies > Block third-party cookies. Safari: Preferences > Privacy > Prevent cross-site tracking.",
+          "priority": "critical"
+        },
+        {
+          "id": "secure-dns",
+          "task": "Configure secure DNS-over-HTTPS",
+          "why": "Encrypts DNS queries to prevent ISPs and networks from seeing which websites you visit.",
+          "howTo": "Chrome: Settings > Privacy and Security > Security > Use secure DNS (Cloudflare 1.1.1.1). Firefox: Settings > Network Settings > Enable DNS over HTTPS. Consider using Quad9 (9.9.9.9) for additional malware protection.",
+          "priority": "high"
+        },
+        {
+          "id": "location-permissions",
+          "task": "Disable location sharing by default",
+          "why": "Prevents websites from accessing your physical location without explicit permission.",
+          "howTo": "Chrome: Settings > Privacy and Security > Site Settings > Location > Don't allow sites to see your location. Firefox: Settings > Privacy & Security > Permissions > Location > Block new requests.",
+          "priority": "high"
+        },
+        {
+          "id": "camera-microphone",
+          "task": "Block camera and microphone access",
+          "why": "Protects against unauthorized access to your camera and microphone by malicious websites.",
+          "howTo": "Go to browser privacy settings and set Camera and Microphone to 'Ask before accessing' or 'Block'. Review and revoke permissions for sites that don't need them.",
+          "priority": "critical"
+        }
+      ]
+    },
+    {
+      "title": "Cookie and Data Management",
+      "items": [
+        {
+          "id": "third-party-cookies",
+          "task": "Block all third-party cookies",
+          "why": "Prevents advertisers and trackers from building profiles across multiple websites you visit.",
+          "howTo": "Chrome: Settings > Privacy and Security > Cookies > Block third-party cookies. Firefox: Settings > Privacy & Security > Cookies > Delete cookies when Firefox closes. Enable 'Cross-site tracking cookies'.",
+          "priority": "critical"
+        },
+        {
+          "id": "clear-data-exit",
+          "task": "Set browser to clear data on exit",
+          "why": "Automatically removes browsing history, cookies, and cached data when you close the browser.",
+          "howTo": "Firefox: Settings > Privacy & Security > History > Clear history when Firefox closes. Chrome: Use Incognito mode or extensions like 'Click&Clean'. Consider switching to Incognito Browser for automatic data clearing.",
+          "priority": "medium"
+        },
+        {
+          "id": "autofill-disable",
+          "task": "Disable autofill for sensitive data",
+          "why": "Prevents browsers from storing and auto-filling passwords, addresses, and payment information that could be accessed by malicious sites.",
+          "howTo": "Chrome: Settings > Autofill > Turn off passwords, payment methods, and addresses. Firefox: Settings > Privacy & Security > Forms and Autofill > Uncheck save options. Use a dedicated password manager instead.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Search and Navigation Privacy",
+      "items": [
+        {
+          "id": "private-search",
+          "task": "Change default search engine to privacy-focused option",
+          "why": "Privacy-focused search engines don't track your searches or build advertising profiles.",
+          "howTo": "Set DuckDuckGo, Startpage, or Searx as your default search engine. Chrome: Settings > Search engine. Firefox: Settings > Search. Avoid Google, Bing, and Yahoo for better privacy.",
+          "priority": "high"
+        },
+        {
+          "id": "url-suggestions",
+          "task": "Disable search and URL suggestions",
+          "why": "Stops your browser from sending what you type in the address bar to search engines before you hit enter.",
+          "howTo": "Chrome: Settings > Privacy and Security > Sync and Google services > Turn off 'Autocomplete searches and URLs'. Firefox: Settings > Privacy & Security > Address Bar > Uncheck suggestion options.",
+          "priority": "medium"
+        },
+        {
+          "id": "safe-browsing",
+          "task": "Configure safe browsing without data sharing",
+          "why": "Protects against malicious sites while minimizing data sent to Google or other companies.",
+          "howTo": "Chrome: Use 'Standard protection' instead of Enhanced (sends less data to Google). Firefox: Keep 'Block dangerous and deceptive content' enabled. Consider browsers like Brave that use local protection lists.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Privacy Protection",
+      "items": [
+        {
+          "id": "fingerprinting-protection",
+          "task": "Enable fingerprinting protection",
+          "why": "Prevents websites from identifying you based on your browser configuration, fonts, screen resolution, and other unique characteristics.",
+          "howTo": "Firefox: Settings > Privacy & Security > Enhanced Tracking Protection > Strict (includes fingerprinting). Use Brave browser or Incognito Browser for built-in fingerprinting protection. Chrome users need extensions like uBlock Origin.",
+          "priority": "high"
+        },
+        {
+          "id": "javascript-controls",
+          "task": "Consider JavaScript restrictions for sensitive browsing",
+          "why": "Many tracking and fingerprinting techniques rely on JavaScript. Selective blocking improves privacy.",
+          "howTo": "Install uBlock Origin and enable medium or hard blocking modes. Firefox users can try NoScript extension. For maximum privacy, use Incognito Browser which includes intelligent script blocking.",
+          "priority": "low"
+        },
+        {
+          "id": "privacy-extensions",
+          "task": "Install essential privacy extensions",
+          "why": "Browser extensions can block additional trackers, ads, and privacy violations that built-in protections miss.",
+          "howTo": "Install uBlock Origin (ad/tracker blocking), ClearURLs (removes tracking parameters), and Decentraleyes (blocks CDN tracking). Avoid too many extensions as they can create unique fingerprints.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Best Privacy Browsers Comparison",
+      "url": "/browser-privacy/best-privacy-browsers",
+      "type": "guide"
+    },
+    {
+      "title": "Incognito Mode vs Private Browsing",
+      "url": "/browser-privacy/incognito-mode-guide",
+      "type": "guide"
+    },
+    {
+      "title": "Browser Extensions for Privacy",
+      "url": "/browser-privacy/privacy-extensions",
+      "type": "guide"
+    },
+    {
+      "title": "Device Fingerprinting Protection",
+      "url": "/browser-privacy/device-fingerprinting-protection",
+      "type": "guide"
+    }
+  ]
+}

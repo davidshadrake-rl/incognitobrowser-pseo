@@ -1,0 +1,193 @@
+{
+  "niche": "right-to-forget",
+  "slug": "right-to-be-forgotten-risk-calculator",
+  "title": "Right to Be Forgotten Risk Calculator | Data Deletion Assessment",
+  "metaDescription": "Calculate your risk level for exercising the right to be forgotten. Assess data exposure and get personalized advice for data deletion requests.",
+  "description": "Evaluate your personal data exposure risk and determine the urgency of exercising your right to be forgotten. This calculator assesses factors like data sensitivity, platform reach, and potential harm to provide a comprehensive risk score.",
+  "inputs": [
+    {
+      "id": "dataTypes",
+      "label": "Types of personal data exposed",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic info (name, email, phone)"
+        },
+        {
+          "value": "sensitive",
+          "label": "Sensitive data (photos, location, financial)"
+        },
+        {
+          "value": "protected",
+          "label": "Protected categories (health, political, biometric)"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive profile (all of the above)"
+        }
+      ],
+      "helpText": "Consider the most sensitive type of data exposed about you"
+    },
+    {
+      "id": "platformReach",
+      "label": "Number of platforms/services with your data",
+      "type": "range",
+      "defaultValue": 10,
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "helpText": "Include social media, shopping sites, data brokers, and other online services"
+    },
+    {
+      "id": "publicVisibility",
+      "label": "Data visibility level",
+      "type": "select",
+      "defaultValue": "limited",
+      "options": [
+        {
+          "value": "private",
+          "label": "Private/internal use only"
+        },
+        {
+          "value": "limited",
+          "label": "Limited public access"
+        },
+        {
+          "value": "searchable",
+          "label": "Publicly searchable"
+        },
+        {
+          "value": "viral",
+          "label": "Widely shared/viral content"
+        }
+      ],
+      "helpText": "How easily can others find and access your personal information"
+    },
+    {
+      "id": "timeOnline",
+      "label": "Years your data has been online",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 25,
+      "step": 1,
+      "helpText": "Consider your oldest online accounts and shared information"
+    },
+    {
+      "id": "reputationImpact",
+      "label": "Potential reputation impact",
+      "type": "select",
+      "defaultValue": "low",
+      "options": [
+        {
+          "value": "none",
+          "label": "No concern"
+        },
+        {
+          "value": "low",
+          "label": "Minor embarrassment"
+        },
+        {
+          "value": "moderate",
+          "label": "Professional consequences possible"
+        },
+        {
+          "value": "high",
+          "label": "Severe personal/career damage"
+        }
+      ],
+      "helpText": "Consider impact on relationships, career, and personal well-being"
+    },
+    {
+      "id": "activeRequests",
+      "label": "Have you made data deletion requests before?",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Previous experience with right to be forgotten requests"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Risk Score",
+      "format": "score",
+      "description": "Your comprehensive right to be forgotten risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorized risk assessment with recommended actions"
+    },
+    {
+      "id": "urgency",
+      "label": "Action Urgency",
+      "format": "text",
+      "description": "How quickly you should act on data deletion requests"
+    },
+    {
+      "id": "estimatedPlatforms",
+      "label": "Platforms to Address",
+      "format": "number",
+      "description": "Estimated number of services requiring attention"
+    }
+  ],
+  "formula": "const dataTypeScores = { basic: 20, sensitive: 40, protected: 70, comprehensive: 85 }; const visibilityScores = { private: 10, limited: 25, searchable: 50, viral: 80 }; const reputationScores = { none: 0, low: 15, moderate: 35, high: 60 }; const dataTypeScore = dataTypeScores[dataTypes]; const platformScore = Math.min(platformReach * 1.2, 40); const visibilityScore = visibilityScores[publicVisibility]; const timeScore = Math.min(timeOnline * 1.5, 30); const reputationScore = reputationScores[reputationImpact]; const experienceBonus = activeRequests ? -5 : 0; const riskScore = Math.max(0, Math.min(100, dataTypeScore + platformScore + visibilityScore + timeScore + reputationScore + experienceBonus)); let riskLevel, urgency; if (riskScore >= 70) { riskLevel = 'High Risk'; urgency = 'Immediate action recommended'; } else if (riskScore >= 40) { riskLevel = 'Moderate Risk'; urgency = 'Action within 30 days'; } else { riskLevel = 'Low Risk'; urgency = 'Monitor and plan ahead'; } const estimatedPlatforms = Math.ceil(platformReach * 0.8); return { riskScore: Math.round(riskScore), riskLevel, urgency, estimatedPlatforms };",
+  "educational": {
+    "methodology": "This calculator evaluates multiple risk factors including data sensitivity, platform exposure, public visibility, time online, and potential reputation impact. The scoring system weighs sensitive data types and high visibility scenarios more heavily, as these pose greater privacy risks and potential for harm.",
+    "tips": [
+      "Start with major platforms like Google, Facebook, and data brokers when making deletion requests",
+      "Use Incognito Browser to research your online presence without creating new tracking data",
+      "Document all deletion requests with screenshots and email confirmations",
+      "Under GDPR and similar laws, companies must respond to deletion requests within 30 days",
+      "Some data may be retained for legal compliance - request details about what cannot be deleted",
+      "Set up Google Alerts for your name to monitor new appearances of your personal data",
+      "Consider using privacy-focused alternatives to prevent future data accumulation"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Your data exposure appears minimal. Focus on preventing future data accumulation and maintain good privacy habits.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk",
+        "description": "Some concerning data exposure exists. Consider making targeted deletion requests for the most sensitive information.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant privacy risks identified. Prioritize deletion requests for high-visibility platforms and sensitive data.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Critical Risk",
+        "description": "Urgent action needed. Begin comprehensive data deletion campaign immediately, starting with most damaging content.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "GDPR Right to Erasure Guide",
+      "url": "/guides/gdpr-right-to-erasure",
+      "type": "guide"
+    },
+    {
+      "title": "Data Broker Removal Services",
+      "url": "/tools/data-broker-removal",
+      "type": "tool"
+    },
+    {
+      "title": "Digital Footprint Assessment",
+      "url": "/calculators/digital-footprint-calculator",
+      "type": "calculator"
+    }
+  ]
+}

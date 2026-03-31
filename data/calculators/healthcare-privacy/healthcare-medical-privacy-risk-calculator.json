@@ -1,0 +1,252 @@
+{
+  "niche": "healthcare-privacy",
+  "slug": "healthcare-medical-privacy-risk-calculator",
+  "title": "Healthcare & Medical Privacy Risk Calculator",
+  "metaDescription": "Assess your medical data privacy risks. Evaluate HIPAA compliance, health app security, and healthcare data protection vulnerabilities.",
+  "description": "Calculate your healthcare privacy risk level by evaluating how you share medical data, use health apps, and interact with healthcare providers. Get personalized recommendations to protect your sensitive medical information.",
+  "inputs": [
+    {
+      "id": "healthApps",
+      "label": "Number of health/fitness apps you use",
+      "type": "number",
+      "defaultValue": 0,
+      "min": 0,
+      "max": 20,
+      "helpText": "Include fitness trackers, symptom checkers, medication reminders, mental health apps"
+    },
+    {
+      "id": "appPermissions",
+      "label": "How often do you review app permissions?",
+      "type": "select",
+      "defaultValue": "rarely",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "regularly",
+          "label": "Regularly"
+        },
+        {
+          "value": "always",
+          "label": "Always before installing"
+        }
+      ]
+    },
+    {
+      "id": "dataSharing",
+      "label": "Do you share health data on social media?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "frequently",
+          "label": "Frequently"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "never",
+          "label": "Never"
+        }
+      ]
+    },
+    {
+      "id": "patientPortals",
+      "label": "Number of healthcare patient portals you use",
+      "type": "number",
+      "defaultValue": 1,
+      "min": 0,
+      "max": 10,
+      "helpText": "Online portals where you access medical records, test results, or communicate with providers"
+    },
+    {
+      "id": "publicWifiHealth",
+      "label": "Use healthcare apps/portals on public WiFi?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "frequently",
+          "label": "Frequently"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "never",
+          "label": "Never"
+        }
+      ]
+    },
+    {
+      "id": "passwordSecurity",
+      "label": "Do you use unique passwords for health accounts?",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "none",
+          "label": "No, I reuse passwords"
+        },
+        {
+          "value": "some",
+          "label": "For some accounts"
+        },
+        {
+          "value": "most",
+          "label": "For most accounts"
+        },
+        {
+          "value": "all",
+          "label": "Yes, all unique passwords"
+        }
+      ]
+    },
+    {
+      "id": "twoFactorAuth",
+      "label": "Two-factor authentication on health accounts?",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "Not enabled"
+        },
+        {
+          "value": "some",
+          "label": "On some accounts"
+        },
+        {
+          "value": "most",
+          "label": "On most accounts"
+        },
+        {
+          "value": "all",
+          "label": "On all available accounts"
+        }
+      ]
+    },
+    {
+      "id": "deviceSharing",
+      "label": "Do others use your devices with health apps?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "frequently",
+          "label": "Frequently"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "never",
+          "label": "Never"
+        }
+      ]
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall healthcare privacy risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorized risk assessment"
+    },
+    {
+      "id": "recommendations",
+      "label": "Priority Actions",
+      "format": "text",
+      "description": "Most important steps to improve your healthcare privacy"
+    }
+  ],
+  "formula": "const appRisk = Math.min(inputs.healthApps * 3, 25); const permissionRisk = {never: 20, rarely: 15, sometimes: 10, regularly: 5, always: 0}[inputs.appPermissions]; const socialRisk = {frequently: 20, sometimes: 10, rarely: 5, never: 0}[inputs.dataSharing]; const portalRisk = Math.min(inputs.patientPortals * 2, 10); const wifiRisk = {frequently: 15, sometimes: 10, rarely: 5, never: 0}[inputs.publicWifiHealth]; const passwordRisk = {none: 20, some: 15, most: 5, all: 0}[inputs.passwordSecurity]; const authRisk = {none: 10, some: 7, most: 3, all: 0}[inputs.twoFactorAuth]; const deviceRisk = {frequently: 10, sometimes: 7, rarely: 3, never: 0}[inputs.deviceSharing]; const totalRisk = appRisk + permissionRisk + socialRisk + portalRisk + wifiRisk + passwordRisk + authRisk + deviceRisk; const riskScore = Math.min(totalRisk, 100); let riskLevel, recommendations = []; if (riskScore <= 25) { riskLevel = 'Low Risk'; recommendations.push('Maintain good privacy practices'); } else if (riskScore <= 50) { riskLevel = 'Moderate Risk'; recommendations.push('Review app permissions regularly'); } else if (riskScore <= 75) { riskLevel = 'High Risk'; recommendations.push('Enable 2FA on all health accounts', 'Audit your health apps'); } else { riskLevel = 'Very High Risk'; recommendations.push('Immediate privacy audit needed', 'Stop using public WiFi for health data'); } if (inputs.appPermissions === 'never' || inputs.appPermissions === 'rarely') recommendations.push('Review and restrict app permissions'); if (inputs.passwordSecurity !== 'all') recommendations.push('Use unique passwords for all health accounts'); if (inputs.publicWifiHealth === 'frequently') recommendations.push('Avoid public WiFi for healthcare apps - use Incognito Browser with VPN'); return { riskScore, riskLevel, recommendations: recommendations.slice(0, 3).join(', ') };",
+  "educational": {
+    "methodology": "This calculator evaluates your healthcare privacy risk based on app usage, security practices, data sharing habits, and device security. Each factor is weighted according to common privacy vulnerabilities in healthcare data management.",
+    "tips": [
+      "Regularly audit health apps and remove unused ones to minimize data exposure",
+      "Always review app permissions before installation and limit access to essential functions only",
+      "Use strong, unique passwords and enable two-factor authentication on all healthcare accounts",
+      "Avoid accessing patient portals or health apps on public WiFi networks",
+      "Consider using Incognito Browser for additional privacy when accessing healthcare websites",
+      "Be cautious about sharing health information on social media platforms",
+      "Keep your devices locked and avoid letting others access your health apps",
+      "Read privacy policies of health apps to understand how your data is used and shared"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Good privacy practices in place. Continue monitoring and maintaining security measures.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk",
+        "description": "Some privacy vulnerabilities exist. Focus on app permissions and password security.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant privacy risks detected. Immediate action needed to secure your health data.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Very High Risk",
+        "description": "Critical privacy vulnerabilities. Comprehensive security overhaul required immediately.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "HIPAA Privacy Rights Guide",
+      "url": "/guides/hipaa-privacy-rights",
+      "type": "guide"
+    },
+    {
+      "title": "Health App Privacy Checker",
+      "url": "/tools/health-app-privacy-checker",
+      "type": "tool"
+    },
+    {
+      "title": "Medical Data Protection Laws",
+      "url": "/privacy-laws/healthcare-data-protection",
+      "type": "reference"
+    }
+  ]
+}

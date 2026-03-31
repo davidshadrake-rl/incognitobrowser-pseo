@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["niche", "slug", "title", "metaDescription", "toolType", "description", "inputs", "educational"],
+  "properties": {
+    "niche": { "type": "string" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string", "maxLength": 70 },
+    "metaDescription": { "type": "string", "maxLength": 160 },
+    "toolType": { "type": "string", "enum": ["checker", "analyzer", "generator", "scanner", "calculator", "converter"] },
+    "description": { "type": "string", "maxLength": 300 },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "type", "placeholder"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "type": { "type": "string", "enum": ["text", "url", "email", "textarea", "select", "number"] },
+          "placeholder": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "object", "properties": { "value": { "type": "string" }, "label": { "type": "string" } } } },
+          "validation": { "type": "string" }
+        }
+      }
+    },
+    "educational": {
+      "type": "object",
+      "properties": {
+        "howItWorks": { "type": "string" },
+        "tips": { "type": "array", "items": { "type": "string" } },
+        "commonMistakes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "relatedLinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "url": { "type": "string" },
+          "type": { "type": "string" }
+        }
+      }
+    }
+  }
+}

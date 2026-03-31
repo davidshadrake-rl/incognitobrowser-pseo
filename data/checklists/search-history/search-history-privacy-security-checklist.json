@@ -1,0 +1,132 @@
+{
+  "niche": "search-history",
+  "slug": "search-history-privacy-security-checklist",
+  "title": "Search History Privacy Security Checklist",
+  "metaDescription": "Complete checklist to delete search history, manage privacy settings, and protect your searches across Google, browsers, and other platforms.",
+  "difficulty": "beginner",
+  "estimatedTime": "30-45 minutes",
+  "intro": "Your search history reveals intimate details about your interests, health, relationships, and daily life. This checklist helps you delete existing search data, configure privacy settings, and protect future searches from being tracked across all platforms.",
+  "sections": [
+    {
+      "title": "Google Search History Management",
+      "items": [
+        {
+          "id": "delete-google-search-history",
+          "task": "Delete your Google Search history",
+          "why": "Google stores every search query tied to your account, building detailed profiles for advertising and potentially sharing with third parties.",
+          "howTo": "Visit myactivity.google.com, select 'Search' filter, click 'Delete' and choose time range. Select 'All time' for complete removal, then confirm deletion.",
+          "priority": "critical"
+        },
+        {
+          "id": "turn-off-search-history-tracking",
+          "task": "Disable Google Search history tracking",
+          "why": "Prevents Google from storing future search queries and building ongoing profiles of your interests and behavior.",
+          "howTo": "Go to myactivity.google.com/activitycontrols, find 'Web & App Activity' and toggle it off. Confirm by clicking 'Pause' in the popup dialog.",
+          "priority": "critical"
+        },
+        {
+          "id": "disable-ad-personalization",
+          "task": "Turn off Google ad personalization",
+          "why": "Stops Google from using your search history to create targeted advertising profiles and reduces data collection incentives.",
+          "howTo": "Visit adssettings.google.com, toggle off 'Ad personalization'. Review and delete any existing interests or demographics Google has inferred about you.",
+          "priority": "high"
+        },
+        {
+          "id": "review-google-data-sharing",
+          "task": "Review Google data sharing settings",
+          "why": "Google may share your search data with partners and advertisers unless you explicitly opt out of data sharing programs.",
+          "howTo": "Go to myaccount.google.com/data-and-privacy, click 'Data from apps and services you use', review sharing settings and disable unwanted data sharing.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Browser Privacy Configuration",
+      "items": [
+        {
+          "id": "clear-browser-search-history",
+          "task": "Clear browser search and browsing history",
+          "why": "Browsers store search queries in address bars and maintain browsing history that can be accessed by others using your device.",
+          "howTo": "Press Ctrl+Shift+Delete (Cmd+Shift+Delete on Mac), select 'All time', check browsing history, cookies, and cached data. Click 'Clear data' to remove everything.",
+          "priority": "critical"
+        },
+        {
+          "id": "configure-search-suggestions",
+          "task": "Disable search suggestions and autocomplete",
+          "why": "Search suggestions send your partial queries to search engines before you finish typing, creating additional tracking opportunities.",
+          "howTo": "In browser settings, find 'Privacy and security', disable 'Use a prediction service to help complete searches'. Also disable 'Autocomplete searches and URLs'.",
+          "priority": "medium"
+        },
+        {
+          "id": "set-private-search-engine",
+          "task": "Switch to privacy-focused search engine",
+          "why": "Private search engines like DuckDuckGo don't track users or store search histories, providing genuine search privacy.",
+          "howTo": "Go to browser settings, find 'Search engine', select DuckDuckGo or Startpage. Consider using Incognito Browser which defaults to private search engines.",
+          "priority": "high"
+        },
+        {
+          "id": "enable-do-not-track",
+          "task": "Enable Do Not Track signals",
+          "why": "Sends requests to websites asking them not to track your browsing behavior, though compliance is voluntary.",
+          "howTo": "In browser privacy settings, find 'Send Do Not Track request' or similar option and enable it. This adds privacy headers to all web requests.",
+          "priority": "low"
+        }
+      ]
+    },
+    {
+      "title": "Device and App Privacy",
+      "items": [
+        {
+          "id": "clear-mobile-search-history",
+          "task": "Clear search history on mobile devices",
+          "why": "Mobile apps and keyboards often store search queries locally and sync them to cloud services, creating additional privacy risks.",
+          "howTo": "Clear Google app history, Safari history on iOS, and keyboard app data. Check Settings > Privacy for app-specific search data and clear individually.",
+          "priority": "high"
+        },
+        {
+          "id": "review-voice-search-recordings",
+          "task": "Delete voice search recordings",
+          "why": "Voice searches are often stored as audio recordings, creating permanent records of your spoken queries and background conversations.",
+          "howTo": "Visit myactivity.google.com, filter by 'Voice and Audio', review recordings, and delete them. Disable 'Voice and Audio Activity' for future queries.",
+          "priority": "high"
+        },
+        {
+          "id": "configure-incognito-browsing",
+          "task": "Use private browsing for sensitive searches",
+          "why": "Private browsing modes prevent local storage of search history, though online tracking may still occur without additional privacy tools.",
+          "howTo": "Use Ctrl+Shift+N for incognito mode, or switch to Incognito Browser for enhanced privacy features including built-in ad blocking and tracker protection.",
+          "priority": "medium"
+        },
+        {
+          "id": "audit-connected-apps",
+          "task": "Review apps with search access permissions",
+          "why": "Third-party apps may access your search history through account permissions, sharing your data with additional companies.",
+          "howTo": "Visit myaccount.google.com/permissions, review connected apps and services, revoke access for apps you don't actively use or trust.",
+          "priority": "medium"
+        }
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {
+      "title": "Complete Browser Privacy Guide",
+      "url": "/guides/browser-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "Incognito Mode vs Private Browsing",
+      "url": "/guides/incognito-mode",
+      "type": "internal"
+    },
+    {
+      "title": "Private Search Engines Comparison",
+      "url": "/guides/private-search",
+      "type": "internal"
+    },
+    {
+      "title": "Google Privacy Settings",
+      "url": "https://myaccount.google.com/privacy",
+      "type": "external"
+    }
+  ]
+}
