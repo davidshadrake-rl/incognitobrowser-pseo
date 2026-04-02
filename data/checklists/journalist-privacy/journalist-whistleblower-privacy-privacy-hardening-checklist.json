@@ -2,164 +2,220 @@
   "niche": "journalist-privacy",
   "slug": "journalist-whistleblower-privacy-hardening-checklist",
   "title": "Journalist & Whistleblower Privacy Hardening Checklist",
-  "metaDescription": "Essential privacy and security checklist for journalists and whistleblowers to protect sources, communications, and sensitive information.",
+  "metaDescription": "Essential privacy and security checklist for journalists and whistleblowers. Protect sources, secure communications, and maintain operational security.",
+  "keywords": [
+    "journalist privacy",
+    "whistleblower protection",
+    "source protection",
+    "SecureDrop",
+    "press freedom"
+  ],
   "difficulty": "intermediate",
   "estimatedTime": "2-3 hours",
-  "intro": "Journalists and whistleblowers face unique privacy challenges when handling sensitive information and protecting sources. This comprehensive checklist covers essential security measures to safeguard communications, maintain anonymity, and protect against surveillance.",
+  "intro": "Journalists and whistleblowers face unique privacy threats including surveillance, device seizures, and metadata exposure. This comprehensive checklist covers essential security practices to protect sources, maintain operational security, and preserve press freedom in hostile environments.",
   "sections": [
     {
-      "title": "Communication Security",
+      "title": "Device & Communication Security",
       "items": [
         {
-          "id": "secure-messaging",
-          "task": "Use Signal for encrypted messaging",
-          "why": "Signal provides end-to-end encryption and disappearing messages to protect source communications from interception.",
-          "howTo": "Download Signal, enable disappearing messages for all conversations, and verify safety numbers with contacts. Always use Signal over regular SMS or email for sensitive communications.",
+          "id": "secure-device-setup",
+          "task": "Set up a dedicated secure device for sensitive communications",
+          "why": "Separating sensitive work from personal devices reduces attack surface and protects sources if your main device is compromised.",
+          "howTo": "Use a separate laptop or phone with full-disk encryption, strong passwords, and minimal software. Consider using Tails OS on a USB drive or a Qubes-secured laptop for maximum isolation.",
+          "priority": "critical"
+        },
+        {
+          "id": "encrypted-messaging",
+          "task": "Install and configure Signal for secure messaging",
+          "why": "Signal provides end-to-end encryption and metadata protection, making it harder for adversaries to intercept communications or identify sources.",
+          "howTo": "Download Signal from official sources, enable disappearing messages, turn off read receipts, and use a dedicated phone number. Create separate Signal accounts for different stories or sources.",
           "priority": "critical"
         },
         {
           "id": "secure-email",
-          "task": "Set up ProtonMail or Tutanota for secure email",
-          "why": "Encrypted email services protect sensitive correspondence and prevent unauthorized access to your communications.",
-          "howTo": "Create accounts with ProtonMail or Tutanota using a pseudonym. Enable two-factor authentication and use only over Tor for maximum anonymity.",
-          "priority": "critical"
-        },
-        {
-          "id": "secure-calling",
-          "task": "Use Signal or Jami for voice calls",
-          "why": "Encrypted voice calls prevent eavesdropping on sensitive conversations with sources or colleagues.",
-          "howTo": "Install Signal or Jami for voice calls. Always verify you're using the encrypted calling feature, not regular phone service.",
+          "task": "Set up ProtonMail or Tutanota for encrypted email",
+          "why": "Standard email is unencrypted and easily intercepted. Encrypted email providers protect message content and reduce metadata exposure.",
+          "howTo": "Create accounts with ProtonMail or Tutanota using Tor. Use separate email addresses for different sources. Enable two-factor authentication and use strong, unique passwords.",
           "priority": "high"
-        },
-        {
-          "id": "burner-phones",
-          "task": "Use dedicated devices for sensitive work",
-          "why": "Separate devices prevent cross-contamination of personal and professional communications and reduce tracking risks.",
-          "howTo": "Purchase phones with cash, use prepaid service, and avoid linking to personal accounts. Replace devices regularly and dispose of them securely.",
-          "priority": "high"
-        }
-      ]
-    },
-    {
-      "title": "Anonymous Browsing & Research",
-      "items": [
-        {
-          "id": "tor-browser",
-          "task": "Use Tor Browser for sensitive research",
-          "why": "Tor Browser routes traffic through multiple servers to hide your IP address and browsing activity from surveillance.",
-          "howTo": "Download Tor Browser from the official website. Always use it for researching sensitive topics or accessing sources. Never log into personal accounts while using Tor.",
-          "priority": "critical"
         },
         {
           "id": "vpn-setup",
-          "task": "Install a no-logs VPN service",
-          "why": "VPNs encrypt your internet connection and hide your real IP address from ISPs and potential surveillance.",
-          "howTo": "Choose services like Mullvad or IVPN that don't keep logs. Pay with cryptocurrency if possible. Use VPN in combination with Tor for maximum protection.",
+          "task": "Configure a no-logs VPN for all internet traffic",
+          "why": "VPNs hide your IP address and encrypt internet traffic, making it harder to track your online activities and location.",
+          "howTo": "Choose a reputable no-logs VPN like Mullvad or IVPN. Configure it to auto-connect on device startup and use kill switches to prevent data leaks if the VPN disconnects.",
           "priority": "high"
         },
         {
-          "id": "incognito-browser",
-          "task": "Use Incognito Browser for privacy-focused browsing",
-          "why": "Incognito Browser provides built-in privacy features and blocks tracking without requiring complex configuration.",
-          "howTo": "Download Incognito Browser for daily browsing activities. It automatically blocks trackers and ads while providing a clean browsing experience for research.",
-          "priority": "medium"
-        },
-        {
-          "id": "search-engines",
-          "task": "Switch to private search engines",
-          "why": "Private search engines don't track your searches or build profiles about your research interests.",
-          "howTo": "Use DuckDuckGo, Startpage, or Searx instead of Google. Set one as your default search engine in all browsers.",
-          "priority": "medium"
-        }
-      ]
-    },
-    {
-      "title": "Device & Data Security",
-      "items": [
-        {
-          "id": "full-disk-encryption",
-          "task": "Enable full disk encryption on all devices",
-          "why": "Disk encryption protects all data on your device if it's lost, stolen, or seized by authorities.",
-          "howTo": "Enable FileVault on Mac or BitLocker on Windows. For Linux, use LUKS encryption. Always use strong passwords for encryption keys.",
-          "priority": "critical"
-        },
-        {
-          "id": "secure-backups",
-          "task": "Create encrypted backups of important data",
-          "why": "Encrypted backups ensure you don't lose critical information while maintaining security if devices are compromised.",
-          "howTo": "Use VeraCrypt to create encrypted backup drives. Store backups in secure locations separate from your main devices. Test restore procedures regularly.",
+          "id": "tor-browser",
+          "task": "Install Tor Browser for anonymous web browsing",
+          "why": "Tor routes traffic through multiple encrypted layers, making it extremely difficult to trace your browsing activities back to your location.",
+          "howTo": "Download Tor Browser from the official website. Always use it for research on sensitive topics. Never login to personal accounts while using Tor. Consider using Incognito Browser for additional privacy layers.",
           "priority": "high"
         },
         {
-          "id": "secure-deletion",
-          "task": "Use secure file deletion tools",
-          "why": "Normal deletion doesn't actually remove files from storage, leaving sensitive data recoverable by adversaries.",
-          "howTo": "Use BleachBit on Linux, Eraser on Windows, or built-in secure empty trash on Mac. Regularly wipe free space to remove deleted file traces.",
-          "priority": "high"
-        },
-        {
-          "id": "metadata-removal",
-          "task": "Remove metadata from documents and images",
-          "why": "Metadata can reveal location, device information, and editing history that could compromise your identity or sources.",
-          "howTo": "Use tools like ExifTool or MAT2 to strip metadata before sharing files. Check document properties and remove personal information before publishing.",
+          "id": "secure-calling",
+          "task": "Use encrypted voice calling apps like Signal or Wire",
+          "why": "Regular phone calls can be easily intercepted. Encrypted calling apps protect voice communications from eavesdropping.",
+          "howTo": "Use Signal Voice or Wire for sensitive phone conversations. Test call quality beforehand and have backup communication methods ready. Avoid using regular phone networks for source communications.",
           "priority": "medium"
         }
       ]
     },
     {
-      "title": "Source Protection",
+      "title": "Source Protection Measures",
       "items": [
         {
-          "id": "secure-meetings",
-          "task": "Plan secure in-person meetings",
-          "why": "Face-to-face meetings may be necessary but require careful planning to avoid surveillance and protect source identity.",
-          "howTo": "Meet in public spaces with multiple exits, leave phones at home, vary meeting locations, and use counter-surveillance techniques. Consider using coded language.",
+          "id": "metadata-scrubbing",
+          "task": "Remove metadata from all files before sharing",
+          "why": "File metadata can reveal device information, location data, and editing history that could identify sources or compromise security.",
+          "howTo": "Use tools like ExifTool or MAT2 to strip metadata from documents, images, and videos. Check files manually before sharing and use secure file transfer methods.",
           "priority": "critical"
         },
         {
-          "id": "document-handling",
-          "task": "Establish secure document transfer protocols",
-          "why": "Physical and digital documents from sources need special handling to prevent tracing back to the original source.",
-          "howTo": "Use SecureDrop if available, or encrypted USB drives passed through intermediaries. Scan and digitize physical documents, then securely destroy originals.",
+          "id": "secure-file-transfer",
+          "task": "Set up SecureDrop or OnionShare for receiving files",
+          "why": "These tools allow sources to share documents anonymously without revealing their identity or location to journalists or adversaries.",
+          "howTo": "Work with your newsroom to set up SecureDrop, or use OnionShare for smaller operations. Provide clear instructions to sources on how to use these tools safely.",
+          "priority": "critical"
+        },
+        {
+          "id": "meeting-security",
+          "task": "Establish secure protocols for in-person meetings",
+          "why": "Physical surveillance and location tracking can compromise source identity and put both parties at risk.",
+          "howTo": "Meet in public places with multiple exits, leave devices at home or in Faraday bags, use pre-arranged signals, and vary meeting locations and times. Never meet at your workplace or home.",
           "priority": "high"
         },
         {
-          "id": "operational-security",
-          "task": "Maintain strict operational security (OPSEC)",
-          "why": "Consistent security practices prevent patterns that could expose your sources or compromise ongoing investigations.",
-          "howTo": "Vary your routines, use different routes and locations, avoid discussing work in unsecured locations, and train colleagues on security protocols.",
+          "id": "digital-dead-drops",
+          "task": "Create secure digital dead drop systems",
+          "why": "Digital dead drops allow asynchronous, anonymous information sharing without direct contact between journalist and source.",
+          "howTo": "Use services like SecureDrop, create anonymous email accounts accessible only via Tor, or use encrypted cloud storage with shared credentials communicated through secure channels.",
+          "priority": "medium"
+        },
+        {
+          "id": "source-verification",
+          "task": "Develop methods to verify source identity and information",
+          "why": "Protecting sources includes ensuring they are legitimate and the information is accurate to prevent disinformation and protect credibility.",
+          "howTo": "Establish verification protocols using multiple communication channels, cross-reference information with other sources, and use document authentication techniques when possible.",
+          "priority": "medium"
+        },
+        {
+          "id": "compartmentalization",
+          "task": "Compartmentalize information about different sources",
+          "why": "Keeping source information separate prevents one compromise from affecting multiple sources and limits exposure if devices are seized.",
+          "howTo": "Use different devices, accounts, and storage systems for different sources. Don't store connecting information that could link sources together. Use code names or numbers instead of real names.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Operational Security Practices",
+      "items": [
+        {
+          "id": "travel-security",
+          "task": "Implement secure travel procedures for sensitive assignments",
+          "why": "Border crossings and travel expose journalists to device searches, data seizure, and increased surveillance risks.",
+          "howTo": "Travel with clean devices containing no sensitive data. Use remote access to secure systems only when needed. Consider using burner phones and temporary email accounts for travel.",
           "priority": "high"
         },
         {
-          "id": "legal-protection",
-          "task": "Understand legal protections and risks",
-          "why": "Knowledge of shield laws and legal risks helps you better protect sources and prepare for potential legal challenges.",
-          "howTo": "Consult with media lawyers, understand local shield laws, document your newsgathering process, and prepare for potential subpoenas or searches.",
+          "id": "data-backup",
+          "task": "Create secure, encrypted backups of important data",
+          "why": "Device seizure or destruction can result in permanent loss of critical information and source materials.",
+          "howTo": "Use encrypted external drives stored securely off-site, encrypted cloud storage with strong passwords, and regularly test backup restoration procedures. Keep backups geographically distributed.",
+          "priority": "high"
+        },
+        {
+          "id": "surveillance-detection",
+          "task": "Learn basic surveillance detection techniques",
+          "why": "Identifying surveillance helps protect both yourself and your sources from being monitored or compromised.",
+          "howTo": "Learn to spot behavioral patterns, use reflective surfaces to observe followers, vary your routes and timing, and trust your instincts. Consider professional training if working in high-risk environments.",
+          "priority": "medium"
+        },
+        {
+          "id": "legal-prep",
+          "task": "Prepare for potential legal challenges and subpoenas",
+          "why": "Legal compulsion can force disclosure of sources and methods, requiring advance preparation to protect journalism and sources.",
+          "howTo": "Work with media lawyers to understand shield laws, prepare legal challenges to subpoenas, and develop policies for handling legal requests. Document your newsgathering processes properly.",
+          "priority": "medium"
+        },
+        {
+          "id": "emergency-protocols",
+          "task": "Establish emergency communication and data destruction protocols",
+          "why": "Rapidly changing threat situations require predetermined responses to protect sources and sensitive information under pressure.",
+          "howTo": "Create and practice emergency procedures for wiping devices, activating communication protocols with sources, and coordinating with newsroom security. Use panic buttons or dead man's switches where appropriate.",
+          "priority": "critical"
+        }
+      ]
+    },
+    {
+      "title": "Newsroom & Collaboration Security",
+      "items": [
+        {
+          "id": "newsroom-network",
+          "task": "Secure newsroom network and shared systems",
+          "why": "Compromised newsroom systems can expose all journalists' work and sources, creating systemic risks.",
+          "howTo": "Use network segmentation, strong authentication, regular security updates, and monitor for intrusions. Implement access controls and audit logs for sensitive systems.",
+          "priority": "high"
+        },
+        {
+          "id": "colleague-coordination",
+          "task": "Establish secure protocols for sharing information with editors",
+          "why": "Internal communication about sensitive stories can be intercepted or monitored, potentially exposing sources and methods.",
+          "howTo": "Use encrypted messaging for sensitive discussions, meet in person for critical conversations, and limit the number of people with access to source information.",
+          "priority": "medium"
+        },
+        {
+          "id": "publication-security",
+          "task": "Implement secure review and publication processes",
+          "why": "The final stages before publication present risks of interception, legal challenges, or attempts to prevent publication.",
+          "howTo": "Use version control systems with encryption, secure draft sharing methods, and coordinate with legal teams early. Plan for potential injunctions or takedown requests.",
+          "priority": "medium"
+        },
+        {
+          "id": "training-updates",
+          "task": "Regularly update security training and threat assessments",
+          "why": "Threat landscapes evolve rapidly, requiring ongoing education to maintain effective security practices.",
+          "howTo": "Schedule quarterly security reviews, attend digital security workshops, monitor threat intelligence relevant to journalism, and update procedures based on new risks and tools.",
+          "priority": "low"
+        },
+        {
+          "id": "incident-response",
+          "task": "Develop incident response plans for security breaches",
+          "why": "Security incidents are inevitable, requiring predetermined responses to minimize damage and protect sources.",
+          "howTo": "Create playbooks for different incident types, establish communication trees, identify forensic resources, and practice response procedures. Include source notification protocols.",
           "priority": "medium"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Always assume your communications are being monitored when working on sensitive stories - use this assumption to guide your security choices and never let convenience override safety.",
+    "Regularly rotate and update your security tools, accounts, and procedures - sticking with the same methods for too long creates predictable patterns that adversaries can exploit.",
+    "Test your security measures regularly by having colleagues attempt to find information about your sources or methods - this helps identify weaknesses before real adversaries do.",
+    "Maintain separate digital identities for different types of work - use different browsers, email accounts, and even devices for routine reporting versus sensitive investigations.",
+    "Build relationships with digital security experts and legal professionals before you need them - having trusted advisors ready to help during a crisis is invaluable for protecting sources and your work."
+  ],
   "relatedLinks": [
     {
-      "title": "Freedom of the Press Foundation - Digital Security",
-      "url": "https://freedom.press/training/",
-      "type": "training"
-    },
-    {
-      "title": "Committee to Protect Journalists - Safety Kit",
-      "url": "https://cpj.org/safety-kit/",
+      "title": "Freedom of the Press Foundation Security Guide",
+      "url": "/guides/press-freedom-security",
       "type": "guide"
     },
     {
-      "title": "SecureDrop Directory",
-      "url": "https://securedrop.org/directory/",
-      "type": "tool"
+      "title": "Tor Privacy Setup Guide",
+      "url": "/guides/tor-privacy-setup",
+      "type": "guide"
     },
     {
-      "title": "Tor Project - Journalist Resources",
-      "url": "https://www.torproject.org/audience/journalist/",
-      "type": "resource"
+      "title": "Encrypted Messaging Apps Comparison",
+      "url": "/tools/encrypted-messaging",
+      "type": "tool-comparison"
+    },
+    {
+      "title": "VPN for Journalists Guide",
+      "url": "/guides/vpn-privacy",
+      "type": "guide"
     }
   ]
 }

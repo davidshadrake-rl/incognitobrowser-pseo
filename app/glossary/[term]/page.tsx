@@ -46,6 +46,8 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
   const data = getGlossaryItem<GlossaryData>(term);
   if (!data) notFound();
 
+  const validTermSlugs = getGlossaryFiles();
+
   const breadcrumbs = generateBreadcrumbSchema([
     { name: 'Resources', url: '/' },
     { name: 'Glossary', url: '/glossary' },
@@ -55,7 +57,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
   return (
     <>
       <JsonLd data={breadcrumbs} />
-      <GlossaryTermPage data={data} />
+      <GlossaryTermPage data={data} validTermSlugs={validTermSlugs} />
     </>
   );
 }

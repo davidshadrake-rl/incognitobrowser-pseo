@@ -1,15 +1,18 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["niche", "slug", "title", "metaDescription", "description", "inputs", "outputFields", "formula", "educational"],
+  "required": ["niche", "slug", "title", "metaDescription", "keywords", "description", "inputs", "outputFields", "formula", "educational"],
   "properties": {
     "niche": { "type": "string" },
     "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "title": { "type": "string", "maxLength": 70 },
     "metaDescription": { "type": "string", "maxLength": 160 },
+    "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 6 },
     "description": { "type": "string", "maxLength": 300 },
     "inputs": {
       "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
       "items": {
         "type": "object",
         "required": ["id", "label", "type", "defaultValue"],
@@ -28,6 +31,8 @@
     },
     "outputFields": {
       "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
       "items": {
         "type": "object",
         "required": ["id", "label", "format"],
@@ -44,7 +49,7 @@
       "type": "object",
       "properties": {
         "methodology": { "type": "string" },
-        "tips": { "type": "array", "items": { "type": "string" } },
+        "tips": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 5 },
         "interpretation": {
           "type": "array",
           "items": {

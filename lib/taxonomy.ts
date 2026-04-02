@@ -1,5 +1,13 @@
 import taxonomyData from '@/data/taxonomy.json';
 
+export interface NicheContext {
+  audience: string;
+  pain_points: string;
+  monetization: string;
+  content_that_works: string;
+  subtopics: string[];
+}
+
 export interface Niche {
   id: string;
   name: string;
@@ -9,6 +17,7 @@ export interface Niche {
   parentId: string | null;
   keywords: string[];
   relatedNiches: string[];
+  context: NicheContext;
 }
 
 export interface ContentType {

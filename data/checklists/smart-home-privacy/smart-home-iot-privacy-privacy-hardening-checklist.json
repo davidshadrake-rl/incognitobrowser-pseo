@@ -2,179 +2,209 @@
   "niche": "smart-home-privacy",
   "slug": "smart-home-iot-privacy-hardening-checklist",
   "title": "Smart Home & IoT Privacy Hardening Checklist",
-  "metaDescription": "Complete checklist to secure your smart home devices, protect IoT privacy, and stop voice assistants from tracking you. Essential privacy steps.",
+  "metaDescription": "Secure your smart home devices with this comprehensive privacy checklist. Protect against IoT tracking, voice assistant surveillance, and data breaches.",
+  "keywords": [
+    "smart home privacy",
+    "IoT security",
+    "Alexa privacy",
+    "smart device tracking",
+    "voice assistant privacy"
+  ],
   "difficulty": "intermediate",
   "estimatedTime": "2-3 hours",
-  "intro": "Smart home devices offer convenience but can expose your personal data, listening habits, and daily routines to companies and hackers. This checklist helps you secure your IoT devices, limit data collection, and protect your home network from privacy invasions.",
+  "intro": "Smart home devices offer convenience but often at the cost of privacy. This checklist helps you secure your IoT ecosystem, protect against unauthorized surveillance, and minimize data collection while maintaining functionality.",
   "sections": [
     {
-      "title": "Network & Router Security",
+      "title": "Voice Assistant & Smart Speaker Privacy",
       "items": [
         {
-          "id": "change-default-passwords",
-          "task": "Change all default passwords on router and devices",
-          "why": "Default passwords are easily guessed by hackers and provide no security for your smart home network.",
-          "howTo": "Access each device's settings and create unique, strong passwords. Use a password manager to generate and store them securely.",
+          "id": "voice-1",
+          "task": "Disable always-listening microphones when not needed",
+          "why": "Voice assistants constantly record snippets to detect wake words, potentially capturing private conversations.",
+          "howTo": "Use physical mute buttons on devices. For Alexa, press mute button until red ring appears. For Google Home, toggle mic switch on back of device.",
           "priority": "critical"
         },
         {
-          "id": "separate-iot-network",
-          "task": "Create a separate network for IoT devices",
-          "why": "Isolates smart devices from computers and phones, preventing hackers from accessing sensitive data if devices are compromised.",
-          "howTo": "Set up a guest network on your router dedicated to IoT devices. Connect all smart home devices to this separate network instead of your main WiFi.",
+          "id": "voice-2",
+          "task": "Review and delete voice recording history",
+          "why": "Companies store voice recordings indefinitely unless manually deleted, creating privacy risks and potential data breaches.",
+          "howTo": "Alexa: Go to Privacy Settings > Review Voice History > Delete All Recordings. Google: Visit myactivity.google.com > Delete activity by > All time.",
           "priority": "high"
         },
         {
-          "id": "disable-wps",
-          "task": "Disable WPS (WiFi Protected Setup) on router",
-          "why": "WPS has security vulnerabilities that allow easy unauthorized access to your network.",
-          "howTo": "Log into your router's admin panel, find WiFi settings, and turn off WPS. Save the configuration changes.",
+          "id": "voice-3",
+          "task": "Disable human review of voice recordings",
+          "why": "Tech companies employ contractors to listen to voice recordings for quality improvement, exposing personal conversations.",
+          "howTo": "Alexa: Privacy Settings > Manage Your Alexa Data > Help Improve Alexa > Turn off. Google: Visit Google Account > Data & Privacy > Web & App Activity > Turn off audio recordings.",
           "priority": "high"
         },
         {
-          "id": "update-router-firmware",
-          "task": "Update router firmware to latest version",
-          "why": "Firmware updates patch security vulnerabilities that could be exploited to access your smart home devices.",
-          "howTo": "Check your router manufacturer's website for firmware updates. Follow their instructions to download and install the latest version.",
-          "priority": "high"
-        }
-      ]
-    },
-    {
-      "title": "Voice Assistant Privacy",
-      "items": [
-        {
-          "id": "review-voice-recordings",
-          "task": "Delete stored voice recordings and disable saving",
-          "why": "Voice assistants store your conversations and commands, creating a detailed record of your activities and preferences.",
-          "howTo": "Go to Alexa, Google, or Siri privacy settings. Delete all stored recordings and turn off voice recording storage for future interactions.",
-          "priority": "critical"
-        },
-        {
-          "id": "disable-voice-purchasing",
-          "task": "Turn off voice purchasing and payments",
-          "why": "Prevents accidental or unauthorized purchases through voice commands, protecting your financial information.",
-          "howTo": "In your voice assistant app, find Shopping or Payment settings and disable voice purchasing. Require confirmation codes for any transactions.",
-          "priority": "high"
-        },
-        {
-          "id": "limit-smart-skills",
-          "task": "Remove unnecessary third-party skills and apps",
-          "why": "Third-party voice apps can access your data and conversations, expanding your privacy exposure beyond the main company.",
-          "howTo": "Review installed skills in your voice assistant app. Remove any you don't actively use and check permissions for remaining skills.",
+          "id": "voice-4",
+          "task": "Turn off personalized ads based on voice data",
+          "why": "Voice assistants analyze conversations to build advertising profiles and target personalized ads across platforms.",
+          "howTo": "Alexa: Privacy Settings > Alexa Privacy > Manage How Your Data Improves Alexa > Turn off all options. Google: Ad Settings > Ad personalization > Turn off.",
           "priority": "medium"
         },
         {
-          "id": "mute-when-not-needed",
-          "task": "Use physical mute buttons during private conversations",
-          "why": "Prevents accidental activation and ensures sensitive conversations aren't recorded or transmitted.",
-          "howTo": "Press the mute button on your device during private calls, discussions, or when entertaining guests. Develop a habit of muting when privacy is important.",
+          "id": "voice-5",
+          "task": "Limit third-party skill permissions",
+          "why": "Third-party skills can access voice data, personal information, and device controls beyond their stated purpose.",
+          "howTo": "Review enabled skills regularly. Alexa: Skills & Games > Your Skills > Manage permissions. Google: Assistant Settings > Services > Remove unused services.",
           "priority": "medium"
         }
       ]
     },
     {
-      "title": "Smart Device Configuration",
+      "title": "Smart Camera & Doorbell Security",
       "items": [
         {
-          "id": "disable-data-sharing",
-          "task": "Turn off data sharing with third parties",
-          "why": "Smart device companies often share usage data with advertisers and partners, expanding tracking beyond your home.",
-          "howTo": "Check each device's privacy settings in their respective apps. Look for data sharing, analytics, or advertising options and disable them.",
+          "id": "camera-1",
+          "task": "Enable two-factor authentication on camera accounts",
+          "why": "Weak passwords make cameras vulnerable to hacking, potentially exposing live feeds and recordings to strangers.",
+          "howTo": "Ring: Control Center > Account Security > Two-Step Verification. Nest: Google Account > Security > 2-Step Verification. Use authenticator apps over SMS when possible.",
           "priority": "critical"
         },
         {
-          "id": "limit-location-tracking",
-          "task": "Disable location tracking and geofencing",
-          "why": "Location data reveals your daily routines, work schedule, and travel patterns to device manufacturers.",
-          "howTo": "In smart home apps, turn off location services, geofencing, and home/away detection features unless absolutely necessary for device function.",
+          "id": "camera-2",
+          "task": "Configure local storage instead of cloud when possible",
+          "why": "Cloud storage exposes footage to potential data breaches and government requests, while local storage keeps data in your control.",
+          "howTo": "Check if your camera supports local NAS or SD card storage. Configure backup to personal cloud services using Incognito Browser for setup privacy.",
           "priority": "high"
         },
         {
-          "id": "update-device-firmware",
-          "task": "Enable automatic security updates for all devices",
-          "why": "Keeps devices protected against newly discovered security vulnerabilities that could expose your data.",
-          "howTo": "Check each smart device app for firmware update settings. Enable automatic updates where available, or set monthly reminders to update manually.",
+          "id": "camera-3",
+          "task": "Set up privacy zones to block sensitive areas",
+          "why": "Cameras may capture neighbor's property or private areas of your home, creating legal and privacy concerns.",
+          "howTo": "Use camera app to draw privacy masks over windows, neighboring property, or sensitive areas. Test zones by viewing live feed from different angles.",
           "priority": "high"
         },
         {
-          "id": "review-app-permissions",
-          "task": "Audit mobile app permissions for smart home apps",
-          "why": "Smart home apps often request excessive permissions to access contacts, location, microphone, and camera data.",
-          "howTo": "Review app permissions in your phone settings. Revoke unnecessary permissions like contacts, calendar, or location for smart home control apps.",
+          "id": "camera-4",
+          "task": "Disable audio recording if video-only is sufficient",
+          "why": "Audio recording has stricter legal requirements and captures more personal information than video alone.",
+          "howTo": "Most cameras allow disabling audio in settings. Ring: Device Settings > Audio Settings > Audio Recording Off. Check local laws regarding audio recording.",
           "priority": "medium"
+        },
+        {
+          "id": "camera-5",
+          "task": "Review and limit video sharing permissions",
+          "why": "Some services automatically share footage with law enforcement or neighbors without explicit consent for each request.",
+          "howTo": "Ring: Control Center > Video Request Settings > Turn off automatic sharing. Disable Neighbors app sharing if privacy is priority over community safety.",
+          "priority": "medium"
+        },
+        {
+          "id": "camera-6",
+          "task": "Change default camera passwords and usernames",
+          "why": "Default credentials are publicly known and make cameras easy targets for hackers and unauthorized access.",
+          "howTo": "Log into camera web interface, change admin username from default, set strong unique password with 12+ characters including symbols and numbers.",
+          "priority": "critical"
         }
       ]
     },
     {
-      "title": "Camera & Monitoring Devices",
+      "title": "IoT Device & Network Hardening",
       "items": [
         {
-          "id": "change-camera-passwords",
-          "task": "Set strong, unique passwords for all cameras",
-          "why": "Weak camera passwords allow hackers to spy on your home and family activities.",
-          "howTo": "Access each camera's settings through its app or web interface. Create strong, unique passwords and enable two-factor authentication if available.",
-          "priority": "critical"
-        },
-        {
-          "id": "disable-cloud-storage",
-          "task": "Use local storage instead of cloud recording",
-          "why": "Cloud storage means your private recordings are stored on company servers and could be accessed by employees or hackers.",
-          "howTo": "Configure cameras to save recordings to local SD cards or network storage instead of cloud services. Turn off automatic cloud backup features.",
+          "id": "iot-1",
+          "task": "Create separate network for IoT devices",
+          "why": "Isolating IoT devices prevents compromised smart devices from accessing computers, phones, and sensitive personal data.",
+          "howTo": "Set up guest network on router dedicated to IoT devices. Use different password and VLAN isolation if available. Keep computers and phones on main network.",
           "priority": "high"
         },
         {
-          "id": "set-activity-zones",
-          "task": "Configure privacy zones and recording schedules",
-          "why": "Prevents cameras from recording private areas like bedrooms or when family members are home.",
-          "howTo": "Use your camera app to set up privacy zones that won't be recorded. Create schedules to only record when away from home or during specific hours.",
+          "id": "iot-2",
+          "task": "Update firmware on all smart devices regularly",
+          "why": "Outdated firmware contains security vulnerabilities that hackers actively exploit to gain device access and steal data.",
+          "howTo": "Check device apps monthly for firmware updates. Enable automatic updates where available. Create calendar reminders for devices requiring manual updates.",
+          "priority": "critical"
+        },
+        {
+          "id": "iot-3",
+          "task": "Disable unnecessary data sharing and analytics",
+          "why": "IoT devices collect usage patterns, energy consumption, and behavioral data that companies sell or use for targeted advertising.",
+          "howTo": "Review each device's privacy settings. Turn off usage analytics, improvement programs, and data sharing with third parties. Check both app and web interfaces.",
+          "priority": "high"
+        },
+        {
+          "id": "iot-4",
+          "task": "Configure firewall rules to block suspicious traffic",
+          "why": "Many IoT devices phone home constantly or communicate with unexpected servers, potentially leaking personal information.",
+          "howTo": "Use router firewall to block suspicious domains. Consider Pi-hole or similar DNS filtering to monitor and block tracking domains used by smart devices.",
           "priority": "medium"
         },
         {
-          "id": "check-camera-sharing",
-          "task": "Review who has access to camera feeds",
-          "why": "Ensures only authorized family members can view camera footage and prevents unauthorized access.",
-          "howTo": "Check camera app settings for shared users. Remove any unknown accounts and verify that sharing permissions are set to your preferences.",
+          "id": "iot-5",
+          "task": "Review device permissions and connected accounts",
+          "why": "Smart devices often request excessive permissions and integrate with multiple services, expanding your data exposure surface.",
+          "howTo": "Audit each device's connected services. Remove integration with social media, email, or location services unless essential for functionality.",
           "priority": "medium"
+        },
+        {
+          "id": "iot-6",
+          "task": "Disable remote access features when not needed",
+          "why": "Remote access creates entry points for hackers and may route traffic through company servers, exposing your data.",
+          "howTo": "Turn off cloud connectivity, remote control, and mobile app access for devices that only need local functionality. Use VPN for necessary remote access.",
+          "priority": "high"
         }
       ]
     },
     {
-      "title": "General Privacy Measures",
+      "title": "Smart TV & Entertainment Privacy",
       "items": [
         {
-          "id": "use-privacy-browser",
-          "task": "Use Incognito Browser when managing smart home accounts",
-          "why": "Prevents your smart home management activities from being tracked by other websites and advertisers.",
-          "howTo": "Download Incognito Browser for private browsing when accessing smart home device web portals, reviewing settings, or researching device privacy options.",
+          "id": "tv-1",
+          "task": "Disable automatic content recognition (ACR)",
+          "why": "Smart TVs track everything you watch across all inputs and sell viewing data to advertisers and data brokers.",
+          "howTo": "Samsung: Settings > Support > Terms & Privacy > SyncPlus and Marketing Info > Turn off. LG: Settings > All Settings > General > Live Plus > Turn off.",
+          "priority": "high"
+        },
+        {
+          "id": "tv-2",
+          "task": "Turn off voice control and microphone access",
+          "why": "TV voice features can record conversations even when not actively being used, similar to other voice assistants.",
+          "howTo": "Locate voice settings in TV menu, disable voice recognition, and cover or disconnect microphone if possible. Check for physical mute options on remote.",
+          "priority": "high"
+        },
+        {
+          "id": "tv-3",
+          "task": "Limit app installations and remove unused streaming apps",
+          "why": "Each streaming app collects additional data and may have weaker security than built-in TV features.",
+          "howTo": "Review installed apps, uninstall unused services. Use external streaming device with better privacy controls instead of built-in smart TV apps when possible.",
+          "priority": "medium"
+        },
+        {
+          "id": "tv-4",
+          "task": "Disable advertising personalization and tracking",
+          "why": "Smart TVs build detailed profiles of viewing habits and household members for targeted advertising across devices.",
+          "howTo": "Find advertising or privacy settings in TV menu. Turn off personalized ads, interest-based advertising, and data collection for ad targeting.",
+          "priority": "medium"
+        },
+        {
+          "id": "tv-5",
+          "task": "Block TV internet access if smart features aren't needed",
+          "why": "Disconnecting from internet eliminates all smart TV privacy risks while maintaining basic television functionality.",
+          "howTo": "Remove WiFi connection or block TV MAC address in router settings. Use separate streaming devices connected to non-smart input for online content.",
           "priority": "low"
-        },
-        {
-          "id": "regular-privacy-audit",
-          "task": "Schedule monthly privacy settings review",
-          "why": "Device manufacturers often change privacy policies and reset settings during updates, requiring regular monitoring.",
-          "howTo": "Set a monthly calendar reminder to check privacy settings across all smart home devices and apps. Document any changes in policies or default settings.",
-          "priority": "medium"
-        },
-        {
-          "id": "research-before-buying",
-          "task": "Research privacy practices before buying new smart devices",
-          "why": "Some manufacturers have better privacy practices than others, and choosing privacy-focused brands protects your data from the start.",
-          "howTo": "Before purchasing, research the company's privacy policy, data collection practices, and security track record. Choose devices with strong privacy reputations.",
-          "priority": "medium"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Use Incognito Browser when setting up new smart devices to prevent tracking your device research and configuration activities.",
+    "Consider local-processing alternatives like Apple HomeKit devices that keep data on-device instead of cloud-based solutions.",
+    "Set up network monitoring to identify which devices are communicating with unexpected servers or sending excessive data.",
+    "Create a 'smart home incident response plan' - know how to quickly disconnect devices if you suspect a breach or privacy violation.",
+    "Regularly audit your smart home setup every 6 months as new privacy features and threats emerge frequently in the IoT space."
+  ],
   "relatedLinks": [
     {
-      "title": "Location Tracking Protection Guide",
-      "url": "/location-tracking-protection",
+      "title": "Router Security Setup Guide",
+      "url": "/router-security-guide",
       "type": "internal"
     },
     {
-      "title": "Webcam Privacy Security Checklist",
-      "url": "/webcam-privacy-security",
+      "title": "Privacy-Focused Smart Home Devices",
+      "url": "/privacy-smart-home-devices",
       "type": "internal"
     },
     {

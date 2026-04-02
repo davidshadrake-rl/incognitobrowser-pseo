@@ -2,41 +2,62 @@
   "niche": "tor-privacy",
   "slug": "tor-dark-web-privacy-security-checklist",
   "title": "Tor & Dark Web Privacy Security Checklist",
-  "metaDescription": "Complete security checklist for safe Tor browsing and dark web access. Step-by-step guide to protect your privacy and anonymity online.",
+  "metaDescription": "Complete security checklist for using Tor browser and accessing the dark web safely. Essential privacy tips for anonymous browsing and protection.",
+  "keywords": [
+    "Tor browser security",
+    "dark web safety",
+    "anonymous browsing",
+    "onion routing privacy",
+    "Tor privacy checklist"
+  ],
   "difficulty": "intermediate",
   "estimatedTime": "45-60 minutes",
-  "intro": "Navigate the Tor network and dark web safely with this comprehensive security checklist. Learn essential steps to protect your identity, secure your connection, and maintain anonymity while browsing .onion sites and using Tor for private communication.",
+  "intro": "Using Tor and accessing the dark web requires careful security practices to maintain anonymity and protect your privacy. This comprehensive checklist covers essential steps for safe Tor usage, from initial setup to ongoing security measures.",
   "sections": [
     {
       "title": "Initial Tor Setup & Configuration",
       "items": [
         {
-          "id": "download-tor-official",
+          "id": "tor-official-download",
           "task": "Download Tor Browser from official source only",
-          "why": "Fake Tor browsers contain malware and compromise your anonymity by logging your activities.",
-          "howTo": "Visit torproject.org directly, verify the download signature, and never download from third-party sites or app stores. Check the GPG signature before installation.",
+          "why": "Fake Tor browsers contain malware and compromise your anonymity from the start.",
+          "howTo": "Visit torproject.org directly, verify SSL certificate, and download from official links. Never use third-party sites or app stores.",
           "priority": "critical"
         },
         {
-          "id": "disable-javascript",
-          "task": "Disable JavaScript in Tor Browser",
-          "why": "JavaScript can reveal your real IP address and fingerprint your browser through various tracking techniques.",
-          "howTo": "Click the shield icon in Tor Browser, select 'Advanced Security Settings', and choose 'Safest' level to disable JavaScript completely.",
+          "id": "tor-signature-verify",
+          "task": "Verify Tor Browser signature before installation",
+          "why": "Ensures the downloaded file hasn't been tampered with by malicious actors.",
+          "howTo": "Download the signature file from Tor Project, use GPG to verify authenticity. Instructions are provided on the official download page.",
           "priority": "high"
         },
         {
-          "id": "configure-security-level",
+          "id": "tor-security-level",
           "task": "Set Tor Browser security level to Safest",
-          "why": "Higher security levels disable features that could compromise your anonymity like plugins and media elements.",
-          "howTo": "Click shield icon > Advanced Security Settings > Select 'Safest'. This disables JavaScript, some fonts, icons, and media on all sites.",
+          "why": "Disables JavaScript and other features that can leak your real IP address.",
+          "howTo": "Click the shield icon in Tor Browser, select 'Advanced Security Settings', choose 'Safest' level.",
+          "priority": "critical"
+        },
+        {
+          "id": "tor-updates-check",
+          "task": "Enable automatic Tor Browser updates",
+          "why": "Keeps you protected against newly discovered vulnerabilities and security flaws.",
+          "howTo": "Go to Settings > General > Updates, select 'Automatically install updates (recommended)'.",
           "priority": "high"
         },
         {
-          "id": "verify-tor-connection",
-          "task": "Verify your Tor connection is working",
-          "why": "Ensures you're actually routing through Tor network and not accidentally using your regular connection.",
-          "howTo": "Visit check.torproject.org in Tor Browser. You should see 'Congratulations. This browser is configured to use Tor.' message.",
-          "priority": "critical"
+          "id": "tor-bridge-setup",
+          "task": "Configure bridge relays if in censored country",
+          "why": "Helps bypass ISP blocking and government censorship of Tor traffic.",
+          "howTo": "In Tor Browser settings, go to Connection, enable bridges. Request bridges from bridges@torproject.org or use built-in options.",
+          "priority": "high"
+        },
+        {
+          "id": "tor-circuit-display",
+          "task": "Enable circuit display to monitor connection path",
+          "why": "Allows you to see which relays your traffic passes through for transparency.",
+          "howTo": "Click the 'i' icon in address bar to view current circuit. Familiarize yourself with relay locations.",
+          "priority": "medium"
         }
       ]
     },
@@ -44,117 +65,171 @@
       "title": "Safe Browsing Practices",
       "items": [
         {
-          "id": "never-login-personal-accounts",
-          "task": "Never log into personal accounts through Tor",
-          "why": "Logging into personal accounts defeats anonymity by linking your identity to your Tor session.",
-          "howTo": "Create separate accounts with pseudonyms if needed. Never access email, social media, or any accounts tied to your real identity.",
+          "id": "javascript-disable",
+          "task": "Keep JavaScript disabled at all times",
+          "why": "JavaScript can execute code that reveals your real IP address and fingerprints your browser.",
+          "howTo": "Maintain 'Safest' security level. Never enable JavaScript even for trusted sites while using Tor.",
           "priority": "critical"
         },
         {
-          "id": "avoid-downloads",
+          "id": "no-downloads",
           "task": "Avoid downloading files through Tor",
-          "why": "Downloaded files may contain malware or tracking elements that can compromise your system and identity.",
-          "howTo": "If you must download, scan files with antivirus, open in isolated environment, and never open while connected to internet.",
+          "why": "Downloaded files may contain malware or tracking mechanisms that bypass Tor protection.",
+          "howTo": "If absolutely necessary, download to isolated system, scan with antivirus, and never open files while Tor is running.",
+          "priority": "critical"
+        },
+        {
+          "id": "https-only",
+          "task": "Only visit HTTPS websites and .onion sites",
+          "why": "HTTP traffic can be monitored by exit nodes, compromising your privacy and security.",
+          "howTo": "Look for the lock icon in address bar. Use HTTPS Everywhere extension (built into Tor Browser) to force HTTPS connections.",
           "priority": "high"
         },
         {
-          "id": "use-https-only",
-          "task": "Only visit HTTPS sites when possible",
-          "why": "HTTP connections can be monitored by exit nodes, potentially exposing your browsing activity.",
-          "howTo": "Enable 'HTTPS-Only Mode' in Tor Browser settings. Look for the padlock icon and avoid sites that don't support HTTPS.",
-          "priority": "high"
+          "id": "no-login-accounts",
+          "task": "Never log into personal accounts through Tor",
+          "why": "Logging into personal accounts defeats the purpose of anonymity and links your identity to Tor usage.",
+          "howTo": "Create separate, anonymous accounts if needed. Never access email, social media, or banking through Tor.",
+          "priority": "critical"
         },
         {
-          "id": "new-circuit-regularly",
-          "task": "Request new Tor circuit regularly",
-          "why": "Fresh circuits prevent correlation attacks and reduce the chance of using compromised nodes.",
-          "howTo": "Click the onion icon in Tor Browser address bar and select 'New Tor Circuit for this Site' every 10-15 minutes of browsing.",
+          "id": "new-identity-regular",
+          "task": "Use 'New Identity' feature regularly",
+          "why": "Changes your circuit and clears cookies to prevent tracking across browsing sessions.",
+          "howTo": "Click hamburger menu > New Identity, or use Ctrl+Shift+L. Do this every 15-30 minutes or when changing topics.",
+          "priority": "medium"
+        },
+        {
+          "id": "window-size-default",
+          "task": "Keep browser window at default size",
+          "why": "Unique window sizes can be used to fingerprint and identify your browser session.",
+          "howTo": "Don't maximize or resize Tor Browser window. Use the default size that opens automatically.",
           "priority": "medium"
         }
       ]
     },
     {
-      "title": "System Security Measures",
+      "title": "System Security & Isolation",
       "items": [
         {
-          "id": "use-vpn-with-tor",
+          "id": "vpn-over-tor",
           "task": "Consider using VPN before connecting to Tor",
-          "why": "VPN hides Tor usage from your ISP and adds an extra layer of encryption protection.",
-          "howTo": "Connect to a no-logs VPN service before starting Tor Browser. Use VPN-over-Tor configuration for maximum privacy. Consider Incognito Browser for additional protection.",
-          "priority": "medium"
-        },
-        {
-          "id": "disable-plugins",
-          "task": "Ensure all browser plugins are disabled",
-          "why": "Plugins like Flash or Java can leak your real IP address and provide fingerprinting vectors.",
-          "howTo": "In Tor Browser, go to about:addons and ensure no plugins are installed or enabled. The 'Safest' security level should handle this automatically.",
+          "why": "Hides Tor usage from your ISP and adds an extra layer of encryption and anonymity.",
+          "howTo": "Connect to a no-logs VPN service first, then launch Tor Browser. Choose VPN providers that accept anonymous payments.",
           "priority": "high"
         },
         {
-          "id": "use-tails-os",
-          "task": "Consider using Tails operating system",
-          "why": "Tails routes all traffic through Tor and leaves no traces on your computer after shutdown.",
-          "howTo": "Download Tails from tails.boum.org, create bootable USB, and boot from USB for maximum anonymity. All activity runs from RAM.",
+          "id": "os-isolation",
+          "task": "Use Tor on a separate OS or virtual machine",
+          "why": "Isolates Tor activities from your main system and prevents data leaks from other applications.",
+          "howTo": "Consider using Tails OS, or set up a dedicated VM with Linux for Tor browsing. Never use Tor on your main OS with other apps running.",
+          "priority": "high"
+        },
+        {
+          "id": "dns-leak-prevention",
+          "task": "Verify no DNS leaks are occurring",
+          "why": "DNS leaks can reveal your browsing activity and real IP address despite using Tor.",
+          "howTo": "Visit DNS leak test sites through Tor to verify your DNS queries are properly routed. Results should show Tor exit node location.",
+          "priority": "high"
+        },
+        {
+          "id": "system-clock-sync",
+          "task": "Ensure system clock is accurate",
+          "why": "Incorrect time can prevent Tor from connecting properly and may fingerprint your system.",
+          "howTo": "Enable automatic time sync on your OS. Verify time zone matches your claimed location if using VPN.",
           "priority": "medium"
         },
         {
-          "id": "cover-webcam-microphone",
-          "task": "Physically disable webcam and microphone",
-          "why": "Malicious sites could potentially access these devices to compromise your physical identity.",
-          "howTo": "Use tape to cover webcam, disable microphone in system settings, or use a laptop with physical privacy switches.",
+          "id": "firewall-configuration",
+          "task": "Configure firewall to only allow Tor traffic",
+          "why": "Prevents other applications from bypassing Tor and leaking your real IP address.",
+          "howTo": "Set up firewall rules to block all traffic except through Tor ports (9001, 9030, 9050, 9051). Block direct internet access for other apps.",
+          "priority": "high"
+        },
+        {
+          "id": "microphone-camera-disable",
+          "task": "Disable or physically block camera and microphone",
+          "why": "Prevents potential malware from accessing audio/video without your knowledge.",
+          "howTo": "Disable camera/microphone in system settings, use physical covers, or disconnect USB devices when using Tor.",
           "priority": "medium"
         }
       ]
     },
     {
-      "title": "Dark Web Navigation Safety",
+      "title": "Dark Web Safety & Monitoring",
       "items": [
         {
-          "id": "verify-onion-addresses",
-          "task": "Always verify .onion addresses from trusted sources",
-          "why": "Fake .onion sites can steal credentials, install malware, or conduct phishing attacks.",
-          "howTo": "Use verified directory sites like DuckDuckGo onion search or maintain a personal list of verified .onion addresses from trusted sources.",
+          "id": "onion-link-verification",
+          "task": "Verify .onion links from trusted sources only",
+          "why": "Malicious .onion sites can host malware, scams, or law enforcement honeypots.",
+          "howTo": "Use established directories like The Hidden Wiki, cross-reference links from multiple sources, never click random links.",
           "priority": "critical"
         },
         {
-          "id": "avoid-illegal-content",
-          "task": "Stay away from illegal marketplaces and content",
-          "why": "Accessing illegal content can result in serious legal consequences and draws law enforcement attention.",
-          "howTo": "Stick to legitimate uses like privacy-focused communication, journalism, or accessing censored information in restrictive countries.",
-          "priority": "critical"
-        },
-        {
-          "id": "use-pgp-encryption",
-          "task": "Use PGP encryption for sensitive communications",
-          "why": "Even on Tor, message content should be encrypted to protect against exit node monitoring and server compromises.",
-          "howTo": "Generate PGP key pair using GPG tools, share public key securely, and encrypt all sensitive messages before sending.",
+          "id": "exit-node-monitoring",
+          "task": "Monitor and avoid malicious exit nodes",
+          "why": "Some exit nodes are operated by malicious actors who monitor traffic and inject malware.",
+          "howTo": "Check your exit node location regularly, use 'New Identity' if you notice suspicious behavior or repeated bad exit nodes.",
           "priority": "high"
         },
         {
-          "id": "bitcoin-privacy",
-          "task": "Use privacy coins or Bitcoin mixing services",
-          "why": "Bitcoin transactions are traceable and can be linked back to your identity through blockchain analysis.",
-          "howTo": "Use privacy-focused cryptocurrencies like Monero, or use Bitcoin mixing services to obscure transaction history before any purchases.",
+          "id": "cryptocurrency-anonymity",
+          "task": "Use privacy-focused cryptocurrencies for transactions",
+          "why": "Bitcoin transactions can be traced; privacy coins provide better anonymity for dark web purchases.",
+          "howTo": "Use Monero, Zcash, or other privacy coins. Never use exchanges that require KYC verification. Use coin mixing services.",
+          "priority": "high"
+        },
+        {
+          "id": "pgp-encryption",
+          "task": "Set up PGP encryption for communications",
+          "why": "Encrypts messages end-to-end, protecting communications even if intercepted by authorities.",
+          "howTo": "Generate PGP key pair using GPG, share public key safely, encrypt all sensitive communications before sending.",
+          "priority": "high"
+        },
+        {
+          "id": "marketplace-research",
+          "task": "Research marketplace reputation and escrow systems",
+          "why": "Many dark web marketplaces are scams or honeypots designed to steal money or identify users.",
+          "howTo": "Read forum reviews, check marketplace uptime history, always use escrow services, start with small test purchases.",
           "priority": "medium"
+        },
+        {
+          "id": "legal-awareness",
+          "task": "Understand legal implications in your jurisdiction",
+          "why": "Laws regarding Tor usage and dark web access vary significantly between countries.",
+          "howTo": "Research local laws about Tor usage, encryption, and online anonymity. Consider legal risks before accessing certain content.",
+          "priority": "high"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Always assume you're being monitored - practice perfect operational security even for legal activities on Tor.",
+    "Use the Incognito Browser for regular privacy needs and reserve Tor only for situations requiring maximum anonymity.",
+    "Never mix Tor activities with your real identity - create completely separate digital personas and never cross-contaminate them.",
+    "Test your setup regularly using online anonymity checkers to ensure no information is leaking about your real identity.",
+    "Keep detailed notes about your security practices in an encrypted journal to maintain consistency and identify potential weaknesses."
+  ],
   "relatedLinks": [
     {
-      "title": "VPN Privacy Guide",
-      "url": "/privacy-guides/vpn-privacy",
+      "title": "VPN Privacy Ultimate Guide",
+      "url": "/guides/vpn-privacy-ultimate-guide",
       "type": "internal"
     },
     {
-      "title": "Browser Privacy Settings",
-      "url": "/privacy-guides/browser-privacy",
+      "title": "Browser Privacy Security Checklist",
+      "url": "/checklists/browser-privacy-security-checklist",
       "type": "internal"
     },
     {
-      "title": "Incognito Mode vs Private Browsing",
-      "url": "/privacy-guides/incognito-mode",
-      "type": "internal"
+      "title": "Official Tor Project Documentation",
+      "url": "https://tb-manual.torproject.org/",
+      "type": "external"
+    },
+    {
+      "title": "Tails Anonymous Operating System",
+      "url": "https://tails.boum.org/",
+      "type": "external"
     }
   ]
 }

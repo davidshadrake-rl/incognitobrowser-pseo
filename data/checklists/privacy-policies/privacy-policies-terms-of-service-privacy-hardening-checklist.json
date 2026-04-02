@@ -1,191 +1,268 @@
 {
   "niche": "privacy-policies",
   "slug": "privacy-policies-terms-service-hardening-checklist",
-  "title": "Privacy Policies & Terms of Service Hardening Checklist",
-  "metaDescription": "Complete checklist to evaluate and protect yourself from privacy policies and terms of service. Identify dark patterns and strengthen consent.",
-  "difficulty": "beginner",
-  "estimatedTime": "30-45 minutes",
-  "intro": "Privacy policies and terms of service often hide how your data is collected and used. This checklist helps you identify problematic clauses, dark patterns, and take control of your digital agreements to better protect your privacy.",
+  "title": "Privacy Policies & Terms of Service Privacy Hardening Checklist",
+  "metaDescription": "Complete checklist to evaluate and harden your privacy when dealing with privacy policies and terms of service agreements. Protect your data.",
+  "keywords": [
+    "privacy policy checklist",
+    "terms of service review",
+    "dark patterns",
+    "consent management",
+    "privacy hardening"
+  ],
+  "difficulty": "intermediate",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Privacy policies and terms of service are often dense legal documents designed to confuse users. This checklist helps you identify red flags, understand your rights, and make informed decisions about which services to trust with your personal data.",
   "sections": [
     {
-      "title": "Before Reading Privacy Policies",
+      "title": "Pre-Reading Assessment",
       "items": [
         {
-          "id": "pp-01",
-          "task": "Use privacy-focused browser for research",
-          "why": "Regular browsers may track your policy research and share data with third parties.",
-          "howTo": "Open Incognito Browser or similar privacy browser before researching services. This prevents tracking of your privacy research activities.",
-          "priority": "high"
-        },
-        {
-          "id": "pp-02",
-          "task": "Check when policy was last updated",
-          "why": "Outdated policies may not reflect current data practices or comply with recent privacy laws.",
-          "howTo": "Look for 'Last Updated' or 'Effective Date' at the top or bottom of privacy policies. Policies older than 2 years should be scrutinized more carefully.",
-          "priority": "medium"
-        },
-        {
-          "id": "pp-03",
-          "task": "Identify policy length and readability",
-          "why": "Extremely long or complex policies may be designed to discourage reading and hide important details.",
-          "howTo": "Note if the policy is unusually long (over 10 pages) or uses excessive legal jargon. Consider this a red flag for potential privacy issues.",
-          "priority": "medium"
-        }
-      ]
-    },
-    {
-      "title": "Evaluating Data Collection Practices",
-      "items": [
-        {
-          "id": "dc-01",
-          "task": "Identify what personal data is collected",
-          "why": "You need to know exactly what information about you is being gathered and stored.",
-          "howTo": "Look for sections titled 'Information We Collect' or 'Data Collection.' Make a list of all data types mentioned including browsing habits, location, and device information.",
+          "id": "policy-location",
+          "task": "Verify privacy policy is easily accessible and up-to-date",
+          "why": "Hidden or outdated policies often indicate poor privacy practices and potential legal non-compliance.",
+          "howTo": "Look for privacy policy links in the footer, check the last updated date, and ensure it's prominently displayed during signup.",
           "priority": "critical"
         },
         {
-          "id": "dc-02",
-          "task": "Check for automatic data collection",
-          "why": "Services often collect data without explicit consent through cookies, pixels, and tracking technologies.",
-          "howTo": "Search for terms like 'automatically collect,' 'cookies,' 'pixels,' 'beacons,' or 'tracking technologies.' Note what data is gathered passively.",
+          "id": "policy-length",
+          "task": "Note the policy length and readability level",
+          "why": "Excessively long policies (over 5,000 words) may be intentionally difficult to read and understand.",
+          "howTo": "Use online readability tools or browser extensions to check reading level. Flag policies requiring college-level reading skills.",
+          "priority": "medium"
+        },
+        {
+          "id": "separate-documents",
+          "task": "Check if privacy policy is separate from terms of service",
+          "why": "Combined documents often bury important privacy information within legal terms to discourage reading.",
+          "howTo": "Look for distinct 'Privacy Policy' and 'Terms of Service' links. Red flag if they're combined into one document.",
           "priority": "high"
         },
         {
-          "id": "dc-03",
-          "task": "Review third-party data sharing",
-          "why": "Your data may be shared with advertisers, partners, or sold to data brokers without clear disclosure.",
-          "howTo": "Find sections on 'Data Sharing,' 'Third Parties,' or 'Partners.' Look for vague terms like 'business partners' or 'affiliated companies' which may hide extensive sharing.",
+          "id": "contact-info",
+          "task": "Verify clear contact information for privacy concerns",
+          "why": "Companies serious about privacy provide easy ways to contact them about data practices and requests.",
+          "howTo": "Look for dedicated privacy contact email, data protection officer info, or privacy-specific contact forms.",
+          "priority": "high"
+        },
+        {
+          "id": "jurisdiction",
+          "task": "Identify which privacy laws and jurisdiction apply",
+          "why": "Different jurisdictions offer varying levels of privacy protection and user rights.",
+          "howTo": "Check which country's laws govern the policy. Look for mentions of GDPR, CCPA, or other privacy regulations.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Data Collection Analysis",
+      "items": [
+        {
+          "id": "data-types",
+          "task": "Identify all types of personal data being collected",
+          "why": "Many services collect far more data than necessary for their stated purpose, creating privacy risks.",
+          "howTo": "Look for comprehensive lists of collected data including device info, location, browsing habits, and third-party data sources.",
           "priority": "critical"
         },
         {
-          "id": "dc-04",
-          "task": "Examine data retention periods",
-          "why": "Indefinite data retention increases your privacy risk and potential for data breaches.",
-          "howTo": "Search for 'retention,' 'storage period,' or 'delete.' If no timeframe is specified or data is kept 'as long as necessary,' consider this problematic.",
-          "priority": "high"
-        }
-      ]
-    },
-    {
-      "title": "Spotting Dark Patterns and Consent Issues",
-      "items": [
-        {
-          "id": "dp-01",
-          "task": "Identify pre-checked consent boxes",
-          "why": "Pre-checked boxes for data sharing or marketing violate true consent principles.",
-          "howTo": "During signup, check if boxes for newsletters, data sharing, or targeted ads are pre-selected. Uncheck any boxes you don't want and note this as a dark pattern.",
+          "id": "collection-methods",
+          "task": "Understand how data is collected (automatic vs. voluntary)",
+          "why": "Automatic collection often happens without clear user awareness or consent.",
+          "howTo": "Distinguish between data you provide directly versus data collected through cookies, pixels, or device fingerprinting.",
           "priority": "high"
         },
         {
-          "id": "dp-02",
-          "task": "Look for consent bundling",
-          "why": "Services shouldn't require you to accept all data uses to access basic functionality.",
-          "howTo": "Check if you can reject marketing/advertising consent while still using the service. Look for granular consent options rather than all-or-nothing approaches.",
+          "id": "third-party-sources",
+          "task": "Check if data is obtained from third-party sources",
+          "why": "Data brokers and partners can provide information you never directly shared with the service.",
+          "howTo": "Look for mentions of 'partners,' 'affiliates,' or 'third-party data sources' in the collection section.",
           "priority": "high"
         },
         {
-          "id": "dp-03",
-          "task": "Check difficulty of opting out",
-          "why": "Making opt-out processes complicated discourages users from protecting their privacy.",
-          "howTo": "Look for opt-out instructions in privacy settings or contact information. Note if the process requires phone calls, mailing letters, or navigating complex menus.",
+          "id": "data-minimization",
+          "task": "Assess if data collection follows minimization principles",
+          "why": "Excessive data collection increases your privacy risk and may indicate poor data practices.",
+          "howTo": "Compare collected data types with the service's stated purpose. Flag collections that seem unrelated to core functionality.",
           "priority": "medium"
         },
         {
-          "id": "dp-04",
-          "task": "Review account deletion options",
-          "why": "You should be able to easily delete your account and associated data when desired.",
-          "howTo": "Search for 'delete account,' 'data deletion,' or 'right to erasure.' Note if the process is clearly explained and accessible through account settings.",
-          "priority": "high"
-        }
-      ]
-    },
-    {
-      "title": "Understanding Your Privacy Rights",
-      "items": [
-        {
-          "id": "pr-01",
-          "task": "Identify your data access rights",
-          "why": "You have the right to know what personal data companies have collected about you.",
-          "howTo": "Look for sections on 'Data Access,' 'Your Rights,' or 'Data Subject Rights.' Note the process for requesting a copy of your data and any associated fees.",
-          "priority": "medium"
-        },
-        {
-          "id": "pr-02",
-          "task": "Check data portability options",
-          "why": "You should be able to export your data in a usable format to switch services.",
-          "howTo": "Search for 'data portability,' 'export,' or 'download your data.' Verify if data can be exported in standard formats like CSV or JSON.",
-          "priority": "medium"
-        },
-        {
-          "id": "pr-03",
-          "task": "Review correction and update procedures",
-          "why": "Inaccurate personal data can affect services and should be correctable by you.",
-          "howTo": "Find information about updating or correcting your personal information. Check if this can be done through account settings or requires contacting support.",
-          "priority": "low"
-        },
-        {
-          "id": "pr-04",
-          "task": "Understand complaint and contact options",
-          "why": "You need clear ways to raise privacy concerns and contact data protection officers.",
-          "howTo": "Look for privacy contact information, data protection officer details, or complaint procedures. Save this information for future reference.",
-          "priority": "medium"
-        }
-      ]
-    },
-    {
-      "title": "Taking Action on Problematic Policies",
-      "items": [
-        {
-          "id": "ap-01",
-          "task": "Adjust privacy settings immediately",
-          "why": "Default settings are often configured for maximum data collection rather than user privacy.",
-          "howTo": "Navigate to account privacy settings and disable unnecessary data sharing, targeted advertising, and third-party integrations. Choose most restrictive options available.",
+          "id": "sensitive-data",
+          "task": "Identify collection of sensitive personal information",
+          "why": "Sensitive data like health, financial, or biometric information requires extra protection and scrutiny.",
+          "howTo": "Look for mentions of health data, financial info, biometrics, political views, or other sensitive categories.",
           "priority": "critical"
         },
         {
-          "id": "ap-02",
-          "task": "Set up policy change notifications",
-          "why": "Companies can change policies at any time, potentially weakening your privacy protections.",
-          "howTo": "Enable email notifications for policy updates in account settings. Consider using a service that monitors privacy policy changes for important accounts.",
+          "id": "children-data",
+          "task": "Check policies regarding children's data collection",
+          "why": "Children's data has special legal protections and ethical considerations.",
+          "howTo": "Look for age restrictions, parental consent requirements, and special protections for users under 13 or 16.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Data Usage and Sharing Evaluation",
+      "items": [
+        {
+          "id": "usage-purposes",
+          "task": "Review all stated purposes for data usage",
+          "why": "Vague or overly broad usage terms allow companies to use your data in unexpected ways.",
+          "howTo": "Look for specific, limited purposes. Red flags include 'business purposes,' 'improving services,' or 'as permitted by law.'",
+          "priority": "critical"
+        },
+        {
+          "id": "data-sharing",
+          "task": "Identify all third parties who receive your data",
+          "why": "Data sharing multiplies your privacy risks and reduces your control over personal information.",
+          "howTo": "Look for comprehensive lists of data recipients including advertisers, analytics providers, and business partners.",
+          "priority": "critical"
+        },
+        {
+          "id": "sale-disclosure",
+          "task": "Check if personal data is sold to third parties",
+          "why": "Data sales create ongoing privacy risks and may violate your expectations about how data is used.",
+          "howTo": "Look for explicit statements about data sales. Some policies hide this in 'monetization' or 'business transfer' sections.",
+          "priority": "high"
+        },
+        {
+          "id": "advertising-use",
+          "task": "Understand how data is used for advertising and profiling",
+          "why": "Advertising use often involves detailed profiling and tracking across websites and devices.",
+          "howTo": "Look for mentions of 'targeted advertising,' 'personalization,' 'user profiling,' or 'cross-device tracking.'",
+          "priority": "high"
+        },
+        {
+          "id": "retention-periods",
+          "task": "Identify data retention periods and deletion policies",
+          "why": "Indefinite data retention increases long-term privacy risks and potential for data breaches.",
+          "howTo": "Look for specific timeframes for data deletion. Flag policies with vague terms like 'as long as necessary.'",
           "priority": "medium"
         },
         {
-          "id": "ap-03",
-          "task": "Document concerning practices",
-          "why": "Keeping records helps you track privacy violations and can support complaints to regulators.",
-          "howTo": "Screenshot problematic clauses, dark patterns, or concerning data practices. Note the date and service name for future reference.",
-          "priority": "low"
+          "id": "legal-disclosure",
+          "task": "Review circumstances for legal data disclosure",
+          "why": "Overly broad legal disclosure terms may allow sharing with law enforcement without proper legal process.",
+          "howTo": "Check if disclosure requires warrants, court orders, or if company fights overbroad requests. Look for transparency reports.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "User Rights and Control Assessment",
+      "items": [
+        {
+          "id": "access-rights",
+          "task": "Verify your right to access collected personal data",
+          "why": "Data access rights help you understand what information companies have about you.",
+          "howTo": "Look for clear processes to request data downloads or access reports. Check if there are fees or restrictions.",
+          "priority": "high"
         },
         {
-          "id": "ap-04",
-          "task": "Consider service alternatives",
-          "why": "Some privacy-invasive services may not be worth the risk to your personal data.",
-          "howTo": "Research privacy-focused alternatives for services with concerning policies. Gradually migrate important data and accounts to more privacy-respecting platforms.",
+          "id": "correction-rights",
+          "task": "Check your right to correct inaccurate information",
+          "why": "Inaccurate data can lead to incorrect profiling and discriminatory treatment.",
+          "howTo": "Look for processes to update, correct, or dispute inaccurate personal information in your account or profile.",
           "priority": "medium"
+        },
+        {
+          "id": "deletion-rights",
+          "task": "Understand your right to delete personal data",
+          "why": "Deletion rights help you remove data you no longer want companies to have.",
+          "howTo": "Look for account deletion options and data erasure processes. Check for exceptions or data that won't be deleted.",
+          "priority": "high"
+        },
+        {
+          "id": "opt-out-rights",
+          "task": "Identify opt-out options for data processing",
+          "why": "Opt-out rights give you control over how your data is used, especially for marketing and analytics.",
+          "howTo": "Look for options to opt out of data sales, targeted advertising, analytics, and marketing communications.",
+          "priority": "critical"
+        },
+        {
+          "id": "consent-withdrawal",
+          "task": "Check if you can withdraw consent for data processing",
+          "why": "Consent should be freely given and easily withdrawn to maintain user control over personal data.",
+          "howTo": "Look for clear processes to withdraw consent. Check if service functionality is threatened when consent is withdrawn.",
+          "priority": "high"
+        },
+        {
+          "id": "portability-rights",
+          "task": "Assess data portability and export options",
+          "why": "Data portability prevents vendor lock-in and allows you to switch services while keeping your data.",
+          "howTo": "Look for options to export your data in standard formats that can be used with other services.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Dark Patterns and Consent Issues",
+      "items": [
+        {
+          "id": "consent-granularity",
+          "task": "Check if consent options are granular and specific",
+          "why": "Bundled consent forces you to accept all data uses or none, reducing your control over privacy.",
+          "howTo": "Look for separate consent options for different data uses like marketing, analytics, and personalization.",
+          "priority": "high"
+        },
+        {
+          "id": "pre-checked-boxes",
+          "task": "Identify pre-checked consent boxes or default opt-ins",
+          "why": "Pre-checked boxes don't represent genuine consent and often lead to unwanted data processing.",
+          "howTo": "During signup, check if marketing or data sharing options are pre-selected. True consent requires active user choice.",
+          "priority": "critical"
+        },
+        {
+          "id": "consent-barriers",
+          "task": "Assess barriers to declining data processing",
+          "why": "Making it difficult to say no to data collection is a manipulative dark pattern.",
+          "howTo": "Check if declining requires multiple clicks, hidden options, or threatens service functionality unnecessarily.",
+          "priority": "high"
+        },
+        {
+          "id": "notification-changes",
+          "task": "Review how policy changes are communicated",
+          "why": "Inadequate notice of policy changes prevents informed consent to new data practices.",
+          "howTo": "Look for commitments to prominent notice of material changes, not just email notifications or website posts.",
+          "priority": "medium"
+        },
+        {
+          "id": "deceptive-language",
+          "task": "Identify deceptive or misleading language about privacy",
+          "why": "Misleading language can hide important privacy risks and manipulate user decisions.",
+          "howTo": "Watch for phrases like 'we value your privacy' while permitting extensive data sharing, or vague benefit claims.",
+          "priority": "high"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Use Incognito Browser's built-in privacy policy scanner to automatically flag common red flags and dark patterns in terms of service.",
+    "Keep a privacy audit log noting policy changes from services you use regularly - many companies make changes without prominent notification.",
+    "Look for services that offer 'privacy-first' alternatives with transparent policies, even if they cost more than ad-supported options.",
+    "Use browser extensions that highlight privacy policy red flags in real-time as you browse and sign up for services.",
+    "Create a separate email address specifically for services with poor privacy practices to limit data correlation across accounts."
+  ],
   "relatedLinks": [
     {
-      "title": "Data Broker Removal Checklist",
-      "url": "/checklists/data-brokers/data-broker-removal-checklist",
+      "title": "Terms of Service Didn't Read",
+      "url": "https://tosdr.org",
+      "type": "tool"
+    },
+    {
+      "title": "Privacy Policy Analysis Tools",
+      "url": "/tools/privacy-policy-analyzers",
       "type": "internal"
     },
     {
-      "title": "Ad Tracking Prevention Guide",
-      "url": "/checklists/ad-tracking/ad-tracking-prevention-checklist",
+      "title": "Dark Patterns Hall of Shame",
+      "url": "/guides/dark-patterns-examples",
       "type": "internal"
     },
     {
-      "title": "Social Media Privacy Hardening",
-      "url": "/checklists/social-media-privacy/social-media-privacy-checklist",
+      "title": "Data Broker Opt-Out Guide",
+      "url": "/guides/data-broker-removal",
       "type": "internal"
-    },
-    {
-      "title": "Terms of Service; Didn't Read",
-      "url": "https://tosdr.org/",
-      "type": "external"
     }
   ]
 }

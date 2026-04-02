@@ -2,145 +2,124 @@
   "niche": "healthcare-privacy",
   "slug": "healthcare-medical-privacy-request-letter-template",
   "title": "Healthcare & Medical Privacy Request Letter Template",
-  "metaDescription": "Free HIPAA-compliant letter template to request access, correction, or deletion of your medical records. Protect your healthcare data privacy.",
-  "description": "A comprehensive letter template to help you exercise your HIPAA rights and request access to, correction of, or deletion of your medical records. Includes proper legal language and formatting for healthcare providers.",
+  "metaDescription": "Free HIPAA-compliant template to request your medical records, data deletion, or privacy information from healthcare providers and health apps.",
+  "keywords": [
+    "HIPAA privacy request",
+    "medical records request",
+    "health app data deletion",
+    "healthcare privacy letter",
+    "medical data privacy"
+  ],
+  "description": "Protect your medical privacy with this comprehensive letter template. Request your health records, delete personal data from health apps, or inquire about privacy practices at healthcare facilities under HIPAA regulations.",
   "templateType": "letter",
   "sections": [
     {
       "heading": "Letter Header",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Phone Number]\n[Email Address]\n\n[Date]\n\n[Healthcare Provider/Facility Name]\n[Privacy Officer or Medical Records Department]\n[Address]\n[City, State, ZIP Code]",
+      "content": "[Your Full Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Phone Number]\n[Your Email Address]\n\n[Date]\n\n[Healthcare Provider/Company Name]\nAttn: Privacy Officer\n[Address]\n[City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "your_name",
           "label": "Your Full Name",
-          "defaultValue": "[Your Name]"
-        },
-        {
-          "key": "your_address",
-          "label": "Your Address",
-          "defaultValue": "[Your Address]"
+          "defaultValue": "John Smith"
         },
         {
           "key": "provider_name",
-          "label": "Healthcare Provider Name",
-          "defaultValue": "[Healthcare Provider/Facility Name]"
+          "label": "Healthcare Provider/Company Name",
+          "defaultValue": "ABC Medical Center"
+        },
+        {
+          "key": "request_date",
+          "label": "Date of Request",
+          "defaultValue": "MM/DD/YYYY"
         }
       ]
     },
     {
-      "heading": "Subject Line and Introduction",
-      "content": "Subject: HIPAA Privacy Request - [Type of Request]\n\nDear Privacy Officer or Medical Records Manager,\n\nI am writing to formally request [access to/amendment of/restriction of/deletion of] my protected health information (PHI) under the Health Insurance Portability and Accountability Act (HIPAA) Privacy Rule, 45 CFR § 164.524.",
+      "heading": "Subject and Introduction",
+      "content": "Subject: HIPAA Privacy Request - [REQUEST TYPE]\n\nDear Privacy Officer,\n\nI am writing to formally request [ACCESS TO/DELETION OF/INFORMATION ABOUT] my protected health information (PHI) as permitted under the Health Insurance Portability and Accountability Act (HIPAA) Privacy Rule, 45 CFR § 164.524.\n\nPatient Information:\n- Full Name: [YOUR FULL NAME]\n- Date of Birth: [YOUR DOB]\n- Patient ID/Account Number: [IF KNOWN]\n- Service Dates: [DATE RANGE OR SPECIFIC DATES]",
       "placeholders": [
         {
           "key": "request_type",
-          "label": "Type of Request (access to, amendment of, etc.)",
-          "defaultValue": "[Type of Request]"
-        }
-      ]
-    },
-    {
-      "heading": "Patient Identification",
-      "content": "Patient Information:\n- Full Name: [Your Full Name]\n- Date of Birth: [Your Date of Birth]\n- Patient ID/Medical Record Number: [If Known]\n- Social Security Number (last 4 digits): [XXXX]\n- Address: [Your Current Address]\n- Phone Number: [Your Phone Number]",
-      "placeholders": [
+          "label": "Type of Request",
+          "defaultValue": "Medical Records Access Request"
+        },
         {
           "key": "patient_dob",
-          "label": "Date of Birth",
-          "defaultValue": "[Your Date of Birth]"
+          "label": "Patient Date of Birth",
+          "defaultValue": "MM/DD/YYYY"
         },
         {
-          "key": "patient_id",
-          "label": "Patient ID (if known)",
-          "defaultValue": "[If Known]"
-        },
-        {
-          "key": "ssn_last4",
-          "label": "Last 4 digits of SSN",
-          "defaultValue": "[XXXX]"
+          "key": "service_dates",
+          "label": "Service Date Range",
+          "defaultValue": "January 2023 - Present"
         }
       ]
     },
     {
       "heading": "Specific Request Details",
-      "content": "I am specifically requesting:\n\n[Choose one or more of the following:]\n\n☐ Access to my complete medical records from [date range]\n☐ Copies of specific records: [specify tests, visits, treatments]\n☐ Amendment to incorrect information in my records\n☐ Restriction on use or disclosure of my PHI\n☐ Accounting of disclosures of my PHI\n☐ Other: [specify]\n\nIf requesting amendment, please specify the incorrect information and desired correction:\n[Details of correction needed]",
+      "content": "I am specifically requesting:\n\n☐ Complete medical records including:\n   - Progress notes and consultation reports\n   - Test results and imaging studies\n   - Prescription and medication history\n   - Billing and insurance information\n\n☐ Data deletion/restriction:\n   - Delete all personal health information\n   - Restrict sharing of my data with third parties\n   - Opt-out of marketing communications\n\n☐ Privacy practices information:\n   - Copy of your Notice of Privacy Practices\n   - List of disclosures made in the past 6 years\n   - Information about data sharing with business associates\n\nPreferred format: ☐ Electronic copy ☐ Paper copy ☐ Secure patient portal",
       "placeholders": [
         {
-          "key": "date_range",
-          "label": "Date Range for Records",
-          "defaultValue": "[date range]"
-        },
-        {
-          "key": "specific_records",
-          "label": "Specific Records Requested",
-          "defaultValue": "[specify tests, visits, treatments]"
-        },
-        {
-          "key": "correction_details",
-          "label": "Details of Correction Needed",
-          "defaultValue": "[Details of correction needed]"
+          "key": "preferred_format",
+          "label": "Preferred Format for Records",
+          "defaultValue": "Electronic copy via secure email"
         }
       ]
     },
     {
-      "heading": "Delivery Method and Timeline",
-      "content": "Please provide the requested information in the following format:\n☐ Paper copies mailed to the address above\n☐ Secure electronic delivery to: [email address]\n☐ Available for pickup at your facility\n☐ Other format: [specify]\n\nUnder HIPAA regulations, I understand you have 30 days to respond to this request, with a possible 30-day extension if needed. Please notify me in writing if an extension is required.",
+      "heading": "Legal Rights and Timeline",
+      "content": "Under HIPAA regulations, I understand that:\n- You have 30 days to respond to this request (with possible 30-day extension)\n- You may charge reasonable fees for copying and mailing\n- I have the right to file a complaint with HHS if this request is improperly denied\n\nIf you deny this request, please provide written explanation citing specific legal grounds for denial and information about my right to request a review of the denial.\n\nFor health apps and digital platforms: I also request information about any data sharing with third-party advertisers, data brokers, or other companies not directly involved in my healthcare.",
+      "placeholders": []
+    },
+    {
+      "heading": "Identity Verification",
+      "content": "To verify my identity, I am providing:\n☐ Copy of government-issued photo ID\n☐ Signed authorization form (if required)\n☐ Additional verification: [SPECIFY]\n\nIf additional verification is needed, please contact me at [PHONE NUMBER] or [EMAIL ADDRESS].\n\nFor security purposes, please send any electronic records using encrypted email or through a secure patient portal. I recommend using secure browsers like Incognito Browser when accessing health records online to protect against tracking.",
       "placeholders": [
         {
-          "key": "delivery_email",
-          "label": "Email for Electronic Delivery",
-          "defaultValue": "[email address]"
-        },
-        {
-          "key": "other_format",
-          "label": "Other Format Specification",
-          "defaultValue": "[specify]"
+          "key": "verification_method",
+          "label": "Additional Verification Method",
+          "defaultValue": "Last 4 digits of SSN: XXXX"
         }
       ]
     },
     {
-      "heading": "Authorization and Signature",
-      "content": "I understand that reasonable fees may apply for copying and mailing costs. Please contact me if fees exceed $[amount] before processing this request.\n\nI authorize this request and verify that I am the patient or authorized representative. If you require additional verification of my identity, please contact me at [phone number].\n\nThank you for your prompt attention to this matter.\n\nSincerely,\n\n[Your Signature]\n[Your Printed Name]\n[Date]\n\nEnclosures: Copy of photo ID (if required by your facility)",
+      "heading": "Closing and Contact Information",
+      "content": "Please acknowledge receipt of this request within 5 business days and provide an estimated timeline for completion. If you have any questions or need additional information, please contact me immediately.\n\nI expect a response within the HIPAA-mandated timeframe. Thank you for your prompt attention to this matter.\n\nSincerely,\n\n[Your Signature]\n[Your Printed Name]\n[Date]\n\nEnclosures: [List any documents attached]",
       "placeholders": [
         {
-          "key": "max_fee",
-          "label": "Maximum Fee Amount",
-          "defaultValue": "[amount]"
-        },
-        {
-          "key": "contact_phone",
-          "label": "Contact Phone Number",
-          "defaultValue": "[phone number]"
+          "key": "enclosures",
+          "label": "List of Attached Documents",
+          "defaultValue": "Copy of driver's license"
         }
       ]
     }
   ],
   "useCases": [
-    "Requesting copies of medical records for personal use",
-    "Correcting errors in your medical files",
-    "Obtaining records to share with a new healthcare provider",
-    "Reviewing what information has been disclosed about you",
-    "Requesting restrictions on who can access your health information",
-    "Getting documentation for insurance claims or legal purposes",
-    "Verifying accuracy of medical billing and treatments",
-    "Preparing for medical appointments or second opinions"
+    "Requesting complete medical records from your doctor or hospital",
+    "Deleting personal data from health and fitness apps",
+    "Getting copies of test results and imaging studies",
+    "Requesting privacy practices from telehealth platforms",
+    "Obtaining disclosure history of your health information",
+    "Restricting sharing of reproductive health data"
   ],
   "relatedLinks": [
     {
-      "title": "Understanding Your HIPAA Rights",
-      "url": "/privacy/healthcare/hipaa-patient-rights-guide",
+      "title": "HIPAA Privacy Rule Overview",
+      "url": "/guides/hipaa-privacy-rule-patients",
       "type": "guide"
     },
     {
-      "title": "Health App Privacy Settings Checklist",
-      "url": "/privacy/healthcare/health-app-privacy-checklist",
-      "type": "checklist"
+      "title": "Health App Privacy Checklist",
+      "url": "/templates/health-app-privacy-checklist",
+      "type": "template"
     },
     {
-      "title": "Medical Data Breach Response Plan",
-      "url": "/privacy/healthcare/medical-data-breach-response",
-      "type": "plan"
+      "title": "Data Deletion Request Template",
+      "url": "/templates/data-deletion-request-letter",
+      "type": "template"
     },
     {
-      "title": "Incognito Browser - Protect Your Health Research",
+      "title": "Incognito Browser for Health Privacy",
       "url": "/tools/incognito-browser",
       "type": "tool"
     }

@@ -1,16 +1,19 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["niche", "slug", "title", "metaDescription", "toolType", "description", "inputs", "educational"],
+  "required": ["niche", "slug", "title", "metaDescription", "keywords", "toolType", "description", "inputs", "educational"],
   "properties": {
     "niche": { "type": "string" },
     "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "title": { "type": "string", "maxLength": 70 },
     "metaDescription": { "type": "string", "maxLength": 160 },
+    "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 6 },
     "toolType": { "type": "string", "enum": ["checker", "analyzer", "generator", "scanner", "calculator", "converter"] },
     "description": { "type": "string", "maxLength": 300 },
     "inputs": {
       "type": "array",
+      "minItems": 2,
+      "maxItems": 6,
       "items": {
         "type": "object",
         "required": ["id", "label", "type", "placeholder"],
@@ -28,8 +31,8 @@
       "type": "object",
       "properties": {
         "howItWorks": { "type": "string" },
-        "tips": { "type": "array", "items": { "type": "string" } },
-        "commonMistakes": { "type": "array", "items": { "type": "string" } }
+        "tips": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 5 },
+        "commonMistakes": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 5 }
       }
     },
     "relatedLinks": {

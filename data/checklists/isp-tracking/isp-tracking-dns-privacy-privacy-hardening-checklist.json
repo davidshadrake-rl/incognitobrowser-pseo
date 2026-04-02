@@ -2,145 +2,173 @@
   "niche": "isp-tracking",
   "slug": "isp-tracking-dns-privacy-hardening-checklist",
   "title": "ISP Tracking & DNS Privacy Hardening Checklist",
-  "metaDescription": "Protect yourself from ISP monitoring and DNS tracking with this comprehensive privacy checklist. Stop your internet provider from spying on you.",
+  "metaDescription": "Complete checklist to stop ISP tracking and protect DNS privacy. Prevent your internet provider from monitoring, selling, and throttling your activity.",
+  "keywords": [
+    "ISP tracking",
+    "DNS privacy",
+    "DNS over HTTPS",
+    "ISP monitoring",
+    "internet provider spying"
+  ],
   "difficulty": "intermediate",
   "estimatedTime": "45-60 minutes",
-  "intro": "Your internet service provider can see every website you visit and track your online activity through DNS requests. This checklist helps you implement practical measures to prevent ISP monitoring and secure your DNS queries from prying eyes.",
+  "intro": "Your ISP can see every website you visit and may sell this data to advertisers. This checklist helps you block ISP tracking, secure your DNS queries, and prevent throttling through proven privacy hardening techniques.",
   "sections": [
     {
-      "title": "DNS Privacy Protection",
+      "title": "DNS Privacy Configuration",
       "items": [
         {
-          "id": "dns-over-https",
-          "task": "Enable DNS over HTTPS (DoH) in your browser",
-          "why": "Encrypts DNS queries between your browser and DNS server, preventing ISPs from seeing which websites you're requesting.",
-          "howTo": "In Chrome/Edge: Go to Settings > Privacy and Security > Security > Use Secure DNS. In Firefox: Settings > Privacy & Security > DNS over HTTPS. Enable and select a provider like Cloudflare or Quad9.",
-          "priority": "high"
-        },
-        {
-          "id": "secure-dns-resolver",
-          "task": "Switch to a privacy-focused DNS resolver",
-          "why": "Default ISP DNS servers log and potentially sell your browsing data. Privacy-focused resolvers don't log queries or track users.",
-          "howTo": "Change your DNS settings to use Cloudflare (1.1.1.1), Quad9 (9.9.9.9), or Mullvad DNS (194.242.2.2). Configure this in your router settings or individual device network settings.",
+          "id": "dns-over-https-browser",
+          "task": "Enable DNS over HTTPS in your browser",
+          "why": "Encrypts DNS queries so ISPs cannot see which websites you're visiting or hijack your DNS requests.",
+          "howTo": "In Chrome/Firefox: Go to Settings > Privacy & Security > Security > Use secure DNS. Select Cloudflare (1.1.1.1) or Quad9 (9.9.9.9). Test at dnsleaktest.com to verify.",
           "priority": "critical"
         },
         {
-          "id": "dns-over-tls",
-          "task": "Configure DNS over TLS (DoT) on your router",
-          "why": "Encrypts all DNS traffic from your entire network, protecting all connected devices from ISP DNS monitoring.",
-          "howTo": "Access your router admin panel and look for DNS or WAN settings. Enable DoT and enter a secure DNS provider that supports it, such as Cloudflare (1dot1dot1dot1.cloudflare-dns.com).",
+          "id": "router-dns-change",
+          "task": "Change DNS servers on your router",
+          "why": "Protects all devices on your network from ISP DNS monitoring and prevents DNS hijacking attacks.",
+          "howTo": "Access router admin panel (usually 192.168.1.1). Find DNS settings and replace ISP DNS with Cloudflare (1.1.1.1, 1.0.0.1) or Quad9 (9.9.9.9, 149.112.112.112). Restart router.",
           "priority": "high"
         },
         {
-          "id": "flush-dns-cache",
-          "task": "Regularly flush your DNS cache",
-          "why": "Removes stored DNS records that could reveal your browsing history if your device is compromised.",
-          "howTo": "Windows: Open Command Prompt as admin and run 'ipconfig /flushdns'. Mac: Run 'sudo dscacheutil -flushcache' in Terminal. Do this weekly or after visiting sensitive sites.",
+          "id": "device-dns-config",
+          "task": "Configure encrypted DNS on all devices",
+          "why": "Ensures DNS queries from phones, tablets, and computers are encrypted even when not using a browser.",
+          "howTo": "iOS: Settings > General > VPN & Device Management > DNS > Add Cloudflare 1.1.1.1. Android: Settings > Network > Private DNS > Enter one.one.one.one.",
+          "priority": "high"
+        },
+        {
+          "id": "dns-leak-test",
+          "task": "Test for DNS leaks",
+          "why": "Verifies your DNS traffic is actually encrypted and not leaking to your ISP despite configuration changes.",
+          "howTo": "Visit dnsleaktest.com and run extended test. Should show your chosen DNS provider (not your ISP). If ISP appears, reconfigure DNS settings.",
+          "priority": "critical"
+        },
+        {
+          "id": "dns-filtering-enable",
+          "task": "Enable DNS-based ad and tracker blocking",
+          "why": "Blocks tracking domains at DNS level, reducing data collection while improving browsing speed and security.",
+          "howTo": "Use NextDNS or AdGuard DNS instead of basic providers. Configure custom blocklists for ads, trackers, and malware. Test blocking at d3ward.github.io/toolz/adblock.html.",
           "priority": "medium"
         }
       ]
     },
     {
-      "title": "Network Traffic Protection",
+      "title": "VPN & Traffic Encryption",
       "items": [
         {
-          "id": "vpn-service",
-          "task": "Use a reputable VPN service",
-          "why": "Routes all internet traffic through encrypted tunnels, preventing ISPs from monitoring your online activity and hiding your real IP address.",
-          "howTo": "Choose a no-logs VPN provider like Mullvad, ProtonVPN, or ExpressVPN. Install their app, connect before browsing, and verify your IP has changed using whatismyipaddress.com.",
+          "id": "vpn-service-setup",
+          "task": "Install a no-logs VPN service",
+          "why": "Encrypts all internet traffic so ISPs only see encrypted data going to VPN servers, not your actual browsing activity.",
+          "howTo": "Choose audited no-logs VPN like NordVPN, Surfshark, or ProtonVPN. Install apps on all devices. Enable auto-connect and kill switch features. Test IP change at whatismyipaddress.com.",
           "priority": "critical"
+        },
+        {
+          "id": "vpn-kill-switch",
+          "task": "Configure VPN kill switch",
+          "why": "Prevents traffic from leaking to ISP if VPN connection drops unexpectedly, maintaining continuous protection.",
+          "howTo": "In VPN app settings, enable 'Kill Switch' or 'Network Lock'. Test by disconnecting VPN while browsing - internet should stop working until VPN reconnects.",
+          "priority": "high"
+        },
+        {
+          "id": "vpn-auto-connect",
+          "task": "Enable VPN auto-connect on startup",
+          "why": "Ensures protection starts immediately when devices boot up, preventing unencrypted traffic from reaching ISP.",
+          "howTo": "In VPN app: Enable 'Connect on startup' or 'Launch on boot'. On routers: Configure VPN at router level for automatic protection of all devices.",
+          "priority": "high"
         },
         {
           "id": "https-everywhere",
-          "task": "Force HTTPS connections on all websites",
-          "why": "Prevents ISPs from reading the content of your web traffic, though they can still see which domains you visit.",
-          "howTo": "Enable 'Always use secure connections' in Chrome/Edge settings. In Firefox, set 'HTTPS-Only Mode' in Privacy & Security settings. Install HTTPS Everywhere browser extension for additional protection.",
-          "priority": "high"
-        },
-        {
-          "id": "tor-browser",
-          "task": "Use Tor Browser for sensitive browsing",
-          "why": "Routes traffic through multiple encrypted layers, making it extremely difficult for ISPs to track your activity or identify visited websites.",
-          "howTo": "Download Tor Browser from torproject.org. Use it for sensitive research, whistleblowing, or accessing blocked content. Never download files or enable plugins while using Tor.",
+          "task": "Force HTTPS connections",
+          "why": "Even with VPN, HTTPS adds extra encryption layer and prevents ISPs from seeing unencrypted HTTP traffic if VPN fails.",
+          "howTo": "Install HTTPS Everywhere browser extension or enable 'Always use secure connections' in browser settings. Use Incognito Browser for built-in HTTPS upgrading.",
           "priority": "medium"
         },
         {
-          "id": "incognito-browser",
-          "task": "Switch to Incognito Browser for enhanced privacy",
-          "why": "Provides built-in privacy features including ad blocking, tracker protection, and secure browsing without storing your data.",
-          "howTo": "Download Incognito Browser and set it as your default browser. It automatically blocks tracking scripts and provides better privacy than standard browsers without additional configuration.",
-          "priority": "high"
-        }
-      ]
-    },
-    {
-      "title": "Router and Network Security",
-      "items": [
-        {
-          "id": "router-firmware-update",
-          "task": "Update your router firmware regularly",
-          "why": "Patches security vulnerabilities that ISPs or attackers could exploit to monitor your network traffic.",
-          "howTo": "Access your router's admin panel (usually 192.168.1.1 or 192.168.0.1), check for firmware updates in the administration section, and enable automatic updates if available.",
-          "priority": "high"
-        },
-        {
-          "id": "change-default-passwords",
-          "task": "Change default router admin passwords",
-          "why": "Prevents unauthorized access to your router settings, which could be used to redirect your traffic or install monitoring software.",
-          "howTo": "Log into your router admin panel, find the administration or system settings, and change both the admin password and WiFi password to strong, unique passwords with 12+ characters.",
+          "id": "torrent-vpn-binding",
+          "task": "Bind torrent client to VPN interface",
+          "why": "Prevents torrent traffic from leaking to ISP if VPN disconnects, avoiding DMCA notices and throttling.",
+          "howTo": "In qBittorrent/Deluge: Go to Settings > Advanced > Network Interface, select VPN adapter (e.g., TAP-NordVPN). Test with torrent IP checker.",
           "priority": "critical"
-        },
-        {
-          "id": "disable-logging",
-          "task": "Disable router activity logging",
-          "why": "Prevents your router from storing browsing history that could be accessed by ISP technicians or during legal requests.",
-          "howTo": "In your router settings, look for 'Logs', 'Activity Logging', or 'History' sections. Disable web history logging, visited sites logging, and any traffic monitoring features.",
-          "priority": "medium"
         }
       ]
     },
     {
-      "title": "Advanced Privacy Measures",
+      "title": "ISP Tracking Detection & Monitoring",
       "items": [
         {
-          "id": "pi-hole-setup",
-          "task": "Set up Pi-hole for network-wide ad and tracker blocking",
-          "why": "Blocks tracking domains at the DNS level for all devices on your network, reducing data collection by advertising companies and ISPs.",
-          "howTo": "Install Pi-hole on a Raspberry Pi or spare computer using the one-line install script from pi-hole.net. Configure your router to use Pi-hole as the primary DNS server.",
-          "priority": "low"
-        },
-        {
-          "id": "encrypted-messaging",
-          "task": "Use encrypted messaging and email services",
-          "why": "Prevents ISPs from reading your communications content, though they may still see connection metadata.",
-          "howTo": "Switch to Signal for messaging, ProtonMail or Tutanota for email. These services provide end-to-end encryption that ISPs cannot decrypt even if they intercept the data.",
+          "id": "isp-data-policy-review",
+          "task": "Review your ISP's privacy policy",
+          "why": "Understanding what data your ISP collects and sells helps you know what you're protecting against.",
+          "howTo": "Find privacy policy on ISP website. Look for sections on data collection, sharing with third parties, and opt-out procedures. Note retention periods and data types collected.",
           "priority": "medium"
         },
         {
-          "id": "decoy-traffic",
-          "task": "Generate decoy web traffic",
-          "why": "Creates noise in your browsing patterns, making it harder for ISPs to build accurate profiles of your interests and activities.",
-          "howTo": "Use browser extensions like TrackMeNot or set up automated scripts to visit random websites. Be cautious not to visit illegal or harmful sites through automated browsing.",
+          "id": "throttling-detection",
+          "task": "Test for ISP throttling",
+          "why": "ISPs may slow specific traffic types. Detecting throttling helps you understand if your ISP is monitoring and limiting your activity.",
+          "howTo": "Use fast.com (Netflix) and speedtest.net. Compare speeds with/without VPN and across different times. Significant differences suggest throttling.",
+          "priority": "medium"
+        },
+        {
+          "id": "tracking-opt-out",
+          "task": "Opt out of ISP data sharing programs",
+          "why": "Many ISPs have opt-out mechanisms for advertising programs, though these may not stop all data collection.",
+          "howTo": "Log into ISP account portal, find Privacy or Advertising sections. Disable 'Relevant Advertising', 'Business and Marketing Reports', and similar programs.",
           "priority": "low"
+        },
+        {
+          "id": "connection-monitoring",
+          "task": "Monitor network connections for suspicious activity",
+          "why": "Helps detect if ISP is injecting ads, redirecting traffic, or if your privacy measures are working correctly.",
+          "howTo": "Use Wireshark or built-in network monitors to watch traffic. Look for unexpected connections, ad injections, or DNS redirects. Check browser developer tools for injected content.",
+          "priority": "low"
+        },
+        {
+          "id": "privacy-browser-setup",
+          "task": "Use privacy-focused browser configuration",
+          "why": "Prevents ISP from gathering additional data through browser fingerprinting and tracking techniques.",
+          "howTo": "Use Incognito Browser with built-in privacy features, or configure Firefox with strict privacy settings. Disable telemetry, enable tracking protection, clear cookies regularly.",
+          "priority": "high"
+        },
+        {
+          "id": "regular-ip-checking",
+          "task": "Regularly verify IP address and DNS changes",
+          "why": "Ensures your privacy setup is working correctly and ISP cannot see your real location or DNS queries.",
+          "howTo": "Weekly check: Visit whatismyipaddress.com (should show VPN IP), dnsleaktest.com (should show chosen DNS), and ipleak.net for comprehensive leak testing.",
+          "priority": "medium"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Use different VPN servers periodically to make traffic analysis harder for your ISP to correlate.",
+    "Consider using Tor Browser for highly sensitive browsing, as it provides multiple layers of encryption beyond just hiding from your ISP.",
+    "Set up a Pi-hole on your network for additional DNS-level blocking and monitoring of all network queries.",
+    "Use a VPN that accepts cryptocurrency payments and doesn't require personal information for true anonymity.",
+    "Monitor your ISP bill for unexplained charges - some ISPs charge extra fees for 'privacy' features that should be standard."
+  ],
   "relatedLinks": [
     {
       "title": "VPN Privacy Guide",
-      "url": "/checklists/vpn-privacy",
+      "url": "/vpn-privacy",
       "type": "internal"
     },
     {
-      "title": "Browser Privacy Checklist",
-      "url": "/checklists/browser-privacy",
+      "title": "Browser Privacy Settings",
+      "url": "/browser-privacy",
       "type": "internal"
     },
     {
-      "title": "Incognito Mode Best Practices",
-      "url": "/checklists/incognito-mode",
-      "type": "internal"
+      "title": "DNS Leak Test",
+      "url": "https://dnsleaktest.com",
+      "type": "external"
+    },
+    {
+      "title": "Incognito Browser",
+      "url": "https://incognito.org",
+      "type": "external"
     }
   ]
 }

@@ -2,33 +2,55 @@
   "niche": "social-media-privacy",
   "slug": "social-media-privacy-security-checklist",
   "title": "Social Media Privacy Security Checklist",
-  "metaDescription": "Complete checklist to protect your privacy on Facebook, Instagram, TikTok, X and other social platforms. Secure your personal data today.",
+  "metaDescription": "Complete checklist to secure your privacy on Facebook, Instagram, TikTok, X and other social platforms. Protect your data in 30 minutes.",
+  "keywords": [
+    "social media privacy",
+    "Facebook privacy settings",
+    "Instagram privacy guide",
+    "TikTok privacy",
+    "Twitter privacy settings",
+    "social media security"
+  ],
   "difficulty": "beginner",
-  "estimatedTime": "45-60 minutes",
-  "intro": "Social media platforms collect vast amounts of personal data for advertising and profit. This checklist helps you reclaim control over your privacy across Facebook, Instagram, TikTok, X, and other platforms with practical, step-by-step actions.",
+  "estimatedTime": "30-45 minutes",
+  "intro": "Social media platforms constantly collect your data for advertising and profit. This comprehensive checklist helps you lock down your privacy settings across all major platforms, reduce data harvesting, and protect yourself from account takeovers.",
   "sections": [
     {
       "title": "Account Security Basics",
       "items": [
         {
           "id": "enable-2fa",
-          "task": "Enable two-factor authentication on all social media accounts",
-          "why": "Prevents unauthorized access even if your password is compromised. 2FA blocks 99.9% of automated attacks.",
-          "howTo": "Go to Security Settings in each platform. Choose SMS, authenticator app, or hardware key. Save backup codes in a secure location.",
+          "task": "Enable two-factor authentication on all social accounts",
+          "why": "Prevents unauthorized access even if your password is compromised. Account takeovers are increasingly common and can damage your reputation.",
+          "howTo": "Go to Security settings in each app. Choose authenticator app over SMS when possible. Popular options include Google Authenticator, Authy, or your password manager's 2FA feature.",
           "priority": "critical"
         },
         {
-          "id": "review-passwords",
-          "task": "Update passwords to unique, strong combinations",
-          "why": "Weak or reused passwords are the #1 cause of account breaches. Each platform needs a unique password.",
-          "howTo": "Use a password manager to generate 12+ character passwords with mixed case, numbers, and symbols. Never reuse passwords across platforms.",
+          "id": "strong-passwords",
+          "task": "Use unique, strong passwords for each platform",
+          "why": "Password reuse means one breach compromises all accounts. Social media accounts are prime targets for credential stuffing attacks.",
+          "howTo": "Use a password manager like Bitwarden or 1Password. Generate 12+ character passwords with mixed characters. Never reuse passwords across platforms.",
           "priority": "critical"
         },
         {
-          "id": "review-login-activity",
-          "task": "Check recent login activity and active sessions",
-          "why": "Identifies unauthorized access attempts and suspicious locations accessing your account.",
-          "howTo": "Find 'Active Sessions' or 'Login Activity' in security settings. Log out suspicious sessions and change password if needed.",
+          "id": "login-alerts",
+          "task": "Enable login alerts and notifications",
+          "why": "Get immediately notified of suspicious login attempts from unknown devices or locations before damage occurs.",
+          "howTo": "In Security settings, turn on email/SMS alerts for new device logins, password changes, and suspicious activity. Review alerts promptly.",
+          "priority": "high"
+        },
+        {
+          "id": "review-sessions",
+          "task": "Review and remove old active sessions",
+          "why": "Old sessions on forgotten devices remain access points. Public computer sessions often stay logged in indefinitely.",
+          "howTo": "Check 'Active Sessions' or 'Where You're Logged In' sections. Log out sessions from unrecognized devices, old phones, or public computers.",
+          "priority": "medium"
+        },
+        {
+          "id": "app-passwords",
+          "task": "Remove unused app passwords and connected apps",
+          "why": "Third-party apps with access to your accounts can leak data or be compromised, creating backdoors to your social media.",
+          "howTo": "Review 'Connected Apps' or 'App Passwords' sections. Remove apps you don't use. Revoke access for suspicious or unnecessary applications.",
           "priority": "high"
         }
       ]
@@ -38,102 +60,128 @@
       "items": [
         {
           "id": "profile-visibility",
-          "task": "Set profile and posts to private/friends-only visibility",
-          "why": "Prevents strangers, employers, and data scrapers from accessing your personal information and posts.",
-          "howTo": "Go to Privacy Settings. Set profile info, posts, and photos to 'Friends Only' or 'Private'. Review each visibility option individually.",
+          "task": "Set profile and posts to friends/followers only",
+          "why": "Public profiles expose personal information to strangers, data scrapers, and potential stalkers or scammers.",
+          "howTo": "Change 'Who can see your posts' to Friends/Followers. Set profile info visibility to Friends only. Limit who can find you by email/phone number.",
           "priority": "critical"
         },
         {
-          "id": "disable-face-recognition",
-          "task": "Turn off facial recognition and photo tagging features",
-          "why": "Facial recognition creates biometric profiles used for tracking and can be accessed by third parties or law enforcement.",
-          "howTo": "Find 'Face Recognition' in privacy settings and disable. Turn off auto-tagging suggestions and require approval for tags.",
+          "id": "friend-requests",
+          "task": "Restrict who can send friend requests and message you",
+          "why": "Open messaging enables spam, scams, and harassment. Unrestricted friend requests lead to fake profiles accessing your content.",
+          "howTo": "Set friend requests to 'Friends of Friends' only. Limit direct messages to connections only. Enable message filtering for unknown contacts.",
           "priority": "high"
         },
         {
-          "id": "location-sharing",
-          "task": "Disable location sharing and geotagging",
-          "why": "Location data reveals your daily patterns, home/work addresses, and can be used for stalking or burglary.",
-          "howTo": "Turn off location services for social apps in phone settings. Disable geotagging in each app's privacy settings. Remove location from past posts.",
+          "id": "photo-tagging",
+          "task": "Disable automatic photo tagging and require approval",
+          "why": "Automatic tagging exposes you in others' photos without consent and helps platforms build detailed profiles of your activities.",
+          "howTo": "Turn off face recognition/auto-tagging. Set 'Review tags before they appear' to ON. Disable 'Allow others to find photos of you'.",
           "priority": "high"
+        },
+        {
+          "id": "location-services",
+          "task": "Turn off location tracking and geotagging",
+          "why": "Location data reveals your daily patterns, home/work addresses, and can be used for stalking or targeted advertising.",
+          "howTo": "Disable location services for social apps in phone settings. Turn off geotagging in posts. Remove location history and disable future tracking.",
+          "priority": "critical"
         },
         {
           "id": "search-visibility",
-          "task": "Prevent profile discovery via email/phone lookup",
-          "why": "Stops people from finding your profile using your contact information, reducing unwanted contact attempts.",
-          "howTo": "In privacy settings, find 'Who can find me' options. Disable lookup by email address and phone number. Set to 'Friends' or 'No one'.",
+          "task": "Limit search engine indexing of your profile",
+          "why": "Prevents your social media profiles from appearing in Google searches, reducing your digital footprint and unwanted attention.",
+          "howTo": "Find 'Search Engine' or 'Discoverability' settings. Turn off 'Allow search engines to link to your profile'. This may take weeks to take effect.",
           "priority": "medium"
+        },
+        {
+          "id": "data-sharing",
+          "task": "Opt out of data sharing with third parties",
+          "why": "Platforms sell your data to advertisers and data brokers, creating detailed profiles used for manipulation and targeting.",
+          "howTo": "Look for 'Data Policy' or 'Ad Preferences' settings. Disable data sharing with partners. Opt out of data use for ad targeting across platforms.",
+          "priority": "high"
         }
       ]
     },
     {
-      "title": "Data Collection Controls",
+      "title": "Advanced Privacy Measures",
       "items": [
         {
-          "id": "ad-preferences",
-          "task": "Review and limit advertising data collection",
-          "why": "Reduces targeted advertising based on your behavior and limits data sharing with advertising partners.",
-          "howTo": "Go to Ad Preferences/Settings. Turn off personalized ads. Clear interests and advertisers. Opt out of ads based on partner data.",
-          "priority": "high"
-        },
-        {
-          "id": "third-party-apps",
-          "task": "Remove connected third-party apps and games",
-          "why": "Third-party apps often access your profile data, friend lists, and posts, then share this information with other companies.",
-          "howTo": "Find 'Connected Apps' or 'Applications' in settings. Remove apps you don't use. Review permissions for remaining apps and limit access.",
-          "priority": "high"
-        },
-        {
-          "id": "data-download",
-          "task": "Download your data to see what platforms know about you",
-          "why": "Reveals the full scope of data collection including deleted posts, messages, and tracking data you didn't know existed.",
-          "howTo": "Look for 'Download Your Data' option in settings. Request full archive. Review what's collected and adjust privacy settings accordingly.",
+          "id": "ad-tracking",
+          "task": "Disable ad tracking and personalized advertising",
+          "why": "Reduces invasive profiling and limits how much platforms learn about your interests, purchases, and behavior patterns.",
+          "howTo": "In Ad Settings, turn off personalized ads. Disable ad tracking in phone settings (iOS: Limit Ad Tracking, Android: Opt out of Ads Personalization).",
           "priority": "medium"
         },
         {
           "id": "contact-sync",
-          "task": "Disable contact syncing and friend suggestions",
-          "why": "Stops platforms from accessing your contacts and suggesting friends based on phone numbers, creating shadow profiles.",
-          "howTo": "Turn off contact syncing in app settings. Revoke contact access in phone permissions. Disable friend suggestions based on contacts.",
-          "priority": "medium"
-        }
-      ]
-    },
-    {
-      "title": "Additional Protection Measures",
-      "items": [
+          "task": "Turn off contact syncing and friend suggestions",
+          "why": "Contact syncing shares your friends' data without consent and helps platforms map your social network for targeted advertising.",
+          "howTo": "Disable 'Upload Contacts' or 'Sync Contacts'. Turn off friend suggestions based on contacts. Remove previously uploaded contact lists.",
+          "priority": "high"
+        },
         {
-          "id": "incognito-browsing",
-          "task": "Use Incognito Browser for social media access",
-          "why": "Prevents tracking cookies and browsing history from being stored, reducing cross-site tracking and data collection.",
-          "howTo": "Download Incognito Browser for private social media browsing. Blocks trackers automatically and doesn't store browsing history or cookies.",
+          "id": "data-download",
+          "task": "Download your data to see what platforms know",
+          "why": "Understanding what data is collected helps you make informed privacy decisions and reveals hidden tracking practices.",
+          "howTo": "Use 'Download Your Information' tools on each platform. Review collected data including deleted posts, ad interests, and off-platform activity.",
           "priority": "medium"
         },
         {
-          "id": "regular-audits",
-          "task": "Schedule monthly privacy settings reviews",
-          "why": "Platforms frequently change privacy policies and reset settings during updates, requiring ongoing monitoring.",
-          "howTo": "Set monthly calendar reminder to check privacy settings. Review new features and their privacy implications. Update settings after major platform updates.",
+          "id": "browsing-protection",
+          "task": "Use privacy browsers like Incognito Browser for social media",
+          "why": "Regular browsers leak data to social platforms through tracking pixels and cookies, even when you're not actively using the sites.",
+          "howTo": "Use Incognito Browser or similar privacy-focused browsers. Enable tracking protection and ad blockers. Clear cookies and data regularly.",
+          "priority": "medium"
+        },
+        {
+          "id": "inactive-cleanup",
+          "task": "Delete or deactivate unused social media accounts",
+          "why": "Dormant accounts remain security risks and continue collecting data. Old accounts are often forgotten during security updates.",
+          "howTo": "List all your social accounts. Deactivate or delete accounts you no longer use. For kept accounts, ensure they follow this security checklist.",
           "priority": "low"
+        },
+        {
+          "id": "regular-audit",
+          "task": "Schedule monthly privacy settings reviews",
+          "why": "Platforms frequently change privacy settings and add new data collection features, often defaulting to less private options.",
+          "howTo": "Set monthly calendar reminders to review privacy settings. Check for new privacy options and data collection features. Update settings as needed.",
+          "priority": "medium"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Privacy settings often reset during app updates - check them monthly to ensure your preferences are maintained.",
+    "Use Incognito Browser when accessing social media to prevent cross-site tracking and reduce digital fingerprinting.",
+    "Consider using separate email addresses for social media accounts to limit data correlation between platforms.",
+    "Remember that 'private' accounts can still collect extensive data - privacy settings control sharing, not data collection.",
+    "Screenshots and data exports help document your privacy settings in case platforms change or reset them unexpectedly."
+  ],
   "relatedLinks": [
     {
-      "title": "Digital Footprint Checklist",
-      "url": "/checklists/digital-footprint-checklist",
+      "title": "Digital Footprint Reduction Guide",
+      "url": "/checklists/digital-footprint-reduction",
       "type": "internal"
     },
     {
-      "title": "Stop Ad Tracking Guide",
-      "url": "/guides/stop-ad-tracking",
+      "title": "Ad Tracking Prevention Checklist",
+      "url": "/checklists/ad-tracking-prevention",
       "type": "internal"
     },
     {
-      "title": "Data Broker Removal Checklist",
-      "url": "/checklists/data-broker-removal-checklist",
+      "title": "Data Broker Removal Guide",
+      "url": "/checklists/data-broker-removal",
       "type": "internal"
+    },
+    {
+      "title": "Facebook Privacy Settings Guide",
+      "url": "https://www.facebook.com/privacy/explanation",
+      "type": "external"
+    },
+    {
+      "title": "Privacy-Focused Incognito Browser",
+      "url": "https://incognito-browser.com",
+      "type": "affiliate"
     }
   ]
 }

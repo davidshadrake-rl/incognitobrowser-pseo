@@ -1,12 +1,13 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["niche", "slug", "title", "metaDescription", "intro", "products", "features", "verdict", "faqs"],
+  "required": ["niche", "slug", "title", "metaDescription", "keywords", "intro", "products", "features", "verdict", "pro_tips", "faqs"],
   "properties": {
     "niche": { "type": "string" },
     "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "title": { "type": "string", "maxLength": 70 },
     "metaDescription": { "type": "string", "maxLength": 160 },
+    "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 6 },
     "intro": { "type": "string", "maxLength": 300 },
     "products": {
       "type": "array",
@@ -29,6 +30,8 @@
     },
     "features": {
       "type": "array",
+      "minItems": 4,
+      "maxItems": 10,
       "items": {
         "type": "object",
         "required": ["name", "description", "scores"],
@@ -65,6 +68,12 @@
           }
         }
       }
+    },
+    "pro_tips": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 5,
+      "maxItems": 5
     },
     "faqs": {
       "type": "array",

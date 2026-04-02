@@ -23,7 +23,15 @@ interface GlossaryData {
   category: string;
 }
 
-export function GlossaryTermPage({ data }: { data: GlossaryData }) {
+interface GlossaryTermPageProps {
+  data: GlossaryData;
+  validTermSlugs?: string[];
+}
+
+export function GlossaryTermPage({ data, validTermSlugs }: GlossaryTermPageProps) {
+  const filteredRelatedTerms = validTermSlugs
+    ? data.relatedTerms.filter(t => validTermSlugs.includes(t))
+    : data.relatedTerms;
   return (
     <article className="max-w-3xl mx-auto">
       <Breadcrumbs items={[
@@ -73,11 +81,11 @@ export function GlossaryTermPage({ data }: { data: GlossaryData }) {
         </section>
       )}
 
-      {data.relatedTerms.length > 0 && (
+      {filteredRelatedTerms.length > 0 && (
         <section className="mt-10 pt-6 border-t border-white/10">
           <h2 className="text-lg font-semibold text-white mb-3">Related Terms</h2>
           <div className="flex flex-wrap gap-2">
-            {data.relatedTerms.map((term, i) => (
+            {filteredRelatedTerms.map((term, i) => (
               <Link
                 key={i}
                 href={`/glossary/${term}`}

@@ -2,98 +2,134 @@
   "niche": "social-media-privacy",
   "slug": "social-media-privacy-request-letter-template",
   "title": "Social Media Privacy Request Letter Template",
-  "metaDescription": "Free template to request your data from Facebook, Instagram, TikTok, and other social media platforms. Protect your privacy with this ready-to-use letter.",
-  "description": "Exercise your privacy rights with this comprehensive letter template. Request data access, deletion, or portability from major social media platforms including Facebook, Instagram, TikTok, and X (Twitter). Includes step-by-step guidance for each platform.",
+  "metaDescription": "Free template to request your personal data from Facebook, Instagram, TikTok, and other social platforms. Protect your privacy with this letter.",
+  "keywords": [
+    "social media privacy request",
+    "data request letter template",
+    "Facebook data request",
+    "Instagram privacy letter",
+    "social media data protection"
+  ],
+  "description": "A comprehensive letter template to formally request your personal data from social media platforms, understand what information they collect, and exercise your privacy rights under GDPR and other data protection laws.",
   "templateType": "letter",
   "sections": [
     {
-      "heading": "Letter Header",
-      "content": "[Your Full Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Email Address]\n[Your Phone Number]\n\nDate: [Current Date]\n\n[Platform Privacy Team]\n[Platform Company Name]\n[Platform Address]\n\nSubject: Privacy Rights Request - [Request Type]",
+      "heading": "Letter Header and Contact Information",
+      "content": "Date: [DATE]\n\nTo: Data Protection Officer\n[PLATFORM_NAME]\n[PLATFORM_ADDRESS]\n\nFrom: [YOUR_FULL_NAME]\n[YOUR_ADDRESS]\n[YOUR_EMAIL]\n[YOUR_PHONE]\n\nRe: Request for Personal Data Access and Privacy Information",
       "placeholders": [
         {
-          "key": "your_name",
-          "label": "Your Full Name",
+          "key": "DATE",
+          "label": "Current Date",
+          "defaultValue": "March 15, 2024"
+        },
+        {
+          "key": "PLATFORM_NAME",
+          "label": "Social Media Platform Name",
+          "defaultValue": "Facebook/Meta"
+        },
+        {
+          "key": "PLATFORM_ADDRESS",
+          "label": "Platform's Official Address",
+          "defaultValue": "1601 Willow Road, Menlo Park, CA 94025"
+        },
+        {
+          "key": "YOUR_FULL_NAME",
+          "label": "Your Full Legal Name",
           "defaultValue": "John Smith"
         },
         {
-          "key": "platform_name",
-          "label": "Platform Name",
-          "defaultValue": "Facebook"
+          "key": "YOUR_ADDRESS",
+          "label": "Your Mailing Address",
+          "defaultValue": "123 Main Street, City, State 12345"
         },
         {
-          "key": "request_type",
-          "label": "Request Type",
-          "defaultValue": "Data Access Request"
+          "key": "YOUR_EMAIL",
+          "label": "Your Email Address",
+          "defaultValue": "john.smith@email.com"
+        },
+        {
+          "key": "YOUR_PHONE",
+          "label": "Your Phone Number",
+          "defaultValue": "(555) 123-4567"
         }
       ]
     },
     {
-      "heading": "Account Identification",
-      "content": "Dear Privacy Team,\n\nI am writing to exercise my privacy rights regarding my account on your platform. Please find my account details below:\n\nAccount Information:\n- Username/Handle: [Your Username]\n- Email associated with account: [Account Email]\n- Account creation date (approximate): [Creation Date]\n- Phone number (if applicable): [Phone Number]",
+      "heading": "Account Identification and Legal Basis",
+      "content": "Dear Data Protection Officer,\n\nI am writing to formally request access to my personal data held by [PLATFORM_NAME] under my rights as a data subject. My account details are as follows:\n\nAccount Username/Handle: [USERNAME]\nAccount Email: [ACCOUNT_EMAIL]\nApproximate Account Creation Date: [CREATION_DATE]\nAccount ID (if known): [ACCOUNT_ID]\n\nThis request is made under applicable data protection laws, including but not limited to the General Data Protection Regulation (GDPR) Article 15, California Consumer Privacy Act (CCPA), and other relevant privacy legislation.",
       "placeholders": [
         {
-          "key": "username",
-          "label": "Your Username/Handle",
-          "defaultValue": "@username"
+          "key": "USERNAME",
+          "label": "Your Platform Username",
+          "defaultValue": "@johnsmith123"
         },
         {
-          "key": "account_email",
-          "label": "Account Email",
-          "defaultValue": "user@example.com"
+          "key": "ACCOUNT_EMAIL",
+          "label": "Email Used for Account",
+          "defaultValue": "john.smith@email.com"
+        },
+        {
+          "key": "CREATION_DATE",
+          "label": "When You Created Account",
+          "defaultValue": "January 2019"
+        },
+        {
+          "key": "ACCOUNT_ID",
+          "label": "Account ID if Available",
+          "defaultValue": "Not known"
         }
       ]
     },
     {
-      "heading": "Privacy Rights Request",
-      "content": "I am exercising my rights under applicable privacy laws including GDPR, CCPA, and other relevant regulations. I hereby request:\n\n☐ Access to my personal data (Right to Know)\n☐ Deletion of my personal data (Right to Delete)\n☐ Data portability (Right to Data Portability)\n☐ Correction of inaccurate personal data\n☐ Opt-out of sale/sharing of personal data\n☐ Information about data sharing with third parties\n\nSpecifically, I request information about:\n- All personal data you have collected about me\n- Sources of this personal data\n- Business purposes for collecting this data\n- Categories of third parties with whom you share my data\n- Data retention periods\n- Advertising data and targeting profiles",
+      "heading": "Specific Data Categories Requested",
+      "content": "I specifically request access to the following categories of personal data you process about me:\n\n1. All profile information, posts, comments, messages, and content I have shared\n2. Data about my connections, followers, following, and social interactions\n3. Location data, IP addresses, and device information collected\n4. Advertising profile data, interests, and behavioral analytics\n5. Third-party data sources and data sharing arrangements\n6. Login history, security events, and account access logs\n7. Content I have viewed, liked, shared, or interacted with\n8. Any automated decision-making or profiling data\n9. Data retention schedules and deletion policies applied to my data\n10. Records of data breaches or security incidents affecting my information",
       "placeholders": []
     },
     {
-      "heading": "Identity Verification",
-      "content": "For identity verification purposes, I have attached/included:\n\n☐ Government-issued photo ID\n☐ Screenshot of my account profile\n☐ Recent account activity confirmation\n☐ Answer to security question: [Security Answer]\n\nI understand you may need additional verification, and I am prepared to provide reasonable proof of identity while protecting my privacy.",
+      "heading": "Data Processing Information Request",
+      "content": "In addition to my personal data, I request information about:\n\n• The purposes for which my personal data is processed\n• Categories of personal data being processed\n• Recipients or categories of recipients of my personal data\n• Details of any international data transfers and safeguards\n• Retention periods for different categories of data\n• Information about automated decision-making, including profiling\n• The source of personal data not collected directly from me\n• My rights regarding rectification, erasure, restriction, and portability\n\nPlease provide this information in a commonly used, machine-readable format such as JSON, CSV, or XML files.",
+      "placeholders": []
+    },
+    {
+      "heading": "Identity Verification and Delivery Method",
+      "content": "I understand you may need to verify my identity before processing this request. I am prepared to provide:\n\n• A copy of government-issued photo identification\n• Verification through my registered account email or phone number\n• Additional security questions or verification methods you require\n\nPlease deliver the requested information via:\n☐ Secure email to: [DELIVERY_EMAIL]\n☐ Postal mail to the address above\n☐ Through your platform's data download feature\n☐ Secure file transfer (please provide instructions)\n\nI request confirmation of receipt of this letter within 72 hours and the complete response within 30 days as required by applicable privacy laws.",
       "placeholders": [
         {
-          "key": "security_answer",
-          "label": "Security Question Answer (if applicable)",
-          "defaultValue": "N/A"
+          "key": "DELIVERY_EMAIL",
+          "label": "Preferred Email for Delivery",
+          "defaultValue": "john.smith@email.com"
         }
       ]
     },
     {
-      "heading": "Response Requirements",
-      "content": "Please provide your response within the legally required timeframe (typically 30-45 days). I request that you:\n\n1. Confirm receipt of this request within 10 business days\n2. Provide data in a commonly used, machine-readable format\n3. Include clear explanations of any technical terms or codes\n4. Notify me if you cannot fulfill this request and explain why\n\nPreferred delivery method:\n☐ Secure email to: [Preferred Email]\n☐ Secure download link\n☐ Physical mail to address above\n\nIf you need to contact me, please use: [Preferred Contact Method]",
+      "heading": "Legal Rights and Response Timeline",
+      "content": "Please note that this request is made under my legal rights as a data subject. If you cannot comply with this request, please provide specific legal grounds for any refusal and information about my right to lodge a complaint with the relevant supervisory authority.\n\nIf you require additional information to locate my data or verify my identity, please contact me promptly at [CONTACT_INFO].\n\nI look forward to your timely response.\n\nSincerely,\n\n[SIGNATURE_LINE]\n[YOUR_FULL_NAME]\n[DATE]",
       "placeholders": [
         {
-          "key": "preferred_email",
-          "label": "Preferred Email for Response",
-          "defaultValue": "privacy@example.com"
+          "key": "CONTACT_INFO",
+          "label": "Preferred Contact Method",
+          "defaultValue": "john.smith@email.com or (555) 123-4567"
         },
         {
-          "key": "contact_method",
-          "label": "Preferred Contact Method",
-          "defaultValue": "Email"
+          "key": "SIGNATURE_LINE",
+          "label": "Your Signature",
+          "defaultValue": "[Your handwritten signature]"
         }
       ]
-    },
-    {
-      "heading": "Legal Notice and Closing",
-      "content": "Please note that this request is made under my legal rights as a data subject. I expect full compliance with applicable privacy laws. If you cannot fulfill this request, please provide specific legal grounds for denial.\n\nI reserve the right to file a complaint with the relevant supervisory authority if my request is not handled appropriately or within the required timeframe.\n\nThank you for your prompt attention to this matter. I look forward to your response.\n\nSincerely,\n\n[Your Signature]\n[Your Printed Name]\n\nEnclosures: Identity verification documents (as applicable)"
     }
   ],
   "useCases": [
-    "Requesting data download from Facebook or Meta platforms",
-    "Asking Instagram for account data and privacy information",
-    "Demanding TikTok delete your personal information",
-    "Getting Twitter/X to provide advertising data about you",
-    "Requesting LinkedIn stop sharing data with third parties",
-    "Asking Snapchat for data portability to another service",
-    "Demanding YouTube/Google correct inaccurate profile data",
-    "Filing privacy complaints with social media companies"
+    "Requesting personal data from Facebook, Instagram, or Meta platforms",
+    "Obtaining your complete TikTok data collection and advertising profile",
+    "Accessing Twitter/X data including deleted tweets and engagement metrics",
+    "Understanding what LinkedIn knows about your professional activities",
+    "Getting Snapchat location data and friend connection information",
+    "Discovering how YouTube tracks your viewing habits and recommendations"
   ],
   "relatedLinks": [
     {
-      "title": "Incognito Browser - Browse Social Media Privately",
-      "url": "/incognito-browser",
+      "title": "Incognito Browser - Private Social Media Browsing",
+      "url": "/tools/incognito-browser",
       "type": "tool"
     },
     {
@@ -102,9 +138,14 @@
       "type": "guide"
     },
     {
-      "title": "Data Broker Removal Services",
-      "url": "/niche/data-brokers",
-      "type": "category"
+      "title": "How to Download Your Instagram Data",
+      "url": "/guides/instagram-data-download",
+      "type": "tutorial"
+    },
+    {
+      "title": "Social Media Data Deletion Checklist",
+      "url": "/templates/social-media-deletion-checklist",
+      "type": "template"
     }
   ]
 }

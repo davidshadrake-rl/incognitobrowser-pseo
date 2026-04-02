@@ -1,18 +1,20 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["niche", "slug", "title", "metaDescription", "difficulty", "estimatedTime", "sections", "relatedLinks"],
+  "required": ["niche", "slug", "title", "metaDescription", "keywords", "difficulty", "estimatedTime", "sections", "pro_tips", "relatedLinks"],
   "properties": {
     "niche": { "type": "string", "description": "Niche ID from taxonomy" },
     "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
     "title": { "type": "string", "maxLength": 70 },
     "metaDescription": { "type": "string", "maxLength": 160 },
+    "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 6 },
     "difficulty": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] },
     "estimatedTime": { "type": "string" },
     "intro": { "type": "string", "maxLength": 300 },
     "sections": {
       "type": "array",
-      "minItems": 2,
+      "minItems": 3,
+      "maxItems": 5,
       "items": {
         "type": "object",
         "required": ["title", "items"],
@@ -20,7 +22,8 @@
           "title": { "type": "string" },
           "items": {
             "type": "array",
-            "minItems": 2,
+            "minItems": 5,
+            "maxItems": 8,
             "items": {
               "type": "object",
               "required": ["id", "task", "why", "howTo", "priority"],
@@ -35,6 +38,12 @@
           }
         }
       }
+    },
+    "pro_tips": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 5,
+      "maxItems": 5
     },
     "relatedLinks": {
       "type": "array",

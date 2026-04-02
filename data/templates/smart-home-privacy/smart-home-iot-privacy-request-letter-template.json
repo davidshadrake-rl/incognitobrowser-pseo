@@ -1,117 +1,122 @@
 {
   "niche": "smart-home-privacy",
-  "slug": "smart-home-iot-privacy-request-letter",
+  "slug": "smart-home-iot-privacy-request-letter-template",
   "title": "Smart Home & IoT Privacy Request Letter Template",
-  "metaDescription": "Free template to request your smart home and IoT device data. Protect your privacy with Alexa, Google Home, and other connected devices.",
-  "description": "A comprehensive letter template to request information about what data your smart home devices collect, how it's used, and to exercise your privacy rights with IoT device manufacturers and service providers.",
+  "metaDescription": "Professional template to request data access, deletion, or opt-out from smart home device companies. Protect your IoT privacy rights.",
+  "keywords": [
+    "smart home privacy",
+    "IoT privacy request",
+    "Alexa privacy rights",
+    "smart device data deletion",
+    "voice assistant privacy"
+  ],
+  "description": "A comprehensive letter template for requesting data access, deletion, or opting out of data collection from smart home and IoT device manufacturers. Covers Amazon Alexa, Google Home, smart cameras, and other connected devices.",
   "templateType": "letter",
   "sections": [
     {
-      "heading": "Letter Header",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Email]\n[Your Phone Number]\n\n[Date]\n\n[Company Name]\nPrivacy Officer / Data Protection Officer\n[Company Address]\n[City, State, ZIP Code]",
+      "heading": "Letter Header and Date",
+      "content": "[Your Name]\n[Your Address]\n[City, State ZIP Code]\n[Your Email]\n[Your Phone Number]\n\n[Date]\n\n[Company Name]\nPrivacy Officer / Data Protection Team\n[Company Address]\n[City, State ZIP Code]",
       "placeholders": [
         {
-          "key": "your_name",
+          "key": "yourName",
           "label": "Your Full Name",
-          "defaultValue": "[Your Name]"
+          "defaultValue": "John Smith"
         },
         {
-          "key": "your_address",
-          "label": "Your Address",
-          "defaultValue": "[Your Address]"
-        },
-        {
-          "key": "company_name",
-          "label": "Device/Service Company Name",
-          "defaultValue": "[Company Name]"
+          "key": "companyName",
+          "label": "Device Manufacturer Name",
+          "defaultValue": "Amazon"
         }
       ]
     },
     {
       "heading": "Subject Line and Introduction",
-      "content": "Subject: Privacy Rights Request - Smart Home Device Data\n\nDear Privacy Officer,\n\nI am writing to exercise my privacy rights regarding the collection, use, and sharing of personal data through my smart home devices and IoT services provided by your company. I am the registered owner/user of the following device(s): [DEVICE_MODEL] with account email: [ACCOUNT_EMAIL].",
+      "content": "Subject: Privacy Rights Request - Data Access/Deletion for Smart Home Devices\n\nDear Privacy Team,\n\nI am writing to exercise my privacy rights under applicable data protection laws regarding the personal data collected through my smart home and IoT devices. I am a customer who owns the following devices: [DEVICE_LIST]. I request your assistance in managing my personal data as outlined below.",
       "placeholders": [
         {
-          "key": "device_model",
-          "label": "Device Model/Service Name",
-          "defaultValue": "[DEVICE_MODEL]"
-        },
-        {
-          "key": "account_email",
-          "label": "Account Email Address",
-          "defaultValue": "[ACCOUNT_EMAIL]"
+          "key": "deviceList",
+          "label": "List of Your Smart Devices",
+          "defaultValue": "Amazon Echo Dot, Ring Video Doorbell, Nest Thermostat"
         }
       ]
     },
     {
       "heading": "Data Access Request",
-      "content": "I hereby request access to all personal data you have collected about me through:\n\n• Voice recordings and transcriptions\n• Device usage patterns and timestamps\n• Location data and geofencing information\n• Integration data with third-party services\n• Biometric data (if applicable)\n• Network and connectivity information\n• Purchase history and preferences\n• Any data shared with or sold to third parties\n\nPlease provide this information in a commonly used electronic format within the timeframe required by applicable privacy laws."
+      "content": "I hereby request access to all personal data you have collected about me through my smart home devices, including but not limited to:\n\n• Voice recordings and transcripts from voice assistants\n• Video recordings from security cameras and doorbells\n• Usage patterns and device interaction logs\n• Location data and home activity patterns\n• Any data shared with third parties or affiliates\n• Inferences or profiles created about my household\n\nPlease provide this information in a commonly used electronic format within the timeframe required by law.",
+      "placeholders": []
     },
     {
-      "heading": "Data Usage and Sharing Inquiry",
-      "content": "Please provide detailed information about:\n\n1. How my personal data is used for product improvement, advertising, or other purposes\n2. What data is shared with third-party partners, advertisers, or data brokers\n3. Whether my voice recordings are reviewed by human employees or contractors\n4. How long my data is retained and your deletion policies\n5. What security measures protect my personal information\n6. Whether my data is used to train AI models or algorithms"
-    },
-    {
-      "heading": "Privacy Rights Exercise",
-      "content": "Under applicable privacy laws (GDPR, CCPA, or other relevant regulations), I request:\n\n☐ Right to Access: Provide all personal data you hold about me\n☐ Right to Portability: Deliver my data in a machine-readable format\n☐ Right to Correction: Update any inaccurate personal information\n☐ Right to Deletion: Delete all personal data (\"right to be forgotten\")\n☐ Right to Opt-Out: Stop selling or sharing my personal data\n☐ Right to Restrict Processing: Limit how my data is used\n\nPlease confirm which rights apply based on my location and provide instructions for exercising these rights."
-    },
-    {
-      "heading": "Device-Specific Privacy Requests",
-      "content": "For smart home devices, I specifically request information about:\n\n• Always-listening capabilities and wake word detection\n• Camera and microphone activation logs\n• Smart home automation and routine data\n• Integration with home security systems\n• Energy usage monitoring and reporting\n• Guest network access and visitor data collection\n\nI also request instructions on how to:\n• Delete voice recordings and command history\n• Disable data sharing for advertising purposes\n• Limit cross-device tracking and profiling\n• Secure my devices against unauthorized access"
-    },
-    {
-      "heading": "Response Timeline and Contact",
-      "content": "Please respond to this request within 30 days as required by law. If you need additional information to verify my identity, please contact me at [YOUR_EMAIL] or [YOUR_PHONE].\n\nIf you cannot fulfill this request, please explain the legal basis for any denial and inform me of my right to file a complaint with the appropriate privacy authority.\n\nI look forward to your prompt response and to better understanding how my personal data is handled by your smart home services.",
+      "heading": "Data Deletion Request",
+      "content": "I request the deletion of the following categories of personal data:\n\n• All voice recordings older than [TIME_PERIOD]\n• Video recordings stored in cloud services from [DATE_RANGE]\n• Any data shared with third-party partners for advertising purposes\n• Device usage analytics not essential for basic functionality\n\nPlease confirm in writing once this data has been permanently deleted from your systems and any backup storage.",
       "placeholders": [
         {
-          "key": "your_email",
-          "label": "Your Contact Email",
-          "defaultValue": "[YOUR_EMAIL]"
+          "key": "timePeriod",
+          "label": "Time Period for Voice Recordings",
+          "defaultValue": "30 days"
         },
         {
-          "key": "your_phone",
-          "label": "Your Phone Number",
-          "defaultValue": "[YOUR_PHONE]"
+          "key": "dateRange",
+          "label": "Date Range for Video Deletion",
+          "defaultValue": "January 1, 2023 to present"
         }
       ]
     },
     {
-      "heading": "Closing",
-      "content": "Sincerely,\n\n[Your Signature]\n[Your Printed Name]\n[Date]\n\nAttachments:\n• Copy of account verification (if required)\n• Proof of device ownership (if requested)\n• Government-issued ID (if necessary for verification)"
+      "heading": "Opt-Out Requests",
+      "content": "I request to opt out of the following data processing activities:\n\n• Human review of voice recordings for quality improvement\n• Use of my data for advertising or marketing purposes\n• Sharing of my data with third-party companies\n• Analysis for product development beyond my direct benefit\n• Cross-device tracking and profile building\n\nPlease implement these opt-out preferences across all my registered devices and accounts.",
+      "placeholders": []
+    },
+    {
+      "heading": "Account Verification",
+      "content": "To verify my identity and account ownership, I am providing the following information:\n\n• Registered email address: [EMAIL_ADDRESS]\n• Account holder name: [ACCOUNT_NAME]\n• Device serial numbers: [SERIAL_NUMBERS]\n• Approximate registration date: [REGISTRATION_DATE]\n\nI can provide additional verification if needed to process this request securely.",
+      "placeholders": [
+        {
+          "key": "emailAddress",
+          "label": "Your Registered Email",
+          "defaultValue": "your.email@example.com"
+        },
+        {
+          "key": "serialNumbers",
+          "label": "Device Serial Numbers",
+          "defaultValue": "ABC123456, DEF789012"
+        }
+      ]
+    },
+    {
+      "heading": "Response Requirements and Closing",
+      "content": "Please respond to this request within 30 days as required by applicable privacy laws. If you cannot fulfill any part of this request, please explain the specific legal basis for the refusal.\n\nI expect a written confirmation of all actions taken regarding my data. If you need any additional information to process this request, please contact me at [CONTACT_INFO].\n\nThank you for your prompt attention to this privacy matter.\n\nSincerely,\n[YOUR_SIGNATURE]\n[YOUR_PRINTED_NAME]",
+      "placeholders": [
+        {
+          "key": "contactInfo",
+          "label": "Your Preferred Contact Method",
+          "defaultValue": "your.email@example.com or (555) 123-4567"
+        }
+      ]
     }
   ],
   "useCases": [
-    "Requesting data from Amazon Alexa and Echo devices",
-    "Getting information from Google Home and Nest products",
-    "Contacting Apple about HomeKit and Siri data",
-    "Requesting data deletion from smart TV manufacturers",
-    "Exercising privacy rights with smart doorbell companies",
-    "Getting voice recording data from smart speakers",
-    "Requesting IoT device usage analytics and logs",
-    "Understanding smart thermostat data collection",
-    "Asking about smart security camera privacy practices",
-    "Exercising CCPA or GDPR rights with IoT companies"
+    "Request deletion of Alexa voice recordings older than 30 days",
+    "Access all data collected by Ring doorbell cameras",
+    "Opt out of human review of Google Home voice commands",
+    "Delete video footage from smart security cameras",
+    "Stop third-party data sharing from smart TV usage",
+    "Remove household activity patterns from IoT analytics"
   ],
   "relatedLinks": [
-    {
-      "title": "IoT Device Privacy Settings Checklist",
-      "url": "/templates/iot-device-privacy-checklist",
-      "type": "template"
-    },
-    {
-      "title": "Smart Home Security Assessment Guide",
-      "url": "/guides/smart-home-security-guide",
-      "type": "guide"
-    },
-    {
-      "title": "Voice Assistant Privacy Controls",
-      "url": "/guides/voice-assistant-privacy-settings",
-      "type": "guide"
-    },
     {
       "title": "Incognito Browser for Private Smart Home Management",
       "url": "/tools/incognito-browser",
       "type": "tool"
+    },
+    {
+      "title": "Smart Home Privacy Settings Guide",
+      "url": "/guides/smart-home-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "IoT Device Security Checklist",
+      "url": "/templates/iot-security-checklist",
+      "type": "template"
     }
   ]
 }

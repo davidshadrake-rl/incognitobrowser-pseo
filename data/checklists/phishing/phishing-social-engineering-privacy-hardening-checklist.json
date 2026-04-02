@@ -2,74 +2,102 @@
   "niche": "phishing",
   "slug": "phishing-social-engineering-privacy-hardening-checklist",
   "title": "Phishing & Social Engineering Privacy Hardening Checklist",
-  "metaDescription": "Protect yourself from phishing scams and social engineering attacks with this comprehensive privacy checklist. Learn to spot threats and secure your data.",
-  "difficulty": "intermediate",
-  "estimatedTime": "2-3 hours",
-  "intro": "Phishing and social engineering attacks target human psychology rather than technical vulnerabilities. This checklist helps you build strong defenses against scammers who try to trick you into revealing personal information or clicking malicious links.",
+  "metaDescription": "Protect yourself from phishing scams and social engineering attacks with this comprehensive privacy checklist. Learn to spot threats and stay secure.",
+  "keywords": [
+    "phishing protection",
+    "social engineering",
+    "email scam",
+    "phishing checklist",
+    "spear phishing"
+  ],
+  "difficulty": "beginner",
+  "estimatedTime": "45-60 minutes",
+  "intro": "Phishing attacks and social engineering tactics are becoming increasingly sophisticated, with AI-generated content making scams harder to detect. This checklist provides actionable steps to protect yourself from fraudulent emails, fake websites, and manipulation attempts that target your personal information.",
   "sections": [
     {
-      "title": "Email Security & Phishing Protection",
+      "title": "Email Security Hardening",
       "items": [
         {
-          "id": "verify-sender-identity",
-          "task": "Always verify sender identity before clicking links or attachments",
-          "why": "Phishing emails often impersonate trusted organizations to steal credentials or install malware on your device.",
-          "howTo": "Check sender email addresses carefully for typos or suspicious domains. When in doubt, contact the organization directly through official channels before responding.",
+          "id": "email-1",
+          "task": "Enable two-factor authentication on all email accounts",
+          "why": "Prevents attackers from accessing your email even if your password is compromised through phishing",
+          "howTo": "Go to your email provider's security settings and enable 2FA using an authenticator app or SMS. Test the setup by logging out and back in.",
           "priority": "critical"
         },
         {
-          "id": "enable-email-filtering",
-          "task": "Enable spam and phishing filters in your email client",
-          "why": "Email filters automatically block most known phishing attempts and suspicious messages before they reach your inbox.",
-          "howTo": "Turn on spam protection in Gmail, Outlook, or your email provider. Consider using additional email security services for enhanced protection.",
+          "id": "email-2",
+          "task": "Configure spam filters to maximum protection",
+          "why": "Reduces the number of phishing emails that reach your inbox by automatically filtering suspicious content",
+          "howTo": "In your email settings, set spam protection to 'High' or 'Aggressive'. Create custom filters to block emails with suspicious keywords or domains.",
           "priority": "high"
         },
         {
-          "id": "avoid-email-links",
-          "task": "Never click links in unexpected or suspicious emails",
-          "why": "Malicious links can redirect you to fake websites designed to steal your login credentials or download malware.",
-          "howTo": "Instead of clicking links, manually type the website URL into your browser or use bookmarks. Hover over links to preview the destination URL first.",
-          "priority": "critical"
+          "id": "email-3",
+          "task": "Disable automatic image loading in emails",
+          "why": "Prevents tracking pixels from revealing when you open emails and stops malicious images from loading",
+          "howTo": "In email settings, find 'Privacy' or 'Images' section and select 'Ask before loading external images' or disable automatic loading.",
+          "priority": "medium"
         },
         {
-          "id": "secure-email-provider",
-          "task": "Use a privacy-focused email provider with built-in security features",
-          "why": "Secure email providers offer better protection against phishing attempts and don't scan your emails for advertising purposes.",
-          "howTo": "Consider switching to ProtonMail, Tutanota, or similar encrypted email services that prioritize user privacy and security.",
+          "id": "email-4",
+          "task": "Set up email aliases for online shopping and signups",
+          "why": "Limits exposure of your main email address and helps identify the source of phishing attempts",
+          "howTo": "Create aliases through your email provider or use services like Apple Hide My Email. Use different aliases for shopping, newsletters, and accounts.",
           "priority": "medium"
+        },
+        {
+          "id": "email-5",
+          "task": "Enable email headers view for suspicious messages",
+          "why": "Allows you to see technical details that can reveal fake sender addresses and routing information",
+          "howTo": "Learn to access 'View Source' or 'Show Headers' in your email client. Look for mismatched sender domains and suspicious routing paths.",
+          "priority": "low"
         }
       ]
     },
     {
-      "title": "Browser Security & Web Protection",
+      "title": "Browser and Link Protection",
       "items": [
         {
-          "id": "use-secure-browser",
-          "task": "Use a privacy-focused browser with anti-phishing protection",
-          "why": "Secure browsers like Incognito Browser block malicious websites and protect against tracking that could be used in targeted attacks.",
-          "howTo": "Download Incognito Browser or configure Firefox/Chrome with strict privacy settings. Enable phishing and malware protection in browser settings.",
+          "id": "browser-1",
+          "task": "Install and configure Incognito Browser for secure browsing",
+          "why": "Provides enhanced privacy protection and built-in security features to block malicious websites and trackers",
+          "howTo": "Download Incognito Browser and enable features like anti-phishing protection, ad blocking, and privacy mode by default for all browsing sessions.",
           "priority": "high"
         },
         {
-          "id": "check-website-certificates",
-          "task": "Always verify website SSL certificates and URLs before entering sensitive information",
-          "why": "Fake websites often use similar URLs or lack proper security certificates to trick users into entering personal data.",
-          "howTo": "Look for the padlock icon in your browser address bar. Check that URLs match exactly (watch for character substitutions). Never enter passwords on HTTP sites.",
+          "id": "browser-2",
+          "task": "Enable browser phishing and malware protection",
+          "why": "Warns you before visiting known malicious websites and blocks downloads of harmful files",
+          "howTo": "In browser security settings, enable 'Safe Browsing' or equivalent. Ensure real-time protection and download scanning are active.",
           "priority": "critical"
         },
         {
-          "id": "use-bookmarks",
-          "task": "Access important websites through bookmarks rather than search results or links",
-          "why": "Attackers can create fake websites that appear in search results or send malicious links that look legitimate.",
-          "howTo": "Bookmark your bank, email, and other important sites. Always use these bookmarks to access accounts rather than clicking links from emails or messages.",
+          "id": "browser-3",
+          "task": "Install a reputable URL checker extension",
+          "why": "Provides real-time analysis of links before you click them, identifying suspicious or malicious URLs",
+          "howTo": "Install extensions like Web of Trust (WOT) or similar tools. Configure to show warnings for untrusted sites and scan all links automatically.",
+          "priority": "medium"
+        },
+        {
+          "id": "browser-4",
+          "task": "Disable password autofill for financial and sensitive sites",
+          "why": "Prevents passwords from being automatically entered on fake websites that mimic legitimate services",
+          "howTo": "In browser settings, go to password management and disable autofill for banking, email, and other sensitive accounts. Always type manually.",
           "priority": "high"
         },
         {
-          "id": "enable-browser-warnings",
-          "task": "Keep browser security warnings enabled and never ignore them",
-          "why": "Browser warnings alert you to potentially dangerous websites and downloads that could compromise your privacy.",
-          "howTo": "Never disable security warnings in your browser settings. If you see a security warning, do not proceed to the website or download.",
+          "id": "browser-5",
+          "task": "Bookmark legitimate websites for important services",
+          "why": "Ensures you always visit the real website instead of clicking potentially malicious links in emails",
+          "howTo": "Create bookmarks for your bank, email provider, shopping sites, and other frequently used services. Always use bookmarks instead of email links.",
           "priority": "medium"
+        },
+        {
+          "id": "browser-6",
+          "task": "Configure browser to clear cookies and data regularly",
+          "why": "Reduces tracking and prevents malicious websites from storing persistent data on your device",
+          "howTo": "Set browser to clear cookies, cache, and browsing data on exit or weekly. Consider using private browsing mode for sensitive activities.",
+          "priority": "low"
         }
       ]
     },
@@ -77,84 +105,110 @@
       "title": "Social Engineering Defense",
       "items": [
         {
-          "id": "limit-personal-information",
-          "task": "Minimize personal information shared on social media and public profiles",
-          "why": "Scammers use publicly available information to make their attacks more convincing and personalized (spear phishing).",
-          "howTo": "Review privacy settings on Facebook, LinkedIn, and other platforms. Remove or restrict access to personal details like phone numbers, addresses, and family information.",
-          "priority": "high"
-        },
-        {
-          "id": "verify-requests",
-          "task": "Always verify unexpected requests for sensitive information through independent channels",
-          "why": "Social engineers often create urgency or impersonate authority figures to pressure victims into sharing confidential data.",
-          "howTo": "If someone calls or emails requesting passwords, account details, or payments, hang up and call the organization directly using official contact information.",
+          "id": "social-1",
+          "task": "Create a personal verification process for unexpected contacts",
+          "why": "Protects against impersonation attempts where attackers pretend to be colleagues, friends, or service providers",
+          "howTo": "Establish a policy to verify unexpected requests through a different communication channel. Call back using known numbers, not provided ones.",
           "priority": "critical"
         },
         {
-          "id": "be-skeptical",
-          "task": "Maintain healthy skepticism about unsolicited offers, urgent requests, and 'too good to be true' opportunities",
-          "why": "Social engineering attacks exploit human emotions like fear, greed, and helpfulness to bypass logical thinking.",
-          "howTo": "Take time to think before responding to urgent requests. Research offers independently. When in doubt, consult with trusted friends or family members.",
+          "id": "social-2",
+          "task": "Review and limit personal information on social media",
+          "why": "Reduces the information available to attackers for creating personalized spear-phishing campaigns",
+          "howTo": "Set profiles to private, remove personal details like birthday, phone, address. Limit posts about work, travel, and personal life.",
+          "priority": "high"
+        },
+        {
+          "id": "social-3",
+          "task": "Establish information sharing guidelines for family members",
+          "why": "Prevents attackers from using family members as vectors to gather information or access accounts",
+          "howTo": "Educate family about not sharing personal details over phone/email. Create code words for emergency situations and financial requests.",
+          "priority": "high"
+        },
+        {
+          "id": "social-4",
+          "task": "Set up fraud alerts with financial institutions",
+          "why": "Provides early warning when someone attempts to access your accounts or open new ones in your name",
+          "howTo": "Contact your bank and credit card companies to enable fraud monitoring. Set up account alerts for all transactions above a certain amount.",
           "priority": "medium"
         },
         {
-          "id": "educate-family",
-          "task": "Educate family members and colleagues about common social engineering tactics",
-          "why": "Attackers may target your contacts to gain access to your information or use them as stepping stones for larger attacks.",
-          "howTo": "Share information about common scams with family and coworkers. Establish verification procedures for sensitive requests within your household or organization.",
+          "id": "social-5",
+          "task": "Practice the 'pause and verify' technique for urgent requests",
+          "why": "Gives you time to think critically about requests that pressure you to act quickly, a common social engineering tactic",
+          "howTo": "When receiving urgent requests for money, information, or access, take 24 hours to verify through independent channels before responding.",
           "priority": "medium"
         }
       ]
     },
     {
-      "title": "Account Security & Authentication",
+      "title": "Incident Response and Reporting",
       "items": [
         {
-          "id": "enable-2fa",
-          "task": "Enable two-factor authentication on all important accounts",
-          "why": "2FA provides an additional layer of security even if your password is compromised through phishing attacks.",
-          "howTo": "Use authenticator apps like Google Authenticator or Authy instead of SMS when possible. Enable 2FA on email, banking, social media, and work accounts.",
-          "priority": "critical"
+          "id": "response-1",
+          "task": "Document and report phishing attempts to authorities",
+          "why": "Helps law enforcement track cybercriminals and prevents others from falling victim to the same scams",
+          "howTo": "Forward phishing emails to the Anti-Phishing Working Group (reportphishing@apwg.org) and report to the FTC at ReportFraud.ftc.gov.",
+          "priority": "low"
         },
         {
-          "id": "use-unique-passwords",
-          "task": "Use unique, strong passwords for every account with a password manager",
-          "why": "If one account is compromised through phishing, unique passwords prevent attackers from accessing your other accounts.",
-          "howTo": "Install a reputable password manager like Bitwarden or 1Password. Generate unique passwords for each account and never reuse passwords across sites.",
-          "priority": "high"
-        },
-        {
-          "id": "monitor-accounts",
-          "task": "Regularly monitor account activity and enable security notifications",
-          "why": "Early detection of unauthorized access can help minimize damage from successful phishing attacks.",
-          "howTo": "Check bank and email account activity weekly. Enable login notifications and security alerts. Report suspicious activity immediately to the service provider.",
+          "id": "response-2",
+          "task": "Create an incident response checklist for compromised accounts",
+          "why": "Ensures you take quick, appropriate action if you fall victim to a phishing attack or account compromise",
+          "howTo": "Write down steps: change passwords, enable 2FA, check account activity, contact institutions, monitor credit reports, document evidence.",
           "priority": "medium"
         },
         {
-          "id": "secure-recovery-options",
-          "task": "Secure account recovery options and backup authentication methods",
-          "why": "Attackers often target recovery emails and phone numbers to gain access to your accounts even with strong passwords.",
-          "howTo": "Use a separate, secure email for account recovery. Keep backup authentication codes in a safe place. Avoid using easily guessed security questions.",
+          "id": "response-3",
+          "task": "Set up credit monitoring and identity theft protection",
+          "why": "Provides early detection if your personal information is used to open accounts or make unauthorized transactions",
+          "howTo": "Use free credit monitoring services or paid identity protection. Set up alerts for credit inquiries, new accounts, and address changes.",
+          "priority": "medium"
+        },
+        {
+          "id": "response-4",
+          "task": "Maintain a secure backup of important documents and passwords",
+          "why": "Ensures you can recover access to accounts and prove your identity if you become a victim of identity theft",
+          "howTo": "Store encrypted copies of IDs, financial documents, and password manager backups in a secure location separate from your main devices.",
           "priority": "high"
+        },
+        {
+          "id": "response-5",
+          "task": "Regularly test your phishing awareness with simulation tools",
+          "why": "Helps you stay sharp at recognizing evolving phishing tactics and builds confidence in your detection abilities",
+          "howTo": "Use free phishing simulation tools like those offered by security companies. Take online quizzes and review real-world examples regularly.",
+          "priority": "low"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Trust your instincts - if something feels suspicious or too good to be true, it probably is. Take time to verify before taking action.",
+    "Legitimate companies will never ask for passwords or sensitive information via email. When in doubt, contact them directly using official channels.",
+    "Pay attention to urgency and emotional manipulation in messages. Scammers often create false deadlines to pressure quick decisions.",
+    "Keep your browser and security software updated. New phishing techniques emerge constantly, and updates include protection against them.",
+    "Consider using a dedicated email address for financial accounts that you never use for shopping, social media, or other online activities."
+  ],
   "relatedLinks": [
     {
-      "title": "Email Privacy Guide",
-      "url": "/guides/email-privacy",
+      "title": "Email Privacy Best Practices",
+      "url": "/checklists/email-privacy",
       "type": "internal"
     },
     {
-      "title": "Password Security Checklist",
+      "title": "Password Security Hardening Guide",
       "url": "/checklists/password-security",
       "type": "internal"
     },
     {
-      "title": "Browser Privacy Settings",
-      "url": "/guides/browser-privacy",
-      "type": "internal"
+      "title": "FTC Scam Reporting Center",
+      "url": "https://reportfraud.ftc.gov",
+      "type": "external"
+    },
+    {
+      "title": "Anti-Phishing Working Group",
+      "url": "https://apwg.org",
+      "type": "external"
     }
   ]
 }

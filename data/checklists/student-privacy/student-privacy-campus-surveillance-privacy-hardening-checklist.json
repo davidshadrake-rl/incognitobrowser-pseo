@@ -1,146 +1,229 @@
 {
   "niche": "student-privacy",
-  "slug": "student-privacy-campus-surveillance-checklist",
+  "slug": "student-privacy-campus-surveillance-hardening-checklist",
   "title": "Student Privacy & Campus Surveillance Privacy Hardening Checklist",
-  "metaDescription": "Protect your student data and privacy from campus surveillance. Complete checklist for educational privacy, digital proctoring, and data rights.",
+  "metaDescription": "Comprehensive checklist to protect student privacy from campus surveillance, proctoring software, and educational data collection.",
+  "keywords": [
+    "student privacy",
+    "campus surveillance",
+    "digital proctoring",
+    "student data protection",
+    "educational privacy",
+    "FERPA rights"
+  ],
   "difficulty": "intermediate",
-  "estimatedTime": "45-60 minutes",
-  "intro": "Educational institutions collect vast amounts of student data and deploy extensive surveillance systems. This checklist helps you understand your privacy rights, protect your personal information, and navigate campus monitoring while maintaining your digital privacy.",
+  "estimatedTime": "2-3 hours",
+  "intro": "Modern education involves extensive digital monitoring through proctoring software, campus networks, and educational technology platforms. This checklist helps students protect their privacy while navigating school-issued devices, online exams, and campus surveillance systems.",
   "sections": [
     {
-      "title": "Student Data Rights & Educational Privacy",
+      "title": "School Device Privacy Hardening",
       "items": [
         {
-          "id": "ferpa-rights",
-          "task": "Understand your FERPA rights and how to access your educational records",
-          "why": "FERPA gives you control over your educational records and limits how schools can share your information with third parties.",
-          "howTo": "Request a copy of your school's FERPA policy. Learn what information is considered 'directory information' and how to opt out of public disclosure. Submit written requests to access your records.",
+          "id": "school-device-1",
+          "task": "Review school device monitoring policies",
+          "why": "Schools often monitor everything on issued devices including browsing, keystrokes, and personal files. Understanding the extent helps you protect sensitive information.",
+          "howTo": "Request a copy of your school's device monitoring policy. Look for sections on web filtering, keystroke logging, and file access. Ask IT staff about specific monitoring software installed.",
           "priority": "critical"
         },
         {
-          "id": "data-audit",
-          "task": "Audit what personal data your school collects and stores",
-          "why": "Schools collect extensive data beyond grades, including biometric data, location tracking, and behavioral analytics that could impact your future.",
-          "howTo": "Review your student handbook and privacy policies. Request a data audit from the registrar's office. Check what information is shared with third-party vendors and partners.",
+          "id": "school-device-2",
+          "task": "Create separate user accounts for personal use",
+          "why": "Mixing personal and academic activities on school devices creates privacy risks as schools can access all data on their systems.",
+          "howTo": "If allowed, create a separate local user account for personal activities. Keep academic work in the school-managed account and personal browsing in your account.",
           "priority": "high"
         },
         {
-          "id": "opt-out-directory",
-          "task": "Opt out of directory information disclosure",
-          "why": "Directory information can be shared publicly without your consent unless you explicitly opt out, potentially exposing personal details.",
-          "howTo": "Submit a written request to your registrar's office to suppress directory information. This typically includes your name, address, phone, email, and enrollment status from public disclosure.",
+          "id": "school-device-3",
+          "task": "Use portable privacy browsers for personal browsing",
+          "why": "School-installed browsers often have monitoring extensions and content filters that track your online activities.",
+          "howTo": "Download portable versions of privacy-focused browsers like Incognito Browser or Firefox to a USB drive. These run without installation and leave minimal traces on the device.",
           "priority": "high"
         },
         {
-          "id": "third-party-sharing",
-          "task": "Limit third-party data sharing and vendor access",
-          "why": "Educational technology companies often collect student data for analytics, advertising, or other commercial purposes beyond education.",
-          "howTo": "Review contracts with EdTech vendors. Request information about data sharing agreements. Opt out of non-essential services that collect personal data when possible.",
-          "priority": "medium"
-        }
-      ]
-    },
-    {
-      "title": "Campus Surveillance Awareness & Protection",
-      "items": [
-        {
-          "id": "surveillance-mapping",
-          "task": "Map campus surveillance systems and monitoring zones",
-          "why": "Understanding surveillance infrastructure helps you make informed decisions about privacy in different campus areas.",
-          "howTo": "Identify security cameras, WiFi monitoring zones, card reader locations, and facial recognition systems. Request surveillance policies from campus security and IT departments.",
+          "id": "school-device-4",
+          "task": "Disable or limit cloud sync for personal accounts",
+          "why": "Personal cloud accounts syncing to school devices can expose your private files and data to school monitoring systems.",
+          "howTo": "Log out of personal Google, Apple, or Microsoft accounts on school devices. If you must use them, disable sync for photos, documents, and browsing history.",
           "priority": "medium"
         },
         {
-          "id": "id-card-privacy",
-          "task": "Minimize student ID card tracking and data collection",
-          "why": "Student ID cards often contain RFID chips that track your location and activities across campus, creating detailed behavioral profiles.",
-          "howTo": "Store your ID card in an RFID-blocking wallet when not in use. Only swipe for essential services. Request information about what data is collected and how long it's retained.",
-          "priority": "high"
-        },
-        {
-          "id": "campus-wifi-security",
-          "task": "Secure your connections on campus WiFi networks",
-          "why": "Campus networks often monitor internet activity and may log your browsing history, creating privacy risks.",
-          "howTo": "Use Incognito Browser for sensitive browsing. Connect through a VPN when possible. Avoid automatic WiFi connection to prevent constant location tracking. Use cellular data for private communications.",
-          "priority": "critical"
-        },
-        {
-          "id": "biometric-opt-out",
-          "task": "Opt out of biometric data collection systems",
-          "why": "Fingerprint scanners and facial recognition systems create permanent biometric profiles that could be breached or misused.",
-          "howTo": "Research alternative authentication methods like PIN codes or traditional ID cards. Submit formal opt-out requests for biometric systems. Understand your state's biometric privacy laws.",
-          "priority": "high"
-        }
-      ]
-    },
-    {
-      "title": "Digital Learning & Proctoring Privacy",
-      "items": [
-        {
-          "id": "proctoring-software",
-          "task": "Understand and limit digital proctoring surveillance",
-          "why": "Proctoring software monitors your screen, camera, microphone, and system activity, often storing recordings and creating privacy risks.",
-          "howTo": "Review proctoring software privacy policies. Request information about data retention and sharing. Use a dedicated computer or browser profile. Cover cameras when not testing.",
-          "priority": "critical"
-        },
-        {
-          "id": "lms-privacy",
-          "task": "Configure privacy settings in learning management systems",
-          "why": "LMS platforms track detailed learning analytics including time spent, click patterns, and engagement metrics that create behavioral profiles.",
-          "howTo": "Review privacy settings in Canvas, Blackboard, or other LMS platforms. Limit profile visibility to instructors only. Disable optional tracking features and social components.",
+          "id": "school-device-5",
+          "task": "Use encrypted external storage for sensitive files",
+          "why": "Files stored on school devices can be accessed by administrators, and personal documents may violate acceptable use policies.",
+          "howTo": "Use encrypted USB drives or external hard drives for personal files. Tools like VeraCrypt can create encrypted containers for sensitive documents.",
           "priority": "medium"
         },
         {
-          "id": "device-isolation",
-          "task": "Isolate school-issued devices from personal data",
-          "why": "School devices often have monitoring software that can access personal files, browsing history, and communications.",
-          "howTo": "Use school devices only for academic purposes. Never save personal files or log into personal accounts. Use Incognito Browser or private browsing mode. Consider separate user accounts.",
-          "priority": "high"
-        },
-        {
-          "id": "communication-privacy",
-          "task": "Secure your academic communications and collaboration",
-          "why": "School email and collaboration platforms are monitored and archived, potentially exposing private conversations and personal information.",
-          "howTo": "Use school email only for academic purposes. Avoid sensitive topics in school communications. Use personal encrypted messaging for private discussions with classmates.",
-          "priority": "medium"
-        }
-      ]
-    },
-    {
-      "title": "Long-term Privacy Protection",
-      "items": [
-        {
-          "id": "graduation-cleanup",
-          "task": "Plan data deletion and account closure after graduation",
-          "why": "Schools may retain your data indefinitely unless you take action to request deletion of non-essential information.",
-          "howTo": "Create a checklist of all school accounts and services. Request deletion of non-academic data after graduation. Download important files before account closure. Update contact information selectively.",
-          "priority": "medium"
-        },
-        {
-          "id": "privacy-advocacy",
-          "task": "Advocate for stronger student privacy policies",
-          "why": "Collective action can improve privacy protections for all students and create institutional change in data practices.",
-          "howTo": "Join or create student privacy advocacy groups. Attend school board meetings. Propose privacy policy improvements through student government. Share privacy concerns with administrators.",
+          "id": "school-device-6",
+          "task": "Regularly clear browsing data and temporary files",
+          "why": "Even with monitoring, regularly clearing data reduces the digital footprint of your personal activities on school devices.",
+          "howTo": "Use built-in browser cleaning tools or third-party cleaners like CCleaner to remove browsing history, cache, and temporary files weekly.",
           "priority": "low"
+        }
+      ]
+    },
+    {
+      "title": "Online Exam & Proctoring Privacy Protection",
+      "items": [
+        {
+          "id": "proctoring-1",
+          "task": "Understand your proctoring software's data collection",
+          "why": "Proctoring software like Respondus or Proctorio can access far more than just exam activity, including system information and biometric data.",
+          "howTo": "Read the privacy policy of your proctoring software. Look for data collection scope, retention periods, and third-party sharing. Request specific details from your school if unclear.",
+          "priority": "critical"
+        },
+        {
+          "id": "proctoring-2",
+          "task": "Secure your testing environment",
+          "why": "Proctoring software records your screen, camera, and microphone, potentially capturing sensitive information in your room or on your screen.",
+          "howTo": "Remove personal documents from view, cover sensitive information on walls or desks, and close all unnecessary applications before starting the exam.",
+          "priority": "high"
+        },
+        {
+          "id": "proctoring-3",
+          "task": "Use a dedicated device or clean user profile for exams",
+          "why": "Proctoring software may access browser history, installed applications, and system information from your primary user account.",
+          "howTo": "If possible, use a separate device for proctored exams. Otherwise, create a clean user profile with minimal personal data and applications installed.",
+          "priority": "high"
+        },
+        {
+          "id": "proctoring-4",
+          "task": "Limit network access during proctored sessions",
+          "why": "Some proctoring software monitors network traffic and may flag legitimate activities as suspicious, while also potentially accessing local network devices.",
+          "howTo": "Disconnect other devices from your network during exams. Use a guest network if available, or consider using mobile hotspot to isolate the testing device.",
+          "priority": "medium"
+        },
+        {
+          "id": "proctoring-5",
+          "task": "Document any privacy violations or technical issues",
+          "why": "Proctoring software can malfunction or overreach, and having documentation helps protect your academic standing and privacy rights.",
+          "howTo": "Keep records of any unusual behavior, excessive permissions requested, or technical problems. Screenshot error messages and note dates and times of issues.",
+          "priority": "medium"
+        },
+        {
+          "id": "proctoring-6",
+          "task": "Request data deletion after exam completion",
+          "why": "Many schools and proctoring companies retain exam recordings and biometric data longer than necessary for academic purposes.",
+          "howTo": "Submit written requests to both your school and the proctoring company to delete your exam recordings and biometric data after grades are finalized.",
+          "priority": "low"
+        }
+      ]
+    },
+    {
+      "title": "Educational Platform Data Protection",
+      "items": [
+        {
+          "id": "edtech-1",
+          "task": "Audit permissions for educational apps and platforms",
+          "why": "Educational technology platforms often request excessive permissions and may share student data with third parties for non-educational purposes.",
+          "howTo": "Review app permissions on your devices for educational platforms. Disable unnecessary permissions like location access, contact list access, or camera access when not needed for coursework.",
+          "priority": "critical"
+        },
+        {
+          "id": "edtech-2",
+          "task": "Understand FERPA rights and limitations",
+          "why": "FERPA provides some protection for student educational records, but has exceptions that allow data sharing without consent in many situations.",
+          "howTo": "Read your school's FERPA notice and understand what constitutes educational records versus other data. Know that FERPA doesn't cover all student data collected by schools.",
+          "priority": "high"
+        },
+        {
+          "id": "edtech-3",
+          "task": "Minimize personal information in educational profiles",
+          "why": "Educational platforms often allow optional personal information that increases privacy risks without improving educational outcomes.",
+          "howTo": "Review your profiles on learning management systems and educational apps. Remove optional personal information like personal interests, photos, or contact information not required for coursework.",
+          "priority": "high"
+        },
+        {
+          "id": "edtech-4",
+          "task": "Use privacy-focused communication tools when possible",
+          "why": "Many educational communication platforms retain message history and may analyze communications for various purposes beyond education.",
+          "howTo": "For group projects or study groups, consider using privacy-focused alternatives like Signal for sensitive discussions. Keep required platform use to academic content only.",
+          "priority": "medium"
+        },
+        {
+          "id": "edtech-5",
+          "task": "Regularly review and clean up digital assignments",
+          "why": "Old assignments and projects stored on educational platforms may contain personal information or demonstrate evolving political or personal views.",
+          "howTo": "Periodically review old submissions and remove any that contain sensitive personal information. Download important work for personal archives before deletion.",
+          "priority": "medium"
+        },
+        {
+          "id": "edtech-6",
+          "task": "Monitor third-party integrations and data sharing",
+          "why": "Educational platforms often integrate with third-party services, creating additional data sharing relationships that expand privacy risks.",
+          "howTo": "Check your educational platform settings for connected third-party apps and services. Disconnect any that aren't essential for your current coursework.",
+          "priority": "low"
+        }
+      ]
+    },
+    {
+      "title": "Campus Network & Physical Privacy",
+      "items": [
+        {
+          "id": "campus-1",
+          "task": "Use VPN on campus networks",
+          "why": "Campus networks often monitor, filter, and log all internet traffic, creating detailed profiles of student online activities.",
+          "howTo": "Install a reputable VPN service on your devices before connecting to campus WiFi. Choose VPN providers with no-logging policies and strong encryption.",
+          "priority": "critical"
+        },
+        {
+          "id": "campus-2",
+          "task": "Understand campus surveillance systems",
+          "why": "Modern campuses use extensive camera surveillance, WiFi tracking, and access card monitoring that can create detailed records of student movements and associations.",
+          "howTo": "Request information about campus surveillance policies from student services. Learn about camera locations, data retention periods, and access procedures for your own records.",
+          "priority": "high"
+        },
+        {
+          "id": "campus-2",
+          "task": "Manage WiFi and Bluetooth tracking",
+          "why": "Campus systems can track device location through WiFi and Bluetooth signals, even when you're not actively connected to networks.",
+          "howTo": "Turn off WiFi and Bluetooth when not needed. Use randomized MAC addresses if your device supports it. Consider airplane mode in sensitive locations.",
+          "priority": "high"
+        },
+        {
+          "id": "campus-4",
+          "task": "Protect ID card and access data",
+          "why": "Student ID cards often contain RFID chips that can be read without your knowledge, and access logs create detailed movement patterns.",
+          "howTo": "Use RFID-blocking wallets or sleeves for your student ID. Be aware that card access creates logs, and consider cash transactions when privacy is important.",
+          "priority": "medium"
+        },
+        {
+          "id": "campus-5",
+          "task": "Be cautious with campus social media and check-ins",
+          "why": "Social media posts, location check-ins, and campus app usage can create additional data points that supplement official surveillance systems.",
+          "howTo": "Disable location services for social media apps on campus. Avoid checking in to sensitive locations, and review privacy settings for any campus-specific social platforms.",
+          "priority": "medium"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Keep personal and academic digital lives separate - use different browsers, accounts, and devices when possible to minimize data correlation.",
+    "Document everything - save copies of privacy policies, monitoring notices, and any privacy violations you experience for potential future complaints or legal action.",
+    "Know your rights under FERPA, but understand its limitations - it doesn't cover all student data and has many exceptions for data sharing without consent.",
+    "Build relationships with privacy-conscious classmates to share information about new monitoring systems and effective privacy strategies specific to your institution.",
+    "Consider the long-term implications of educational data collection - information collected now may affect you years later in employment, insurance, or other contexts."
+  ],
   "relatedLinks": [
     {
-      "title": "Family Educational Rights and Privacy Act (FERPA)",
-      "url": "https://www2.ed.gov/policy/gen/guid/fpco/ferpa/index.html",
-      "type": "official-resource"
-    },
-    {
-      "title": "Student Privacy Compass - Privacy Rights for Students",
+      "title": "Student Privacy Compass - Educational Privacy Resources",
       "url": "https://studentprivacycompass.org/",
-      "type": "privacy-guide"
+      "type": "resource"
     },
     {
       "title": "Electronic Frontier Foundation - Student Privacy",
       "url": "https://www.eff.org/issues/student-privacy",
-      "type": "privacy-guide"
+      "type": "guide"
+    },
+    {
+      "title": "FERPA & Student Privacy Rights Explained",
+      "url": "https://studentprivacy.ed.gov/",
+      "type": "government"
+    },
+    {
+      "title": "Common Sense Privacy Program - Student Digital Privacy",
+      "url": "https://privacy.commonsense.org/",
+      "type": "resource"
     }
   ]
 }

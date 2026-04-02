@@ -2,170 +2,212 @@
   "niche": "social-media-privacy",
   "slug": "social-media-privacy-hardening-checklist",
   "title": "Social Media Privacy Hardening Checklist",
-  "metaDescription": "Complete privacy checklist for Facebook, Instagram, TikTok, and X. Secure your social media accounts with these essential privacy settings.",
-  "difficulty": "beginner",
+  "metaDescription": "Complete checklist to harden your privacy on Facebook, Instagram, TikTok, X and other social platforms. Protect your data from tracking and harvesting.",
+  "keywords": [
+    "social media privacy",
+    "Facebook privacy settings",
+    "Instagram privacy guide",
+    "TikTok privacy",
+    "social media security"
+  ],
+  "difficulty": "intermediate",
   "estimatedTime": "45-60 minutes",
-  "intro": "Social media platforms collect vast amounts of personal data and share it with advertisers and third parties. This comprehensive checklist will help you lock down your privacy settings across major platforms and protect your digital footprint.",
+  "intro": "Social media platforms constantly change privacy settings and harvest your data for advertising. This comprehensive checklist helps you lock down your accounts across all major platforms to minimize data collection, prevent unauthorized access, and control who sees your information.",
   "sections": [
     {
-      "title": "Facebook Privacy Settings",
+      "title": "Account Security Fundamentals",
       "items": [
         {
-          "id": "fb-profile-visibility",
-          "task": "Set profile visibility to Friends only",
-          "why": "Prevents strangers from viewing your personal information and photos",
-          "howTo": "Go to Settings & Privacy > Settings > Privacy > Who can see your future posts, and select 'Friends'. Also check 'Who can look you up' settings.",
+          "id": "enable-2fa",
+          "task": "Enable two-factor authentication on all social media accounts",
+          "why": "Prevents account takeovers even if your password is compromised. Essential protection against hackers and identity theft.",
+          "howTo": "Go to Security settings in each platform. Enable 2FA using an authenticator app (preferred) or SMS. Save backup codes in a secure location. Test the setup before leaving settings.",
           "priority": "critical"
         },
         {
-          "id": "fb-disable-face-recognition",
-          "task": "Turn off facial recognition features",
-          "why": "Prevents Facebook from automatically tagging you in photos and building facial recognition data",
-          "howTo": "Go to Settings & Privacy > Settings > Face Recognition and turn off 'Do you want Facebook to be able to recognize you in photos and videos?'",
+          "id": "review-passwords",
+          "task": "Update to unique, strong passwords for each platform",
+          "why": "Weak or reused passwords make you vulnerable to credential stuffing attacks and data breaches from other services.",
+          "howTo": "Use a password manager to generate unique 12+ character passwords. Include uppercase, lowercase, numbers, and symbols. Never reuse passwords across platforms.",
+          "priority": "critical"
+        },
+        {
+          "id": "check-active-sessions",
+          "task": "Review and remove unrecognized active sessions",
+          "why": "Old sessions from public computers or compromised devices can give unauthorized access to your accounts.",
+          "howTo": "In Security settings, find 'Active Sessions' or 'Where You're Logged In'. Log out sessions from unknown devices or locations. Set up login alerts for new devices.",
           "priority": "high"
         },
         {
-          "id": "fb-ad-preferences",
-          "task": "Limit ad targeting and data sharing",
-          "why": "Reduces how much personal data is used for targeted advertising",
-          "howTo": "Visit Settings & Privacy > Settings > Ads. Turn off ads based on data from partners, ads based on your activity on Facebook Company Products.",
+          "id": "update-recovery-info",
+          "task": "Verify and secure account recovery information",
+          "why": "Outdated recovery emails or phone numbers can prevent account recovery or allow attackers to hijack your account.",
+          "howTo": "Update recovery email to current secure address. Add backup phone number. Remove old or compromised contact methods. Test recovery process works.",
           "priority": "high"
         },
         {
-          "id": "fb-apps-cleanup",
-          "task": "Remove unused third-party apps",
-          "why": "Apps can access your Facebook data even when you're not using them",
-          "howTo": "Go to Settings & Privacy > Settings > Apps and Websites. Review and remove apps you no longer use or don't recognize.",
+          "id": "review-connected-apps",
+          "task": "Audit and remove unnecessary connected apps and services",
+          "why": "Third-party apps often have broad permissions to access your data and can be security vulnerabilities or privacy risks.",
+          "howTo": "Go to Apps/Applications in settings. Review each connected app's permissions. Remove apps you don't use. Limit permissions for remaining apps to minimum necessary.",
           "priority": "medium"
         }
       ]
     },
     {
-      "title": "Instagram Privacy Controls",
+      "title": "Privacy Settings Configuration",
       "items": [
         {
-          "id": "ig-private-account",
-          "task": "Switch to a private account",
-          "why": "Only approved followers can see your posts, stories, and profile information",
-          "howTo": "Go to Settings > Privacy > Account Privacy and turn on 'Private Account'.",
+          "id": "lock-down-profile",
+          "task": "Set profile and posts to private/friends only",
+          "why": "Public profiles expose personal information to strangers, data scrapers, and can be used for social engineering attacks.",
+          "howTo": "Change profile visibility to Friends/Followers only. Set future posts to private by default. Review who can see past posts and limit if needed. Hide friend/follower lists.",
           "priority": "critical"
         },
         {
-          "id": "ig-story-settings",
-          "task": "Restrict story visibility and interactions",
-          "why": "Prevents strangers from viewing your stories and limits unwanted interactions",
-          "howTo": "Go to Settings > Privacy > Story. Set 'Allow sharing' to off and customize who can reply to your stories.",
+          "id": "disable-search-indexing",
+          "task": "Prevent search engines from indexing your profile",
+          "why": "Allows anyone to find your social media profiles through Google searches, exposing your information beyond the platform.",
+          "howTo": "In Privacy settings, find 'Search' or 'Discoverability' options. Disable 'Allow search engines to link to your profile'. Turn off profile suggestions to strangers.",
           "priority": "high"
         },
         {
-          "id": "ig-activity-status",
-          "task": "Turn off activity status",
-          "why": "Hides when you were last active on Instagram from other users",
-          "howTo": "Go to Settings > Privacy > Activity Status and turn off 'Show Activity Status'.",
+          "id": "limit-contact-discovery",
+          "task": "Disable contact syncing and phone/email lookup",
+          "why": "Prevents platforms from suggesting your profile to people who have your contact info, and stops building shadow profiles from contacts.",
+          "howTo": "Turn off 'Let others find you by phone/email'. Disable contact syncing. Delete previously uploaded contacts if option available. Opt out of friend suggestions based on contacts.",
+          "priority": "high"
+        },
+        {
+          "id": "control-tagging",
+          "task": "Require approval for tags and mentions",
+          "why": "Prevents others from associating your name with content you haven't approved, protecting your reputation and privacy.",
+          "howTo": "Enable tag/mention approval in Privacy settings. Set posts you're tagged in to require approval before appearing on your profile. Turn on notifications for tags.",
           "priority": "medium"
         },
         {
-          "id": "ig-data-download",
-          "task": "Review your Instagram data",
-          "why": "Understanding what data Instagram has collected helps you make informed privacy decisions",
-          "howTo": "Go to Settings > Security > Download Data to see what information Instagram has about you.",
-          "priority": "low"
-        }
-      ]
-    },
-    {
-      "title": "TikTok Security Measures",
-      "items": [
-        {
-          "id": "tiktok-private-account",
-          "task": "Enable private account setting",
-          "why": "Requires approval for followers and makes your videos visible only to approved users",
-          "howTo": "Go to Settings and Privacy > Privacy > Private account and turn it on.",
-          "priority": "critical"
-        },
-        {
-          "id": "tiktok-data-personalization",
-          "task": "Limit data collection for personalization",
-          "why": "Reduces how TikTok uses your data for targeted content and ads",
-          "howTo": "Go to Settings and Privacy > Privacy > Personalization and data. Turn off personalization features you're uncomfortable with.",
-          "priority": "high"
-        },
-        {
-          "id": "tiktok-location-services",
-          "task": "Disable location sharing",
-          "why": "Prevents TikTok from accessing and sharing your location data",
-          "howTo": "In your phone settings, find TikTok and turn off location access. Also check Settings and Privacy > Privacy > Location Services in the app.",
-          "priority": "high"
-        }
-      ]
-    },
-    {
-      "title": "X (Twitter) Privacy Configuration",
-      "items": [
-        {
-          "id": "twitter-protect-tweets",
-          "task": "Protect your tweets",
-          "why": "Makes your tweets private so only approved followers can see them",
-          "howTo": "Go to Settings and Privacy > Privacy and Safety > Audience and Tagging > Protect your Tweets.",
-          "priority": "critical"
-        },
-        {
-          "id": "twitter-ad-personalization",
-          "task": "Disable personalized ads",
-          "why": "Prevents X from using your data for targeted advertising",
-          "howTo": "Go to Settings and Privacy > Privacy and Safety > Ads Preferences and turn off 'Personalized ads'.",
-          "priority": "high"
-        },
-        {
-          "id": "twitter-data-sharing",
-          "task": "Limit data sharing with business partners",
-          "why": "Prevents X from sharing your data with third-party advertisers",
-          "howTo": "In Privacy and Safety > Ads Preferences, turn off 'Allow additional information sharing with business partners'.",
+          "id": "limit-message-requests",
+          "task": "Restrict who can send you direct messages",
+          "why": "Reduces spam, harassment, and phishing attempts from strangers trying to contact you directly.",
+          "howTo": "Set message permissions to Friends/Followers only. Enable message filtering for offensive content. Turn off read receipts to maintain privacy in conversations.",
           "priority": "medium"
+        },
+        {
+          "id": "disable-location-sharing",
+          "task": "Turn off location sharing and check-ins",
+          "why": "Location data reveals personal patterns, home/work addresses, and can be used for stalking or physical security threats.",
+          "howTo": "Disable location services for social media apps in phone settings. Turn off location tagging in posts. Disable location history and nearby friends features.",
+          "priority": "high"
         }
       ]
     },
     {
-      "title": "General Privacy Best Practices",
+      "title": "Data Collection & Advertising Controls",
       "items": [
         {
-          "id": "browser-privacy",
-          "task": "Use Incognito Browser for social media browsing",
-          "why": "Provides built-in privacy protection and blocks tracking across social media sites",
-          "howTo": "Download Incognito Browser and use it when accessing social media platforms to prevent cross-site tracking and protect your browsing data.",
+          "id": "limit-ad-tracking",
+          "task": "Disable personalized ads and data sharing with advertisers",
+          "why": "Reduces the amount of personal data collected for advertising and limits sharing with third-party advertisers and data brokers.",
+          "howTo": "Go to Ad Preferences/Settings. Turn off personalized ads. Opt out of data sharing with partners. Clear existing ad interests and demographic categories. Disable off-platform activity tracking.",
           "priority": "high"
         },
         {
-          "id": "two-factor-auth",
-          "task": "Enable two-factor authentication on all accounts",
-          "why": "Adds an extra layer of security to prevent unauthorized access",
-          "howTo": "In each platform's security settings, find two-factor authentication and enable it using SMS or an authenticator app.",
+          "id": "review-data-policy",
+          "task": "Download your data and review what's being collected",
+          "why": "Understanding what data platforms have helps you make informed privacy decisions and identify concerning collection practices.",
+          "howTo": "Use 'Download Your Data' tools in settings. Review collected information including messages, search history, and ad data. Delete unnecessary data where possible.",
+          "priority": "medium"
+        },
+        {
+          "id": "limit-facial-recognition",
+          "task": "Disable facial recognition and auto-tagging features",
+          "why": "Facial recognition creates biometric profiles that can be used for surveillance and makes you identifiable in photos you didn't consent to.",
+          "howTo": "Turn off face recognition in Privacy settings. Disable auto-tagging suggestions. Delete existing face recognition data if deletion option is available.",
+          "priority": "medium"
+        },
+        {
+          "id": "control-data-sharing",
+          "task": "Limit data sharing with Meta companies and partners",
+          "why": "Prevents your social media data from being combined with data from other platforms and services for more comprehensive profiling.",
+          "howTo": "In Privacy settings, find data sharing options. Disable sharing between Meta companies (Facebook, Instagram, WhatsApp). Opt out of sharing with external partners and advertisers.",
+          "priority": "medium"
+        },
+        {
+          "id": "manage-activity-tracking",
+          "task": "Clear and disable off-platform activity tracking",
+          "why": "Platforms track your browsing and purchases outside their sites to build detailed profiles for advertising and data monetization.",
+          "howTo": "Find 'Off-Platform Activity' or similar in settings. Clear existing tracked activity. Turn off future activity tracking. Use Incognito Browser to prevent tracking cookies.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Platform-Specific Hardening",
+      "items": [
+        {
+          "id": "tiktok-data-controls",
+          "task": "Configure TikTok's extensive data collection settings",
+          "why": "TikTok collects more data than most platforms including device info, clipboard content, and biometric data for its algorithm.",
+          "howTo": "Disable 'Suggest account to others', turn off 'Sync contacts', disable 'Personalized ads', turn off clipboard access in phone settings, and set account to private.",
           "priority": "critical"
         },
         {
-          "id": "regular-privacy-audit",
-          "task": "Conduct monthly privacy settings review",
-          "why": "Social media platforms frequently change privacy policies and add new features",
-          "howTo": "Set a monthly reminder to review privacy settings on all your social media accounts and adjust as needed.",
+          "id": "instagram-hidden-settings",
+          "task": "Adjust Instagram's less obvious privacy settings",
+          "why": "Instagram has many privacy settings buried in different menus that aren't immediately obvious but significantly impact your privacy.",
+          "howTo": "Turn off 'Similar account suggestions', disable 'Use contact info', turn off 'Share story to Facebook', disable 'Activity status', and turn off 'Shopping ads'.",
+          "priority": "high"
+        },
+        {
+          "id": "facebook-detailed-targeting",
+          "task": "Opt out of Facebook's detailed ad targeting categories",
+          "why": "Facebook creates hundreds of interest categories based on your activity that can reveal sensitive information about health, finances, and beliefs.",
+          "howTo": "Go to Ad Preferences > Categories used to reach you. Remove sensitive categories like health, financial, and lifestyle interests. Turn off partner categories.",
+          "priority": "medium"
+        },
+        {
+          "id": "twitter-x-privacy",
+          "task": "Configure X (Twitter) discoverability and data settings",
+          "why": "X shares data widely and has many discoverability features that can expose your account to unwanted attention and data collection.",
+          "howTo": "Turn off 'Let others find you by email/phone', disable 'Personalized ads', turn off 'Track where you see Twitter content', and disable 'Share data with partners'.",
+          "priority": "medium"
+        },
+        {
+          "id": "linkedin-professional-privacy",
+          "task": "Balance LinkedIn professional needs with privacy protection",
+          "why": "LinkedIn requires some visibility for professional networking but has many data sharing features that go beyond necessary professional exposure.",
+          "howTo": "Turn off 'Profile public visibility', disable 'Data for ads', turn off 'Profile data for research', disable 'Read receipts', and limit who can see your connections.",
           "priority": "medium"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Use Incognito Browser when accessing social media to prevent cross-site tracking and maintain session isolation from your regular browsing.",
+    "Regularly audit your privacy settings as platforms frequently change defaults and add new data collection features without clear notification.",
+    "Consider using separate email addresses for social media accounts to isolate them from your primary email and reduce data correlation.",
+    "Review and clean up old posts, photos, and check-ins periodically - what seemed fine to share years ago might not align with your current privacy preferences.",
+    "Enable all available security notifications so you're immediately aware of login attempts, privacy setting changes, or suspicious account activity."
+  ],
   "relatedLinks": [
     {
-      "title": "Digital Footprint Minimization Guide",
-      "url": "/digital-footprint",
+      "title": "Facebook Privacy Settings Guide",
+      "url": "/guides/facebook-privacy-settings",
       "type": "internal"
     },
     {
-      "title": "Ad Tracking Protection Methods",
-      "url": "/ad-tracking",
+      "title": "Instagram Privacy Complete Guide",
+      "url": "/guides/instagram-privacy-guide",
       "type": "internal"
     },
     {
-      "title": "Data Brokers Removal Checklist",
-      "url": "/data-brokers",
+      "title": "TikTok Data Collection Explained",
+      "url": "/guides/tiktok-data-collection",
+      "type": "internal"
+    },
+    {
+      "title": "Digital Footprint Minimization",
+      "url": "/guides/digital-footprint",
       "type": "internal"
     }
   ]

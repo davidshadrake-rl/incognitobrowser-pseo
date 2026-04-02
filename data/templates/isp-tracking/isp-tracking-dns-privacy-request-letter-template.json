@@ -2,80 +2,109 @@
   "niche": "isp-tracking",
   "slug": "isp-tracking-dns-privacy-request-letter-template",
   "title": "ISP Tracking & DNS Privacy Request Letter Template",
-  "metaDescription": "Free template to request privacy information from your ISP about DNS tracking, monitoring practices, and data collection policies.",
-  "description": "A professional letter template to request information from your internet service provider about their DNS tracking practices, data collection policies, and monitoring activities. Helps you understand what data your ISP collects and how to protect your privacy.",
+  "metaDescription": "Professional template to request ISP data deletion, opt-out of tracking, and protect DNS privacy. Get transparency on your browsing data.",
+  "keywords": [
+    "ISP tracking request letter",
+    "DNS privacy template",
+    "ISP data deletion",
+    "internet privacy rights",
+    "ISP monitoring opt-out"
+  ],
+  "description": "A comprehensive letter template to formally request information about your ISP's tracking practices, request data deletion, and establish DNS privacy protections. Includes legal references and actionable privacy steps.",
   "templateType": "letter",
   "sections": [
     {
-      "heading": "Letter Header",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Email]\n[Your Phone Number]\n[Date]\n\n[ISP Company Name]\nCustomer Privacy Department\n[ISP Address]\n[City, State, ZIP Code]",
+      "heading": "Header Information",
+      "content": "[Your Name]\n[Your Address]\n[City, State ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[ISP Company Name]\nCustomer Privacy Department\n[ISP Address]\n[City, State ZIP Code]\n\nRe: Privacy Rights Request - Account #[ACCOUNT_NUMBER]",
       "placeholders": [
         {
-          "key": "your_name",
-          "label": "Your Full Name",
-          "defaultValue": "[Your Name]"
-        },
-        {
-          "key": "your_address",
-          "label": "Your Address",
-          "defaultValue": "[Your Address]"
-        },
-        {
-          "key": "isp_name",
-          "label": "ISP Company Name",
-          "defaultValue": "[ISP Company Name]"
+          "key": "ACCOUNT_NUMBER",
+          "label": "Your ISP Account Number",
+          "defaultValue": "Enter your account number"
         }
       ]
     },
     {
-      "heading": "Subject Line and Introduction",
-      "content": "Re: Privacy Information Request - DNS Tracking and Monitoring Practices\nAccount Number: [Your Account Number]\n\nDear Privacy Officer,\n\nI am writing as a customer of [ISP Company Name] to request information about your company's DNS tracking, internet monitoring, and data collection practices as they relate to my internet service."
+      "heading": "Formal Request Opening",
+      "content": "Dear Privacy Officer,\n\nI am writing as a customer of [ISP_NAME] to formally request information about my privacy rights and to exercise certain rights regarding my personal data and internet activity monitoring.\n\nThis request is made under applicable federal and state privacy laws, including the Communications Act and relevant state consumer protection statutes.",
+      "placeholders": [
+        {
+          "key": "ISP_NAME",
+          "label": "Your ISP Company Name",
+          "defaultValue": "Enter your ISP name"
+        }
+      ]
     },
     {
-      "heading": "DNS Privacy Information Request",
-      "content": "I would like to understand the following aspects of your DNS and privacy practices:\n\n1. DNS Logging: Do you log DNS queries made through your DNS servers? If so, what information is recorded and for how long is it retained?\n\n2. DNS Filtering: Do you filter, block, or redirect DNS queries? Please provide details about any content filtering or DNS manipulation.\n\n3. Third-Party Sharing: Do you share DNS query data or browsing information with third parties, advertisers, or government agencies?\n\n4. Data Collection: What specific data do you collect about my internet usage, including websites visited, connection times, and bandwidth usage?"
+      "heading": "Data Collection Transparency Request",
+      "content": "I request detailed information about:\n\n1. What browsing data, DNS queries, and metadata you collect from my internet connection\n2. How long this data is retained in your systems\n3. Whether my data has been sold, shared, or provided to third parties\n4. A complete list of all third parties who have received my data\n5. The legal basis for each type of data collection and sharing\n6. All privacy policies that have governed my account since [START_DATE]",
+      "placeholders": [
+        {
+          "key": "START_DATE",
+          "label": "Account Start Date",
+          "defaultValue": "MM/DD/YYYY"
+        }
+      ]
     },
     {
-      "heading": "Monitoring and Tracking Practices",
-      "content": "Please provide information about your monitoring practices:\n\n1. Traffic Analysis: Do you perform deep packet inspection (DPI) or analyze the content of my internet traffic?\n\n2. Behavioral Tracking: Do you create profiles of customer internet usage patterns or browsing habits?\n\n3. Advertising Programs: Do you participate in any advertising programs that use customer data?\n\n4. Opt-Out Options: What options do I have to opt out of data collection, tracking, or sharing programs?"
+      "heading": "Opt-Out and Deletion Requests",
+      "content": "I formally request to:\n\n• OPT-OUT of all data sales and third-party sharing programs\n• DELETE all historical browsing data, DNS logs, and metadata associated with my account\n• STOP all non-essential monitoring of my internet activity\n• DISABLE any deep packet inspection beyond what's required for basic service delivery\n• REMOVE my data from any advertising or analytics programs\n\nPlease confirm these changes in writing within 30 days."
     },
     {
-      "heading": "Privacy Protection Options",
-      "content": "I am also interested in learning about:\n\n1. Alternative DNS: Can I use third-party DNS servers (such as Cloudflare, Quad9, or Google DNS) without restrictions?\n\n2. DNS over HTTPS/TLS: Do you support DNS over HTTPS (DoH) or DNS over TLS (DoT) for enhanced privacy?\n\n3. Privacy Settings: Are there account settings I can adjust to enhance my privacy?\n\n4. Data Deletion: Can I request deletion of stored DNS logs or browsing data?"
+      "heading": "DNS Privacy Protection Request",
+      "content": "Regarding DNS services:\n\n1. I request that you stop logging my DNS queries beyond technical necessity\n2. Please confirm whether you redirect or hijack DNS requests to third-party servers\n3. I want to use my own DNS servers ([PREFERRED_DNS]) without interference\n4. Provide technical details about any DNS filtering or modification you perform\n5. Confirm that you support DNS over HTTPS (DoH) and DNS over TLS (DoT) protocols",
+      "placeholders": [
+        {
+          "key": "PREFERRED_DNS",
+          "label": "Your Preferred DNS Servers",
+          "defaultValue": "e.g., 1.1.1.1, 8.8.8.8"
+        }
+      ]
     },
     {
-      "heading": "Legal Rights and Response Request",
-      "content": "Under applicable privacy laws and as your customer, I believe I have the right to understand how my data is collected and used. Please provide:\n\n1. Your current privacy policy and any recent updates\n2. Written responses to the questions above\n3. Information about my rights regarding data collection and sharing\n4. Contact information for further privacy-related inquiries\n\nI would appreciate a response within 30 days. If you need additional information to process this request, please contact me at [Your Email] or [Your Phone Number]."
+      "heading": "Legal Rights and Timeline",
+      "content": "Under federal communications privacy laws and state consumer protection statutes, I have the right to:\n\n• Know what personal information is collected and how it's used\n• Request deletion of my personal information\n• Opt-out of the sale of personal information\n• Receive equal service regardless of privacy choices\n\nI request your written response within 30 days of receiving this letter. If you cannot fulfill these requests, please explain the specific legal or technical reasons why."
     },
     {
-      "heading": "Closing",
-      "content": "Thank you for your attention to this privacy matter. I look forward to your prompt response and to better understanding your privacy practices.\n\nSincerely,\n\n[Your Signature]\n[Your Printed Name]\n[Account Holder (if different)]"
+      "heading": "Contact Information and Follow-up",
+      "content": "Please send your written response to:\n\nEmail: [YOUR_EMAIL]\nMail: [YOUR_ADDRESS]\n\nIf I do not receive a satisfactory response within 30 days, I will consider filing complaints with:\n• The Federal Communications Commission (FCC)\n• My state's Attorney General office\n• Relevant consumer protection agencies\n\nI look forward to your prompt response and to working together to protect my privacy rights.\n\nSincerely,\n[YOUR_SIGNATURE]\n[YOUR_PRINTED_NAME]",
+      "placeholders": [
+        {
+          "key": "YOUR_EMAIL",
+          "label": "Your Email Address",
+          "defaultValue": "your.email@example.com"
+        },
+        {
+          "key": "YOUR_ADDRESS",
+          "label": "Your Mailing Address",
+          "defaultValue": "Your full mailing address"
+        }
+      ]
     }
   ],
   "useCases": [
-    "Requesting transparency about ISP DNS logging practices",
-    "Understanding what browsing data your ISP collects",
-    "Learning about opt-out options for ISP tracking programs",
-    "Verifying ISP compliance with privacy regulations",
-    "Requesting information before switching to privacy-focused DNS",
-    "Understanding ISP data sharing with third parties",
-    "Documenting ISP privacy practices for legal purposes"
+    "Requesting transparency about ISP data collection practices",
+    "Opting out of ISP data sales and third-party sharing",
+    "Demanding deletion of historical browsing and DNS data",
+    "Establishing DNS privacy protections and custom DNS usage",
+    "Creating legal documentation for privacy rights enforcement",
+    "Following up on suspected ISP privacy violations"
   ],
   "relatedLinks": [
     {
-      "title": "Incognito Browser - Private DNS Settings",
-      "url": "https://incognito-browser.com",
+      "title": "Incognito Browser - Private Browsing Protection",
+      "url": "/incognito-browser",
       "type": "tool"
     },
     {
-      "title": "VPN Privacy Protection Guide",
-      "url": "/templates/vpn-privacy",
-      "type": "internal"
+      "title": "VPN Privacy Guide",
+      "url": "/vpn-privacy",
+      "type": "guide"
     },
     {
-      "title": "Browser Privacy Settings Template",
-      "url": "/templates/browser-privacy",
-      "type": "internal"
+      "title": "DNS over HTTPS Setup Tutorial",
+      "url": "/dns-over-https-setup",
+      "type": "tutorial"
     }
   ]
 }

@@ -2,78 +2,120 @@
   "niche": "phishing",
   "slug": "phishing-social-engineering-policy-template",
   "title": "Phishing & Social Engineering Policy Template",
-  "metaDescription": "Protect your organization with our comprehensive phishing and social engineering policy template. Includes prevention strategies and response procedures.",
-  "description": "A comprehensive policy template to help organizations establish clear guidelines for recognizing, preventing, and responding to phishing attacks and social engineering tactics. Includes employee training requirements and incident response procedures.",
+  "metaDescription": "Comprehensive policy template to protect your organization from phishing attacks and social engineering tactics. Ready-to-use format.",
+  "keywords": [
+    "phishing policy template",
+    "social engineering policy",
+    "phishing protection",
+    "email security policy",
+    "cybersecurity policy"
+  ],
+  "description": "A comprehensive policy template designed to help organizations establish clear guidelines and procedures for identifying, preventing, and responding to phishing attacks and social engineering attempts.",
   "templateType": "policy",
   "sections": [
     {
-      "heading": "Policy Overview and Purpose",
-      "content": "This policy establishes guidelines to protect {{ORGANIZATION_NAME}} from phishing attacks and social engineering tactics. Our goal is to educate employees on recognizing threats, implementing protective measures, and responding appropriately to suspicious activities. This policy applies to all employees, contractors, and third parties with access to our systems and information.",
+      "heading": "Policy Overview and Scope",
+      "content": "This policy applies to all {{ORGANIZATION_NAME}} employees, contractors, and third-party users who access company systems or handle sensitive information. The purpose is to establish clear procedures for recognizing and responding to phishing attacks, social engineering attempts, and suspicious communications that could compromise organizational security.",
       "placeholders": [
         {
-          "key": "{{ORGANIZATION_NAME}}",
+          "key": "ORGANIZATION_NAME",
           "label": "Organization Name",
           "defaultValue": "[Your Organization Name]"
         }
       ]
     },
     {
-      "heading": "Definitions and Common Threats",
-      "content": "Phishing: Fraudulent attempts to obtain sensitive information by impersonating trusted entities through email, text, or phone calls. Social Engineering: Psychological manipulation tactics used to trick individuals into divulging confidential information or performing actions that compromise security. Common threats include: spear phishing (targeted attacks), business email compromise, vishing (voice phishing), smishing (SMS phishing), and pretexting scenarios."
+      "heading": "Phishing Attack Recognition",
+      "content": "All personnel must be able to identify common phishing indicators including: urgent language demanding immediate action, suspicious sender addresses that don't match the claimed organization, generic greetings instead of personalized ones, requests for sensitive information via email, and mismatched or suspicious URLs. When in doubt, verify requests through independent communication channels before taking any action.",
+      "placeholders": []
     },
     {
-      "heading": "Employee Responsibilities",
-      "content": "All employees must: verify sender identity before responding to requests for sensitive information, hover over links to check destinations before clicking, report suspicious emails to {{IT_CONTACT}}, never provide passwords or credentials via email or phone, use secure browsers like Incognito Browser for sensitive activities, and attend mandatory security awareness training sessions annually."
+      "heading": "Email Security Procedures",
+      "content": "Employees must not click on suspicious links or download unexpected attachments. All emails requesting sensitive information, financial transactions, or system access must be verified through official company channels. Use secure browsers like Incognito Browser when accessing links from external sources. Report suspicious emails immediately to {{IT_CONTACT}} before deleting or forwarding.",
+      "placeholders": [
+        {
+          "key": "IT_CONTACT",
+          "label": "IT Support Contact",
+          "defaultValue": "IT@yourcompany.com"
+        }
+      ]
     },
     {
-      "heading": "Email Security Guidelines",
-      "content": "Exercise caution with: urgent requests for financial information, emails with generic greetings or poor grammar, unexpected attachments or links, requests to update account information, and communications claiming to be from executives requesting unusual actions. Always verify requests through separate communication channels when in doubt."
+      "heading": "Social Engineering Response",
+      "content": "Personnel should be cautious of unsolicited phone calls, in-person visits, or messages requesting confidential information or system access. Verify the identity of requesters through official company directories or callback procedures. Never provide passwords, system access, or sensitive data based solely on verbal requests, regardless of claimed authority or urgency.",
+      "placeholders": []
     },
     {
-      "heading": "Incident Response Procedures",
-      "content": "If you suspect a phishing attempt: do not click links or download attachments, forward the suspicious email to {{SECURITY_EMAIL}}, change passwords if credentials may have been compromised, immediately report any successful attacks to {{IT_CONTACT}}, and document the incident including time, sender information, and actions taken."
+      "heading": "Incident Reporting Procedures",
+      "content": "Suspected phishing attempts must be reported to {{SECURITY_TEAM}} within {{REPORTING_TIMEFRAME}} hours. Include the original email as an attachment, document any actions taken, and preserve evidence. Do not attempt to investigate suspicious communications independently. All incidents will be logged and analyzed to improve future prevention measures.",
+      "placeholders": [
+        {
+          "key": "SECURITY_TEAM",
+          "label": "Security Team Contact",
+          "defaultValue": "security@yourcompany.com"
+        },
+        {
+          "key": "REPORTING_TIMEFRAME",
+          "label": "Reporting Timeframe (hours)",
+          "defaultValue": "24"
+        }
+      ]
     },
     {
-      "heading": "Technical Safeguards",
-      "content": "{{ORGANIZATION_NAME}} implements: email filtering and spam detection systems, multi-factor authentication for all accounts, regular security updates and patches, employee access controls and permissions reviews, secure browsing tools and VPN requirements, and network monitoring for suspicious activities."
+      "heading": "Training and Awareness Requirements",
+      "content": "All employees must complete phishing awareness training within {{TRAINING_PERIOD}} days of employment and annually thereafter. Training will include real-world examples, simulation exercises, and current threat intelligence. Department managers are responsible for ensuring their team's compliance and addressing any knowledge gaps identified during assessments.",
+      "placeholders": [
+        {
+          "key": "TRAINING_PERIOD",
+          "label": "Initial Training Period (days)",
+          "defaultValue": "30"
+        }
+      ]
     },
     {
-      "heading": "Training and Awareness",
-      "content": "All employees receive: initial security awareness training within {{TRAINING_TIMEFRAME}} of employment, annual refresher training sessions, simulated phishing tests to assess awareness levels, updates on emerging threats and attack methods, and access to security resources and reporting channels."
+      "heading": "Consequences and Enforcement",
+      "content": "Failure to follow this policy may result in disciplinary action up to and including termination. However, employees who report suspected attacks in good faith will not face penalties, even if their actions inadvertently caused a security incident. The focus is on learning and improvement rather than punishment for honest mistakes.",
+      "placeholders": []
     },
     {
-      "heading": "Policy Violations and Consequences",
-      "content": "Violations of this policy may result in: mandatory additional training, restricted system access, formal disciplinary action up to and including termination, and potential legal action in cases of intentional misconduct. The severity of consequences depends on the nature and impact of the violation."
+      "heading": "Policy Review and Updates",
+      "content": "This policy will be reviewed annually by {{POLICY_OWNER}} and updated as needed to address emerging threats. All changes will be communicated to staff with appropriate training provided. The policy effective date is {{EFFECTIVE_DATE}} and supersedes all previous versions.",
+      "placeholders": [
+        {
+          "key": "POLICY_OWNER",
+          "label": "Policy Owner",
+          "defaultValue": "[IT Security Manager]"
+        },
+        {
+          "key": "EFFECTIVE_DATE",
+          "label": "Effective Date",
+          "defaultValue": "[Date]"
+        }
+      ]
     }
   ],
   "useCases": [
     "Small businesses establishing their first cybersecurity policies",
-    "Organizations updating existing security frameworks",
-    "HR departments creating employee security guidelines",
+    "Organizations updating existing security procedures",
     "Companies preparing for compliance audits",
-    "Educational institutions protecting student and staff data",
-    "Healthcare organizations safeguarding patient information"
+    "HR departments creating employee security guidelines",
+    "Remote work teams needing clear security protocols"
   ],
   "relatedLinks": [
     {
-      "title": "Email Privacy Protection Guide",
-      "url": "/guides/email-privacy",
-      "type": "guide"
+      "title": "How to Spot Phishing Emails Guide",
+      "url": "/guides/spot-phishing-emails",
+      "type": "internal"
     },
     {
-      "title": "Password Security Best Practices",
-      "url": "/guides/password-security",
-      "type": "guide"
+      "title": "Email Security Best Practices",
+      "url": "/guides/email-security-best-practices",
+      "type": "internal"
     },
     {
-      "title": "Browser Privacy Settings",
-      "url": "/guides/browser-privacy",
-      "type": "guide"
-    },
-    {
-      "title": "Incognito Browser Security Features",
-      "url": "https://incognitobrowser.com",
-      "type": "tool"
+      "title": "Phishing Simulation Tools",
+      "url": "/tools/phishing-simulation",
+      "type": "internal"
     }
   ]
 }

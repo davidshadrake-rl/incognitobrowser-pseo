@@ -2,108 +2,150 @@
   "niche": "dating-privacy",
   "slug": "dating-app-privacy-request-letter-template",
   "title": "Dating App Privacy Request Letter Template",
-  "metaDescription": "Professional template to request your personal data from Tinder, Bumble, Hinge and other dating apps. Protect your privacy with our free letter.",
-  "description": "Use this comprehensive letter template to formally request access to your personal data from dating platforms like Tinder, Bumble, Hinge, and Grindr. Includes proper legal language and step-by-step guidance for exercising your privacy rights under GDPR and CCPA.",
+  "metaDescription": "Free template to request your personal data from Tinder, Bumble, Grindr and other dating apps. Protect your privacy with our GDPR-compliant letter.",
+  "keywords": [
+    "dating app privacy request",
+    "Tinder data request",
+    "dating app GDPR",
+    "personal data request letter",
+    "dating app privacy rights"
+  ],
+  "description": "A comprehensive letter template to request your personal data from dating apps like Tinder, Bumble, and Grindr. Includes GDPR and CCPA compliant language to help you understand what data these platforms collect about you.",
   "templateType": "letter",
   "sections": [
     {
-      "heading": "Letter Header",
-      "content": "[Your Full Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Email Address]\n[Your Phone Number]\n\n[Date]\n\n[Dating App Company Name]\nData Protection Officer\n[Company Address]\n\nSubject: Data Access Request Under [GDPR/CCPA] - Account: [Your Username/Email]",
+      "heading": "Letter Header and Recipient Information",
+      "content": "Date: [DATE]\n\nTo: Data Protection Officer\n[DATING_APP_COMPANY]\n[COMPANY_ADDRESS]\n\nSubject: Request for Personal Data Under Data Protection Laws\n\nDear Data Protection Team,",
       "placeholders": [
         {
-          "key": "your_name",
-          "label": "Your Full Name",
-          "defaultValue": "[Your Full Name]"
+          "key": "DATE",
+          "label": "Current Date",
+          "defaultValue": "MM/DD/YYYY"
         },
         {
-          "key": "your_address",
-          "label": "Your Address",
-          "defaultValue": "[Your Address]"
-        },
-        {
-          "key": "dating_app_name",
+          "key": "DATING_APP_COMPANY",
           "label": "Dating App Company Name",
-          "defaultValue": "[Dating App Company Name]"
+          "defaultValue": "Tinder Inc."
         },
         {
-          "key": "privacy_law",
-          "label": "Applicable Privacy Law",
-          "defaultValue": "GDPR/CCPA"
-        },
-        {
-          "key": "account_identifier",
-          "label": "Your Username or Email",
-          "defaultValue": "[Your Username/Email]"
+          "key": "COMPANY_ADDRESS",
+          "label": "Company Address",
+          "defaultValue": "8750 Wilshire Blvd, Beverly Hills, CA 90211"
         }
       ]
     },
     {
-      "heading": "Opening Statement",
-      "content": "Dear Data Protection Officer,\n\nI am writing to formally request access to all personal data you hold about me under my rights as outlined in [the General Data Protection Regulation (GDPR) Article 15 / the California Consumer Privacy Act (CCPA) Section 1798.110].\n\nI am a user of your [dating app name] service and my account is associated with the following information:\n- Username: [Your Username]\n- Email Address: [Your Email]\n- Phone Number: [Your Phone Number]\n- Account Creation Date (if known): [Date]",
+      "heading": "Personal Information and Account Details",
+      "content": "I am writing to request access to my personal data that your company processes. My account details are as follows:\n\nFull Name: [FULL_NAME]\nEmail Address: [EMAIL_ADDRESS]\nPhone Number: [PHONE_NUMBER]\nAccount Username/ID: [USERNAME]\nApproximate Account Creation Date: [CREATION_DATE]",
       "placeholders": [
         {
-          "key": "privacy_regulation",
-          "label": "Privacy Regulation Reference",
-          "defaultValue": "General Data Protection Regulation (GDPR) Article 15"
+          "key": "FULL_NAME",
+          "label": "Your Full Legal Name",
+          "defaultValue": "John Doe"
         },
         {
-          "key": "app_name",
-          "label": "Dating App Name",
-          "defaultValue": "[dating app name]"
+          "key": "EMAIL_ADDRESS",
+          "label": "Email Used for Account",
+          "defaultValue": "john.doe@email.com"
+        },
+        {
+          "key": "PHONE_NUMBER",
+          "label": "Phone Number (if provided)",
+          "defaultValue": "Optional"
+        },
+        {
+          "key": "USERNAME",
+          "label": "Dating App Username or ID",
+          "defaultValue": "Your app username"
+        },
+        {
+          "key": "CREATION_DATE",
+          "label": "When You Created Account",
+          "defaultValue": "MM/YYYY"
         }
       ]
     },
     {
-      "heading": "Specific Data Request",
-      "content": "I hereby request access to all personal data you process about me, including but not limited to:\n\n• Profile information (photos, bio, preferences, demographics)\n• Location data and geolocation history\n• Messaging history and communications\n• Match history and interaction data\n• Usage analytics and behavioral data\n• Device information and IP addresses\n• Third-party data sources and integrations\n• Algorithm scoring and recommendation data\n• Payment and subscription information\n• Any data shared with or received from third parties\n• Data retention schedules and deletion dates\n• Records of data processing activities involving my information"
+      "heading": "Specific Data Categories Requested",
+      "content": "Under applicable data protection laws (GDPR Article 15, CCPA Section 1798.110), I request access to all personal data you process about me, including but not limited to:\n\n• Profile information (photos, bio, preferences)\n• Location data and geolocation history\n• Match history and interaction data\n• Messages and communication records\n• Payment and subscription information\n• Device information and app usage analytics\n• Data obtained from third-party sources\n• Any automated decision-making or profiling data",
+      "placeholders": []
     },
     {
-      "heading": "Legal Rights Reference",
-      "content": "Under [GDPR/CCPA], I have the right to:\n\n1. Receive confirmation of whether you process my personal data\n2. Access the personal data you hold about me\n3. Receive information about the purposes of processing\n4. Know the categories of personal data concerned\n5. Understand who my data has been shared with\n6. Know how long my data will be stored\n7. Receive my data in a structured, machine-readable format\n\nI request that you provide this information within the legally required timeframe of [30 days under GDPR / 45 days under CCPA]."
+      "heading": "Legal Basis and Rights",
+      "content": "This request is made under my rights as a data subject under [APPLICABLE_LAW]. I understand that you are required to respond to this request within [RESPONSE_TIME] of receipt. Please provide the data in a commonly used electronic format.\n\nIf you need additional information to verify my identity, please contact me using the details provided above.",
+      "placeholders": [
+        {
+          "key": "APPLICABLE_LAW",
+          "label": "Applicable Privacy Law",
+          "defaultValue": "GDPR and applicable local data protection laws"
+        },
+        {
+          "key": "RESPONSE_TIME",
+          "label": "Required Response Time",
+          "defaultValue": "30 days"
+        }
+      ]
     },
     {
-      "heading": "Identity Verification",
-      "content": "To verify my identity, I am providing the following information:\n\n• Full Name: [Your Full Name]\n• Email associated with account: [Your Email]\n• Phone number associated with account: [Your Phone Number]\n• Last known location when using the app: [City, State]\n• Approximate account creation date: [Date]\n\nIf you require additional verification, please contact me using the information provided above. I am happy to provide reasonable proof of identity while maintaining my privacy and security."
+      "heading": "Data Processing Transparency Request",
+      "content": "Additionally, please provide information about:\n\n• The purposes for which my personal data is processed\n• Categories of recipients with whom my data has been shared\n• Data retention periods for different types of information\n• Your legal basis for processing my personal data\n• Any transfers of my data to third countries or international organizations\n• The source of personal data not collected directly from me",
+      "placeholders": []
     },
     {
-      "heading": "Delivery Instructions",
-      "content": "Please provide the requested information in a secure, encrypted format via email to [Your Email Address]. If the data is extensive, please provide it in multiple files or via a secure download link with appropriate access controls.\n\nI prefer to receive the data in commonly readable formats such as PDF, CSV, or JSON. Please ensure that any files are virus-scanned and password-protected if containing sensitive information."
-    },
-    {
-      "heading": "Closing Statement",
-      "content": "I expect a response within the legally mandated timeframe. If you cannot comply with this request or need additional time, please provide written explanation of the delay and expected completion date.\n\nIf you need clarification on any aspect of this request, please contact me promptly. I reserve the right to escalate this matter to the relevant data protection authority if my request is not handled appropriately.\n\nThank you for your prompt attention to this matter.\n\nSincerely,\n\n[Your Signature]\n[Your Printed Name]\n[Date]"
+      "heading": "Closing and Contact Information",
+      "content": "I look forward to your prompt response within the legally required timeframe. Should you have any questions regarding this request, please contact me at [CONTACT_EMAIL] or [CONTACT_PHONE].\n\nThank you for your attention to this matter.\n\nSincerely,\n[SIGNATURE]\n[PRINTED_NAME]\n[DATE_SIGNED]",
+      "placeholders": [
+        {
+          "key": "CONTACT_EMAIL",
+          "label": "Your Contact Email",
+          "defaultValue": "your.email@example.com"
+        },
+        {
+          "key": "CONTACT_PHONE",
+          "label": "Your Contact Phone",
+          "defaultValue": "Your phone number"
+        },
+        {
+          "key": "SIGNATURE",
+          "label": "Your Signature",
+          "defaultValue": "[Your signature here]"
+        },
+        {
+          "key": "PRINTED_NAME",
+          "label": "Your Printed Name",
+          "defaultValue": "John Doe"
+        },
+        {
+          "key": "DATE_SIGNED",
+          "label": "Date Signed",
+          "defaultValue": "MM/DD/YYYY"
+        }
+      ]
     }
   ],
   "useCases": [
-    "Requesting personal data from Tinder, Bumble, or Hinge",
+    "Requesting personal data from Tinder, Bumble, or Grindr",
     "Understanding what information dating apps collect about you",
-    "Preparing for account deletion by downloading your data first",
-    "Investigating potential privacy violations by dating platforms",
-    "Exercising GDPR or CCPA data access rights",
-    "Checking if your data was involved in a dating app data breach",
-    "Reviewing location tracking and behavioral profiling by dating apps",
-    "Verifying what information is shared with third-party advertisers"
+    "Exercising your GDPR or CCPA privacy rights",
+    "Preparing to delete your dating app account permanently",
+    "Investigating potential data breaches or privacy violations",
+    "Academic research on dating app data practices"
   ],
   "relatedLinks": [
-    {
-      "title": "Incognito Browser for Private Dating App Usage",
-      "url": "/incognito-browser",
-      "type": "tool"
-    },
     {
       "title": "Dating App Privacy Settings Guide",
       "url": "/guides/dating-app-privacy-settings",
       "type": "guide"
     },
     {
-      "title": "Location Privacy Protection Tips",
-      "url": "/guides/location-privacy-protection",
+      "title": "How to Hide Your Location on Dating Apps",
+      "url": "/guides/hide-location-dating-apps",
       "type": "guide"
     },
     {
-      "title": "GDPR Data Request Rights Explained",
-      "url": "/guides/gdpr-data-access-rights",
-      "type": "guide"
+      "title": "Incognito Browser for Private Dating",
+      "url": "/tools/incognito-browser-dating",
+      "type": "tool"
     }
   ]
 }

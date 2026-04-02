@@ -2,146 +2,167 @@
   "niche": "public-wifi",
   "slug": "wifi-security-public-wifi-checklist",
   "title": "Wi-Fi Security & Public Wi-Fi Security Checklist",
-  "metaDescription": "Complete checklist to secure your Wi-Fi connections and stay safe on public networks. Protect your privacy with these essential steps.",
+  "metaDescription": "Complete checklist to stay safe on public Wi-Fi networks. Protect yourself from attacks, secure connections, and browse safely in cafes and hotels.",
+  "keywords": [
+    "public wifi security",
+    "wifi privacy",
+    "secure wifi",
+    "hotspot security",
+    "vpn for public wifi"
+  ],
   "difficulty": "beginner",
-  "estimatedTime": "20-30 minutes",
-  "intro": "Public Wi-Fi networks are convenient but dangerous for your privacy and security. Hackers can easily intercept your data on unsecured networks. This checklist helps you secure your home Wi-Fi and stay protected when using public hotspots.",
+  "estimatedTime": "15-20 minutes",
+  "intro": "Public Wi-Fi networks pose serious security risks including data theft, man-in-the-middle attacks, and fake hotspots. This checklist helps you stay safe while browsing in cafes, hotels, airports, and other public spaces.",
   "sections": [
     {
-      "title": "Home Wi-Fi Security",
+      "title": "Pre-Connection Security Setup",
       "items": [
         {
-          "id": "home-wifi-password",
-          "task": "Change default router password",
-          "why": "Default passwords are publicly known and easily exploited by attackers to access your network.",
-          "howTo": "Access your router's admin panel (usually 192.168.1.1), login with current credentials, find the Wi-Fi settings, and create a strong password with 12+ characters including numbers and symbols.",
+          "id": "pre-1",
+          "task": "Install and configure a reliable VPN service",
+          "why": "VPNs encrypt all your internet traffic, protecting data from eavesdroppers on public networks.",
+          "howTo": "Choose a reputable VPN provider, install their app on all devices, and test the connection at home before traveling. Enable auto-connect features for public Wi-Fi.",
           "priority": "critical"
         },
         {
-          "id": "wpa3-encryption",
-          "task": "Enable WPA3 or WPA2 encryption",
-          "why": "Encryption scrambles your data so hackers can't read it even if they intercept it.",
-          "howTo": "In your router settings, go to wireless security settings and select WPA3 (preferred) or WPA2. Avoid WEP encryption as it's easily cracked.",
+          "id": "pre-2",
+          "task": "Update all devices and browsers to latest versions",
+          "why": "Updates contain security patches that protect against known vulnerabilities exploited on public networks.",
+          "howTo": "Check for OS updates on phones, tablets, and laptops. Update browsers and consider using Incognito Browser for enhanced privacy features.",
           "priority": "critical"
         },
         {
-          "id": "network-name-change",
-          "task": "Change default network name (SSID)",
-          "why": "Default network names reveal your router model, making it easier for attackers to exploit known vulnerabilities.",
-          "howTo": "In router settings, find the wireless/SSID section and change the network name to something unique that doesn't identify your router brand or personal information.",
+          "id": "pre-3",
+          "task": "Disable automatic Wi-Fi connection on all devices",
+          "why": "Prevents devices from automatically connecting to malicious networks that mimic previously used hotspots.",
+          "howTo": "Go to Wi-Fi settings and turn off 'Connect automatically' or 'Auto-join' features. Remove old, unnecessary network profiles.",
           "priority": "high"
         },
         {
-          "id": "firmware-update",
-          "task": "Update router firmware",
-          "why": "Firmware updates patch security vulnerabilities that hackers could exploit to access your network.",
-          "howTo": "Check your router's admin panel for firmware updates, or visit the manufacturer's website to download the latest version. Enable automatic updates if available.",
+          "id": "pre-4",
+          "task": "Turn off file sharing and AirDrop features",
+          "why": "File sharing makes your device discoverable and accessible to attackers on the same network.",
+          "howTo": "Disable file sharing, printer sharing, and AirDrop. Set network discovery to 'off' on Windows or 'contacts only' on iOS.",
           "priority": "high"
         },
         {
-          "id": "guest-network",
-          "task": "Set up a guest network",
-          "why": "Guest networks isolate visitors' devices from your main network and personal devices.",
-          "howTo": "Enable the guest network feature in your router settings, give it a different password, and limit bandwidth if desired. Use this for IoT devices too.",
+          "id": "pre-5",
+          "task": "Enable two-factor authentication on important accounts",
+          "why": "Adds extra security layer if login credentials are compromised on public networks.",
+          "howTo": "Set up 2FA on email, banking, social media, and work accounts. Use authenticator apps rather than SMS when possible.",
+          "priority": "high"
+        }
+      ]
+    },
+    {
+      "title": "Safe Connection Practices",
+      "items": [
+        {
+          "id": "conn-1",
+          "task": "Verify the legitimate network name with staff",
+          "why": "Prevents connection to 'evil twin' networks that mimic legitimate hotspots to steal data.",
+          "howTo": "Ask hotel front desk, cafe staff, or check official signage for exact network name and password. Avoid networks with generic names like 'Free WiFi'.",
+          "priority": "critical"
+        },
+        {
+          "id": "conn-2",
+          "task": "Connect to VPN immediately after joining network",
+          "why": "Encrypts your traffic before any browsing activity, protecting against immediate surveillance.",
+          "howTo": "Open your VPN app as soon as Wi-Fi connects, wait for VPN connection to establish, then verify your IP address has changed before browsing.",
+          "priority": "critical"
+        },
+        {
+          "id": "conn-3",
+          "task": "Use HTTPS websites only and verify SSL certificates",
+          "why": "HTTPS adds encryption between your browser and websites, making data harder to intercept.",
+          "howTo": "Look for padlock icon in browser address bar. Avoid sites without HTTPS. Be suspicious of certificate warnings and don't proceed if unsure.",
+          "priority": "high"
+        },
+        {
+          "id": "conn-4",
+          "task": "Avoid captive portals requesting personal information",
+          "why": "Malicious portals can harvest personal data, install malware, or capture login credentials.",
+          "howTo": "If portal asks for email, phone, or social media login, use fake information or find alternative networks. Never enter real passwords.",
+          "priority": "high"
+        },
+        {
+          "id": "conn-5",
+          "task": "Set network profile to 'Public' not 'Home'",
+          "why": "Public profile disables network discovery and sharing features that could expose your device.",
+          "howTo": "When connecting, choose 'Public network' option. On Windows, go to Network settings and ensure current network is set as Public.",
           "priority": "medium"
         }
       ]
     },
     {
-      "title": "Public Wi-Fi Safety",
+      "title": "Secure Browsing & Activity",
       "items": [
         {
-          "id": "vpn-usage",
-          "task": "Use a VPN on public Wi-Fi",
-          "why": "VPNs encrypt all your internet traffic, protecting your data from hackers on the same network.",
-          "howTo": "Install a reputable VPN app before connecting to public Wi-Fi. Connect to the VPN first, then join the public network. Keep the VPN active throughout your session.",
+          "id": "browse-1",
+          "task": "Avoid accessing sensitive accounts and information",
+          "why": "Reduces risk of credential theft and financial fraud if security measures fail.",
+          "howTo": "Skip online banking, shopping, and work systems with confidential data. If necessary, use mobile data instead of public Wi-Fi.",
           "priority": "critical"
         },
         {
-          "id": "verify-network-name",
-          "task": "Verify the official network name",
-          "why": "Hackers create fake hotspots with similar names to trick users into connecting to malicious networks.",
-          "howTo": "Ask staff for the exact network name and password. Be suspicious of networks like 'Free WiFi' or misspelled versions of legitimate networks.",
-          "priority": "critical"
-        },
-        {
-          "id": "disable-auto-connect",
-          "task": "Turn off automatic Wi-Fi connection",
-          "why": "Auto-connect can join malicious networks without your knowledge or connect to previously used networks in unsafe locations.",
-          "howTo": "Go to Wi-Fi settings on your device and disable 'Connect automatically' or 'Auto-join' for all networks. Manually select networks each time.",
+          "id": "browse-2",
+          "task": "Use private/incognito browsing mode",
+          "why": "Prevents storage of browsing history, cookies, and cached data that could be accessed by attackers.",
+          "howTo": "Open private browsing in your browser or use Incognito Browser which provides enhanced privacy features by default.",
           "priority": "high"
         },
         {
-          "id": "https-websites",
-          "task": "Only visit HTTPS websites",
-          "why": "HTTPS encrypts data between your device and websites, preventing eavesdropping on public networks.",
-          "howTo": "Look for the lock icon in your browser's address bar. Use Incognito Browser which prioritizes secure connections and warns about unsecured sites.",
+          "id": "browse-3",
+          "task": "Log out of all accounts when finished",
+          "why": "Prevents unauthorized access if someone gains control of your device or session.",
+          "howTo": "Manually log out of each service rather than just closing tabs. Clear browser data including cookies and stored passwords.",
           "priority": "high"
         },
         {
-          "id": "avoid-sensitive-activities",
-          "task": "Avoid banking and sensitive logins",
-          "why": "Even with precautions, public Wi-Fi poses risks for highly sensitive activities like banking or accessing personal accounts.",
-          "howTo": "Use your mobile data instead for banking, shopping, or accessing sensitive accounts. If you must use public Wi-Fi, ensure you have a VPN active.",
-          "priority": "high"
-        },
-        {
-          "id": "forget-networks",
-          "task": "Forget public networks after use",
-          "why": "Saved public networks can automatically reconnect in unsafe situations or to malicious networks with the same name.",
-          "howTo": "Go to your Wi-Fi settings, find previously connected public networks, and select 'Forget' or 'Remove' for each one before leaving.",
-          "priority": "medium"
-        }
-      ]
-    },
-    {
-      "title": "Device Security Settings",
-      "items": [
-        {
-          "id": "firewall-enable",
-          "task": "Enable device firewall",
-          "why": "Firewalls block unauthorized access attempts from other devices on the same network.",
-          "howTo": "On Windows, go to Windows Security > Firewall & network protection and ensure it's on. On Mac, go to System Preferences > Security & Privacy > Firewall tab and turn it on.",
-          "priority": "high"
-        },
-        {
-          "id": "file-sharing-disable",
-          "task": "Disable file sharing and AirDrop",
-          "why": "File sharing features can expose your files to other users on the same network.",
-          "howTo": "Turn off file sharing in system settings. On iPhone/Mac, set AirDrop to 'Receiving Off' or 'Contacts Only'. On Windows, disable network discovery.",
-          "priority": "high"
-        },
-        {
-          "id": "software-updates",
-          "task": "Keep software updated",
-          "why": "Updates patch security vulnerabilities that could be exploited on unsecured networks.",
-          "howTo": "Enable automatic updates for your operating system and apps. Regularly check for updates manually, especially for security software and browsers.",
+          "id": "browse-4",
+          "task": "Monitor device for unusual activity or pop-ups",
+          "why": "Early detection of malware or attacks allows quick response before serious damage occurs.",
+          "howTo": "Watch for unexpected pop-ups, slow performance, or unknown apps. Run antivirus scan if anything seems suspicious.",
           "priority": "medium"
         },
         {
-          "id": "private-browsing",
-          "task": "Use private browsing mode",
-          "why": "Private browsing prevents storing sensitive data locally and reduces tracking on public networks.",
-          "howTo": "Use Incognito Browser or enable private/incognito mode in your regular browser when on public Wi-Fi. This prevents saving passwords and browsing history locally.",
+          "id": "browse-5",
+          "task": "Use encrypted messaging apps for communication",
+          "why": "End-to-end encryption protects messages even if network traffic is intercepted.",
+          "howTo": "Use Signal, WhatsApp, or Telegram instead of SMS or regular email for sensitive communications while on public Wi-Fi.",
           "priority": "medium"
+        },
+        {
+          "id": "browse-6",
+          "task": "Forget the network when leaving",
+          "why": "Prevents automatic reconnection to potentially compromised networks in the future.",
+          "howTo": "Go to Wi-Fi settings and select 'Forget' or 'Remove' for the public network before leaving the location.",
+          "priority": "low"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Consider investing in a travel router with built-in VPN capabilities for automatic protection across all your devices.",
+    "Use your phone's mobile hotspot instead of public Wi-Fi when handling sensitive tasks - cellular data is much more secure.",
+    "Download offline maps, entertainment, and work files before traveling to reduce your dependence on public Wi-Fi networks.",
+    "Keep a list of trusted VPN servers in your destination country for optimal connection speed and reliability.",
+    "Set up a separate 'travel' email account for public Wi-Fi use to keep your main accounts safer from potential breaches."
+  ],
   "relatedLinks": [
     {
-      "title": "VPN Privacy Guide",
-      "url": "/vpn-privacy",
+      "title": "Best VPN Services for Travel Security",
+      "url": "/vpn-privacy/best-vpn-services-travel",
       "type": "internal"
     },
     {
-      "title": "Browser Privacy Settings",
-      "url": "/browser-privacy",
+      "title": "Browser Privacy Settings Checklist",
+      "url": "/browser-privacy/browser-privacy-settings-checklist",
       "type": "internal"
     },
     {
-      "title": "Password Security Checklist",
-      "url": "/password-security",
+      "title": "Password Security Best Practices",
+      "url": "/password-security/password-security-checklist",
       "type": "internal"
     }
   ]

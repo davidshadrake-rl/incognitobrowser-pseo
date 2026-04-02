@@ -11,6 +11,19 @@
 
 import fs from 'fs';
 import path from 'path';
+
+// Load .env manually since dotenv gets intercepted by tsx/Next.js
+const envPath = path.join(process.cwd(), '.env');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf-8');
+  for (const line of envContent.split('\n')) {
+    const match = line.match(/^([^#=]+)=(.*)$/);
+    if (match && !process.env[match[1].trim()]) {
+      process.env[match[1].trim()] = match[2].trim();
+    }
+  }
+}
+
 import Anthropic from '@anthropic-ai/sdk';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -119,6 +132,11 @@ Niche: ${niche.name}
 Description: ${niche.description}
 Keywords: ${niche.keywords.join(', ')}
 Related topics: ${niche.relatedNiches.join(', ')}
+Target audience: ${niche.context.audience}
+Pain points to address: ${niche.context.pain_points}
+Monetization angle: ${niche.context.monetization}
+Content that works: ${niche.context.content_that_works}
+Subtopics to cover: ${niche.context.subtopics.join(', ')}
   `.trim();
 
   const relatedBlogPosts = existingBlogUrls
@@ -170,6 +188,8 @@ ${JSON.stringify(schema, null, 2)}`;
 }
 
 async function generateGlossaryTerm(term: string, schema: object): Promise<any> {
+  const validTermSlugs = glossaryTerms.join(', ');
+
   const prompt = `Generate a JSON object for a privacy glossary entry for the term "${term.replace(/-/g, ' ')}".
 
 IMPORTANT RULES:
@@ -177,7 +197,8 @@ IMPORTANT RULES:
 2. Follow the schema exactly
 3. Write the definition clearly for a general audience
 4. Include practical real-world examples
-5. Link to related terms using their slugs
+5. For relatedTerms, ONLY use slugs from this list: ${validTermSlugs}
+   Do NOT invent new slugs. Pick 3-5 terms from the list above that are most related.
 6. Set slug to "${term}"
 
 JSON Schema to follow:

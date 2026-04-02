@@ -2,145 +2,213 @@
   "niche": "encrypted-messaging",
   "slug": "encrypted-messaging-privacy-hardening-checklist",
   "title": "Encrypted Messaging Privacy Hardening Checklist",
-  "metaDescription": "Complete checklist to maximize privacy and security in encrypted messaging apps like Signal, WhatsApp, and Telegram. Essential privacy hardening tips.",
+  "metaDescription": "Complete checklist to maximize privacy and security in encrypted messaging apps like Signal, WhatsApp, and Telegram. Protect your communications.",
+  "keywords": [
+    "encrypted messaging",
+    "Signal app privacy",
+    "WhatsApp security settings",
+    "end-to-end encryption",
+    "secure messaging apps"
+  ],
   "difficulty": "intermediate",
   "estimatedTime": "45-60 minutes",
-  "intro": "Secure your private communications with this comprehensive privacy hardening checklist for encrypted messaging apps. Learn to properly configure Signal, WhatsApp, Telegram, and other messaging platforms to maximize your privacy protection.",
+  "intro": "Secure your private communications with this comprehensive checklist. Even encrypted messaging apps need proper configuration to maximize privacy and protect against metadata leaks, contact discovery, and other privacy risks.",
   "sections": [
     {
       "title": "App Selection & Installation",
       "items": [
         {
-          "id": "choose-signal",
-          "task": "Use Signal as your primary encrypted messaging app",
-          "why": "Signal offers the strongest end-to-end encryption with minimal metadata collection and open-source transparency.",
-          "howTo": "Download Signal from official app stores only. Verify the developer is Signal Foundation. Enable automatic updates for security patches.",
+          "id": "choose-secure-app",
+          "task": "Choose Signal as your primary messaging app",
+          "why": "Signal offers the strongest privacy protections with open-source code, minimal metadata collection, and proven end-to-end encryption.",
+          "howTo": "Download Signal from official app stores only. Verify the developer is 'Signal Foundation' on mobile or signal.org for desktop versions.",
           "priority": "critical"
         },
         {
-          "id": "verify-app-authenticity",
-          "task": "Verify app authenticity before installation",
-          "why": "Fake messaging apps can steal your data and compromise your communications.",
-          "howTo": "Only download from official app stores. Check developer names match official sources. Read recent reviews for security concerns. Verify app signatures when possible.",
+          "id": "verify-installation",
+          "task": "Verify app authenticity and enable auto-updates",
+          "why": "Fake messaging apps can steal your data, and outdated apps may have security vulnerabilities.",
+          "howTo": "Check app developer credentials in your app store. Enable automatic updates in your device settings to ensure you get security patches quickly.",
           "priority": "high"
         },
         {
-          "id": "enable-app-lock",
-          "task": "Enable app lock with biometric or PIN protection",
-          "why": "Prevents unauthorized access to your messages if someone gains physical access to your device.",
-          "howTo": "Go to app Privacy settings. Enable Screen Lock or App Lock. Choose biometric authentication (fingerprint/face) or strong PIN. Set lock timer to immediate.",
-          "priority": "critical"
-        }
-      ]
-    },
-    {
-      "title": "Account & Profile Configuration",
-      "items": [
-        {
-          "id": "minimize-profile-info",
-          "task": "Minimize profile information and visibility",
-          "why": "Reduces your digital footprint and limits information available to strangers and potential attackers.",
-          "howTo": "Use initials or nickname instead of full name. Remove or limit profile photo visibility. Hide 'last seen' status, read receipts, and online status from non-contacts.",
-          "priority": "high"
-        },
-        {
-          "id": "disable-phone-discovery",
-          "task": "Disable phone number discovery features",
-          "why": "Prevents others from finding your account using your phone number, reducing unwanted contact attempts.",
-          "howTo": "In Privacy settings, disable 'Allow others to find me by phone number' or similar options. Turn off contact syncing if not needed.",
+          "id": "secure-phone-number",
+          "task": "Register with a dedicated phone number if possible",
+          "why": "Using your main phone number can link your messaging activity to your real identity and other online accounts.",
+          "howTo": "Consider using a separate phone number from services like Google Voice or a prepaid SIM card for messaging app registration.",
           "priority": "medium"
         },
         {
-          "id": "configure-disappearing-messages",
-          "task": "Enable disappearing messages by default",
-          "why": "Automatically deletes messages after a set time, reducing data retention and potential exposure in device compromises.",
-          "howTo": "Set default disappearing message timer to 1 week or less. Enable for all new conversations. Regularly review and enable for existing chats.",
+          "id": "disable-sms-fallback",
+          "task": "Disable SMS fallback in messaging apps",
+          "why": "SMS messages are not encrypted and can be intercepted by carriers, governments, or attackers.",
+          "howTo": "In Signal: Settings > SMS and MMS > Turn off 'Use as default SMS app'. In other apps, look for 'SMS fallback' or similar options and disable them.",
           "priority": "high"
+        },
+        {
+          "id": "setup-registration-lock",
+          "task": "Enable registration lock or PIN protection",
+          "why": "Prevents someone from registering your number on a new device and accessing your message history.",
+          "howTo": "In Signal: Settings > Account > Registration Lock. Create a strong PIN you'll remember. In WhatsApp: Settings > Account > Two-step verification.",
+          "priority": "critical"
         }
       ]
     },
     {
-      "title": "Communication Security",
+      "title": "Privacy Settings Configuration",
       "items": [
         {
-          "id": "verify-safety-numbers",
-          "task": "Verify safety numbers for important contacts",
-          "why": "Confirms you're communicating with the intended person and prevents man-in-the-middle attacks.",
-          "howTo": "Open contact info, tap safety number or encryption keys. Compare numbers in person, via video call, or through another secure channel. Mark as verified.",
-          "priority": "critical"
-        },
-        {
-          "id": "enable-sealed-sender",
-          "task": "Enable sealed sender or similar privacy features",
-          "why": "Hides message sender information from the messaging service, providing additional metadata protection.",
-          "howTo": "In Signal Privacy settings, enable 'Sealed Sender'. For other apps, look for similar metadata protection features in privacy settings.",
+          "id": "disable-contact-discovery",
+          "task": "Limit contact discovery and syncing",
+          "why": "Contact syncing uploads your entire address book to company servers, potentially exposing your contacts' information.",
+          "howTo": "In Signal: Settings > Privacy > Phone Number > Who can find me by number > Nobody. Disable 'Allow others to find me'. Manually add contacts instead of syncing.",
           "priority": "high"
         },
         {
-          "id": "disable-message-backups",
-          "task": "Disable cloud backups or use encrypted backups only",
-          "why": "Cloud backups often aren't end-to-end encrypted, potentially exposing your message history to service providers or attackers.",
-          "howTo": "Turn off iCloud/Google Drive backups in app settings. If backups needed, use only encrypted local backups or Signal's encrypted backup feature.",
-          "priority": "critical"
-        },
-        {
-          "id": "review-linked-devices",
-          "task": "Regularly audit and remove unnecessary linked devices",
-          "why": "Compromised or forgotten linked devices can provide access to your messages.",
-          "howTo": "Check Linked Devices in settings monthly. Remove any unrecognized devices immediately. Sign out from devices you no longer use regularly.",
-          "priority": "high"
-        }
-      ]
-    },
-    {
-      "title": "Advanced Privacy Settings",
-      "items": [
-        {
-          "id": "disable-read-receipts",
+          "id": "hide-read-receipts",
           "task": "Disable read receipts and typing indicators",
-          "why": "Prevents others from knowing when you've read messages or are typing, enhancing your privacy and reducing pressure to respond immediately.",
-          "howTo": "In Privacy settings, turn off read receipts, typing indicators, and online status. Note this is mutual - you won't see others' status either.",
+          "why": "These features reveal when you're active and reading messages, providing metadata about your communication patterns.",
+          "howTo": "In Signal: Settings > Privacy > Read Receipts (turn off). In WhatsApp: Settings > Privacy > Read receipts (disable). Also disable 'Show when typing'.",
           "priority": "medium"
         },
         {
-          "id": "configure-notification-privacy",
-          "task": "Configure notification privacy to hide message content",
-          "why": "Prevents message previews from appearing on lock screen where others might see them.",
-          "howTo": "In Notifications settings, disable message preview or set to 'Name only'. Configure system notifications to hide sensitive content on lock screen.",
+          "id": "configure-profile-privacy",
+          "task": "Minimize profile information and visibility",
+          "why": "Profile photos, status messages, and 'last seen' information can reveal personal details to unwanted contacts.",
+          "howTo": "Use generic profile photos, avoid personal status messages. Set 'Last Seen' to 'Nobody' in privacy settings. Limit who can see your profile info.",
+          "priority": "medium"
+        },
+        {
+          "id": "disable-cloud-backups",
+          "task": "Turn off cloud backups",
+          "why": "Cloud backups are often not end-to-end encrypted and can be accessed by service providers or through account compromise.",
+          "howTo": "In WhatsApp: Settings > Chats > Chat backup > Turn off. In Signal: Backups are local by default. In Telegram: Settings > Data and Storage > Turn off cloud sync.",
+          "priority": "critical"
+        },
+        {
+          "id": "enable-disappearing-messages",
+          "task": "Set default disappearing message timers",
+          "why": "Automatically deleting messages reduces the amount of sensitive data stored on devices long-term.",
+          "howTo": "In Signal: Settings > Privacy > Disappearing Messages > Set default timer (1 week recommended). Enable for all new conversations by default.",
           "priority": "high"
         },
         {
           "id": "disable-link-previews",
-          "task": "Disable automatic link previews",
-          "why": "Link previews can leak metadata to websites and may expose your IP address or other identifying information.",
-          "howTo": "In Privacy or Chat settings, disable 'Generate Link Previews' or similar options. Manually preview links using Incognito Browser when needed.",
+          "task": "Turn off link previews",
+          "why": "Link previews can leak metadata about your conversations to third-party websites and reveal your IP address.",
+          "howTo": "In Signal: Settings > Privacy > Link Previews (disable). In other apps, look for 'Generate link previews' or similar options and turn them off.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Advanced Security Measures",
+      "items": [
+        {
+          "id": "verify-safety-numbers",
+          "task": "Verify safety numbers with important contacts",
+          "why": "Safety number verification ensures you're actually communicating with your intended contact and not a man-in-the-middle attacker.",
+          "howTo": "In Signal: Open conversation > Tap contact name > View Safety Number. Compare in person or via separate secure channel. Mark as verified when confirmed.",
+          "priority": "high"
+        },
+        {
+          "id": "enable-screen-security",
+          "task": "Enable screen lock and disable screenshots",
+          "why": "Prevents unauthorized access to messages and stops other apps from capturing screenshots of your conversations.",
+          "howTo": "In Signal: Settings > Privacy > Screen Lock (enable with short timeout). Enable 'Screen Security' to block screenshots. Set up app-specific PIN or biometric lock.",
+          "priority": "high"
+        },
+        {
+          "id": "configure-notifications",
+          "task": "Secure lock screen notifications",
+          "why": "Message previews on lock screens can expose sensitive information to anyone who can see your device.",
+          "howTo": "In app settings: Turn off message previews in notifications. In device settings: Set notifications to 'Hide sensitive content' on lock screen.",
           "priority": "medium"
         },
         {
-          "id": "enable-relay-calls",
-          "task": "Enable privacy-focused calling features",
-          "why": "Protects your IP address during voice calls and prevents direct peer-to-peer connections that could reveal location.",
-          "howTo": "In Signal, enable 'Always Relay Calls' in Privacy settings. For other apps, look for similar IP protection or relay features during calls.",
+          "id": "use-vpn-with-messaging",
+          "task": "Use VPN when messaging on public networks",
+          "why": "While message content is encrypted, metadata like when you're online can still be monitored on public WiFi networks.",
+          "howTo": "Connect to a trustworthy VPN service before using messaging apps on public WiFi. Use Incognito Browser for any web-based messaging to add another layer of privacy.",
           "priority": "medium"
+        },
+        {
+          "id": "regular-security-audit",
+          "task": "Regularly audit active sessions and linked devices",
+          "why": "Forgotten or compromised devices with access to your messages pose ongoing security risks.",
+          "howTo": "Monthly check: Signal > Settings > Linked Devices. Remove any unrecognized devices. WhatsApp > Settings > WhatsApp Web. Log out unknown sessions immediately.",
+          "priority": "medium"
+        }
+      ]
+    },
+    {
+      "title": "Operational Security Practices",
+      "items": [
+        {
+          "id": "create-communication-plan",
+          "task": "Establish secure communication protocols with contacts",
+          "why": "Having agreed-upon security practices ensures all parties maintain consistent privacy standards.",
+          "howTo": "Agree on which app to use for sensitive topics, establish code words for emergencies, and decide on disappearing message timers for different conversation types.",
+          "priority": "medium"
+        },
+        {
+          "id": "practice-device-security",
+          "task": "Secure your device with strong authentication",
+          "why": "Device compromise can expose all your encrypted messages regardless of app security settings.",
+          "howTo": "Use strong device passcodes (6+ digits), enable biometric locks where available, set short auto-lock timers, and enable remote wipe capabilities.",
+          "priority": "critical"
+        },
+        {
+          "id": "manage-group-chats",
+          "task": "Carefully manage group chat membership and settings",
+          "why": "Group chats are only as secure as the least secure member and can leak information through member changes.",
+          "howTo": "Enable admin-only settings changes, verify all members before adding, use disappearing messages for groups, and avoid adding contacts you don't fully trust.",
+          "priority": "medium"
+        },
+        {
+          "id": "handle-sensitive-media",
+          "task": "Implement secure practices for sharing media",
+          "why": "Photos and files can contain metadata that reveals location, device information, and other sensitive details.",
+          "howTo": "Strip metadata from photos before sharing, avoid sharing location-revealing images, use disappearing media messages, and consider using separate apps for media editing.",
+          "priority": "medium"
+        },
+        {
+          "id": "plan-account-recovery",
+          "task": "Document secure account recovery procedures",
+          "why": "Lost access to your secure messaging can be catastrophic, but recovery methods can also be attack vectors.",
+          "howTo": "Securely store registration PINs and recovery phrases, document trusted contacts for emergency communication, and have backup communication methods established.",
+          "priority": "low"
         }
       ]
     }
   ],
+  "pro_tips": [
+    "Consider using different messaging apps for different purposes - Signal for sensitive communications, others for casual chat to avoid putting all contacts on one platform.",
+    "Regularly educate your contacts about privacy settings. A secure conversation requires both participants to follow good practices.",
+    "For ultimate privacy, use separate devices or user profiles for sensitive communications, keeping them isolated from your main digital identity.",
+    "When transitioning friends from insecure platforms, start with less sensitive conversations to build their confidence in encrypted messaging before discussing private matters.",
+    "Use Incognito Browser when researching messaging apps or accessing web versions to prevent tracking of your privacy research activities."
+  ],
   "relatedLinks": [
     {
-      "title": "Email Privacy Checklist",
-      "url": "/checklists/email-privacy",
+      "title": "Signal vs WhatsApp vs Telegram Security Comparison",
+      "url": "/guides/signal-vs-whatsapp-vs-telegram-security",
       "type": "internal"
     },
     {
-      "title": "Password Security Guide",
-      "url": "/checklists/password-security",
+      "title": "Email Privacy Protection Guide",
+      "url": "/checklists/email-privacy-checklist",
       "type": "internal"
     },
     {
-      "title": "Social Media Privacy Settings",
-      "url": "/checklists/social-media-privacy",
+      "title": "Password Security Best Practices",
+      "url": "/checklists/password-security-checklist",
       "type": "internal"
+    },
+    {
+      "title": "Signal Privacy Settings Guide",
+      "url": "https://signal.org/support/privacy-settings",
+      "type": "external"
     }
   ]
 }
