@@ -1,0 +1,176 @@
+{
+  "niche": "data-brokers",
+  "slug": "data-broker-risk-calculator",
+  "title": "Data Broker Risk Calculator - Check Your Exposure Level",
+  "metaDescription": "Calculate your personal data exposure risk across major data brokers. Get your privacy score and learn how to remove your information.",
+  "keywords": [
+    "data broker risk",
+    "personal data exposure",
+    "data broker opt out",
+    "privacy score calculator",
+    "data removal"
+  ],
+  "description": "Assess how much of your personal information is likely exposed across data broker networks. This calculator evaluates your digital footprint and provides a personalized risk score with actionable steps to protect your privacy.",
+  "inputs": [
+    {
+      "id": "socialMediaActivity",
+      "label": "Social Media Activity Level",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Minimal - Rarely post or share"
+        },
+        {
+          "value": "moderate",
+          "label": "Moderate - Regular posting/sharing"
+        },
+        {
+          "value": "heavy",
+          "label": "Heavy - Very active across platforms"
+        },
+        {
+          "value": "public",
+          "label": "Public profile with lots of personal info"
+        }
+      ],
+      "helpText": "How actively you share personal information on social platforms"
+    },
+    {
+      "id": "onlineAccounts",
+      "label": "Number of Online Accounts",
+      "type": "range",
+      "defaultValue": 25,
+      "min": 5,
+      "max": 100,
+      "step": 5,
+      "helpText": "Estimate total accounts (shopping, email, subscriptions, etc.)"
+    },
+    {
+      "id": "dataBreaches",
+      "label": "Known Data Breaches You've Been In",
+      "type": "number",
+      "defaultValue": 2,
+      "min": 0,
+      "max": 20,
+      "helpText": "Check haveibeenpwned.com if unsure"
+    },
+    {
+      "id": "publicRecords",
+      "label": "Public Records Available",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Property ownership, business registration, court records, etc."
+    },
+    {
+      "id": "phoneSpam",
+      "label": "Spam Calls/Texts Per Week",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "helpText": "Higher numbers often indicate more data broker exposure"
+    },
+    {
+      "id": "previousOptOuts",
+      "label": "Previous Data Broker Opt-Out Attempts",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "Never attempted"
+        },
+        {
+          "value": "few",
+          "label": "1-5 sites"
+        },
+        {
+          "value": "many",
+          "label": "6-20 sites"
+        },
+        {
+          "value": "service",
+          "label": "Used removal service"
+        }
+      ],
+      "helpText": "Past efforts to remove data from broker sites"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Data Broker Exposure Risk Score",
+      "format": "score",
+      "description": "Overall risk level from 0-100 based on your digital footprint"
+    },
+    {
+      "id": "estimatedBrokers",
+      "label": "Estimated Brokers With Your Data",
+      "format": "number",
+      "description": "Approximate number of data broker sites likely containing your information"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your overall privacy risk category"
+    }
+  ],
+  "formula": "const socialWeight = {minimal: 10, moderate: 25, heavy: 40, public: 60}; const accountsWeight = Math.min(inputs.onlineAccounts * 0.6, 40); const breachWeight = Math.min(inputs.dataBreaches * 8, 30); const recordsWeight = inputs.publicRecords ? 15 : 0; const spamWeight = Math.min(inputs.phoneSpam * 1.2, 25); const optOutReduction = {none: 0, few: -5, many: -15, service: -25}; const baseScore = socialWeight[inputs.socialMediaActivity] + accountsWeight + breachWeight + recordsWeight + spamWeight; const riskScore = Math.max(0, Math.min(100, baseScore + optOutReduction[inputs.previousOptOuts])); const estimatedBrokers = Math.round((riskScore / 100) * 200 + 20); const riskLevel = riskScore <= 30 ? 'Low' : riskScore <= 60 ? 'Moderate' : riskScore <= 80 ? 'High' : 'Critical'; return {riskScore: Math.round(riskScore), estimatedBrokers, riskLevel};",
+  "educational": {
+    "methodology": "This calculator assesses your data broker exposure risk by analyzing key factors that determine how much personal information is likely circulating among data brokers. It considers your digital activity patterns, account proliferation, breach history, public records, and current protection efforts to estimate your overall privacy risk.",
+    "tips": [
+      "Start with major data brokers like WhitePages, Spokeo, and BeenVerified for manual opt-outs",
+      "Consider using Incognito Browser for sensitive searches to avoid creating new data trails",
+      "Data removal services like DeleteMe or Incogni can automate the opt-out process across 100+ brokers",
+      "Monitor spam calls/texts as they often indicate new data broker exposure",
+      "Regularly check haveibeenpwned.com for new breaches affecting your accounts"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Minimal data broker exposure. Basic privacy hygiene should be sufficient.",
+        "color": "green"
+      },
+      {
+        "range": "31-60",
+        "label": "Moderate Risk",
+        "description": "Noticeable exposure. Consider manual opt-outs from major brokers.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-80",
+        "label": "High Risk",
+        "description": "Significant exposure across many brokers. Data removal service recommended.",
+        "color": "orange"
+      },
+      {
+        "range": "81-100",
+        "label": "Critical Risk",
+        "description": "Extensive exposure. Immediate action needed with professional removal service.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Complete Data Broker Opt-Out Guide",
+      "url": "/guides/data-broker-opt-out",
+      "type": "internal"
+    },
+    {
+      "title": "DeleteMe vs Incogni Comparison",
+      "url": "/comparisons/deleteme-vs-incogni",
+      "type": "internal"
+    },
+    {
+      "title": "Download Incognito Browser",
+      "url": "/tools/incognito-browser",
+      "type": "tool"
+    }
+  ]
+}

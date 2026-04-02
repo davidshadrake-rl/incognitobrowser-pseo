@@ -1,0 +1,217 @@
+{
+  "niche": "student-privacy",
+  "slug": "student-privacy-campus-surveillance-risk-calculator",
+  "title": "Student Privacy & Campus Surveillance Risk Calculator",
+  "metaDescription": "Calculate your privacy risk from campus surveillance, proctoring software, and school monitoring. Get actionable tips to protect your student data.",
+  "keywords": [
+    "student privacy",
+    "campus surveillance",
+    "digital proctoring",
+    "student data protection",
+    "educational privacy"
+  ],
+  "description": "Assess your exposure to campus surveillance and digital monitoring with our comprehensive privacy risk calculator. Understand how proctoring software, school devices, and campus systems may be collecting your data and get personalized recommendations.",
+  "inputs": [
+    {
+      "id": "schoolType",
+      "label": "Type of Educational Institution",
+      "type": "select",
+      "defaultValue": "public-university",
+      "options": [
+        {
+          "value": "k12-public",
+          "label": "Public K-12 School"
+        },
+        {
+          "value": "k12-private",
+          "label": "Private K-12 School"
+        },
+        {
+          "value": "public-university",
+          "label": "Public University/College"
+        },
+        {
+          "value": "private-university",
+          "label": "Private University/College"
+        },
+        {
+          "value": "community-college",
+          "label": "Community College"
+        }
+      ],
+      "helpText": "Different institution types have varying privacy policies and surveillance levels"
+    },
+    {
+      "id": "deviceUsage",
+      "label": "School-Issued Device Usage",
+      "type": "select",
+      "defaultValue": "personal-only",
+      "options": [
+        {
+          "value": "school-primary",
+          "label": "Primarily use school-issued devices"
+        },
+        {
+          "value": "mixed-usage",
+          "label": "Mix of school and personal devices"
+        },
+        {
+          "value": "personal-only",
+          "label": "Primarily use personal devices"
+        },
+        {
+          "value": "no-devices",
+          "label": "No digital device requirements"
+        }
+      ],
+      "helpText": "School-issued devices typically have more monitoring capabilities"
+    },
+    {
+      "id": "proctoringFrequency",
+      "label": "Digital Proctoring Frequency",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never used"
+        },
+        {
+          "value": "rarely",
+          "label": "1-2 times per semester"
+        },
+        {
+          "value": "sometimes",
+          "label": "Monthly or for major exams"
+        },
+        {
+          "value": "frequently",
+          "label": "Weekly or regular use"
+        },
+        {
+          "value": "always",
+          "label": "For all online assessments"
+        }
+      ],
+      "helpText": "Digital proctoring software can access cameras, microphones, and screen activity"
+    },
+    {
+      "id": "campusWifiUsage",
+      "label": "Campus Network Usage",
+      "type": "range",
+      "defaultValue": 50,
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "helpText": "Percentage of time you use campus WiFi or network resources"
+    },
+    {
+      "id": "onlineServices",
+      "label": "Educational Technology Services Used",
+      "type": "number",
+      "defaultValue": 3,
+      "min": 0,
+      "max": 15,
+      "helpText": "Number of edtech platforms you regularly use (LMS, Google Classroom, etc.)"
+    },
+    {
+      "id": "privacyAwareness",
+      "label": "Privacy Policy Awareness",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "none",
+          "label": "Haven't read any privacy policies"
+        },
+        {
+          "value": "some",
+          "label": "Read some but not all"
+        },
+        {
+          "value": "most",
+          "label": "Read most relevant policies"
+        },
+        {
+          "value": "all",
+          "label": "Thoroughly reviewed all policies"
+        }
+      ],
+      "helpText": "Understanding privacy policies helps you know what data is being collected"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Privacy Risk Score",
+      "format": "score",
+      "description": "Your total privacy risk score out of 100"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your privacy risk category with recommendations"
+    },
+    {
+      "id": "dataExposure",
+      "label": "Estimated Data Collection Points",
+      "format": "number",
+      "description": "Approximate number of ways your data may be collected"
+    }
+  ],
+  "formula": "const deviceRisk = deviceUsage === 'school-primary' ? 25 : deviceUsage === 'mixed-usage' ? 15 : deviceUsage === 'personal-only' ? 5 : 0; const proctoringRisk = proctoringFrequency === 'always' ? 30 : proctoringFrequency === 'frequently' ? 25 : proctoringFrequency === 'sometimes' ? 15 : proctoringFrequency === 'rarely' ? 8 : 0; const schoolRisk = schoolType === 'k12-public' ? 15 : schoolType === 'k12-private' ? 10 : schoolType === 'public-university' ? 12 : 8; const networkRisk = Math.round(campusWifiUsage * 0.2); const serviceRisk = Math.min(onlineServices * 2, 20); const awarenessBonus = privacyAwareness === 'all' ? -10 : privacyAwareness === 'most' ? -5 : privacyAwareness === 'some' ? -2 : 0; const riskScore = Math.max(0, Math.min(100, deviceRisk + proctoringRisk + schoolRisk + networkRisk + serviceRisk + awarenessBonus)); const riskLevel = riskScore >= 70 ? 'High Risk' : riskScore >= 40 ? 'Moderate Risk' : riskScore >= 20 ? 'Low-Moderate Risk' : 'Low Risk'; const dataExposure = Math.round(3 + (onlineServices * 1.5) + (proctoringRisk/5) + (deviceRisk/5)); return { riskScore, riskLevel, dataExposure };",
+  "educational": {
+    "methodology": "This calculator evaluates privacy risks based on institutional surveillance capabilities, device monitoring potential, digital proctoring exposure, network usage patterns, and privacy awareness levels. The scoring system weights high-risk factors like comprehensive proctoring and school-issued devices more heavily.",
+    "tips": [
+      "Use Incognito Browser or privacy-focused browsers when possible to limit tracking",
+      "Review FERPA rights and understand what educational data can be collected about you",
+      "Consider using a VPN when on campus networks to protect browsing activity",
+      "Ask about proctoring software permissions and opt for less invasive alternatives when available",
+      "Regularly review privacy settings on all educational technology platforms you use"
+    ],
+    "interpretation": [
+      {
+        "range": "0-19",
+        "label": "Low Risk",
+        "description": "Minimal privacy exposure with good protective practices in place",
+        "color": "green"
+      },
+      {
+        "range": "20-39",
+        "label": "Low-Moderate Risk",
+        "description": "Some privacy concerns but manageable with basic precautions",
+        "color": "yellow"
+      },
+      {
+        "range": "40-69",
+        "label": "Moderate Risk",
+        "description": "Significant data collection likely occurring, enhanced privacy measures recommended",
+        "color": "orange"
+      },
+      {
+        "range": "70-100",
+        "label": "High Risk",
+        "description": "Extensive surveillance and monitoring probable, immediate privacy protection needed",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "FERPA Student Rights Guide",
+      "url": "/guides/ferpa-student-rights",
+      "type": "internal"
+    },
+    {
+      "title": "Digital Proctoring Privacy Protection",
+      "url": "/guides/proctoring-software-privacy",
+      "type": "internal"
+    },
+    {
+      "title": "School Device Monitoring: What You Need to Know",
+      "url": "/guides/school-device-privacy",
+      "type": "internal"
+    }
+  ]
+}

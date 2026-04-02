@@ -1,0 +1,223 @@
+{
+  "niche": "webcam-privacy",
+  "slug": "webcam-microphone-privacy-risk-calculator",
+  "title": "Webcam & Microphone Privacy Risk Calculator",
+  "metaDescription": "Calculate your webcam and microphone privacy risk score. Get personalized recommendations to protect against unauthorized access and hacking.",
+  "keywords": [
+    "webcam privacy",
+    "microphone privacy",
+    "webcam hacking",
+    "camera security",
+    "privacy risk assessment"
+  ],
+  "description": "Assess your vulnerability to webcam and microphone spying. This calculator evaluates your device security, app permissions, and privacy practices to provide a comprehensive risk score and actionable protection recommendations.",
+  "inputs": [
+    {
+      "id": "deviceType",
+      "label": "Primary Device Type",
+      "type": "select",
+      "defaultValue": "laptop",
+      "options": [
+        {
+          "value": "laptop",
+          "label": "Laptop"
+        },
+        {
+          "value": "desktop",
+          "label": "Desktop PC"
+        },
+        {
+          "value": "smartphone",
+          "label": "Smartphone"
+        },
+        {
+          "value": "tablet",
+          "label": "Tablet"
+        }
+      ],
+      "helpText": "Different devices have varying security vulnerabilities"
+    },
+    {
+      "id": "physicalCover",
+      "label": "Use Physical Webcam Cover",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Physical covers provide the strongest protection when camera isn't in use"
+    },
+    {
+      "id": "videoCallFrequency",
+      "label": "Video Calls Per Week",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "helpText": "More frequent usage increases exposure risk"
+    },
+    {
+      "id": "permissionAudit",
+      "label": "Last Permission Audit",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "thisWeek",
+          "label": "This week"
+        },
+        {
+          "value": "thisMonth",
+          "label": "This month"
+        },
+        {
+          "value": "sixMonths",
+          "label": "6+ months ago"
+        },
+        {
+          "value": "never",
+          "label": "Never checked"
+        }
+      ],
+      "helpText": "Regular audits help identify apps with unnecessary camera/mic access"
+    },
+    {
+      "id": "antivirusProtection",
+      "label": "Antivirus/Security Software",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "premium",
+          "label": "Premium security suite"
+        },
+        {
+          "value": "basic",
+          "label": "Basic antivirus"
+        },
+        {
+          "value": "builtin",
+          "label": "Built-in OS protection only"
+        },
+        {
+          "value": "none",
+          "label": "No protection"
+        }
+      ],
+      "helpText": "Security software can detect and block unauthorized camera access"
+    },
+    {
+      "id": "unknownApps",
+      "label": "Apps from Unknown Sources",
+      "type": "range",
+      "defaultValue": 2,
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "helpText": "Apps from unofficial sources pose higher privacy risks"
+    },
+    {
+      "id": "indicatorLight",
+      "label": "Camera Indicator Light Presence",
+      "type": "select",
+      "defaultValue": "present",
+      "options": [
+        {
+          "value": "present",
+          "label": "Has indicator light"
+        },
+        {
+          "value": "sometimes",
+          "label": "Light works inconsistently"
+        },
+        {
+          "value": "none",
+          "label": "No indicator light"
+        },
+        {
+          "value": "unknown",
+          "label": "Don't know"
+        }
+      ],
+      "helpText": "Indicator lights alert you when camera is active, but can be bypassed"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "percentage",
+      "description": "Overall risk of unauthorized webcam/microphone access"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your current privacy protection level"
+    },
+    {
+      "id": "recommendationsCount",
+      "label": "Priority Actions",
+      "format": "number",
+      "description": "Number of immediate steps to improve security"
+    }
+  ],
+  "formula": "let baseRisk = 30; if (deviceType === 'laptop' || deviceType === 'smartphone') baseRisk += 10; if (physicalCover) baseRisk -= 20; baseRisk += Math.min(videoCallFrequency * 0.5, 15); switch(permissionAudit) { case 'thisWeek': baseRisk -= 10; break; case 'thisMonth': baseRisk -= 5; break; case 'sixMonths': baseRisk += 10; break; case 'never': baseRisk += 20; break; } switch(antivirusProtection) { case 'premium': baseRisk -= 15; break; case 'basic': baseRisk -= 5; break; case 'builtin': baseRisk += 5; break; case 'none': baseRisk += 20; break; } baseRisk += unknownApps * 2; switch(indicatorLight) { case 'present': baseRisk -= 5; break; case 'sometimes': break; case 'none': baseRisk += 10; break; case 'unknown': baseRisk += 5; break; } const riskScore = Math.max(0, Math.min(100, baseRisk)); let riskLevel = 'A'; let recommendationsCount = 0; if (riskScore >= 70) { riskLevel = 'F'; recommendationsCount = 5; } else if (riskScore >= 50) { riskLevel = 'D'; recommendationsCount = 4; } else if (riskScore >= 30) { riskLevel = 'C'; recommendationsCount = 3; } else if (riskScore >= 15) { riskLevel = 'B'; recommendationsCount = 2; } else { recommendationsCount = 1; } return { riskScore, riskLevel, recommendationsCount };",
+  "educational": {
+    "methodology": "This calculator evaluates multiple factors that affect your webcam and microphone privacy risk, including device type, physical security measures, usage patterns, permission management, and software protection. The scoring system weighs each factor based on real-world privacy threat research and security best practices.",
+    "tips": [
+      "Use physical webcam covers when not on video calls - they provide 100% protection against unauthorized access",
+      "Regularly audit app permissions and revoke camera/microphone access for apps that don't need it",
+      "Enable camera and microphone notification alerts in your operating system settings",
+      "Consider using Incognito Browser for video calls to limit tracking and data collection",
+      "Keep your operating system and security software updated to protect against new vulnerabilities"
+    ],
+    "interpretation": [
+      {
+        "range": "0-15%",
+        "label": "Excellent Protection (A)",
+        "description": "Your privacy practices are strong. Maintain current security measures and stay vigilant.",
+        "color": "green"
+      },
+      {
+        "range": "16-29%",
+        "label": "Good Protection (B)",
+        "description": "Solid privacy foundation with room for minor improvements. Consider adding physical covers.",
+        "color": "lightgreen"
+      },
+      {
+        "range": "30-49%",
+        "label": "Moderate Risk (C)",
+        "description": "Some privacy gaps exist. Review app permissions and consider upgrading security software.",
+        "color": "yellow"
+      },
+      {
+        "range": "50-69%",
+        "label": "High Risk (D)",
+        "description": "Significant privacy vulnerabilities detected. Take immediate action to secure your devices.",
+        "color": "orange"
+      },
+      {
+        "range": "70-100%",
+        "label": "Critical Risk (F)",
+        "description": "Your devices are highly vulnerable to privacy breaches. Implement multiple protection layers immediately.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "How to Check App Camera Permissions",
+      "url": "/guides/app-camera-permissions",
+      "type": "guide"
+    },
+    {
+      "title": "Best Webcam Covers 2024",
+      "url": "/reviews/webcam-covers",
+      "type": "review"
+    },
+    {
+      "title": "Signs Your Webcam Is Hacked",
+      "url": "/guides/webcam-hacking-signs",
+      "type": "guide"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "term": "Sandbox",
+  "slug": "sandbox",
+  "definition": "A security mechanism that isolates programs or processes in a restricted environment to prevent them from accessing or affecting other parts of a system or user data.",
+  "metaDescription": "Learn about sandbox technology - how it isolates programs to protect your privacy and security by preventing unauthorized access to your data.",
+  "simpleExplanation": "Think of a sandbox like a secure playground where programs can run without being able to escape and cause harm. It creates invisible walls that prevent apps, websites, or code from accessing your personal files, other programs, or sensitive system areas.",
+  "whyItMatters": "Sandboxing protects your privacy by preventing malicious software from stealing personal data, tracking your activities across applications, or accessing sensitive information like passwords and financial details stored elsewhere on your device.",
+  "technicalDetail": "Sandboxes use various isolation techniques including process separation, restricted file system access, limited network permissions, and controlled API access. Modern implementations include browser process isolation, mobile app sandboxing, and virtual machines that create secure boundaries between applications and system resources.",
+  "examples": [
+    {
+      "scenario": "Mobile App Sandboxing",
+      "explanation": "Each app on your smartphone runs in its own sandbox, preventing a malicious photo editing app from accessing your banking app's data or reading your text messages without explicit permission."
+    },
+    {
+      "scenario": "Browser Tab Isolation",
+      "explanation": "Modern web browsers run each website tab in a separate sandbox, so if one tab contains malicious code, it cannot access data from your online banking tab or read files from your computer."
+    },
+    {
+      "scenario": "Email Attachment Protection",
+      "explanation": "When you open a PDF attachment, your email client may run it in a sandbox to prevent any embedded malicious code from accessing your personal files or installing malware on your system."
+    }
+  ],
+  "relatedTerms": [
+    "containerization",
+    "privacy-sandbox",
+    "trusted-execution-environment",
+    "vulnerability-disclosure"
+  ],
+  "category": "technology"
+}

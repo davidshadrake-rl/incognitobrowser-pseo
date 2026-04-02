@@ -1,0 +1,30 @@
+{
+  "term": "Containerization",
+  "slug": "containerization",
+  "definition": "A security technique that isolates applications, websites, or processes in separate virtual environments to prevent them from accessing or affecting each other or the host system.",
+  "metaDescription": "Learn about containerization - a security method that isolates apps and processes to protect privacy and prevent unauthorized data access.",
+  "simpleExplanation": "Think of containerization like putting each app in its own secure box. Just as you might store different types of food in separate containers to prevent contamination, containerization keeps different programs separated so they can't interfere with each other or access your personal data without permission.",
+  "whyItMatters": "Containerization protects your privacy by preventing malicious websites or apps from accessing data from other applications. It also limits the damage if one container gets compromised, as the attacker can't easily spread to other parts of your system or access sensitive information stored elsewhere.",
+  "technicalDetail": "Containerization uses operating system-level virtualization to create isolated user spaces called containers. Each container has its own file system, network interface, and process space, but shares the host OS kernel. This provides lightweight isolation with minimal performance overhead compared to full virtual machines.",
+  "examples": [
+    {
+      "scenario": "Web browser tabs",
+      "explanation": "Modern browsers use containerization to isolate each tab or website, so a malicious site in one tab can't read your banking information from another tab or access your saved passwords."
+    },
+    {
+      "scenario": "Mobile app sandboxing",
+      "explanation": "Your smartphone puts each app in its own container, preventing a flashlight app from secretly accessing your photos or contacts without explicit permission."
+    },
+    {
+      "scenario": "Docker containers",
+      "explanation": "Web services use Docker to run different applications in isolated containers, ensuring that if one service gets hacked, the attacker can't access databases or files from other services."
+    }
+  ],
+  "relatedTerms": [
+    "sandbox",
+    "trusted-execution-environment",
+    "privacy-by-design",
+    "permissions-policy"
+  ],
+  "category": "technology"
+}

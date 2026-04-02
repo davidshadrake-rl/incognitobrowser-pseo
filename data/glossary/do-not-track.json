@@ -1,0 +1,31 @@
+{
+  "term": "Do Not Track",
+  "slug": "do-not-track",
+  "definition": "A browser setting and HTTP header that allows users to signal websites not to track their browsing behavior for advertising or analytics purposes.",
+  "metaDescription": "Learn about Do Not Track (DNT) - a browser privacy setting that requests websites not to track your online behavior for ads and analytics.",
+  "simpleExplanation": "Do Not Track is like putting up a 'no solicitors' sign for your web browser. When enabled, it sends a polite request to websites asking them not to follow your browsing habits for advertising purposes.",
+  "whyItMatters": "While DNT gives users a way to express privacy preferences, most websites ignore these requests since compliance is voluntary. Understanding its limitations helps users make informed decisions about browser privacy settings.",
+  "technicalDetail": "DNT works by adding a 'DNT: 1' header to HTTP requests. However, there's no enforcement mechanism, and major advertising networks typically don't honor DNT signals. The W3C discontinued the DNT standard in 2019 due to lack of industry adoption and disagreement over implementation.",
+  "examples": [
+    {
+      "scenario": "News website tracking",
+      "explanation": "You visit a news site with DNT enabled. Your browser sends a signal asking not to be tracked, but the site may still collect data for ads and analytics since compliance is optional."
+    },
+    {
+      "scenario": "Online shopping behavior",
+      "explanation": "While browsing online stores with DNT turned on, most retailers will still track your product views and purchases to show personalized recommendations, as they consider this 'functional' rather than prohibited tracking."
+    },
+    {
+      "scenario": "Social media integration",
+      "explanation": "Websites with Facebook Like buttons or Twitter widgets typically ignore DNT requests and still collect data when you visit pages containing these social plugins."
+    }
+  ],
+  "relatedTerms": [
+    "global-privacy-control",
+    "behavioral-tracking",
+    "cross-site-tracking",
+    "third-party-cookies",
+    "ad-blocker"
+  ],
+  "category": "technology"
+}

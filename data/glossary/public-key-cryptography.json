@@ -1,0 +1,30 @@
+{
+  "term": "Public Key Cryptography",
+  "slug": "public-key-cryptography",
+  "definition": "A cryptographic system using two mathematically linked keys: a public key for encryption and a private key for decryption, enabling secure communication without sharing secrets.",
+  "metaDescription": "Learn about public key cryptography, how it uses paired keys for secure encryption, and why it's essential for internet security and privacy.",
+  "simpleExplanation": "Think of public key cryptography like a special mailbox. You give everyone your public key (like your address), so they can send you encrypted messages. Only you have the private key (like the mailbox key) to unlock and read those messages.",
+  "whyItMatters": "Public key cryptography makes secure internet communication possible without requiring people to share secret passwords beforehand. It protects online banking, messaging, email, and website connections from eavesdropping.",
+  "technicalDetail": "Also called asymmetric cryptography, it uses mathematical algorithms like RSA, ECC, or Diffie-Hellman to generate key pairs. The keys are mathematically related but computationally infeasible to derive one from the other. Public keys can be freely shared, while private keys must remain secret.",
+  "examples": [
+    {
+      "scenario": "Secure website connections",
+      "explanation": "When you visit an HTTPS website, your browser uses the site's public key to encrypt data sent to the server, which uses its private key to decrypt it."
+    },
+    {
+      "scenario": "Email encryption",
+      "explanation": "You can share your public key so others can send you encrypted emails that only your private key can decrypt, ensuring message privacy."
+    },
+    {
+      "scenario": "Digital signatures",
+      "explanation": "You can sign documents with your private key, and others can verify the signature's authenticity using your public key, proving the document came from you."
+    }
+  ],
+  "relatedTerms": [
+    "end-to-end-encryption",
+    "ssl-tls",
+    "https",
+    "two-factor-authentication"
+  ],
+  "category": "technology"
+}

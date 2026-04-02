@@ -1,0 +1,233 @@
+{
+  "niche": "phishing",
+  "slug": "phishing-social-engineering-risk-calculator",
+  "title": "Phishing & Social Engineering Risk Calculator",
+  "metaDescription": "Calculate your vulnerability to phishing attacks and social engineering scams. Get personalized security tips to protect yourself online.",
+  "keywords": [
+    "phishing scam",
+    "social engineering",
+    "phishing protection",
+    "email scam",
+    "spear phishing"
+  ],
+  "description": "Assess your personal risk level for phishing attacks and social engineering scams based on your online habits, security practices, and awareness. Get actionable recommendations to improve your digital security.",
+  "inputs": [
+    {
+      "id": "emailFrequency",
+      "label": "How many emails do you receive daily?",
+      "type": "select",
+      "defaultValue": "50-100",
+      "options": [
+        {
+          "value": "0-10",
+          "label": "Less than 10"
+        },
+        {
+          "value": "10-25",
+          "label": "10-25 emails"
+        },
+        {
+          "value": "25-50",
+          "label": "25-50 emails"
+        },
+        {
+          "value": "50-100",
+          "label": "50-100 emails"
+        },
+        {
+          "value": "100+",
+          "label": "More than 100"
+        }
+      ],
+      "helpText": "Higher email volume increases exposure to phishing attempts"
+    },
+    {
+      "id": "verificationHabits",
+      "label": "How often do you verify sender identity before clicking links?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always verify"
+        },
+        {
+          "value": "usually",
+          "label": "Usually verify"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes verify"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely verify"
+        },
+        {
+          "value": "never",
+          "label": "Never verify"
+        }
+      ],
+      "helpText": "Verification habits are your first line of defense"
+    },
+    {
+      "id": "publicWifi",
+      "label": "How often do you use public Wi-Fi for sensitive activities?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        },
+        {
+          "value": "always",
+          "label": "Very frequently"
+        }
+      ],
+      "helpText": "Public Wi-Fi increases vulnerability to man-in-the-middle attacks"
+    },
+    {
+      "id": "socialMediaSharing",
+      "label": "How much personal information do you share on social media?",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Minimal (name only)"
+        },
+        {
+          "value": "limited",
+          "label": "Limited (basic info)"
+        },
+        {
+          "value": "moderate",
+          "label": "Moderate (some details)"
+        },
+        {
+          "value": "extensive",
+          "label": "Extensive (many details)"
+        },
+        {
+          "value": "everything",
+          "label": "Everything (very open)"
+        }
+      ],
+      "helpText": "Shared information helps attackers craft targeted spear phishing"
+    },
+    {
+      "id": "securityTraining",
+      "label": "Have you received phishing awareness training?",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "recent",
+          "label": "Yes, within 6 months"
+        },
+        {
+          "value": "past-year",
+          "label": "Yes, within past year"
+        },
+        {
+          "value": "old",
+          "label": "Yes, but over a year ago"
+        },
+        {
+          "value": "none",
+          "label": "No formal training"
+        }
+      ],
+      "helpText": "Regular training significantly reduces susceptibility"
+    },
+    {
+      "id": "urlChecking",
+      "label": "Do you check URLs before clicking?",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Hovering over links reveals the actual destination"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Risk Score",
+      "format": "score",
+      "description": "Your overall phishing vulnerability score out of 100"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Your risk category based on current security practices"
+    },
+    {
+      "id": "improvement",
+      "label": "Improvement Potential",
+      "format": "percentage",
+      "description": "How much you could reduce your risk with better practices"
+    }
+  ],
+  "formula": "const emailRisk = {\"0-10\": 5, \"10-25\": 10, \"25-50\": 20, \"50-100\": 30, \"100+\": 40}[inputs.emailFrequency] || 20; const verifyRisk = {\"always\": 0, \"usually\": 10, \"sometimes\": 25, \"rarely\": 40, \"never\": 50}[inputs.verificationHabits] || 25; const wifiRisk = {\"never\": 0, \"rarely\": 5, \"sometimes\": 15, \"often\": 25, \"always\": 35}[inputs.publicWifi] || 15; const socialRisk = {\"minimal\": 0, \"limited\": 5, \"moderate\": 15, \"extensive\": 25, \"everything\": 35}[inputs.socialMediaSharing] || 15; const trainingBonus = {\"recent\": -15, \"past-year\": -10, \"old\": -5, \"none\": 0}[inputs.securityTraining] || 0; const urlBonus = inputs.urlChecking ? -10 : 0; const baseScore = Math.min(100, Math.max(0, emailRisk + verifyRisk + wifiRisk + socialRisk + trainingBonus + urlBonus)); const riskLevel = baseScore <= 20 ? \"Low Risk\" : baseScore <= 40 ? \"Moderate Risk\" : baseScore <= 60 ? \"High Risk\" : \"Very High Risk\"; const maxPossibleReduction = Math.max(0, baseScore - 10); const improvementPct = Math.round((maxPossibleReduction / Math.max(baseScore, 1)) * 100); return {riskScore: baseScore, riskLevel: riskLevel, improvement: improvementPct};",
+  "educational": {
+    "methodology": "This calculator evaluates your phishing risk based on email exposure, security habits, training history, and information sharing practices. The scoring system reflects real-world attack patterns and vulnerability research.",
+    "tips": [
+      "Always hover over links to preview the destination URL before clicking",
+      "Use Incognito Browser or similar privacy-focused browsers to limit tracking and reduce targeted attacks",
+      "Enable two-factor authentication on all important accounts to limit breach impact",
+      "Be skeptical of urgent requests for personal information, even from known contacts",
+      "Keep software updated and use reputable antivirus with real-time email scanning"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Low Risk",
+        "description": "You have strong security practices and low exposure to phishing attacks",
+        "color": "green"
+      },
+      {
+        "range": "21-40",
+        "label": "Moderate Risk",
+        "description": "Some vulnerabilities exist but you have decent baseline security awareness",
+        "color": "yellow"
+      },
+      {
+        "range": "41-60",
+        "label": "High Risk",
+        "description": "Multiple risk factors make you an attractive target for attackers",
+        "color": "orange"
+      },
+      {
+        "range": "61-100",
+        "label": "Very High Risk",
+        "description": "Urgent security improvements needed to protect against common attacks",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "How to Spot Phishing Emails",
+      "url": "/guides/spot-phishing-emails",
+      "type": "guide"
+    },
+    {
+      "title": "Email Security Tools",
+      "url": "/tools/email-security",
+      "type": "affiliate"
+    }
+  ]
+}

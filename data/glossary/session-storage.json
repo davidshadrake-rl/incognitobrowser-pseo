@@ -1,0 +1,30 @@
+{
+  "term": "Session Storage",
+  "slug": "session-storage",
+  "definition": "A browser storage mechanism that temporarily stores data for a specific browsing session, automatically clearing when the tab or window is closed.",
+  "metaDescription": "Learn about session storage, a temporary browser data storage that persists only during your browsing session for enhanced privacy.",
+  "simpleExplanation": "Session storage is like a temporary notepad that websites use to remember things about your visit. Unlike other storage methods, it automatically erases everything when you close the browser tab, making it more privacy-friendly.",
+  "whyItMatters": "Session storage offers better privacy than persistent storage because data is automatically deleted when you close a tab. However, it can still track your activities within a single browsing session and may store sensitive information temporarily.",
+  "technicalDetail": "Session storage provides 5-10MB of temporary storage per origin, accessible only within the same tab. Data persists through page refreshes but is destroyed when the tab closes. It operates synchronously and is isolated between different tabs of the same website, unlike local storage which persists indefinitely.",
+  "examples": [
+    {
+      "scenario": "Shopping cart contents",
+      "explanation": "An e-commerce site stores your cart items in session storage so they persist as you browse different pages, but the cart empties if you accidentally close the tab."
+    },
+    {
+      "scenario": "Form progress saving",
+      "explanation": "A job application website saves your form progress in session storage, allowing you to refresh the page without losing data, but requiring you to start over in a new tab."
+    },
+    {
+      "scenario": "User preferences",
+      "explanation": "A news website temporarily stores your font size preference in session storage for that browsing session, reverting to defaults when you open a new tab."
+    }
+  ],
+  "relatedTerms": [
+    "local-storage",
+    "cookies",
+    "first-party-cookies",
+    "private-browsing"
+  ],
+  "category": "technology"
+}

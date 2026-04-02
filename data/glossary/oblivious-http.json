@@ -1,0 +1,31 @@
+{
+  "term": "Oblivious HTTP",
+  "slug": "oblivious-http",
+  "definition": "A protocol that adds an extra layer of privacy to web requests by routing them through proxy servers, preventing websites from linking requests to specific users or IP addresses.",
+  "metaDescription": "Learn about Oblivious HTTP, a privacy protocol that hides user identity from websites by routing requests through intermediary proxy servers.",
+  "simpleExplanation": "Oblivious HTTP works like having a trusted friend make requests on your behalf. When you want to visit a website, your request goes through a relay server first, which forwards it to the destination. The website sees the relay's information, not yours.",
+  "whyItMatters": "It prevents websites from tracking users across visits and building profiles based on IP addresses or request patterns. This is especially important for sensitive queries like health searches or accessing controversial content where anonymity is crucial.",
+  "technicalDetail": "OHTTP uses a two-hop architecture with a relay and gateway. Requests are encrypted end-to-end, with the relay seeing the client's identity but not the destination, while the gateway sees the destination but not the client's identity. This separation ensures neither party has complete information about the communication.",
+  "examples": [
+    {
+      "scenario": "Private DNS queries",
+      "explanation": "Your browser uses OHTTP to send DNS lookups through a relay, preventing your internet provider from seeing which websites you're trying to visit."
+    },
+    {
+      "scenario": "Anonymous web searches",
+      "explanation": "A search engine could implement OHTTP so they receive your queries without knowing your IP address or being able to link searches to your identity."
+    },
+    {
+      "scenario": "Sensitive API requests",
+      "explanation": "Apps making requests to health or financial APIs could use OHTTP to ensure the service provider can't correlate requests with specific users."
+    }
+  ],
+  "relatedTerms": [
+    "proxy-server",
+    "end-to-end-encryption",
+    "tor-network",
+    "dns-over-https",
+    "private-relay"
+  ],
+  "category": "protocol"
+}

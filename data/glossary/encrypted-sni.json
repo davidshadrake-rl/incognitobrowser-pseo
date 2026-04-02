@@ -1,0 +1,31 @@
+{
+  "term": "Encrypted SNI",
+  "slug": "encrypted-sni",
+  "definition": "A privacy enhancement that encrypts the Server Name Indication (SNI) field in TLS connections, preventing network observers from seeing which specific website you're visiting.",
+  "metaDescription": "Learn about Encrypted SNI (ESNI), a privacy technology that hides which websites you visit from network monitors and internet service providers.",
+  "simpleExplanation": "When you visit a website, your browser normally tells the server which site you want to see in plain text. Encrypted SNI hides this information by encrypting it, so your internet provider or anyone monitoring your network can't see exactly which websites you're visiting.",
+  "whyItMatters": "Without Encrypted SNI, even when using HTTPS, your ISP, government, or network administrators can see which specific websites you visit. This technology helps protect your browsing privacy by hiding this information from network surveillance.",
+  "technicalDetail": "ESNI encrypts the SNI extension in the TLS ClientHello message using a public key published in DNS records. This prevents passive network observers from identifying the target hostname while still allowing the server to present the correct certificate. It has evolved into Encrypted Client Hello (ECH) for broader protection.",
+  "examples": [
+    {
+      "scenario": "Browsing at work",
+      "explanation": "Without Encrypted SNI, your company's IT department could see you're visiting specific news sites or social media platforms. With ESNI, they only see you connected to the server's IP address."
+    },
+    {
+      "scenario": "Using public Wi-Fi",
+      "explanation": "On a coffee shop's Wi-Fi, other users or the network owner could monitor which websites you visit. ESNI prevents them from seeing your specific destinations, only the general server locations."
+    },
+    {
+      "scenario": "ISP monitoring",
+      "explanation": "Your internet provider can normally see every website you visit for advertising or compliance purposes. Encrypted SNI hides these specific site visits while still allowing proper connection routing."
+    }
+  ],
+  "relatedTerms": [
+    "ssl-tls",
+    "https",
+    "dns-over-https",
+    "vpn",
+    "end-to-end-encryption"
+  ],
+  "category": "protocol"
+}

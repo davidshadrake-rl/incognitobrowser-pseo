@@ -1,0 +1,32 @@
+{
+  "term": "Private Relay",
+  "slug": "private-relay",
+  "definition": "A privacy service that routes internet traffic through two separate relay servers to hide users' IP addresses and browsing activity from websites, ISPs, and the relay service itself.",
+  "metaDescription": "Learn about Private Relay, Apple's privacy service that hides your IP address and web browsing from trackers using dual-relay encryption technology.",
+  "simpleExplanation": "Private Relay works like having two trusted friends pass your mail without either knowing both your address and the recipient. Your internet requests go through two different servers, so no single server can see both who you are and what websites you're visiting.",
+  "whyItMatters": "Private Relay protects your browsing privacy by preventing websites, advertisers, and even your internet provider from tracking your online activity or determining your exact location based on your IP address.",
+  "technicalDetail": "Private Relay uses a dual-hop architecture where the first relay receives your encrypted request and strips your IP address, then forwards it to a second relay that connects to the destination website. This ensures no single relay knows both your identity and your browsing destination, implementing a zero-knowledge privacy model.",
+  "examples": [
+    {
+      "scenario": "Shopping online with Safari",
+      "explanation": "When you browse an online store, Private Relay hides your real IP address so the retailer can't track your location or link your browsing to your identity across multiple visits."
+    },
+    {
+      "scenario": "Using public Wi-Fi",
+      "explanation": "At a coffee shop, Private Relay prevents the Wi-Fi provider from seeing which websites you visit, only that you're connected to Apple's relay service."
+    },
+    {
+      "scenario": "Reading news websites",
+      "explanation": "News sites can't determine your precise location or build a profile of your reading habits when Private Relay routes your traffic through its encrypted relay system."
+    }
+  ],
+  "relatedTerms": [
+    "proxy-server",
+    "vpn",
+    "ip-address",
+    "end-to-end-encryption",
+    "behavioral-tracking"
+  ],
+  "niche": "Apple ecosystem privacy feature",
+  "category": "technology"
+}

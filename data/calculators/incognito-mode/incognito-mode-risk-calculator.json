@@ -1,0 +1,197 @@
+{
+  "niche": "incognito-mode",
+  "slug": "incognito-mode-risk-calculator",
+  "title": "Incognito Mode Risk Calculator - Test Your Privacy Protection",
+  "metaDescription": "Calculate your real privacy risk when using incognito mode. Discover what data you're still exposed to and get personalized protection tips.",
+  "keywords": [
+    "incognito mode risk",
+    "private browsing safety",
+    "incognito privacy test",
+    "browser privacy calculator",
+    "incognito security assessment"
+  ],
+  "description": "Evaluate how well incognito mode protects your privacy based on your browsing habits and activities. Get a personalized risk score and learn what additional privacy measures you need to stay truly anonymous online.",
+  "inputs": [
+    {
+      "id": "browser",
+      "label": "Primary Browser",
+      "type": "select",
+      "defaultValue": "chrome",
+      "options": [
+        {
+          "value": "chrome",
+          "label": "Chrome (Incognito)"
+        },
+        {
+          "value": "firefox",
+          "label": "Firefox (Private)"
+        },
+        {
+          "value": "safari",
+          "label": "Safari (Private)"
+        },
+        {
+          "value": "edge",
+          "label": "Edge (InPrivate)"
+        },
+        {
+          "value": "incognito-browser",
+          "label": "Incognito Browser"
+        }
+      ],
+      "helpText": "Different browsers offer varying levels of private browsing protection"
+    },
+    {
+      "id": "activities",
+      "label": "Common Incognito Activities",
+      "type": "select",
+      "defaultValue": "shopping",
+      "options": [
+        {
+          "value": "shopping",
+          "label": "Online shopping & price comparison"
+        },
+        {
+          "value": "banking",
+          "label": "Banking & financial services"
+        },
+        {
+          "value": "social",
+          "label": "Social media & messaging"
+        },
+        {
+          "value": "research",
+          "label": "Personal research & browsing"
+        },
+        {
+          "value": "streaming",
+          "label": "Video streaming & entertainment"
+        }
+      ],
+      "helpText": "Your activities determine your privacy risk level"
+    },
+    {
+      "id": "networkType",
+      "label": "Network Environment",
+      "type": "select",
+      "defaultValue": "home",
+      "options": [
+        {
+          "value": "home",
+          "label": "Home WiFi"
+        },
+        {
+          "value": "work",
+          "label": "Work/Office Network"
+        },
+        {
+          "value": "public",
+          "label": "Public WiFi"
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile Data"
+        }
+      ],
+      "helpText": "Network administrators can still see your traffic in incognito mode"
+    },
+    {
+      "id": "frequency",
+      "label": "Incognito Usage Frequency",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "helpText": "How often do you use incognito mode? (1=Rarely, 5=Always)"
+    },
+    {
+      "id": "additionalTools",
+      "label": "Additional Privacy Tools Used",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use VPN, ad blockers, or other privacy tools with incognito mode?"
+    },
+    {
+      "id": "sharedDevice",
+      "label": "Shared Device Usage",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use incognito mode on shared or public computers?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall risk level when using incognito mode (0-100 scale)"
+    },
+    {
+      "id": "protectionLevel",
+      "label": "Protection Grade",
+      "format": "grade",
+      "description": "Letter grade assessment of your current privacy protection"
+    },
+    {
+      "id": "exposurePercentage",
+      "label": "Data Still Exposed",
+      "format": "percentage",
+      "description": "Estimated percentage of your data that remains trackable"
+    }
+  ],
+  "formula": "let baseRisk = 40; let browserMultipliers = {chrome: 1.0, firefox: 0.9, safari: 0.95, edge: 1.0, 'incognito-browser': 0.7}; let activityRisks = {shopping: 15, banking: 25, social: 20, research: 10, streaming: 12}; let networkRisks = {home: 5, work: 15, public: 30, mobile: 10}; let frequencyMultiplier = frequency * 0.1; let toolsReduction = additionalTools ? -15 : 0; let sharedRisk = sharedDevice ? 20 : 0; let totalRisk = Math.max(0, Math.min(100, baseRisk * browserMultipliers[browser] + activityRisks[activities] + networkRisks[networkType] + (frequencyMultiplier * 10) + toolsReduction + sharedRisk)); let grade = totalRisk <= 25 ? 'A' : totalRisk <= 40 ? 'B' : totalRisk <= 60 ? 'C' : totalRisk <= 80 ? 'D' : 'F'; let exposurePercent = Math.round(totalRisk * 0.8); return {riskScore: Math.round(totalRisk), protectionLevel: grade, exposurePercentage: exposurePercent};",
+  "educational": {
+    "methodology": "This calculator evaluates your privacy risk by analyzing your browser choice, online activities, network environment, and additional security measures. It accounts for the fact that incognito mode only prevents local data storage, not network-level tracking or ISP monitoring.",
+    "tips": [
+      "Combine incognito mode with a VPN for better network-level privacy protection",
+      "Use Incognito Browser for enhanced private browsing with built-in privacy features",
+      "Avoid banking or sensitive activities on public WiFi, even in incognito mode",
+      "Remember that incognito mode doesn't hide your activity from your ISP or network administrator",
+      "Consider using privacy-focused browsers like Incognito Browser for stronger default protections"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Good privacy protection. You're using incognito mode effectively with additional security measures.",
+        "color": "green"
+      },
+      {
+        "range": "26-40",
+        "label": "Moderate Risk",
+        "description": "Decent protection but room for improvement. Consider adding a VPN or switching to a more private browser.",
+        "color": "yellow"
+      },
+      {
+        "range": "41-60",
+        "label": "High Risk",
+        "description": "Significant privacy gaps. Your data is still quite trackable despite using incognito mode.",
+        "color": "orange"
+      },
+      {
+        "range": "61-100",
+        "label": "Very High Risk",
+        "description": "Poor privacy protection. You need additional tools beyond incognito mode to protect your data.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Download Incognito Browser",
+      "url": "/incognito-browser-download",
+      "type": "internal"
+    },
+    {
+      "title": "Incognito Mode vs VPN Comparison",
+      "url": "/incognito-vs-vpn",
+      "type": "internal"
+    },
+    {
+      "title": "Complete Private Browsing Guide",
+      "url": "/private-browsing-guide",
+      "type": "internal"
+    }
+  ]
+}

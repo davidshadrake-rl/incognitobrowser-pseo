@@ -1,0 +1,32 @@
+{
+  "term": "Onion Routing",
+  "slug": "onion-routing",
+  "definition": "A privacy technique that encrypts internet traffic in multiple layers and routes it through several servers, making it extremely difficult to trace the original source or destination.",
+  "metaDescription": "Learn about onion routing, the privacy technology that encrypts data in layers and routes it through multiple servers to protect user anonymity online.",
+  "simpleExplanation": "Think of onion routing like sending a letter inside multiple sealed envelopes, each addressed to a different person. Each person opens one envelope and passes it to the next person, but no single person knows both who sent the original letter and who will receive it.",
+  "whyItMatters": "Onion routing provides strong anonymity protection by ensuring that no single point in the network knows both your identity and your destination. This protects journalists, activists, and anyone seeking privacy from surveillance and censorship.",
+  "technicalDetail": "Each layer of encryption is peeled away at successive relay nodes, revealing only the next destination. The entry node knows your IP but not your destination, middle nodes know neither, and the exit node knows your destination but not your identity. This three-hop minimum ensures no single point of failure for anonymity.",
+  "examples": [
+    {
+      "scenario": "Using Tor Browser",
+      "explanation": "When you browse the web with Tor, your traffic is encrypted in layers and routed through three random servers worldwide before reaching the destination website, hiding your location and identity."
+    },
+    {
+      "scenario": "Accessing blocked websites",
+      "explanation": "A journalist in a country with internet censorship uses onion routing to safely access and publish information on blocked news sites without revealing their identity to authorities."
+    },
+    {
+      "scenario": "Whistleblower communications",
+      "explanation": "A whistleblower uses onion routing to securely submit documents to news organizations without their identity being traced back through network traffic analysis."
+    }
+  ],
+  "relatedTerms": [
+    "tor-network",
+    "end-to-end-encryption",
+    "vpn",
+    "proxy-server",
+    "mixnet"
+  ],
+  "niche": "Advanced privacy technology primarily used by those requiring strong anonymity protection",
+  "category": "technology"
+}

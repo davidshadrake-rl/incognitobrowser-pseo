@@ -1,0 +1,30 @@
+{
+  "term": "Canvas Fingerprinting",
+  "slug": "canvas-fingerprinting",
+  "definition": "A tracking technique that uses HTML5 canvas elements to create unique identifiers based on how a device renders text and graphics, exploiting differences in hardware and software.",
+  "metaDescription": "Learn about canvas fingerprinting, a web tracking method that identifies users by analyzing how their device renders graphics and text elements.",
+  "simpleExplanation": "Canvas fingerprinting works like asking your computer to draw a picture, then using the tiny differences in how it draws to identify you. Each device renders graphics slightly differently due to its unique combination of graphics card, fonts, and browser settings.",
+  "whyItMatters": "Unlike cookies that can be deleted, canvas fingerprints are persistent and hard to avoid. They allow trackers to follow you across websites even when you clear your browsing data or use private browsing mode, compromising your online privacy.",
+  "technicalDetail": "Canvas fingerprinting exploits variations in graphics rendering caused by differences in GPU drivers, installed fonts, anti-aliasing settings, and operating systems. Scripts draw invisible text and shapes on HTML5 canvas elements, then generate hash values from the pixel data to create unique device signatures.",
+  "examples": [
+    {
+      "scenario": "Shopping website tracking",
+      "explanation": "An e-commerce site uses canvas fingerprinting to track visitors across sessions, even after they clear cookies, to analyze shopping behavior and serve targeted ads."
+    },
+    {
+      "scenario": "Cross-site user identification",
+      "explanation": "Multiple websites use the same analytics service that employs canvas fingerprinting to link your browsing activity across different sites, building a comprehensive profile of your interests."
+    },
+    {
+      "scenario": "Fraud prevention systems",
+      "explanation": "Banking websites use canvas fingerprinting as part of device recognition to detect suspicious login attempts from unfamiliar devices, helping prevent unauthorized access."
+    }
+  ],
+  "relatedTerms": [
+    "browser-fingerprinting",
+    "behavioral-tracking",
+    "cross-site-tracking",
+    "digital-footprint"
+  ],
+  "category": "technology"
+}

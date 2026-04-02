@@ -1,0 +1,31 @@
+{
+  "term": "Supercookie",
+  "slug": "supercookie",
+  "definition": "A persistent tracking mechanism that stores data outside regular browser cookies, making it extremely difficult to delete and allowing websites to track users across sessions.",
+  "metaDescription": "Learn about supercookies, persistent tracking mechanisms that are harder to delete than regular cookies and can track users across browsing sessions.",
+  "simpleExplanation": "Unlike regular cookies that you can easily delete from your browser, supercookies hide tracking data in various places on your device. Even after clearing your cookies, supercookies can regenerate regular cookies and continue tracking your browsing habits.",
+  "whyItMatters": "Supercookies are particularly concerning because they bypass normal privacy controls. Users who think they've protected their privacy by deleting cookies may still be tracked, making informed consent difficult and undermining user autonomy over their data.",
+  "technicalDetail": "Supercookies exploit various browser storage mechanisms like Local Storage, Flash cookies, ETags, HTML5 databases, and browser caches. They can use techniques like respawning, where deleted cookies are automatically recreated from backup storage locations, or canvas fingerprinting to maintain persistent identifiers across sessions.",
+  "examples": [
+    {
+      "scenario": "Flash Cookie Tracking",
+      "explanation": "A website stores your unique ID in Adobe Flash storage. Even after clearing browser cookies, the Flash cookie remains and regenerates the deleted tracking cookies on your next visit."
+    },
+    {
+      "scenario": "ETag Supercookie",
+      "explanation": "A web server assigns unique ETag values to images or files for each user. These ETags act as identifiers that persist even after cookie deletion, allowing cross-session tracking."
+    },
+    {
+      "scenario": "HTML5 Storage Tracking",
+      "explanation": "An advertising network stores tracking data in your browser's Local Storage or IndexedDB. This data survives cookie clearing and private browsing mode, maintaining persistent user profiles."
+    }
+  ],
+  "relatedTerms": [
+    "cookies",
+    "third-party-cookies",
+    "etag-tracking",
+    "browser-fingerprinting",
+    "local-storage"
+  ],
+  "category": "technology"
+}

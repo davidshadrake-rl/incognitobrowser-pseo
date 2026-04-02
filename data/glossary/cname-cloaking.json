@@ -1,0 +1,28 @@
+{
+  "term": "CNAME Cloaking",
+  "slug": "cname-cloaking",
+  "definition": "A technique where third-party tracking scripts are disguised as first-party content by using DNS CNAME records to redirect requests through the website's own domain.",
+  "metaDescription": "Learn about CNAME cloaking, a tracking technique that bypasses ad blockers by disguising third-party trackers as first-party content.",
+  "simpleExplanation": "CNAME cloaking is like putting a fake label on a package. Websites use it to make tracking scripts from other companies look like they're coming from their own website, which helps them bypass ad blockers and privacy tools.",
+  "whyItMatters": "This technique makes it harder for users to block unwanted tracking and can bypass privacy protections. It reduces transparency about what third-party services are actually collecting your data when you visit websites.",
+  "technicalDetail": "CNAME cloaking works by setting up a CNAME DNS record that points a subdomain (like analytics.example.com) to a third-party tracking service. When browsers make requests to this subdomain, they treat it as first-party traffic, allowing trackers to bypass same-site policies and many ad blockers that rely on domain-based filtering.",
+  "examples": [
+    {
+      "scenario": "Analytics tracking bypass",
+      "explanation": "A website creates a subdomain 'stats.mysite.com' that secretly redirects to Google Analytics, making the tracking appear as if it's coming from their own domain instead of Google's servers."
+    },
+    {
+      "scenario": "Ad network cloaking",
+      "explanation": "An e-commerce site uses 'cdn.shop.com' to mask requests to Facebook's tracking pixel, allowing them to collect data even when users have blocked Facebook domains."
+    }
+  ],
+  "relatedTerms": [
+    "third-party-cookies",
+    "cross-site-tracking",
+    "ad-blocker",
+    "behavioral-tracking",
+    "tracker-blocker"
+  ],
+  "niche": "Web tracking and privacy circumvention",
+  "category": "technology"
+}

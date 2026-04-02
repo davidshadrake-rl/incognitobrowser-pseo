@@ -1,0 +1,207 @@
+{
+  "niche": "ccpa",
+  "slug": "ccpa-california-privacy-risk-calculator",
+  "title": "CCPA & California Privacy Risk Calculator",
+  "metaDescription": "Assess your privacy risk under CCPA. Calculate compliance gaps and get personalized recommendations for California privacy protection.",
+  "keywords": [
+    "CCPA calculator",
+    "California privacy risk",
+    "CCPA compliance",
+    "CPRA assessment",
+    "privacy risk calculator"
+  ],
+  "description": "Calculate your privacy risk level under California's CCPA and CPRA laws. Get a personalized risk score based on your data practices, business type, and compliance measures to identify gaps and improve protection.",
+  "inputs": [
+    {
+      "id": "businessType",
+      "label": "Business Type",
+      "type": "select",
+      "defaultValue": "small",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small Business (<$25M revenue)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium Business ($25M+ revenue)"
+        },
+        {
+          "value": "large",
+          "label": "Large Business (50k+ consumers)"
+        },
+        {
+          "value": "data-broker",
+          "label": "Data Broker/Seller"
+        }
+      ],
+      "helpText": "CCPA thresholds determine your compliance requirements"
+    },
+    {
+      "id": "dataTypes",
+      "label": "Types of Personal Information Collected",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic (name, email, phone)"
+        },
+        {
+          "value": "identifiers",
+          "label": "Identifiers + Commercial Info"
+        },
+        {
+          "value": "biometric",
+          "label": "Biometric/Geolocation Data"
+        },
+        {
+          "value": "sensitive",
+          "label": "Sensitive Personal Information"
+        }
+      ],
+      "helpText": "More sensitive data types increase privacy risk and requirements"
+    },
+    {
+      "id": "dataSelling",
+      "label": "Do you sell or share personal information?",
+      "type": "select",
+      "defaultValue": "no",
+      "options": [
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "advertising",
+          "label": "Yes, for advertising/marketing"
+        },
+        {
+          "value": "commercial",
+          "label": "Yes, for commercial purposes"
+        },
+        {
+          "value": "extensive",
+          "label": "Yes, extensively"
+        }
+      ],
+      "helpText": "Data selling triggers additional CCPA obligations"
+    },
+    {
+      "id": "complianceMeasures",
+      "label": "Current Compliance Measures",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "Rate your current privacy policy, opt-out processes, and data handling practices (1=none, 10=comprehensive)"
+    },
+    {
+      "id": "requestVolume",
+      "label": "Monthly Consumer Requests",
+      "type": "select",
+      "defaultValue": "low",
+      "options": [
+        {
+          "value": "none",
+          "label": "None received"
+        },
+        {
+          "value": "low",
+          "label": "1-10 requests"
+        },
+        {
+          "value": "medium",
+          "label": "11-50 requests"
+        },
+        {
+          "value": "high",
+          "label": "50+ requests"
+        }
+      ],
+      "helpText": "Request volume indicates consumer awareness and potential compliance burden"
+    },
+    {
+      "id": "hasPrivacyOfficer",
+      "label": "Dedicated Privacy Officer/Team",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Having dedicated privacy resources reduces compliance risk"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk level from 1-100"
+    },
+    {
+      "id": "complianceGrade",
+      "label": "Compliance Grade",
+      "format": "grade",
+      "description": "Letter grade based on current compliance status"
+    },
+    {
+      "id": "priorityActions",
+      "label": "Priority Actions Needed",
+      "format": "number",
+      "description": "Number of immediate actions required"
+    }
+  ],
+  "formula": "let riskScore = 20; const businessRisk = {'small': 0, 'medium': 15, 'large': 25, 'data-broker': 35}; riskScore += businessRisk[businessType]; const dataRisk = {'basic': 5, 'identifiers': 15, 'biometric': 25, 'sensitive': 35}; riskScore += dataRisk[dataTypes]; const sellingRisk = {'no': 0, 'advertising': 15, 'commercial': 25, 'extensive': 35}; riskScore += sellingRisk[dataSelling]; riskScore += Math.max(0, 10 - complianceMeasures); const requestRisk = {'none': 0, 'low': 5, 'medium': 10, 'high': 15}; riskScore += requestRisk[requestVolume]; if (!hasPrivacyOfficer && (businessType === 'large' || businessType === 'data-broker')) riskScore += 10; riskScore = Math.min(100, riskScore); let grade = 'F'; if (riskScore <= 30) grade = 'A'; else if (riskScore <= 45) grade = 'B'; else if (riskScore <= 60) grade = 'C'; else if (riskScore <= 75) grade = 'D'; let actions = 0; if (complianceMeasures < 5) actions += 2; if (dataSelling !== 'no' && complianceMeasures < 7) actions += 1; if (!hasPrivacyOfficer && businessType !== 'small') actions += 1; if (requestVolume === 'high' && complianceMeasures < 6) actions += 1; return {riskScore, complianceGrade: grade, priorityActions: actions};",
+  "educational": {
+    "methodology": "This calculator evaluates privacy risk based on CCPA/CPRA requirements including business size thresholds, data sensitivity levels, selling practices, and current compliance measures. Higher risk scores indicate greater potential for violations and consumer complaints.",
+    "tips": [
+      "Use Incognito Browser to research competitor privacy practices without leaving tracking data",
+      "Implement a 'Do Not Sell My Personal Information' link prominently on your website",
+      "Regularly audit third-party vendors and data sharing agreements for CCPA compliance",
+      "Train customer service teams to handle privacy requests within 45-day deadlines",
+      "Consider using automated privacy management platforms for high-volume request handling"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Good compliance foundation with minimal privacy risk exposure",
+        "color": "green"
+      },
+      {
+        "range": "31-45",
+        "label": "Moderate Risk",
+        "description": "Some compliance gaps that should be addressed proactively",
+        "color": "yellow"
+      },
+      {
+        "range": "46-60",
+        "label": "High Risk",
+        "description": "Significant compliance issues requiring immediate attention",
+        "color": "orange"
+      },
+      {
+        "range": "61-100",
+        "label": "Critical Risk",
+        "description": "Major compliance failures with high violation and penalty potential",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "CCPA Compliance Checklist",
+      "url": "/ccpa/compliance-checklist",
+      "type": "internal"
+    },
+    {
+      "title": "CCPA vs CPRA Differences Guide",
+      "url": "/ccpa/ccpa-vs-cpra",
+      "type": "internal"
+    },
+    {
+      "title": "California Attorney General CCPA Resources",
+      "url": "https://oag.ca.gov/privacy/ccpa",
+      "type": "external"
+    }
+  ]
+}

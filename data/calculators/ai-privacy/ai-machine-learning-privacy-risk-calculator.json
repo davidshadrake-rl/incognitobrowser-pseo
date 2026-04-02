@@ -1,0 +1,221 @@
+{
+  "niche": "ai-privacy",
+  "slug": "ai-machine-learning-privacy-risk-calculator",
+  "title": "AI & Machine Learning Privacy Risk Calculator",
+  "metaDescription": "Calculate your AI privacy risk score. Assess data exposure from ChatGPT, machine learning tools, and AI platforms with actionable protection tips.",
+  "keywords": [
+    "AI privacy risk",
+    "ChatGPT privacy",
+    "machine learning data collection",
+    "AI surveillance",
+    "AI privacy calculator"
+  ],
+  "description": "Evaluate your privacy exposure from AI and machine learning platforms. This calculator assesses your risk based on AI usage patterns, data sharing habits, and privacy settings to help you protect your personal information.",
+  "inputs": [
+    {
+      "id": "aiUsageFrequency",
+      "label": "How often do you use AI tools (ChatGPT, Bard, etc.)?",
+      "type": "select",
+      "defaultValue": "weekly",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly or less"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "daily",
+          "label": "Daily"
+        },
+        {
+          "value": "multiple",
+          "label": "Multiple times daily"
+        }
+      ],
+      "helpText": "More frequent usage increases data collection exposure"
+    },
+    {
+      "id": "workAiUsage",
+      "label": "Do you use AI tools for work-related tasks?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "regularly",
+          "label": "Regularly"
+        },
+        {
+          "value": "always",
+          "label": "Always for work tasks"
+        }
+      ],
+      "helpText": "Work data shared with AI can pose business and personal privacy risks"
+    },
+    {
+      "id": "personalDataSharing",
+      "label": "How often do you share personal information with AI?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        },
+        {
+          "value": "always",
+          "label": "Always"
+        }
+      ],
+      "helpText": "Personal details in AI conversations may be stored and used for training"
+    },
+    {
+      "id": "privacySettings",
+      "label": "Have you configured privacy settings on AI platforms?",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "all",
+          "label": "Yes, on all platforms I use"
+        },
+        {
+          "value": "some",
+          "label": "On some platforms"
+        },
+        {
+          "value": "few",
+          "label": "On very few platforms"
+        },
+        {
+          "value": "none",
+          "label": "No, using default settings"
+        }
+      ],
+      "helpText": "Privacy settings can limit data collection and conversation storage"
+    },
+    {
+      "id": "aiPlatformsUsed",
+      "label": "Number of different AI platforms you use",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "helpText": "Each platform has different privacy policies and data practices"
+    },
+    {
+      "id": "dataOptOut",
+      "label": "Have you opted out of AI training data collection?",
+      "type": "select",
+      "defaultValue": "unsure",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes, where possible"
+        },
+        {
+          "value": "some",
+          "label": "On some platforms"
+        },
+        {
+          "value": "no",
+          "label": "No"
+        },
+        {
+          "value": "unsure",
+          "label": "Unsure how to opt out"
+        }
+      ],
+      "helpText": "Opting out prevents your data from being used to train AI models"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall AI privacy risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Categorized risk assessment with recommendations"
+    }
+  ],
+  "formula": "const frequencyScores = {never: 0, monthly: 10, weekly: 20, daily: 35, multiple: 50}; const workScores = {never: 0, sometimes: 15, regularly: 25, always: 40}; const personalScores = {never: 0, rarely: 5, sometimes: 15, often: 25, always: 35}; const settingsScores = {all: 0, some: 10, few: 20, none: 30}; const optOutScores = {yes: 0, some: 10, no: 25, unsure: 20}; const platformScore = Math.min(inputs.aiPlatformsUsed * 3, 25); const totalScore = frequencyScores[inputs.aiUsageFrequency] + workScores[inputs.workAiUsage] + personalScores[inputs.personalDataSharing] + settingsScores[inputs.privacySettings] + platformScore + optOutScores[inputs.dataOptOut]; const riskScore = Math.min(Math.round(totalScore), 100); let riskLevel = 'Low Risk'; if (riskScore >= 60) riskLevel = 'High Risk'; else if (riskScore >= 30) riskLevel = 'Moderate Risk'; return {riskScore, riskLevel};",
+  "educational": {
+    "methodology": "This calculator evaluates your AI privacy risk based on usage frequency, data sharing patterns, privacy settings configuration, and opt-out status. Higher scores indicate greater exposure to data collection, storage, and potential misuse by AI platforms.",
+    "tips": [
+      "Review and enable privacy settings on all AI platforms you use - many default to maximum data collection",
+      "Avoid sharing sensitive personal, financial, or work information in AI conversations",
+      "Use Incognito Browser when accessing AI tools to limit tracking and data correlation",
+      "Regularly opt out of AI training data collection where platforms offer this option",
+      "Consider using privacy-focused AI alternatives that don't store conversation history"
+    ],
+    "interpretation": [
+      {
+        "range": "0-29",
+        "label": "Low Risk",
+        "description": "Good privacy practices. Continue monitoring AI platform policies and maintain current privacy settings.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "30-59",
+        "label": "Moderate Risk",
+        "description": "Some privacy exposure. Review settings on AI platforms and reduce sharing of personal information.",
+        "color": "#f59e0b"
+      },
+      {
+        "range": "60-100",
+        "label": "High Risk",
+        "description": "Significant privacy exposure. Immediate action needed to configure privacy settings and limit data sharing.",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "ChatGPT Privacy Settings Guide",
+      "url": "/guides/chatgpt-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "AI Data Collection Opt-Out Methods",
+      "url": "/guides/ai-data-opt-out",
+      "type": "guide"
+    },
+    {
+      "title": "Best Privacy-Focused AI Tools",
+      "url": "/tools/private-ai-alternatives",
+      "type": "tool"
+    }
+  ]
+}

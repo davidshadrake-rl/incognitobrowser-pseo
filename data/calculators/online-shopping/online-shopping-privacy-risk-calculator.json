@@ -1,0 +1,264 @@
+{
+  "niche": "online-shopping",
+  "slug": "online-shopping-privacy-risk-calculator",
+  "title": "Online Shopping Privacy Risk Calculator",
+  "metaDescription": "Calculate your privacy risk when shopping online. Assess tracking exposure, payment security, and get personalized tips for safer shopping.",
+  "keywords": [
+    "online shopping privacy",
+    "secure shopping",
+    "shopping privacy risk",
+    "private shopping",
+    "shopping incognito"
+  ],
+  "description": "Evaluate your online shopping privacy risks based on your browsing habits, payment methods, and security practices. Get personalized recommendations to protect your data and avoid dynamic pricing while shopping online.",
+  "inputs": [
+    {
+      "id": "shoppingFrequency",
+      "label": "How often do you shop online?",
+      "type": "select",
+      "defaultValue": "weekly",
+      "options": [
+        {
+          "value": "daily",
+          "label": "Daily"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (few times per year)"
+        }
+      ],
+      "helpText": "Higher frequency increases tracking exposure"
+    },
+    {
+      "id": "browserType",
+      "label": "What browser do you primarily use for shopping?",
+      "type": "select",
+      "defaultValue": "chrome",
+      "options": [
+        {
+          "value": "incognito-browser",
+          "label": "Incognito Browser or similar privacy browser"
+        },
+        {
+          "value": "firefox",
+          "label": "Firefox with privacy settings"
+        },
+        {
+          "value": "safari",
+          "label": "Safari"
+        },
+        {
+          "value": "chrome",
+          "label": "Chrome/Edge (default settings)"
+        }
+      ],
+      "helpText": "Privacy-focused browsers offer better protection"
+    },
+    {
+      "id": "cookieManagement",
+      "label": "Do you manage cookies and tracking?",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always clear cookies and block trackers"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes clear cookies"
+        },
+        {
+          "value": "never",
+          "label": "Never manage cookies"
+        }
+      ],
+      "helpText": "Cookie management prevents cross-site tracking"
+    },
+    {
+      "id": "incognitoUsage",
+      "label": "How often do you shop in incognito/private mode?",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "never",
+          "label": "Never"
+        }
+      ],
+      "helpText": "Incognito mode helps avoid dynamic pricing"
+    },
+    {
+      "id": "paymentMethods",
+      "label": "What payment methods do you use?",
+      "type": "select",
+      "defaultValue": "direct-card",
+      "options": [
+        {
+          "value": "virtual-cards",
+          "label": "Virtual credit cards or masked cards"
+        },
+        {
+          "value": "paypal-apple",
+          "label": "PayPal, Apple Pay, or similar services"
+        },
+        {
+          "value": "direct-card",
+          "label": "Direct credit/debit card entry"
+        },
+        {
+          "value": "stored-cards",
+          "label": "Stored cards on multiple sites"
+        }
+      ],
+      "helpText": "Virtual cards provide the best financial privacy"
+    },
+    {
+      "id": "accountCreation",
+      "label": "Do you create accounts on shopping sites?",
+      "type": "select",
+      "defaultValue": "always",
+      "options": [
+        {
+          "value": "guest",
+          "label": "Always shop as guest when possible"
+        },
+        {
+          "value": "minimal",
+          "label": "Only on frequently used sites"
+        },
+        {
+          "value": "always",
+          "label": "Create accounts on most sites"
+        }
+      ],
+      "helpText": "Guest checkout reduces data collection"
+    },
+    {
+      "id": "priceComparison",
+      "label": "How do you compare prices?",
+      "type": "select",
+      "defaultValue": "same-browser",
+      "options": [
+        {
+          "value": "private-tools",
+          "label": "Use private price tracking tools"
+        },
+        {
+          "value": "different-devices",
+          "label": "Check on different devices/browsers"
+        },
+        {
+          "value": "same-browser",
+          "label": "Compare in the same browser session"
+        }
+      ],
+      "helpText": "Private comparison prevents price manipulation"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "privacyRisk",
+      "label": "Privacy Risk Level",
+      "format": "percentage",
+      "description": "Overall privacy risk when shopping online"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Privacy Grade",
+      "format": "grade",
+      "description": "Letter grade for your shopping privacy practices"
+    },
+    {
+      "id": "trackingExposure",
+      "label": "Tracking Exposure",
+      "format": "score",
+      "description": "How exposed you are to cross-site tracking (0-100)"
+    }
+  ],
+  "formula": "const weights = { shoppingFrequency: 15, browserType: 25, cookieManagement: 20, incognitoUsage: 15, paymentMethods: 15, accountCreation: 5, priceComparison: 5 }; const scores = { shoppingFrequency: { daily: 100, weekly: 75, monthly: 40, rarely: 10 }, browserType: { 'incognito-browser': 10, firefox: 30, safari: 50, chrome: 90 }, cookieManagement: { always: 10, sometimes: 50, never: 100 }, incognitoUsage: { always: 10, often: 30, sometimes: 60, never: 100 }, paymentMethods: { 'virtual-cards': 10, 'paypal-apple': 40, 'direct-card': 70, 'stored-cards': 100 }, accountCreation: { guest: 20, minimal: 50, always: 100 }, priceComparison: { 'private-tools': 20, 'different-devices': 40, 'same-browser': 100 } }; let totalScore = 0; for (let key in weights) { totalScore += (scores[key][inputs[key]] * weights[key]) / 100; } const privacyRisk = Math.round(totalScore); const trackingExposure = Math.round(totalScore * 0.8 + (inputs.shoppingFrequency === 'daily' ? 20 : 0)); const riskGrade = privacyRisk <= 25 ? 'A' : privacyRisk <= 40 ? 'B' : privacyRisk <= 60 ? 'C' : privacyRisk <= 80 ? 'D' : 'F'; return { privacyRisk, riskGrade, trackingExposure };",
+  "educational": {
+    "methodology": "This calculator evaluates your online shopping privacy risk based on browser choice, tracking prevention, payment methods, and shopping habits. Higher scores indicate greater privacy risks including data collection, dynamic pricing exposure, and financial information vulnerability.",
+    "tips": [
+      "Use Incognito Browser or enable strict privacy settings to block shopping trackers automatically",
+      "Shop in incognito/private mode to avoid dynamic pricing based on your browsing history",
+      "Use virtual credit cards or services like Apple Pay to protect your real payment information",
+      "Clear cookies between shopping sessions or use separate browsers for different retailers",
+      "Compare prices using private browsing or different devices to see true pricing"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25%",
+        "label": "Low Risk",
+        "description": "Excellent privacy practices. You're well-protected from tracking and price manipulation.",
+        "color": "green"
+      },
+      {
+        "range": "26-40%",
+        "label": "Moderate Risk",
+        "description": "Good privacy habits with room for improvement. Consider upgrading your browser or payment methods.",
+        "color": "blue"
+      },
+      {
+        "range": "41-60%",
+        "label": "Medium Risk",
+        "description": "Some privacy vulnerabilities. You may experience dynamic pricing and moderate tracking.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-80%",
+        "label": "High Risk",
+        "description": "Significant privacy exposure. Your shopping data is likely being collected and analyzed.",
+        "color": "orange"
+      },
+      {
+        "range": "81-100%",
+        "label": "Very High Risk",
+        "description": "Major privacy vulnerabilities. You're highly exposed to tracking, data collection, and price manipulation.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Incognito Browser - Private Shopping Browser",
+      "url": "https://incognito.com",
+      "type": "tool"
+    },
+    {
+      "title": "How to Shop Privately Online",
+      "url": "/guides/private-online-shopping",
+      "type": "guide"
+    },
+    {
+      "title": "Virtual Credit Cards Comparison",
+      "url": "/guides/virtual-credit-cards",
+      "type": "guide"
+    },
+    {
+      "title": "Avoiding Dynamic Pricing",
+      "url": "/guides/dynamic-pricing-protection",
+      "type": "guide"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "term": "Referrer Policy",
+  "slug": "referrer-policy",
+  "definition": "A web security feature that controls how much information about the previous webpage is shared when a user clicks a link or loads a resource from another site.",
+  "metaDescription": "Learn about referrer policy - a web security feature that controls what information websites share when users navigate between pages.",
+  "simpleExplanation": "When you click a link to go from one website to another, your browser normally tells the new site where you came from. Referrer policy lets websites control whether this information is shared, helping protect your browsing privacy.",
+  "whyItMatters": "Referrer information can reveal your browsing patterns and the specific pages you visit. A strict referrer policy prevents websites from tracking where their visitors came from, reducing cross-site tracking and protecting user privacy.",
+  "technicalDetail": "Referrer policy is implemented via HTTP headers or HTML meta tags with values like 'no-referrer', 'origin', 'strict-origin-when-cross-origin'. It determines whether the full URL, just the origin, or no referrer information is sent when navigating between different origins or protocols.",
+  "examples": [
+    {
+      "scenario": "Shopping site privacy",
+      "explanation": "An online store sets a 'no-referrer' policy so when customers click external links, those sites won't know the specific product pages the customer was viewing."
+    },
+    {
+      "scenario": "News website navigation",
+      "explanation": "A news site uses 'origin' policy, so when readers click outbound links, the destination only knows they came from the news site's domain, not the specific article they were reading."
+    },
+    {
+      "scenario": "Social media link sharing",
+      "explanation": "A social platform implements 'strict-origin-when-cross-origin' so external sites only receive referrer info when clicking HTTPS to HTTPS links, preventing leakage on insecure connections."
+    }
+  ],
+  "relatedTerms": [
+    "cross-site-tracking",
+    "content-security-policy",
+    "https",
+    "digital-footprint",
+    "behavioral-tracking"
+  ],
+  "category": "technology"
+}

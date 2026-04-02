@@ -1,0 +1,31 @@
+{
+  "term": "Local Storage",
+  "slug": "local-storage",
+  "definition": "A web browser feature that allows websites to store data directly on a user's device, persisting even after the browser is closed, with larger capacity than cookies.",
+  "metaDescription": "Learn about local storage - how websites store data on your device, privacy implications, and examples of what information gets saved locally.",
+  "simpleExplanation": "Local storage is like a digital filing cabinet that websites can use to save information on your computer or phone. Unlike cookies, this storage space is larger and the data stays there until you delete it or the website removes it.",
+  "whyItMatters": "Local storage can contain sensitive personal information like preferences, search history, or partial form data. Since it persists across browser sessions and isn't automatically cleared, it can be used for tracking and may accumulate personal data over time.",
+  "technicalDetail": "Local storage provides websites with up to 5-10MB of storage space per domain, accessed via JavaScript. Data is stored as key-value pairs and remains until explicitly deleted by the user, website, or browser storage management. Unlike cookies, local storage data isn't automatically sent to servers with every request.",
+  "examples": [
+    {
+      "scenario": "Shopping cart persistence",
+      "explanation": "An e-commerce site saves items in your cart using local storage, so they're still there when you return days later, even if you didn't create an account."
+    },
+    {
+      "scenario": "Social media draft posts",
+      "explanation": "A social platform saves your partially written posts locally, so you don't lose your work if the browser crashes or you accidentally navigate away."
+    },
+    {
+      "scenario": "Game progress tracking",
+      "explanation": "An online game stores your progress, achievements, and settings in local storage so you can continue where you left off without logging in."
+    }
+  ],
+  "relatedTerms": [
+    "cookies",
+    "session-storage",
+    "indexeddb",
+    "behavioral-tracking",
+    "browser-fingerprinting"
+  ],
+  "category": "technology"
+}

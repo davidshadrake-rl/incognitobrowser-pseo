@@ -1,0 +1,207 @@
+{
+  "niche": "data-breach",
+  "slug": "data-breach-response-risk-calculator",
+  "title": "Data Breach Response Risk Calculator - Assess Your Vulnerability",
+  "metaDescription": "Calculate your data breach response risk level. Get personalized recommendations to protect yourself after a breach and minimize identity theft.",
+  "keywords": [
+    "data breach response",
+    "breach risk calculator",
+    "identity theft protection",
+    "data breach assessment",
+    "breach vulnerability"
+  ],
+  "description": "Assess your vulnerability level after a data breach and get personalized recommendations for protecting your identity and personal information. Calculate your risk score based on exposed data types and current security measures.",
+  "inputs": [
+    {
+      "id": "dataTypes",
+      "label": "What types of data were exposed in the breach?",
+      "type": "select",
+      "defaultValue": "personal",
+      "options": [
+        {
+          "value": "personal",
+          "label": "Personal info only (name, email, phone)"
+        },
+        {
+          "value": "financial",
+          "label": "Financial data (credit cards, bank info)"
+        },
+        {
+          "value": "sensitive",
+          "label": "Sensitive data (SSN, passwords, medical)"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive profile (multiple data types)"
+        }
+      ],
+      "helpText": "Different data types carry different levels of risk for identity theft"
+    },
+    {
+      "id": "breachSize",
+      "label": "How many people were affected by this breach?",
+      "type": "select",
+      "defaultValue": "medium",
+      "options": [
+        {
+          "value": "small",
+          "label": "Under 1,000 people"
+        },
+        {
+          "value": "medium",
+          "label": "1,000 - 100,000 people"
+        },
+        {
+          "value": "large",
+          "label": "100,000 - 1 million people"
+        },
+        {
+          "value": "massive",
+          "label": "Over 1 million people"
+        }
+      ],
+      "helpText": "Larger breaches often attract more criminal attention"
+    },
+    {
+      "id": "timeAwareness",
+      "label": "How long after the breach did you become aware?",
+      "type": "select",
+      "defaultValue": "weeks",
+      "options": [
+        {
+          "value": "immediate",
+          "label": "Within 24 hours"
+        },
+        {
+          "value": "days",
+          "label": "Within a few days"
+        },
+        {
+          "value": "weeks",
+          "label": "Within a few weeks"
+        },
+        {
+          "value": "months",
+          "label": "Months later"
+        }
+      ],
+      "helpText": "Earlier awareness allows for faster protective action"
+    },
+    {
+      "id": "currentProtections",
+      "label": "What security measures do you currently have?",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No special protections"
+        },
+        {
+          "value": "basic",
+          "label": "Strong passwords and 2FA"
+        },
+        {
+          "value": "intermediate",
+          "label": "Credit monitoring and password manager"
+        },
+        {
+          "value": "advanced",
+          "label": "Credit freeze and identity monitoring"
+        }
+      ],
+      "helpText": "Existing protections reduce your overall risk level"
+    },
+    {
+      "id": "accountsAffected",
+      "label": "How many online accounts use the same credentials?",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "helpText": "Reused passwords increase breach impact across multiple accounts"
+    },
+    {
+      "id": "hasActedYet",
+      "label": "Have you taken any response actions yet?",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Check if you've already started responding to the breach"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Risk Score",
+      "format": "score",
+      "description": "Your calculated risk level from 1-100"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Low, Medium, High, or Critical risk assessment"
+    },
+    {
+      "id": "urgencyScore",
+      "label": "Action Urgency",
+      "format": "percentage",
+      "description": "How urgently you need to take protective actions"
+    }
+  ],
+  "formula": "const dataTypeScore = {personal: 20, financial: 50, sensitive: 80, comprehensive: 100}[inputs.dataTypes]; const sizeMultiplier = {small: 1.0, medium: 1.2, large: 1.4, massive: 1.6}[inputs.breachSize]; const timeScore = {immediate: 0, days: 10, weeks: 25, months: 50}[inputs.timeAwareness]; const protectionReduction = {none: 0, basic: 15, intermediate: 30, advanced: 50}[inputs.currentProtections]; const accountMultiplier = Math.min(inputs.accountsAffected * 2, 30); const actionBonus = inputs.hasActedYet ? 20 : 0; const baseRisk = dataTypeScore * sizeMultiplier + timeScore + accountMultiplier; const adjustedRisk = Math.max(0, baseRisk - protectionReduction - actionBonus); const riskScore = Math.min(100, Math.round(adjustedRisk)); const riskLevel = riskScore < 30 ? 'Low' : riskScore < 50 ? 'Medium' : riskScore < 75 ? 'High' : 'Critical'; const urgencyScore = Math.min(100, riskScore + (inputs.hasActedYet ? 0 : 20)); return {riskScore, riskLevel, urgencyScore};",
+  "educational": {
+    "methodology": "This calculator assesses your data breach response risk by analyzing the types of data exposed, breach scale, response timing, existing protections, and credential reuse. Higher scores indicate greater vulnerability to identity theft and financial fraud, requiring more urgent protective actions.",
+    "tips": [
+      "Change passwords immediately for the affected account and any accounts sharing those credentials",
+      "Enable two-factor authentication on all important accounts to add an extra security layer",
+      "Consider placing a credit freeze with all three major credit bureaus to prevent new account fraud",
+      "Use Incognito Browser mode when checking accounts to avoid saving sensitive login information",
+      "Monitor your credit reports and bank statements closely for signs of fraudulent activity"
+    ],
+    "interpretation": [
+      {
+        "range": "0-29",
+        "label": "Low Risk",
+        "description": "Limited exposure with good existing protections. Monitor accounts and update passwords as a precaution.",
+        "color": "green"
+      },
+      {
+        "range": "30-49",
+        "label": "Medium Risk",
+        "description": "Moderate exposure requiring prompt action. Change passwords, enable 2FA, and consider credit monitoring.",
+        "color": "yellow"
+      },
+      {
+        "range": "50-74",
+        "label": "High Risk",
+        "description": "Significant vulnerability to identity theft. Take immediate protective actions including credit alerts.",
+        "color": "orange"
+      },
+      {
+        "range": "75-100",
+        "label": "Critical Risk",
+        "description": "Severe exposure requiring urgent comprehensive response. Consider credit freeze and identity monitoring services.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Free Credit Report Check",
+      "url": "https://www.annualcreditreport.com",
+      "type": "external"
+    },
+    {
+      "title": "Identity Theft Protection Services",
+      "url": "/data-breach/identity-theft-protection-comparison",
+      "type": "internal"
+    },
+    {
+      "title": "Credit Freeze Guide",
+      "url": "/data-breach/credit-freeze-guide",
+      "type": "internal"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "term": "Man in the Middle",
+  "slug": "man-in-the-middle",
+  "definition": "A cyberattack where an attacker secretly intercepts and potentially alters communications between two parties who believe they are communicating directly with each other.",
+  "metaDescription": "Learn about man-in-the-middle attacks, how cybercriminals intercept communications, and ways to protect yourself from this privacy threat.",
+  "simpleExplanation": "Imagine you're passing notes to a friend, but someone sits between you and secretly reads or changes your messages before passing them along. A man-in-the-middle attack works the same way with digital communications.",
+  "whyItMatters": "These attacks can steal sensitive information like passwords, credit card numbers, or personal messages. They're particularly dangerous because victims often don't realize their communications are being intercepted and monitored.",
+  "technicalDetail": "MITM attacks typically exploit vulnerabilities in network protocols or use techniques like ARP spoofing, DNS hijacking, or rogue Wi-Fi hotspots. Attackers position themselves between the victim and intended destination, often using packet sniffing tools to capture and analyze traffic before forwarding it to maintain the illusion of normal communication.",
+  "examples": [
+    {
+      "scenario": "Public Wi-Fi Attack",
+      "explanation": "An attacker creates a fake Wi-Fi hotspot called 'Free Airport WiFi' and intercepts all internet traffic from users who connect to it, stealing login credentials and personal data."
+    },
+    {
+      "scenario": "Email Interception",
+      "explanation": "A cybercriminal intercepts emails between a customer and their bank, modifying account numbers in payment instructions to redirect money to their own account."
+    },
+    {
+      "scenario": "Website Spoofing",
+      "explanation": "An attacker redirects traffic from a legitimate banking website to an identical fake site, capturing login credentials when users enter their information."
+    }
+  ],
+  "relatedTerms": [
+    "phishing",
+    "ssl-tls",
+    "https",
+    "vpn",
+    "end-to-end-encryption"
+  ],
+  "category": "attack"
+}

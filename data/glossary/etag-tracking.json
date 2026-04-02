@@ -1,0 +1,31 @@
+{
+  "term": "ETag Tracking",
+  "slug": "etag-tracking",
+  "definition": "A web tracking technique that uses HTTP ETags (entity tags) to create persistent identifiers that survive cookie deletion and private browsing sessions.",
+  "metaDescription": "Learn about ETag tracking - a persistent web tracking method that uses HTTP ETags to identify users even after cookies are deleted.",
+  "simpleExplanation": "ETag tracking exploits a web caching feature called ETags to secretly track users across websites. Unlike cookies, these tracking identifiers are harder to detect and remove, making them a form of \"supercookie\" that persists even in private browsing.",
+  "whyItMatters": "ETag tracking bypasses user privacy controls and cookie blockers, making it nearly impossible for users to prevent tracking. It undermines user consent and creates persistent digital fingerprints that follow users across the web.",
+  "technicalDetail": "ETags are HTTP headers designed for cache validation. Tracking scripts generate unique ETags for each user and store them server-side. When users return, the server compares ETags to identify them, even if cookies are cleared or private browsing is used.",
+  "examples": [
+    {
+      "scenario": "News website tracking",
+      "explanation": "A news site assigns you a unique ETag when you first visit. Even after clearing cookies or using incognito mode, the site recognizes you through the ETag and continues building your reading profile."
+    },
+    {
+      "scenario": "Cross-site advertising",
+      "explanation": "An advertising network uses ETags to track your behavior across multiple websites, creating detailed profiles for targeted ads that persist despite privacy measures."
+    },
+    {
+      "scenario": "Analytics evasion",
+      "explanation": "A company uses ETag tracking to continue collecting user analytics data even after users opt out of cookies, violating their privacy preferences."
+    }
+  ],
+  "relatedTerms": [
+    "supercookie",
+    "behavioral-tracking",
+    "browser-fingerprinting",
+    "cookies",
+    "cross-site-tracking"
+  ],
+  "category": "attack"
+}

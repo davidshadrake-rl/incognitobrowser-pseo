@@ -1,0 +1,30 @@
+{
+  "term": "K-Anonymity",
+  "slug": "k-anonymity",
+  "definition": "A privacy technique that ensures each person in a dataset cannot be distinguished from at least k-1 other individuals, making it harder to identify specific people.",
+  "metaDescription": "Learn about k-anonymity, a privacy protection method that groups data to prevent individual identification in datasets and databases.",
+  "simpleExplanation": "K-anonymity protects privacy by making sure that when you look at any record in a database, there are always at least 'k' other records that look exactly the same for certain identifying information. This makes it much harder to figure out which record belongs to which specific person.",
+  "whyItMatters": "K-anonymity helps organizations share useful data for research and analysis while protecting individual privacy. It's especially important for medical records, survey data, and other sensitive information that needs to be studied without exposing personal details.",
+  "technicalDetail": "K-anonymity is achieved through generalization (making data less specific) and suppression (removing certain data points). For example, exact ages might be grouped into ranges, or specific zip codes might be generalized to broader geographic regions. The 'k' value represents the minimum group size required.",
+  "examples": [
+    {
+      "scenario": "Medical Research Database",
+      "explanation": "A hospital releases patient data for research, but ensures that for every combination of age range, gender, and zip code area, there are at least 5 patients with identical information, making individual identification nearly impossible."
+    },
+    {
+      "scenario": "Census Data Publication",
+      "explanation": "Government census data is released with 10-anonymity, meaning every person's demographic profile (age range, occupation category, general location) matches at least 9 other people in the dataset."
+    },
+    {
+      "scenario": "Customer Survey Analysis",
+      "explanation": "A company analyzes customer feedback by grouping responses so that each demographic combination (age group, income bracket, region) represents at least 3 customers, protecting individual privacy while enabling trend analysis."
+    }
+  ],
+  "relatedTerms": [
+    "differential-privacy",
+    "data-minimization",
+    "privacy-by-design",
+    "data-mining"
+  ],
+  "category": "concept"
+}

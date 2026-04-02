@@ -1,0 +1,201 @@
+{
+  "niche": "private-search",
+  "slug": "private-search-engines-risk-calculator",
+  "title": "Private Search Engines Risk Calculator - Assess Your Privacy",
+  "metaDescription": "Calculate your search privacy risk level. Compare Google, DuckDuckGo, and other search engines to find the best private search option for you.",
+  "keywords": [
+    "private search engine",
+    "DuckDuckGo",
+    "search privacy",
+    "anonymous search",
+    "Startpage"
+  ],
+  "description": "Assess your current search engine's privacy risks and discover how much personal data you might be exposing. Get personalized recommendations for switching to private alternatives like DuckDuckGo or Startpage.",
+  "inputs": [
+    {
+      "id": "currentEngine",
+      "label": "Current Primary Search Engine",
+      "type": "select",
+      "defaultValue": "google",
+      "options": [
+        {
+          "value": "google",
+          "label": "Google"
+        },
+        {
+          "value": "bing",
+          "label": "Bing"
+        },
+        {
+          "value": "yahoo",
+          "label": "Yahoo"
+        },
+        {
+          "value": "duckduckgo",
+          "label": "DuckDuckGo"
+        },
+        {
+          "value": "startpage",
+          "label": "Startpage"
+        },
+        {
+          "value": "brave",
+          "label": "Brave Search"
+        }
+      ],
+      "helpText": "Which search engine do you use most often?"
+    },
+    {
+      "id": "dailySearches",
+      "label": "Daily Search Queries",
+      "type": "range",
+      "defaultValue": 20,
+      "min": 1,
+      "max": 100,
+      "step": 5,
+      "helpText": "Approximately how many searches do you perform per day?"
+    },
+    {
+      "id": "loggedIn",
+      "label": "Signed into Google/Microsoft Account",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Are you typically signed into your Google or Microsoft account while browsing?"
+    },
+    {
+      "id": "searchTypes",
+      "label": "Types of Searches You Perform",
+      "type": "select",
+      "defaultValue": "mixed",
+      "options": [
+        {
+          "value": "general",
+          "label": "General information only"
+        },
+        {
+          "value": "mixed",
+          "label": "Mix of general and personal topics"
+        },
+        {
+          "value": "personal",
+          "label": "Frequently personal/sensitive topics"
+        },
+        {
+          "value": "professional",
+          "label": "Work-related searches mainly"
+        }
+      ],
+      "helpText": "What kind of information do you typically search for?"
+    },
+    {
+      "id": "incognitoUsage",
+      "label": "Use Private/Incognito Mode",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (less than 25% of time)"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes (25-50% of time)"
+        },
+        {
+          "value": "often",
+          "label": "Often (50-75% of time)"
+        },
+        {
+          "value": "always",
+          "label": "Always (75%+ of time)"
+        }
+      ],
+      "helpText": "How often do you use private/incognito browsing mode?"
+    },
+    {
+      "id": "adBlocker",
+      "label": "Use Ad Blocker",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use an ad blocker or privacy-focused browser like Incognito Browser?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall search privacy risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your privacy risk category"
+    },
+    {
+      "id": "dataPoints",
+      "label": "Estimated Annual Data Points Collected",
+      "format": "number",
+      "description": "Approximate number of data points collected about you per year"
+    }
+  ],
+  "formula": "const engineRisk = { google: 85, bing: 75, yahoo: 80, duckduckgo: 10, startpage: 15, brave: 25 }; const baseRisk = engineRisk[inputs.currentEngine] || 50; const searchMultiplier = Math.min(inputs.dailySearches / 20, 2); const loginPenalty = inputs.loggedIn && ['google', 'bing'].includes(inputs.currentEngine) ? 15 : 0; const typeMultiplier = { general: 0.8, mixed: 1.0, personal: 1.3, professional: 0.9 }[inputs.searchTypes]; const incognitoBonus = { never: 0, rarely: -5, sometimes: -10, often: -20, always: -30 }[inputs.incognitoUsage]; const adBlockBonus = inputs.adBlocker ? -15 : 0; const riskScore = Math.max(0, Math.min(100, (baseRisk + loginPenalty + incognitoBonus + adBlockBonus) * searchMultiplier * typeMultiplier)); const riskLevel = riskScore >= 70 ? 'High' : riskScore >= 40 ? 'Medium' : riskScore >= 20 ? 'Low' : 'Minimal'; const dataPoints = Math.round(inputs.dailySearches * 365 * (riskScore / 100) * 3); return { riskScore: Math.round(riskScore), riskLevel, dataPoints };",
+  "educational": {
+    "methodology": "This calculator evaluates your search privacy risk based on your chosen search engine's data collection practices, search frequency, account usage, and protective measures. Private search engines like DuckDuckGo and Startpage significantly reduce tracking compared to Google or Bing.",
+    "tips": [
+      "Switch to DuckDuckGo or Startpage for anonymous searching without sacrificing quality",
+      "Use Incognito Browser which defaults to private search engines and blocks trackers",
+      "Sign out of Google/Microsoft accounts when searching to reduce profile building",
+      "Use private browsing mode for sensitive searches, even with private search engines",
+      "Consider different search engines for different purposes - DuckDuckGo for privacy, Google for local businesses"
+    ],
+    "interpretation": [
+      {
+        "range": "0-19",
+        "label": "Minimal Risk",
+        "description": "Excellent privacy practices. You're using private search engines and protective measures effectively.",
+        "color": "green"
+      },
+      {
+        "range": "20-39",
+        "label": "Low Risk",
+        "description": "Good privacy practices with room for minor improvements. Consider switching to private search engines.",
+        "color": "lightgreen"
+      },
+      {
+        "range": "40-69",
+        "label": "Medium Risk",
+        "description": "Moderate privacy exposure. Switching to DuckDuckGo or Startpage would significantly improve your privacy.",
+        "color": "orange"
+      },
+      {
+        "range": "70-100",
+        "label": "High Risk",
+        "description": "Significant privacy exposure. Your searches are being tracked and profiled. Consider immediate switch to private alternatives.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "DuckDuckGo vs Google Comparison",
+      "url": "/guides/duckduckgo-vs-google-comparison",
+      "type": "guide"
+    },
+    {
+      "title": "Best Private Search Engines 2024",
+      "url": "/guides/best-private-search-engines",
+      "type": "guide"
+    },
+    {
+      "title": "How to Switch from Google to Private Search",
+      "url": "/guides/switch-from-google-to-private-search",
+      "type": "tutorial"
+    }
+  ]
+}

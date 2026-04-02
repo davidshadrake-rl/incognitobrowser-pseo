@@ -1,0 +1,148 @@
+{
+  "niche": "data-breach",
+  "slug": "data-breach-response-policy-template",
+  "title": "Data Breach Response Policy Template - Quick Action Plan",
+  "metaDescription": "Download our comprehensive data breach response policy template. Step-by-step guidance for organizations to handle breaches effectively.",
+  "keywords": [
+    "data breach response policy",
+    "breach notification template",
+    "data breach plan",
+    "incident response policy",
+    "data leak response"
+  ],
+  "description": "A comprehensive policy template that helps organizations prepare for and respond to data breaches. Includes immediate response procedures, notification requirements, and damage mitigation strategies to protect your business and customers.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Incident Detection and Assessment",
+      "content": "Upon discovery of a potential data breach:\n\n1. Immediately secure the affected systems to prevent further data exposure\n2. Document the time, date, and circumstances of discovery\n3. Assess the scope of potentially compromised data including:\n   - Personal identifiable information (PII)\n   - Financial records\n   - Health information\n   - Login credentials\n4. Determine if the breach is ongoing or contained\n5. Preserve evidence for forensic analysis\n6. Estimate the number of individuals affected",
+      "placeholders": [
+        {
+          "key": "incident_contact",
+          "label": "Primary Incident Response Contact",
+          "defaultValue": "[Name and 24/7 contact information]"
+        },
+        {
+          "key": "discovery_timeframe",
+          "label": "Maximum Discovery Reporting Time",
+          "defaultValue": "within 1 hour of discovery"
+        }
+      ]
+    },
+    {
+      "heading": "Immediate Response Team Activation",
+      "content": "Activate the breach response team within {{activation_time}} of discovery:\n\n**Team Members:**\n- Incident Commander: {{incident_commander}}\n- IT Security Lead: {{security_lead}}\n- Legal Counsel: {{legal_contact}}\n- Communications Manager: {{communications_lead}}\n- Executive Sponsor: {{executive_sponsor}}\n\n**Initial Actions:**\n1. Convene emergency response meeting\n2. Implement containment measures\n3. Begin evidence preservation\n4. Assess legal notification requirements\n5. Prepare preliminary impact assessment",
+      "placeholders": [
+        {
+          "key": "activation_time",
+          "label": "Team Activation Timeframe",
+          "defaultValue": "2 hours"
+        },
+        {
+          "key": "incident_commander",
+          "label": "Incident Commander Name/Title",
+          "defaultValue": "[Name, Title, Contact]"
+        },
+        {
+          "key": "security_lead",
+          "label": "IT Security Lead",
+          "defaultValue": "[Name, Title, Contact]"
+        }
+      ]
+    },
+    {
+      "heading": "Containment and Investigation",
+      "content": "Execute containment procedures to limit breach impact:\n\n**Technical Containment:**\n1. Isolate affected systems from network\n2. Change all potentially compromised passwords\n3. Revoke access tokens and API keys\n4. Apply security patches if breach exploited vulnerabilities\n5. Monitor for ongoing unauthorized access\n\n**Investigation Steps:**\n1. Engage forensic specialists if needed\n2. Analyze logs and system activity\n3. Identify attack vectors and timeline\n4. Determine root cause\n5. Document all findings for regulatory reporting\n\n**Evidence Preservation:**\n- Create forensic images of affected systems\n- Preserve log files and audit trails\n- Maintain chain of custody documentation",
+      "placeholders": [
+        {
+          "key": "forensic_vendor",
+          "label": "Preferred Forensic Investigation Vendor",
+          "defaultValue": "[Vendor name and emergency contact]"
+        }
+      ]
+    },
+    {
+      "heading": "Legal and Regulatory Notification Requirements",
+      "content": "Determine notification obligations based on applicable laws:\n\n**Regulatory Notifications:**\n- GDPR: Notify supervisory authority within 72 hours\n- CCPA: No specific timeframe, but \"without unreasonable delay\"\n- HIPAA: Notify HHS within 60 days\n- State laws: Vary by jurisdiction (typically 30-90 days)\n\n**Required Information for Notifications:**\n1. Nature of the breach and data types involved\n2. Number of individuals affected\n3. Likely consequences of the breach\n4. Measures taken to address the breach\n5. Contact information for inquiries\n\n**Legal Review Checklist:**\n- Determine applicable jurisdiction requirements\n- Calculate notification deadlines\n- Prepare regulatory filing templates\n- Review insurance coverage for breach response costs",
+      "placeholders": [
+        {
+          "key": "legal_counsel",
+          "label": "Legal Counsel Contact",
+          "defaultValue": "[Law firm/attorney contact information]"
+        },
+        {
+          "key": "applicable_laws",
+          "label": "Primary Applicable Privacy Laws",
+          "defaultValue": "[List relevant regulations: GDPR, CCPA, HIPAA, etc.]"
+        }
+      ]
+    },
+    {
+      "heading": "Customer and Stakeholder Communication",
+      "content": "Develop clear, transparent communication to affected individuals:\n\n**Individual Notification Timeline:**\n- Send notifications within {{notification_timeframe}} of breach confirmation\n- Use multiple communication channels (email, mail, website notice)\n\n**Notification Content Must Include:**\n1. Clear description of what happened\n2. Types of information involved\n3. Steps being taken to investigate and address the breach\n4. Specific actions individuals should take to protect themselves\n5. Contact information for questions\n6. Free credit monitoring services (if applicable)\n\n**Communication Channels:**\n- Direct notification (email/postal mail)\n- Website banner and dedicated breach page\n- Social media updates\n- Media statement if breach is significant\n- Customer service talking points\n\n**Sample Individual Notification:**\n\"We are writing to inform you of a data security incident that may have affected your personal information...\"",
+      "placeholders": [
+        {
+          "key": "notification_timeframe",
+          "label": "Individual Notification Timeframe",
+          "defaultValue": "72 hours"
+        },
+        {
+          "key": "customer_service_contact",
+          "label": "Dedicated Customer Support Contact",
+          "defaultValue": "[Phone number and email for breach inquiries]"
+        }
+      ]
+    },
+    {
+      "heading": "Identity Protection and Remediation Services",
+      "content": "Provide affected individuals with resources to protect themselves:\n\n**Immediate Protection Recommendations:**\n1. Change passwords for all online accounts\n2. Use a secure browser like Incognito Browser for sensitive activities\n3. Monitor bank and credit card statements\n4. Place fraud alerts with credit bureaus\n5. Consider credit freezes for enhanced protection\n\n**Services to Offer:**\n- Free credit monitoring (minimum 12 months)\n- Identity theft resolution services\n- Credit report access\n- Fraud alert assistance\n- Dedicated support hotline\n\n**Educational Resources:**\n- Identity theft prevention guide\n- Password security best practices\n- How to recognize phishing attempts\n- Steps to take if identity theft occurs\n\n**Vendor Partnerships:**\nEstablish relationships with reputable identity monitoring services before a breach occurs.",
+      "placeholders": [
+        {
+          "key": "monitoring_vendor",
+          "label": "Identity Monitoring Service Provider",
+          "defaultValue": "[Preferred vendor name and contact]"
+        },
+        {
+          "key": "monitoring_duration",
+          "label": "Credit Monitoring Duration",
+          "defaultValue": "24 months"
+        }
+      ]
+    },
+    {
+      "heading": "Recovery and Lessons Learned",
+      "content": "Implement recovery procedures and prevent future incidents:\n\n**System Recovery:**\n1. Apply all necessary security patches\n2. Implement additional security controls\n3. Conduct penetration testing before restoring systems\n4. Update access controls and authentication requirements\n5. Enhanced monitoring and alerting\n\n**Post-Incident Review:**\n- Conduct thorough post-mortem within 30 days\n- Document lessons learned\n- Update incident response procedures\n- Provide additional staff training\n- Review and update security policies\n\n**Preventive Measures:**\n1. Regular security assessments\n2. Employee security awareness training\n3. Multi-factor authentication implementation\n4. Data encryption for sensitive information\n5. Regular backup and recovery testing\n6. Vendor security reviews\n\n**Documentation Requirements:**\n- Maintain detailed incident timeline\n- Document all response actions taken\n- Keep records of notifications sent\n- Track remediation costs for insurance claims",
+      "placeholders": [
+        {
+          "key": "review_date",
+          "label": "Post-Incident Review Date",
+          "defaultValue": "[Date within 30 days of incident resolution]"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "Small businesses preparing data breach response procedures",
+    "IT security teams developing incident response protocols",
+    "Compliance officers ensuring regulatory notification requirements",
+    "Organizations required to have breach response policies",
+    "Companies wanting to minimize breach response time and costs"
+  ],
+  "relatedLinks": [
+    {
+      "title": "Identity Theft Protection Services Comparison",
+      "url": "/guides/identity-theft-protection-comparison",
+      "type": "internal"
+    },
+    {
+      "title": "Credit Freeze Guide",
+      "url": "/guides/credit-freeze-guide",
+      "type": "internal"
+    },
+    {
+      "title": "Password Security Best Practices",
+      "url": "/guides/password-security",
+      "type": "internal"
+    }
+  ]
+}

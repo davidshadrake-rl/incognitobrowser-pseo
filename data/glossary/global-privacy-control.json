@@ -1,0 +1,31 @@
+{
+  "term": "Global Privacy Control",
+  "slug": "global-privacy-control",
+  "definition": "A web standard that allows users to signal their preference to opt out of data sales and sharing across websites through a single browser setting.",
+  "metaDescription": "Learn about Global Privacy Control (GPC), a web standard that lets users signal opt-out preferences for data sales and sharing across websites.",
+  "simpleExplanation": "Global Privacy Control is like a universal \"do not sell my data\" switch in your browser. When enabled, it automatically tells websites you visit that you don't want them to sell or share your personal information with third parties.",
+  "whyItMatters": "GPC gives users a simple way to exercise privacy rights without having to manually opt out on every website. It's legally recognized under privacy laws like CCPA, making it an enforceable privacy preference.",
+  "technicalDetail": "GPC works by sending an HTTP header (Sec-GPC: 1) and setting a JavaScript property (navigator.globalPrivacyControl) when making requests to websites. Sites that receive this signal are required to honor the opt-out request under applicable privacy laws. Unlike Do Not Track, GPC has legal backing in jurisdictions with comprehensive privacy regulations.",
+  "examples": [
+    {
+      "scenario": "Shopping online with GPC enabled",
+      "explanation": "When you browse an e-commerce site with GPC turned on, the site receives your opt-out signal and cannot sell your browsing data to advertising companies or data brokers."
+    },
+    {
+      "scenario": "Using GPC under CCPA",
+      "explanation": "California residents can use GPC to automatically exercise their right to opt out of personal information sales under the California Consumer Privacy Act, without visiting each website's privacy settings."
+    },
+    {
+      "scenario": "News website compliance",
+      "explanation": "A news website that normally shares reader data with analytics partners must stop this sharing when it detects the GPC signal from your browser."
+    }
+  ],
+  "relatedTerms": [
+    "do-not-track",
+    "ccpa",
+    "third-party-cookies",
+    "behavioral-tracking",
+    "data-broker"
+  ],
+  "category": "technology"
+}

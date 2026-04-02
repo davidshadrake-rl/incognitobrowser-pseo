@@ -1,0 +1,30 @@
+{
+  "term": "Federated Learning",
+  "slug": "federated-learning",
+  "definition": "A machine learning approach where AI models are trained across multiple devices or servers without centralizing the raw data, keeping personal information local while still benefiting from collective learning.",
+  "metaDescription": "Learn about federated learning, a privacy-preserving machine learning technique that trains AI models without sharing your personal data with central servers.",
+  "simpleExplanation": "Instead of sending your personal data to a company's servers for AI training, federated learning lets your device contribute to improving AI models while keeping your data at home. It's like a study group where everyone learns together but keeps their notes private.",
+  "whyItMatters": "Federated learning enables AI improvements without compromising personal privacy. Your smartphone can help make voice recognition better without uploading your conversations, or help improve predictive text without sharing your messages.",
+  "technicalDetail": "In federated learning, a central server distributes a model to participating devices. Each device trains the model locally using its data, then sends only the model updates (gradients) back to the server. The server aggregates these updates to improve the global model without ever seeing the raw data, often combined with differential privacy techniques.",
+  "examples": [
+    {
+      "scenario": "Smartphone keyboard improvements",
+      "explanation": "Your phone's keyboard learns from your typing patterns to improve autocorrect and suggestions, while contributing to overall model improvements without sending your actual messages to the company."
+    },
+    {
+      "scenario": "Medical research collaboration",
+      "explanation": "Hospitals can collaborate to train AI models for disease diagnosis by sharing model improvements rather than sensitive patient data, maintaining HIPAA compliance while advancing medical AI."
+    },
+    {
+      "scenario": "Smart home devices",
+      "explanation": "Voice assistants improve speech recognition by learning from all users' interactions while keeping individual conversations on their respective devices rather than in the cloud."
+    }
+  ],
+  "relatedTerms": [
+    "differential-privacy",
+    "data-minimization",
+    "homomorphic-encryption",
+    "privacy-by-design"
+  ],
+  "category": "technology"
+}

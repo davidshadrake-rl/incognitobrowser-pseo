@@ -1,0 +1,190 @@
+{
+  "niche": "device-fingerprinting",
+  "slug": "device-fingerprinting-risk-calculator",
+  "title": "Device Fingerprinting Risk Calculator - Check Your Privacy Score",
+  "metaDescription": "Calculate your device fingerprinting risk score. Assess how easily websites can track you through browser and device characteristics.",
+  "keywords": [
+    "device fingerprinting calculator",
+    "browser fingerprinting risk",
+    "fingerprint privacy score",
+    "tracking protection assessment"
+  ],
+  "description": "Evaluate your vulnerability to device fingerprinting attacks. This calculator analyzes your browser settings, device characteristics, and privacy measures to determine how uniquely identifiable you are online.",
+  "inputs": [
+    {
+      "id": "browserType",
+      "label": "Browser Type",
+      "type": "select",
+      "defaultValue": "chrome",
+      "options": [
+        {
+          "value": "chrome",
+          "label": "Chrome"
+        },
+        {
+          "value": "firefox",
+          "label": "Firefox"
+        },
+        {
+          "value": "safari",
+          "label": "Safari"
+        },
+        {
+          "value": "edge",
+          "label": "Edge"
+        },
+        {
+          "value": "incognito",
+          "label": "Incognito Browser"
+        },
+        {
+          "value": "tor",
+          "label": "Tor Browser"
+        }
+      ],
+      "helpText": "Your primary web browser"
+    },
+    {
+      "id": "jsEnabled",
+      "label": "JavaScript Enabled",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "JavaScript allows more fingerprinting techniques"
+    },
+    {
+      "id": "cookiesEnabled",
+      "label": "Cookies Enabled",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Cookie settings affect tracking methods"
+    },
+    {
+      "id": "adBlocker",
+      "label": "Ad Blocker Installed",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Ad blockers can reduce fingerprinting scripts"
+    },
+    {
+      "id": "vpnUsage",
+      "label": "VPN Usage",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "always",
+          "label": "Always"
+        }
+      ],
+      "helpText": "How often you use a VPN while browsing"
+    },
+    {
+      "id": "screenResolution",
+      "label": "Screen Resolution Uniqueness",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "Rate how unique your screen resolution is (1=common, 10=very rare)"
+    },
+    {
+      "id": "extensions",
+      "label": "Browser Extensions Count",
+      "type": "number",
+      "defaultValue": 3,
+      "min": 0,
+      "max": 50,
+      "helpText": "Number of installed browser extensions"
+    },
+    {
+      "id": "fingerprintProtection",
+      "label": "Fingerprint Protection Enabled",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Built-in browser fingerprint protection or specialized tools"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Fingerprinting Risk Score",
+      "format": "percentage",
+      "description": "Overall likelihood of being uniquely identified"
+    },
+    {
+      "id": "uniqueness",
+      "label": "Device Uniqueness Level",
+      "format": "grade",
+      "description": "How distinctive your device fingerprint is"
+    },
+    {
+      "id": "protectionLevel",
+      "label": "Current Protection Level",
+      "format": "text",
+      "description": "Assessment of your anti-fingerprinting measures"
+    }
+  ],
+  "formula": "let baseRisk = 70; if (browserType === 'tor') baseRisk -= 40; else if (browserType === 'incognito') baseRisk -= 30; else if (browserType === 'firefox') baseRisk -= 10; if (!jsEnabled) baseRisk -= 25; if (adBlocker) baseRisk -= 15; if (fingerprintProtection) baseRisk -= 20; if (vpnUsage === 'always') baseRisk -= 15; else if (vpnUsage === 'sometimes') baseRisk -= 7; baseRisk += screenResolution * 2; baseRisk += Math.min(extensions * 2, 20); baseRisk = Math.max(5, Math.min(95, baseRisk)); let grade = 'A+'; if (baseRisk > 20) grade = 'A'; if (baseRisk > 40) grade = 'B'; if (baseRisk > 60) grade = 'C'; if (baseRisk > 80) grade = 'D'; let protection = 'Excellent'; if (baseRisk > 30) protection = 'Good'; if (baseRisk > 50) protection = 'Moderate'; if (baseRisk > 70) protection = 'Weak'; if (baseRisk > 85) protection = 'Poor'; return { riskScore: baseRisk, uniqueness: grade, protectionLevel: protection };",
+  "educational": {
+    "methodology": "This calculator evaluates multiple fingerprinting vectors including browser type, enabled features, screen characteristics, and protection measures. It weighs each factor based on research into real-world fingerprinting techniques used by tracking companies.",
+    "tips": [
+      "Use privacy-focused browsers like Incognito Browser or Firefox with strict privacy settings",
+      "Disable JavaScript on sensitive sites or use NoScript extensions",
+      "Install ad blockers and anti-fingerprinting extensions",
+      "Use common screen resolutions and avoid unique browser configurations",
+      "Enable built-in fingerprint protection features when available"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20%",
+        "label": "Low Risk",
+        "description": "Excellent fingerprint protection. You're very difficult to track uniquely.",
+        "color": "green"
+      },
+      {
+        "range": "21-40%",
+        "label": "Moderate Risk",
+        "description": "Good protection with room for improvement. Some tracking is possible.",
+        "color": "lightgreen"
+      },
+      {
+        "range": "41-70%",
+        "label": "High Risk",
+        "description": "Vulnerable to fingerprinting. Your device has distinctive characteristics.",
+        "color": "orange"
+      },
+      {
+        "range": "71-100%",
+        "label": "Very High Risk",
+        "description": "Easily trackable. Your fingerprint is likely unique and persistent.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Complete Guide to Device Fingerprinting",
+      "url": "/guides/device-fingerprinting-complete-guide",
+      "type": "internal"
+    },
+    {
+      "title": "Browser Fingerprinting Test Tool",
+      "url": "/tools/browser-fingerprint-test",
+      "type": "internal"
+    },
+    {
+      "title": "Best Anti-Fingerprinting Browsers",
+      "url": "/reviews/anti-fingerprinting-browsers",
+      "type": "internal"
+    }
+  ]
+}

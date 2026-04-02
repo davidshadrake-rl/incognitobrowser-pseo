@@ -1,0 +1,225 @@
+{
+  "niche": "workplace-privacy",
+  "slug": "workplace-surveillance-employee-privacy-risk-calculator",
+  "title": "Workplace Surveillance & Employee Privacy Risk Calculator",
+  "metaDescription": "Calculate your workplace privacy risk level. Assess employer monitoring, surveillance software, and data collection to protect your employee privacy.",
+  "keywords": [
+    "workplace surveillance",
+    "employee monitoring",
+    "workplace privacy rights",
+    "employer tracking",
+    "employee privacy risk"
+  ],
+  "description": "Evaluate your privacy risk in the workplace by assessing employer monitoring practices, surveillance software, device policies, and legal protections. Get personalized recommendations to safeguard your employee privacy rights.",
+  "inputs": [
+    {
+      "id": "deviceType",
+      "label": "Primary work device",
+      "type": "select",
+      "defaultValue": "company-owned",
+      "options": [
+        {
+          "value": "company-owned",
+          "label": "Company-owned device"
+        },
+        {
+          "value": "byod",
+          "label": "Personal device (BYOD)"
+        },
+        {
+          "value": "mixed",
+          "label": "Both company and personal devices"
+        }
+      ],
+      "helpText": "Type of device you use most for work activities"
+    },
+    {
+      "id": "monitoringSoftware",
+      "label": "Known monitoring software installed",
+      "type": "select",
+      "defaultValue": "unknown",
+      "options": [
+        {
+          "value": "none",
+          "label": "No monitoring software"
+        },
+        {
+          "value": "basic",
+          "label": "Basic time tracking only"
+        },
+        {
+          "value": "moderate",
+          "label": "Screen monitoring & keystroke logging"
+        },
+        {
+          "value": "extensive",
+          "label": "Full surveillance (webcam, audio, location)"
+        },
+        {
+          "value": "unknown",
+          "label": "Unknown/Not disclosed"
+        }
+      ],
+      "helpText": "Level of monitoring software you're aware of"
+    },
+    {
+      "id": "workLocation",
+      "label": "Work arrangement",
+      "type": "select",
+      "defaultValue": "hybrid",
+      "options": [
+        {
+          "value": "office",
+          "label": "Full-time office"
+        },
+        {
+          "value": "remote",
+          "label": "Full-time remote"
+        },
+        {
+          "value": "hybrid",
+          "label": "Hybrid (office + remote)"
+        }
+      ],
+      "helpText": "Your primary work location setup"
+    },
+    {
+      "id": "personalUsage",
+      "label": "Personal use of work devices",
+      "type": "select",
+      "defaultValue": "occasional",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never use for personal activities"
+        },
+        {
+          "value": "occasional",
+          "label": "Occasional personal browsing/email"
+        },
+        {
+          "value": "regular",
+          "label": "Regular personal use"
+        },
+        {
+          "value": "extensive",
+          "label": "Extensive personal use"
+        }
+      ],
+      "helpText": "How often you use work devices for personal activities"
+    },
+    {
+      "id": "privacyPolicy",
+      "label": "Workplace privacy policy awareness",
+      "type": "select",
+      "defaultValue": "partial",
+      "options": [
+        {
+          "value": "none",
+          "label": "No policy or unaware"
+        },
+        {
+          "value": "partial",
+          "label": "Vaguely aware of policy"
+        },
+        {
+          "value": "read",
+          "label": "Read but unclear"
+        },
+        {
+          "value": "clear",
+          "label": "Clear understanding of policy"
+        }
+      ],
+      "helpText": "Your understanding of your employer's privacy/monitoring policies"
+    },
+    {
+      "id": "sensitiveData",
+      "label": "Access to sensitive data",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you handle customer data, financial info, or confidential business information?"
+    },
+    {
+      "id": "unionProtection",
+      "label": "Union or legal protection",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Are you covered by union agreements or strong local privacy laws?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall workplace privacy risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorical assessment of your privacy risk"
+    },
+    {
+      "id": "primaryConcerns",
+      "label": "Primary Privacy Concerns",
+      "format": "text",
+      "description": "Key privacy risks identified for your situation"
+    }
+  ],
+  "formula": "let baseRisk = 30; if (deviceType === 'byod') baseRisk += 20; else if (deviceType === 'mixed') baseRisk += 15; if (monitoringSoftware === 'extensive') baseRisk += 25; else if (monitoringSoftware === 'moderate') baseRisk += 15; else if (monitoringSoftware === 'basic') baseRisk += 5; else if (monitoringSoftware === 'unknown') baseRisk += 10; if (workLocation === 'remote') baseRisk += 10; else if (workLocation === 'hybrid') baseRisk += 5; if (personalUsage === 'extensive') baseRisk += 20; else if (personalUsage === 'regular') baseRisk += 15; else if (personalUsage === 'occasional') baseRisk += 8; if (privacyPolicy === 'none') baseRisk += 15; else if (privacyPolicy === 'partial') baseRisk += 10; else if (privacyPolicy === 'read') baseRisk += 5; if (sensitiveData) baseRisk += 10; if (unionProtection) baseRisk -= 10; const riskScore = Math.min(Math.max(baseRisk, 0), 100); let riskLevel, primaryConcerns = []; if (riskScore <= 35) { riskLevel = 'Low Risk'; } else if (riskScore <= 60) { riskLevel = 'Moderate Risk'; } else if (riskScore <= 80) { riskLevel = 'High Risk'; } else { riskLevel = 'Very High Risk'; } if (deviceType === 'byod') primaryConcerns.push('Personal device monitoring'); if (monitoringSoftware === 'extensive' || monitoringSoftware === 'unknown') primaryConcerns.push('Comprehensive surveillance'); if (personalUsage === 'regular' || personalUsage === 'extensive') primaryConcerns.push('Personal activity tracking'); if (privacyPolicy === 'none' || privacyPolicy === 'partial') primaryConcerns.push('Unclear monitoring boundaries'); if (workLocation === 'remote') primaryConcerns.push('Home environment privacy'); return { riskScore, riskLevel, primaryConcerns: primaryConcerns.join(', ') || 'Standard workplace monitoring' };",
+  "educational": {
+    "methodology": "This calculator evaluates workplace privacy risks based on device ownership, monitoring software presence, work arrangements, personal usage patterns, policy awareness, and legal protections. Higher scores indicate greater privacy exposure and potential for unauthorized data collection.",
+    "tips": [
+      "Use Incognito Browser for personal browsing on work devices to minimize tracking",
+      "Keep personal and work activities completely separate when possible",
+      "Request detailed information about monitoring software and data collection practices",
+      "Consider using a personal VPN on your own devices, but check company policies first",
+      "Regularly review and understand your workplace privacy policies and employee rights"
+    ],
+    "interpretation": [
+      {
+        "range": "0-35",
+        "label": "Low Risk",
+        "description": "Good privacy boundaries with minimal personal exposure. Continue following best practices.",
+        "color": "green"
+      },
+      {
+        "range": "36-60",
+        "label": "Moderate Risk",
+        "description": "Some privacy concerns exist. Review your practices and consider additional protective measures.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-80",
+        "label": "High Risk",
+        "description": "Significant privacy exposure. Take immediate steps to separate personal and work activities.",
+        "color": "orange"
+      },
+      {
+        "range": "81-100",
+        "label": "Very High Risk",
+        "description": "Extensive privacy risks present. Urgent action needed to protect personal information and activities.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Employee Rights: What Can Your Boss Monitor?",
+      "url": "/workplace-privacy/employee-monitoring-rights",
+      "type": "guide"
+    },
+    {
+      "title": "BYOD Privacy: Protecting Personal Devices at Work",
+      "url": "/workplace-privacy/byod-privacy-guide",
+      "type": "guide"
+    },
+    {
+      "title": "Detecting Employee Monitoring Software",
+      "url": "/workplace-privacy/detect-monitoring-software",
+      "type": "tool"
+    }
+  ]
+}

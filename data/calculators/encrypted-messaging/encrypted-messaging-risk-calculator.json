@@ -1,0 +1,220 @@
+{
+  "niche": "encrypted-messaging",
+  "slug": "encrypted-messaging-risk-calculator",
+  "title": "Encrypted Messaging Risk Calculator - Check Your Privacy Score",
+  "metaDescription": "Calculate your messaging privacy risk score. Assess your encrypted messaging habits and get personalized recommendations for secure communication.",
+  "keywords": [
+    "encrypted messaging risk",
+    "messaging privacy calculator",
+    "Signal vs WhatsApp security",
+    "encrypted chat safety",
+    "messaging app privacy score"
+  ],
+  "description": "Evaluate your messaging privacy risks and discover vulnerabilities in your communication habits. Get a personalized risk score and actionable recommendations to improve your encrypted messaging security across Signal, WhatsApp, Telegram, and other platforms.",
+  "inputs": [
+    {
+      "id": "primaryApp",
+      "label": "Primary messaging app",
+      "type": "select",
+      "defaultValue": "whatsapp",
+      "options": [
+        {
+          "value": "signal",
+          "label": "Signal"
+        },
+        {
+          "value": "whatsapp",
+          "label": "WhatsApp"
+        },
+        {
+          "value": "telegram",
+          "label": "Telegram"
+        },
+        {
+          "value": "imessage",
+          "label": "iMessage"
+        },
+        {
+          "value": "sms",
+          "label": "SMS/Text"
+        },
+        {
+          "value": "other",
+          "label": "Other (Facebook Messenger, etc.)"
+        }
+      ],
+      "helpText": "Which app do you use most for private conversations?"
+    },
+    {
+      "id": "backupEnabled",
+      "label": "Cloud backup enabled",
+      "type": "select",
+      "defaultValue": "yes",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes, messages backed up to cloud"
+        },
+        {
+          "value": "no",
+          "label": "No cloud backup"
+        },
+        {
+          "value": "unsure",
+          "label": "Not sure"
+        }
+      ],
+      "helpText": "Are your messages automatically backed up to iCloud, Google Drive, etc?"
+    },
+    {
+      "id": "groupChats",
+      "label": "Number of group chats",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "helpText": "How many group conversations are you actively part of?"
+    },
+    {
+      "id": "sensitiveContent",
+      "label": "Share sensitive information",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        }
+      ],
+      "helpText": "How often do you share personal, work, or sensitive information via messaging?"
+    },
+    {
+      "id": "disappearingMessages",
+      "label": "Use disappearing messages",
+      "type": "select",
+      "defaultValue": "no",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always enabled"
+        },
+        {
+          "value": "sometimes",
+          "label": "For sensitive chats only"
+        },
+        {
+          "value": "no",
+          "label": "Never use them"
+        },
+        {
+          "value": "unavailable",
+          "label": "My app doesn't have this feature"
+        }
+      ],
+      "helpText": "Do you enable self-destructing/disappearing messages?"
+    },
+    {
+      "id": "contactsOnInsecure",
+      "label": "Contacts using insecure apps",
+      "type": "range",
+      "defaultValue": 50,
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "helpText": "What percentage of your contacts use SMS or unencrypted messaging apps?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall messaging privacy risk level (0-100, lower is better)"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Security Grade",
+      "format": "grade",
+      "description": "Letter grade representing your messaging security posture"
+    },
+    {
+      "id": "primaryConcern",
+      "label": "Top Risk Factor",
+      "format": "text",
+      "description": "The biggest threat to your messaging privacy"
+    }
+  ],
+  "formula": "let appRisk = 0; switch(primaryApp) { case 'signal': appRisk = 5; break; case 'whatsapp': appRisk = 25; break; case 'imessage': appRisk = 30; break; case 'telegram': appRisk = 35; break; case 'sms': appRisk = 80; break; default: appRisk = 70; } let backupRisk = backupEnabled === 'yes' ? 30 : (backupEnabled === 'unsure' ? 20 : 0); let groupRisk = Math.min(groupChats * 1.5, 30); let contentRisk = {'never': 0, 'rarely': 10, 'sometimes': 25, 'often': 40}[sensitiveContent] || 25; let disappearingRisk = {'always': 0, 'sometimes': 10, 'no': 20, 'unavailable': 15}[disappearingMessages] || 20; let contactRisk = contactsOnInsecure * 0.3; let totalRisk = Math.min(appRisk + backupRisk + groupRisk + contentRisk + disappearingRisk + contactRisk, 100); let grade = totalRisk <= 20 ? 'A' : totalRisk <= 40 ? 'B' : totalRisk <= 60 ? 'C' : totalRisk <= 80 ? 'D' : 'F'; let concerns = []; if(appRisk >= 30) concerns.push('Insecure messaging app'); if(backupRisk >= 20) concerns.push('Cloud backup exposure'); if(contentRisk >= 25) concerns.push('Sensitive content sharing'); if(contactRisk >= 25) concerns.push('Insecure contacts'); let primaryConcern = concerns[0] || 'Metadata collection'; { riskScore: Math.round(totalRisk), riskGrade: grade, primaryConcern: primaryConcern }",
+  "educational": {
+    "methodology": "This calculator evaluates messaging privacy risks based on app security, backup practices, group chat exposure, content sensitivity, disappearing message usage, and contact security habits. Scores range from 0 (most secure) to 100 (highest risk).",
+    "tips": [
+      "Switch to Signal for maximum privacy - it's the gold standard for encrypted messaging",
+      "Disable cloud backups for messaging apps to prevent government and hacker access",
+      "Enable disappearing messages for sensitive conversations to limit data retention",
+      "Use Incognito Browser when accessing web versions of messaging apps for added privacy",
+      "Regularly audit your group chats and leave unnecessary ones to reduce exposure"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Excellent Security",
+        "description": "Your messaging habits follow privacy best practices. Continue using secure apps and settings.",
+        "color": "green"
+      },
+      {
+        "range": "21-40",
+        "label": "Good Security",
+        "description": "You're doing well but have room for improvement. Consider the recommendations above.",
+        "color": "lightgreen"
+      },
+      {
+        "range": "41-60",
+        "label": "Moderate Risk",
+        "description": "Several privacy vulnerabilities exist. Priority improvements needed for better security.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-80",
+        "label": "High Risk",
+        "description": "Significant privacy risks in your messaging habits. Immediate changes recommended.",
+        "color": "orange"
+      },
+      {
+        "range": "81-100",
+        "label": "Very High Risk",
+        "description": "Your messages are highly vulnerable to interception. Switch to encrypted apps immediately.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Signal vs WhatsApp vs Telegram: Complete Security Comparison",
+      "url": "/guides/signal-whatsapp-telegram-comparison",
+      "type": "guide"
+    },
+    {
+      "title": "How to Migrate from WhatsApp to Signal",
+      "url": "/guides/migrate-whatsapp-to-signal",
+      "type": "tutorial"
+    },
+    {
+      "title": "Understanding End-to-End Encryption in Messaging Apps",
+      "url": "/guides/end-to-end-encryption-explained",
+      "type": "explainer"
+    }
+  ]
+}

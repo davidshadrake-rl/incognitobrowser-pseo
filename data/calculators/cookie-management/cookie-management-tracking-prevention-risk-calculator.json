@@ -1,0 +1,233 @@
+{
+  "niche": "cookie-management",
+  "slug": "cookie-tracking-prevention-risk-calculator",
+  "title": "Cookie Management & Tracking Prevention Risk Calculator",
+  "metaDescription": "Calculate your privacy risk from cookies and tracking. Get personalized recommendations for better cookie management and protection.",
+  "keywords": [
+    "cookie tracking risk",
+    "third-party cookies",
+    "browser privacy",
+    "cookie management",
+    "tracking prevention"
+  ],
+  "description": "Assess your current cookie and tracking exposure risk based on your browsing habits, browser settings, and privacy tools. Get actionable recommendations to improve your online privacy and reduce unwanted tracking.",
+  "inputs": [
+    {
+      "id": "browserType",
+      "label": "Primary Browser",
+      "type": "select",
+      "defaultValue": "chrome",
+      "options": [
+        {
+          "value": "chrome",
+          "label": "Google Chrome"
+        },
+        {
+          "value": "firefox",
+          "label": "Mozilla Firefox"
+        },
+        {
+          "value": "safari",
+          "label": "Safari"
+        },
+        {
+          "value": "edge",
+          "label": "Microsoft Edge"
+        },
+        {
+          "value": "incognito",
+          "label": "Incognito Browser"
+        },
+        {
+          "value": "other",
+          "label": "Other"
+        }
+      ],
+      "helpText": "Which browser do you use most often?"
+    },
+    {
+      "id": "cookieSettings",
+      "label": "Cookie Settings",
+      "type": "select",
+      "defaultValue": "default",
+      "options": [
+        {
+          "value": "allow-all",
+          "label": "Accept all cookies"
+        },
+        {
+          "value": "default",
+          "label": "Default browser settings"
+        },
+        {
+          "value": "block-third-party",
+          "label": "Block third-party cookies"
+        },
+        {
+          "value": "block-all",
+          "label": "Block most cookies"
+        }
+      ],
+      "helpText": "What are your current cookie preferences?"
+    },
+    {
+      "id": "clearFrequency",
+      "label": "How often do you clear cookies/browsing data?",
+      "type": "select",
+      "defaultValue": "rarely",
+      "options": [
+        {
+          "value": "daily",
+          "label": "Daily"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely/Never"
+        }
+      ],
+      "helpText": "Regular clearing reduces tracking accumulation"
+    },
+    {
+      "id": "privacyTools",
+      "label": "Privacy Tools Used",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No additional tools"
+        },
+        {
+          "value": "adblocker",
+          "label": "Ad blocker only"
+        },
+        {
+          "value": "privacy-extensions",
+          "label": "Privacy extensions"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Multiple privacy tools"
+        }
+      ],
+      "helpText": "Ad blockers and privacy extensions reduce tracking"
+    },
+    {
+      "id": "browsingHabits",
+      "label": "Daily browsing intensity",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "1 = Light browsing, 10 = Heavy browsing (many sites daily)"
+    },
+    {
+      "id": "socialMediaUse",
+      "label": "Social media usage",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "none",
+          "label": "Don't use social media"
+        },
+        {
+          "value": "light",
+          "label": "Occasional use"
+        },
+        {
+          "value": "moderate",
+          "label": "Regular use"
+        },
+        {
+          "value": "heavy",
+          "label": "Heavy daily use"
+        }
+      ],
+      "helpText": "Social platforms are major sources of tracking cookies"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Privacy Risk Score",
+      "format": "score",
+      "description": "Your current cookie and tracking risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorized risk assessment based on your settings"
+    },
+    {
+      "id": "trackingExposure",
+      "label": "Estimated Tracking Exposure",
+      "format": "percentage",
+      "description": "Percentage of your browsing likely being tracked"
+    }
+  ],
+  "formula": "const browserScores = {chrome: 7, firefox: 4, safari: 5, edge: 6, incognito: 2, other: 5}; const cookieScores = {'allow-all': 10, default: 7, 'block-third-party': 4, 'block-all': 2}; const clearScores = {daily: 1, weekly: 3, monthly: 5, rarely: 8}; const toolScores = {none: 8, adblocker: 5, 'privacy-extensions': 3, comprehensive: 1}; const socialScores = {none: 0, light: 2, moderate: 4, heavy: 6}; const browserRisk = browserScores[inputs.browserType] || 5; const cookieRisk = cookieScores[inputs.cookieSettings] || 7; const clearRisk = clearScores[inputs.clearFrequency] || 8; const toolRisk = toolScores[inputs.privacyTools] || 8; const browsingRisk = inputs.browsingHabits * 0.8; const socialRisk = socialScores[inputs.socialMediaUse] || 4; const riskScore = Math.min(100, Math.round((browserRisk + cookieRisk + clearRisk + toolRisk + browsingRisk + socialRisk) / 6 * 10)); const riskLevel = riskScore >= 80 ? 'High Risk' : riskScore >= 60 ? 'Moderate Risk' : riskScore >= 40 ? 'Low-Moderate Risk' : 'Low Risk'; const trackingExposure = Math.min(95, riskScore * 0.9 + (inputs.browsingHabits * 2)); return {riskScore, riskLevel, trackingExposure};",
+  "educational": {
+    "methodology": "This calculator evaluates your cookie and tracking risk based on browser choice, privacy settings, clearing habits, and browsing patterns. Browsers like Incognito Browser and Firefox offer better default privacy, while regular data clearing and privacy tools significantly reduce tracking exposure.",
+    "tips": [
+      "Switch to privacy-focused browsers like Incognito Browser for better default protection",
+      "Clear cookies and browsing data at least weekly to reset tracking profiles",
+      "Block third-party cookies in your browser settings - they're mainly used for tracking",
+      "Install privacy extensions or ad blockers to prevent tracking scripts",
+      "Be cautious with social media logins on other sites - they enable cross-site tracking"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Good privacy practices! Your tracking exposure is minimal.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "31-50",
+        "label": "Low-Moderate Risk",
+        "description": "Decent privacy protection with room for improvement.",
+        "color": "#84cc16"
+      },
+      {
+        "range": "51-70",
+        "label": "Moderate Risk",
+        "description": "Significant tracking exposure. Consider improving your privacy settings.",
+        "color": "#f59e0b"
+      },
+      {
+        "range": "71-100",
+        "label": "High Risk",
+        "description": "High tracking exposure. Your browsing is likely being extensively tracked.",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "How to Delete Cookies in Chrome",
+      "url": "/guides/delete-cookies-chrome",
+      "type": "guide"
+    },
+    {
+      "title": "Third-Party Cookies Explained",
+      "url": "/guides/third-party-cookies-explained",
+      "type": "guide"
+    },
+    {
+      "title": "Download Incognito Browser",
+      "url": "https://incognito-browser.com",
+      "type": "external"
+    }
+  ]
+}

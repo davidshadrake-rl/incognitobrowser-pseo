@@ -1,0 +1,31 @@
+{
+  "term": "Pixel Tracking",
+  "slug": "pixel-tracking",
+  "definition": "A technique that uses tiny, invisible images (usually 1x1 pixel) embedded in emails or web pages to track user behavior, such as when emails are opened or pages are viewed.",
+  "metaDescription": "Learn about pixel tracking, the invisible monitoring technique used in emails and websites to track user behavior and gather data.",
+  "simpleExplanation": "Pixel tracking is like hiding a tiny invisible spy camera in an email or webpage. When you open the email or visit the page, this invisible pixel loads and tells the sender that you've seen their content, along with information about when and where you opened it.",
+  "whyItMatters": "Pixel tracking allows companies to monitor your email reading habits, browsing patterns, and location without your explicit consent. This data helps build detailed profiles about your interests and behavior for marketing purposes.",
+  "technicalDetail": "Tracking pixels are typically 1x1 pixel transparent GIF or PNG images loaded from external servers. When rendered, they send HTTP requests containing headers with user information like IP address, user agent, timestamps, and referrer data. Email clients and web browsers can block these by preventing automatic image loading or using privacy-focused settings.",
+  "examples": [
+    {
+      "scenario": "Email newsletters",
+      "explanation": "A marketing email contains an invisible pixel that reports back when you open the email, what device you used, and your approximate location based on IP address."
+    },
+    {
+      "scenario": "Website analytics",
+      "explanation": "E-commerce sites embed tracking pixels to monitor which product pages you visit and how long you spend on each page to optimize their marketing campaigns."
+    },
+    {
+      "scenario": "Social media advertising",
+      "explanation": "Facebook and Google place tracking pixels on websites to see which users visit certain pages, allowing them to show targeted ads based on your browsing history."
+    }
+  ],
+  "relatedTerms": [
+    "behavioral-tracking",
+    "cross-site-tracking",
+    "cookies",
+    "third-party-cookies",
+    "ad-blocker"
+  ],
+  "category": "technology"
+}

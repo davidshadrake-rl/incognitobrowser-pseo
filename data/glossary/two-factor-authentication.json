@@ -1,0 +1,30 @@
+{
+  "term": "Two Factor Authentication",
+  "slug": "two-factor-authentication",
+  "definition": "A security method that requires two different forms of verification to access an account, typically combining something you know (password) with something you have (phone) or are (biometric).",
+  "metaDescription": "Two factor authentication (2FA) adds extra security by requiring two verification methods. Learn how 2FA protects your accounts and privacy online.",
+  "simpleExplanation": "Two factor authentication is like having two locks on your door instead of one. Even if someone steals your password, they still can't get into your account without the second form of verification, like a code sent to your phone or your fingerprint.",
+  "whyItMatters": "2FA dramatically reduces the risk of account breaches and identity theft. It protects your personal data, financial information, and digital privacy even when passwords are compromised through data breaches or phishing attacks.",
+  "technicalDetail": "2FA implements multiple authentication factors: knowledge factors (passwords, PINs), possession factors (smartphones, hardware tokens), and inherence factors (biometrics). Common methods include SMS codes, authenticator apps generating time-based one-time passwords (TOTP), push notifications, and hardware security keys using protocols like FIDO2/WebAuthn.",
+  "examples": [
+    {
+      "scenario": "Banking app login",
+      "explanation": "After entering your password, the bank sends a text message with a 6-digit code to your registered phone number that you must enter to complete login."
+    },
+    {
+      "scenario": "Google account with authenticator app",
+      "explanation": "You enter your password, then open Google Authenticator on your phone to get a time-sensitive 6-digit code that changes every 30 seconds."
+    },
+    {
+      "scenario": "Hardware security key",
+      "explanation": "After typing your password, you insert a USB security key and press its button, or tap it to your phone via NFC to verify your identity."
+    }
+  ],
+  "relatedTerms": [
+    "multi-factor-authentication",
+    "password-hashing",
+    "phishing",
+    "biometric-data"
+  ],
+  "category": "technology"
+}

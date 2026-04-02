@@ -1,0 +1,239 @@
+{
+  "niche": "email-privacy",
+  "slug": "email-privacy-encryption-risk-calculator",
+  "title": "Email Privacy & Encryption Risk Calculator",
+  "metaDescription": "Calculate your email privacy risk score and discover how secure your email setup is. Get personalized recommendations for better email security.",
+  "keywords": [
+    "email privacy",
+    "email encryption",
+    "email security",
+    "ProtonMail",
+    "encrypted email",
+    "email risk assessment"
+  ],
+  "description": "Assess your email privacy and security risks with our comprehensive calculator. Evaluate your current email provider, encryption usage, and privacy practices to get a personalized risk score and actionable recommendations.",
+  "inputs": [
+    {
+      "id": "emailProvider",
+      "label": "Primary Email Provider",
+      "type": "select",
+      "defaultValue": "gmail",
+      "options": [
+        {
+          "value": "gmail",
+          "label": "Gmail"
+        },
+        {
+          "value": "outlook",
+          "label": "Outlook/Hotmail"
+        },
+        {
+          "value": "yahoo",
+          "label": "Yahoo Mail"
+        },
+        {
+          "value": "protonmail",
+          "label": "ProtonMail"
+        },
+        {
+          "value": "tutanota",
+          "label": "Tutanota"
+        },
+        {
+          "value": "other-secure",
+          "label": "Other Secure Provider"
+        },
+        {
+          "value": "work-email",
+          "label": "Work/Corporate Email"
+        }
+      ],
+      "helpText": "Your main email service provider"
+    },
+    {
+      "id": "twoFactorAuth",
+      "label": "Two-Factor Authentication Enabled",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use 2FA on your email account?"
+    },
+    {
+      "id": "emailsPerDay",
+      "label": "Emails Sent/Received Daily",
+      "type": "select",
+      "defaultValue": "10-50",
+      "options": [
+        {
+          "value": "1-10",
+          "label": "1-10 emails"
+        },
+        {
+          "value": "10-50",
+          "label": "10-50 emails"
+        },
+        {
+          "value": "50-100",
+          "label": "50-100 emails"
+        },
+        {
+          "value": "100+",
+          "label": "100+ emails"
+        }
+      ],
+      "helpText": "Average daily email volume"
+    },
+    {
+      "id": "sensitiveContent",
+      "label": "Frequency of Sensitive Content",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        },
+        {
+          "value": "always",
+          "label": "Very Often"
+        }
+      ],
+      "helpText": "How often do you send personal, financial, or work-sensitive information via email?"
+    },
+    {
+      "id": "encryptionUsage",
+      "label": "Email Encryption Usage",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No encryption"
+        },
+        {
+          "value": "sometimes",
+          "label": "Occasionally use encryption"
+        },
+        {
+          "value": "secure-provider",
+          "label": "Use encrypted email provider"
+        },
+        {
+          "value": "always",
+          "label": "Always encrypt sensitive emails"
+        }
+      ],
+      "helpText": "How do you currently protect your email content?"
+    },
+    {
+      "id": "trackingProtection",
+      "label": "Email Tracking Protection",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No protection"
+        },
+        {
+          "value": "basic",
+          "label": "Basic (images blocked)"
+        },
+        {
+          "value": "advanced",
+          "label": "Advanced tracking blocker"
+        },
+        {
+          "value": "full",
+          "label": "Full privacy setup"
+        }
+      ],
+      "helpText": "Do you block email tracking pixels and links?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Email Privacy Risk Score",
+      "format": "percentage",
+      "description": "Your overall email privacy risk level (lower is better)"
+    },
+    {
+      "id": "securityGrade",
+      "label": "Security Grade",
+      "format": "grade",
+      "description": "Letter grade for your current email security setup"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Overall assessment of your email privacy risks"
+    }
+  ],
+  "formula": "let providerRisk = {gmail: 70, outlook: 65, yahoo: 75, protonmail: 15, tutanota: 20, 'other-secure': 30, 'work-email': 50}[emailProvider] || 50; let volumeMultiplier = {'1-10': 0.8, '10-50': 1.0, '50-100': 1.2, '100+': 1.4}[emailsPerDay] || 1.0; let sensitivityRisk = {never: 0, rarely: 10, sometimes: 20, often: 35, always: 50}[sensitiveContent] || 20; let encryptionReduction = {none: 0, sometimes: -15, 'secure-provider': -35, always: -45}[encryptionUsage] || 0; let trackingReduction = {none: 0, basic: -5, advanced: -15, full: -25}[trackingProtection] || 0; let twoFactorReduction = twoFactorAuth ? -10 : 0; let baseRisk = (providerRisk + sensitivityRisk) * volumeMultiplier; let totalRisk = Math.max(5, Math.min(95, baseRisk + encryptionReduction + trackingReduction + twoFactorReduction)); let grade = totalRisk <= 25 ? 'A' : totalRisk <= 40 ? 'B' : totalRisk <= 60 ? 'C' : totalRisk <= 80 ? 'D' : 'F'; let level = totalRisk <= 25 ? 'Low Risk' : totalRisk <= 50 ? 'Moderate Risk' : totalRisk <= 75 ? 'High Risk' : 'Very High Risk'; return {riskScore: Math.round(totalRisk), securityGrade: grade, riskLevel: level};",
+  "educational": {
+    "methodology": "This calculator evaluates your email privacy risk based on your provider's data practices, encryption usage, authentication methods, and privacy protections. Major providers like Gmail scan emails for advertising, while encrypted providers like ProtonMail offer zero-access encryption.",
+    "tips": [
+      "Switch to encrypted email providers like ProtonMail or Tutanota for automatic end-to-end encryption",
+      "Enable two-factor authentication on all email accounts to prevent unauthorized access",
+      "Use email tracking blockers or privacy-focused browsers like Incognito Browser to prevent pixel tracking",
+      "Create email aliases for online accounts to protect your main email from data breaches",
+      "Avoid sending sensitive information through unencrypted email providers"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25%",
+        "label": "Low Risk",
+        "description": "Excellent email privacy setup with strong encryption and protection measures",
+        "color": "green"
+      },
+      {
+        "range": "26-50%",
+        "label": "Moderate Risk",
+        "description": "Good privacy practices but room for improvement in encryption or provider choice",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75%",
+        "label": "High Risk",
+        "description": "Significant privacy vulnerabilities - consider switching to encrypted email provider",
+        "color": "orange"
+      },
+      {
+        "range": "76-100%",
+        "label": "Very High Risk",
+        "description": "Major privacy concerns - immediate action needed to protect your email communications",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "ProtonMail vs Gmail Comparison",
+      "url": "/guides/protonmail-vs-gmail-privacy-comparison",
+      "type": "guide"
+    },
+    {
+      "title": "How to Block Email Tracking Pixels",
+      "url": "/guides/block-email-tracking-pixels",
+      "type": "tutorial"
+    },
+    {
+      "title": "Best Anonymous Email Services",
+      "url": "/guides/anonymous-email-services",
+      "type": "guide"
+    }
+  ]
+}

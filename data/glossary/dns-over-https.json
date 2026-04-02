@@ -1,0 +1,31 @@
+{
+  "term": "DNS over HTTPS",
+  "slug": "dns-over-https",
+  "definition": "A protocol that encrypts DNS queries by sending them through HTTPS connections, preventing ISPs and network operators from seeing which websites you're trying to visit.",
+  "metaDescription": "Learn about DNS over HTTPS (DoH), a privacy protocol that encrypts your web browsing requests to prevent surveillance and manipulation.",
+  "simpleExplanation": "When you type a website name, your device asks a DNS server for the website's address. Normally, this request is unencrypted and visible to your internet provider. DNS over HTTPS encrypts these requests, hiding your browsing activity.",
+  "whyItMatters": "Without DoH, your ISP can see every website you visit, even if the site itself uses HTTPS. This creates a detailed record of your browsing habits that can be sold to advertisers, used for censorship, or accessed by governments.",
+  "technicalDetail": "DoH encapsulates DNS queries within HTTPS requests on port 443, making them indistinguishable from regular web traffic. Unlike traditional DNS on port 53, DoH queries are encrypted using TLS and can bypass network-level DNS filtering and monitoring.",
+  "examples": [
+    {
+      "scenario": "Using Chrome with Cloudflare DoH",
+      "explanation": "Chrome automatically encrypts your DNS queries through Cloudflare's 1.1.1.1 service, preventing your ISP from logging which websites you visit while browsing."
+    },
+    {
+      "scenario": "Bypassing workplace restrictions",
+      "explanation": "An office network blocks social media by filtering DNS requests. With DoH enabled, your browser sends encrypted DNS queries that can't be easily blocked by traditional network filters."
+    },
+    {
+      "scenario": "Traveling with public WiFi",
+      "explanation": "At a coffee shop, DoH prevents the WiFi operator from seeing your DNS queries and potentially redirecting you to malicious websites or injecting ads into your browsing."
+    }
+  ],
+  "relatedTerms": [
+    "secure-dns",
+    "dns-over-tls",
+    "https",
+    "encrypted-sni",
+    "dns-leak"
+  ],
+  "category": "protocol"
+}

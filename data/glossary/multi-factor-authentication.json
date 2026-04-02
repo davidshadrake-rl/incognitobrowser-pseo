@@ -1,0 +1,30 @@
+{
+  "term": "Multi Factor Authentication",
+  "slug": "multi-factor-authentication",
+  "definition": "A security method that requires users to provide two or more verification factors to gain access to an account, combining something you know, have, or are.",
+  "metaDescription": "Learn about multi-factor authentication (MFA) - a crucial security method that uses multiple verification steps to protect your accounts and data.",
+  "simpleExplanation": "Instead of just using a password, multi-factor authentication adds extra security layers like a text message code, fingerprint scan, or authenticator app. It's like having multiple locks on your door - even if someone gets your password, they still can't get in without the other factors.",
+  "whyItMatters": "MFA dramatically reduces the risk of unauthorized access to your accounts, even if your password is compromised. It protects your personal data, financial information, and digital identity from cybercriminals who may have obtained your login credentials through data breaches or phishing attacks.",
+  "technicalDetail": "MFA combines authentication factors from different categories: knowledge factors (passwords, PINs), possession factors (smartphones, hardware tokens), and inherence factors (biometrics). Common implementations include SMS codes, authenticator apps generating time-based one-time passwords (TOTP), hardware security keys using FIDO2/WebAuthn standards, and biometric verification.",
+  "examples": [
+    {
+      "scenario": "Banking Login",
+      "explanation": "You enter your password, then receive a text message with a 6-digit code that you must enter within a few minutes to access your bank account."
+    },
+    {
+      "scenario": "Email Account Access",
+      "explanation": "After entering your password, you open an authenticator app on your phone to get a time-sensitive code, or use your fingerprint to approve the login attempt."
+    },
+    {
+      "scenario": "Corporate VPN",
+      "explanation": "Employees must use their password plus a hardware security key that they physically insert into their computer to access company resources remotely."
+    }
+  ],
+  "relatedTerms": [
+    "two-factor-authentication",
+    "password-hashing",
+    "phishing",
+    "public-key-cryptography"
+  ],
+  "category": "technology"
+}

@@ -1,0 +1,207 @@
+{
+  "niche": "ad-tracking",
+  "slug": "ad-tracking-targeted-advertising-risk-calculator",
+  "title": "Ad Tracking & Targeted Advertising Risk Calculator",
+  "metaDescription": "Calculate your risk exposure to ad tracking and targeted advertising. Get personalized recommendations to protect your privacy online.",
+  "keywords": [
+    "ad tracking calculator",
+    "targeted ads risk",
+    "behavioral advertising",
+    "stop ad tracking",
+    "personalized ads privacy"
+  ],
+  "description": "Assess your vulnerability to online ad tracking and targeted advertising based on your browsing habits, device usage, and privacy settings. Get a personalized risk score with actionable recommendations to protect your digital privacy.",
+  "inputs": [
+    {
+      "id": "browsing_frequency",
+      "label": "Daily browsing hours",
+      "type": "range",
+      "defaultValue": 4,
+      "min": 1,
+      "max": 16,
+      "step": 1,
+      "helpText": "Average hours you spend browsing the web daily"
+    },
+    {
+      "id": "social_media_usage",
+      "label": "Social media platforms used",
+      "type": "select",
+      "defaultValue": "2-3",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "1",
+          "label": "1 platform"
+        },
+        {
+          "value": "2-3",
+          "label": "2-3 platforms"
+        },
+        {
+          "value": "4-5",
+          "label": "4-5 platforms"
+        },
+        {
+          "value": "6+",
+          "label": "6+ platforms"
+        }
+      ],
+      "helpText": "Number of social media platforms you actively use"
+    },
+    {
+      "id": "shopping_frequency",
+      "label": "Online shopping frequency",
+      "type": "select",
+      "defaultValue": "monthly",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (few times per year)"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly"
+        },
+        {
+          "value": "daily",
+          "label": "Daily"
+        }
+      ],
+      "helpText": "How often you shop online or browse e-commerce sites"
+    },
+    {
+      "id": "cookie_management",
+      "label": "Cookie management",
+      "type": "select",
+      "defaultValue": "default",
+      "options": [
+        {
+          "value": "accept_all",
+          "label": "Accept all cookies"
+        },
+        {
+          "value": "default",
+          "label": "Default browser settings"
+        },
+        {
+          "value": "reject_third_party",
+          "label": "Block third-party cookies"
+        },
+        {
+          "value": "strict",
+          "label": "Block most cookies"
+        }
+      ],
+      "helpText": "Your current approach to managing website cookies"
+    },
+    {
+      "id": "ad_blocker_usage",
+      "label": "Ad blocker installed",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use an ad blocker extension or built-in browser feature?"
+    },
+    {
+      "id": "privacy_browser",
+      "label": "Privacy-focused browser usage",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you use privacy browsers like Incognito Browser, Brave, or Firefox with strict settings?"
+    },
+    {
+      "id": "device_count",
+      "label": "Number of devices used",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "Total devices you use for browsing (phone, tablet, laptop, etc.)"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "risk_score",
+      "label": "Ad Tracking Risk Score",
+      "format": "score",
+      "description": "Your overall vulnerability to ad tracking and behavioral profiling"
+    },
+    {
+      "id": "risk_level",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Simplified risk assessment based on your digital footprint"
+    },
+    {
+      "id": "tracking_exposure",
+      "label": "Estimated Tracking Exposure",
+      "format": "percentage",
+      "description": "Percentage of your online activity likely being tracked for advertising"
+    }
+  ],
+  "formula": "const browsing_weight = browsing_frequency * 2; const social_weights = {'none': 0, '1': 10, '2-3': 25, '4-5': 40, '6+': 60}; const shopping_weights = {'never': 0, 'rarely': 5, 'monthly': 15, 'weekly': 30, 'daily': 50}; const cookie_weights = {'strict': 0, 'reject_third_party': 5, 'default': 25, 'accept_all': 40}; let base_score = browsing_weight + social_weights[social_media_usage] + shopping_weights[shopping_frequency] + cookie_weights[cookie_management] + (device_count * 3); base_score -= ad_blocker_usage ? 15 : 0; base_score -= privacy_browser ? 20 : 0; const risk_score = Math.max(0, Math.min(100, base_score)); const tracking_exposure = Math.min(95, risk_score + 10); let risk_level; if (risk_score <= 25) risk_level = 'Low'; else if (risk_score <= 50) risk_level = 'Medium'; else if (risk_score <= 75) risk_level = 'High'; else risk_level = 'Very High'; return {risk_score, risk_level, tracking_exposure};",
+  "educational": {
+    "methodology": "This calculator evaluates your ad tracking risk based on browsing habits, platform usage, privacy tools, and device footprint. It considers factors like social media presence, online shopping behavior, cookie settings, and protective measures to estimate your exposure to behavioral advertising and cross-site tracking.",
+    "tips": [
+      "Install a reputable ad blocker and enable strict tracking protection in your browser settings",
+      "Use privacy-focused browsers like Incognito Browser or configure mainstream browsers for maximum privacy",
+      "Regularly clear cookies and browsing data, or use incognito/private browsing mode",
+      "Opt out of ad personalization on major platforms like Google, Facebook, and Amazon",
+      "Consider using different browsers or profiles for different activities to limit cross-site tracking"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Good privacy practices limit your exposure to targeted advertising. Continue using protective tools.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Medium Risk",
+        "description": "Moderate tracking exposure. Consider implementing additional privacy measures like ad blockers.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant ad tracking exposure. Your online behavior is likely being extensively profiled for advertising.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Very High Risk",
+        "description": "Maximum tracking exposure. Immediate action needed to protect your privacy from invasive advertising.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "How to Stop Facebook from Tracking You",
+      "url": "/guides/stop-facebook-tracking",
+      "type": "guide"
+    },
+    {
+      "title": "Complete Guide to Blocking Ad Trackers",
+      "url": "/guides/block-ad-trackers",
+      "type": "guide"
+    },
+    {
+      "title": "Best Privacy Browsers Comparison",
+      "url": "/tools/privacy-browsers",
+      "type": "tool"
+    }
+  ]
+}

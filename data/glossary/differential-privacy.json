@@ -1,0 +1,32 @@
+{
+  "term": "Differential Privacy",
+  "slug": "differential-privacy",
+  "definition": "A mathematical framework that adds controlled noise to datasets to protect individual privacy while preserving overall statistical accuracy for research and analysis.",
+  "metaDescription": "Learn about differential privacy, a technique that protects individual data privacy by adding mathematical noise while maintaining useful statistics.",
+  "simpleExplanation": "Differential privacy is like adding static to a radio signal - enough noise to hide individual voices, but not so much that you can't understand the overall message. It mathematically guarantees that your personal data can't be identified in large datasets.",
+  "whyItMatters": "It enables organizations to share valuable insights from data without compromising individual privacy. This technique allows for medical research, urban planning, and other beneficial uses of data while maintaining strong privacy protections.",
+  "technicalDetail": "Differential privacy works by adding carefully calibrated random noise to query results or datasets. The amount of noise is determined by a privacy parameter (epsilon) that controls the privacy-utility tradeoff. Smaller epsilon values provide stronger privacy but less accurate results, while larger values provide more utility but weaker privacy guarantees.",
+  "examples": [
+    {
+      "scenario": "Apple's iOS usage statistics",
+      "explanation": "Apple uses differential privacy to collect information about how users interact with their devices and apps without being able to identify individual users or their specific behaviors."
+    },
+    {
+      "scenario": "US Census Bureau data releases",
+      "explanation": "The 2020 US Census implemented differential privacy to protect individual household information while still providing accurate demographic statistics for redistricting and government planning."
+    },
+    {
+      "scenario": "Google's Chrome browser telemetry",
+      "explanation": "Google applies differential privacy to collect data about web browsing patterns and security threats while preventing the identification of individual users' browsing habits."
+    }
+  ],
+  "relatedTerms": [
+    "k-anonymity",
+    "data-minimization",
+    "zero-knowledge-proof",
+    "homomorphic-encryption",
+    "federated-learning"
+  ],
+  "niche": "privacy-enhancing-technologies",
+  "category": "technology"
+}

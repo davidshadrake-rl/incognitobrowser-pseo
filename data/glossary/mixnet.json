@@ -1,0 +1,32 @@
+{
+  "term": "Mixnet",
+  "slug": "mixnet",
+  "definition": "A network routing system that hides communication patterns by mixing messages from multiple users, making it difficult to trace who is communicating with whom.",
+  "metaDescription": "Learn about mixnets - privacy networks that shuffle messages to hide communication patterns and protect user anonymity online.",
+  "simpleExplanation": "Think of a mixnet like a postal service that collects letters from many people, shuffles them completely, and then delivers them so no one can tell who sent what to whom. It protects your privacy by hiding your communication patterns.",
+  "whyItMatters": "Mixnets provide stronger privacy protection than standard encryption by hiding not just message content, but also who you're talking to and when. This prevents surveillance systems from building profiles of your relationships and activities.",
+  "technicalDetail": "Mixnets use cryptographic techniques and message batching to decorrelate inputs and outputs. Messages are encrypted in layers, delayed randomly, and reordered through multiple mix nodes. This process breaks the timing and pattern analysis that could reveal sender-receiver relationships, providing traffic analysis resistance beyond what simple encrypted tunnels offer.",
+  "examples": [
+    {
+      "scenario": "Anonymous whistleblowing",
+      "explanation": "A journalist receives leaked documents through a mixnet, making it impossible for authorities to trace which government employee sent the information, even if they monitor all network traffic."
+    },
+    {
+      "scenario": "Private messaging in authoritarian regimes",
+      "explanation": "Activists use mixnet-based messaging apps to communicate without revealing their social networks to government surveillance, protecting both themselves and their contacts."
+    },
+    {
+      "scenario": "Anonymous voting systems",
+      "explanation": "Electronic voting platforms use mixnets to shuffle encrypted ballots, ensuring vote privacy while maintaining the ability to verify election results."
+    }
+  ],
+  "relatedTerms": [
+    "tor-network",
+    "onion-routing",
+    "end-to-end-encryption",
+    "metadata",
+    "surveillance-capitalism"
+  ],
+  "niche": "Advanced anonymity networks and cryptographic privacy systems",
+  "category": "technology"
+}

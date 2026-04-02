@@ -1,0 +1,173 @@
+{
+  "niche": "drone-surveillance",
+  "slug": "drone-surveillance-risk-calculator",
+  "title": "Drone Surveillance Risk Calculator - Assess Your Privacy Exposure",
+  "metaDescription": "Calculate your risk of drone surveillance with our privacy assessment tool. Evaluate location exposure, detection capabilities, and legal protections.",
+  "keywords": [
+    "drone surveillance risk",
+    "aerial surveillance privacy",
+    "drone detection calculator",
+    "privacy assessment tool",
+    "drone privacy laws"
+  ],
+  "description": "Assess your vulnerability to drone surveillance based on location, activities, and available protections. Get personalized recommendations to enhance your privacy and understand your legal rights against unauthorized aerial monitoring.",
+  "inputs": [
+    {
+      "id": "propertyType",
+      "label": "Property Type",
+      "type": "select",
+      "defaultValue": "suburban",
+      "options": [
+        {
+          "value": "urban",
+          "label": "Urban/City"
+        },
+        {
+          "value": "suburban",
+          "label": "Suburban"
+        },
+        {
+          "value": "rural",
+          "label": "Rural/Remote"
+        },
+        {
+          "value": "commercial",
+          "label": "Commercial Property"
+        }
+      ],
+      "helpText": "Urban areas have more regulations but higher surveillance activity"
+    },
+    {
+      "id": "outdoorActivity",
+      "label": "Outdoor Activity Level",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "How often you spend time in outdoor spaces (1=rarely, 10=very frequently)"
+    },
+    {
+      "id": "privacyMeasures",
+      "label": "Current Privacy Protections",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No protections"
+        },
+        {
+          "value": "basic",
+          "label": "Basic (fencing, trees)"
+        },
+        {
+          "value": "moderate",
+          "label": "Moderate (covers, detection apps)"
+        },
+        {
+          "value": "advanced",
+          "label": "Advanced (RF detectors, legal notices)"
+        }
+      ],
+      "helpText": "Existing measures to prevent or detect drone surveillance"
+    },
+    {
+      "id": "sensitiveActivities",
+      "label": "Sensitive Activities",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you engage in activities requiring high privacy (journalism, activism, etc.)?"
+    },
+    {
+      "id": "nearAirport",
+      "label": "Near Airport/Restricted Airspace",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Are you within 5 miles of an airport or military installation?"
+    },
+    {
+      "id": "localLaws",
+      "label": "Local Drone Laws",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "weak",
+          "label": "Weak/No local regulations"
+        },
+        {
+          "value": "moderate",
+          "label": "Moderate protections"
+        },
+        {
+          "value": "strong",
+          "label": "Strong privacy laws"
+        }
+      ],
+      "helpText": "Strength of local drone privacy regulations in your area"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Surveillance Risk Score",
+      "format": "score",
+      "description": "Overall risk of drone surveillance (0-100 scale)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Categorized risk assessment with recommendations"
+    }
+  ],
+  "formula": "const baseRisk = propertyType === 'urban' ? 30 : propertyType === 'suburban' ? 40 : propertyType === 'rural' ? 50 : 35; const activityRisk = outdoorActivity * 3; const protectionReduction = privacyMeasures === 'none' ? 0 : privacyMeasures === 'basic' ? 10 : privacyMeasures === 'moderate' ? 20 : 30; const sensitiveBonus = sensitiveActivities ? 15 : 0; const airportReduction = nearAirport ? 15 : 0; const lawReduction = localLaws === 'weak' ? 0 : localLaws === 'moderate' ? 10 : 20; const riskScore = Math.max(0, Math.min(100, baseRisk + activityRisk + sensitiveBonus - protectionReduction - airportReduction - lawReduction)); const riskLevel = riskScore >= 70 ? 'High Risk' : riskScore >= 40 ? 'Moderate Risk' : 'Low Risk'; return { riskScore, riskLevel };",
+  "educational": {
+    "methodology": "This calculator evaluates drone surveillance risk based on location vulnerability, activity patterns, existing privacy protections, and legal framework strength. Scores consider property exposure, outdoor activity frequency, current countermeasures, and regulatory protections.",
+    "tips": [
+      "Install visual barriers like privacy screens or plant tall vegetation to block aerial views of sensitive areas",
+      "Use drone detection apps or RF scanners to identify unauthorized surveillance drones in your vicinity",
+      "Know your local drone laws - many areas prohibit flying over private property without permission",
+      "Consider using Incognito Browser when researching drone detection tools to maintain your privacy online",
+      "Document any suspected surveillance incidents with photos, times, and locations for potential legal action"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Well-protected with good legal framework. Maintain current privacy measures and stay informed about local regulations.",
+        "color": "green"
+      },
+      {
+        "range": "31-69",
+        "label": "Moderate Risk",
+        "description": "Some vulnerability exists. Consider adding detection tools, privacy screens, or researching local drone laws for better protection.",
+        "color": "yellow"
+      },
+      {
+        "range": "70-100",
+        "label": "High Risk",
+        "description": "Significant surveillance exposure. Implement multiple countermeasures including detection systems, physical barriers, and legal protections.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Drone Detection Equipment",
+      "url": "/affiliate/drone-detectors",
+      "type": "affiliate"
+    },
+    {
+      "title": "Privacy Screen Solutions",
+      "url": "/affiliate/privacy-screens",
+      "type": "affiliate"
+    },
+    {
+      "title": "Know Your Drone Privacy Rights",
+      "url": "/guides/drone-privacy-laws",
+      "type": "guide"
+    }
+  ]
+}

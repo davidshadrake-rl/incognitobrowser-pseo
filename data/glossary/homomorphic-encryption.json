@@ -1,0 +1,30 @@
+{
+  "term": "Homomorphic Encryption",
+  "slug": "homomorphic-encryption",
+  "definition": "A cryptographic technique that allows computations to be performed on encrypted data without decrypting it first, maintaining privacy while enabling data processing.",
+  "metaDescription": "Learn about homomorphic encryption - a privacy-preserving technology that enables computations on encrypted data without revealing the underlying information.",
+  "simpleExplanation": "Imagine a locked box where you can perform math operations on the contents without opening it. Homomorphic encryption works similarly - it lets computers process your encrypted data and return encrypted results, all while keeping your original information completely private.",
+  "whyItMatters": "This technology enables secure cloud computing and data analysis while preserving privacy. Organizations can process sensitive data without ever seeing the actual information, making it valuable for healthcare, finance, and AI applications where privacy is critical.",
+  "technicalDetail": "Homomorphic encryption uses mathematical schemes that preserve the structure of operations when performed on ciphertext. There are three types: partially homomorphic (supports one operation), somewhat homomorphic (limited operations), and fully homomorphic (unlimited operations). Current implementations face performance challenges but are rapidly improving.",
+  "examples": [
+    {
+      "scenario": "Medical Research",
+      "explanation": "Hospitals can encrypt patient data and send it to researchers who can analyze disease patterns and treatment effectiveness without ever seeing individual patient records."
+    },
+    {
+      "scenario": "Financial Analysis",
+      "explanation": "Banks can outsource risk calculations to cloud services that process encrypted transaction data and return encrypted results, maintaining customer privacy throughout."
+    },
+    {
+      "scenario": "Private Search",
+      "explanation": "You could search an encrypted database for information without the database owner knowing what you're looking for or what results you received."
+    }
+  ],
+  "relatedTerms": [
+    "end-to-end-encryption",
+    "zero-knowledge-proof",
+    "secure-multi-party-computation",
+    "federated-learning"
+  ],
+  "category": "technology"
+}

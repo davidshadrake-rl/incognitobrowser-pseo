@@ -1,0 +1,205 @@
+{
+  "niche": "gaming-privacy",
+  "slug": "gaming-vr-privacy-risk-calculator",
+  "title": "Gaming & VR Privacy Risk Calculator - Assess Your Gaming Privacy",
+  "metaDescription": "Calculate your privacy risk score from gaming platforms, VR headsets, and online gaming. Get personalized tips to protect your gaming data.",
+  "keywords": [
+    "gaming privacy calculator",
+    "VR privacy risk",
+    "gaming data protection",
+    "online gaming privacy",
+    "gaming privacy score"
+  ],
+  "description": "Evaluate your privacy exposure across gaming platforms, VR devices, and online gaming activities. Get a personalized risk assessment and actionable recommendations to protect your gaming data and enhance your digital privacy.",
+  "inputs": [
+    {
+      "id": "gamingPlatforms",
+      "label": "Number of Gaming Platforms Used",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "helpText": "Include Steam, Xbox Live, PlayStation Network, Epic Games, etc."
+    },
+    {
+      "id": "vrUsage",
+      "label": "VR Headset Usage",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No VR headset"
+        },
+        {
+          "value": "occasional",
+          "label": "Occasional use (1-2 hours/week)"
+        },
+        {
+          "value": "regular",
+          "label": "Regular use (3-10 hours/week)"
+        },
+        {
+          "value": "heavy",
+          "label": "Heavy use (10+ hours/week)"
+        }
+      ],
+      "helpText": "VR headsets collect biometric and movement data"
+    },
+    {
+      "id": "voiceChat",
+      "label": "Voice Chat Usage",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never use voice chat"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (friends only)"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes (team games)"
+        },
+        {
+          "value": "frequently",
+          "label": "Frequently (daily gaming)"
+        }
+      ],
+      "helpText": "Voice chat can be recorded and analyzed"
+    },
+    {
+      "id": "inGamePurchases",
+      "label": "Monthly In-Game Purchases",
+      "type": "range",
+      "defaultValue": 20,
+      "min": 0,
+      "max": 500,
+      "step": 10,
+      "helpText": "Amount spent on games, DLC, cosmetics, etc. (in USD)"
+    },
+    {
+      "id": "privacySettings",
+      "label": "Privacy Settings Configuration",
+      "type": "select",
+      "defaultValue": "default",
+      "options": [
+        {
+          "value": "optimized",
+          "label": "Optimized for privacy"
+        },
+        {
+          "value": "partial",
+          "label": "Some settings adjusted"
+        },
+        {
+          "value": "default",
+          "label": "Default settings"
+        },
+        {
+          "value": "unknown",
+          "label": "Never checked settings"
+        }
+      ],
+      "helpText": "How well have you configured privacy settings on gaming platforms"
+    },
+    {
+      "id": "socialFeatures",
+      "label": "Social Gaming Features",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Do you use friend lists, streaming, or share gameplay data?"
+    },
+    {
+      "id": "childAccount",
+      "label": "Child Gaming Account",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Is this assessment for a child's gaming account?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk from gaming activities (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your privacy risk category with recommendations"
+    },
+    {
+      "id": "dataExposure",
+      "label": "Data Exposure Types",
+      "format": "number",
+      "description": "Number of different data types potentially collected"
+    }
+  ],
+  "formula": "let platformRisk = inputs.gamingPlatforms * 8; let vrRisk = inputs.vrUsage === 'none' ? 0 : inputs.vrUsage === 'occasional' ? 15 : inputs.vrUsage === 'regular' ? 25 : 35; let voiceRisk = inputs.voiceChat === 'never' ? 0 : inputs.voiceChat === 'rarely' ? 5 : inputs.voiceChat === 'sometimes' ? 15 : 25; let purchaseRisk = Math.min(inputs.inGamePurchases * 0.1, 20); let settingsRisk = inputs.privacySettings === 'optimized' ? -15 : inputs.privacySettings === 'partial' ? -5 : inputs.privacySettings === 'default' ? 10 : 15; let socialRisk = inputs.socialFeatures ? 12 : 0; let childRisk = inputs.childAccount ? 10 : 0; let totalRisk = Math.max(0, Math.min(100, platformRisk + vrRisk + voiceRisk + purchaseRisk + settingsRisk + socialRisk + childRisk)); let riskLevel = totalRisk < 25 ? 'A' : totalRisk < 45 ? 'B' : totalRisk < 65 ? 'C' : totalRisk < 85 ? 'D' : 'F'; let dataTypes = (inputs.gamingPlatforms > 0 ? 1 : 0) + (inputs.vrUsage !== 'none' ? 3 : 0) + (inputs.voiceChat !== 'never' ? 2 : 0) + (inputs.inGamePurchases > 0 ? 2 : 0) + (inputs.socialFeatures ? 2 : 0) + (inputs.childAccount ? 1 : 0); return { riskScore: Math.round(totalRisk), riskLevel: riskLevel, dataExposure: dataTypes };",
+  "educational": {
+    "methodology": "This calculator evaluates privacy risks based on gaming platform usage, VR device data collection, voice chat exposure, purchase tracking, social features, and privacy settings configuration. Scores are weighted by data sensitivity and collection scope.",
+    "tips": [
+      "Review and optimize privacy settings on all gaming platforms regularly",
+      "Use Incognito Browser when accessing gaming websites to prevent tracking",
+      "Limit voice chat to trusted friends and disable voice recording features",
+      "Consider using a gaming VPN to mask your IP address and location",
+      "Regularly audit what data gaming companies have collected about you"
+    ],
+    "interpretation": [
+      {
+        "range": "0-24",
+        "label": "Low Risk (A)",
+        "description": "Good privacy practices with minimal data exposure. Continue monitoring settings.",
+        "color": "green"
+      },
+      {
+        "range": "25-44",
+        "label": "Moderate Risk (B)",
+        "description": "Some privacy concerns. Review settings on major platforms and limit data sharing.",
+        "color": "yellow"
+      },
+      {
+        "range": "45-64",
+        "label": "High Risk (C)",
+        "description": "Significant privacy exposure. Prioritize adjusting privacy settings and reducing data collection.",
+        "color": "orange"
+      },
+      {
+        "range": "65-84",
+        "label": "Very High Risk (D)",
+        "description": "Major privacy concerns across multiple gaming activities. Immediate action needed.",
+        "color": "red"
+      },
+      {
+        "range": "85-100",
+        "label": "Critical Risk (F)",
+        "description": "Extensive data collection with minimal protection. Complete privacy audit recommended.",
+        "color": "darkred"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Steam Privacy Settings Guide",
+      "url": "/guides/steam-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "Best Gaming VPNs for Privacy",
+      "url": "/tools/gaming-vpn-recommendations",
+      "type": "tool"
+    },
+    {
+      "title": "VR Data Collection Report",
+      "url": "/research/vr-privacy-study",
+      "type": "research"
+    }
+  ]
+}

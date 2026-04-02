@@ -1,0 +1,175 @@
+{
+  "niche": "browser-extensions",
+  "slug": "browser-extensions-privacy-addons-risk-calculator",
+  "title": "Browser Extensions & Privacy Add-ons Risk Calculator",
+  "metaDescription": "Calculate privacy risks of your browser extensions. Evaluate permissions, sources, and security to protect your data from malicious add-ons.",
+  "keywords": [
+    "browser extension security",
+    "privacy add-ons risk",
+    "extension permissions audit",
+    "browser security calculator",
+    "privacy extension safety"
+  ],
+  "description": "Assess the privacy and security risks of your browser extensions based on permissions, installation sources, update frequency, and user reviews. Get personalized recommendations to improve your browser security.",
+  "inputs": [
+    {
+      "id": "extensionCount",
+      "label": "Number of installed extensions",
+      "type": "number",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "helpText": "Count all extensions in your browser, including disabled ones"
+    },
+    {
+      "id": "officialStore",
+      "label": "Extensions from official stores (%)",
+      "type": "range",
+      "defaultValue": 80,
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "helpText": "Percentage installed from Chrome Web Store, Firefox Add-ons, etc."
+    },
+    {
+      "id": "highPermissions",
+      "label": "Extensions with extensive permissions",
+      "type": "number",
+      "defaultValue": 2,
+      "min": 0,
+      "max": 20,
+      "helpText": "Extensions that can read all website data or access sensitive info"
+    },
+    {
+      "id": "updateFrequency",
+      "label": "Average extension update frequency",
+      "type": "select",
+      "defaultValue": "monthly",
+      "options": [
+        {
+          "value": "weekly",
+          "label": "Weekly or more"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly"
+        },
+        {
+          "value": "quarterly",
+          "label": "Every 3-6 months"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely or never"
+        }
+      ],
+      "helpText": "How often your extensions receive updates from developers"
+    },
+    {
+      "id": "reviewCheck",
+      "label": "I check reviews before installing",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Do you read user reviews and ratings before installing extensions?"
+    },
+    {
+      "id": "adBlocker",
+      "label": "Using reputable ad blocker",
+      "type": "select",
+      "defaultValue": "ublock",
+      "options": [
+        {
+          "value": "ublock",
+          "label": "uBlock Origin"
+        },
+        {
+          "value": "adblock",
+          "label": "Adblock/Adblock Plus"
+        },
+        {
+          "value": "other",
+          "label": "Other ad blocker"
+        },
+        {
+          "value": "none",
+          "label": "No ad blocker"
+        }
+      ],
+      "helpText": "Which ad blocking solution do you use?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Risk Score",
+      "format": "score",
+      "description": "Your browser extension security risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorized risk assessment based on your extension usage"
+    },
+    {
+      "id": "recommendations",
+      "label": "Priority Actions",
+      "format": "number",
+      "description": "Number of high-priority security actions recommended"
+    }
+  ],
+  "formula": "let baseRisk = Math.min(extensionCount * 3, 30); let storeRisk = (100 - officialStore) * 0.4; let permissionRisk = highPermissions * 8; let updateRisk = updateFrequency === 'weekly' ? 0 : updateFrequency === 'monthly' ? 5 : updateFrequency === 'quarterly' ? 15 : 25; let reviewBonus = reviewCheck ? -5 : 0; let adBlockBonus = adBlocker === 'ublock' ? -8 : adBlocker === 'adblock' ? -5 : adBlocker === 'other' ? -3 : 0; let riskScore = Math.max(0, Math.min(100, baseRisk + storeRisk + permissionRisk + updateRisk + reviewBonus + adBlockBonus)); let riskLevel = riskScore <= 20 ? 'Low Risk' : riskScore <= 40 ? 'Moderate Risk' : riskScore <= 60 ? 'High Risk' : 'Critical Risk'; let recommendations = (officialStore < 90 ? 1 : 0) + (highPermissions > 3 ? 1 : 0) + (updateFrequency === 'rarely' ? 1 : 0) + (!reviewCheck ? 1 : 0) + (adBlocker === 'none' ? 1 : 0); return { riskScore: Math.round(riskScore), riskLevel, recommendations };",
+  "educational": {
+    "methodology": "This calculator evaluates browser extension risks based on installation sources, permission levels, maintenance indicators, and security practices. Higher scores indicate greater privacy and security risks from potentially malicious or poorly maintained extensions.",
+    "tips": [
+      "Install extensions only from official browser stores like Chrome Web Store or Firefox Add-ons",
+      "Review extension permissions carefully - avoid those requesting access to 'all website data' unless necessary",
+      "Use uBlock Origin instead of other ad blockers for better privacy and security protection",
+      "Regularly audit your extensions and remove unused ones to minimize attack surface",
+      "Consider using Incognito Browser for enhanced privacy alongside careful extension management"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Low Risk",
+        "description": "Good extension hygiene with minimal security risks. Continue current practices.",
+        "color": "green"
+      },
+      {
+        "range": "21-40",
+        "label": "Moderate Risk",
+        "description": "Some areas for improvement. Review extension permissions and sources.",
+        "color": "yellow"
+      },
+      {
+        "range": "41-60",
+        "label": "High Risk",
+        "description": "Significant security concerns. Audit extensions immediately and remove unnecessary ones.",
+        "color": "orange"
+      },
+      {
+        "range": "61-100",
+        "label": "Critical Risk",
+        "description": "Serious privacy and security vulnerabilities. Immediate action required to secure browser.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "uBlock Origin Setup Guide",
+      "url": "/guides/ublock-origin-setup",
+      "type": "internal"
+    },
+    {
+      "title": "Browser Extension Permission Audit",
+      "url": "/guides/extension-permissions-audit",
+      "type": "internal"
+    },
+    {
+      "title": "Best Privacy Extensions 2024",
+      "url": "/guides/best-privacy-extensions",
+      "type": "internal"
+    }
+  ]
+}

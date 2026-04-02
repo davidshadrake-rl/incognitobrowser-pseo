@@ -1,0 +1,32 @@
+{
+  "term": "Content Security Policy",
+  "slug": "content-security-policy",
+  "definition": "A security standard that helps prevent cross-site scripting and other code injection attacks by controlling which resources a web page can load and execute.",
+  "metaDescription": "Learn about Content Security Policy (CSP) - a web security feature that prevents malicious scripts and protects users from XSS attacks.",
+  "simpleExplanation": "Content Security Policy is like a bouncer for your web browser. It tells websites which scripts, images, and other content are allowed to run, blocking potentially harmful code that could steal your personal information or hijack your browsing session.",
+  "whyItMatters": "CSP protects you from malicious scripts that could steal passwords, inject fake content, or redirect you to scam sites. It's especially important because many cyberattacks exploit vulnerabilities in web applications to run unauthorized code in your browser.",
+  "technicalDetail": "CSP works through HTTP headers or meta tags that define directives like script-src, img-src, and default-src. These specify allowed sources for different content types using keywords (self, unsafe-inline) or URLs. Violations are blocked and can be reported to specified endpoints for monitoring.",
+  "examples": [
+    {
+      "scenario": "Banking website protection",
+      "explanation": "A bank's website uses CSP to only allow scripts from its own domain, preventing attackers from injecting malicious code that could steal login credentials or transfer funds."
+    },
+    {
+      "scenario": "E-commerce site security",
+      "explanation": "An online store blocks inline JavaScript and only permits scripts from trusted payment processors, protecting customers from fake checkout forms that could steal credit card information."
+    },
+    {
+      "scenario": "News website defense",
+      "explanation": "A news site's CSP prevents malicious ads from loading unauthorized scripts, stopping cryptojacking attempts and protecting readers from browser-based attacks."
+    }
+  ],
+  "relatedTerms": [
+    "permissions-policy",
+    "referrer-policy",
+    "script-blocker",
+    "https",
+    "phishing"
+  ],
+  "niche": "Web security and browser protection",
+  "category": "technology"
+}

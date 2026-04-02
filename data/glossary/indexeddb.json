@@ -1,0 +1,31 @@
+{
+  "term": "IndexedDB",
+  "slug": "indexeddb",
+  "definition": "A browser-based database that allows websites to store large amounts of structured data locally on your device, including personal information and browsing behavior.",
+  "metaDescription": "Learn about IndexedDB, a browser storage system that can store your personal data locally. Understand privacy implications and tracking risks.",
+  "simpleExplanation": "IndexedDB is like a filing cabinet inside your web browser where websites can store information about you. Unlike cookies, it can hold much more data and isn't automatically deleted, potentially creating a detailed profile of your online activities.",
+  "whyItMatters": "IndexedDB can be used to track you across browsing sessions and even after clearing cookies. It stores data persistently, potentially containing sensitive information like your preferences, activities, and personal details that could be accessed later.",
+  "technicalDetail": "IndexedDB is a low-level API that provides client-side storage of significant amounts of structured data. It supports transactions, indexes, and can store various data types. Unlike localStorage, it's asynchronous and can hold much larger datasets, making it both powerful for legitimate uses and concerning for privacy.",
+  "examples": [
+    {
+      "scenario": "Online banking application",
+      "explanation": "A banking website stores your encrypted transaction history and account preferences in IndexedDB for faster loading, but this creates a local copy of your financial data."
+    },
+    {
+      "scenario": "Social media tracking",
+      "explanation": "A social platform uses IndexedDB to store detailed information about your interactions, friends, and interests, creating a comprehensive profile that persists even after clearing cookies."
+    },
+    {
+      "scenario": "Shopping website personalization",
+      "explanation": "An e-commerce site stores your browsing history, cart items, and product preferences in IndexedDB, which could be used to track your shopping behavior over time."
+    }
+  ],
+  "relatedTerms": [
+    "local-storage",
+    "session-storage",
+    "cookies",
+    "browser-fingerprinting",
+    "behavioral-tracking"
+  ],
+  "category": "technology"
+}

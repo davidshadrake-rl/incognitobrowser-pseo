@@ -1,0 +1,30 @@
+{
+  "term": "Permissions Policy",
+  "slug": "permissions-policy",
+  "definition": "A web security mechanism that allows website owners to control which browser features and APIs their site and embedded content can access, enhancing privacy and security.",
+  "metaDescription": "Learn about Permissions Policy, a web standard that controls browser feature access to protect user privacy and enhance website security.",
+  "simpleExplanation": "Permissions Policy is like a bouncer for your web browser. It lets websites decide which powerful features (like your camera, microphone, or location) they and any embedded content can use, preventing unauthorized access to sensitive capabilities.",
+  "whyItMatters": "It protects users from malicious third-party content that might try to access sensitive device features without permission. It also helps websites implement privacy-by-design principles by restricting unnecessary feature access.",
+  "technicalDetail": "Implemented via HTTP headers (Permissions-Policy) or HTML attributes, it uses allowlists to specify which origins can access specific browser features. It replaced the older Feature Policy standard and provides granular control over APIs like geolocation, camera, microphone, and payment request.",
+  "examples": [
+    {
+      "scenario": "Blocking third-party camera access",
+      "explanation": "A news website uses Permissions Policy to prevent embedded ads or widgets from accessing your camera, even if malicious code tries to activate it without your knowledge."
+    },
+    {
+      "scenario": "Restricting geolocation on embedded content",
+      "explanation": "A shopping site allows its own checkout process to request your location for shipping but blocks all embedded maps or social media widgets from accessing location data."
+    },
+    {
+      "scenario": "Preventing unwanted notifications",
+      "explanation": "A blog disables notification permissions for all embedded content, ensuring only the main site can request to send you notifications, reducing spam."
+    }
+  ],
+  "relatedTerms": [
+    "content-security-policy",
+    "referrer-policy",
+    "privacy-by-design",
+    "sandbox"
+  ],
+  "category": "technology"
+}

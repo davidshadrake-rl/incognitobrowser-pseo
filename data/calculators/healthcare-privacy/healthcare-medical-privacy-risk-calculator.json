@@ -1,0 +1,244 @@
+{
+  "niche": "healthcare-privacy",
+  "slug": "healthcare-medical-privacy-risk-calculator",
+  "title": "Healthcare & Medical Privacy Risk Calculator",
+  "metaDescription": "Assess your medical privacy risks with health apps, telehealth, and HIPAA compliance. Get personalized recommendations to protect your health data.",
+  "keywords": [
+    "HIPAA privacy",
+    "health app privacy",
+    "medical data privacy",
+    "telehealth security",
+    "healthcare privacy risks"
+  ],
+  "description": "Calculate your healthcare privacy risk level based on your health app usage, telehealth practices, and data sharing habits. Get personalized recommendations to better protect your sensitive medical information from unauthorized access and data breaches.",
+  "inputs": [
+    {
+      "id": "healthApps",
+      "label": "Number of health/fitness apps you use regularly",
+      "type": "select",
+      "defaultValue": "1-3",
+      "options": [
+        {
+          "value": "0",
+          "label": "None"
+        },
+        {
+          "value": "1-3",
+          "label": "1-3 apps"
+        },
+        {
+          "value": "4-6",
+          "label": "4-6 apps"
+        },
+        {
+          "value": "7-10",
+          "label": "7-10 apps"
+        },
+        {
+          "value": "10+",
+          "label": "More than 10 apps"
+        }
+      ],
+      "helpText": "Include fitness trackers, period trackers, symptom checkers, mental health apps, etc."
+    },
+    {
+      "id": "appPrivacy",
+      "label": "How often do you review health app privacy policies?",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always before installing"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "never",
+          "label": "Never"
+        }
+      ],
+      "helpText": "Privacy policies reveal how apps collect, use, and share your health data"
+    },
+    {
+      "id": "telehealthFreq",
+      "label": "Telehealth usage frequency",
+      "type": "select",
+      "defaultValue": "monthly",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never use telehealth"
+        },
+        {
+          "value": "rarely",
+          "label": "1-2 times per year"
+        },
+        {
+          "value": "monthly",
+          "label": "Monthly"
+        },
+        {
+          "value": "weekly",
+          "label": "Weekly or more"
+        }
+      ],
+      "helpText": "Video calls, phone consultations, or messaging with healthcare providers"
+    },
+    {
+      "id": "dataSharing",
+      "label": "Do you allow health apps to share data with third parties?",
+      "type": "select",
+      "defaultValue": "unknown",
+      "options": [
+        {
+          "value": "no",
+          "label": "No, I disable all sharing"
+        },
+        {
+          "value": "limited",
+          "label": "Only with healthcare providers"
+        },
+        {
+          "value": "yes",
+          "label": "Yes, for research or ads"
+        },
+        {
+          "value": "unknown",
+          "label": "I don't know/haven't checked"
+        }
+      ],
+      "helpText": "Check app settings for data sharing options and permissions"
+    },
+    {
+      "id": "sensitiveData",
+      "label": "Types of sensitive health data you track digitally",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "None - I avoid digital tracking"
+        },
+        {
+          "value": "basic",
+          "label": "Basic fitness data only"
+        },
+        {
+          "value": "moderate",
+          "label": "Symptoms, medications, or periods"
+        },
+        {
+          "value": "extensive",
+          "label": "Mental health, reproductive, chronic conditions"
+        }
+      ],
+      "helpText": "More sensitive data creates higher privacy risks if breached"
+    },
+    {
+      "id": "securityMeasures",
+      "label": "Privacy protection measures you currently use",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No special measures"
+        },
+        {
+          "value": "basic",
+          "label": "Strong passwords only"
+        },
+        {
+          "value": "moderate",
+          "label": "2FA and app permissions review"
+        },
+        {
+          "value": "advanced",
+          "label": "VPN, encrypted apps, regular audits"
+        }
+      ],
+      "helpText": "Security measures help reduce your overall privacy risk"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Healthcare Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall medical privacy risk level out of 100"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Category",
+      "format": "text",
+      "description": "Low, Moderate, High, or Critical risk assessment"
+    },
+    {
+      "id": "recommendations",
+      "label": "Priority Actions",
+      "format": "number",
+      "description": "Number of recommended actions to improve your privacy"
+    }
+  ],
+  "formula": "const appRisk = { '0': 0, '1-3': 15, '4-6': 25, '7-10': 35, '10+': 45 }[healthApps] || 20; const policyRisk = { 'always': 0, 'sometimes': 10, 'rarely': 20, 'never': 30 }[appPrivacy] || 25; const telehealthRisk = { 'never': 0, 'rarely': 5, 'monthly': 10, 'weekly': 15 }[telehealthFreq] || 10; const sharingRisk = { 'no': 0, 'limited': 5, 'yes': 25, 'unknown': 20 }[dataSharing] || 20; const dataRisk = { 'none': 0, 'basic': 5, 'moderate': 15, 'extensive': 25 }[sensitiveData] || 15; const securityBonus = { 'none': 0, 'basic': -5, 'moderate': -15, 'advanced': -25 }[securityMeasures] || 0; const rawScore = Math.max(0, Math.min(100, appRisk + policyRisk + telehealthRisk + sharingRisk + dataRisk + securityBonus)); const riskLevel = rawScore <= 25 ? 'Low Risk' : rawScore <= 50 ? 'Moderate Risk' : rawScore <= 75 ? 'High Risk' : 'Critical Risk'; const recommendations = rawScore <= 25 ? 2 : rawScore <= 50 ? 4 : rawScore <= 75 ? 6 : 8; return { riskScore: rawScore, riskLevel: riskLevel, recommendations: recommendations };",
+  "educational": {
+    "methodology": "This calculator evaluates your healthcare privacy risk by analyzing your digital health habits, app usage patterns, data sharing practices, and security measures. It considers factors like the number of health apps you use, how you handle privacy policies, telehealth security, and the sensitivity of data you track digitally.",
+    "tips": [
+      "Review privacy policies of all health apps before installation and annually thereafter",
+      "Use Incognito Browser when researching sensitive health topics to avoid tracking",
+      "Enable two-factor authentication on all health-related accounts and apps",
+      "Regularly audit app permissions and disable unnecessary data sharing options",
+      "Consider using a VPN when accessing telehealth services on public networks"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Good privacy practices with minimal exposure. Continue monitoring and stay informed about new threats.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk",
+        "description": "Some privacy vulnerabilities exist. Review app permissions and consider reducing data sharing.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant privacy concerns. Immediate action needed to secure your health data and review all apps.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Critical Risk",
+        "description": "Urgent privacy vulnerabilities. Consider removing non-essential apps and implementing strong security measures immediately.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "HIPAA Privacy Rights Guide",
+      "url": "/guides/hipaa-privacy-rights",
+      "type": "internal"
+    },
+    {
+      "title": "Health App Privacy Audit Checklist",
+      "url": "/guides/health-app-privacy-audit",
+      "type": "internal"
+    },
+    {
+      "title": "Telehealth Security Best Practices",
+      "url": "/guides/telehealth-security",
+      "type": "internal"
+    }
+  ]
+}

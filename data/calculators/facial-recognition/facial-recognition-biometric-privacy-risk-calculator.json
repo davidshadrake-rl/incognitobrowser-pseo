@@ -1,0 +1,200 @@
+{
+  "niche": "facial-recognition",
+  "slug": "facial-recognition-biometric-privacy-risk-calculator",
+  "title": "Facial Recognition & Biometric Privacy Risk Calculator",
+  "metaDescription": "Calculate your facial recognition exposure risk. Assess surveillance threats, biometric data collection, and get protection recommendations.",
+  "keywords": [
+    "facial recognition",
+    "biometric privacy",
+    "surveillance risk",
+    "privacy calculator",
+    "Clearview AI",
+    "face scanning"
+  ],
+  "description": "Evaluate your exposure to facial recognition surveillance and biometric data collection. Get personalized risk assessment and actionable steps to protect your biometric privacy from unauthorized scanning and database storage.",
+  "inputs": [
+    {
+      "id": "location",
+      "label": "Primary Location Type",
+      "type": "select",
+      "defaultValue": "urban",
+      "options": [
+        {
+          "value": "urban",
+          "label": "Major City (High surveillance)"
+        },
+        {
+          "value": "suburban",
+          "label": "Suburban Area (Medium surveillance)"
+        },
+        {
+          "value": "rural",
+          "label": "Rural Area (Low surveillance)"
+        }
+      ],
+      "helpText": "Urban areas typically have more facial recognition systems deployed"
+    },
+    {
+      "id": "publicSpaces",
+      "label": "Weekly Hours in Public Spaces",
+      "type": "range",
+      "defaultValue": 20,
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "helpText": "Include shopping, commuting, entertainment venues, protests"
+    },
+    {
+      "id": "socialMedia",
+      "label": "Social Media Photo Sharing",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "none",
+          "label": "No photos shared"
+        },
+        {
+          "value": "limited",
+          "label": "Rare, private accounts only"
+        },
+        {
+          "value": "moderate",
+          "label": "Regular sharing, mixed privacy"
+        },
+        {
+          "value": "frequent",
+          "label": "Frequent public photo sharing"
+        }
+      ],
+      "helpText": "Public photos can be scraped by companies like Clearview AI"
+    },
+    {
+      "id": "workplace",
+      "label": "Workplace Biometric Systems",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No biometric systems"
+        },
+        {
+          "value": "basic",
+          "label": "Basic access control only"
+        },
+        {
+          "value": "extensive",
+          "label": "Comprehensive facial recognition"
+        }
+      ],
+      "helpText": "Many workplaces now use facial recognition for security and time tracking"
+    },
+    {
+      "id": "protections",
+      "label": "Current Protection Methods",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No specific protections"
+        },
+        {
+          "value": "basic",
+          "label": "Privacy settings, limited sharing"
+        },
+        {
+          "value": "moderate",
+          "label": "Masks, sunglasses, opt-outs when possible"
+        },
+        {
+          "value": "advanced",
+          "label": "Anti-surveillance clothing, comprehensive strategy"
+        }
+      ],
+      "helpText": "Existing measures you take to avoid facial recognition"
+    },
+    {
+      "id": "activism",
+      "label": "Political/Activist Activities",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Protesters and activists face higher surveillance risks and targeting"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Privacy Risk",
+      "format": "score",
+      "description": "Your total facial recognition exposure risk (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Category",
+      "format": "grade",
+      "description": "Categorized risk level with specific recommendations"
+    },
+    {
+      "id": "exposureEstimate",
+      "label": "Weekly Scan Exposure",
+      "format": "number",
+      "description": "Estimated times your face may be scanned per week"
+    }
+  ],
+  "formula": "let baseRisk = 0; const locationMultiplier = location === 'urban' ? 30 : location === 'suburban' ? 15 : 5; const publicExposure = (publicSpaces / 80) * 25; const socialRisk = socialMedia === 'frequent' ? 20 : socialMedia === 'moderate' ? 12 : socialMedia === 'limited' ? 5 : 0; const workplaceRisk = workplace === 'extensive' ? 15 : workplace === 'basic' ? 8 : 0; const activismBonus = activism ? 15 : 0; const protectionReduction = protections === 'advanced' ? 0.3 : protections === 'moderate' ? 0.15 : protections === 'basic' ? 0.05 : 0; baseRisk = locationMultiplier + publicExposure + socialRisk + workplaceRisk + activismBonus; const riskScore = Math.max(0, Math.min(100, Math.round(baseRisk * (1 - protectionReduction)))); const riskLevel = riskScore >= 70 ? 'A+' : riskScore >= 50 ? 'B+' : riskScore >= 30 ? 'C+' : 'D+'; const exposureEstimate = Math.round((publicSpaces / 10) * (location === 'urban' ? 3 : location === 'suburban' ? 1.5 : 0.5)); return { riskScore, riskLevel, exposureEstimate };",
+  "educational": {
+    "methodology": "This calculator assesses facial recognition exposure based on location surveillance density, public space usage, digital footprint, workplace systems, and existing protection measures. Risk factors are weighted according to surveillance deployment patterns and biometric data collection practices.",
+    "tips": [
+      "Use Incognito Browser to limit online tracking that builds biometric profiles",
+      "Wear sunglasses and face masks in high-surveillance areas like airports and city centers",
+      "Review and tighten social media privacy settings to prevent photo scraping",
+      "Research local facial recognition policies and opt-out where legally possible",
+      "Consider anti-surveillance clothing with infrared-blocking patterns for high-risk situations"
+    ],
+    "interpretation": [
+      {
+        "range": "0-29",
+        "label": "Low Risk",
+        "description": "Minimal facial recognition exposure. Continue basic privacy practices and stay informed about local surveillance expansion.",
+        "color": "green"
+      },
+      {
+        "range": "30-49",
+        "label": "Moderate Risk",
+        "description": "Moderate exposure requiring active privacy measures. Implement basic protections and monitor surveillance in your area.",
+        "color": "yellow"
+      },
+      {
+        "range": "50-69",
+        "label": "High Risk",
+        "description": "Significant surveillance exposure. Take comprehensive protective measures and consider legal advocacy options.",
+        "color": "orange"
+      },
+      {
+        "range": "70-100",
+        "label": "Critical Risk",
+        "description": "Maximum exposure to facial recognition systems. Implement advanced countermeasures and consider relocating if possible.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Facial Recognition Opt-Out Guide",
+      "url": "/guides/facial-recognition-opt-out",
+      "type": "internal"
+    },
+    {
+      "title": "Clearview AI Database Search",
+      "url": "/tools/clearview-ai-checker",
+      "type": "internal"
+    },
+    {
+      "title": "Anti-Surveillance Gear Reviews",
+      "url": "/reviews/anti-surveillance-clothing",
+      "type": "internal"
+    }
+  ]
+}

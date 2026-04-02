@@ -1,0 +1,239 @@
+{
+  "niche": "children-safety",
+  "slug": "childrens-online-safety-risk-calculator",
+  "title": "Children's Online Safety Risk Calculator - Assess Digital Threats",
+  "metaDescription": "Calculate your child's online safety risk level. Get personalized recommendations for parental controls, privacy settings, and digital protection.",
+  "keywords": [
+    "children online safety",
+    "kids internet safety calculator",
+    "parental controls assessment",
+    "child online risk",
+    "COPPA compliance checker"
+  ],
+  "description": "Evaluate your child's current online safety level and get personalized recommendations for improving digital protection, privacy settings, and parental controls based on their age, activities, and existing safeguards.",
+  "inputs": [
+    {
+      "id": "childAge",
+      "label": "Child's Age",
+      "type": "select",
+      "defaultValue": "8",
+      "options": [
+        {
+          "value": "4",
+          "label": "4-5 years"
+        },
+        {
+          "value": "6",
+          "label": "6-7 years"
+        },
+        {
+          "value": "8",
+          "label": "8-9 years"
+        },
+        {
+          "value": "10",
+          "label": "10-11 years"
+        },
+        {
+          "value": "12",
+          "label": "12-13 years"
+        },
+        {
+          "value": "14",
+          "label": "14+ years"
+        }
+      ],
+      "helpText": "Younger children face different online risks than teenagers"
+    },
+    {
+      "id": "deviceAccess",
+      "label": "Device Access Level",
+      "type": "select",
+      "defaultValue": "supervised",
+      "options": [
+        {
+          "value": "none",
+          "label": "No unsupervised access"
+        },
+        {
+          "value": "supervised",
+          "label": "Supervised access only"
+        },
+        {
+          "value": "limited",
+          "label": "Limited unsupervised access"
+        },
+        {
+          "value": "unrestricted",
+          "label": "Full unsupervised access"
+        }
+      ],
+      "helpText": "How much independent device access does your child have?"
+    },
+    {
+      "id": "parentalControls",
+      "label": "Current Parental Controls",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No parental controls"
+        },
+        {
+          "value": "basic",
+          "label": "Basic built-in controls"
+        },
+        {
+          "value": "moderate",
+          "label": "Third-party parental control app"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive monitoring system"
+        }
+      ],
+      "helpText": "What level of parental controls are currently active?"
+    },
+    {
+      "id": "socialMediaUse",
+      "label": "Social Media & Gaming",
+      "type": "select",
+      "defaultValue": "minimal",
+      "options": [
+        {
+          "value": "none",
+          "label": "No social media or online gaming"
+        },
+        {
+          "value": "minimal",
+          "label": "Educational apps/games only"
+        },
+        {
+          "value": "moderate",
+          "label": "Age-appropriate social platforms"
+        },
+        {
+          "value": "extensive",
+          "label": "Multiple platforms and games"
+        }
+      ],
+      "helpText": "What's your child's level of social media and online gaming activity?"
+    },
+    {
+      "id": "privacyEducation",
+      "label": "Privacy Education Given",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No privacy education yet"
+        },
+        {
+          "value": "basic",
+          "label": "Basic 'stranger danger' concepts"
+        },
+        {
+          "value": "moderate",
+          "label": "Regular privacy discussions"
+        },
+        {
+          "value": "comprehensive",
+          "label": "Comprehensive digital literacy training"
+        }
+      ],
+      "helpText": "How much privacy and safety education has your child received?"
+    },
+    {
+      "id": "screenTime",
+      "label": "Daily Screen Time (hours)",
+      "type": "range",
+      "defaultValue": 2,
+      "min": 0,
+      "max": 8,
+      "step": 0.5,
+      "helpText": "Average hours of recreational screen time per day"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Risk Level",
+      "format": "score",
+      "description": "Combined safety risk score from 0-100"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Safety Grade",
+      "format": "grade",
+      "description": "Letter grade assessment of current safety measures"
+    },
+    {
+      "id": "priorityActions",
+      "label": "Priority Actions Needed",
+      "format": "number",
+      "description": "Number of immediate safety improvements recommended"
+    }
+  ],
+  "formula": "const ageRisk = childAge <= 8 ? 30 : childAge <= 12 ? 20 : 10; const deviceRisk = deviceAccess === 'unrestricted' ? 25 : deviceAccess === 'limited' ? 15 : deviceAccess === 'supervised' ? 5 : 0; const controlRisk = parentalControls === 'none' ? 25 : parentalControls === 'basic' ? 15 : parentalControls === 'moderate' ? 8 : 0; const socialRisk = socialMediaUse === 'extensive' ? 15 : socialMediaUse === 'moderate' ? 8 : socialMediaUse === 'minimal' ? 3 : 0; const educationRisk = privacyEducation === 'none' ? 15 : privacyEducation === 'basic' ? 10 : privacyEducation === 'moderate' ? 5 : 0; const timeRisk = screenTime > 4 ? 10 : screenTime > 2 ? 5 : 0; const riskScore = Math.min(100, ageRisk + deviceRisk + controlRisk + socialRisk + educationRisk + timeRisk); const riskGrade = riskScore <= 20 ? 'A' : riskScore <= 35 ? 'B' : riskScore <= 50 ? 'C' : riskScore <= 70 ? 'D' : 'F'; const priorityActions = (parentalControls === 'none' ? 1 : 0) + (privacyEducation === 'none' ? 1 : 0) + (deviceAccess === 'unrestricted' && childAge <= 12 ? 1 : 0) + (socialMediaUse === 'extensive' && childAge <= 10 ? 1 : 0); return { riskScore, riskGrade, priorityActions };",
+  "educational": {
+    "methodology": "This calculator evaluates online safety risk based on your child's age, device access level, current protective measures, online activities, privacy education received, and screen time. Higher risk scores indicate more potential vulnerabilities that should be addressed with appropriate safety measures.",
+    "tips": [
+      "Start privacy education early - even young children can learn basic concepts about not sharing personal information",
+      "Use age-appropriate parental control tools and regularly update settings as your child grows",
+      "Consider using privacy-focused browsers like Incognito Browser for safer web browsing",
+      "Create a family media agreement that establishes clear rules for online behavior and screen time",
+      "Regularly review your child's online activities and friend lists on social platforms"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Low Risk (Grade A)",
+        "description": "Excellent safety measures in place. Continue monitoring and age-appropriate education.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "21-35",
+        "label": "Moderate Risk (Grade B)",
+        "description": "Good foundation with room for improvement. Consider upgrading some safety measures.",
+        "color": "#84cc16"
+      },
+      {
+        "range": "36-50",
+        "label": "Elevated Risk (Grade C)",
+        "description": "Several areas need attention. Implement additional parental controls and education.",
+        "color": "#eab308"
+      },
+      {
+        "range": "51-70",
+        "label": "High Risk (Grade D)",
+        "description": "Significant vulnerabilities present. Immediate action needed to improve safety.",
+        "color": "#f97316"
+      },
+      {
+        "range": "71-100",
+        "label": "Very High Risk (Grade F)",
+        "description": "Critical safety gaps. Comprehensive overhaul of online safety measures required.",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Best Parental Control Software 2024",
+      "url": "/children-safety/best-parental-controls",
+      "type": "internal"
+    },
+    {
+      "title": "COPPA Compliance Guide for Parents",
+      "url": "/children-safety/coppa-explained",
+      "type": "internal"
+    },
+    {
+      "title": "Kid-Safe Browser Setup Guide",
+      "url": "/children-safety/safe-browsers-kids",
+      "type": "internal"
+    }
+  ]
+}

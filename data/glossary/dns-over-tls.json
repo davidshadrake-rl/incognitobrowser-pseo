@@ -1,0 +1,31 @@
+{
+  "term": "DNS over TLS",
+  "slug": "dns-over-tls",
+  "definition": "A security protocol that encrypts DNS queries using Transport Layer Security (TLS) to prevent eavesdropping and tampering with domain name resolution requests.",
+  "metaDescription": "Learn about DNS over TLS (DoT), a protocol that encrypts your DNS queries to protect privacy and prevent ISPs from seeing which websites you visit.",
+  "simpleExplanation": "When you visit a website, your device first asks a DNS server to translate the website name into an IP address. DNS over TLS encrypts these requests, so your internet provider or anyone monitoring your connection can't see which websites you're trying to visit.",
+  "whyItMatters": "Without DNS encryption, your ISP and other network observers can see every website you visit, even if the website itself uses HTTPS. This creates a detailed log of your browsing habits that can be sold to advertisers or accessed by governments.",
+  "technicalDetail": "DNS over TLS establishes a secure TLS connection on port 853 before sending DNS queries. The client and server perform a TLS handshake with certificate verification, ensuring both authentication and encryption. This prevents DNS spoofing attacks and protects against passive surveillance of DNS traffic.",
+  "examples": [
+    {
+      "scenario": "Public Wi-Fi Protection",
+      "explanation": "When using airport or coffee shop Wi-Fi, DNS over TLS prevents other users on the network from seeing which websites you're visiting by encrypting your DNS lookups."
+    },
+    {
+      "scenario": "ISP Privacy",
+      "explanation": "Your internet provider normally sees every DNS query you make. With DNS over TLS configured on your router, your ISP only sees encrypted traffic to your chosen DNS server, not the specific sites you visit."
+    },
+    {
+      "scenario": "Parental Control Bypass Prevention",
+      "explanation": "Organizations use DNS over TLS to ensure employees can't bypass content filters by switching to unencrypted DNS servers, maintaining security policies while protecting legitimate traffic."
+    }
+  ],
+  "relatedTerms": [
+    "dns-over-https",
+    "secure-dns",
+    "ssl-tls",
+    "dns-leak",
+    "encrypted-sni"
+  ],
+  "category": "protocol"
+}

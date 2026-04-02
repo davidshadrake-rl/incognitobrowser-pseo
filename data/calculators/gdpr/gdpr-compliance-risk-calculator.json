@@ -1,0 +1,230 @@
+{
+  "niche": "gdpr",
+  "slug": "gdpr-compliance-risk-calculator",
+  "title": "GDPR Compliance Risk Calculator - Assess Your Risk Score",
+  "metaDescription": "Calculate your GDPR compliance risk score. Assess data processing, security measures, and compliance gaps to avoid hefty GDPR fines.",
+  "keywords": [
+    "GDPR compliance",
+    "GDPR risk assessment",
+    "GDPR fines",
+    "data protection compliance",
+    "EU data privacy"
+  ],
+  "description": "Evaluate your organization's GDPR compliance risk level by assessing data processing activities, security measures, privacy policies, and breach response procedures. Get actionable insights to improve compliance.",
+  "inputs": [
+    {
+      "id": "dataVolume",
+      "label": "Data Processing Volume",
+      "type": "select",
+      "defaultValue": "medium",
+      "options": [
+        {
+          "value": "low",
+          "label": "Minimal (< 1,000 data subjects)"
+        },
+        {
+          "value": "medium",
+          "label": "Moderate (1,000 - 100,000 data subjects)"
+        },
+        {
+          "value": "high",
+          "label": "High (> 100,000 data subjects)"
+        }
+      ],
+      "helpText": "Estimate the number of EU individuals whose data you process"
+    },
+    {
+      "id": "dataSensitivity",
+      "label": "Data Sensitivity Level",
+      "type": "select",
+      "defaultValue": "standard",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic (Names, emails only)"
+        },
+        {
+          "value": "standard",
+          "label": "Standard (Demographics, transactions)"
+        },
+        {
+          "value": "sensitive",
+          "label": "Sensitive (Health, biometric, criminal data)"
+        }
+      ],
+      "helpText": "Type of personal data your organization processes"
+    },
+    {
+      "id": "privacyPolicy",
+      "label": "Privacy Policy Quality",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No privacy policy"
+        },
+        {
+          "value": "basic",
+          "label": "Generic privacy policy"
+        },
+        {
+          "value": "compliant",
+          "label": "GDPR-compliant privacy policy"
+        }
+      ],
+      "helpText": "Quality and completeness of your privacy documentation"
+    },
+    {
+      "id": "consentMechanism",
+      "label": "Consent Management",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No consent management"
+        },
+        {
+          "value": "basic",
+          "label": "Basic opt-in/opt-out"
+        },
+        {
+          "value": "advanced",
+          "label": "Granular consent management system"
+        }
+      ],
+      "helpText": "How you obtain and manage user consent"
+    },
+    {
+      "id": "dataProtection",
+      "label": "Data Security Measures",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "Basic security (passwords only)"
+        },
+        {
+          "value": "moderate",
+          "label": "Standard security (encryption, access controls)"
+        },
+        {
+          "value": "robust",
+          "label": "Advanced security (end-to-end encryption, regular audits)"
+        }
+      ],
+      "helpText": "Technical and organizational security measures in place"
+    },
+    {
+      "id": "thirdPartySharing",
+      "label": "Third-Party Data Sharing",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "none",
+          "label": "No third-party sharing"
+        },
+        {
+          "value": "some",
+          "label": "Limited sharing with documented agreements"
+        },
+        {
+          "value": "extensive",
+          "label": "Extensive sharing without proper agreements"
+        }
+      ],
+      "helpText": "Extent of data sharing with processors and partners"
+    },
+    {
+      "id": "breachResponse",
+      "label": "Breach Response Plan",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you have a documented data breach response procedure?"
+    },
+    {
+      "id": "dpoAssigned",
+      "label": "Data Protection Officer (DPO)",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you have a designated DPO or privacy officer?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "GDPR Risk Score",
+      "format": "score",
+      "description": "Overall compliance risk score from 0-100"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "text",
+      "description": "Risk category based on your assessment"
+    },
+    {
+      "id": "potentialFine",
+      "label": "Potential Fine Range",
+      "format": "text",
+      "description": "Estimated fine range based on risk factors"
+    }
+  ],
+  "formula": "let score = 0; const weights = { dataVolume: { low: 5, medium: 15, high: 25 }, dataSensitivity: { basic: 5, standard: 15, sensitive: 25 }, privacyPolicy: { none: 20, basic: 10, compliant: 0 }, consentMechanism: { none: 15, basic: 8, advanced: 0 }, dataProtection: { minimal: 20, moderate: 10, robust: 0 }, thirdPartySharing: { none: 0, some: 5, extensive: 15 } }; Object.keys(weights).forEach(key => { score += weights[key][inputs[key]] || 0; }); if (!inputs.breachResponse) score += 10; if (!inputs.dpoAssigned) score += 5; const riskLevel = score <= 25 ? 'Low Risk' : score <= 50 ? 'Medium Risk' : score <= 75 ? 'High Risk' : 'Critical Risk'; const potentialFine = score <= 25 ? '€0 - €100K' : score <= 50 ? '€100K - €1M' : score <= 75 ? '€1M - €10M' : 'Up to €20M or 4% of revenue'; return { riskScore: Math.min(score, 100), riskLevel, potentialFine };",
+  "educational": {
+    "methodology": "This calculator evaluates GDPR compliance risk based on key factors including data processing volume, sensitivity, security measures, consent management, and organizational safeguards. The scoring system reflects common compliance gaps that lead to regulatory enforcement.",
+    "tips": [
+      "Implement a robust consent management system to clearly document user permissions and allow easy withdrawal",
+      "Use privacy-focused tools like Incognito Browser to minimize unnecessary data collection and protect user privacy",
+      "Create a comprehensive data breach response plan and test it regularly with your team",
+      "Conduct regular privacy impact assessments (PIAs) for new data processing activities",
+      "Maintain detailed records of processing activities and ensure all third-party agreements include GDPR clauses"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Good compliance foundation with minimal regulatory risk",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Medium Risk",
+        "description": "Some compliance gaps that should be addressed proactively",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant compliance issues requiring immediate attention",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Critical Risk",
+        "description": "Major compliance failures with high enforcement risk",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "GDPR Rights Explained Guide",
+      "url": "/gdpr/rights-explained",
+      "type": "internal"
+    },
+    {
+      "title": "Data Subject Access Request Template",
+      "url": "/gdpr/dsar-template",
+      "type": "internal"
+    },
+    {
+      "title": "GDPR Cookie Compliance Checker",
+      "url": "/gdpr/cookie-compliance",
+      "type": "internal"
+    }
+  ]
+}

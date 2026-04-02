@@ -1,0 +1,31 @@
+{
+  "term": "WebRTC Leak",
+  "slug": "webrtc-leak",
+  "definition": "A privacy vulnerability where WebRTC technology exposes your real IP address even when using VPNs or proxies, potentially revealing your location and identity.",
+  "metaDescription": "Learn about WebRTC leaks - how this web technology can expose your real IP address even when using VPNs, compromising your online privacy and anonymity.",
+  "simpleExplanation": "WebRTC is a technology that helps websites handle video calls and messaging. However, it can accidentally reveal your true IP address to websites, even if you're trying to hide it with a VPN. It's like having a mask on but your ID card falling out of your pocket.",
+  "whyItMatters": "WebRTC leaks can completely bypass VPN protection, exposing your real location and IP address to websites, advertisers, and potential attackers. This undermines privacy tools and can be used for tracking, targeting, or even revealing your identity in sensitive situations.",
+  "technicalDetail": "WebRTC uses STUN servers to establish peer-to-peer connections, which can expose both local network IP addresses and public IP addresses through JavaScript APIs. This occurs because WebRTC attempts to find the most direct connection path, potentially bypassing VPN tunnels and revealing the user's actual network configuration to any website that queries the WebRTC APIs.",
+  "examples": [
+    {
+      "scenario": "VPN bypass detection",
+      "explanation": "You're using a VPN to appear as if you're browsing from another country, but a streaming service detects your real IP through WebRTC and blocks access anyway."
+    },
+    {
+      "scenario": "Location tracking",
+      "explanation": "An advertising network uses WebRTC to discover your real IP address and local network details, allowing them to track your actual location despite using privacy tools."
+    },
+    {
+      "scenario": "Identity exposure",
+      "explanation": "While browsing anonymously for sensitive research, a website uses WebRTC leak detection to potentially identify your real location and ISP, compromising your privacy."
+    }
+  ],
+  "relatedTerms": [
+    "vpn",
+    "ip-address",
+    "dns-leak",
+    "browser-fingerprinting",
+    "proxy-server"
+  ],
+  "category": "attack"
+}

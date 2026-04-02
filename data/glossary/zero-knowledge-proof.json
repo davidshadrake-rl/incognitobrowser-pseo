@@ -1,0 +1,30 @@
+{
+  "term": "Zero Knowledge Proof",
+  "slug": "zero-knowledge-proof",
+  "definition": "A cryptographic method that allows one party to prove they know certain information to another party without revealing the actual information itself.",
+  "metaDescription": "Learn about zero knowledge proofs - cryptographic techniques that verify information without revealing it, enhancing privacy in digital transactions.",
+  "simpleExplanation": "Imagine proving you know a password without actually saying what the password is. Zero knowledge proofs let you verify you have secret information or meet certain requirements without exposing the details, keeping your private data safe.",
+  "whyItMatters": "Zero knowledge proofs enable stronger privacy in digital systems by allowing verification without data exposure. They're crucial for private authentication, confidential transactions, and proving compliance without revealing sensitive information.",
+  "technicalDetail": "Zero knowledge proofs use mathematical protocols where a prover demonstrates knowledge of a secret to a verifier through interactive or non-interactive challenges. The proof reveals nothing about the secret itself, only that the prover knows it. Common implementations include zk-SNARKs and zk-STARKs.",
+  "examples": [
+    {
+      "scenario": "Age verification",
+      "explanation": "Proving you're over 21 to access a website without revealing your actual age, birth date, or identity documents"
+    },
+    {
+      "scenario": "Financial compliance",
+      "explanation": "A bank proving to regulators that it meets capital requirements without disclosing specific account balances or customer information"
+    },
+    {
+      "scenario": "Private voting",
+      "explanation": "Verifying that your vote was counted correctly in an election without revealing which candidate you voted for"
+    }
+  ],
+  "relatedTerms": [
+    "public-key-cryptography",
+    "end-to-end-encryption",
+    "homomorphic-encryption",
+    "secure-multi-party-computation"
+  ],
+  "category": "technology"
+}

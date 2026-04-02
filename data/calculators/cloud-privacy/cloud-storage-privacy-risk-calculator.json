@@ -1,0 +1,236 @@
+{
+  "niche": "cloud-privacy",
+  "slug": "cloud-storage-privacy-risk-calculator",
+  "title": "Cloud Storage Privacy Risk Calculator - Assess Your Data Security",
+  "metaDescription": "Calculate your cloud storage privacy risk score. Evaluate provider security, encryption, and data protection to keep your files safe from breaches.",
+  "keywords": [
+    "cloud storage privacy",
+    "cloud data protection",
+    "Google Drive privacy",
+    "encrypted cloud storage",
+    "cloud security risk",
+    "zero-knowledge encryption"
+  ],
+  "description": "Assess your cloud storage privacy risks with our comprehensive calculator. Evaluate your provider's security practices, encryption methods, and data protection features to understand how well your files are protected from unauthorized access.",
+  "inputs": [
+    {
+      "id": "provider",
+      "label": "Cloud Storage Provider",
+      "type": "select",
+      "defaultValue": "google-drive",
+      "options": [
+        {
+          "value": "google-drive",
+          "label": "Google Drive"
+        },
+        {
+          "value": "dropbox",
+          "label": "Dropbox"
+        },
+        {
+          "value": "onedrive",
+          "label": "Microsoft OneDrive"
+        },
+        {
+          "value": "icloud",
+          "label": "Apple iCloud"
+        },
+        {
+          "value": "proton-drive",
+          "label": "Proton Drive"
+        },
+        {
+          "value": "tresorit",
+          "label": "Tresorit"
+        },
+        {
+          "value": "pcloud-crypto",
+          "label": "pCloud Crypto"
+        },
+        {
+          "value": "other",
+          "label": "Other/Unknown"
+        }
+      ],
+      "helpText": "Select your primary cloud storage provider"
+    },
+    {
+      "id": "dataTypes",
+      "label": "Types of Data Stored",
+      "type": "select",
+      "defaultValue": "personal",
+      "options": [
+        {
+          "value": "personal",
+          "label": "Personal files (photos, documents)"
+        },
+        {
+          "value": "business",
+          "label": "Business documents"
+        },
+        {
+          "value": "financial",
+          "label": "Financial records"
+        },
+        {
+          "value": "medical",
+          "label": "Medical/health records"
+        },
+        {
+          "value": "legal",
+          "label": "Legal documents"
+        },
+        {
+          "value": "creative",
+          "label": "Creative work (client projects)"
+        }
+      ],
+      "helpText": "What type of data do you primarily store?"
+    },
+    {
+      "id": "encryptionUsed",
+      "label": "Client-Side Encryption",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No additional encryption"
+        },
+        {
+          "value": "manual",
+          "label": "I encrypt files before upload"
+        },
+        {
+          "value": "zero-knowledge",
+          "label": "Provider offers zero-knowledge encryption"
+        },
+        {
+          "value": "third-party",
+          "label": "Use third-party encryption tool"
+        }
+      ],
+      "helpText": "Do you use any additional encryption beyond the provider's default?"
+    },
+    {
+      "id": "twoFactor",
+      "label": "Two-Factor Authentication",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Do you have 2FA enabled on your cloud storage account?"
+    },
+    {
+      "id": "sharingFrequency",
+      "label": "File Sharing Frequency",
+      "type": "select",
+      "defaultValue": "occasional",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never share files"
+        },
+        {
+          "value": "rare",
+          "label": "Rarely (few times per year)"
+        },
+        {
+          "value": "occasional",
+          "label": "Occasionally (monthly)"
+        },
+        {
+          "value": "frequent",
+          "label": "Frequently (weekly)"
+        },
+        {
+          "value": "daily",
+          "label": "Daily sharing"
+        }
+      ],
+      "helpText": "How often do you share files or folders with others?"
+    },
+    {
+      "id": "dataAmount",
+      "label": "Amount of Data Stored (GB)",
+      "type": "range",
+      "defaultValue": 50,
+      "min": 1,
+      "max": 1000,
+      "step": 10,
+      "helpText": "Approximate amount of data stored in the cloud"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk assessment (0-100, lower is better)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your current privacy risk category"
+    },
+    {
+      "id": "recommendation",
+      "label": "Primary Recommendation",
+      "format": "text",
+      "description": "Most important step to improve your privacy"
+    }
+  ],
+  "formula": "const providerScores = { 'google-drive': 60, 'dropbox': 55, 'onedrive': 65, 'icloud': 70, 'proton-drive': 15, 'tresorit': 10, 'pcloud-crypto': 20, 'other': 80 }; const dataTypeScores = { 'personal': 10, 'business': 25, 'financial': 40, 'medical': 45, 'legal': 35, 'creative': 20 }; const encryptionReduction = { 'none': 0, 'manual': -25, 'zero-knowledge': -30, 'third-party': -20 }; const sharingScores = { 'never': 0, 'rare': 5, 'occasional': 10, 'frequent': 20, 'daily': 30 }; let baseScore = providerScores[provider] || 80; baseScore += dataTypeScores[dataTypes] || 10; baseScore += encryptionReduction[encryptionUsed] || 0; baseScore += sharingScores[sharingFrequency] || 10; if (!twoFactor) baseScore += 15; if (dataAmount > 100) baseScore += 5; if (dataAmount > 500) baseScore += 10; const riskScore = Math.max(0, Math.min(100, baseScore)); let riskLevel, recommendation; if (riskScore <= 25) { riskLevel = 'Low Risk'; recommendation = 'Great privacy practices! Consider using Incognito Browser for additional web privacy.'; } else if (riskScore <= 50) { riskLevel = 'Moderate Risk'; recommendation = 'Enable 2FA and consider encrypted providers like Proton Drive or Tresorit.'; } else if (riskScore <= 75) { riskLevel = 'High Risk'; recommendation = 'Switch to zero-knowledge providers and encrypt sensitive files before upload.'; } else { riskLevel = 'Critical Risk'; recommendation = 'Immediately migrate to encrypted storage like Tresorit and enable all security features.'; } return { riskScore, riskLevel, recommendation };",
+  "educational": {
+    "methodology": "This calculator evaluates your cloud storage privacy risk based on provider security practices, data sensitivity, encryption usage, account security, and sharing habits. Scores range from 0-100, with lower scores indicating better privacy protection.",
+    "tips": [
+      "Use zero-knowledge encrypted providers like Proton Drive or Tresorit for sensitive data",
+      "Always enable two-factor authentication on your cloud storage accounts",
+      "Encrypt sensitive files locally before uploading to any cloud service",
+      "Regularly review and revoke sharing permissions for old files and folders",
+      "Use Incognito Browser when accessing cloud storage to prevent tracking"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Excellent privacy practices with minimal risk of data exposure",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk",
+        "description": "Good practices but room for improvement in encryption and provider choice",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant privacy vulnerabilities that should be addressed soon",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Critical Risk",
+        "description": "Immediate action needed to protect your data from unauthorized access",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Best Encrypted Cloud Storage Providers 2024",
+      "url": "/guides/encrypted-cloud-storage-comparison",
+      "type": "guide"
+    },
+    {
+      "title": "Google Drive Privacy Settings Guide",
+      "url": "/guides/google-drive-privacy-settings",
+      "type": "tutorial"
+    },
+    {
+      "title": "Proton Drive vs Tresorit Comparison",
+      "url": "/comparisons/proton-drive-vs-tresorit",
+      "type": "comparison"
+    }
+  ]
+}

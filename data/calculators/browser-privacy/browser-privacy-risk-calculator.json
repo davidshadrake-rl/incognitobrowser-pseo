@@ -1,0 +1,239 @@
+{
+  "niche": "browser-privacy",
+  "slug": "browser-privacy-risk-calculator",
+  "title": "Browser Privacy Risk Calculator - Check Your Privacy Score",
+  "metaDescription": "Calculate your browser's privacy risk score. Assess tracking protection, data collection, and security settings across Chrome, Firefox, Safari, and more.",
+  "keywords": [
+    "browser privacy calculator",
+    "privacy risk assessment",
+    "secure browser comparison",
+    "browser tracking protection",
+    "privacy score checker"
+  ],
+  "description": "Evaluate your browser's privacy protection level with our comprehensive risk calculator. Get personalized recommendations to improve your online privacy and security based on your current browser setup and settings.",
+  "inputs": [
+    {
+      "id": "browserType",
+      "label": "Your Primary Browser",
+      "type": "select",
+      "defaultValue": "chrome",
+      "options": [
+        {
+          "value": "chrome",
+          "label": "Google Chrome"
+        },
+        {
+          "value": "firefox",
+          "label": "Mozilla Firefox"
+        },
+        {
+          "value": "safari",
+          "label": "Safari"
+        },
+        {
+          "value": "brave",
+          "label": "Brave"
+        },
+        {
+          "value": "edge",
+          "label": "Microsoft Edge"
+        },
+        {
+          "value": "incognito-browser",
+          "label": "Incognito Browser"
+        },
+        {
+          "value": "other",
+          "label": "Other"
+        }
+      ],
+      "helpText": "Select your main browser for daily browsing"
+    },
+    {
+      "id": "trackingProtection",
+      "label": "Tracking Protection Level",
+      "type": "select",
+      "defaultValue": "standard",
+      "options": [
+        {
+          "value": "none",
+          "label": "Disabled/None"
+        },
+        {
+          "value": "standard",
+          "label": "Standard/Default"
+        },
+        {
+          "value": "strict",
+          "label": "Strict/Enhanced"
+        },
+        {
+          "value": "custom",
+          "label": "Custom Configuration"
+        }
+      ],
+      "helpText": "Current tracking protection setting in your browser"
+    },
+    {
+      "id": "thirdPartyCookies",
+      "label": "Third-Party Cookies",
+      "type": "select",
+      "defaultValue": "allowed",
+      "options": [
+        {
+          "value": "blocked",
+          "label": "Blocked"
+        },
+        {
+          "value": "limited",
+          "label": "Limited/SameSite"
+        },
+        {
+          "value": "allowed",
+          "label": "Allowed"
+        }
+      ],
+      "helpText": "How your browser handles third-party cookies"
+    },
+    {
+      "id": "extensionsInstalled",
+      "label": "Privacy Extensions Installed",
+      "type": "number",
+      "defaultValue": 0,
+      "min": 0,
+      "max": 10,
+      "helpText": "Number of privacy-focused extensions (uBlock Origin, Privacy Badger, etc.)"
+    },
+    {
+      "id": "incognitoUsage",
+      "label": "Private/Incognito Mode Usage",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "frequently",
+          "label": "Frequently"
+        },
+        {
+          "value": "always",
+          "label": "Always for sensitive browsing"
+        }
+      ],
+      "helpText": "How often you use private browsing modes"
+    },
+    {
+      "id": "syncEnabled",
+      "label": "Browser Sync/Account Features",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Do you sync bookmarks, passwords, and history across devices?"
+    },
+    {
+      "id": "locationSharing",
+      "label": "Location Sharing",
+      "type": "select",
+      "defaultValue": "ask",
+      "options": [
+        {
+          "value": "blocked",
+          "label": "Always Blocked"
+        },
+        {
+          "value": "ask",
+          "label": "Ask Each Time"
+        },
+        {
+          "value": "allowed",
+          "label": "Allowed for Most Sites"
+        }
+      ],
+      "helpText": "Default location sharing permission setting"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "privacyScore",
+      "label": "Privacy Protection Score",
+      "format": "score",
+      "description": "Overall privacy protection level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Privacy Risk Level",
+      "format": "grade",
+      "description": "Your current privacy risk category"
+    },
+    {
+      "id": "improvementPotential",
+      "label": "Improvement Potential",
+      "format": "percentage",
+      "description": "How much you could improve with recommended changes"
+    }
+  ],
+  "formula": "let baseScore = 0; const browserScores = { 'incognito-browser': 25, 'brave': 20, 'firefox': 15, 'safari': 12, 'edge': 8, 'chrome': 5, 'other': 10 }; baseScore += browserScores[browserType] || 10; const trackingScores = { 'strict': 25, 'custom': 20, 'standard': 10, 'none': 0 }; baseScore += trackingScores[trackingProtection]; const cookieScores = { 'blocked': 20, 'limited': 12, 'allowed': 0 }; baseScore += cookieScores[thirdPartyCookies]; baseScore += Math.min(extensionsInstalled * 3, 15); const incognitoScores = { 'always': 10, 'frequently': 8, 'sometimes': 5, 'rarely': 2, 'never': 0 }; baseScore += incognitoScores[incognitoUsage]; baseScore += syncEnabled ? 0 : 5; const locationScores = { 'blocked': 5, 'ask': 3, 'allowed': 0 }; baseScore += locationScores[locationSharing]; const privacyScore = Math.min(baseScore, 100); let riskLevel = 'High Risk'; if (privacyScore >= 80) riskLevel = 'Low Risk'; else if (privacyScore >= 60) riskLevel = 'Medium Risk'; else if (privacyScore >= 40) riskLevel = 'High Risk'; else riskLevel = 'Very High Risk'; const maxPossible = 100; const improvementPotential = Math.round(((maxPossible - privacyScore) / maxPossible) * 100); return { privacyScore, riskLevel, improvementPotential };",
+  "educational": {
+    "methodology": "This calculator evaluates your browser privacy based on key factors: browser choice (inherent privacy features), tracking protection settings, cookie policies, privacy extensions, private browsing habits, sync features, and permission settings. Each factor is weighted based on its impact on your overall privacy protection.",
+    "tips": [
+      "Switch to privacy-focused browsers like Incognito Browser, Brave, or hardened Firefox for better default protection",
+      "Enable strict tracking protection and block third-party cookies in your browser settings",
+      "Install essential privacy extensions like uBlock Origin and Privacy Badger",
+      "Use private/incognito mode for sensitive browsing, especially on shared devices",
+      "Regularly review and limit website permissions for location, camera, and microphone access"
+    ],
+    "interpretation": [
+      {
+        "range": "80-100",
+        "label": "Low Risk",
+        "description": "Excellent privacy protection. Your browser setup provides strong defense against tracking and data collection.",
+        "color": "green"
+      },
+      {
+        "range": "60-79",
+        "label": "Medium Risk",
+        "description": "Good privacy protection with room for improvement. Consider enabling stricter settings or adding privacy extensions.",
+        "color": "yellow"
+      },
+      {
+        "range": "40-59",
+        "label": "High Risk",
+        "description": "Limited privacy protection. Your data is likely being tracked and collected. Immediate improvements recommended.",
+        "color": "orange"
+      },
+      {
+        "range": "0-39",
+        "label": "Very High Risk",
+        "description": "Minimal privacy protection. Your browsing activities are extensively tracked. Consider switching browsers and updating settings.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Best Private Browsers 2025 Comparison",
+      "url": "/best-private-browsers-2025",
+      "type": "internal"
+    },
+    {
+      "title": "Complete Browser Privacy Settings Guide",
+      "url": "/browser-privacy-settings-guide",
+      "type": "internal"
+    },
+    {
+      "title": "Chrome vs Firefox vs Brave Privacy Comparison",
+      "url": "/chrome-firefox-brave-privacy-comparison",
+      "type": "internal"
+    }
+  ]
+}

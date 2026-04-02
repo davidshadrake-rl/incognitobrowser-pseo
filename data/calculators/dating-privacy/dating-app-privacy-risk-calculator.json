@@ -1,0 +1,248 @@
+{
+  "niche": "dating-privacy",
+  "slug": "dating-app-privacy-risk-calculator",
+  "title": "Dating App Privacy Risk Calculator - Check Your Safety Score",
+  "metaDescription": "Calculate your privacy risk on dating apps like Tinder, Bumble & Grindr. Get personalized safety recommendations to protect your data and location.",
+  "keywords": [
+    "dating app privacy",
+    "Tinder privacy risk",
+    "dating app safety calculator",
+    "online dating security",
+    "Grindr privacy"
+  ],
+  "description": "Assess your privacy risk across popular dating platforms and receive personalized recommendations to protect your personal data, location, and identity while dating online safely.",
+  "inputs": [
+    {
+      "id": "appType",
+      "label": "Primary Dating App Used",
+      "type": "select",
+      "defaultValue": "tinder",
+      "options": [
+        {
+          "value": "tinder",
+          "label": "Tinder"
+        },
+        {
+          "value": "bumble",
+          "label": "Bumble"
+        },
+        {
+          "value": "grindr",
+          "label": "Grindr"
+        },
+        {
+          "value": "hinge",
+          "label": "Hinge"
+        },
+        {
+          "value": "okcupid",
+          "label": "OkCupid"
+        },
+        {
+          "value": "multiple",
+          "label": "Multiple Apps"
+        }
+      ],
+      "helpText": "Select your most frequently used dating app"
+    },
+    {
+      "id": "locationSharing",
+      "label": "Location Sharing Settings",
+      "type": "select",
+      "defaultValue": "precise",
+      "options": [
+        {
+          "value": "disabled",
+          "label": "Disabled/Hidden"
+        },
+        {
+          "value": "approximate",
+          "label": "Approximate Location Only"
+        },
+        {
+          "value": "precise",
+          "label": "Precise Location Shared"
+        },
+        {
+          "value": "unknown",
+          "label": "Don't Know My Settings"
+        }
+      ],
+      "helpText": "How detailed is your location information on your profile?"
+    },
+    {
+      "id": "photoPrivacy",
+      "label": "Photo Privacy Level",
+      "type": "select",
+      "defaultValue": "social-media",
+      "options": [
+        {
+          "value": "unique",
+          "label": "Unique Photos Not Used Elsewhere"
+        },
+        {
+          "value": "limited",
+          "label": "Some Photos from Social Media"
+        },
+        {
+          "value": "social-media",
+          "label": "Same Photos as Social Media"
+        },
+        {
+          "value": "identifiable",
+          "label": "Photos Show Workplace/Home"
+        }
+      ],
+      "helpText": "How easily can your photos be reverse-searched or identified?"
+    },
+    {
+      "id": "personalInfo",
+      "label": "Personal Information Shared",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "minimal",
+          "label": "First Name Only"
+        },
+        {
+          "value": "some",
+          "label": "Name + Job/School"
+        },
+        {
+          "value": "detailed",
+          "label": "Full Name + Detailed Bio"
+        },
+        {
+          "value": "extensive",
+          "label": "Social Media Links + Phone"
+        }
+      ],
+      "helpText": "How much personal information is visible on your profile?"
+    },
+    {
+      "id": "messagingHabits",
+      "label": "Communication Privacy",
+      "type": "select",
+      "defaultValue": "app-only",
+      "options": [
+        {
+          "value": "app-only",
+          "label": "Keep Conversations In-App"
+        },
+        {
+          "value": "phone-quick",
+          "label": "Share Phone Number Quickly"
+        },
+        {
+          "value": "social-media",
+          "label": "Connect on Social Media First"
+        },
+        {
+          "value": "video-calls",
+          "label": "Video Chat Before Meeting"
+        }
+      ],
+      "helpText": "How do you typically communicate with matches?"
+    },
+    {
+      "id": "meetingCaution",
+      "label": "Meeting Safety Practices",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "high",
+          "label": "Always Public Places + Tell Friends"
+        },
+        {
+          "value": "moderate",
+          "label": "Usually Public Places"
+        },
+        {
+          "value": "basic",
+          "label": "Sometimes Meet Privately"
+        },
+        {
+          "value": "low",
+          "label": "Often Meet at Home/Private"
+        }
+      ],
+      "helpText": "How cautious are you when meeting matches in person?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall privacy risk level (0-100 scale)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Category",
+      "format": "grade",
+      "description": "Your privacy risk classification"
+    },
+    {
+      "id": "vulnerabilities",
+      "label": "Key Vulnerabilities",
+      "format": "number",
+      "description": "Number of high-risk privacy exposures identified"
+    }
+  ],
+  "formula": "const weights = { appType: { tinder: 15, bumble: 10, grindr: 25, hinge: 8, okcupid: 12, multiple: 20 }, locationSharing: { disabled: 0, approximate: 10, precise: 25, unknown: 15 }, photoPrivacy: { unique: 5, limited: 15, 'social-media': 25, identifiable: 35 }, personalInfo: { minimal: 5, some: 15, detailed: 25, extensive: 35 }, messagingHabits: { 'app-only': 5, 'phone-quick': 15, 'social-media': 20, 'video-calls': 0 }, meetingCaution: { high: 0, moderate: 10, basic: 20, low: 30 } }; const riskScore = Math.min(100, weights.appType[inputs.appType] + weights.locationSharing[inputs.locationSharing] + weights.photoPrivacy[inputs.photoPrivacy] + weights.personalInfo[inputs.personalInfo] + weights.messagingHabits[inputs.messagingHabits] + weights.meetingCaution[inputs.meetingCaution]); const vulnerabilities = [inputs.locationSharing === 'precise', inputs.photoPrivacy === 'identifiable', inputs.personalInfo === 'extensive', inputs.messagingHabits === 'phone-quick', inputs.meetingCaution === 'low'].filter(Boolean).length; const riskLevel = riskScore <= 30 ? 'Low Risk' : riskScore <= 60 ? 'Moderate Risk' : riskScore <= 80 ? 'High Risk' : 'Critical Risk'; return { riskScore, riskLevel, vulnerabilities };",
+  "educational": {
+    "methodology": "This calculator evaluates your dating app privacy risk based on six key factors: app choice (some apps have weaker privacy), location sharing settings, photo traceability, personal information exposure, communication habits, and meeting safety practices. Each factor is weighted according to real privacy vulnerabilities reported by security researchers.",
+    "tips": [
+      "Use Incognito Browser when accessing dating apps on shared devices to prevent data tracking",
+      "Create unique photos for dating apps that can't be reverse-searched on Google Images",
+      "Hide your precise location and use approximate distance settings instead",
+      "Keep conversations in-app until you've met and verified the person's identity",
+      "Use a separate phone number or Google Voice for initial dating communications"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Good privacy practices! You're well-protected against common dating app risks.",
+        "color": "green"
+      },
+      {
+        "range": "31-60",
+        "label": "Moderate Risk",
+        "description": "Some vulnerabilities exist. Consider tightening privacy settings and photo choices.",
+        "color": "yellow"
+      },
+      {
+        "range": "61-80",
+        "label": "High Risk",
+        "description": "Multiple privacy exposures detected. Review location, photo, and information sharing.",
+        "color": "orange"
+      },
+      {
+        "range": "81-100",
+        "label": "Critical Risk",
+        "description": "Significant privacy vulnerabilities. Immediate action needed to protect your safety.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Tinder Privacy Settings Guide",
+      "url": "/guides/tinder-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "Hide Your Location on Dating Apps",
+      "url": "/guides/hide-location-dating-apps",
+      "type": "guide"
+    },
+    {
+      "title": "Best VPN for Dating App Privacy",
+      "url": "/tools/vpn-dating-apps",
+      "type": "tool"
+    }
+  ]
+}

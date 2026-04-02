@@ -1,0 +1,32 @@
+{
+  "term": "Secure Multi-Party Computation",
+  "slug": "secure-multi-party-computation",
+  "definition": "A cryptographic technique that allows multiple parties to jointly compute a function over their inputs while keeping those inputs private from each other.",
+  "metaDescription": "Learn about secure multi-party computation (SMPC) - a privacy-preserving technology that enables collaborative data analysis without revealing sensitive information.",
+  "simpleExplanation": "Imagine multiple organizations want to analyze their combined data without sharing their actual data with each other. SMPC makes this possible by using advanced math to compute results on encrypted data, so each party only sees the final answer, not anyone else's private information.",
+  "whyItMatters": "SMPC enables valuable collaborative research and business intelligence while maintaining strict privacy. It allows organizations to gain insights from shared data analysis without the legal and security risks of actually sharing sensitive data with partners.",
+  "technicalDetail": "SMPC protocols use cryptographic primitives like secret sharing, homomorphic encryption, or garbled circuits to distribute computation across multiple parties. Each party holds encrypted shares of the data, performs computations on these shares, and combines results to produce the final output without reconstructing the original private inputs.",
+  "examples": [
+    {
+      "scenario": "Medical Research Collaboration",
+      "explanation": "Multiple hospitals can jointly analyze patient data to identify disease patterns without sharing actual patient records, protecting privacy while advancing medical research."
+    },
+    {
+      "scenario": "Financial Fraud Detection",
+      "explanation": "Banks can combine their transaction data to detect fraud patterns across institutions without revealing individual customer information or proprietary data to competitors."
+    },
+    {
+      "scenario": "Supply Chain Analytics",
+      "explanation": "Companies in a supply chain can collectively analyze inventory and demand data to optimize operations while keeping their business-sensitive information confidential."
+    }
+  ],
+  "relatedTerms": [
+    "homomorphic-encryption",
+    "zero-knowledge-proof",
+    "federated-learning",
+    "differential-privacy",
+    "end-to-end-encryption"
+  ],
+  "niche": "Advanced cryptographic privacy-preserving computation",
+  "category": "technology"
+}

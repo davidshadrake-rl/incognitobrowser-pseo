@@ -1,0 +1,30 @@
+{
+  "term": "SSL/TLS",
+  "slug": "ssl-tls",
+  "definition": "Cryptographic protocols that encrypt internet connections between devices and servers, protecting data from interception and tampering during transmission.",
+  "metaDescription": "Learn about SSL/TLS encryption protocols that secure internet connections and protect your data from eavesdropping and tampering online.",
+  "simpleExplanation": "SSL (Secure Sockets Layer) and its successor TLS (Transport Layer Security) are like protective envelopes for your internet data. When you visit a website with HTTPS, SSL/TLS encrypts your information so hackers can't read it as it travels between your device and the website's server.",
+  "whyItMatters": "SSL/TLS prevents criminals from stealing sensitive information like passwords, credit card numbers, and personal messages. Without it, anyone monitoring network traffic could easily read your private data, making online banking, shopping, and communication extremely risky.",
+  "technicalDetail": "SSL/TLS uses asymmetric encryption for initial handshake and key exchange, then switches to symmetric encryption for data transmission. The protocol includes authentication through digital certificates, integrity checking through message authentication codes, and forward secrecy to protect past communications even if keys are compromised.",
+  "examples": [
+    {
+      "scenario": "Online Banking",
+      "explanation": "When you log into your bank account, SSL/TLS encrypts your username, password, and account details so they can't be intercepted by criminals on public Wi-Fi."
+    },
+    {
+      "scenario": "Shopping Websites",
+      "explanation": "E-commerce sites use SSL/TLS to protect your credit card information during checkout, indicated by the padlock icon and 'https://' in your browser's address bar."
+    },
+    {
+      "scenario": "Email Services",
+      "explanation": "Webmail providers like Gmail use SSL/TLS to encrypt your emails and login credentials, preventing others from reading your private messages."
+    }
+  ],
+  "relatedTerms": [
+    "https",
+    "end-to-end-encryption",
+    "public-key-cryptography",
+    "man-in-the-middle"
+  ],
+  "category": "protocol"
+}

@@ -1,0 +1,30 @@
+{
+  "term": "WebRTC",
+  "slug": "webrtc",
+  "definition": "Web Real-Time Communication (WebRTC) is a technology that enables direct peer-to-peer communication between browsers, allowing real-time audio, video, and data sharing without plugins.",
+  "metaDescription": "Learn about WebRTC technology and its privacy implications. Understand how real-time browser communication can expose your IP address and location.",
+  "simpleExplanation": "WebRTC lets your browser directly connect to other browsers for video calls and file sharing. While convenient, it can reveal your real IP address even when using a VPN, potentially exposing your location and identity to websites.",
+  "whyItMatters": "WebRTC can bypass privacy tools like VPNs and proxies, revealing your true IP address to websites. This creates a privacy leak that can be used for tracking, location detection, or circumventing anonymity measures you've put in place.",
+  "technicalDetail": "WebRTC uses STUN servers to discover your public IP address for NAT traversal, creating direct peer connections. This process can expose local network IPs, public IPs, and even IPv6 addresses through JavaScript APIs, potentially revealing information that other privacy tools are designed to hide.",
+  "examples": [
+    {
+      "scenario": "Video calling in browser",
+      "explanation": "When you use Google Meet or Zoom in your browser, WebRTC enables the direct video connection, but websites can also use this to detect your real IP address."
+    },
+    {
+      "scenario": "VPN bypass detection",
+      "explanation": "A website uses WebRTC to discover that your real IP is in New York while your VPN shows London, revealing your actual location despite the VPN."
+    },
+    {
+      "scenario": "Browser-based file sharing",
+      "explanation": "Services like Firefox Send use WebRTC for direct file transfers, which is faster but can expose network information to the service provider."
+    }
+  ],
+  "relatedTerms": [
+    "webrtc-leak",
+    "vpn",
+    "ip-address",
+    "browser-fingerprinting"
+  ],
+  "category": "technology"
+}

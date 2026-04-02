@@ -1,0 +1,31 @@
+{
+  "term": "Secure DNS",
+  "slug": "secure-dns",
+  "definition": "Methods of encrypting DNS queries to prevent eavesdropping and manipulation of domain name lookups, protecting users from surveillance and DNS-based attacks.",
+  "metaDescription": "Learn about Secure DNS, encryption methods that protect your domain lookups from surveillance and attacks. Understand DNS-over-HTTPS and DNS-over-TLS.",
+  "simpleExplanation": "When you visit a website, your device asks a DNS server for the website's address. Normally, this request is unencrypted and visible to your ISP and others. Secure DNS encrypts these requests, hiding which websites you're trying to visit.",
+  "whyItMatters": "Without secure DNS, your ISP, government, or attackers can see every website you visit, even if the site itself uses HTTPS. They can also redirect you to malicious sites or block access to legitimate ones.",
+  "technicalDetail": "Secure DNS uses protocols like DNS-over-HTTPS (DoH) or DNS-over-TLS (DoT) to encrypt DNS queries. DoH sends queries over HTTPS connections, while DoT uses dedicated TLS connections on port 853. Both prevent plaintext DNS queries from revealing browsing patterns and protect against DNS spoofing attacks.",
+  "examples": [
+    {
+      "scenario": "Using Cloudflare's 1.1.1.1 DNS service",
+      "explanation": "Instead of using your ISP's DNS servers, you configure your device to use Cloudflare's encrypted DNS service, preventing your ISP from seeing which websites you're looking up."
+    },
+    {
+      "scenario": "Browser-level DNS encryption",
+      "explanation": "Firefox and Chrome can be configured to use DNS-over-HTTPS, encrypting your DNS queries even if your operating system doesn't support secure DNS."
+    },
+    {
+      "scenario": "Corporate network protection",
+      "explanation": "A company implements secure DNS to prevent employees' browsing habits from being monitored on public Wi-Fi and to block access to known malicious domains."
+    }
+  ],
+  "relatedTerms": [
+    "dns-over-https",
+    "dns-over-tls",
+    "dns-leak",
+    "vpn",
+    "https"
+  ],
+  "category": "technology"
+}

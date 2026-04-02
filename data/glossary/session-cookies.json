@@ -1,0 +1,30 @@
+{
+  "term": "Session Cookies",
+  "slug": "session-cookies",
+  "definition": "Temporary cookies that exist only during a user's browsing session and are automatically deleted when the browser is closed or the session ends.",
+  "metaDescription": "Learn about session cookies - temporary files that store data only during your browsing session and disappear when you close your browser.",
+  "simpleExplanation": "Session cookies are like temporary sticky notes that websites place on your browser to remember things about you while you're visiting. Once you close your browser or leave the site, these notes disappear automatically.",
+  "whyItMatters": "Session cookies are generally privacy-friendly since they don't persist between browsing sessions, but they still allow websites to track your activity during a single visit. Understanding them helps you make informed decisions about cookie settings.",
+  "technicalDetail": "Session cookies have no expiration date or MaxAge attribute set, causing browsers to treat them as temporary. They're stored in RAM rather than on disk and are deleted when the browser tab closes, the browser shuts down, or the session times out. They typically contain session IDs that link to server-side data rather than storing personal information directly.",
+  "examples": [
+    {
+      "scenario": "Online shopping cart",
+      "explanation": "When you add items to your cart on an e-commerce site, a session cookie remembers what's in your cart as you browse different pages, but the cart empties if you close your browser without checking out."
+    },
+    {
+      "scenario": "Banking website login",
+      "explanation": "After logging into your online bank, a session cookie keeps you authenticated while you navigate between account pages, but automatically logs you out when you close the browser for security."
+    },
+    {
+      "scenario": "Website preferences",
+      "explanation": "A news website uses session cookies to remember if you prefer the dark mode theme during your visit, but you'll need to select it again the next time you visit the site."
+    }
+  ],
+  "relatedTerms": [
+    "cookies",
+    "first-party-cookies",
+    "local-storage",
+    "session-storage"
+  ],
+  "category": "technology"
+}

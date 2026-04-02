@@ -1,0 +1,247 @@
+{
+  "niche": "tor-privacy",
+  "slug": "tor-dark-web-privacy-risk-calculator",
+  "title": "Tor & Dark Web Privacy Risk Calculator",
+  "metaDescription": "Calculate your privacy risk when using Tor browser and accessing the dark web. Get personalized safety recommendations and threat assessment.",
+  "keywords": [
+    "tor privacy risk",
+    "dark web safety",
+    "tor browser security",
+    "anonymous browsing risk",
+    "onion routing privacy"
+  ],
+  "description": "Assess your privacy and security risks when using Tor browser and accessing the dark web. This calculator evaluates your setup, browsing habits, and threat model to provide a personalized risk score and actionable safety recommendations.",
+  "inputs": [
+    {
+      "id": "torUsage",
+      "label": "Primary Tor Usage",
+      "type": "select",
+      "defaultValue": "general-browsing",
+      "options": [
+        {
+          "value": "general-browsing",
+          "label": "General anonymous browsing"
+        },
+        {
+          "value": "research",
+          "label": "Research and journalism"
+        },
+        {
+          "value": "circumvention",
+          "label": "Bypassing censorship"
+        },
+        {
+          "value": "activism",
+          "label": "Activism and whistleblowing"
+        },
+        {
+          "value": "dark-web",
+          "label": "Accessing dark web services"
+        }
+      ],
+      "helpText": "Your main reason for using Tor affects your risk profile"
+    },
+    {
+      "id": "torSetup",
+      "label": "Tor Browser Configuration",
+      "type": "select",
+      "defaultValue": "default",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default Tor Browser settings"
+        },
+        {
+          "value": "hardened",
+          "label": "Hardened with custom security settings"
+        },
+        {
+          "value": "bridges",
+          "label": "Using bridge relays"
+        },
+        {
+          "value": "vpn-tor",
+          "label": "VPN over Tor setup"
+        },
+        {
+          "value": "tails",
+          "label": "Using Tails OS"
+        }
+      ],
+      "helpText": "More secure configurations reduce risk"
+    },
+    {
+      "id": "location",
+      "label": "Geographic Location",
+      "type": "select",
+      "defaultValue": "free-country",
+      "options": [
+        {
+          "value": "free-country",
+          "label": "Country with internet freedom"
+        },
+        {
+          "value": "some-censorship",
+          "label": "Limited internet restrictions"
+        },
+        {
+          "value": "heavy-censorship",
+          "label": "Heavy internet censorship"
+        },
+        {
+          "value": "authoritarian",
+          "label": "Authoritarian surveillance state"
+        }
+      ],
+      "helpText": "Your location affects legal and surveillance risks"
+    },
+    {
+      "id": "activities",
+      "label": "Online Activities",
+      "type": "select",
+      "defaultValue": "legal-browsing",
+      "options": [
+        {
+          "value": "legal-browsing",
+          "label": "Legal browsing and communication"
+        },
+        {
+          "value": "sensitive-research",
+          "label": "Sensitive research or journalism"
+        },
+        {
+          "value": "marketplace-browsing",
+          "label": "Browsing dark web marketplaces"
+        },
+        {
+          "value": "file-sharing",
+          "label": "File sharing or downloads"
+        },
+        {
+          "value": "high-risk",
+          "label": "High-risk or illegal activities"
+        }
+      ],
+      "helpText": "Different activities carry varying levels of risk"
+    },
+    {
+      "id": "opsecLevel",
+      "label": "Operational Security Level",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "helpText": "Rate your security practices (1=Basic, 5=Expert)"
+    },
+    {
+      "id": "deviceSecurity",
+      "label": "Device Security",
+      "type": "select",
+      "defaultValue": "standard",
+      "options": [
+        {
+          "value": "unsecured",
+          "label": "Standard device, shared computer"
+        },
+        {
+          "value": "standard",
+          "label": "Personal device with basic security"
+        },
+        {
+          "value": "secured",
+          "label": "Hardened device with encryption"
+        },
+        {
+          "value": "dedicated",
+          "label": "Dedicated device for Tor only"
+        },
+        {
+          "value": "airgapped",
+          "label": "Air-gapped or live OS"
+        }
+      ],
+      "helpText": "Device security affects overall privacy protection"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "overallRisk",
+      "label": "Overall Privacy Risk",
+      "format": "percentage",
+      "description": "Your combined risk score based on all factors"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Risk Assessment",
+      "format": "grade",
+      "description": "Letter grade summary of your privacy risk level"
+    },
+    {
+      "id": "threatLevel",
+      "label": "Threat Level",
+      "format": "text",
+      "description": "Descriptive assessment of your threat exposure"
+    }
+  ],
+  "formula": "const usageRisk = { 'general-browsing': 10, 'research': 25, 'circumvention': 40, 'activism': 60, 'dark-web': 80 }[torUsage]; const setupBonus = { 'default': 0, 'hardened': -15, 'bridges': -10, 'vpn-tor': -20, 'tails': -30 }[torSetup]; const locationRisk = { 'free-country': 5, 'some-censorship': 25, 'heavy-censorship': 50, 'authoritarian': 80 }[location]; const activityRisk = { 'legal-browsing': 5, 'sensitive-research': 20, 'marketplace-browsing': 50, 'file-sharing': 40, 'high-risk': 90 }[activities]; const opsecBonus = (5 - opsecLevel) * 10; const deviceBonus = { 'unsecured': 30, 'standard': 10, 'secured': -5, 'dedicated': -15, 'airgapped': -25 }[deviceSecurity]; const risk = Math.max(0, Math.min(100, usageRisk + locationRisk + activityRisk + setupBonus + opsecBonus + deviceBonus)); const grade = risk <= 20 ? 'A' : risk <= 35 ? 'B' : risk <= 50 ? 'C' : risk <= 70 ? 'D' : 'F'; const threat = risk <= 20 ? 'Very Low Risk' : risk <= 35 ? 'Low Risk' : risk <= 50 ? 'Moderate Risk' : risk <= 70 ? 'High Risk' : 'Very High Risk'; return { overallRisk: risk, riskGrade: grade, threatLevel: threat };",
+  "educational": {
+    "methodology": "This calculator evaluates your Tor privacy risk by analyzing your usage patterns, security configuration, geographic location, online activities, operational security practices, and device security. Higher risk scores indicate greater potential for surveillance, traffic analysis, or legal consequences.",
+    "tips": [
+      "Always use the latest Tor Browser version and never install additional plugins or extensions",
+      "Consider using bridge relays if Tor is blocked in your country or you want extra anonymity",
+      "Combine Tor with a VPN for additional protection, but understand the trade-offs",
+      "Use Tails OS or a dedicated device for maximum security when accessing sensitive content",
+      "Never download files or enable JavaScript when browsing high-risk dark web content"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20%",
+        "label": "Very Low Risk",
+        "description": "Excellent privacy setup with minimal exposure to threats",
+        "color": "#22c55e"
+      },
+      {
+        "range": "21-35%",
+        "label": "Low Risk",
+        "description": "Good privacy practices with minor areas for improvement",
+        "color": "#84cc16"
+      },
+      {
+        "range": "36-50%",
+        "label": "Moderate Risk",
+        "description": "Adequate privacy but significant room for security improvements",
+        "color": "#eab308"
+      },
+      {
+        "range": "51-70%",
+        "label": "High Risk",
+        "description": "Substantial privacy risks requiring immediate security upgrades",
+        "color": "#f97316"
+      },
+      {
+        "range": "71-100%",
+        "label": "Very High Risk",
+        "description": "Critical privacy vulnerabilities with severe threat exposure",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Tor Browser Setup Guide",
+      "url": "/guides/tor-browser-setup",
+      "type": "guide"
+    },
+    {
+      "title": "Tor vs VPN Comparison",
+      "url": "/guides/tor-vs-vpn",
+      "type": "guide"
+    },
+    {
+      "title": "Dark Web Safety Best Practices",
+      "url": "/guides/dark-web-safety",
+      "type": "guide"
+    }
+  ]
+}

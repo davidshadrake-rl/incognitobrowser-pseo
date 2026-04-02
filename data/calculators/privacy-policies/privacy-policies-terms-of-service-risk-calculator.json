@@ -1,0 +1,216 @@
+{
+  "niche": "privacy-policies",
+  "slug": "privacy-policy-terms-service-risk-calculator",
+  "title": "Privacy Policy & Terms of Service Risk Calculator",
+  "metaDescription": "Evaluate privacy risks in policies and terms of service. Check for dark patterns, data sharing risks, and unclear consent mechanisms.",
+  "keywords": [
+    "privacy policy risk",
+    "terms of service analysis",
+    "dark patterns detection",
+    "consent management",
+    "privacy policy evaluation"
+  ],
+  "description": "Assess the privacy risks in any privacy policy or terms of service agreement. This calculator helps you identify red flags, dark patterns, and potential data misuse by analyzing key policy elements and transparency factors.",
+  "inputs": [
+    {
+      "id": "policyLength",
+      "label": "Policy Length (pages)",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "helpText": "How many pages long is the privacy policy or terms of service?"
+    },
+    {
+      "id": "readabilityLevel",
+      "label": "Reading Level Required",
+      "type": "select",
+      "defaultValue": "graduate",
+      "options": [
+        {
+          "value": "middle",
+          "label": "Middle School (Easy)"
+        },
+        {
+          "value": "high",
+          "label": "High School"
+        },
+        {
+          "value": "college",
+          "label": "College Level"
+        },
+        {
+          "value": "graduate",
+          "label": "Graduate/Legal"
+        }
+      ],
+      "helpText": "What education level is needed to understand the policy?"
+    },
+    {
+      "id": "dataSharing",
+      "label": "Third-Party Data Sharing",
+      "type": "select",
+      "defaultValue": "vague",
+      "options": [
+        {
+          "value": "none",
+          "label": "No sharing mentioned"
+        },
+        {
+          "value": "clear",
+          "label": "Clearly disclosed"
+        },
+        {
+          "value": "vague",
+          "label": "Vaguely described"
+        },
+        {
+          "value": "broad",
+          "label": "Broad partner sharing"
+        }
+      ],
+      "helpText": "How does the policy describe sharing your data with third parties?"
+    },
+    {
+      "id": "consentMechanism",
+      "label": "Consent Type",
+      "type": "select",
+      "defaultValue": "implied",
+      "options": [
+        {
+          "value": "explicit",
+          "label": "Clear opt-in required"
+        },
+        {
+          "value": "checkbox",
+          "label": "Pre-checked boxes"
+        },
+        {
+          "value": "implied",
+          "label": "Assumed by use"
+        },
+        {
+          "value": "bundled",
+          "label": "All-or-nothing consent"
+        }
+      ],
+      "helpText": "How does the service obtain your consent?"
+    },
+    {
+      "id": "optOutDifficulty",
+      "label": "Opt-Out Difficulty",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "helpText": "Rate how difficult it is to opt out or delete your data (1=easy, 5=very hard)"
+    },
+    {
+      "id": "policyChanges",
+      "label": "Policy Change Notification",
+      "type": "select",
+      "defaultValue": "email",
+      "options": [
+        {
+          "value": "direct",
+          "label": "Direct notification"
+        },
+        {
+          "value": "email",
+          "label": "Email notification"
+        },
+        {
+          "value": "website",
+          "label": "Website posting only"
+        },
+        {
+          "value": "none",
+          "label": "No notification"
+        }
+      ],
+      "helpText": "How are you notified when the policy changes?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk rating from 0-100 (higher = more risk)"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Risk Grade",
+      "format": "grade",
+      "description": "Letter grade assessment of privacy protection"
+    },
+    {
+      "id": "darkPatternRisk",
+      "label": "Dark Pattern Risk",
+      "format": "percentage",
+      "description": "Likelihood of manipulative design patterns"
+    }
+  ],
+  "formula": "const lengthScore = Math.min(policyLength * 2, 20); const readabilityScores = {middle: 0, high: 5, college: 10, graduate: 20}; const sharingScores = {none: 0, clear: 5, vague: 15, broad: 25}; const consentScores = {explicit: 0, checkbox: 10, implied: 20, bundled: 25}; const changeScores = {direct: 0, email: 5, website: 15, none: 25}; const riskScore = Math.min(lengthScore + readabilityScores[readabilityLevel] + sharingScores[dataSharing] + consentScores[consentMechanism] + (optOutDifficulty * 4) + changeScores[policyChanges], 100); const grades = riskScore <= 20 ? 'A' : riskScore <= 40 ? 'B' : riskScore <= 60 ? 'C' : riskScore <= 80 ? 'D' : 'F'; const darkPatternRisk = Math.min(((consentScores[consentMechanism] + (optOutDifficulty * 5) + (readabilityScores[readabilityLevel] / 2)) / 45) * 100, 100); return {riskScore: Math.round(riskScore), riskGrade: grades, darkPatternRisk: Math.round(darkPatternRisk)};",
+  "educational": {
+    "methodology": "This calculator evaluates privacy policies and terms of service based on transparency, user control, consent mechanisms, and accessibility. Higher scores indicate greater privacy risks, including potential for data misuse, difficult opt-outs, and manipulative design patterns.",
+    "tips": [
+      "Look for policies under 10 pages - longer policies often hide important details in legal jargon",
+      "Avoid services that use pre-checked consent boxes or bundle all permissions together",
+      "Check if you can easily delete your account and data - difficult opt-outs are red flags",
+      "Use Incognito Browser to read policies without being tracked by the same company",
+      "Watch for vague language about 'partners' or 'affiliates' - this often means broad data sharing"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Low Risk (A)",
+        "description": "Good privacy protection with clear policies and user control",
+        "color": "#22c55e"
+      },
+      {
+        "range": "21-40",
+        "label": "Moderate Risk (B)",
+        "description": "Reasonable privacy but some concerning practices",
+        "color": "#84cc16"
+      },
+      {
+        "range": "41-60",
+        "label": "Elevated Risk (C)",
+        "description": "Several privacy concerns and potential for data misuse",
+        "color": "#eab308"
+      },
+      {
+        "range": "61-80",
+        "label": "High Risk (D)",
+        "description": "Significant privacy risks and poor user control",
+        "color": "#f97316"
+      },
+      {
+        "range": "81-100",
+        "label": "Very High Risk (F)",
+        "description": "Major privacy concerns with likely dark patterns",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Common Privacy Policy Red Flags",
+      "url": "/privacy-policy-red-flags-guide",
+      "type": "guide"
+    },
+    {
+      "title": "Dark Patterns in Consent Forms",
+      "url": "/dark-patterns-consent-detection",
+      "type": "tool"
+    },
+    {
+      "title": "Privacy Policy Generator Tool",
+      "url": "/privacy-policy-generator",
+      "type": "tool"
+    }
+  ]
+}

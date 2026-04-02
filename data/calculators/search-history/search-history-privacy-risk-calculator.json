@@ -1,0 +1,269 @@
+{
+  "niche": "search-history",
+  "slug": "search-history-privacy-risk-calculator",
+  "title": "Search History Privacy Risk Calculator - Check Your Exposure",
+  "metaDescription": "Calculate your search history privacy risk score. Assess data retention, sharing habits, and get actionable steps to protect your search privacy.",
+  "keywords": [
+    "search history privacy",
+    "delete search history",
+    "Google search history",
+    "search privacy risk",
+    "clear browsing data"
+  ],
+  "description": "Evaluate your search history privacy risks across devices and platforms. Get a personalized risk score and learn how to better protect your search data from tracking, ads, and unwanted exposure on shared devices.",
+  "inputs": [
+    {
+      "id": "yearsOfSearching",
+      "label": "How many years have you been using the same search engine account?",
+      "type": "select",
+      "defaultValue": "3-5",
+      "options": [
+        {
+          "value": "less-than-1",
+          "label": "Less than 1 year"
+        },
+        {
+          "value": "1-2",
+          "label": "1-2 years"
+        },
+        {
+          "value": "3-5",
+          "label": "3-5 years"
+        },
+        {
+          "value": "6-10",
+          "label": "6-10 years"
+        },
+        {
+          "value": "more-than-10",
+          "label": "More than 10 years"
+        }
+      ],
+      "helpText": "Longer histories create larger privacy risks"
+    },
+    {
+      "id": "searchEngine",
+      "label": "Primary search engine",
+      "type": "select",
+      "defaultValue": "google",
+      "options": [
+        {
+          "value": "google",
+          "label": "Google"
+        },
+        {
+          "value": "bing",
+          "label": "Microsoft Bing"
+        },
+        {
+          "value": "yahoo",
+          "label": "Yahoo"
+        },
+        {
+          "value": "duckduckgo",
+          "label": "DuckDuckGo"
+        },
+        {
+          "value": "private-engine",
+          "label": "Other private search engine"
+        }
+      ],
+      "helpText": "Different engines have varying data retention policies"
+    },
+    {
+      "id": "deviceSharing",
+      "label": "Do you share devices with others?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "family-computer",
+          "label": "Yes, family computer"
+        },
+        {
+          "value": "work-device",
+          "label": "Yes, work devices"
+        },
+        {
+          "value": "frequently",
+          "label": "Frequently share devices"
+        }
+      ],
+      "helpText": "Shared devices increase exposure risk"
+    },
+    {
+      "id": "autoDeleteEnabled",
+      "label": "Have you enabled auto-delete for search history?",
+      "type": "select",
+      "defaultValue": "no",
+      "options": [
+        {
+          "value": "yes-3months",
+          "label": "Yes, after 3 months"
+        },
+        {
+          "value": "yes-18months",
+          "label": "Yes, after 18 months"
+        },
+        {
+          "value": "yes-36months",
+          "label": "Yes, after 36 months"
+        },
+        {
+          "value": "no",
+          "label": "No auto-delete enabled"
+        },
+        {
+          "value": "unsure",
+          "label": "Not sure"
+        }
+      ],
+      "helpText": "Auto-delete limits data retention"
+    },
+    {
+      "id": "incognitoUsage",
+      "label": "How often do you use private/incognito browsing?",
+      "type": "select",
+      "defaultValue": "rarely",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always"
+        },
+        {
+          "value": "often",
+          "label": "Often (50%+ of searches)"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes (25-50%)"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely (less than 25%)"
+        },
+        {
+          "value": "never",
+          "label": "Never"
+        }
+      ],
+      "helpText": "Private browsing reduces history tracking"
+    },
+    {
+      "id": "sensitiveSearches",
+      "label": "Do you search for sensitive topics?",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes"
+        },
+        {
+          "value": "often",
+          "label": "Often"
+        },
+        {
+          "value": "very-often",
+          "label": "Very often"
+        }
+      ],
+      "helpText": "Health, financial, or personal topics increase privacy concerns"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Your overall search history privacy risk (0-100)"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorized risk level with recommendations"
+    },
+    {
+      "id": "dataRetention",
+      "label": "Estimated Data Retention",
+      "format": "text",
+      "description": "How long your searches are likely stored"
+    }
+  ],
+  "formula": "let score = 0; const years = inputs.yearsOfSearching; if(years === 'less-than-1') score += 5; else if(years === '1-2') score += 15; else if(years === '3-5') score += 30; else if(years === '6-10') score += 50; else score += 70; if(inputs.searchEngine === 'google') score += 25; else if(inputs.searchEngine === 'bing' || inputs.searchEngine === 'yahoo') score += 20; else if(inputs.searchEngine === 'duckduckgo' || inputs.searchEngine === 'private-engine') score += 5; const sharing = inputs.deviceSharing; if(sharing === 'never') score += 0; else if(sharing === 'sometimes') score += 10; else if(sharing === 'family-computer') score += 15; else if(sharing === 'work-device') score += 20; else score += 25; const autoDelete = inputs.autoDeleteEnabled; if(autoDelete === 'yes-3months') score -= 15; else if(autoDelete === 'yes-18months') score -= 10; else if(autoDelete === 'yes-36months') score -= 5; else if(autoDelete === 'no') score += 15; else score += 10; const incognito = inputs.incognitoUsage; if(incognito === 'always') score -= 20; else if(incognito === 'often') score -= 10; else if(incognito === 'sometimes') score -= 5; else if(incognito === 'rarely') score += 5; else score += 15; const sensitive = inputs.sensitiveSearches; if(sensitive === 'never') score += 0; else if(sensitive === 'rarely') score += 5; else if(sensitive === 'sometimes') score += 10; else if(sensitive === 'often') score += 20; else score += 30; score = Math.max(0, Math.min(100, score)); let grade, retention; if(score <= 25) { grade = 'Low Risk'; retention = 'Minimal data stored'; } else if(score <= 50) { grade = 'Moderate Risk'; retention = 'Some data retention'; } else if(score <= 75) { grade = 'High Risk'; retention = 'Extensive data retention'; } else { grade = 'Critical Risk'; retention = 'Years of detailed history stored'; } return { riskScore: Math.round(score), riskGrade: grade, dataRetention: retention };",
+  "educational": {
+    "methodology": "This calculator evaluates your search history privacy risk based on data retention policies, sharing habits, privacy tool usage, and the sensitivity of your searches. Scores range from 0-100, with higher scores indicating greater privacy exposure.",
+    "tips": [
+      "Enable auto-delete in Google Activity Controls to automatically remove old search data",
+      "Use Incognito Browser or private browsing mode for sensitive searches",
+      "Consider switching to privacy-focused search engines like DuckDuckGo",
+      "Regularly clear your search history manually, especially on shared devices",
+      "Review and adjust your ad personalization settings to limit data use"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Good privacy practices! Your search history exposure is minimal.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk",
+        "description": "Some privacy concerns. Consider enabling auto-delete and using private browsing more often.",
+        "color": "#eab308"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant privacy exposure. Take action to limit data retention and protect sensitive searches.",
+        "color": "#f97316"
+      },
+      {
+        "range": "76-100",
+        "label": "Critical Risk",
+        "description": "Major privacy concerns. Immediate action needed to protect your search history.",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "How to Delete Google Search History",
+      "url": "/guides/delete-google-search-history",
+      "type": "guide"
+    },
+    {
+      "title": "Set Up Auto-Delete for Search History",
+      "url": "/guides/auto-delete-search-history",
+      "type": "tutorial"
+    },
+    {
+      "title": "Private Search Engines Comparison",
+      "url": "/guides/private-search-engines",
+      "type": "comparison"
+    },
+    {
+      "title": "Incognito Browser - Private Browsing",
+      "url": "https://incognito-browser.com",
+      "type": "tool"
+    }
+  ]
+}

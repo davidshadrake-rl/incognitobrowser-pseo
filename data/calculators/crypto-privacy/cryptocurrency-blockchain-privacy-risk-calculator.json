@@ -1,0 +1,258 @@
+{
+  "niche": "crypto-privacy",
+  "slug": "crypto-privacy-risk-calculator",
+  "title": "Crypto Privacy Risk Calculator - Assess Your Blockchain Anonymity",
+  "metaDescription": "Calculate your cryptocurrency privacy risk score. Assess blockchain anonymity threats from exchange KYC, chain analysis, and transaction patterns.",
+  "keywords": [
+    "crypto privacy risk",
+    "blockchain anonymity",
+    "cryptocurrency privacy",
+    "chain analysis protection",
+    "privacy coins calculator"
+  ],
+  "description": "Evaluate your cryptocurrency privacy risks with our comprehensive calculator. Assess threats from blockchain analysis, exchange tracking, wallet types, and transaction patterns to understand your anonymity level and get personalized recommendations.",
+  "inputs": [
+    {
+      "id": "primaryCrypto",
+      "label": "Primary Cryptocurrency Used",
+      "type": "select",
+      "defaultValue": "bitcoin",
+      "options": [
+        {
+          "value": "bitcoin",
+          "label": "Bitcoin (BTC)"
+        },
+        {
+          "value": "ethereum",
+          "label": "Ethereum (ETH)"
+        },
+        {
+          "value": "monero",
+          "label": "Monero (XMR)"
+        },
+        {
+          "value": "zcash",
+          "label": "Zcash (ZEC)"
+        },
+        {
+          "value": "litecoin",
+          "label": "Litecoin (LTC)"
+        },
+        {
+          "value": "other-transparent",
+          "label": "Other transparent blockchain"
+        },
+        {
+          "value": "other-private",
+          "label": "Other privacy coin"
+        }
+      ],
+      "helpText": "Different cryptocurrencies offer varying levels of privacy"
+    },
+    {
+      "id": "walletType",
+      "label": "Primary Wallet Type",
+      "type": "select",
+      "defaultValue": "software-hot",
+      "options": [
+        {
+          "value": "exchange-custodial",
+          "label": "Exchange wallet (Coinbase, Binance)"
+        },
+        {
+          "value": "software-hot",
+          "label": "Software wallet (MetaMask, Electrum)"
+        },
+        {
+          "value": "hardware",
+          "label": "Hardware wallet (Ledger, Trezor)"
+        },
+        {
+          "value": "privacy-focused",
+          "label": "Privacy-focused wallet (Samourai, Wasabi)"
+        },
+        {
+          "value": "multisig",
+          "label": "Multi-signature wallet"
+        }
+      ],
+      "helpText": "Your wallet type significantly impacts your privacy level"
+    },
+    {
+      "id": "exchangeKyc",
+      "label": "KYC Exchange Usage",
+      "type": "select",
+      "defaultValue": "regular",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never used KYC exchanges"
+        },
+        {
+          "value": "minimal",
+          "label": "Rarely use KYC exchanges"
+        },
+        {
+          "value": "regular",
+          "label": "Regular KYC exchange user"
+        },
+        {
+          "value": "exclusive",
+          "label": "Only use KYC exchanges"
+        }
+      ],
+      "helpText": "KYC exchanges link your identity to crypto addresses"
+    },
+    {
+      "id": "transactionFrequency",
+      "label": "Weekly Transaction Count",
+      "type": "range",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "helpText": "More transactions create larger patterns for analysis"
+    },
+    {
+      "id": "privacyTechniques",
+      "label": "Privacy Techniques Used",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No privacy techniques"
+        },
+        {
+          "value": "basic",
+          "label": "Address rotation only"
+        },
+        {
+          "value": "intermediate",
+          "label": "Mixing/CoinJoin occasionally"
+        },
+        {
+          "value": "advanced",
+          "label": "Regular mixing + Tor usage"
+        },
+        {
+          "value": "expert",
+          "label": "Multiple techniques + privacy coins"
+        }
+      ],
+      "helpText": "Privacy techniques help break transaction links"
+    },
+    {
+      "id": "addressReuse",
+      "label": "Address Reuse Pattern",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always reuse same addresses"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes reuse addresses"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely reuse addresses"
+        },
+        {
+          "value": "never",
+          "label": "Never reuse addresses"
+        }
+      ],
+      "helpText": "Address reuse makes transaction linking easier"
+    },
+    {
+      "id": "publicActivity",
+      "label": "Public Crypto Activity",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Check if you share wallet addresses publicly or on social media"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "privacyScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk from 0-100 (lower is better)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Your current privacy risk category"
+    },
+    {
+      "id": "trackingVulnerability",
+      "label": "Chain Analysis Vulnerability",
+      "format": "percentage",
+      "description": "Likelihood of successful transaction tracking"
+    }
+  ],
+  "formula": "const cryptoRisk = {bitcoin: 60, ethereum: 70, monero: 5, zcash: 15, litecoin: 65, 'other-transparent': 65, 'other-private': 20}[primaryCrypto]; const walletRisk = {'exchange-custodial': 40, 'software-hot': 25, hardware: 15, 'privacy-focused': 5, multisig: 10}[walletType]; const kycRisk = {never: 0, minimal: 10, regular: 30, exclusive: 50}[exchangeKyc]; const freqRisk = Math.min(transactionFrequency * 0.5, 20); const privacyBonus = {none: 0, basic: -5, intermediate: -15, advanced: -25, expert: -35}[privacyTechniques]; const addressRisk = {always: 25, sometimes: 15, rarely: 5, never: 0}[addressReuse]; const publicRisk = publicActivity ? 15 : 0; const baseScore = cryptoRisk + walletRisk + kycRisk + freqRisk + privacyBonus + addressRisk + publicRisk; const privacyScore = Math.max(0, Math.min(100, baseScore)); const trackingVulnerability = privacyScore; const riskLevel = privacyScore <= 20 ? 'A' : privacyScore <= 40 ? 'B' : privacyScore <= 60 ? 'C' : privacyScore <= 80 ? 'D' : 'F'; return {privacyScore, riskLevel, trackingVulnerability};",
+  "educational": {
+    "methodology": "This calculator evaluates cryptocurrency privacy risks by analyzing blockchain transparency, wallet security, exchange usage patterns, and privacy techniques. The scoring system weighs factors like cryptocurrency type (privacy coins score lower), wallet types (hardware and privacy wallets reduce risk), KYC exchange usage (increases traceability), transaction frequency (more transactions create larger patterns), privacy techniques used (mixing and Tor reduce scores), and address reuse patterns (reuse increases linkability).",
+    "tips": [
+      "Use privacy coins like Monero or Zcash for enhanced transaction anonymity",
+      "Avoid reusing wallet addresses - generate new ones for each transaction",
+      "Consider using privacy-focused wallets like Samourai or Wasabi for Bitcoin",
+      "Use Tor browser or VPN when accessing crypto services to hide your IP",
+      "Minimize KYC exchange usage and consider decentralized exchanges when possible"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Excellent Privacy",
+        "description": "Very low risk of transaction tracking. You're using strong privacy practices.",
+        "color": "#22c55e"
+      },
+      {
+        "range": "21-40",
+        "label": "Good Privacy",
+        "description": "Moderate privacy with some vulnerabilities. Consider additional privacy measures.",
+        "color": "#84cc16"
+      },
+      {
+        "range": "41-60",
+        "label": "Fair Privacy",
+        "description": "Significant privacy gaps. Your transactions may be traceable with effort.",
+        "color": "#f59e0b"
+      },
+      {
+        "range": "61-80",
+        "label": "Poor Privacy",
+        "description": "High risk of tracking. Most transactions likely traceable to your identity.",
+        "color": "#f97316"
+      },
+      {
+        "range": "81-100",
+        "label": "Critical Risk",
+        "description": "Minimal privacy protection. Transactions easily linked to your real identity.",
+        "color": "#ef4444"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Privacy Coin Comparison Guide",
+      "url": "/guides/privacy-coins-comparison",
+      "type": "internal"
+    },
+    {
+      "title": "Bitcoin Privacy Techniques",
+      "url": "/guides/bitcoin-privacy-methods",
+      "type": "internal"
+    },
+    {
+      "title": "Incognito Browser for Crypto",
+      "url": "https://incognito.org",
+      "type": "tool"
+    }
+  ]
+}

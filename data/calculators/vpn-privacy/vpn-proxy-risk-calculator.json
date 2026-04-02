@@ -1,0 +1,251 @@
+{
+  "niche": "vpn-privacy",
+  "slug": "vpn-proxy-risk-calculator",
+  "title": "VPN & Proxy Risk Calculator - Assess Your Privacy Protection",
+  "metaDescription": "Calculate your VPN and proxy privacy risk level. Assess security features, logging policies, and jurisdictions to find the safest option.",
+  "keywords": [
+    "VPN risk assessment",
+    "proxy privacy calculator",
+    "VPN security score",
+    "best VPN privacy",
+    "VPN vs proxy security"
+  ],
+  "description": "Evaluate the privacy and security risks of your VPN or proxy service. This calculator analyzes key factors like jurisdiction, logging policies, encryption, and payment methods to give you a comprehensive risk assessment.",
+  "inputs": [
+    {
+      "id": "serviceType",
+      "label": "Service Type",
+      "type": "select",
+      "defaultValue": "vpn",
+      "options": [
+        {
+          "value": "vpn",
+          "label": "VPN"
+        },
+        {
+          "value": "proxy",
+          "label": "HTTP Proxy"
+        },
+        {
+          "value": "socks",
+          "label": "SOCKS Proxy"
+        },
+        {
+          "value": "free-vpn",
+          "label": "Free VPN"
+        }
+      ],
+      "helpText": "Type of service you're using or considering"
+    },
+    {
+      "id": "jurisdiction",
+      "label": "Company Jurisdiction",
+      "type": "select",
+      "defaultValue": "neutral",
+      "options": [
+        {
+          "value": "five-eyes",
+          "label": "Five Eyes (US, UK, CA, AU, NZ)"
+        },
+        {
+          "value": "nine-eyes",
+          "label": "Nine Eyes (+ FR, NL, DK, NO)"
+        },
+        {
+          "value": "fourteen-eyes",
+          "label": "Fourteen Eyes (+ DE, BE, IT, ES, SE)"
+        },
+        {
+          "value": "neutral",
+          "label": "Privacy-friendly (CH, IS, PA)"
+        },
+        {
+          "value": "unknown",
+          "label": "Unknown/Offshore"
+        }
+      ],
+      "helpText": "Where the VPN/proxy company is legally based"
+    },
+    {
+      "id": "loggingPolicy",
+      "label": "Logging Policy",
+      "type": "select",
+      "defaultValue": "some-logs",
+      "options": [
+        {
+          "value": "no-logs",
+          "label": "Verified No-logs (audited)"
+        },
+        {
+          "value": "claimed-no-logs",
+          "label": "Claims No-logs (unverified)"
+        },
+        {
+          "value": "some-logs",
+          "label": "Keeps connection logs"
+        },
+        {
+          "value": "full-logs",
+          "label": "Keeps activity logs"
+        },
+        {
+          "value": "unknown",
+          "label": "Policy unclear/unknown"
+        }
+      ],
+      "helpText": "What information the service logs about your activity"
+    },
+    {
+      "id": "encryption",
+      "label": "Encryption Standard",
+      "type": "select",
+      "defaultValue": "aes-256",
+      "options": [
+        {
+          "value": "none",
+          "label": "No encryption (HTTP proxy)"
+        },
+        {
+          "value": "basic",
+          "label": "Basic encryption"
+        },
+        {
+          "value": "aes-128",
+          "label": "AES-128"
+        },
+        {
+          "value": "aes-256",
+          "label": "AES-256 or equivalent"
+        },
+        {
+          "value": "unknown",
+          "label": "Unknown"
+        }
+      ],
+      "helpText": "Level of encryption used to protect your data"
+    },
+    {
+      "id": "paymentMethod",
+      "label": "Payment Method Used",
+      "type": "select",
+      "defaultValue": "credit-card",
+      "options": [
+        {
+          "value": "crypto",
+          "label": "Cryptocurrency"
+        },
+        {
+          "value": "cash",
+          "label": "Cash/Gift cards"
+        },
+        {
+          "value": "paypal",
+          "label": "PayPal"
+        },
+        {
+          "value": "credit-card",
+          "label": "Credit/Debit card"
+        },
+        {
+          "value": "free",
+          "label": "Free service"
+        }
+      ],
+      "helpText": "How you pay affects your anonymity level"
+    },
+    {
+      "id": "killSwitch",
+      "label": "Kill Switch Available",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Blocks internet if VPN connection drops"
+    },
+    {
+      "id": "dnsLeakProtection",
+      "label": "DNS Leak Protection",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Prevents DNS queries from bypassing the VPN"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk level (0-100, lower is better)"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Risk Grade",
+      "format": "grade",
+      "description": "Letter grade assessment of your privacy protection"
+    },
+    {
+      "id": "recommendation",
+      "label": "Recommendation",
+      "format": "text",
+      "description": "Suggested action based on your risk level"
+    }
+  ],
+  "formula": "const serviceRisk = { 'vpn': 0, 'proxy': 30, 'socks': 25, 'free-vpn': 50 }[serviceType] || 40; const jurisdictionRisk = { 'five-eyes': 40, 'nine-eyes': 35, 'fourteen-eyes': 30, 'neutral': 0, 'unknown': 25 }[jurisdiction] || 30; const loggingRisk = { 'no-logs': 0, 'claimed-no-logs': 10, 'some-logs': 30, 'full-logs': 50, 'unknown': 35 }[loggingPolicy] || 40; const encryptionRisk = { 'none': 50, 'basic': 30, 'aes-128': 10, 'aes-256': 0, 'unknown': 25 }[encryption] || 30; const paymentRisk = { 'crypto': 0, 'cash': 0, 'paypal': 15, 'credit-card': 25, 'free': 40 }[paymentMethod] || 30; const killSwitchBonus = killSwitch ? -5 : 10; const dnsBonus = dnsLeakProtection ? -5 : 10; const riskScore = Math.max(0, Math.min(100, serviceRisk + jurisdictionRisk + loggingRisk + encryptionRisk + paymentRisk + killSwitchBonus + dnsBonus)); const riskGrade = riskScore <= 20 ? 'A' : riskScore <= 35 ? 'B' : riskScore <= 50 ? 'C' : riskScore <= 70 ? 'D' : 'F'; const recommendation = riskScore <= 20 ? 'Excellent privacy protection' : riskScore <= 35 ? 'Good privacy, minor improvements possible' : riskScore <= 50 ? 'Moderate risk, consider upgrades' : riskScore <= 70 ? 'High risk, switch providers recommended' : 'Very high risk, change immediately'; return { riskScore, riskGrade, recommendation };",
+  "educational": {
+    "methodology": "This calculator evaluates privacy risks based on key factors: service type (VPNs offer better protection than proxies), jurisdiction (countries with strong surveillance laws pose higher risks), logging policies (verified no-logs policies are safest), encryption strength (AES-256 is gold standard), payment anonymity (crypto/cash are most private), and security features like kill switches and DNS leak protection.",
+    "tips": [
+      "Choose VPN providers based in privacy-friendly jurisdictions like Switzerland, Iceland, or Panama",
+      "Look for independently audited no-logs policies, not just marketing claims",
+      "Use cryptocurrency or cash payments to maintain anonymity when signing up",
+      "Always enable kill switch and DNS leak protection features",
+      "Consider using Incognito Browser alongside your VPN for maximum privacy protection"
+    ],
+    "interpretation": [
+      {
+        "range": "0-20",
+        "label": "Low Risk",
+        "description": "Excellent privacy protection with strong security features",
+        "color": "green"
+      },
+      {
+        "range": "21-35",
+        "label": "Moderate-Low Risk",
+        "description": "Good privacy protection with room for minor improvements",
+        "color": "lightgreen"
+      },
+      {
+        "range": "36-50",
+        "label": "Moderate Risk",
+        "description": "Adequate protection but consider upgrading key features",
+        "color": "yellow"
+      },
+      {
+        "range": "51-70",
+        "label": "High Risk",
+        "description": "Significant privacy concerns, switching providers recommended",
+        "color": "orange"
+      },
+      {
+        "range": "71-100",
+        "label": "Very High Risk",
+        "description": "Poor privacy protection, immediate action required",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Best No-Logs VPN Services 2024",
+      "url": "/guides/best-no-logs-vpn",
+      "type": "internal"
+    },
+    {
+      "title": "Free VPN Risks and Dangers",
+      "url": "/guides/free-vpn-risks",
+      "type": "internal"
+    },
+    {
+      "title": "VPN vs Proxy vs Tor Comparison",
+      "url": "/guides/vpn-proxy-tor-comparison",
+      "type": "internal"
+    }
+  ]
+}

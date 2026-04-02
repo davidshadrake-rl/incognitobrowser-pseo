@@ -1,0 +1,287 @@
+{
+  "niche": "isp-tracking",
+  "slug": "isp-tracking-dns-privacy-risk-calculator",
+  "title": "ISP Tracking & DNS Privacy Risk Calculator",
+  "metaDescription": "Calculate your ISP tracking risk level and get personalized recommendations to protect your DNS queries and browsing privacy from monitoring.",
+  "keywords": [
+    "ISP tracking calculator",
+    "DNS privacy risk",
+    "ISP monitoring detection",
+    "DNS over HTTPS",
+    "internet privacy assessment"
+  ],
+  "description": "Evaluate how exposed you are to ISP tracking and DNS monitoring. This calculator analyzes your current privacy setup and provides a personalized risk score with actionable steps to protect your browsing data from your internet provider.",
+  "inputs": [
+    {
+      "id": "ispType",
+      "label": "Your Internet Service Provider Type",
+      "type": "select",
+      "defaultValue": "cable",
+      "options": [
+        {
+          "value": "cable",
+          "label": "Cable (Comcast, Spectrum, Cox)"
+        },
+        {
+          "value": "fiber",
+          "label": "Fiber (Verizon FiOS, AT&T Fiber)"
+        },
+        {
+          "value": "dsl",
+          "label": "DSL (CenturyLink, AT&T DSL)"
+        },
+        {
+          "value": "satellite",
+          "label": "Satellite (HughesNet, Viasat)"
+        },
+        {
+          "value": "mobile",
+          "label": "Mobile Hotspot (Verizon, T-Mobile)"
+        }
+      ],
+      "helpText": "Different ISP types have varying levels of tracking capabilities"
+    },
+    {
+      "id": "dnsProvider",
+      "label": "Current DNS Provider",
+      "type": "select",
+      "defaultValue": "isp-default",
+      "options": [
+        {
+          "value": "isp-default",
+          "label": "ISP Default DNS (Automatic)"
+        },
+        {
+          "value": "google",
+          "label": "Google DNS (8.8.8.8)"
+        },
+        {
+          "value": "cloudflare",
+          "label": "Cloudflare DNS (1.1.1.1)"
+        },
+        {
+          "value": "quad9",
+          "label": "Quad9 DNS (9.9.9.9)"
+        },
+        {
+          "value": "opendns",
+          "label": "OpenDNS/Cisco Umbrella"
+        },
+        {
+          "value": "custom",
+          "label": "Custom/Other DNS Provider"
+        }
+      ],
+      "helpText": "Your DNS provider can see all websites you visit"
+    },
+    {
+      "id": "dnsEncryption",
+      "label": "DNS Encryption Status",
+      "type": "select",
+      "defaultValue": "none",
+      "options": [
+        {
+          "value": "none",
+          "label": "No encryption (Standard DNS)"
+        },
+        {
+          "value": "doh",
+          "label": "DNS over HTTPS (DoH) enabled"
+        },
+        {
+          "value": "dot",
+          "label": "DNS over TLS (DoT) enabled"
+        },
+        {
+          "value": "unsure",
+          "label": "Not sure about encryption"
+        }
+      ],
+      "helpText": "Encrypted DNS prevents ISPs from seeing your DNS queries"
+    },
+    {
+      "id": "vpnUsage",
+      "label": "VPN Usage Frequency",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "never",
+          "label": "Never use VPN"
+        },
+        {
+          "value": "sometimes",
+          "label": "Occasionally (sensitive browsing)"
+        },
+        {
+          "value": "often",
+          "label": "Most of the time"
+        },
+        {
+          "value": "always",
+          "label": "Always connected to VPN"
+        }
+      ],
+      "helpText": "VPNs hide your traffic from ISP monitoring"
+    },
+    {
+      "id": "browserPrivacy",
+      "label": "Browser Privacy Measures",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No special privacy settings"
+        },
+        {
+          "value": "basic",
+          "label": "Basic privacy mode/incognito"
+        },
+        {
+          "value": "enhanced",
+          "label": "Enhanced tracking protection"
+        },
+        {
+          "value": "strict",
+          "label": "Strict privacy browser (Tor, Incognito Browser)"
+        }
+      ],
+      "helpText": "Browser privacy settings affect ISP visibility"
+    },
+    {
+      "id": "dataUsage",
+      "label": "Monthly Data Usage (GB)",
+      "type": "range",
+      "defaultValue": 500,
+      "min": 10,
+      "max": 2000,
+      "step": 50,
+      "helpText": "Higher usage creates more tracking opportunities"
+    },
+    {
+      "id": "streamingHabits",
+      "label": "Streaming & Download Activity",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "low",
+          "label": "Light browsing, email, social media"
+        },
+        {
+          "value": "moderate",
+          "label": "Regular streaming (Netflix, YouTube)"
+        },
+        {
+          "value": "heavy",
+          "label": "Heavy streaming, gaming, downloads"
+        },
+        {
+          "value": "torrenting",
+          "label": "File sharing, torrenting, P2P"
+        }
+      ],
+      "helpText": "Different activities have varying ISP monitoring risks"
+    },
+    {
+      "id": "optOutAttempts",
+      "label": "ISP Data Sharing Opt-Out Status",
+      "type": "select",
+      "defaultValue": "unknown",
+      "options": [
+        {
+          "value": "unknown",
+          "label": "Haven't checked ISP privacy policy"
+        },
+        {
+          "value": "no-option",
+          "label": "No opt-out option available"
+        },
+        {
+          "value": "attempted",
+          "label": "Attempted to opt-out"
+        },
+        {
+          "value": "opted-out",
+          "label": "Successfully opted out"
+        }
+      ],
+      "helpText": "Most ISPs sell browsing data unless you specifically opt out"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "ISP Tracking Risk Score",
+      "format": "score",
+      "description": "Overall risk level from 0-100 (lower is better)"
+    },
+    {
+      "id": "privacyGrade",
+      "label": "DNS Privacy Grade",
+      "format": "grade",
+      "description": "Letter grade for your current DNS privacy setup"
+    },
+    {
+      "id": "exposureLevel",
+      "label": "Data Exposure Level",
+      "format": "text",
+      "description": "How much of your browsing data is visible to your ISP"
+    }
+  ],
+  "formula": "let baseRisk = 70; if(inputs.dnsProvider === 'isp-default') baseRisk += 20; if(inputs.dnsEncryption === 'none') baseRisk += 15; else if(inputs.dnsEncryption === 'doh' || inputs.dnsEncryption === 'dot') baseRisk -= 25; if(inputs.vpnUsage === 'always') baseRisk -= 30; else if(inputs.vpnUsage === 'often') baseRisk -= 20; else if(inputs.vpnUsage === 'sometimes') baseRisk -= 10; if(inputs.browserPrivacy === 'strict') baseRisk -= 15; else if(inputs.browserPrivacy === 'enhanced') baseRisk -= 10; else if(inputs.browserPrivacy === 'basic') baseRisk -= 5; if(inputs.streamingHabits === 'torrenting') baseRisk += 15; else if(inputs.streamingHabits === 'heavy') baseRisk += 10; if(inputs.dataUsage > 1000) baseRisk += 10; if(inputs.optOutAttempts === 'opted-out') baseRisk -= 10; else if(inputs.optOutAttempts === 'no-option') baseRisk += 5; let riskScore = Math.max(0, Math.min(100, baseRisk)); let privacyGrade = riskScore <= 20 ? 'A' : riskScore <= 40 ? 'B' : riskScore <= 60 ? 'C' : riskScore <= 80 ? 'D' : 'F'; let exposureLevel = riskScore <= 25 ? 'Minimal - Well Protected' : riskScore <= 50 ? 'Moderate - Some Visibility' : riskScore <= 75 ? 'High - Significant Tracking' : 'Critical - Maximum Exposure'; return { riskScore, privacyGrade, exposureLevel };",
+  "educational": {
+    "methodology": "This calculator evaluates your ISP tracking risk based on DNS configuration, VPN usage, browser privacy settings, and data usage patterns. It considers how ISPs monitor unencrypted DNS queries, analyze traffic patterns, and collect browsing metadata even when using HTTPS.",
+    "tips": [
+      "Switch to encrypted DNS (DNS over HTTPS) in your browser settings to hide DNS queries from your ISP",
+      "Use Incognito Browser or a reputable VPN service to encrypt all traffic and hide your browsing from ISP monitoring",
+      "Change your DNS provider from ISP default to privacy-focused options like Cloudflare (1.1.1.1) or Quad9",
+      "Check your ISP's privacy policy and opt-out of data sharing programs if available",
+      "Consider using Tor browser or other privacy-focused browsers for sensitive browsing activities"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25",
+        "label": "Low Risk",
+        "description": "Excellent privacy protection. Your ISP has minimal visibility into your browsing habits.",
+        "color": "green"
+      },
+      {
+        "range": "26-50",
+        "label": "Moderate Risk",
+        "description": "Good privacy setup with room for improvement. Some browsing data may be visible to your ISP.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75",
+        "label": "High Risk",
+        "description": "Significant ISP tracking exposure. Your browsing habits and DNS queries are likely being monitored.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100",
+        "label": "Critical Risk",
+        "description": "Maximum ISP tracking exposure. Your ISP can see most of your browsing activity and DNS queries.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "How to Enable DNS over HTTPS",
+      "url": "/guides/dns-over-https-setup",
+      "type": "guide"
+    },
+    {
+      "title": "Best VPN Services for ISP Privacy",
+      "url": "/reviews/best-vpns-isp-blocking",
+      "type": "review"
+    },
+    {
+      "title": "Download Incognito Browser",
+      "url": "/tools/incognito-browser",
+      "type": "tool"
+    }
+  ]
+}

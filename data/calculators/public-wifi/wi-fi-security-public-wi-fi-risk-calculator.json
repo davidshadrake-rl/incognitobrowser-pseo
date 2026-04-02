@@ -1,0 +1,236 @@
+{
+  "niche": "public-wifi",
+  "slug": "wifi-security-public-wifi-risk-calculator",
+  "title": "Wi-Fi Security & Public Wi-Fi Risk Calculator",
+  "metaDescription": "Calculate your public Wi-Fi security risk level and get personalized tips to protect your data on unsecured networks and hotspots.",
+  "keywords": [
+    "public wifi security",
+    "wifi privacy calculator",
+    "hotspot security risk",
+    "wifi safety assessment",
+    "public network protection"
+  ],
+  "description": "Assess your vulnerability when using public Wi-Fi networks and get personalized security recommendations. This calculator evaluates network types, your browsing habits, and security measures to determine your risk level.",
+  "inputs": [
+    {
+      "id": "networkType",
+      "label": "Type of Wi-Fi Network",
+      "type": "select",
+      "defaultValue": "open-public",
+      "options": [
+        {
+          "value": "open-public",
+          "label": "Open public Wi-Fi (no password)"
+        },
+        {
+          "value": "password-public",
+          "label": "Password-protected public Wi-Fi"
+        },
+        {
+          "value": "hotel",
+          "label": "Hotel Wi-Fi"
+        },
+        {
+          "value": "cafe",
+          "label": "Cafe/Restaurant Wi-Fi"
+        },
+        {
+          "value": "airport",
+          "label": "Airport Wi-Fi"
+        },
+        {
+          "value": "enterprise",
+          "label": "Enterprise/WPA2-Enterprise"
+        }
+      ],
+      "helpText": "Different network types have varying security levels"
+    },
+    {
+      "id": "vpnUsage",
+      "label": "VPN Usage",
+      "type": "select",
+      "defaultValue": "never",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always use VPN"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes use VPN"
+        },
+        {
+          "value": "never",
+          "label": "Never use VPN"
+        }
+      ],
+      "helpText": "VPNs encrypt your traffic and hide your activity from network operators"
+    },
+    {
+      "id": "browsingSensitivity",
+      "label": "Typical Activities on Public Wi-Fi",
+      "type": "select",
+      "defaultValue": "mixed",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic browsing, social media"
+        },
+        {
+          "value": "mixed",
+          "label": "Mix of personal and work activities"
+        },
+        {
+          "value": "sensitive",
+          "label": "Banking, work emails, confidential data"
+        },
+        {
+          "value": "high-risk",
+          "label": "File sharing, unencrypted communications"
+        }
+      ],
+      "helpText": "More sensitive activities increase your risk exposure"
+    },
+    {
+      "id": "securityMeasures",
+      "label": "Security Measures Used",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No special precautions"
+        },
+        {
+          "value": "basic",
+          "label": "HTTPS websites only"
+        },
+        {
+          "value": "moderate",
+          "label": "HTTPS + secure browser settings"
+        },
+        {
+          "value": "advanced",
+          "label": "HTTPS + secure browser + 2FA"
+        }
+      ],
+      "helpText": "Additional security measures help reduce risk"
+    },
+    {
+      "id": "connectionDuration",
+      "label": "Typical Connection Duration",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "short",
+          "label": "Less than 30 minutes"
+        },
+        {
+          "value": "moderate",
+          "label": "30 minutes to 2 hours"
+        },
+        {
+          "value": "long",
+          "label": "2+ hours continuously"
+        }
+      ],
+      "helpText": "Longer exposure times increase attack opportunities"
+    },
+    {
+      "id": "deviceSecurity",
+      "label": "Device Security Level",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Default settings, auto-connect enabled"
+        },
+        {
+          "value": "moderate",
+          "label": "Updated OS, firewall enabled"
+        },
+        {
+          "value": "high",
+          "label": "Updated OS, firewall, endpoint protection"
+        }
+      ],
+      "helpText": "Device security affects your overall vulnerability"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Overall Risk Score",
+      "format": "score",
+      "description": "Your overall public Wi-Fi security risk level (0-100)"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Simplified risk assessment with actionable guidance"
+    },
+    {
+      "id": "vulnerabilities",
+      "label": "Primary Vulnerabilities",
+      "format": "text",
+      "description": "Main security concerns based on your usage pattern"
+    }
+  ],
+  "formula": "const networkRisk = { 'open-public': 40, 'password-public': 30, 'hotel': 25, 'cafe': 30, 'airport': 35, 'enterprise': 10 }; const vpnProtection = { 'always': -30, 'sometimes': -15, 'never': 0 }; const activityRisk = { 'basic': 10, 'mixed': 20, 'sensitive': 35, 'high-risk': 40 }; const securityBonus = { 'none': 0, 'basic': -5, 'moderate': -10, 'advanced': -15 }; const durationRisk = { 'short': 5, 'moderate': 10, 'long': 15 }; const deviceBonus = { 'basic': 0, 'moderate': -5, 'high': -10 }; let riskScore = networkRisk[networkType] + vpnProtection[vpnUsage] + activityRisk[browsingSensitivity] + securityBonus[securityMeasures] + durationRisk[connectionDuration] + deviceBonus[deviceSecurity]; riskScore = Math.max(0, Math.min(100, riskScore)); let riskLevel = riskScore >= 70 ? 'High Risk' : riskScore >= 40 ? 'Medium Risk' : riskScore >= 20 ? 'Low Risk' : 'Very Low Risk'; let vulnerabilities = []; if (networkType === 'open-public') vulnerabilities.push('Unencrypted network traffic'); if (vpnUsage === 'never') vulnerabilities.push('No VPN protection'); if (browsingSensitivity === 'sensitive' || browsingSensitivity === 'high-risk') vulnerabilities.push('Sensitive data exposure'); if (securityMeasures === 'none') vulnerabilities.push('Minimal security measures'); return { riskScore: riskScore, riskLevel: riskLevel, vulnerabilities: vulnerabilities.join(', ') || 'Good security posture' };",
+  "educational": {
+    "methodology": "This calculator assesses your public Wi-Fi risk by evaluating network security, your protective measures, activity sensitivity, and exposure duration. Scores range from 0-100, with higher scores indicating greater vulnerability to attacks like man-in-the-middle, data interception, and malicious hotspots.",
+    "tips": [
+      "Always use a reputable VPN when connecting to public Wi-Fi networks to encrypt your traffic",
+      "Disable auto-connect features and forget networks after use to prevent automatic connections to malicious hotspots",
+      "Only visit HTTPS websites and avoid accessing sensitive accounts like banking on public networks",
+      "Use Incognito Browser or private browsing modes to minimize data collection and tracking",
+      "Keep your device's operating system and security software updated to protect against known vulnerabilities"
+    ],
+    "interpretation": [
+      {
+        "range": "0-19",
+        "label": "Very Low Risk",
+        "description": "Excellent security practices. You're well-protected against common public Wi-Fi threats.",
+        "color": "green"
+      },
+      {
+        "range": "20-39",
+        "label": "Low Risk",
+        "description": "Good security posture with room for minor improvements. Consider strengthening weak areas.",
+        "color": "lightgreen"
+      },
+      {
+        "range": "40-69",
+        "label": "Medium Risk",
+        "description": "Moderate vulnerability to attacks. Implement additional security measures, especially VPN usage.",
+        "color": "orange"
+      },
+      {
+        "range": "70-100",
+        "label": "High Risk",
+        "description": "Significant exposure to threats. Immediate action needed - use VPN, avoid sensitive activities, improve device security.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Best VPNs for Public Wi-Fi Security",
+      "url": "/vpn-reviews",
+      "type": "internal"
+    },
+    {
+      "title": "Travel Router Security Guide",
+      "url": "/travel-router-guide",
+      "type": "internal"
+    },
+    {
+      "title": "Hotel Wi-Fi Safety Checklist",
+      "url": "/hotel-wifi-security",
+      "type": "internal"
+    }
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "niche": "right-to-forget",
+  "slug": "right-to-be-forgotten-risk-calculator",
+  "title": "Right to Be Forgotten Risk Calculator - Data Deletion Success",
+  "metaDescription": "Calculate your chances of successfully getting personal data deleted online. Assess GDPR right to erasure risks and improve your removal strategy.",
+  "keywords": [
+    "right to be forgotten",
+    "data deletion calculator",
+    "right to erasure",
+    "remove personal data",
+    "GDPR compliance"
+  ],
+  "description": "Evaluate your likelihood of successfully exercising your right to be forgotten. This calculator assesses factors affecting data deletion requests under GDPR and other privacy laws to help you build a stronger removal strategy.",
+  "inputs": [
+    {
+      "id": "dataType",
+      "label": "Type of Personal Data",
+      "type": "select",
+      "defaultValue": "search-results",
+      "options": [
+        {
+          "value": "search-results",
+          "label": "Search engine results"
+        },
+        {
+          "value": "social-media",
+          "label": "Social media posts"
+        },
+        {
+          "value": "news-articles",
+          "label": "News articles/press"
+        },
+        {
+          "value": "business-records",
+          "label": "Business/professional records"
+        },
+        {
+          "value": "financial-data",
+          "label": "Financial information"
+        },
+        {
+          "value": "personal-photos",
+          "label": "Photos/images"
+        }
+      ],
+      "helpText": "Different data types have varying deletion success rates"
+    },
+    {
+      "id": "jurisdiction",
+      "label": "Your Location/Jurisdiction",
+      "type": "select",
+      "defaultValue": "eu",
+      "options": [
+        {
+          "value": "eu",
+          "label": "European Union (GDPR)"
+        },
+        {
+          "value": "uk",
+          "label": "United Kingdom (UK GDPR)"
+        },
+        {
+          "value": "california",
+          "label": "California (CCPA)"
+        },
+        {
+          "value": "us-other",
+          "label": "Other US states"
+        },
+        {
+          "value": "other",
+          "label": "Other countries"
+        }
+      ],
+      "helpText": "Legal protections vary significantly by location"
+    },
+    {
+      "id": "companySize",
+      "label": "Size of Data Controller/Company",
+      "type": "select",
+      "defaultValue": "large",
+      "options": [
+        {
+          "value": "major-tech",
+          "label": "Major tech company (Google, Meta, etc.)"
+        },
+        {
+          "value": "large",
+          "label": "Large corporation (500+ employees)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium business (50-500 employees)"
+        },
+        {
+          "value": "small",
+          "label": "Small business (<50 employees)"
+        },
+        {
+          "value": "individual",
+          "label": "Individual/blogger"
+        }
+      ],
+      "helpText": "Larger companies typically have better compliance processes"
+    },
+    {
+      "id": "dataAge",
+      "label": "Age of Data (months)",
+      "type": "range",
+      "defaultValue": 24,
+      "min": 1,
+      "max": 120,
+      "step": 1,
+      "helpText": "Older data is generally easier to remove if no longer relevant"
+    },
+    {
+      "id": "publicInterest",
+      "label": "Public Interest Level",
+      "type": "select",
+      "defaultValue": "low",
+      "options": [
+        {
+          "value": "high",
+          "label": "High (public figure, major news)"
+        },
+        {
+          "value": "medium",
+          "label": "Medium (local news, professional)"
+        },
+        {
+          "value": "low",
+          "label": "Low (personal, private matter)"
+        },
+        {
+          "value": "none",
+          "label": "None (completely private)"
+        }
+      ],
+      "helpText": "Higher public interest makes removal more difficult"
+    },
+    {
+      "id": "hasLegalBasis",
+      "label": "Strong Legal Basis for Removal",
+      "type": "checkbox",
+      "defaultValue": false,
+      "helpText": "Data is inaccurate, unlawfully processed, or you're a minor"
+    },
+    {
+      "id": "previousAttempts",
+      "label": "Previous Deletion Attempts",
+      "type": "number",
+      "defaultValue": 0,
+      "min": 0,
+      "max": 10,
+      "helpText": "Number of times you've already requested deletion"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "successProbability",
+      "label": "Success Probability",
+      "format": "percentage",
+      "description": "Your estimated chance of successful data deletion"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Assessment",
+      "format": "grade",
+      "description": "Overall risk level for your deletion request"
+    },
+    {
+      "id": "timeEstimate",
+      "label": "Expected Timeline",
+      "format": "text",
+      "description": "Estimated time for resolution"
+    }
+  ],
+  "formula": "const jurisdictionScores = {'eu': 85, 'uk': 80, 'california': 70, 'us-other': 40, 'other': 30}; const dataTypeScores = {'search-results': 75, 'social-media': 65, 'news-articles': 45, 'business-records': 70, 'financial-data': 80, 'personal-photos': 85}; const companySizeScores = {'major-tech': 80, 'large': 75, 'medium': 65, 'small': 55, 'individual': 45}; const publicInterestPenalty = {'high': -30, 'medium': -15, 'low': -5, 'none': 0}; let baseScore = (jurisdictionScores[jurisdiction] + dataTypeScores[dataType] + companySizeScores[companySize]) / 3; baseScore += publicInterestPenalty[publicInterest]; if (dataAge > 24) baseScore += Math.min((dataAge - 24) / 6, 15); if (hasLegalBasis) baseScore += 20; if (previousAttempts > 0) baseScore -= Math.min(previousAttempts * 8, 25); const successProbability = Math.max(5, Math.min(95, Math.round(baseScore))); let riskLevel, timeEstimate; if (successProbability >= 75) { riskLevel = 'A'; timeEstimate = '1-3 months'; } else if (successProbability >= 60) { riskLevel = 'B'; timeEstimate = '3-6 months'; } else if (successProbability >= 45) { riskLevel = 'C'; timeEstimate = '6-12 months'; } else if (successProbability >= 30) { riskLevel = 'D'; timeEstimate = '12+ months'; } else { riskLevel = 'F'; timeEstimate = 'Very unlikely'; } return { successProbability, riskLevel, timeEstimate };",
+  "educational": {
+    "methodology": "This calculator evaluates multiple factors that influence data deletion success rates, including legal jurisdiction, data type, company compliance levels, and specific circumstances of your case. Scores are based on privacy law effectiveness studies and reported success rates from major data removal services.",
+    "tips": [
+      "Start with formal written requests citing specific legal grounds (GDPR Article 17, CCPA, etc.)",
+      "Use Incognito Browser when researching your digital footprint to avoid creating new tracking data",
+      "Document all interactions with companies and follow up within legal timeframes (typically 30 days)",
+      "Consider professional data removal services for complex cases or low success probability scenarios",
+      "Appeal rejections with additional legal justification and escalate to data protection authorities when appropriate"
+    ],
+    "interpretation": [
+      {
+        "range": "75-95%",
+        "label": "High Success (Grade A)",
+        "description": "Excellent chances of successful removal. Strong legal protections apply to your case.",
+        "color": "green"
+      },
+      {
+        "range": "60-74%",
+        "label": "Good Success (Grade B)",
+        "description": "Good prospects for deletion. May require proper documentation and follow-up.",
+        "color": "lightgreen"
+      },
+      {
+        "range": "45-59%",
+        "label": "Moderate Success (Grade C)",
+        "description": "Mixed chances. Consider professional help or strengthening your legal arguments.",
+        "color": "orange"
+      },
+      {
+        "range": "30-44%",
+        "label": "Low Success (Grade D)",
+        "description": "Challenging case. May need legal assistance or regulatory complaints.",
+        "color": "red"
+      },
+      {
+        "range": "5-29%",
+        "label": "Very Low Success (Grade F)",
+        "description": "Difficult removal case. Consider reputation management alternatives.",
+        "color": "darkred"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "GDPR Article 17 - Right to Erasure Guide",
+      "url": "/guides/gdpr-right-to-erasure",
+      "type": "internal"
+    },
+    {
+      "title": "Data Deletion Request Templates",
+      "url": "/templates/data-deletion-requests",
+      "type": "internal"
+    },
+    {
+      "title": "Google Removal Request Form",
+      "url": "https://www.google.com/webmasters/tools/legal-removal-request",
+      "type": "external"
+    }
+  ]
+}

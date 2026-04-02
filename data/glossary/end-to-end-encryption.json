@@ -1,0 +1,30 @@
+{
+  "term": "End-to-End Encryption",
+  "slug": "end-to-end-encryption",
+  "definition": "A security method where only the sender and intended recipient can read messages, preventing anyone else, including service providers, from accessing the content.",
+  "metaDescription": "End-to-end encryption ensures only you and your recipient can read messages. Learn how this security technology protects your private communications.",
+  "simpleExplanation": "Think of it like sending a letter in a locked box where only you and the recipient have keys. Even the postal service can't open it. Your messages are scrambled during transmission and only unscrambled on your devices.",
+  "whyItMatters": "It protects your private conversations from hackers, governments, and even the companies providing the service. Without it, your messages could be intercepted and read by unauthorized parties during transmission.",
+  "technicalDetail": "Messages are encrypted on the sender's device using cryptographic keys, transmitted as scrambled data, then decrypted only on the recipient's device. The service provider never has access to the decryption keys, meaning they cannot read the content even if compelled by law enforcement.",
+  "examples": [
+    {
+      "scenario": "WhatsApp messaging",
+      "explanation": "When you send a WhatsApp message, it's encrypted on your phone and only decrypted on your friend's phone. WhatsApp itself cannot read your conversations."
+    },
+    {
+      "scenario": "Signal app calls",
+      "explanation": "Voice calls through Signal are encrypted so that only you and the person you're calling can hear the conversation, not Signal or anyone intercepting the call."
+    },
+    {
+      "scenario": "ProtonMail emails",
+      "explanation": "Emails sent between ProtonMail users are encrypted end-to-end, meaning ProtonMail cannot access the content of your emails even with a court order."
+    }
+  ],
+  "relatedTerms": [
+    "public-key-cryptography",
+    "ssl-tls",
+    "two-factor-authentication",
+    "zero-knowledge-proof"
+  ],
+  "category": "technology"
+}

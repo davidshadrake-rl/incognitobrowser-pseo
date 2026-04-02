@@ -1,0 +1,192 @@
+{
+  "niche": "smart-home-privacy",
+  "slug": "smart-home-iot-privacy-risk-calculator",
+  "title": "Smart Home & IoT Privacy Risk Calculator",
+  "metaDescription": "Calculate your smart home privacy risk score. Assess IoT devices, voice assistants, and security cameras for potential data tracking vulnerabilities.",
+  "keywords": [
+    "smart home privacy",
+    "IoT security calculator",
+    "Alexa privacy risk",
+    "smart device tracking",
+    "voice assistant privacy"
+  ],
+  "description": "Evaluate the privacy risks of your smart home setup. This calculator analyzes your IoT devices, voice assistants, security cameras, and privacy settings to provide a comprehensive risk assessment and personalized recommendations.",
+  "inputs": [
+    {
+      "id": "voiceAssistants",
+      "label": "Number of Voice Assistants",
+      "type": "number",
+      "defaultValue": 1,
+      "min": 0,
+      "max": 10,
+      "helpText": "Include Alexa, Google Home, Siri devices, and smart displays"
+    },
+    {
+      "id": "smartCameras",
+      "label": "Smart Cameras & Doorbells",
+      "type": "number",
+      "defaultValue": 2,
+      "min": 0,
+      "max": 20,
+      "helpText": "Security cameras, Ring doorbells, baby monitors with internet connectivity"
+    },
+    {
+      "id": "iotDevices",
+      "label": "Other IoT Devices",
+      "type": "number",
+      "defaultValue": 5,
+      "min": 0,
+      "max": 50,
+      "helpText": "Smart lights, thermostats, locks, appliances, TVs, etc."
+    },
+    {
+      "id": "cloudStorage",
+      "label": "Cloud Storage Usage",
+      "type": "select",
+      "defaultValue": "some",
+      "options": [
+        {
+          "value": "none",
+          "label": "No cloud storage"
+        },
+        {
+          "value": "some",
+          "label": "Some devices use cloud"
+        },
+        {
+          "value": "most",
+          "label": "Most devices use cloud"
+        },
+        {
+          "value": "all",
+          "label": "All devices use cloud"
+        }
+      ],
+      "helpText": "How many of your devices store data in the cloud?"
+    },
+    {
+      "id": "privacySettings",
+      "label": "Privacy Settings Configured",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "Default settings only"
+        },
+        {
+          "value": "basic",
+          "label": "Basic privacy settings"
+        },
+        {
+          "value": "advanced",
+          "label": "Advanced privacy settings"
+        },
+        {
+          "value": "maximum",
+          "label": "Maximum privacy settings"
+        }
+      ],
+      "helpText": "How thoroughly have you configured privacy settings?"
+    },
+    {
+      "id": "networkSecurity",
+      "label": "Network Security Level",
+      "type": "select",
+      "defaultValue": "standard",
+      "options": [
+        {
+          "value": "weak",
+          "label": "Default router, weak passwords"
+        },
+        {
+          "value": "standard",
+          "label": "Standard router, good passwords"
+        },
+        {
+          "value": "strong",
+          "label": "Secure router, VLANs, strong encryption"
+        },
+        {
+          "value": "maximum",
+          "label": "Enterprise-grade security, isolated IoT network"
+        }
+      ],
+      "helpText": "How secure is your home network setup?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "score",
+      "description": "Overall privacy risk level from 0 (lowest risk) to 100 (highest risk)"
+    },
+    {
+      "id": "riskGrade",
+      "label": "Privacy Grade",
+      "format": "grade",
+      "description": "Letter grade representing your smart home privacy posture"
+    },
+    {
+      "id": "vulnerabilities",
+      "label": "Key Vulnerabilities",
+      "format": "number",
+      "description": "Number of major privacy vulnerabilities identified"
+    }
+  ],
+  "formula": "const deviceRisk = (voiceAssistants * 8) + (smartCameras * 12) + (iotDevices * 3); const cloudMultiplier = {none: 0.7, some: 1.0, most: 1.3, all: 1.6}[cloudStorage]; const privacyReduction = {none: 0, basic: 10, advanced: 25, maximum: 40}[privacySettings]; const networkReduction = {weak: 0, standard: 15, strong: 30, maximum: 45}[networkSecurity]; const baseRisk = Math.min(deviceRisk * cloudMultiplier, 100); const adjustedRisk = Math.max(baseRisk - privacyReduction - networkReduction, 5); const riskScore = Math.round(adjustedRisk); const riskGrade = riskScore >= 80 ? 'F' : riskScore >= 70 ? 'D' : riskScore >= 60 ? 'C' : riskScore >= 50 ? 'B' : riskScore >= 40 ? 'B+' : riskScore >= 30 ? 'A-' : 'A'; const vulnerabilities = Math.ceil(riskScore / 20); return { riskScore, riskGrade, vulnerabilities };",
+  "educational": {
+    "methodology": "This calculator evaluates privacy risks based on device count, cloud dependencies, privacy configurations, and network security. Voice assistants and cameras carry higher risk weights due to their always-listening/watching nature and potential for intimate data collection.",
+    "tips": [
+      "Use Incognito Browser when managing smart home settings to prevent tracking of your privacy configurations",
+      "Regularly audit and disable unnecessary permissions for voice assistants and smart devices",
+      "Set up a separate IoT network to isolate smart devices from personal computers and phones",
+      "Choose devices with local processing capabilities to reduce cloud data dependencies",
+      "Review and delete stored voice recordings and video footage from manufacturer cloud services monthly"
+    ],
+    "interpretation": [
+      {
+        "range": "0-30",
+        "label": "Low Risk",
+        "description": "Excellent privacy posture with minimal vulnerabilities. Your smart home setup follows security best practices.",
+        "color": "green"
+      },
+      {
+        "range": "31-50",
+        "label": "Moderate Risk",
+        "description": "Good privacy setup with room for improvement. Consider enhancing network security and privacy settings.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-70",
+        "label": "High Risk",
+        "description": "Significant privacy vulnerabilities present. Immediate action needed to secure your smart home ecosystem.",
+        "color": "orange"
+      },
+      {
+        "range": "71-100",
+        "label": "Critical Risk",
+        "description": "Major privacy risks detected. Your personal data and home activities are highly vulnerable to surveillance and breaches.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Alexa Privacy Settings Guide",
+      "url": "/guides/alexa-privacy-settings",
+      "type": "guide"
+    },
+    {
+      "title": "IoT Device Security Checklist",
+      "url": "/guides/iot-security-checklist",
+      "type": "guide"
+    },
+    {
+      "title": "Smart Camera Privacy Best Practices",
+      "url": "/guides/smart-camera-privacy",
+      "type": "guide"
+    }
+  ]
+}

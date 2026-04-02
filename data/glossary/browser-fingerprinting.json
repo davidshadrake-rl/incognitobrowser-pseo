@@ -1,0 +1,31 @@
+{
+  "term": "Browser Fingerprinting",
+  "slug": "browser-fingerprinting",
+  "definition": "A tracking technique that collects information about your browser, device, and settings to create a unique identifier without using cookies.",
+  "metaDescription": "Learn about browser fingerprinting: how websites track users by collecting browser and device information to create unique digital fingerprints.",
+  "simpleExplanation": "Think of browser fingerprinting like taking your digital fingerprint. Websites collect details about your browser version, screen size, installed fonts, timezone, and other settings. Combined together, these details often create a unique profile that can identify you across different websites.",
+  "whyItMatters": "Browser fingerprinting is harder to block than cookies and works even in private browsing mode. It allows companies to track your online activities across websites without your knowledge, potentially building detailed profiles of your interests and behavior for advertising or other purposes.",
+  "technicalDetail": "Browser fingerprinting uses JavaScript and other web technologies to collect attributes like user agent string, screen resolution, installed plugins, supported fonts, WebGL renderer, audio context properties, and hardware specifications. Advanced techniques include canvas fingerprinting, WebRTC IP detection, and timing attacks on system resources.",
+  "examples": [
+    {
+      "scenario": "Online Shopping Tracking",
+      "explanation": "An e-commerce site collects your browser's font list, screen resolution, and timezone to create a fingerprint, then shares this data with advertising networks to track your shopping behavior across multiple retail websites."
+    },
+    {
+      "scenario": "Fraud Detection",
+      "explanation": "A bank uses browser fingerprinting to identify unusual login patterns by comparing your current browser fingerprint with previous sessions, helping detect if someone else is trying to access your account."
+    },
+    {
+      "scenario": "Analytics Across Devices",
+      "explanation": "A news website uses fingerprinting to recognize returning readers even when they clear cookies or browse in incognito mode, allowing them to track article preferences and reading habits."
+    }
+  ],
+  "relatedTerms": [
+    "canvas-fingerprinting",
+    "cookies",
+    "behavioral-tracking",
+    "cross-site-tracking",
+    "digital-footprint"
+  ],
+  "category": "technology"
+}

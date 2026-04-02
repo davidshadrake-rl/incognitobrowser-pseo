@@ -1,0 +1,211 @@
+{
+  "niche": "journalist-privacy",
+  "slug": "journalist-whistleblower-privacy-risk-calculator",
+  "title": "Journalist & Whistleblower Privacy Risk Calculator",
+  "metaDescription": "Calculate your privacy risk as a journalist or whistleblower. Get personalized security recommendations to protect sources and communications.",
+  "keywords": [
+    "journalist privacy",
+    "whistleblower protection",
+    "source protection",
+    "press freedom",
+    "operational security"
+  ],
+  "description": "Assess your privacy risks and vulnerabilities as a journalist or whistleblower. This calculator evaluates your current security practices and provides actionable recommendations to protect sensitive sources and communications.",
+  "inputs": [
+    {
+      "id": "communicationMethods",
+      "label": "Primary Communication Methods",
+      "type": "select",
+      "defaultValue": "email",
+      "options": [
+        {
+          "value": "email",
+          "label": "Standard Email"
+        },
+        {
+          "value": "encrypted-email",
+          "label": "Encrypted Email (ProtonMail, etc.)"
+        },
+        {
+          "value": "messaging",
+          "label": "Standard Messaging Apps"
+        },
+        {
+          "value": "secure-messaging",
+          "label": "Secure Messaging (Signal, Wire)"
+        },
+        {
+          "value": "anonymous",
+          "label": "Anonymous Platforms (SecureDrop)"
+        }
+      ],
+      "helpText": "How do you typically communicate with sources?"
+    },
+    {
+      "id": "deviceSecurity",
+      "label": "Device Security Level",
+      "type": "range",
+      "defaultValue": 3,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "helpText": "Rate your device security practices (1=basic, 5=advanced encryption/hardening)"
+    },
+    {
+      "id": "locationRisk",
+      "label": "Work Location Risk",
+      "type": "select",
+      "defaultValue": "moderate",
+      "options": [
+        {
+          "value": "low",
+          "label": "Democratic country, strong press freedom"
+        },
+        {
+          "value": "moderate",
+          "label": "Some restrictions, occasional surveillance"
+        },
+        {
+          "value": "high",
+          "label": "Authoritarian regime, active journalist targeting"
+        }
+      ],
+      "helpText": "Assess the legal and political environment where you work"
+    },
+    {
+      "id": "storyType",
+      "label": "Story Sensitivity",
+      "type": "select",
+      "defaultValue": "medium",
+      "options": [
+        {
+          "value": "low",
+          "label": "General reporting, public information"
+        },
+        {
+          "value": "medium",
+          "label": "Corporate investigations, local corruption"
+        },
+        {
+          "value": "high",
+          "label": "Government surveillance, national security"
+        }
+      ],
+      "helpText": "What types of stories do you typically investigate?"
+    },
+    {
+      "id": "sourceProtection",
+      "label": "Source Protection Measures",
+      "type": "range",
+      "defaultValue": 2,
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "helpText": "Rate your current source protection practices (1=minimal, 5=comprehensive anonymization)"
+    },
+    {
+      "id": "internetUsage",
+      "label": "Internet Privacy Tools",
+      "type": "select",
+      "defaultValue": "basic",
+      "options": [
+        {
+          "value": "none",
+          "label": "No special tools"
+        },
+        {
+          "value": "basic",
+          "label": "VPN only"
+        },
+        {
+          "value": "intermediate",
+          "label": "VPN + private browser"
+        },
+        {
+          "value": "advanced",
+          "label": "Tor + VPN + secure browsers like Incognito Browser"
+        }
+      ],
+      "helpText": "What privacy tools do you use for online research and communication?"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "overallRisk",
+      "label": "Overall Privacy Risk",
+      "format": "percentage",
+      "description": "Your current privacy risk level based on threat assessment"
+    },
+    {
+      "id": "riskCategory",
+      "label": "Risk Category",
+      "format": "text",
+      "description": "Risk level classification with specific recommendations"
+    },
+    {
+      "id": "securityScore",
+      "label": "Security Readiness Score",
+      "format": "score",
+      "description": "Your current security preparedness out of 100"
+    }
+  ],
+  "formula": "const commRisk = { 'email': 80, 'encrypted-email': 40, 'messaging': 70, 'secure-messaging': 20, 'anonymous': 10 }[communicationMethods]; const locRisk = { 'low': 20, 'moderate': 50, 'high': 90 }[locationRisk]; const storyRisk = { 'low': 20, 'medium': 50, 'high': 80 }[storyType]; const toolsRisk = { 'none': 90, 'basic': 60, 'intermediate': 30, 'advanced': 10 }[internetUsage]; const deviceFactor = (6 - deviceSecurity) * 15; const sourceFactor = (6 - sourceProtection) * 12; const rawRisk = (commRisk + locRisk + storyRisk + toolsRisk + deviceFactor + sourceFactor) / 6; const overallRisk = Math.min(95, Math.max(5, rawRisk)); const securityScore = Math.round(100 - overallRisk); const riskCategory = overallRisk >= 70 ? 'Critical Risk' : overallRisk >= 50 ? 'High Risk' : overallRisk >= 30 ? 'Moderate Risk' : 'Low Risk'; return { overallRisk: Math.round(overallRisk), securityScore, riskCategory };",
+  "educational": {
+    "methodology": "This calculator evaluates privacy risks for journalists and whistleblowers by analyzing communication methods, operational security practices, threat environment, and story sensitivity. The assessment considers real-world factors that affect source protection and personal safety in journalism.",
+    "tips": [
+      "Use Signal or Wire for source communications instead of regular messaging apps",
+      "Consider using Incognito Browser or Tor for sensitive research and source contact",
+      "Implement full-disk encryption on all devices that could be seized",
+      "Establish secure communication protocols before contacting sensitive sources",
+      "Regularly update your threat model based on current stories and political climate"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25%",
+        "label": "Low Risk",
+        "description": "Good security practices in place. Continue monitoring and stay updated on emerging threats.",
+        "color": "green"
+      },
+      {
+        "range": "26-49%",
+        "label": "Moderate Risk",
+        "description": "Some vulnerabilities present. Upgrade communication tools and source protection methods.",
+        "color": "yellow"
+      },
+      {
+        "range": "50-69%",
+        "label": "High Risk",
+        "description": "Significant security gaps. Immediate improvements needed in multiple areas.",
+        "color": "orange"
+      },
+      {
+        "range": "70-100%",
+        "label": "Critical Risk",
+        "description": "Serious privacy vulnerabilities. Comprehensive security overhaul required immediately.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "SecureDrop Setup Guide",
+      "url": "https://securedrop.org/",
+      "type": "external"
+    },
+    {
+      "title": "Signal Messenger Security",
+      "url": "https://signal.org/",
+      "type": "external"
+    },
+    {
+      "title": "Committee to Protect Journalists Security Guide",
+      "url": "https://cpj.org/2019/07/digital-safety-kit-journalists/",
+      "type": "external"
+    },
+    {
+      "title": "Tor Project for Journalists",
+      "url": "https://www.torproject.org/",
+      "type": "external"
+    }
+  ]
+}

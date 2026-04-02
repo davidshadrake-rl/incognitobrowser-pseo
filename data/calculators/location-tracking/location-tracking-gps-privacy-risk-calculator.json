@@ -1,0 +1,188 @@
+{
+  "niche": "location-tracking",
+  "slug": "location-tracking-gps-privacy-risk-calculator",
+  "title": "Location Tracking & GPS Privacy Risk Calculator",
+  "metaDescription": "Calculate your location privacy risk score based on app permissions, device settings, and tracking behaviors. Get personalized protection tips.",
+  "keywords": [
+    "location tracking",
+    "GPS privacy",
+    "geolocation tracking",
+    "stop location tracking",
+    "location privacy risk"
+  ],
+  "description": "Assess how exposed your location data is to apps, advertisers, and data brokers. This calculator evaluates your device settings, app permissions, and usage patterns to provide a personalized privacy risk score and actionable protection steps.",
+  "inputs": [
+    {
+      "id": "appsWithLocation",
+      "label": "How many apps have location access?",
+      "type": "range",
+      "defaultValue": 10,
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "helpText": "Check Settings > Privacy > Location Services to count apps with location permissions"
+    },
+    {
+      "id": "locationHistoryEnabled",
+      "label": "Location history enabled?",
+      "type": "select",
+      "defaultValue": "yes",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes, fully enabled"
+        },
+        {
+          "value": "partial",
+          "label": "Partially enabled"
+        },
+        {
+          "value": "no",
+          "label": "No, disabled"
+        },
+        {
+          "value": "unknown",
+          "label": "I don't know"
+        }
+      ],
+      "helpText": "Google Location History, Apple Significant Locations, etc."
+    },
+    {
+      "id": "socialMediaSharing",
+      "label": "Social media location sharing",
+      "type": "select",
+      "defaultValue": "sometimes",
+      "options": [
+        {
+          "value": "always",
+          "label": "Always share location"
+        },
+        {
+          "value": "sometimes",
+          "label": "Sometimes share location"
+        },
+        {
+          "value": "rarely",
+          "label": "Rarely share location"
+        },
+        {
+          "value": "never",
+          "label": "Never share location"
+        }
+      ]
+    },
+    {
+      "id": "precisionSetting",
+      "label": "Location precision setting",
+      "type": "select",
+      "defaultValue": "precise",
+      "options": [
+        {
+          "value": "precise",
+          "label": "Precise location (exact GPS)"
+        },
+        {
+          "value": "approximate",
+          "label": "Approximate location only"
+        },
+        {
+          "value": "mixed",
+          "label": "Mixed (varies by app)"
+        },
+        {
+          "value": "unknown",
+          "label": "I don't know"
+        }
+      ],
+      "helpText": "iOS 14+ and Android 12+ offer approximate location options"
+    },
+    {
+      "id": "backgroundTracking",
+      "label": "Apps tracking in background?",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Weather, maps, social media apps often track location continuously"
+    },
+    {
+      "id": "adPersonalization",
+      "label": "Location-based ads enabled?",
+      "type": "checkbox",
+      "defaultValue": true,
+      "helpText": "Google Ads, Apple's personalized ads based on location"
+    }
+  ],
+  "outputFields": [
+    {
+      "id": "riskScore",
+      "label": "Privacy Risk Score",
+      "format": "percentage",
+      "description": "Overall location tracking exposure level"
+    },
+    {
+      "id": "riskLevel",
+      "label": "Risk Level",
+      "format": "grade",
+      "description": "Categorized risk assessment"
+    },
+    {
+      "id": "exposureCount",
+      "label": "Active Tracking Sources",
+      "format": "number",
+      "description": "Number of ways your location is being tracked"
+    }
+  ],
+  "formula": "let score = 0; let sources = 0; if (appsWithLocation > 0) { score += Math.min(appsWithLocation * 3, 30); sources++; } if (locationHistoryEnabled === 'yes') { score += 20; sources++; } else if (locationHistoryEnabled === 'partial') { score += 10; sources++; } else if (locationHistoryEnabled === 'unknown') { score += 15; sources++; } if (socialMediaSharing === 'always') { score += 15; sources++; } else if (socialMediaSharing === 'sometimes') { score += 8; sources++; } else if (socialMediaSharing === 'rarely') { score += 3; sources++; } if (precisionSetting === 'precise') { score += 10; } else if (precisionSetting === 'unknown') { score += 8; } if (backgroundTracking) { score += 15; sources++; } if (adPersonalization) { score += 10; sources++; } score = Math.min(score, 100); let level = 'Low'; if (score >= 70) level = 'High'; else if (score >= 40) level = 'Medium'; return { riskScore: score, riskLevel: level, exposureCount: sources };",
+  "educational": {
+    "methodology": "This calculator evaluates your location privacy risk by analyzing app permissions, system settings, sharing behaviors, and tracking features. Higher scores indicate more ways your location data can be collected, stored, and potentially shared with third parties including advertisers, data brokers, and government agencies.",
+    "tips": [
+      "Review location permissions regularly and revoke access for apps that don't need it",
+      "Use 'approximate location' instead of precise GPS when possible",
+      "Turn off location history in Google, Apple, and social media accounts",
+      "Disable location-based advertising in your device privacy settings",
+      "Consider using Incognito Browser to prevent location tracking during web browsing"
+    ],
+    "interpretation": [
+      {
+        "range": "0-25%",
+        "label": "Low Risk",
+        "description": "Good location privacy practices. Your location data exposure is minimal.",
+        "color": "green"
+      },
+      {
+        "range": "26-50%",
+        "label": "Medium Risk",
+        "description": "Moderate location tracking. Consider tightening permissions and disabling unnecessary features.",
+        "color": "yellow"
+      },
+      {
+        "range": "51-75%",
+        "label": "High Risk",
+        "description": "Significant location exposure. Multiple apps and services are tracking your movements.",
+        "color": "orange"
+      },
+      {
+        "range": "76-100%",
+        "label": "Very High Risk",
+        "description": "Extensive location tracking. Immediate privacy audit recommended to reduce exposure.",
+        "color": "red"
+      }
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "How to Turn Off Location Tracking on iPhone",
+      "url": "/guides/turn-off-iphone-location-tracking",
+      "type": "guide"
+    },
+    {
+      "title": "Android Location Privacy Settings",
+      "url": "/guides/android-location-privacy",
+      "type": "guide"
+    },
+    {
+      "title": "What Are Geofence Warrants?",
+      "url": "/learn/geofence-warrants-explained",
+      "type": "article"
+    }
+  ]
+}

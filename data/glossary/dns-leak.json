@@ -1,0 +1,32 @@
+{
+  "term": "DNS Leak",
+  "slug": "dns-leak",
+  "definition": "A security vulnerability where DNS queries bypass a VPN or proxy connection, revealing your browsing activity and real IP address to your internet service provider or other observers.",
+  "metaDescription": "Learn about DNS leaks - a privacy vulnerability that can expose your browsing activity even when using a VPN. Understand how to detect and prevent DNS leaks.",
+  "simpleExplanation": "When you use a VPN to hide your internet activity, sometimes your device still asks your regular internet provider to look up website addresses. This is like whispering through a secret tunnel but shouting your questions to everyone nearby.",
+  "whyItMatters": "DNS leaks can completely undermine your privacy protection efforts. Even with a VPN active, your ISP, government, or hackers can see which websites you visit, track your browsing patterns, and potentially censor or monitor your internet activity.",
+  "technicalDetail": "DNS leaks occur when the operating system's DNS resolver bypasses the VPN tunnel due to misconfigurations, IPv6 fallback, transparent DNS proxies, or WebRTC connections. The queries are sent to default DNS servers instead of the VPN provider's secure DNS servers, exposing the user's real location and browsing habits.",
+  "examples": [
+    {
+      "scenario": "VPN with ISP DNS",
+      "explanation": "You connect to a VPN but your computer still sends DNS requests to your ISP's servers, allowing them to see you're visiting social media sites even though your traffic appears to come from another country."
+    },
+    {
+      "scenario": "IPv6 DNS Leak",
+      "explanation": "Your VPN only protects IPv4 traffic, but your device uses IPv6 to resolve domain names, sending those requests through your regular internet connection and revealing your browsing to your ISP."
+    },
+    {
+      "scenario": "WebRTC Leak",
+      "explanation": "A website uses WebRTC features that bypass your VPN's DNS protection, directly querying DNS servers and potentially exposing your real IP address and location to the website."
+    }
+  ],
+  "relatedTerms": [
+    "vpn",
+    "webrtc-leak",
+    "ip-address",
+    "secure-dns",
+    "dns-over-https"
+  ],
+  "niche": "Network Security",
+  "category": "attack"
+}

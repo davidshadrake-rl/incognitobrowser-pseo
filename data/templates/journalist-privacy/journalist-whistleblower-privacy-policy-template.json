@@ -1,0 +1,129 @@
+{
+  "niche": "journalist-privacy",
+  "slug": "journalist-whistleblower-privacy-policy-template",
+  "title": "Journalist & Whistleblower Privacy Policy Template",
+  "metaDescription": "Comprehensive privacy policy template for news organizations protecting journalist sources and whistleblower communications. Covers SecureDrop, encryption.",
+  "keywords": [
+    "journalist privacy policy",
+    "whistleblower protection",
+    "source protection",
+    "newsroom privacy",
+    "press freedom policy"
+  ],
+  "description": "A specialized privacy policy template designed for news organizations, independent journalists, and media outlets handling sensitive sources and whistleblower communications. Addresses unique privacy challenges in journalism.",
+  "templateType": "policy",
+  "sections": [
+    {
+      "heading": "Information Collection and Source Protection",
+      "content": "We are committed to protecting the identity and safety of our sources. We collect information solely for journalistic purposes and employ the following practices:\n\n• Anonymous tip submissions through SecureDrop or encrypted channels\n• No logging of IP addresses or metadata for source communications\n• Minimal data collection - only what's necessary for story verification\n• Regular deletion of temporary files and communication records\n• Use of privacy-focused browsers like Incognito Browser for research\n\nWe never collect personal information from sources unless explicitly provided and necessary for story accuracy.",
+      "placeholders": [
+        {
+          "key": "organization_name",
+          "label": "Organization Name",
+          "defaultValue": "[Your News Organization]"
+        },
+        {
+          "key": "contact_method",
+          "label": "Secure Contact Method",
+          "defaultValue": "[SecureDrop URL or Encrypted Email]"
+        }
+      ]
+    },
+    {
+      "heading": "Secure Communication Protocols",
+      "content": "{{organization_name}} maintains strict security protocols for all communications:\n\n• All source communications use end-to-end encryption\n• Signal, Wire, or other verified encrypted messaging apps for ongoing communication\n• Tor browser and VPN usage for sensitive research and communication\n• Air-gapped systems for handling highly sensitive documents\n• Regular security training for all editorial staff\n• Device encryption and secure storage practices\n\nOur journalists use privacy tools including Incognito Browser, encrypted email (ProtonMail, Tutanota), and secure file sharing platforms.",
+      "placeholders": [
+        {
+          "key": "security_contact",
+          "label": "Security Contact",
+          "defaultValue": "[IT Security Team Email]"
+        }
+      ]
+    },
+    {
+      "heading": "Data Storage and Retention",
+      "content": "We follow strict data minimization and retention policies:\n\n• Source communications are stored on encrypted, offline systems when possible\n• Automatic deletion of temporary files and browser data after each session\n• Regular secure wiping of devices and storage media\n• Limited retention periods - data deleted once stories are published unless ongoing investigation requires retention\n• No cloud storage for sensitive source materials\n• Physical security measures for all devices and storage media\n\nDocument retention follows our editorial guidelines and legal requirements while prioritizing source protection.",
+      "placeholders": [
+        {
+          "key": "retention_period",
+          "label": "Standard Retention Period",
+          "defaultValue": "[30-90 days]"
+        }
+      ]
+    },
+    {
+      "heading": "Legal Requests and Subpoenas",
+      "content": "{{organization_name}} will vigorously protect source confidentiality:\n\n• We will challenge all legal requests for source information\n• Legal counsel will be engaged immediately upon receipt of any subpoena or court order\n• We maintain minimal records to limit what can be compelled in legal proceedings\n• Sources will be notified of legal requests when legally permissible\n• We assert all available journalist shield law protections\n• No voluntary cooperation with surveillance requests\n\nOur legal team: {{legal_contact}}",
+      "placeholders": [
+        {
+          "key": "legal_contact",
+          "label": "Legal Team Contact",
+          "defaultValue": "[Legal Department Contact]"
+        }
+      ]
+    },
+    {
+      "heading": "Third-Party Services and Vendors",
+      "content": "We carefully vet all third-party services to ensure source protection:\n\n• Privacy-first hosting providers with strong legal protections\n• No use of tracking analytics or advertising networks on secure submission systems\n• Encrypted cloud services only for non-sensitive materials\n• Regular security audits of all third-party integrations\n• Data processing agreements with all vendors emphasizing source protection\n• Geographic considerations for server locations and legal jurisdictions",
+      "placeholders": [
+        {
+          "key": "hosting_provider",
+          "label": "Primary Hosting Provider",
+          "defaultValue": "[Privacy-Focused Host]"
+        }
+      ]
+    },
+    {
+      "heading": "Incident Response and Data Breaches",
+      "content": "In the event of a security incident:\n\n• Immediate isolation of affected systems\n• Forensic analysis to determine scope of potential compromise\n• Notification of potentially affected sources when safe to do so\n• Coordination with cybersecurity experts and legal counsel\n• Transparent public reporting of incidents that don't compromise source safety\n• Implementation of additional security measures to prevent future incidents\n\nReport security concerns to: {{security_contact}}",
+      "placeholders": [
+        {
+          "key": "incident_contact",
+          "label": "Incident Response Contact",
+          "defaultValue": "[Security Incident Email]"
+        }
+      ]
+    },
+    {
+      "heading": "Rights and Transparency",
+      "content": "Sources and readers have the following rights:\n\n• Right to anonymous communication and source protection\n• Right to know what information we collect and why\n• Right to request deletion of personal information (when safe and legally permissible)\n• Right to transparency about our security practices\n• Access to security guidance and tools for safe communication\n\nFor privacy questions or concerns, contact us at: {{privacy_contact}}\n\nThis policy is reviewed annually and updated as needed to reflect best practices in source protection.",
+      "placeholders": [
+        {
+          "key": "privacy_contact",
+          "label": "Privacy Contact Email",
+          "defaultValue": "[privacy@organization.com]"
+        },
+        {
+          "key": "last_updated",
+          "label": "Last Updated Date",
+          "defaultValue": "[Current Date]"
+        }
+      ]
+    }
+  ],
+  "useCases": [
+    "News organizations setting up SecureDrop or anonymous tip systems",
+    "Independent journalists establishing source protection protocols",
+    "Investigative reporting teams handling sensitive whistleblower communications",
+    "Press freedom organizations providing guidance to media outlets",
+    "Newsroom IT departments implementing security policies",
+    "Media lawyers drafting privacy policies for news organizations"
+  ],
+  "relatedLinks": [
+    {
+      "title": "SecureDrop Implementation Guide",
+      "url": "/templates/securedrop-setup-guide",
+      "type": "template"
+    },
+    {
+      "title": "Journalist Threat Model Template",
+      "url": "/templates/journalist-threat-model",
+      "type": "template"
+    },
+    {
+      "title": "Newsroom Security Toolkit",
+      "url": "/guides/newsroom-security-best-practices",
+      "type": "guide"
+    }
+  ]
+}

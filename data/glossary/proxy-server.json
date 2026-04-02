@@ -1,0 +1,30 @@
+{
+  "term": "Proxy Server",
+  "slug": "proxy-server",
+  "definition": "An intermediary server that sits between your device and the internet, forwarding your requests to websites and returning their responses back to you.",
+  "metaDescription": "Learn what a proxy server is, how it works to route internet traffic, and its privacy implications for hiding your IP address and location.",
+  "simpleExplanation": "Think of a proxy server as a middleman for your internet connection. Instead of connecting directly to websites, your requests go through the proxy first, which then fetches the content for you. This can hide your real IP address from websites.",
+  "whyItMatters": "Proxy servers can enhance privacy by masking your IP address and location from websites you visit. However, they also create a potential point of surveillance since the proxy operator can see all your internet traffic unless it's encrypted.",
+  "technicalDetail": "Proxy servers operate at the application layer, handling specific protocols like HTTP/HTTPS. Unlike VPNs, they typically don't encrypt traffic end-to-end. Common types include HTTP proxies, SOCKS proxies, and transparent proxies. The proxy server receives client requests, modifies headers if needed, forwards requests to destination servers, and relays responses back to clients.",
+  "examples": [
+    {
+      "scenario": "Corporate network filtering",
+      "explanation": "Your company uses a proxy server to monitor and filter employee web browsing, blocking access to social media sites during work hours while logging all web requests."
+    },
+    {
+      "scenario": "Bypassing geographic restrictions",
+      "explanation": "You use a proxy server located in another country to access streaming content that's blocked in your region, making it appear as if you're browsing from that location."
+    },
+    {
+      "scenario": "Web scraping protection",
+      "explanation": "A developer uses rotating proxy servers to gather data from websites without being blocked, as each request appears to come from a different IP address."
+    }
+  ],
+  "relatedTerms": [
+    "vpn",
+    "ip-address",
+    "tor-network",
+    "dns-leak"
+  ],
+  "category": "technology"
+}
