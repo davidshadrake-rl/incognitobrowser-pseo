@@ -9,6 +9,21 @@ export const metadata: Metadata = {
   },
   description: "Free privacy tools, checklists, guides, and resources to protect your online privacy.",
   metadataBase: new URL("https://incognitobrowser.io"),
+  openGraph: {
+    title: "Privacy Resources | Incognito Browser",
+    description: "Free privacy tools, checklists, guides, and resources to protect your online privacy.",
+    siteName: "Incognito Browser",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Privacy Resources | Incognito Browser",
+    description: "Free privacy tools, checklists, guides, and resources to protect your online privacy.",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 const navItems = [
