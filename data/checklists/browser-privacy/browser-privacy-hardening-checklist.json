@@ -1,0 +1,31 @@
+{
+  "niche": "browser-privacy",
+  "slug": "browser-privacy-hardening-checklist",
+  "title": "Browser Privacy Hardening Checklist",
+  "metaDescription": "Step-by-step browser privacy hardening checklist. Secure Chrome, Firefox, and other browsers with this interactive guide.",
+  "difficulty": "beginner",
+  "estimatedTime": "20 minutes",
+  "intro": "Protect your online privacy by hardening your browser settings. This checklist covers the essential steps.",
+  "sections": [
+    {
+      "title": "Basic Privacy Settings",
+      "items": [
+        {"id": "bp-1", "task": "Disable third-party cookies", "why": "Third-party cookies track you across websites to build advertising profiles.", "howTo": "Go to browser Settings > Privacy > Cookies and select Block third-party cookies.", "priority": "critical"},
+        {"id": "bp-2", "task": "Enable Do Not Track", "why": "Sends a signal to websites requesting they don't track your browsing activity.", "howTo": "Settings > Privacy > Send Do Not Track request.", "priority": "medium"},
+        {"id": "bp-3", "task": "Clear browsing data on exit", "why": "Prevents data accumulation that can be used to identify you across sessions.", "howTo": "Settings > Privacy > Clear browsing data > On exit.", "priority": "high"}
+      ]
+    },
+    {
+      "title": "Advanced Protection",
+      "items": [
+        {"id": "ap-1", "task": "Disable WebRTC to prevent IP leaks", "why": "WebRTC can reveal your real IP address even when using a VPN.", "howTo": "Install a WebRTC leak prevention extension or disable in about:config.", "priority": "high"},
+        {"id": "ap-2", "task": "Use HTTPS-Only mode", "why": "Ensures all connections are encrypted, preventing eavesdropping.", "howTo": "Settings > Privacy > HTTPS-Only Mode > Enable for all windows.", "priority": "critical"},
+        {"id": "ap-3", "task": "Review and limit browser permissions", "why": "Websites may request access to camera, microphone, and location unnecessarily.", "howTo": "Settings > Permissions > Review each permission type.", "priority": "medium"}
+      ]
+    }
+  ],
+  "relatedLinks": [
+    {"title": "Best Privacy Browsers Compared", "url": "/comparisons/browser-privacy/best-privacy-browsers-compared", "type": "comparison"},
+    {"title": "Complete Guide to Browser Privacy", "url": "/guides/browser-privacy/complete-guide-to-browser-privacy", "type": "guide"}
+  ]
+}
