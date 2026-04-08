@@ -1,0 +1,34 @@
+{
+  "niche": "location-tracking",
+  "slug": "permission-audit",
+  "title": "Location Permission Audit",
+  "metaDescription": "Check which websites and apps have access to your location data and other sensitive device permissions.",
+  "keywords": [
+    "location tracking",
+    "GPS privacy",
+    "geolocation tracking",
+    "stop location tracking",
+    "geofence warrants"
+  ],
+  "toolType": "checker",
+  "toolEngine": "permission-checker",
+  "description": "Check which websites and apps have access to your location data and other sensitive device permissions.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool queries the browser Permissions API to check the status of various device permissions including location, camera, microphone, notifications, clipboard access, and device sensors. It reports whether each permission is granted, blocked, or set to prompt, along with risk assessments and privacy recommendations for each.",
+    "tips": [
+      "Review and revoke unnecessary permissions regularly in your browser settings",
+      "Deny location access by default and only grant it temporarily when needed",
+      "Block notification permissions for most websites to prevent spam and malvertising",
+      "Camera and microphone access should be denied by default — grant only for video calls",
+      "Use browser settings to reset all permissions periodically for a clean slate"
+    ],
+    "commonMistakes": [
+      "Clicking \"Allow\" on permission prompts without reading what's being requested",
+      "Forgetting that permissions persist after granting them — they don't auto-expire",
+      "Not checking permissions after browser updates, which may reset or change defaults",
+      "Granting clipboard read access, which lets sites read passwords you've copied",
+      "Allowing sensor access (accelerometer, gyroscope) which enables device fingerprinting"
+    ]
+  }
+}

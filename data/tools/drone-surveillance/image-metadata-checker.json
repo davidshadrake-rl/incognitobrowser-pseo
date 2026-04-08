@@ -1,0 +1,34 @@
+{
+  "niche": "drone-surveillance",
+  "slug": "image-metadata-checker",
+  "title": "Image Metadata Inspector",
+  "metaDescription": "Inspect drone and aerial photos for embedded GPS coordinates, camera data, and other identifying metadata.",
+  "keywords": [
+    "drone surveillance",
+    "drone privacy",
+    "aerial surveillance",
+    "drone laws",
+    "spy drones"
+  ],
+  "toolType": "analyzer",
+  "toolEngine": "metadata-viewer",
+  "description": "Inspect drone and aerial photos for embedded GPS coordinates, camera data, and other identifying metadata.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool reads EXIF metadata from JPEG images directly in your browser. It parses the APP1 segment of JPEG files to extract camera information, timestamps, GPS coordinates, software details, and other embedded metadata. The image never leaves your device — all processing happens client-side using the File API and ArrayBuffer parsing.",
+    "tips": [
+      "Always strip metadata from photos before sharing online, especially GPS coordinates",
+      "Most phones embed precise GPS coordinates in every photo by default — check your settings",
+      "Screenshots typically contain less metadata than camera photos",
+      "Use image conversion (e.g., PNG to JPEG) as a simple way to strip most metadata",
+      "Check metadata in photos before posting on dating apps or social media"
+    ],
+    "commonMistakes": [
+      "Assuming social media platforms strip all metadata — many preserve some data in their backend",
+      "Not disabling location services for your camera app, embedding GPS in every photo",
+      "Sharing original photos via email or messaging without stripping metadata first",
+      "Forgetting that camera model and software information can identify you",
+      "Not checking photos received from others for metadata before re-sharing"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "niche": "webcam-privacy",
+  "slug": "permission-checker",
+  "title": "Webcam Permission Checker",
+  "metaDescription": "Check which websites have access to your camera and microphone, and learn how to revoke permissions.",
+  "keywords": [
+    "webcam privacy",
+    "microphone privacy",
+    "webcam hacking",
+    "camera cover",
+    "webcam security"
+  ],
+  "toolType": "checker",
+  "toolEngine": "permission-checker",
+  "description": "Check which websites have access to your camera and microphone, and learn how to revoke permissions.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool queries the browser Permissions API to check the status of various device permissions including location, camera, microphone, notifications, clipboard access, and device sensors. It reports whether each permission is granted, blocked, or set to prompt, along with risk assessments and privacy recommendations for each.",
+    "tips": [
+      "Review and revoke unnecessary permissions regularly in your browser settings",
+      "Deny location access by default and only grant it temporarily when needed",
+      "Block notification permissions for most websites to prevent spam and malvertising",
+      "Camera and microphone access should be denied by default — grant only for video calls",
+      "Use browser settings to reset all permissions periodically for a clean slate"
+    ],
+    "commonMistakes": [
+      "Clicking \"Allow\" on permission prompts without reading what's being requested",
+      "Forgetting that permissions persist after granting them — they don't auto-expire",
+      "Not checking permissions after browser updates, which may reset or change defaults",
+      "Granting clipboard read access, which lets sites read passwords you've copied",
+      "Allowing sensor access (accelerometer, gyroscope) which enables device fingerprinting"
+    ]
+  }
+}

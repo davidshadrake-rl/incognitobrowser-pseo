@@ -1,0 +1,34 @@
+{
+  "niche": "encrypted-messaging",
+  "slug": "text-encryption-tool",
+  "title": "Text Encryption Tool",
+  "metaDescription": "Encrypt and decrypt text messages using military-grade AES-256-GCM encryption, entirely in your browser.",
+  "keywords": [
+    "encrypted messaging",
+    "Signal app",
+    "WhatsApp privacy",
+    "Telegram security",
+    "end-to-end encryption"
+  ],
+  "toolType": "converter",
+  "toolEngine": "text-encryption",
+  "description": "Encrypt and decrypt text messages using military-grade AES-256-GCM encryption, entirely in your browser.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool uses the Web Crypto API built into modern browsers to perform AES-256-GCM authenticated encryption. Your passphrase is converted into a cryptographic key using PBKDF2 with 100,000 iterations and a random salt. Each encryption generates a unique random IV (initialization vector), ensuring identical plaintexts produce different ciphertexts. Everything runs in your browser — no data is transmitted.",
+    "tips": [
+      "Use a strong, unique passphrase — the encryption is only as secure as your passphrase",
+      "Share the passphrase through a different channel than the encrypted message",
+      "AES-256-GCM provides both confidentiality and integrity verification",
+      "Save encrypted text as-is — any modification will make it impossible to decrypt",
+      "For maximum security, use this tool in a private/incognito browsing session"
+    ],
+    "commonMistakes": [
+      "Using a weak or easily guessable passphrase defeats the purpose of encryption",
+      "Sending the passphrase alongside the encrypted message in the same channel",
+      "Modifying the encrypted output text, which corrupts the ciphertext and prevents decryption",
+      "Forgetting the passphrase — there is no recovery mechanism with symmetric encryption",
+      "Relying on encryption alone without also using secure communication channels"
+    ]
+  }
+}

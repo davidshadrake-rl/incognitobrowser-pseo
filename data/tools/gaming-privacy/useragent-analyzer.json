@@ -1,0 +1,34 @@
+{
+  "niche": "gaming-privacy",
+  "slug": "useragent-analyzer",
+  "title": "Gaming Browser Analyzer",
+  "metaDescription": "Analyze what your browser reveals to gaming platforms about your device and system configuration.",
+  "keywords": [
+    "gaming privacy",
+    "VR privacy",
+    "online gaming tracking",
+    "gaming data collection",
+    "virtual reality data"
+  ],
+  "toolType": "analyzer",
+  "toolEngine": "useragent-analyzer",
+  "description": "Analyze what your browser reveals to gaming platforms about your device and system configuration.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool parses the user agent string that your browser sends with every HTTP request. It extracts and displays your browser name and version, operating system, device type, rendering engine, and architecture. It also identifies privacy concerns specific to your browser and highlights factors that contribute to your unique browser fingerprint.",
+    "tips": [
+      "Consider using a browser that reduces or randomizes user agent strings",
+      "The User-Agent Client Hints API is replacing traditional UA strings — but still reveals data",
+      "Switching browsers periodically can reduce long-term fingerprint tracking",
+      "Privacy-focused browsers like Brave and Firefox often reduce UA string detail",
+      "Browser extensions can spoof your user agent, but this can create a more unique fingerprint"
+    ],
+    "commonMistakes": [
+      "Assuming user agent spoofing alone provides anonymity — many other fingerprinting vectors exist",
+      "Using a very unusual or custom user agent string, which makes you more identifiable",
+      "Not realizing that user agent data is sent with every single HTTP request",
+      "Ignoring the privacy implications of browser and OS version information leakage",
+      "Thinking that mobile browsers are more private — they often reveal even more device information"
+    ]
+  }
+}

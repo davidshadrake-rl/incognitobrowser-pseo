@@ -1,0 +1,34 @@
+{
+  "niche": "vpn-privacy",
+  "slug": "browser-leak-test",
+  "title": "Browser Leak Test",
+  "metaDescription": "Check for WebRTC leaks, DNS leaks, and other browser vulnerabilities that could expose your real IP while using a VPN.",
+  "keywords": [
+    "VPN privacy",
+    "best VPN",
+    "free VPN risks",
+    "VPN vs proxy",
+    "VPN security"
+  ],
+  "toolType": "checker",
+  "toolEngine": "browser-privacy",
+  "description": "Check for WebRTC leaks, DNS leaks, and other browser vulnerabilities that could expose your real IP while using a VPN.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool runs a series of privacy checks directly in your browser to detect fingerprinting vectors, tracking vulnerabilities, and privacy leaks. It tests Do Not Track settings, WebRTC exposure, canvas fingerprinting, device hardware detection, and more. All checks execute locally — no data leaves your device.",
+    "tips": [
+      "Enable Do Not Track in your browser settings, even though not all sites honor it",
+      "Use a WebRTC blocker to prevent IP address leaks, especially when using a VPN",
+      "Install a canvas fingerprint randomizer extension to prevent unique identification",
+      "Regularly clear cookies and site data to reduce persistent tracking",
+      "Consider using Incognito Browser or Brave for built-in privacy protections"
+    ],
+    "commonMistakes": [
+      "Assuming incognito/private mode makes you anonymous — it only prevents local history storage",
+      "Installing too many browser extensions, which actually increases your fingerprint uniqueness",
+      "Ignoring WebRTC leaks, which can reveal your real IP even behind a VPN",
+      "Not updating your browser regularly, leaving known security vulnerabilities unpatched",
+      "Granting unnecessary permissions (camera, microphone, location) to websites"
+    ]
+  }
+}

@@ -51,7 +51,7 @@ export function BrowserPrivacyTool() {
       const results: PrivacyCheck[] = [];
 
       // 1. Do Not Track
-      const dnt = navigator.doNotTrack || (window as Record<string, unknown>).doNotTrack;
+      const dnt = navigator.doNotTrack || (window as unknown as Record<string, unknown>).doNotTrack;
       results.push({
         name: 'Do Not Track',
         category: 'Tracking',
@@ -141,7 +141,7 @@ export function BrowserPrivacyTool() {
       });
 
       // 9. Device memory
-      const mem = (navigator as Record<string, unknown>).deviceMemory as number | undefined;
+      const mem = (navigator as unknown as Record<string, unknown>).deviceMemory as number | undefined;
       results.push({
         name: 'Device Memory',
         category: 'Fingerprinting',

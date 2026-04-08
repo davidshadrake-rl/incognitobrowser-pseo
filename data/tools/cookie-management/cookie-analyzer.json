@@ -1,0 +1,34 @@
+{
+  "niche": "cookie-management",
+  "slug": "cookie-analyzer",
+  "title": "Cookie Analyzer",
+  "metaDescription": "Analyze browser cookies to identify tracking cookies, categorize them by purpose, and understand their privacy impact.",
+  "keywords": [
+    "browser cookies",
+    "third-party cookies",
+    "tracking cookies",
+    "cookie management",
+    "delete cookies"
+  ],
+  "toolType": "analyzer",
+  "toolEngine": "cookie-analyzer",
+  "description": "Analyze browser cookies to identify tracking cookies, categorize them by purpose, and understand their privacy impact.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool reads and categorizes cookies using a database of known tracking, analytics, and functional cookies. It identifies cookies from major ad networks (Facebook Pixel, Google Analytics, TikTok), analytics platforms (Hotjar, Mixpanel), and categorizes unknown cookies using pattern matching on their names. The analysis runs entirely in your browser.",
+    "tips": [
+      "Block third-party cookies in your browser settings to prevent cross-site tracking",
+      "Use a cookie auto-delete extension to clear tracking cookies after each session",
+      "Functional cookies (CSRF tokens, session IDs) are necessary and generally safe",
+      "Review cookie settings on websites you visit frequently — many have opt-out options",
+      "Consider using a browser like Brave or Incognito Browser that blocks tracking cookies by default"
+    ],
+    "commonMistakes": [
+      "Clicking \"Accept All Cookies\" without reviewing what you're consenting to",
+      "Assuming clearing browser history also removes all cookies — it often doesn't",
+      "Blocking all cookies indiscriminately, which breaks login sessions and site functionality",
+      "Not realizing that cookie consent banners often use dark patterns to trick you into accepting",
+      "Ignoring third-party cookies, which are the primary mechanism for cross-site tracking"
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "niche": "phishing",
+  "slug": "url-safety-checker",
+  "title": "URL Safety Checker",
+  "metaDescription": "Analyze any URL for phishing indicators, suspicious patterns, and security risks before clicking.",
+  "keywords": [
+    "phishing scam",
+    "social engineering",
+    "phishing protection",
+    "email scam",
+    "spear phishing"
+  ],
+  "toolType": "checker",
+  "toolEngine": "url-analyzer",
+  "description": "Analyze any URL for phishing indicators, suspicious patterns, and security risks before clicking.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool parses and analyzes URL structure to detect common phishing indicators without making any network requests. It checks for suspicious TLDs, homograph attacks using non-ASCII characters, IP-based URLs, excessive subdomains, URL shortener detection, and path analysis for credential-harvesting keywords. The analysis runs entirely client-side for your safety.",
+    "tips": [
+      "Always verify URLs before clicking, especially in emails and messages from unknown senders",
+      "Look for HTTPS and a valid domain name — phishing sites often use HTTP or misspelled domains",
+      "Be suspicious of URL shorteners in emails — they hide the true destination",
+      "Check for subtle misspellings in domain names (e.g., g00gle.com, paypa1.com)",
+      "When in doubt, navigate directly to the website by typing the URL yourself"
+    ],
+    "commonMistakes": [
+      "Clicking links in emails without verifying the actual URL destination",
+      "Trusting a URL just because it contains a familiar brand name in the subdomain",
+      "Ignoring browser security warnings about certificate or connection issues",
+      "Entering login credentials on a page reached through an email link",
+      "Assuming HTTPS alone means a website is legitimate — phishing sites use HTTPS too"
+    ]
+  }
+}

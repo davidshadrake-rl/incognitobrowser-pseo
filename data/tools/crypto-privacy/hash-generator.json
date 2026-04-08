@@ -1,0 +1,34 @@
+{
+  "niche": "crypto-privacy",
+  "slug": "hash-generator",
+  "title": "Cryptographic Hash Generator",
+  "metaDescription": "Generate SHA-256, SHA-384, SHA-512, and SHA-1 hashes for verifying file integrity and data authenticity.",
+  "keywords": [
+    "crypto privacy",
+    "blockchain privacy",
+    "privacy coins",
+    "Bitcoin anonymity",
+    "Monero"
+  ],
+  "toolType": "generator",
+  "toolEngine": "hash-generator",
+  "description": "Generate SHA-256, SHA-384, SHA-512, and SHA-1 hashes for verifying file integrity and data authenticity.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "This tool uses the Web Crypto API to generate cryptographic hashes of your input text or files. It supports SHA-1, SHA-256, SHA-384, and SHA-512 algorithms. Hash functions produce a fixed-length fingerprint of any data — even a single character change produces a completely different hash. All processing occurs locally in your browser.",
+    "tips": [
+      "Use SHA-256 or SHA-512 for security-critical applications — SHA-1 is considered weak",
+      "Compare file hashes to verify downloads haven't been tampered with or corrupted",
+      "Hash functions are one-way — you cannot reverse a hash to get the original data",
+      "Even a single byte change in the input produces a completely different hash output",
+      "Use the verify feature to quickly check if a file matches an expected hash"
+    ],
+    "commonMistakes": [
+      "Using SHA-1 for security purposes — it has known collision vulnerabilities",
+      "Confusing hashing with encryption — hashes cannot be reversed, encryption can be decrypted",
+      "Not verifying file hashes after downloading security-sensitive software",
+      "Using hash functions alone for password storage — use PBKDF2, bcrypt, or Argon2 instead",
+      "Assuming different hash algorithms produce the same length output"
+    ]
+  }
+}
