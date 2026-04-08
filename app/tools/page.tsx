@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/Card';
 
 export const metadata = genMeta({
   title: 'Free Privacy Tools',
-  description: 'Free interactive privacy tools: password checker, fingerprint viewer, privacy score calculator, and more.',
+  description: 'Free interactive privacy tools: password checker, browser fingerprint audit, text encryption, URL safety scanner, and more. All run client-side.',
   path: '/tools',
   type: 'website',
 });
@@ -16,25 +16,123 @@ interface ToolMeta {
   title: string;
   metaDescription: string;
   toolType: string;
+  toolEngine?: string;
+  description?: string;
 }
+
+// The 11 unique tool engines with their display info
+const FEATURED_TOOLS: { engine: string; icon: string; title: string; description: string; badge: string }[] = [
+  {
+    engine: 'password-strength',
+    icon: '🔐',
+    title: 'Password Strength Checker',
+    description: 'Analyze any password with entropy calculation, crack time estimation, pattern detection, and character breakdown. Uses the same metrics as professional security tools.',
+    badge: 'checker',
+  },
+  {
+    engine: 'browser-privacy',
+    icon: '🛡️',
+    title: 'Browser Privacy Audit',
+    description: 'Run 14 privacy checks on your browser: Do Not Track, WebRTC leak detection, canvas fingerprinting, device memory exposure, CPU cores, and more.',
+    badge: 'analyzer',
+  },
+  {
+    engine: 'text-encryption',
+    icon: '🔒',
+    title: 'Text Encryption Tool',
+    description: 'Encrypt and decrypt messages using AES-256-GCM with PBKDF2 key derivation (100k iterations). Military-grade encryption, entirely client-side.',
+    badge: 'converter',
+  },
+  {
+    engine: 'cookie-analyzer',
+    icon: '🍪',
+    title: 'Cookie & Tracker Scanner',
+    description: 'Scan any website URL for tracking cookies, analytics scripts, and third-party trackers. Identifies Facebook Pixel, Google Analytics, TikTok, and 30+ more.',
+    badge: 'scanner',
+  },
+  {
+    engine: 'url-analyzer',
+    icon: '🔗',
+    title: 'URL Safety Checker',
+    description: 'Analyze any URL for phishing indicators: suspicious TLDs, homograph attacks, IP-based URLs, URL shorteners, and credential-harvesting patterns.',
+    badge: 'checker',
+  },
+  {
+    engine: 'privacy-quiz',
+    icon: '📊',
+    title: 'Privacy Score Quiz',
+    description: '12-question assessment covering browsing, network security, accounts, communication, and devices. Get a letter grade and personalized recommendations.',
+    badge: 'calculator',
+  },
+  {
+    engine: 'hash-generator',
+    icon: '#️⃣',
+    title: 'Cryptographic Hash Generator',
+    description: 'Generate SHA-1, SHA-256, SHA-384, and SHA-512 hashes for text or files. Verify file integrity with one-click hash comparison.',
+    badge: 'generator',
+  },
+  {
+    engine: 'permission-checker',
+    icon: '📱',
+    title: 'Permission Checker',
+    description: 'Audit which browser permissions (location, camera, microphone, clipboard, sensors) are granted, blocked, or set to prompt.',
+    badge: 'checker',
+  },
+  {
+    engine: 'metadata-viewer',
+    icon: '📷',
+    title: 'Image Metadata Viewer',
+    description: 'Upload any JPEG to inspect hidden EXIF data: GPS coordinates, camera model, timestamps, and software info. All processed locally.',
+    badge: 'analyzer',
+  },
+  {
+    engine: 'useragent-analyzer',
+    icon: '🌐',
+    title: 'User Agent Analyzer',
+    description: 'See exactly what your browser reveals to every website: browser version, OS, device type, rendering engine, and fingerprint factors.',
+    badge: 'analyzer',
+  },
+  {
+    engine: 'password-generator',
+    icon: '🎲',
+    title: 'Secure Password Generator',
+    description: 'Generate cryptographically random passwords or memorable passphrases using the Web Crypto API (CSPRNG). Configurable length, charset, and format.',
+    badge: 'generator',
+  },
+];
 
 export default function ToolsIndex() {
   const items = getAllContentItems<ToolMeta>('tools');
   const niches = getAllNiches();
   const nicheMap = Object.fromEntries(niches.map(n => [n.id, n]));
 
-  const grouped = items.reduce<Record<string, typeof items>>((acc, item) => {
-    const key = item._niche;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
+  // Find the best link for each featured tool (pick first niche that uses this engine)
+  const engineToLink: Record<string, { href: string; niche: string }> = {};
+  for (const item of items) {
+    if (item.toolEngine && !engineToLink[item.toolEngine]) {
+      engineToLink[item.toolEngine] = {
+        href: `/tools/${item._niche}/${item._slug}`,
+        niche: nicheMap[item._niche]?.name || item._niche,
+      };
+    }
+  }
+
+  // Group items by engine for the "all tools by topic" section
+  const byEngine = items.reduce<Record<string, typeof items>>((acc, item) => {
+    const engine = item.toolEngine || 'other';
+    if (!acc[engine]) acc[engine] = [];
+    acc[engine].push(item);
     return acc;
   }, {});
 
   return (
     <div>
       <h1 className="text-3xl font-bold text-white mb-2">Free Privacy Tools</h1>
-      <p className="text-[#B8B8D4] mb-8">
-        Interactive tools to analyze, test, and improve your online privacy. All tools run in your browser — no data is sent to any server.
+      <p className="text-[#B8B8D4] mb-2">
+        Interactive tools to analyze, test, and improve your online privacy.
+      </p>
+      <p className="text-sm text-[#B8B8D4]/60 mb-8">
+        All tools run 100% in your browser — no data is sent to any server.
       </p>
 
       {items.length === 0 && (
@@ -43,24 +141,69 @@ export default function ToolsIndex() {
         </div>
       )}
 
-      {Object.entries(grouped).map(([nicheId, nicheItems]) => (
-        <section key={nicheId} className="mb-10">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            {nicheMap[nicheId]?.name || nicheId}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {nicheItems.map(item => (
-              <Card
-                key={item._slug}
-                title={item.title}
-                description={item.metaDescription}
-                href={`/tools/${item._niche}/${item._slug}`}
-                badge={item.toolType}
-              />
-            ))}
-          </div>
-        </section>
-      ))}
+      {/* Featured tools grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+        {FEATURED_TOOLS.map(tool => {
+          const link = engineToLink[tool.engine];
+          if (!link) return null;
+          return (
+            <a
+              key={tool.engine}
+              href={link.href}
+              className="group bg-[#0a0a0a] border border-white/10 rounded-lg p-6 hover:border-white/25 transition-colors"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <span className="text-2xl">{tool.icon}</span>
+                <span className="text-xs px-2 py-0.5 bg-white/10 rounded text-[#B8B8D4]">{tool.badge}</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-white/90">
+                {tool.title}
+              </h3>
+              <p className="text-sm text-[#B8B8D4] leading-relaxed">
+                {tool.description}
+              </p>
+              <div className="mt-4 flex items-center gap-1 text-xs text-[#B8B8D4]/60">
+                <span className="text-green-400/60">●</span>
+                <span>Free</span>
+                <span className="mx-1">·</span>
+                <span>Client-side</span>
+                <span className="mx-1">·</span>
+                <span>No signup</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+
+      {/* Browse by topic */}
+      <div className="border-t border-white/10 pt-10">
+        <h2 className="text-xl font-semibold text-white mb-2">Browse by Privacy Topic</h2>
+        <p className="text-sm text-[#B8B8D4] mb-6">
+          Each privacy niche has a tailored tool with topic-specific guidance and tips.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {items.map(item => (
+            <a
+              key={`${item._niche}-${item._slug}`}
+              href={`/tools/${item._niche}/${item._slug}`}
+              className="flex items-center gap-3 bg-[#0a0a0a] border border-white/5 rounded-lg px-4 py-3 hover:border-white/15 transition-colors group"
+            >
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-white truncate group-hover:text-white/90">
+                  {item.title}
+                </div>
+                <div className="text-xs text-[#B8B8D4]/60 truncate">
+                  {nicheMap[item._niche]?.name || item._niche}
+                </div>
+              </div>
+              <span className="text-xs px-1.5 py-0.5 bg-white/5 rounded text-[#B8B8D4]/40 shrink-0">
+                {item.toolType}
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
