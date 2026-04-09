@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -49,9 +50,13 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <Link href="/" className="flex items-center gap-3">
-                <div className="w-8 h-8 border-2 border-white rounded-full flex items-center justify-center">
-                  <span className="text-white font-bold text-xs">IB</span>
-                </div>
+                <Image
+                  src="/icon.svg"
+                  alt="Incognito Browser"
+                  width={32}
+                  height={32}
+                  className="rounded"
+                />
                 <span className="font-semibold text-white text-sm uppercase tracking-wider">Privacy Resources</span>
               </Link>
               <nav className="hidden lg:flex items-center gap-1">
@@ -102,7 +107,15 @@ export default function RootLayout({
                 </ul>
               </div>
               <div className="col-span-2">
-                <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">About</h3>
+                <div className="flex items-center gap-3 mb-4">
+                  <Image
+                    src="/icon.svg"
+                    alt="Incognito Browser"
+                    width={28}
+                    height={28}
+                  />
+                  <h3 className="font-semibold text-white text-xs uppercase tracking-wider">Incognito Browser</h3>
+                </div>
                 <p className="text-sm text-[#B8B8D4] leading-relaxed">
                   Free privacy resources provided by Incognito Browser. Protecting your online
                   privacy with tools, guides, and educational content.
