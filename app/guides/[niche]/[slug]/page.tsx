@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { getContentItem, getContentFiles } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateHowToSchema, generateFAQSchema, generateBreadcrumbSchema } from '@/lib/seo';
 import { GuidePage } from '@/components/GuidePage';
+import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
 
@@ -69,12 +70,18 @@ export default async function GuideDetailPage({ params }: PageProps) {
     { name: data.title, url: `/guides/${niche}/${slug}` },
   ]);
 
+  const crossLinks = getCrossNicheLinks(niche, 'guides', slug);
+
   return (
     <>
       <JsonLd data={breadcrumbs} />
       <JsonLd data={howToSchema} />
       {faqSchema && <JsonLd data={faqSchema} />}
       <GuidePage data={data} nicheName={nicheName} />
+      <RelatedContent
+        links={crossLinks}
+        nicheHub={{ name: nicheName, href: `/topics/${niche}` }}
+      />
     </>
   );
 }

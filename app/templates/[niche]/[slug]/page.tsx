@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { getContentItem, getContentFiles } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { TemplatePage } from '@/components/TemplatePage';
+import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
 
@@ -61,10 +62,16 @@ export default async function TemplateDetailPage({ params }: PageProps) {
     { name: data.title, url: `/templates/${niche}/${slug}` },
   ]);
 
+  const crossLinks = getCrossNicheLinks(niche, 'templates', slug);
+
   return (
     <>
       <JsonLd data={breadcrumbs} />
       <TemplatePage data={data} nicheName={nicheName} />
+      <RelatedContent
+        links={crossLinks}
+        nicheHub={{ name: nicheName, href: `/topics/${niche}` }}
+      />
     </>
   );
 }

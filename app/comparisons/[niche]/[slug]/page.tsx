@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { getContentItem, getContentFiles } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateFAQSchema, generateBreadcrumbSchema } from '@/lib/seo';
 import { ComparisonPage } from '@/components/ComparisonPage';
+import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
 
@@ -75,11 +76,17 @@ export default async function ComparisonDetailPage({ params }: PageProps) {
     { name: data.title, url: `/comparisons/${niche}/${slug}` },
   ]);
 
+  const crossLinks = getCrossNicheLinks(niche, 'comparisons', slug);
+
   return (
     <>
       <JsonLd data={breadcrumbs} />
       {faqSchema && <JsonLd data={faqSchema} />}
       <ComparisonPage data={data} nicheName={nicheName} />
+      <RelatedContent
+        links={crossLinks}
+        nicheHub={{ name: nicheName, href: `/topics/${niche}` }}
+      />
     </>
   );
 }

@@ -28,6 +28,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
+  // Niche hub pages
+  const niches = getAllNiches();
+  for (const niche of niches) {
+    entries.push({
+      url: `${SITE_URL}/topics/${niche.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    });
+  }
+
   // Dynamic content pages
   const dynamicTypes = ['checklists', 'guides', 'comparisons', 'tools', 'templates', 'calculators'];
   for (const type of dynamicTypes) {

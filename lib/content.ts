@@ -55,6 +55,37 @@ export function getAllContentItems<T>(contentType: string): Array<T & { _niche: 
   return items;
 }
 
+export function getCrossNicheLinks(
+  niche: string,
+  currentType: string,
+  currentSlug: string,
+  limit = 6
+): Array<{ title: string; url: string; type: string }> {
+  const contentTypes = ['guides', 'checklists', 'comparisons', 'tools', 'templates', 'calculators'];
+  const typeLabels: Record<string, string> = {
+    guides: 'guide', checklists: 'checklist', comparisons: 'comparison',
+    tools: 'tool', templates: 'template', calculators: 'calculator',
+  };
+  const links: Array<{ title: string; url: string; type: string }> = [];
+
+  for (const ct of contentTypes) {
+    if (links.length >= limit) break;
+    const files = getContentFiles(ct, niche);
+    for (const slug of files) {
+      if (links.length >= limit) break;
+      if (ct === currentType && slug === currentSlug) continue;
+      const title = getContentItemTitle(ct, niche, slug);
+      links.push({ title, url: `/${ct}/${niche}/${slug}`, type: typeLabels[ct] });
+    }
+  }
+  return links;
+}
+
+export function getContentItemTitle(contentType: string, niche: string, slug: string): string {
+  const item = getContentItem<{ title?: string }>(contentType, niche, slug);
+  return item?.title || slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
 // For glossary (flat structure, no niche subdirectories)
 export function getGlossaryFiles(): string[] {
   const dir = path.join(DATA_DIR, 'glossary');

@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
-import { getContentItem, getContentFiles } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateWebApplicationSchema, generateBreadcrumbSchema } from '@/lib/seo';
+import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ToolPageClient } from './client';
 import type { Metadata } from 'next';
@@ -72,11 +73,17 @@ export default async function ToolDetailPage({ params }: PageProps) {
     { name: data.title, url: `/tools/${niche}/${slug}` },
   ]);
 
+  const crossLinks = getCrossNicheLinks(niche, 'tools', slug);
+
   return (
     <>
       <JsonLd data={breadcrumbs} />
       <JsonLd data={appSchema} />
       <ToolPageClient data={data} nicheName={nicheName} />
+      <RelatedContent
+        links={crossLinks}
+        nicheHub={{ name: nicheName, href: `/topics/${niche}` }}
+      />
     </>
   );
 }

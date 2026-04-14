@@ -66,7 +66,7 @@ export default function HomePage() {
           {tierOneNiches.map(niche => (
             <Link
               key={niche.slug}
-              href={`/guides/${niche.slug}`}
+              href={`/topics/${niche.slug}`}
               className="px-4 py-2 border border-white/10 text-[#B8B8D4] rounded-full text-sm hover:border-white/40 hover:text-white transition-colors"
             >
               {niche.name}
@@ -80,17 +80,19 @@ export default function HomePage() {
         <h2 className="text-2xl font-bold text-white mb-6">All Privacy Topics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {niches.map(niche => (
-            <div key={niche.slug} className="border border-white/10 rounded-lg p-4 bg-[#0a0a0a]">
-              <h3 className="font-semibold text-white mb-1">{niche.name}</h3>
-              <p className="text-sm text-[#B8B8D4] mb-3">{niche.description}</p>
-              <div className="flex flex-wrap gap-1">
-                {niche.keywords.slice(0, 3).map((kw, i) => (
-                  <span key={i} className="text-xs bg-white/5 text-[#B8B8D4]/70 px-2 py-0.5 rounded border border-white/5">
-                    {kw}
-                  </span>
-                ))}
+            <Link key={niche.slug} href={`/topics/${niche.slug}`} className="group">
+              <div className="border border-white/10 rounded-lg p-4 bg-[#0a0a0a] hover:border-white/30 transition-all">
+                <h3 className="font-semibold text-white group-hover:text-[#cfcfcf] mb-1">{niche.name}</h3>
+                <p className="text-sm text-[#B8B8D4] mb-3">{niche.description}</p>
+                <div className="flex flex-wrap gap-1">
+                  {niche.keywords.slice(0, 3).map((kw, i) => (
+                    <span key={i} className="text-xs bg-white/5 text-[#B8B8D4]/70 px-2 py-0.5 rounded border border-white/5">
+                      {kw}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

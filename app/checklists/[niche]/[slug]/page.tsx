@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation';
-import { getContentItem, getContentFiles } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { ChecklistPage } from '@/components/ChecklistPage';
+import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { generateBreadcrumbSchema } from '@/lib/seo';
 import type { Metadata } from 'next';
@@ -68,10 +69,16 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
     { name: data.title, url: `/checklists/${niche}/${slug}` },
   ]);
 
+  const crossLinks = getCrossNicheLinks(niche, 'checklists', slug);
+
   return (
     <>
       <JsonLd data={breadcrumbs} />
       <ChecklistPage data={data} nicheName={nicheName} />
+      <RelatedContent
+        links={crossLinks}
+        nicheHub={{ name: nicheName, href: `/topics/${niche}` }}
+      />
     </>
   );
 }
