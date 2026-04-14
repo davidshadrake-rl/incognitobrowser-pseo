@@ -51,10 +51,12 @@ A script that loops through niches x content types, calls Claude with the niche 
 | Checklists | Interactive task lists with priorities | 88 | 2 |
 | Guides | Step-by-step tutorials (beginner to advanced) | 132 | 3 |
 | Comparisons | Side-by-side tool/product analysis | 44 | 1 |
+| Tools | Interactive privacy tools (11 engines) | 44 | 1 |
 | Templates | Downloadable privacy request documents | 88 | 2 |
 | Calculators | Interactive risk assessment tools | 44 | 1 |
 | Glossary | Privacy term definitions with cross-links | 106 | flat |
-| **Total** | | **502 files, 514 static pages** | |
+| Topics | Niche hub pages aggregating all types | 44 | 1 hub |
+| **Total** | | **611 static pages** | |
 
 ### Niche tiers
 
@@ -63,6 +65,36 @@ A script that loops through niches x content types, calls Claude with the niche 
 - **Tier 3 -- Specialized (10):** Workplace, Student, Children, Healthcare, Dating, Smart Home, Webcam, AI Privacy, Cloud, Gaming
 - **Tier 4 -- Legal (7):** GDPR, CCPA, US State Laws, International Laws, Data Breach, Right to Be Forgotten, Privacy Policies
 - **Tier 5 -- Advanced (6):** Crypto, Tor, Facial Recognition, Drones, Browser Extensions, Journalist Privacy
+
+## Recent Changes
+
+### Interactive Privacy Tools (11 engines across 44 niches)
+- **Password Strength Analyzer** -- real entropy calculation, crack time estimation, pattern detection
+- **Password Generator** -- CSPRNG-based passwords and passphrases with configurable options
+- **Browser Privacy Audit** -- 14 checks across tracking, fingerprinting, and leak categories
+- **Text Encryption/Decryption** -- AES-256-GCM via Web Crypto API with PBKDF2 key derivation
+- **URL Safety Analyzer** -- detects suspicious TLDs, shorteners, homograph attacks, credential harvesting
+- **Hash Generator** -- SHA-1/256/384/512 with text and file input modes
+- **Privacy Quiz** -- 12 questions across 5 categories with personalized recommendations
+- **Permission Checker** -- queries 11 browser permissions with risk assessments
+- **Cookie & Tracker Scanner** -- scans URLs server-side for cookies, tracking scripts, and security headers
+- **User Agent Analyzer** -- parses browser/OS/engine with privacy concern ratings
+- **Metadata Viewer** -- client-side JPEG EXIF parser detecting GPS, camera info, timestamps
+
+Each engine is mapped to relevant niches via a registry (`components/tools/registry.tsx`), so all 44 niche tool pages render a real, functional tool.
+
+### Hub-and-Spoke SEO Architecture
+- **Niche hub pages** at `/topics/[niche]/` -- 44 pages aggregating all content types per privacy topic
+- **Cross-content-type linking** -- every detail page shows related resources from the same niche (guides link to checklists, tools, comparisons, etc.)
+- **Clickable homepage topic grid** -- all niche cards and popular topic pills link to hub pages
+- **Sitemap updated** with hub pages at priority 0.7
+
+### URL Scanner API
+- Server-side POST endpoint at `/api/scan-url` fetches URLs and analyzes Set-Cookie headers, tracking scripts (33 patterns), third-party domains, and security headers
+- Returns privacy grade (A-F) with detailed breakdown
+
+### Branding
+- Real Incognito Browser icon (hat + sunglasses SVG) used as favicon and throughout header/footer navigation
 
 ## SEO Mechanics
 
@@ -104,16 +136,20 @@ pseo/
     comparisons/           -- Generated comparison JSON per niche
     templates/             -- Generated template JSON per niche
     calculators/           -- Generated calculator JSON per niche
+    tools/                 -- Generated tool JSON per niche (with engine mappings)
     glossary/              -- 106 generated glossary term JSON files
   scripts/
     generate-content.ts    -- AI content generation script
     schemas/               -- JSON schemas for each content type
-  app/                     -- Next.js pages and routes
+  app/                     -- Next.js pages and routes (includes /topics/[niche] hubs)
+  api/scan-url/            -- Server-side URL scanner endpoint
   lib/
     taxonomy.ts            -- TypeScript API for querying niches
     content.ts             -- Functions for loading content files
     seo.ts                 -- SEO metadata and schema generation
   components/              -- React components for each content type
+    tools/                 -- 11 interactive tool engine components + registry
+    seo/                   -- RelatedContent, JsonLd, breadcrumbs
 ```
 
 ## Running Locally
