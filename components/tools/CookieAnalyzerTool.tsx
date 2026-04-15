@@ -177,7 +177,7 @@ export function CookieAnalyzerTool() {
     setScanned(false);
 
     try {
-      const res = await fetch('/api/scan-url', {
+      const res = await fetch('https://api.incognitobrowser.io/scan-url', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: urlInput.trim() }),

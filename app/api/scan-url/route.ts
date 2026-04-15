@@ -117,12 +117,37 @@ function categorizeCookie(cookieStr: string) {
   return { cookieName, name: 'Unknown', category: 'unknown' as const, risk: 'low' as const, description: 'Purpose unknown — could be functional or tracking' };
 }
 
+const ALLOWED_ORIGINS = [
+  'https://incognitobrowser.io',
+  'https://www.incognitobrowser.io',
+];
+
+function corsHeaders(origin: string | null) {
+  const headers: Record<string, string> = {
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Max-Age': '86400',
+  };
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    headers['Access-Control-Allow-Origin'] = origin;
+  }
+  return headers;
+}
+
+export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  return new NextResponse(null, { status: 204, headers: corsHeaders(origin) });
+}
+
 export async function POST(request: NextRequest) {
+  const origin = request.headers.get('origin');
+  const cors = corsHeaders(origin);
+
   try {
     const { url } = await request.json();
 
     if (!url || typeof url !== 'string') {
-      return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+      return NextResponse.json({ error: 'URL is required' }, { status: 400, headers: cors });
     }
 
     // Validate URL format
@@ -130,12 +155,12 @@ export async function POST(request: NextRequest) {
     try {
       parsedUrl = new URL(url.startsWith('http') ? url : `https://${url}`);
     } catch {
-      return NextResponse.json({ error: 'Invalid URL format' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid URL format' }, { status: 400, headers: cors });
     }
 
     // Only allow http/https
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-      return NextResponse.json({ error: 'Only HTTP/HTTPS URLs are supported' }, { status: 400 });
+      return NextResponse.json({ error: 'Only HTTP/HTTPS URLs are supported' }, { status: 400, headers: cors });
     }
 
     const targetUrl = parsedUrl.href;
@@ -160,7 +185,7 @@ export async function POST(request: NextRequest) {
       const message = err instanceof Error && err.name === 'AbortError'
         ? 'Request timed out (10s). The site may be slow or blocking automated requests.'
         : 'Failed to reach this URL. The site may be down or blocking requests.';
-      return NextResponse.json({ error: message }, { status: 502 });
+      return NextResponse.json({ error: message }, { status: 502, headers: cors });
     }
     clearTimeout(timeout);
 
@@ -270,9 +295,9 @@ export async function POST(request: NextRequest) {
         thirdPartyScripts: thirdPartyDomains.size,
         highRiskItems: cookies.filter(c => c.risk === 'high').length + trackers.filter(t => t.risk === 'high').length,
       },
-    });
+    }, { headers: cors });
   } catch (err) {
     console.error('Scan error:', err);
-    return NextResponse.json({ error: 'An unexpected error occurred while scanning.' }, { status: 500 });
+    return NextResponse.json({ error: 'An unexpected error occurred while scanning.' }, { status: 500, headers: cors });
   }
 }
