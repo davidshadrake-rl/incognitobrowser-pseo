@@ -16,7 +16,7 @@ function readFile(relativePath: string): string {
 }
 
 describe('Error Handling - No Stack Trace Leakage', () => {
-  const routeSource = readFile('app/api/scan-url/route.ts');
+  const routeSource = readFile('app/scan-url/route.ts');
 
   it('does not pass raw error objects to console.error', () => {
     // Should NOT have console.error('...', err) with raw error
@@ -47,7 +47,7 @@ describe('Error Handling - No Stack Trace Leakage', () => {
 });
 
 describe('Error Handling - Client Error Messages', () => {
-  const routeSource = readFile('app/api/scan-url/route.ts');
+  const routeSource = readFile('app/scan-url/route.ts');
 
   it('returns 400 for missing URL', () => {
     expect(routeSource).toContain("'URL is required'");

@@ -7,6 +7,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build": "vitest run && next build",
+    "build:static": "vitest run && BUILD_TARGET=static next build",
     "start": "next start",
     "lint": "eslint",
     "generate": "tsx scripts/generate-content.ts",

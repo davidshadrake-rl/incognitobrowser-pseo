@@ -15,7 +15,7 @@ function readFile(relativePath: string): string {
 }
 
 describe('Scanner Response Body Cap', () => {
-  const routeSource = readFile('app/api/scan-url/route.ts');
+  const routeSource = readFile('app/scan-url/route.ts');
 
   it('declares MAX_BODY_SIZE as 5MB', () => {
     expect(routeSource).toContain('const MAX_BODY_SIZE = 5 * 1024 * 1024');
@@ -34,7 +34,7 @@ describe('Scanner Response Body Cap', () => {
 });
 
 describe('Scanner Cookie Array Cap', () => {
-  const routeSource = readFile('app/api/scan-url/route.ts');
+  const routeSource = readFile('app/scan-url/route.ts');
 
   it('declares MAX_COOKIES', () => {
     expect(routeSource).toContain('const MAX_COOKIES = 100');
@@ -46,7 +46,7 @@ describe('Scanner Cookie Array Cap', () => {
 });
 
 describe('Scanner Script Regex Loop Cap', () => {
-  const routeSource = readFile('app/api/scan-url/route.ts');
+  const routeSource = readFile('app/scan-url/route.ts');
 
   it('declares MAX_SCRIPT_MATCHES', () => {
     expect(routeSource).toContain('const MAX_SCRIPT_MATCHES = 500');
@@ -71,7 +71,7 @@ describe('Scanner Script Regex Loop Cap', () => {
 });
 
 describe('Scanner Redirect Handling', () => {
-  const routeSource = readFile('app/api/scan-url/route.ts');
+  const routeSource = readFile('app/scan-url/route.ts');
 
   it("uses redirect: 'manual' to prevent SSRF-by-redirect", () => {
     expect(routeSource).toContain("redirect: 'manual'");

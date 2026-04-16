@@ -13,7 +13,7 @@ import fs from 'fs';
 import path from 'path';
 
 const routeSource = fs.readFileSync(
-  path.join(__dirname, '..', 'app/api/scan-url/route.ts'),
+  path.join(__dirname, '..', 'app/scan-url/route.ts'),
   'utf-8'
 );
 
