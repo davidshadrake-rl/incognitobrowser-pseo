@@ -13,12 +13,12 @@ interface PageProps {
 }
 
 const CONTENT_TYPES = [
-  { slug: 'guides', name: 'Guides', icon: '&#128214;', description: 'Step-by-step tutorials' },
-  { slug: 'checklists', name: 'Checklists', icon: '&#9745;', description: 'Actionable task lists' },
-  { slug: 'comparisons', name: 'Comparisons', icon: '&#8596;', description: 'Product & tool reviews' },
-  { slug: 'tools', name: 'Tools', icon: '&#9881;', description: 'Interactive privacy tools' },
-  { slug: 'templates', name: 'Templates', icon: '&#128196;', description: 'Ready-to-use documents' },
-  { slug: 'calculators', name: 'Calculators', icon: '&#128290;', description: 'Privacy assessments' },
+  { slug: 'guides', name: 'Guides', icon: '\u{1F4D6}', description: 'Step-by-step tutorials' },
+  { slug: 'checklists', name: 'Checklists', icon: '\u2611', description: 'Actionable task lists' },
+  { slug: 'comparisons', name: 'Comparisons', icon: '\u2194', description: 'Product & tool reviews' },
+  { slug: 'tools', name: 'Tools', icon: '\u2699', description: 'Interactive privacy tools' },
+  { slug: 'templates', name: 'Templates', icon: '\u{1F4C4}', description: 'Ready-to-use documents' },
+  { slug: 'calculators', name: 'Calculators', icon: '\u{1F522}', description: 'Privacy assessments' },
 ];
 
 export async function generateStaticParams() {
@@ -100,7 +100,7 @@ export default async function NicheHubPage({ params }: PageProps) {
       {sections.map(section => (
         <section key={section.slug} className="mb-12">
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-2xl" dangerouslySetInnerHTML={{ __html: section.icon }} />
+            <span className="text-2xl">{section.icon}</span>
             <div>
               <h2 className="text-xl font-bold text-white">{section.name}</h2>
               <p className="text-sm text-[#B8B8D4]/60">{section.description}</p>

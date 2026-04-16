@@ -39,6 +39,10 @@ export function HashGeneratorTool() {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (file.size > 50 * 1024 * 1024) {
+      alert('File too large. Maximum size is 50MB.');
+      return;
+    }
     setFileName(file.name);
     const text = await file.text();
     setInputText(text);

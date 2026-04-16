@@ -48,8 +48,8 @@ interface ComparisonData {
 }
 
 const scoreDisplay: Record<string, { label: string; color: string }> = {
-  yes: { label: '&#10003;', color: 'text-green-400 bg-green-500/15' },
-  no: { label: '&#10007;', color: 'text-red-400 bg-red-500/15' },
+  yes: { label: '\u2713', color: 'text-green-400 bg-green-500/15' },
+  no: { label: '\u2717', color: 'text-red-400 bg-red-500/15' },
   partial: { label: '~', color: 'text-yellow-400 bg-yellow-500/15' },
   excellent: { label: 'Excellent', color: 'text-green-400 bg-green-500/15' },
   good: { label: 'Good', color: 'text-blue-400 bg-blue-500/15' },
@@ -135,7 +135,7 @@ export function ComparisonPage({ data, nicheName }: { data: ComparisonData; nich
                     return (
                       <td key={p.slug} className="text-center p-3">
                         {display ? (
-                          <span className={`inline-block px-2 py-1 rounded text-sm font-medium ${display.color}`} dangerouslySetInnerHTML={{ __html: display.label }} />
+                          <span className={`inline-block px-2 py-1 rounded text-sm font-medium ${display.color}`}>{display.label}</span>
                         ) : (
                           <span className="text-white/20">-</span>
                         )}

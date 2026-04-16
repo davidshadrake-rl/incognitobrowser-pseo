@@ -26,6 +26,17 @@ const TRUSTED_DOMAINS = new Set([
 ]);
 
 function analyzeURL(urlString: string): URLAnalysis {
+  // Input length guard against ReDoS
+  if (urlString.length > 2048) {
+    return {
+      url: urlString.substring(0, 100) + '...',
+      score: 10,
+      risks: [{ severity: 'high', message: 'URL is suspiciously long (over 2048 characters)' }],
+      details: [{ label: 'Length', value: `${urlString.length} characters`, safe: false }],
+      isHTTPS: false,
+    };
+  }
+
   const risks: URLAnalysis['risks'] = [];
   const details: URLAnalysis['details'] = [];
   let score = 100;

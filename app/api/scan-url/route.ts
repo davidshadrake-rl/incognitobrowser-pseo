@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, getClientIP } from '@/lib/rate-limit';
 
 // Known tracking script patterns to look for in HTML
 const TRACKER_PATTERNS: { pattern: RegExp; name: string; category: 'tracking' | 'analytics' | 'functional'; risk: 'high' | 'medium' | 'low'; description: string }[] = [
@@ -117,6 +118,56 @@ function categorizeCookie(cookieStr: string) {
   return { cookieName, name: 'Unknown', category: 'unknown' as const, risk: 'low' as const, description: 'Purpose unknown — could be functional or tracking' };
 }
 
+// SSRF Protection: block private/reserved IPs and cloud metadata endpoints
+function isBlockedHostname(hostname: string): boolean {
+  const lower = hostname.toLowerCase();
+
+  // Block localhost variants
+  if (lower === 'localhost' || lower === 'localhost.localdomain') return true;
+
+  // Block common cloud metadata endpoints
+  if (lower === 'metadata.google.internal') return true;
+  if (lower === 'metadata.google.com') return true;
+
+  // Strip IPv6 brackets
+  const ip = lower.replace(/^\[/, '').replace(/\]$/, '');
+
+  // Handle IPv4-mapped IPv6
+  const v4 = ip.startsWith('::ffff:') ? ip.slice(7) : ip;
+
+  // Block IPv4 private/reserved ranges
+  const blockedIPv4 = [
+    /^127\./,                          // Loopback
+    /^10\./,                           // RFC 1918
+    /^172\.(1[6-9]|2[0-9]|3[01])\./,  // RFC 1918
+    /^192\.168\./,                     // RFC 1918
+    /^169\.254\./,                     // Link-local / AWS metadata
+    /^0\./,                            // Current network
+    /^100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\./,  // Carrier-grade NAT
+    /^192\.0\.0\./,                    // IETF protocol assignments
+    /^198\.1[89]\./,                   // Benchmarking
+    /^255\.255\.255\.255$/,            // Broadcast
+  ];
+  if (blockedIPv4.some(r => r.test(v4))) return true;
+
+  // Block IPv6 private/reserved
+  const blockedIPv6 = [
+    /^::1$/,           // Loopback
+    /^fc[0-9a-f]{2}:/i,  // Unique local
+    /^fd[0-9a-f]{2}:/i,  // Unique local
+    /^fe80:/i,         // Link-local
+    /^ff[0-9a-f]{2}:/i,  // Multicast
+    /^::$/,            // Unspecified
+  ];
+  if (blockedIPv6.some(r => r.test(ip))) return true;
+
+  return false;
+}
+
+// Input length limits
+const MAX_URL_LENGTH = 2048;
+const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB max response to read
+
 const ALLOWED_ORIGINS = [
   'https://incognitobrowser.io',
   'https://www.incognitobrowser.io',
@@ -127,6 +178,11 @@ function corsHeaders(origin: string | null) {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Max-Age': '86400',
+    // Security headers
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Content-Type': 'application/json',
   };
   if (origin && ALLOWED_ORIGINS.includes(origin)) {
     headers['Access-Control-Allow-Origin'] = origin;
@@ -139,15 +195,35 @@ export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, { status: 204, headers: corsHeaders(origin) });
 }
 
+// Rate limit: 10 requests per minute per IP
+const RATE_LIMIT_CONFIG = { limit: 10, windowMs: 60_000 };
+
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
   const cors = corsHeaders(origin);
+
+  // Rate limiting
+  const clientIP = getClientIP(request.headers);
+  const rl = rateLimit(clientIP, RATE_LIMIT_CONFIG);
+  const allHeaders = { ...cors, ...rl.headers };
+
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again later.' },
+      { status: 429, headers: allHeaders }
+    );
+  }
 
   try {
     const { url } = await request.json();
 
     if (!url || typeof url !== 'string') {
-      return NextResponse.json({ error: 'URL is required' }, { status: 400, headers: cors });
+      return NextResponse.json({ error: 'URL is required' }, { status: 400, headers: allHeaders });
+    }
+
+    // Input length check
+    if (url.length > MAX_URL_LENGTH) {
+      return NextResponse.json({ error: 'URL is too long (max 2048 characters)' }, { status: 400, headers: allHeaders });
     }
 
     // Validate URL format
@@ -155,12 +231,29 @@ export async function POST(request: NextRequest) {
     try {
       parsedUrl = new URL(url.startsWith('http') ? url : `https://${url}`);
     } catch {
-      return NextResponse.json({ error: 'Invalid URL format' }, { status: 400, headers: cors });
+      return NextResponse.json({ error: 'Invalid URL format' }, { status: 400, headers: allHeaders });
     }
 
     // Only allow http/https
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
-      return NextResponse.json({ error: 'Only HTTP/HTTPS URLs are supported' }, { status: 400, headers: cors });
+      return NextResponse.json({ error: 'Only HTTP/HTTPS URLs are supported' }, { status: 400, headers: allHeaders });
+    }
+
+    // SSRF Protection: block private/internal networks
+    if (isBlockedHostname(parsedUrl.hostname)) {
+      return NextResponse.json(
+        { error: 'Cannot scan private IP addresses, localhost, or internal networks.' },
+        { status: 400, headers: allHeaders }
+      );
+    }
+
+    // Block non-standard ports commonly used for internal services
+    const port = parsedUrl.port ? parseInt(parsedUrl.port, 10) : (parsedUrl.protocol === 'https:' ? 443 : 80);
+    if (port !== 80 && port !== 443 && port !== 8080 && port !== 8443) {
+      return NextResponse.json(
+        { error: 'Only standard web ports (80, 443, 8080, 8443) are supported.' },
+        { status: 400, headers: allHeaders }
+      );
     }
 
     const targetUrl = parsedUrl.href;
@@ -178,14 +271,14 @@ export async function POST(request: NextRequest) {
           'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
           'Accept-Language': 'en-US,en;q=0.5',
         },
-        redirect: 'follow',
+        redirect: 'manual',  // Don't auto-follow redirects (SSRF prevention)
       });
     } catch (err) {
       clearTimeout(timeout);
       const message = err instanceof Error && err.name === 'AbortError'
         ? 'Request timed out (10s). The site may be slow or blocking automated requests.'
         : 'Failed to reach this URL. The site may be down or blocking requests.';
-      return NextResponse.json({ error: message }, { status: 502, headers: cors });
+      return NextResponse.json({ error: message }, { status: 502, headers: allHeaders });
     }
     clearTimeout(timeout);
 
@@ -295,9 +388,10 @@ export async function POST(request: NextRequest) {
         thirdPartyScripts: thirdPartyDomains.size,
         highRiskItems: cookies.filter(c => c.risk === 'high').length + trackers.filter(t => t.risk === 'high').length,
       },
-    }, { headers: cors });
+    }, { headers: allHeaders });
   } catch (err) {
-    console.error('Scan error:', err);
-    return NextResponse.json({ error: 'An unexpected error occurred while scanning.' }, { status: 500, headers: cors });
+    const errorType = err instanceof Error ? err.constructor.name : 'Unknown';
+    console.error(`Scan error (${errorType}): ${err instanceof Error ? err.message : 'unknown'}`);
+    return NextResponse.json({ error: 'An unexpected error occurred while scanning.' }, { status: 500, headers: allHeaders });
   }
 }

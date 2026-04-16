@@ -7,14 +7,14 @@ interface RelatedLink {
 }
 
 const TYPE_ICONS: Record<string, string> = {
-  guide: '&#128214;',
-  checklist: '&#9745;',
-  comparison: '&#8596;',
-  tool: '&#9881;',
-  template: '&#128196;',
-  calculator: '&#128290;',
-  internal: '&#128279;',
-  external: '&#127760;',
+  guide: '\u{1F4D6}',
+  checklist: '\u2611',
+  comparison: '\u2194',
+  tool: '\u2699',
+  template: '\u{1F4C4}',
+  calculator: '\u{1F522}',
+  internal: '\u{1F517}',
+  external: '\u{1F310}',
 };
 
 export function RelatedContent({ links, nicheHub }: { links: RelatedLink[]; nicheHub?: { name: string; href: string } }) {
@@ -30,10 +30,9 @@ export function RelatedContent({ links, nicheHub }: { links: RelatedLink[]; nich
             href={link.url}
             className="flex items-center gap-3 p-3 border border-white/10 rounded-lg hover:border-white/30 bg-white/[0.02] transition-all"
           >
-            <span
-              className="text-base"
-              dangerouslySetInnerHTML={{ __html: TYPE_ICONS[link.type] || TYPE_ICONS.internal }}
-            />
+            <span className="text-base">
+              {TYPE_ICONS[link.type] || TYPE_ICONS.internal}
+            </span>
             <div className="min-w-0">
               <span className="text-sm text-white block truncate">{link.title}</span>
               <span className="text-xs text-[#B8B8D4]/50 capitalize">{link.type}</span>

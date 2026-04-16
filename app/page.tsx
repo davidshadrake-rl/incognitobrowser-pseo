@@ -2,13 +2,13 @@ import Link from 'next/link';
 import { getAllNiches, getAllContentTypes } from '@/lib/taxonomy';
 
 const icons: Record<string, string> = {
-  checklists: '&#9745;',
-  tools: '&#9881;',
-  guides: '&#128214;',
-  comparisons: '&#8596;',
-  glossary: '&#128220;',
-  templates: '&#128196;',
-  calculators: '&#128290;',
+  checklists: '\u2611',
+  tools: '\u2699',
+  guides: '\u{1F4D6}',
+  comparisons: '\u2194',
+  glossary: '\u{1F4DC}',
+  templates: '\u{1F4C4}',
+  calculators: '\u{1F522}',
 };
 
 export default function HomePage() {
@@ -34,7 +34,7 @@ export default function HomePage() {
               href={`/${ct.slug}`}
               className="btn-secondary text-xs"
             >
-              <span dangerouslySetInnerHTML={{ __html: icons[ct.slug] || '' }} />
+              <span>{icons[ct.slug] || ''}</span>
               {' '}{ct.name}
             </Link>
           ))}
@@ -48,7 +48,7 @@ export default function HomePage() {
           {contentTypes.map(ct => (
             <Link key={ct.slug} href={`/${ct.slug}`} className="group">
               <div className="border border-white/10 rounded-lg p-6 hover:border-white/40 bg-[#0a0a0a] transition-all">
-                <div className="text-3xl mb-3" dangerouslySetInnerHTML={{ __html: icons[ct.slug] || '' }} />
+                <div className="text-3xl mb-3">{icons[ct.slug] || ''}</div>
                 <h3 className="text-lg font-semibold text-white group-hover:text-[#cfcfcf] mb-1">
                   {ct.name}
                 </h3>
