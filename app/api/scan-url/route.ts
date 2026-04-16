@@ -167,6 +167,37 @@ function isBlockedHostname(hostname: string): boolean {
 // Input length limits
 const MAX_URL_LENGTH = 2048;
 const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB max response to read
+const MAX_COOKIES = 100; // Max Set-Cookie headers to process
+const MAX_SCRIPT_MATCHES = 500; // Max script src regex iterations
+const MAX_THIRD_PARTY_DOMAINS = 50; // Already sliced at response time
+
+// Read a response body with a hard byte cap. Aborts the stream once the cap is hit.
+async function readCappedText(response: Response, maxBytes: number): Promise<string> {
+  if (!response.body) return '';
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder('utf-8', { fatal: false });
+  let received = 0;
+  let out = '';
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      received += value.byteLength;
+      if (received > maxBytes) {
+        // Decode what fits, then bail. Truncation is intentional.
+        const remaining = value.byteLength - (received - maxBytes);
+        if (remaining > 0) out += decoder.decode(value.subarray(0, remaining), { stream: false });
+        try { await reader.cancel(); } catch { /* ignore */ }
+        break;
+      }
+      out += decoder.decode(value, { stream: true });
+    }
+    out += decoder.decode();
+  } finally {
+    try { reader.releaseLock(); } catch { /* ignore */ }
+  }
+  return out;
+}
 
 const ALLOWED_ORIGINS = [
   'https://incognitobrowser.io',
@@ -282,6 +313,20 @@ export async function POST(request: NextRequest) {
     }
     clearTimeout(timeout);
 
+    // Reject redirect responses — with redirect:'manual' the body is empty/opaque,
+    // and silently "scanning" an unfollowed redirect would give misleading results.
+    // The Location header could also target an internal host we already blocked.
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get('location') || '';
+      return NextResponse.json(
+        {
+          error: `This URL redirects (HTTP ${response.status}). Please scan the final destination directly.`,
+          redirectTo: location.slice(0, 500) || null,
+        },
+        { status: 400, headers: allHeaders }
+      );
+    }
+
     // Extract Set-Cookie headers
     const setCookies: string[] = [];
     response.headers.forEach((value, key) => {
@@ -292,7 +337,9 @@ export async function POST(request: NextRequest) {
 
     // Some servers send multiple cookies in one header
     // Also check getSetCookie if available
-    const rawSetCookies = (response.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() || setCookies;
+    const rawSetCookiesAll = (response.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie?.() || setCookies;
+    // Cap cookie array — a hostile server could send thousands of Set-Cookie headers
+    const rawSetCookies = rawSetCookiesAll.slice(0, MAX_COOKIES);
 
     const cookies = rawSetCookies.map(cookieStr => {
       const categorized = categorizeCookie(cookieStr);
@@ -316,8 +363,9 @@ export async function POST(request: NextRequest) {
       };
     });
 
-    // Read HTML body for script analysis
-    const html = await response.text();
+    // Read HTML body for script analysis — capped to MAX_BODY_SIZE to prevent
+    // memory exhaustion from malicious or huge target pages.
+    const html = await readCappedText(response, MAX_BODY_SIZE);
 
     // Scan for tracking scripts
     const trackers = TRACKER_PATTERNS.filter(t => t.pattern.test(html)).map(t => ({
@@ -327,11 +375,16 @@ export async function POST(request: NextRequest) {
       description: t.description,
     }));
 
-    // Count third-party script domains
-    const scriptSrcRegex = /src=["'](https?:\/\/[^"']+)["']/gi;
+    // Count third-party script domains — capped at MAX_SCRIPT_MATCHES iterations
+    // so pathological pages (e.g. 100k <script> tags) can't DoS the endpoint.
+    // Bound URL length in the character class too, belt-and-suspenders against ReDoS.
+    const scriptSrcRegex = /src=["'](https?:\/\/[^"']{1,2048})["']/gi;
     const thirdPartyDomains = new Set<string>();
     let match;
+    let scriptIterations = 0;
     while ((match = scriptSrcRegex.exec(html)) !== null) {
+      if (++scriptIterations > MAX_SCRIPT_MATCHES) break;
+      if (thirdPartyDomains.size >= MAX_THIRD_PARTY_DOMAINS) break;
       try {
         const scriptUrl = new URL(match[1]);
         if (scriptUrl.hostname !== parsedUrl.hostname) {
@@ -372,7 +425,7 @@ export async function POST(request: NextRequest) {
       cookies,
       trackers,
       inlineTrackers,
-      thirdPartyDomains: Array.from(thirdPartyDomains).slice(0, 50),
+      thirdPartyDomains: Array.from(thirdPartyDomains).slice(0, MAX_THIRD_PARTY_DOMAINS),
       security: {
         isHTTPS,
         hasCSP,
