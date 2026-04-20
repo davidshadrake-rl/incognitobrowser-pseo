@@ -27,17 +27,61 @@ interface TemplateData {
   useCases: string[];
 }
 
+// Escape a string for use in a RegExp.
+function escapeRegExp(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Human-readable label for an auto-synthesized placeholder: "YOUR_NAME" -> "Your Name".
+function prettifyKey(key: string) {
+  return key
+    .toLowerCase()
+    .split('_')
+    .filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ');
+}
+
 export function TemplatePage({ data, nicheName }: { data: TemplateData; nicheName: string }) {
-  const allPlaceholders = data.sections.flatMap(s => s.placeholders || []);
+  // Start with whatever the JSON declared, de-duplicated by key.
+  const declared = new Map(
+    data.sections.flatMap(s => s.placeholders || []).map(p => [p.key, p])
+  );
+
+  // Scan every section's content for [TOKEN] references and synthesize a
+  // placeholder for any that weren't declared. This makes the UI resilient
+  // to content-generation bugs where a template body mentions [RECIPIENT_NAME]
+  // but the placeholders array omits it — otherwise the user sees the raw
+  // bracket token with no input to fill.
+  for (const section of data.sections) {
+    const tokens = section.content.match(/\[[A-Z_][A-Z0-9_]*\]/g) || [];
+    for (const token of tokens) {
+      const key = token.slice(1, -1);
+      if (!declared.has(key)) {
+        declared.set(key, {
+          key,
+          label: prettifyKey(key),
+          defaultValue: '',
+        });
+      }
+    }
+  }
+
+  const uniquePlaceholders = Array.from(declared.values());
+
   const [values, setValues] = useState<Record<string, string>>(
-    Object.fromEntries(allPlaceholders.map(p => [p.key, p.defaultValue]))
+    Object.fromEntries(uniquePlaceholders.map(p => [p.key, p.defaultValue]))
   );
   const [copied, setCopied] = useState(false);
 
+  // Template content uses [KEY] bracket syntax (not {{KEY}}).
+  // Replace every occurrence with the user-supplied value, falling back to the
+  // original bracket token so un-edited spots remain visually marked.
   const fillTemplate = (content: string) => {
     let result = content;
     for (const [key, value] of Object.entries(values)) {
-      result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value || `[${key}]`);
+      const pattern = new RegExp(`\\[${escapeRegExp(key)}\\]`, 'g');
+      result = result.replace(pattern, value || `[${key}]`);
     }
     return result;
   };
@@ -46,10 +90,27 @@ export function TemplatePage({ data, nicheName }: { data: TemplateData; nicheNam
     return data.sections.map(s => `${s.heading}\n\n${fillTemplate(s.content)}`).join('\n\n---\n\n');
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(getFullText());
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    const text = getFullText();
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        // Fallback for non-secure contexts or older browsers
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Permission denied or API unavailable — silently no-op the success state
+    }
   };
 
   return (
@@ -68,11 +129,11 @@ export function TemplatePage({ data, nicheName }: { data: TemplateData; nicheNam
         <p className="text-[#B8B8D4]">{data.description}</p>
       </header>
 
-      {allPlaceholders.length > 0 && (
+      {uniquePlaceholders.length > 0 && (
         <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-5 mb-8">
           <h2 className="font-semibold text-white mb-3">Customize Your Template</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {allPlaceholders.map(p => (
+            {uniquePlaceholders.map(p => (
               <div key={p.key}>
                 <label className="block text-sm font-medium text-[#B8B8D4] mb-1">{p.label}</label>
                 <input
