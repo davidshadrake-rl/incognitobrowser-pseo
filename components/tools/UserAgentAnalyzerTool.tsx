@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 interface UADetails {
   raw: string;
@@ -12,6 +12,16 @@ interface UADetails {
   isMobile: boolean;
   privacyConcerns: string[];
   uniquenessFactors: string[];
+}
+
+interface ClientHints {
+  brands: string;
+  fullVersion: string;
+  platformVersion: string;
+  architecture: string;
+  bitness: string;
+  model: string;
+  wow64: string;
 }
 
 function parseUserAgent(ua: string): UADetails {
@@ -27,13 +37,14 @@ function parseUserAgent(ua: string): UADetails {
     uniquenessFactors: [],
   };
 
-  // Browser detection
+  // Browser detection (order matters — Edge/Opera/Brave identify as Chrome)
   if (/Edg\/(\d+[\.\d]*)/.test(ua)) {
     result.browser = { name: 'Microsoft Edge', version: ua.match(/Edg\/(\d+[\.\d]*)/)![1] };
   } else if (/OPR\/(\d+[\.\d]*)/.test(ua)) {
     result.browser = { name: 'Opera', version: ua.match(/OPR\/(\d+[\.\d]*)/)![1] };
-  } else if (/Brave/.test(ua) || /brave/.test(ua)) {
-    result.browser = { name: 'Brave', version: ua.match(/Chrome\/(\d+[\.\d]*)/)![1] };
+  } else if (/Brave/i.test(ua)) {
+    const m = ua.match(/Chrome\/(\d+[\.\d]*)/);
+    result.browser = { name: 'Brave', version: m ? m[1] : '' };
   } else if (/Chrome\/(\d+[\.\d]*)/.test(ua) && !/Chromium/.test(ua)) {
     result.browser = { name: 'Chrome', version: ua.match(/Chrome\/(\d+[\.\d]*)/)![1] };
   } else if (/Firefox\/(\d+[\.\d]*)/.test(ua)) {
@@ -61,7 +72,7 @@ function parseUserAgent(ua: string): UADetails {
     result.isMobile = true;
     result.device = 'Mobile';
   } else if (/iPhone|iPad/.test(ua)) {
-    const ver = ua.match(/OS (\d+_\d+[_\d]*)/) ;
+    const ver = ua.match(/OS (\d+_\d+[_\d]*)/);
     result.os = { name: 'iOS', version: ver ? ver[1].replace(/_/g, '.') : '' };
     result.isMobile = true;
     result.device = /iPad/.test(ua) ? 'Tablet' : 'Mobile';
@@ -71,7 +82,6 @@ function parseUserAgent(ua: string): UADetails {
     result.os = { name: 'Chrome OS', version: '' };
   }
 
-  // 64-bit
   result.is64bit = /x86_64|x64|Win64|WOW64|aarch64|arm64/.test(ua);
 
   // Privacy concerns
@@ -83,16 +93,13 @@ function parseUserAgent(ua: string): UADetails {
     result.privacyConcerns.push('Edge sends diagnostic data to Microsoft');
   }
 
-  // Outdated browser check
-  const mainVer = parseInt(result.browser.version);
-  if (result.browser.name === 'Chrome' && mainVer < 120) {
-    result.privacyConcerns.push(`Chrome ${mainVer} may be outdated — update for security patches`);
-  }
-  if (result.browser.name === 'Firefox' && mainVer < 120) {
-    result.privacyConcerns.push(`Firefox ${mainVer} may be outdated — update for security patches`);
+  const mainVer = parseInt(result.browser.version, 10);
+  const MIN_VERSION: Record<string, number> = { Chrome: 130, Firefox: 130, 'Microsoft Edge': 130, Safari: 17 };
+  const threshold = MIN_VERSION[result.browser.name];
+  if (threshold && mainVer && mainVer < threshold) {
+    result.privacyConcerns.push(`${result.browser.name} ${mainVer} is outdated — update for security patches`);
   }
 
-  // Uniqueness factors
   result.uniquenessFactors.push(`Browser: ${result.browser.name} ${result.browser.version}`);
   result.uniquenessFactors.push(`OS: ${result.os.name} ${result.os.version}`);
   result.uniquenessFactors.push(`Platform: ${result.device}`);
@@ -102,18 +109,49 @@ function parseUserAgent(ua: string): UADetails {
   return result;
 }
 
+// Lazy initializer: reads navigator.userAgent at render time on the client and
+// parses it once. Avoids the setState-in-effect anti-pattern.
+const initialUA = typeof navigator !== 'undefined' ? navigator.userAgent : '';
+const initialDetails = initialUA ? parseUserAgent(initialUA) : null;
+
 export function UserAgentAnalyzerTool() {
-  const [ua, setUa] = useState('');
-  const [details, setDetails] = useState<UADetails | null>(null);
+  const [ua] = useState(initialUA);
+  const [details, setDetails] = useState<UADetails | null>(initialDetails);
   const [useCustom, setUseCustom] = useState(false);
   const [customUA, setCustomUA] = useState('');
+  const [hints, setHints] = useState<ClientHints | null>(null);
 
+  // Fetch high-entropy Client Hints on mount (Chromium only, async).
   useEffect(() => {
-    if (typeof navigator !== 'undefined') {
-      const current = navigator.userAgent;
-      setUa(current);
-      setDetails(parseUserAgent(current));
-    }
+    const navAny = navigator as unknown as {
+      userAgentData?: {
+        getHighEntropyValues: (hints: string[]) => Promise<{
+          brands?: { brand: string; version: string }[];
+          uaFullVersion?: string;
+          platformVersion?: string;
+          architecture?: string;
+          bitness?: string;
+          model?: string;
+          wow64?: boolean;
+        }>;
+      };
+    };
+    if (!navAny.userAgentData?.getHighEntropyValues) return;
+
+    navAny.userAgentData
+      .getHighEntropyValues(['uaFullVersion', 'platformVersion', 'architecture', 'bitness', 'model', 'wow64'])
+      .then((uaData) => {
+        setHints({
+          brands: (uaData.brands ?? []).map((b) => `${b.brand} ${b.version}`).join(', ') || '—',
+          fullVersion: uaData.uaFullVersion || '—',
+          platformVersion: uaData.platformVersion || '—',
+          architecture: uaData.architecture || '—',
+          bitness: uaData.bitness || '—',
+          model: uaData.model || '—',
+          wow64: uaData.wow64 ? 'yes' : 'no',
+        });
+      })
+      .catch(() => { /* hint API rejected — ignore */ });
   }, []);
 
   const analyzeCustom = () => {
@@ -124,7 +162,6 @@ export function UserAgentAnalyzerTool() {
 
   return (
     <div className="space-y-6">
-      {/* Current UA display */}
       <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
         <h3 className="text-sm font-semibold text-white mb-2">Your User Agent</h3>
         <code className="block bg-[#191b1c] p-4 rounded-md text-xs text-[#B8B8D4] font-mono break-all">
@@ -157,7 +194,6 @@ export function UserAgentAnalyzerTool() {
 
       {details && (
         <>
-          {/* Parsed info */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
               <div className="text-xs text-[#B8B8D4] mb-1">Browser</div>
@@ -190,7 +226,26 @@ export function UserAgentAnalyzerTool() {
             </div>
           </div>
 
-          {/* Privacy concerns */}
+          {/* Client Hints (UA-CH) */}
+          {hints && (
+            <div className="bg-[#0a0a0a] border border-orange-500/20 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-orange-400 mb-1">High-Entropy Client Hints</h3>
+              <p className="text-xs text-[#B8B8D4] mb-3">
+                Chrome is phasing out the classic UA string and exposing these details via the{' '}
+                <code className="text-orange-400">userAgentData</code> API. Sites actively request these to
+                fingerprint you:
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-mono">
+                <div className="text-[#B8B8D4]">Brands: <span className="text-white">{hints.brands}</span></div>
+                <div className="text-[#B8B8D4]">Full version: <span className="text-white">{hints.fullVersion}</span></div>
+                <div className="text-[#B8B8D4]">Platform version: <span className="text-white">{hints.platformVersion}</span></div>
+                <div className="text-[#B8B8D4]">Architecture: <span className="text-white">{hints.architecture}</span></div>
+                <div className="text-[#B8B8D4]">Bitness: <span className="text-white">{hints.bitness}</span></div>
+                <div className="text-[#B8B8D4]">Device model: <span className="text-white">{hints.model || '(empty)'}</span></div>
+              </div>
+            </div>
+          )}
+
           {details.privacyConcerns.length > 0 && (
             <div className="bg-[#0a0a0a] border border-yellow-500/20 rounded-lg p-6">
               <h3 className="text-sm font-semibold text-yellow-400 mb-3">Privacy Concerns</h3>
@@ -204,7 +259,6 @@ export function UserAgentAnalyzerTool() {
             </div>
           )}
 
-          {/* Fingerprint factors */}
           <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">Fingerprint Factors</h3>
             <p className="text-xs text-[#B8B8D4] mb-3">
@@ -219,7 +273,6 @@ export function UserAgentAnalyzerTool() {
             </div>
           </div>
 
-          {/* What this means */}
           <div className="bg-[#0a0a0a] border border-blue-500/20 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-blue-400 mb-3">What This Means</h3>
             <p className="text-sm text-[#B8B8D4]">

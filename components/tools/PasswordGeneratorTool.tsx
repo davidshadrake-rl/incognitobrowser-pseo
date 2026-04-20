@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
+
+type Mode = 'password' | 'passphrase' | 'pin';
 
 interface GeneratorOptions {
   length: number;
@@ -10,6 +12,7 @@ interface GeneratorOptions {
   symbols: boolean;
   excludeAmbiguous: boolean;
   excludeSimilar: boolean;
+  customChars: string; // extra chars the user wants available (added to pool)
 }
 
 const CHARS = {
@@ -19,118 +22,135 @@ const CHARS = {
   symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?',
 };
 
-const AMBIGUOUS = 'O0Il1';
-const SIMILAR = '{}[]()/\\\'"`~,;:.<>';
+// Chars frequently confused with each other: 0/O, 1/l/I. Stripped in ambiguous mode.
+const AMBIGUOUS = /[O0Il1]/g;
+// Symbols that look alike in many monospace fonts — stripped in similar mode.
+const SIMILAR_SYMBOLS = new Set(['{', '}', '[', ']', '(', ')', '/', '\\', "'", '"', '`', '~', ',', ';', ':', '.', '<', '>']);
+
+/** Unbiased rejection-sampling pick from a string of chars. */
+function unbiasedPick(chars: string): string {
+  const bound = Math.floor(0x100000000 / chars.length) * chars.length;
+  const buf = new Uint32Array(1);
+  // Rejection sample to avoid modulo bias
+  for (;;) {
+    crypto.getRandomValues(buf);
+    if (buf[0] < bound) return chars[buf[0] % chars.length];
+  }
+}
 
 function generatePassword(options: GeneratorOptions): string {
-  let charset = '';
-  const required: string[] = [];
+  const pools: string[] = [];
 
   if (options.lowercase) {
     let chars = CHARS.lowercase;
-    if (options.excludeAmbiguous) chars = chars.replace(/[l]/g, '');
-    charset += chars;
-    required.push(chars);
+    if (options.excludeAmbiguous) chars = chars.replace(AMBIGUOUS, '');
+    pools.push(chars);
   }
   if (options.uppercase) {
     let chars = CHARS.uppercase;
-    if (options.excludeAmbiguous) chars = chars.replace(/[OI]/g, '');
-    charset += chars;
-    required.push(chars);
+    if (options.excludeAmbiguous) chars = chars.replace(AMBIGUOUS, '');
+    pools.push(chars);
   }
   if (options.numbers) {
     let chars = CHARS.numbers;
-    if (options.excludeAmbiguous) chars = chars.replace(/[01]/g, '');
-    charset += chars;
-    required.push(chars);
+    if (options.excludeAmbiguous) chars = chars.replace(AMBIGUOUS, '');
+    pools.push(chars);
   }
   if (options.symbols) {
     let chars = CHARS.symbols;
-    if (options.excludeSimilar) chars = chars.split('').filter(c => !SIMILAR.includes(c)).join('');
-    charset += chars;
-    required.push(chars);
+    if (options.excludeSimilar) chars = chars.split('').filter((c) => !SIMILAR_SYMBOLS.has(c)).join('');
+    pools.push(chars);
+  }
+  if (options.customChars) {
+    pools.push(options.customChars);
   }
 
-  if (charset.length === 0) return '';
+  if (pools.length === 0) return '';
+  const allChars = pools.join('');
 
-  const arr = new Uint32Array(options.length);
-  crypto.getRandomValues(arr);
+  // Place one char from each required pool first, then fill the rest and shuffle.
+  const picks = pools.slice(0, options.length).map((p) => unbiasedPick(p));
+  while (picks.length < options.length) picks.push(unbiasedPick(allChars));
 
-  // Start by picking one from each required set
-  const password = new Array(options.length);
-  const positions = Array.from({ length: options.length }, (_, i) => i);
-
-  // Shuffle positions
-  for (let i = positions.length - 1; i > 0; i--) {
-    const j = arr[i] % (i + 1);
-    [positions[i], positions[j]] = [positions[j], positions[i]];
-  }
-
-  // Place one char from each required set
-  for (let i = 0; i < required.length && i < options.length; i++) {
-    const randomArr = new Uint32Array(1);
-    crypto.getRandomValues(randomArr);
-    password[positions[i]] = required[i][randomArr[0] % required[i].length];
-  }
-
-  // Fill remaining
-  for (let i = 0; i < options.length; i++) {
-    if (!password[i]) {
-      password[i] = charset[arr[i] % charset.length];
+  // Fisher–Yates shuffle with unbiased indices.
+  for (let i = picks.length - 1; i > 0; i--) {
+    const boundIdx = i + 1;
+    const bound = Math.floor(0x100000000 / boundIdx) * boundIdx;
+    const buf = new Uint32Array(1);
+    let j: number;
+    for (;;) {
+      crypto.getRandomValues(buf);
+      if (buf[0] < bound) { j = buf[0] % boundIdx; break; }
     }
+    [picks[i], picks[j]] = [picks[j], picks[i]];
   }
-
-  return password.join('');
+  return picks.join('');
 }
 
-function generatePassphrase(wordCount: number): string {
-  const words = [
-    'able', 'acid', 'aged', 'also', 'area', 'army', 'away', 'baby', 'back', 'ball',
-    'band', 'bank', 'base', 'bath', 'beam', 'bear', 'beat', 'been', 'bell', 'belt',
-    'best', 'bird', 'bite', 'blow', 'blue', 'boat', 'body', 'bomb', 'bond', 'bone',
-    'book', 'born', 'boss', 'bowl', 'bulk', 'burn', 'busy', 'cafe', 'cage', 'cake',
-    'call', 'calm', 'came', 'camp', 'card', 'care', 'case', 'cash', 'cast', 'cave',
-    'chip', 'city', 'clan', 'clay', 'clip', 'club', 'clue', 'coal', 'coat', 'code',
-    'coin', 'cold', 'come', 'cook', 'cool', 'cope', 'copy', 'core', 'cost', 'coup',
-    'crew', 'crop', 'dark', 'data', 'dawn', 'dead', 'deal', 'dear', 'debt', 'deep',
-    'deer', 'deny', 'desk', 'dial', 'dice', 'diet', 'dirt', 'disc', 'dish', 'dock',
-    'does', 'done', 'door', 'dose', 'down', 'drag', 'draw', 'drew', 'drop', 'drug',
-    'drum', 'dual', 'duke', 'dull', 'dump', 'dust', 'duty', 'each', 'earn', 'ease',
-    'east', 'easy', 'edge', 'else', 'even', 'evil', 'exam', 'exit', 'face', 'fact',
-    'fail', 'fair', 'fall', 'fame', 'farm', 'fast', 'fate', 'fear', 'feed', 'feel',
-    'feet', 'fell', 'felt', 'file', 'fill', 'film', 'find', 'fine', 'fire', 'firm',
-    'fish', 'flag', 'flat', 'fled', 'flew', 'flip', 'flow', 'foam', 'fold', 'folk',
-    'fond', 'font', 'food', 'fool', 'ford', 'fork', 'form', 'fort', 'foul', 'four',
-    'free', 'from', 'fuel', 'full', 'fund', 'fury', 'fuse', 'gain', 'game', 'gang',
-    'gave', 'gaze', 'gear', 'gene', 'gift', 'girl', 'give', 'glad', 'glow', 'glue',
-    'goal', 'goat', 'goes', 'gold', 'golf', 'gone', 'good', 'grab', 'gray', 'grew',
-    'grid', 'grip', 'grow', 'gulf', 'guru', 'hack', 'half', 'hall', 'halt', 'hand',
-    'hang', 'harm', 'harp', 'hate', 'have', 'head', 'heal', 'heap', 'heat', 'heel',
-    'held', 'helm', 'help', 'herb', 'hero', 'hide', 'high', 'hike', 'hill', 'hint',
-    'hire', 'hold', 'hole', 'holy', 'home', 'hood', 'hook', 'hope', 'horn', 'host',
-    'hour', 'huge', 'hung', 'hunt', 'hurt', 'icon', 'idea', 'inch', 'info', 'iron',
-    'isle', 'item', 'jack', 'jail', 'jazz', 'jean', 'join', 'joke', 'jump', 'jury',
-    'just', 'keen', 'keep', 'kept', 'kick', 'kill', 'kind', 'king', 'kiss', 'knee',
-    'knew', 'knit', 'knob', 'knot', 'know', 'lack', 'lady', 'laid', 'lake', 'lamp',
-    'land', 'lane', 'last', 'late', 'lawn', 'lead', 'leaf', 'lean', 'left', 'lend',
-    'lens', 'lent', 'less', 'lied', 'life', 'lift', 'like', 'lime', 'limp', 'line',
-    'link', 'lion', 'list', 'live', 'load', 'loan', 'lock', 'logo', 'long', 'look',
-    'lord', 'lose', 'loss', 'lost', 'loud', 'love', 'luck', 'lump', 'lung', 'lure',
-  ];
+function generatePin(length: number): string {
+  return Array.from({ length }, () => unbiasedPick(CHARS.numbers)).join('');
+}
 
-  const arr = new Uint32Array(wordCount);
-  crypto.getRandomValues(arr);
-  return Array.from(arr).map(n => words[n % words.length]).join('-');
+const PASSPHRASE_WORDS = [
+  'able', 'acid', 'aged', 'also', 'area', 'army', 'away', 'baby', 'back', 'ball',
+  'band', 'bank', 'base', 'bath', 'beam', 'bear', 'beat', 'been', 'bell', 'belt',
+  'best', 'bird', 'bite', 'blow', 'blue', 'boat', 'body', 'bomb', 'bond', 'bone',
+  'book', 'born', 'boss', 'bowl', 'bulk', 'burn', 'busy', 'cafe', 'cage', 'cake',
+  'call', 'calm', 'came', 'camp', 'card', 'care', 'case', 'cash', 'cast', 'cave',
+  'chip', 'city', 'clan', 'clay', 'clip', 'club', 'clue', 'coal', 'coat', 'code',
+  'coin', 'cold', 'come', 'cook', 'cool', 'cope', 'copy', 'core', 'cost', 'coup',
+  'crew', 'crop', 'dark', 'data', 'dawn', 'dead', 'deal', 'dear', 'debt', 'deep',
+  'deer', 'deny', 'desk', 'dial', 'dice', 'diet', 'dirt', 'disc', 'dish', 'dock',
+  'does', 'done', 'door', 'dose', 'down', 'drag', 'draw', 'drew', 'drop', 'drug',
+  'drum', 'dual', 'duke', 'dull', 'dump', 'dust', 'duty', 'each', 'earn', 'ease',
+  'east', 'easy', 'edge', 'else', 'even', 'evil', 'exam', 'exit', 'face', 'fact',
+  'fail', 'fair', 'fall', 'fame', 'farm', 'fast', 'fate', 'fear', 'feed', 'feel',
+  'feet', 'fell', 'felt', 'file', 'fill', 'film', 'find', 'fine', 'fire', 'firm',
+  'fish', 'flag', 'flat', 'fled', 'flew', 'flip', 'flow', 'foam', 'fold', 'folk',
+  'fond', 'font', 'food', 'fool', 'ford', 'fork', 'form', 'fort', 'foul', 'four',
+  'free', 'from', 'fuel', 'full', 'fund', 'fury', 'fuse', 'gain', 'game', 'gang',
+  'gave', 'gaze', 'gear', 'gene', 'gift', 'girl', 'give', 'glad', 'glow', 'glue',
+  'goal', 'goat', 'goes', 'gold', 'golf', 'gone', 'good', 'grab', 'gray', 'grew',
+  'grid', 'grip', 'grow', 'gulf', 'guru', 'hack', 'half', 'hall', 'halt', 'hand',
+  'hang', 'harm', 'harp', 'hate', 'have', 'head', 'heal', 'heap', 'heat', 'heel',
+  'held', 'helm', 'help', 'herb', 'hero', 'hide', 'high', 'hike', 'hill', 'hint',
+  'hire', 'hold', 'hole', 'holy', 'home', 'hood', 'hook', 'hope', 'horn', 'host',
+  'hour', 'huge', 'hung', 'hunt', 'hurt', 'icon', 'idea', 'inch', 'info', 'iron',
+  'isle', 'item', 'jack', 'jail', 'jazz', 'jean', 'join', 'joke', 'jump', 'jury',
+  'just', 'keen', 'keep', 'kept', 'kick', 'kill', 'kind', 'king', 'kiss', 'knee',
+  'knew', 'knit', 'knob', 'knot', 'know', 'lack', 'lady', 'laid', 'lake', 'lamp',
+  'land', 'lane', 'last', 'late', 'lawn', 'lead', 'leaf', 'lean', 'left', 'lend',
+  'lens', 'lent', 'less', 'lied', 'life', 'lift', 'like', 'lime', 'limp', 'line',
+  'link', 'lion', 'list', 'live', 'load', 'loan', 'lock', 'logo', 'long', 'look',
+  'lord', 'lose', 'loss', 'lost', 'loud', 'love', 'luck', 'lump', 'lung', 'lure',
+];
+
+function generatePassphraseSecure(wordCount: number): string {
+  const words: string[] = [];
+  for (let i = 0; i < wordCount; i++) {
+    const bound = Math.floor(0x100000000 / PASSPHRASE_WORDS.length) * PASSPHRASE_WORDS.length;
+    const buf = new Uint32Array(1);
+    for (;;) {
+      crypto.getRandomValues(buf);
+      if (buf[0] < bound) { words.push(PASSPHRASE_WORDS[buf[0] % PASSPHRASE_WORDS.length]); break; }
+    }
+  }
+  return words.join('-');
 }
 
 function calcEntropy(options: GeneratorOptions): number {
   let poolSize = 0;
-  if (options.lowercase) poolSize += 26;
-  if (options.uppercase) poolSize += 26;
-  if (options.numbers) poolSize += 10;
-  if (options.symbols) poolSize += 26;
-  if (options.excludeAmbiguous) poolSize -= 5;
-  return Math.round(options.length * Math.log2(Math.max(poolSize, 1)));
+  if (options.lowercase) poolSize += options.excludeAmbiguous ? 24 : 26;
+  if (options.uppercase) poolSize += options.excludeAmbiguous ? 24 : 26;
+  if (options.numbers) poolSize += options.excludeAmbiguous ? 8 : 10;
+  if (options.symbols) {
+    let sym = CHARS.symbols;
+    if (options.excludeSimilar) sym = sym.split('').filter((c) => !SIMILAR_SYMBOLS.has(c)).join('');
+    poolSize += sym.length;
+  }
+  if (options.customChars) poolSize += new Set(options.customChars.split('')).size;
+  if (poolSize === 0) return 0;
+  return Math.round(options.length * Math.log2(poolSize));
 }
 
 export function PasswordGeneratorTool() {
@@ -142,21 +162,24 @@ export function PasswordGeneratorTool() {
     symbols: true,
     excludeAmbiguous: false,
     excludeSimilar: false,
+    customChars: '',
   });
-  const [mode, setMode] = useState<'password' | 'passphrase'>('password');
+  const [mode, setMode] = useState<Mode>('password');
   const [wordCount, setWordCount] = useState(5);
+  const [pinLength, setPinLength] = useState(6);
   const [password, setPassword] = useState('');
   const [history, setHistory] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
   const generate = useCallback(() => {
-    const pw = mode === 'password'
-      ? generatePassword(options)
-      : generatePassphrase(wordCount);
+    let pw: string;
+    if (mode === 'password') pw = generatePassword(options);
+    else if (mode === 'passphrase') pw = generatePassphraseSecure(wordCount);
+    else pw = generatePin(pinLength);
     setPassword(pw);
-    setHistory(prev => [pw, ...prev].slice(0, 10));
+    setHistory((prev) => [pw, ...prev].slice(0, 10));
     setCopied(false);
-  }, [options, mode, wordCount]);
+  }, [options, mode, wordCount, pinLength]);
 
   const handleCopy = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -164,30 +187,31 @@ export function PasswordGeneratorTool() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const entropy = mode === 'password'
-    ? calcEntropy(options)
-    : Math.round(wordCount * Math.log2(310)); // ~310 words in our list
+  const entropy =
+    mode === 'password'
+      ? calcEntropy(options)
+      : mode === 'passphrase'
+        ? Math.round(wordCount * Math.log2(PASSPHRASE_WORDS.length))
+        : Math.round(pinLength * Math.log2(10));
 
   return (
     <div className="space-y-6">
       {/* Mode toggle */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex">
-        <button
-          onClick={() => { setMode('password'); setPassword(''); }}
-          className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            mode === 'password' ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
-          }`}
-        >
-          Random Password
-        </button>
-        <button
-          onClick={() => { setMode('passphrase'); setPassword(''); }}
-          className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            mode === 'passphrase' ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
-          }`}
-        >
-          Passphrase
-        </button>
+      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex gap-1">
+        {(['password', 'passphrase', 'pin'] as Mode[]).map((m) => (
+          <button
+            key={m}
+            onClick={() => {
+              setMode(m);
+              setPassword('');
+            }}
+            className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
+              mode === m ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+            }`}
+          >
+            {m === 'password' ? 'Random Password' : m === 'passphrase' ? 'Passphrase' : 'PIN'}
+          </button>
+        ))}
       </div>
 
       {/* Options */}
@@ -207,9 +231,7 @@ export function PasswordGeneratorTool() {
                 onChange={(e) => setOptions({ ...options, length: Number(e.target.value) })}
                 className="w-full accent-white"
               />
-              <div className="flex justify-between text-xs text-[#B8B8D4]/40">
-                <span>8</span><span>64</span>
-              </div>
+              <div className="flex justify-between text-xs text-[#B8B8D4]/40"><span>8</span><span>64</span></div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -232,8 +254,24 @@ export function PasswordGeneratorTool() {
                 </label>
               ))}
             </div>
+
+            <div>
+              <label className="text-sm font-medium text-[#B8B8D4] block mb-1">
+                Extra characters to include (optional)
+              </label>
+              <input
+                type="text"
+                value={options.customChars}
+                onChange={(e) => setOptions({ ...options, customChars: e.target.value })}
+                placeholder="e.g. 漢字 or additional symbols"
+                className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20 font-mono"
+              />
+              <p className="mt-1 text-xs text-[#B8B8D4]/60">
+                These get added to the pool. Some systems reject Unicode — use with care.
+              </p>
+            </div>
           </>
-        ) : (
+        ) : mode === 'passphrase' ? (
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="text-sm font-medium text-[#B8B8D4]">Words: {wordCount}</label>
@@ -247,22 +285,41 @@ export function PasswordGeneratorTool() {
               onChange={(e) => setWordCount(Number(e.target.value))}
               className="w-full accent-white"
             />
-            <div className="flex justify-between text-xs text-[#B8B8D4]/40">
-              <span>3</span><span>10</span>
+            <div className="flex justify-between text-xs text-[#B8B8D4]/40"><span>3</span><span>10</span></div>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-sm font-medium text-[#B8B8D4]">PIN length: {pinLength}</label>
+              <span className="text-xs text-[#B8B8D4]/60">{entropy} bits of entropy</span>
             </div>
+            <input
+              type="range"
+              min={4}
+              max={12}
+              value={pinLength}
+              onChange={(e) => setPinLength(Number(e.target.value))}
+              className="w-full accent-white"
+            />
+            <div className="flex justify-between text-xs text-[#B8B8D4]/40"><span>4</span><span>12</span></div>
+            <p className="mt-2 text-xs text-[#B8B8D4]/60">
+              For phone unlocks, 2FA backup codes, or anywhere only digits are accepted.
+            </p>
           </div>
         )}
 
         <button onClick={generate} className="btn-primary w-full py-3">
-          Generate {mode === 'password' ? 'Password' : 'Passphrase'}
+          Generate {mode === 'password' ? 'Password' : mode === 'passphrase' ? 'Passphrase' : 'PIN'}
         </button>
       </div>
 
-      {/* Generated password */}
+      {/* Generated output */}
       {password && (
         <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-green-400">Generated {mode === 'password' ? 'Password' : 'Passphrase'}</h3>
+            <h3 className="text-sm font-semibold text-green-400">
+              Generated {mode === 'password' ? 'Password' : mode === 'passphrase' ? 'Passphrase' : 'PIN'}
+            </h3>
             <button
               onClick={() => handleCopy(password)}
               className="text-xs text-[#B8B8D4] hover:text-white transition-colors px-3 py-1 border border-white/10 rounded"
@@ -280,7 +337,6 @@ export function PasswordGeneratorTool() {
         </div>
       )}
 
-      {/* History */}
       {history.length > 1 && (
         <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
           <h3 className="text-sm font-semibold text-white mb-3">Recent ({history.length})</h3>
@@ -288,12 +344,7 @@ export function PasswordGeneratorTool() {
             {history.slice(1).map((pw, i) => (
               <div key={i} className="flex items-center justify-between gap-2">
                 <code className="text-xs text-[#B8B8D4] font-mono truncate flex-1">{pw}</code>
-                <button
-                  onClick={() => handleCopy(pw)}
-                  className="text-xs text-[#B8B8D4] hover:text-white shrink-0"
-                >
-                  Copy
-                </button>
+                <button onClick={() => handleCopy(pw)} className="text-xs text-[#B8B8D4] hover:text-white shrink-0">Copy</button>
               </div>
             ))}
           </div>
@@ -301,7 +352,7 @@ export function PasswordGeneratorTool() {
       )}
 
       <p className="text-xs text-[#B8B8D4]/60 text-center">
-        Generated using the Web Crypto API (CSPRNG). Nothing leaves your browser.
+        Generated using the Web Crypto API with unbiased rejection sampling. Nothing leaves your browser.
       </p>
     </div>
   );

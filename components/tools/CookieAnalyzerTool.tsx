@@ -198,6 +198,71 @@ export function CookieAnalyzerTool() {
   const analytics = cookies.filter(c => c.category === 'analytics');
   const functional = cookies.filter(c => c.category === 'functional');
 
+  // Extract the registrable domain from a URL (rough — no PSL lookup in-browser).
+  const getBaseDomain = (hostname: string) => {
+    const parts = hostname.toLowerCase().split('.');
+    return parts.length > 2 ? parts.slice(-2).join('.') : hostname.toLowerCase();
+  };
+
+  // True when a cookie's Domain attribute doesn't belong to the scanned site.
+  const isThirdParty = (cookieDomain: string | undefined, siteUrl: string) => {
+    if (!cookieDomain) return false;
+    try {
+      const siteHost = new URL(siteUrl).hostname;
+      const siteBase = getBaseDomain(siteHost);
+      const cookieBase = getBaseDomain(cookieDomain.replace(/^\./, ''));
+      return cookieBase !== siteBase;
+    } catch {
+      return false;
+    }
+  };
+
+  const downloadCsv = (result: URLScanResult) => {
+    const escape = (s: string) => `"${s.replace(/"/g, '""')}"`;
+    const rows: string[] = [
+      ['Type', 'Name', 'Category', 'Risk', 'Third-Party', 'Secure', 'HttpOnly', 'SameSite', 'Domain', 'Description'].map(escape).join(','),
+    ];
+    for (const c of result.cookies) {
+      rows.push([
+        'cookie',
+        c.cookieName,
+        c.category,
+        c.risk,
+        isThirdParty(c.domain, result.url) ? 'yes' : 'no',
+        c.secure ? 'yes' : 'no',
+        c.httpOnly ? 'yes' : 'no',
+        c.sameSite,
+        c.domain || '',
+        c.description,
+      ].map(escape).join(','));
+    }
+    for (const t of result.trackers) {
+      rows.push([
+        'tracker',
+        t.name,
+        t.category,
+        t.risk,
+        'yes',
+        '', '', '', '',
+        t.description,
+      ].map(escape).join(','));
+    }
+    for (const d of result.thirdPartyDomains) {
+      rows.push(['third-party-script', d, '', '', 'yes', '', '', '', d, ''].map(escape).join(','));
+    }
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    let host = 'scan';
+    try { host = new URL(result.url).hostname; } catch {}
+    a.download = `${host}-cookie-scan.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   // Calculate privacy grade for URL scan
   const getPrivacyGrade = (result: URLScanResult) => {
     const { summary, security } = result;
@@ -425,6 +490,22 @@ export function CookieAnalyzerTool() {
             </div>
           )}
 
+          {/* Export */}
+          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-sm text-white font-medium">Compliance report</p>
+              <p className="text-xs text-[#B8B8D4]">
+                Export cookies, trackers, and third-party scripts to CSV for GDPR/CCPA audits.
+              </p>
+            </div>
+            <button
+              onClick={() => downloadCsv(urlResult)}
+              className="text-sm px-4 py-2 border border-white/10 rounded text-white hover:bg-white/5 shrink-0"
+            >
+              Export CSV
+            </button>
+          </div>
+
           {/* Cookies detail */}
           {urlResult.cookies.length > 0 && (
             <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
@@ -462,6 +543,11 @@ export function CookieAnalyzerTool() {
                       {c.domain && (
                         <span className="px-2 py-0.5 rounded bg-white/5 text-[#B8B8D4]">
                           {c.domain}
+                        </span>
+                      )}
+                      {isThirdParty(c.domain, urlResult.url) && (
+                        <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-400" title="Cookie's domain differs from the site's domain">
+                          3rd-party
                         </span>
                       )}
                     </div>

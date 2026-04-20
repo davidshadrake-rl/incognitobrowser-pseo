@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface PermissionResult {
   name: string;
@@ -178,6 +178,29 @@ export function PermissionCheckerTool() {
               <div className="text-2xl font-bold text-yellow-400">{prompt}</div>
               <div className="text-xs text-[#B8B8D4]">Will Ask</div>
             </div>
+          </div>
+
+          {/* Settings deep-link info */}
+          <div className="bg-[#0a0a0a] border border-blue-500/20 rounded-lg p-4">
+            <p className="text-sm text-blue-400 font-medium mb-2">How to revoke a permission</p>
+            <p className="text-xs text-[#B8B8D4] mb-2">
+              Browsers intentionally don&apos;t expose a programmatic way to revoke permissions (it would be abused).
+              Open your site settings via the browser address bar or the shortcut below:
+            </p>
+            <div className="flex flex-wrap gap-2 text-xs">
+              {[
+                { label: 'Chrome / Brave / Edge', url: 'chrome://settings/content' },
+                { label: 'Firefox', url: 'about:preferences#privacy' },
+                { label: 'Safari', url: 'Settings → Websites' },
+              ].map((link) => (
+                <span key={link.label} className="px-2 py-1 bg-white/5 rounded font-mono text-[#B8B8D4]">
+                  <span className="text-white">{link.label}:</span> {link.url}
+                </span>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-[#B8B8D4]/60">
+              Tip: in Chromium-based browsers, click the padlock icon in the address bar for per-site controls.
+            </p>
           </div>
 
           {/* Detail list */}

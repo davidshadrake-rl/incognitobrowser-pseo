@@ -6,13 +6,16 @@ interface Question {
   id: string;
   category: string;
   text: string;
+  // Impact weight: how much this question matters to real-world privacy.
+  // Higher = more critical. Used to rank recommendations.
+  impact: number;
   options: { label: string; score: number }[];
 }
 
 const QUESTIONS: Question[] = [
-  {
-    id: 'browser',
-    category: 'Browsing',
+  // Impact scale 1–10. Authentication & passwords have the highest real-world
+  // blast radius if compromised, so they get priority in recommendations.
+  { id: 'browser', category: 'Browsing', impact: 6,
     text: 'Which browser do you primarily use?',
     options: [
       { label: 'Brave / Tor Browser', score: 10 },
@@ -21,9 +24,7 @@ const QUESTIONS: Question[] = [
       { label: 'Chrome / Edge (default settings)', score: 2 },
     ],
   },
-  {
-    id: 'search',
-    category: 'Browsing',
+  { id: 'search', category: 'Browsing', impact: 3,
     text: 'What search engine do you use?',
     options: [
       { label: 'DuckDuckGo / Startpage', score: 10 },
@@ -32,9 +33,7 @@ const QUESTIONS: Question[] = [
       { label: 'Google', score: 1 },
     ],
   },
-  {
-    id: 'vpn',
-    category: 'Network',
+  { id: 'vpn', category: 'Network', impact: 5,
     text: 'Do you use a VPN?',
     options: [
       { label: 'Always on (reputable paid VPN)', score: 10 },
@@ -43,9 +42,7 @@ const QUESTIONS: Question[] = [
       { label: 'Never', score: 0 },
     ],
   },
-  {
-    id: 'passwords',
-    category: 'Accounts',
+  { id: 'passwords', category: 'Accounts', impact: 10,
     text: 'How do you manage passwords?',
     options: [
       { label: 'Dedicated password manager + unique passwords', score: 10 },
@@ -54,9 +51,7 @@ const QUESTIONS: Question[] = [
       { label: 'Same password everywhere', score: 0 },
     ],
   },
-  {
-    id: '2fa',
-    category: 'Accounts',
+  { id: '2fa', category: 'Accounts', impact: 10,
     text: 'Do you use two-factor authentication?',
     options: [
       { label: 'Hardware key (YubiKey, etc.)', score: 10 },
@@ -65,9 +60,7 @@ const QUESTIONS: Question[] = [
       { label: 'No 2FA', score: 0 },
     ],
   },
-  {
-    id: 'email',
-    category: 'Communication',
+  { id: 'email', category: 'Communication', impact: 5,
     text: 'What email provider do you use?',
     options: [
       { label: 'ProtonMail / Tutanota', score: 10 },
@@ -76,9 +69,7 @@ const QUESTIONS: Question[] = [
       { label: 'Gmail / Outlook / Yahoo', score: 1 },
     ],
   },
-  {
-    id: 'messaging',
-    category: 'Communication',
+  { id: 'messaging', category: 'Communication', impact: 4,
     text: 'What messaging app do you primarily use?',
     options: [
       { label: 'Signal', score: 10 },
@@ -87,9 +78,7 @@ const QUESTIONS: Question[] = [
       { label: 'SMS / Facebook Messenger / Discord', score: 1 },
     ],
   },
-  {
-    id: 'social',
-    category: 'Social Media',
+  { id: 'social', category: 'Social Media', impact: 4,
     text: 'How do you handle social media privacy?',
     options: [
       { label: "Don't use social media / anonymous accounts only", score: 10 },
@@ -98,9 +87,7 @@ const QUESTIONS: Question[] = [
       { label: 'Public profiles with personal details', score: 0 },
     ],
   },
-  {
-    id: 'dns',
-    category: 'Network',
+  { id: 'dns', category: 'Network', impact: 3,
     text: 'What DNS resolver do you use?',
     options: [
       { label: 'Encrypted DNS (DoH/DoT) — Quad9, NextDNS', score: 10 },
@@ -109,9 +96,7 @@ const QUESTIONS: Question[] = [
       { label: "What's DNS?", score: 0 },
     ],
   },
-  {
-    id: 'updates',
-    category: 'Device',
+  { id: 'updates', category: 'Device', impact: 9,
     text: 'How quickly do you install security updates?',
     options: [
       { label: 'Immediately / auto-update enabled', score: 10 },
@@ -120,9 +105,7 @@ const QUESTIONS: Question[] = [
       { label: 'Rarely / updates are annoying', score: 0 },
     ],
   },
-  {
-    id: 'permissions',
-    category: 'Device',
+  { id: 'permissions', category: 'Device', impact: 5,
     text: 'How do you handle app permissions?',
     options: [
       { label: 'Review and minimize all permissions regularly', score: 10 },
@@ -131,9 +114,7 @@ const QUESTIONS: Question[] = [
       { label: 'Always allow everything', score: 0 },
     ],
   },
-  {
-    id: 'cookies',
-    category: 'Browsing',
+  { id: 'cookies', category: 'Browsing', impact: 3,
     text: 'How do you handle cookies?',
     options: [
       { label: 'Block all third-party, clear regularly', score: 10 },
@@ -153,10 +134,41 @@ function getGrade(score: number): { letter: string; label: string; color: string
   return { letter: 'F', label: 'Very Exposed', color: '#ef4444' };
 }
 
+// Encode/decode answers in the URL hash so results are shareable.
+// Format: "#r=<score1><score2>..." — each score is a single base36 digit (0–9,a).
+function encodeAnswers(answers: Record<string, number>): string {
+  return QUESTIONS.map((q) => (answers[q.id] ?? -1).toString(36)).join('');
+}
+function decodeAnswers(encoded: string): Record<string, number> | null {
+  if (encoded.length !== QUESTIONS.length) return null;
+  const out: Record<string, number> = {};
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    const n = parseInt(encoded[i], 36);
+    if (Number.isNaN(n) || n < 0 || n > 10) return null;
+    out[QUESTIONS[i].id] = n;
+  }
+  return out;
+}
+
+// Lazy initializer: read shared results out of the URL hash at mount time,
+// avoids the setState-in-effect rule and prevents a flash of question #1.
+function restoreFromHash(): { answers: Record<string, number>; finished: boolean } {
+  if (typeof window === 'undefined') return { answers: {}, finished: false };
+  const match = window.location.hash.match(/r=([0-9a]+)/);
+  if (!match) return { answers: {}, finished: false };
+  const restored = decodeAnswers(match[1]);
+  if (restored && Object.keys(restored).length === QUESTIONS.length) {
+    return { answers: restored, finished: true };
+  }
+  return { answers: {}, finished: false };
+}
+
 export function PrivacyQuizTool() {
-  const [answers, setAnswers] = useState<Record<string, number>>({});
+  const initial = restoreFromHash();
+  const [answers, setAnswers] = useState<Record<string, number>>(initial.answers);
   const [currentQ, setCurrentQ] = useState(0);
-  const [finished, setFinished] = useState(false);
+  const [finished, setFinished] = useState(initial.finished);
+  const [shared, setShared] = useState(false);
 
   const handleAnswer = (questionId: string, score: number) => {
     const newAnswers = { ...answers, [questionId]: score };
@@ -165,7 +177,15 @@ export function PrivacyQuizTool() {
     if (currentQ < QUESTIONS.length - 1) {
       setTimeout(() => setCurrentQ(currentQ + 1), 300);
     } else {
-      setTimeout(() => setFinished(true), 300);
+      setTimeout(() => {
+        setFinished(true);
+        // Write answers to URL so refresh preserves results and the link is shareable.
+        if (typeof window !== 'undefined') {
+          const url = new URL(window.location.href);
+          url.hash = `r=${encodeAnswers(newAnswers)}`;
+          window.history.replaceState(null, '', url.toString());
+        }
+      }, 300);
     }
   };
 
@@ -173,6 +193,22 @@ export function PrivacyQuizTool() {
     setAnswers({});
     setCurrentQ(0);
     setFinished(false);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.hash = '';
+      window.history.replaceState(null, '', url.toString());
+    }
+  };
+
+  const shareLink = async () => {
+    if (typeof window === 'undefined') return;
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShared(true);
+      setTimeout(() => setShared(false), 2000);
+    } catch {
+      // ignore
+    }
   };
 
   const totalScore = Math.round(
@@ -230,28 +266,39 @@ export function PrivacyQuizTool() {
           </div>
         </div>
 
-        {/* Improvement tips */}
+        {/* Improvement tips — ranked by impact × (how far the user is from the ideal) */}
         <div className="bg-[#0a0a0a] border border-blue-500/20 rounded-lg p-6">
           <h3 className="text-sm font-semibold text-blue-400 mb-3">Top Recommendations</h3>
           <ul className="space-y-2">
-            {QUESTIONS.filter(q => (answers[q.id] || 0) < 6)
+            {QUESTIONS
+              .filter((q) => (answers[q.id] || 0) < 6)
+              .map((q) => ({ q, priority: q.impact * (10 - (answers[q.id] || 0)) }))
+              .sort((a, b) => b.priority - a.priority)
               .slice(0, 5)
-              .map(q => (
+              .map(({ q }) => (
                 <li key={q.id} className="flex items-start text-sm text-[#B8B8D4]">
                   <span className="mr-2 text-blue-500 shrink-0">&#10132;</span>
                   <span>
                     <strong className="text-white">{q.category}:</strong>{' '}
-                    {q.options[0].label} (you answered: {q.options.find(o => o.score === answers[q.id])?.label})
+                    {q.options[0].label} (you answered: {q.options.find((o) => o.score === answers[q.id])?.label})
                   </span>
                 </li>
               ))}
-            {QUESTIONS.filter(q => (answers[q.id] || 0) < 6).length === 0 && (
+            {QUESTIONS.filter((q) => (answers[q.id] || 0) < 6).length === 0 && (
               <li className="text-sm text-green-400">You&apos;re already doing great across all areas!</li>
             )}
           </ul>
         </div>
 
-        <button onClick={reset} className="btn-primary w-full py-3">Retake Quiz</button>
+        <div className="grid grid-cols-2 gap-3">
+          <button onClick={reset} className="btn-primary py-3">Retake Quiz</button>
+          <button
+            onClick={shareLink}
+            className="py-3 border border-white/10 rounded text-white hover:bg-white/5"
+          >
+            {shared ? 'Link copied!' : 'Copy shareable link'}
+          </button>
+        </div>
       </div>
     );
   }

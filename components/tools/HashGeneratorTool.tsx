@@ -4,49 +4,118 @@ import { useState } from 'react';
 
 type Algorithm = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 
-async function hashText(text: string, algorithm: Algorithm): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
+async function digest(algorithm: Algorithm, data: BufferSource): Promise<string> {
   const buffer = await crypto.subtle.digest(algorithm, data);
   return Array.from(new Uint8Array(buffer))
     .map(b => b.toString(16).padStart(2, '0'))
     .join('');
 }
 
+async function hashBytes(bytes: BufferSource, algorithm: Algorithm): Promise<string> {
+  return digest(algorithm, bytes);
+}
+
+async function hmacBytes(bytes: BufferSource, keyBytes: Uint8Array, algorithm: Algorithm): Promise<string> {
+  // SHA-1 -> 'HMAC' with hash: 'SHA-1', same for SHA-256/384/512
+  const key = await crypto.subtle.importKey(
+    'raw',
+    keyBytes as BufferSource,
+    { name: 'HMAC', hash: algorithm },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, bytes);
+  return Array.from(new Uint8Array(sig))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
+
 export function HashGeneratorTool() {
   const [inputText, setInputText] = useState('');
   const [results, setResults] = useState<Record<string, string>>({});
   const [copied, setCopied] = useState('');
   const [inputMode, setInputMode] = useState<'text' | 'file'>('text');
-  const [fileName, setFileName] = useState('');
+  const [fileInfo, setFileInfo] = useState<{ name: string; size: number } | null>(null);
+  const [fileBytes, setFileBytes] = useState<ArrayBuffer | null>(null);
+  const [hmacMode, setHmacMode] = useState(false);
+  const [hmacKey, setHmacKey] = useState('');
+  const [computing, setComputing] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [error, setError] = useState('');
 
   const algorithms: Algorithm[] = ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
 
-  const generateHashes = async (text: string) => {
-    if (!text) { setResults({}); return; }
-    const r: Record<string, string> = {};
-    for (const algo of algorithms) {
-      r[algo] = await hashText(text, algo);
+  const compute = async (bytes: BufferSource) => {
+    setComputing(true);
+    setError('');
+    try {
+      const r: Record<string, string> = {};
+      if (hmacMode) {
+        if (!hmacKey) {
+          setResults({});
+          setError('HMAC mode requires a key.');
+          setComputing(false);
+          return;
+        }
+        const keyBytes = new TextEncoder().encode(hmacKey);
+        for (const algo of algorithms) {
+          r[algo] = await hmacBytes(bytes, keyBytes, algo);
+        }
+      } else {
+        for (const algo of algorithms) {
+          r[algo] = await hashBytes(bytes, algo);
+        }
+      }
+      setResults(r);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Hash failed');
+      setResults({});
     }
-    setResults(r);
+    setComputing(false);
   };
 
-  const handleTextChange = (text: string) => {
+  const onTextChange = (text: string) => {
     setInputText(text);
-    generateHashes(text);
+    setFileBytes(null);
+    setFileInfo(null);
+    if (!text) { setResults({}); return; }
+    compute(new TextEncoder().encode(text) as BufferSource);
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 50 * 1024 * 1024) {
-      alert('File too large. Maximum size is 50MB.');
+  const ingestFile = async (file: File) => {
+    if (file.size > MAX_FILE_SIZE) {
+      setError('File too large. Maximum size is 50MB.');
       return;
     }
-    setFileName(file.name);
-    const text = await file.text();
-    setInputText(text);
-    generateHashes(text);
+    setError('');
+    setFileInfo({ name: file.name, size: file.size });
+    setInputText('');
+    const buffer = await file.arrayBuffer();
+    setFileBytes(buffer);
+    compute(buffer);
+  };
+
+  const onFileInput = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) await ingestFile(file);
+  };
+
+  const onDrop = async (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      setInputMode('file');
+      await ingestFile(file);
+    }
+  };
+
+  // Re-compute when HMAC toggle or key changes, if we have input.
+  const rehash = () => {
+    if (fileBytes) compute(fileBytes);
+    else if (inputText) compute(new TextEncoder().encode(inputText) as BufferSource);
   };
 
   const handleCopy = async (algo: string, hash: string) => {
@@ -68,7 +137,7 @@ export function HashGeneratorTool() {
 
   return (
     <div className="space-y-6">
-      {/* Input mode toggle */}
+      {/* Mode toggle */}
       <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex">
         <button
           onClick={() => setInputMode('text')}
@@ -88,6 +157,32 @@ export function HashGeneratorTool() {
         </button>
       </div>
 
+      {/* HMAC toggle */}
+      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={hmacMode}
+            onChange={(e) => { setHmacMode(e.target.checked); setTimeout(rehash, 0); }}
+            className="accent-white"
+          />
+          <span className="text-sm text-white font-medium">HMAC mode</span>
+          <span className="text-xs text-[#B8B8D4]">(keyed hash for signing — webhooks, API auth)</span>
+        </label>
+        {hmacMode && (
+          <div className="mt-3">
+            <label className="block text-xs font-medium text-[#B8B8D4] mb-1">HMAC key (secret)</label>
+            <input
+              type="text"
+              value={hmacKey}
+              onChange={(e) => { setHmacKey(e.target.value); setTimeout(rehash, 0); }}
+              placeholder="Enter the shared secret..."
+              className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20 font-mono"
+            />
+          </div>
+        )}
+      </div>
+
       {/* Input */}
       <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
         {inputMode === 'text' ? (
@@ -95,7 +190,7 @@ export function HashGeneratorTool() {
             <label className="block text-sm font-medium text-[#B8B8D4] mb-2">Text to Hash</label>
             <textarea
               value={inputText}
-              onChange={(e) => handleTextChange(e.target.value)}
+              onChange={(e) => onTextChange(e.target.value)}
               placeholder="Enter text to generate hashes..."
               rows={4}
               className="w-full px-4 py-3 bg-[#191b1c] border border-white/10 rounded-md text-white placeholder-white/20 font-mono text-sm"
@@ -103,31 +198,50 @@ export function HashGeneratorTool() {
           </div>
         ) : (
           <div>
-            <label className="block text-sm font-medium text-[#B8B8D4] mb-2">Upload File</label>
-            <input
-              type="file"
-              onChange={handleFileUpload}
-              className="w-full text-sm text-[#B8B8D4] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
-            />
-            {fileName && (
-              <p className="mt-2 text-xs text-[#B8B8D4]">File: {fileName}</p>
-            )}
+            <label className="block text-sm font-medium text-[#B8B8D4] mb-2">Upload or Drop File</label>
+            <div
+              onDrop={onDrop}
+              onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+              onDragLeave={() => setDragging(false)}
+              className={`border-2 border-dashed rounded-md p-6 text-center transition-colors ${
+                dragging ? 'border-white/40 bg-white/5' : 'border-white/10'
+              }`}
+            >
+              <p className="text-sm text-[#B8B8D4] mb-3">
+                {dragging ? 'Drop to hash' : 'Drop a file here, or click to browse'}
+              </p>
+              <input
+                type="file"
+                onChange={onFileInput}
+                className="w-full text-sm text-[#B8B8D4] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
+              />
+              {fileInfo && (
+                <p className="mt-3 text-xs text-[#B8B8D4]">
+                  {fileInfo.name} ({(fileInfo.size / 1024).toLocaleString()} KB) — hashed as raw bytes
+                </p>
+              )}
+            </div>
           </div>
         )}
-        {inputText && (
+        {inputText && inputMode === 'text' && (
           <p className="mt-2 text-xs text-[#B8B8D4]/60">
             Input size: {new Blob([inputText]).size.toLocaleString()} bytes
           </p>
         )}
       </div>
 
+      {error && (
+        <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-sm text-red-400">{error}</div>
+      )}
+
       {/* Results */}
       {Object.keys(results).length > 0 && (
         <div className="space-y-3">
+          {computing && <p className="text-xs text-[#B8B8D4]">Computing...</p>}
           {algorithms.map(algo => (
             <div key={algo} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-white">{algo}</span>
+                <span className="text-sm font-semibold text-white">{hmacMode ? `HMAC-${algo}` : algo}</span>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleVerify(algo)}
@@ -155,7 +269,7 @@ export function HashGeneratorTool() {
       )}
 
       <p className="text-xs text-[#B8B8D4]/60 text-center">
-        Uses the Web Crypto API. All hashing is performed locally in your browser.
+        Uses the Web Crypto API. Files are hashed as raw bytes — binary safe. All processing is local.
       </p>
     </div>
   );

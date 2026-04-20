@@ -51,12 +51,13 @@ function analyzePassword(password: string): PasswordAnalysis {
     { name: 'Symbols', found: /[^a-zA-Z0-9]/.test(password), count: (password.match(/[^a-zA-Z0-9]/g) || []).length },
   ];
 
-  // Calculate pool size
+  // Pool size matches the Password Generator so entropy comparisons agree between tools.
+  // If a user generates at N bits and pastes here, they see the same N bits.
   let poolSize = 0;
-  if (charsets[0].found) poolSize += 26;
-  if (charsets[1].found) poolSize += 26;
-  if (charsets[2].found) poolSize += 10;
-  if (charsets[3].found) poolSize += 33;
+  if (charsets[0].found) poolSize += 26; // lowercase
+  if (charsets[1].found) poolSize += 26; // uppercase
+  if (charsets[2].found) poolSize += 10; // digits
+  if (charsets[3].found) poolSize += 26; // symbols (same set generator uses: !@#$%^&*()_+-=[]{}|;:,.<>?)
 
   // Entropy calculation
   const entropy = length * Math.log2(Math.max(poolSize, 1));
