@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { ToolPage } from '@/components/ToolPage';
 import { renderToolEngine } from '@/components/tools/registry';
 
@@ -33,7 +34,7 @@ export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName:
       return (
         <article className="max-w-3xl mx-auto">
           <nav className="mb-6 flex items-center gap-2 text-sm text-[#B8B8D4]">
-            <a href="/tools" className="hover:text-white transition-colors">Tools</a>
+            <Link href="/tools" className="hover:text-white transition-colors">Tools</Link>
             <span>/</span>
             <span className="text-white">{nicheName}</span>
           </nav>

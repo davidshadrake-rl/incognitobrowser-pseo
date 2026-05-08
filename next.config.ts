@@ -10,6 +10,13 @@ import type { NextConfig } from "next";
 const isStatic = process.env.BUILD_TARGET === "static";
 
 const nextConfig: NextConfig = {
+  // Pin Turbopack to this project's directory. Without this, Next.js 16 walks
+  // up the filesystem looking for a lockfile and may pick a parent directory's
+  // node_modules — which contains an incompatible React JSX runtime and breaks
+  // builds with "Export jsxs doesn't exist in target module".
+  turbopack: {
+    root: __dirname,
+  },
   ...(isStatic
     ? {
         output: "export" as const,

@@ -1,7 +1,7 @@
+import Link from 'next/link';
 import { getAllContentItems } from '@/lib/content';
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
-import { Card } from '@/components/ui/Card';
 
 export const metadata = genMeta({
   title: 'Free Privacy Tools',
@@ -147,7 +147,7 @@ export default function ToolsIndex() {
           const link = engineToLink[tool.engine];
           if (!link) return null;
           return (
-            <a
+            <Link
               key={tool.engine}
               href={link.href}
               className="group bg-[#0a0a0a] border border-white/10 rounded-lg p-6 hover:border-white/25 transition-colors"
@@ -170,7 +170,7 @@ export default function ToolsIndex() {
                 <span className="mx-1">·</span>
                 <span>No signup</span>
               </div>
-            </a>
+            </Link>
           );
         })}
       </div>
@@ -184,7 +184,7 @@ export default function ToolsIndex() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {items.map(item => (
-            <a
+            <Link
               key={`${item._niche}-${item._slug}`}
               href={`/tools/${item._niche}/${item._slug}`}
               className="flex items-center gap-3 bg-[#0a0a0a] border border-white/5 rounded-lg px-4 py-3 hover:border-white/15 transition-colors group"
@@ -200,7 +200,7 @@ export default function ToolsIndex() {
               <span className="text-xs px-1.5 py-0.5 bg-white/5 rounded text-[#B8B8D4]/40 shrink-0">
                 {item.toolType}
               </span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>
