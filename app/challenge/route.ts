@@ -1,12 +1,16 @@
 /**
- * GET /challenge — issues a fresh Altcha proof-of-work challenge.
+ * POST /challenge — issues a fresh Altcha proof-of-work challenge.
  *
  * The client must solve the challenge (CPU work) and pass the solution as the
  * Authorization header on the next /scan-url call. See lib/altcha.ts.
  *
- * Why a separate endpoint and not inline: the challenge is cheap to generate and
- * needs no body, so making it a fast GET lets us aggressively rate-limit /scan-url
- * (the expensive endpoint) without burning the client's POW budget for failures.
+ * Why POST and not GET: Next.js 16 with `output: "export"` rejects GET route
+ * handlers that aren't marked `force-static`. Our challenge IS dynamic (random
+ * salt each call), so static is wrong. POST handlers are silently excluded
+ * from static export, which is what we want — the static droplet build skips
+ * this route, the Vercel server build still serves it.
+ *
+ * The body is unused; client can send `{}` or empty.
  *
  * Origin allowlist is configurable via env var ALLOWED_ORIGINS (comma-separated).
  */
@@ -32,14 +36,14 @@ export async function OPTIONS(request: NextRequest) {
     status: 204,
     headers: {
       ...corsHeadersFor(origin),
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400',
     },
   });
 }
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
   const cors = corsHeadersFor(origin);
 

@@ -181,7 +181,13 @@ export function CookieAnalyzerTool() {
    * scripted abuse of the /scan-url endpoint.
    */
   const solveAltchaChallenge = async (): Promise<string> => {
-    const cRes = await fetch(`${API_BASE}/challenge`, { method: 'GET' });
+    // POST (not GET) — Next.js 16 static export refuses dynamic GET handlers.
+    // Empty body. See note in app/challenge/route.ts for the full rationale.
+    const cRes = await fetch(`${API_BASE}/challenge`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+    });
     if (!cRes.ok) {
       throw new Error(`Challenge service returned ${cRes.status}`);
     }

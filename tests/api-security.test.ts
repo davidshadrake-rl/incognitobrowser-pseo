@@ -267,8 +267,10 @@ describe('scan-url route enforces POW + origin', () => {
 describe('challenge endpoint exists with rate limit', () => {
   const src = readFile('app/challenge/route.ts');
 
-  it('uses GET method', () => {
-    expect(src).toMatch(/export async function GET/);
+  it('uses POST method (so Next.js static export excludes it gracefully)', () => {
+    expect(src).toMatch(/export async function POST/);
+    // Specifically NOT a GET — static export would refuse a dynamic GET handler
+    expect(src).not.toMatch(/export async function GET\(/);
   });
 
   it('checks origin before issuing a challenge', () => {
