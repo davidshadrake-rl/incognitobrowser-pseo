@@ -141,6 +141,9 @@ export function CookieAnalyzerTool() {
   // URL scan state
   const [urlInput, setUrlInput] = useState('');
   const [urlScanning, setUrlScanning] = useState(false);
+  // Per-phase status so users can see why a click costs ~2-4 seconds. The
+  // proof-of-work step in particular looks suspiciously slow without context.
+  const [scanStatus, setScanStatus] = useState<'' | 'verifying' | 'solving' | 'scanning'>('');
   const [urlResult, setUrlResult] = useState<URLScanResult | null>(null);
   const [urlError, setUrlError] = useState('');
 
@@ -186,8 +189,7 @@ export function CookieAnalyzerTool() {
    * (no spinner freeze) on slower devices.
    */
   const solveAltchaChallenge = async (): Promise<string> => {
-    // POST (not GET) — Next.js 16 static export refuses dynamic GET handlers.
-    // Empty body. See note in app/challenge/route.ts for the full rationale.
+    setScanStatus('verifying');
     const cRes = await fetch(`${API_BASE}/challenge`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -205,8 +207,7 @@ export function CookieAnalyzerTool() {
       expires: number;
     };
 
-    // Dynamic import keeps the lib out of the initial bundle for users who
-    // never click Scan. Adds ~1KB only when the scanner is actually used.
+    setScanStatus('solving');
     const { sha256 } = await import('js-sha256');
     const target = c.challenge.toLowerCase();
     for (let n = 0; n <= c.maxnumber; n++) {
@@ -220,8 +221,8 @@ export function CookieAnalyzerTool() {
         };
         return `Altcha ${btoa(JSON.stringify(solution))}`;
       }
-      // Yield to the event loop every 5000 iterations so the browser stays
-      // responsive and the spinner keeps animating.
+      // Yield to the event loop every 5000 iterations so the spinner animates
+      // and the UI stays responsive on slower devices.
       if (n % 5000 === 0 && n > 0) {
         await new Promise((r) => setTimeout(r, 0));
       }
@@ -241,6 +242,7 @@ export function CookieAnalyzerTool() {
       const authHeader = await solveAltchaChallenge();
 
       // 2. Now scan with the token in Authorization
+      setScanStatus('scanning');
       const res = await fetch(`${API_BASE}/scan-url`, {
         method: 'POST',
         headers: {
@@ -263,6 +265,7 @@ export function CookieAnalyzerTool() {
       );
     }
     setUrlScanning(false);
+    setScanStatus('');
   };
 
   const tracking = cookies.filter(c => c.category === 'tracking');
@@ -394,7 +397,12 @@ export function CookieAnalyzerTool() {
             </label>
             <div className="flex gap-2">
               <input
-                type="text"
+                type="url"
+                inputMode="url"
+                autoComplete="url"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !urlScanning && scanURL()}
@@ -409,11 +417,24 @@ export function CookieAnalyzerTool() {
                 {urlScanning ? (
                   <span className="flex items-center gap-2">
                     <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
-                    Scanning
+                    {scanStatus === 'verifying' ? 'Verifying' :
+                     scanStatus === 'solving' ? 'Proving' :
+                     scanStatus === 'scanning' ? 'Scanning' :
+                     'Working'}
                   </span>
                 ) : 'Scan'}
               </button>
             </div>
+            {/* Per-phase status line: tells the user why a click costs 2–4s.
+                Removes the "is it broken?" anxiety during the PoW step. */}
+            {urlScanning && scanStatus && (
+              <div className="mt-2 flex items-center gap-2 text-xs text-[#B8B8D4]/80">
+                <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
+                {scanStatus === 'verifying' && 'Requesting verification token from the server…'}
+                {scanStatus === 'solving' && 'Proving you’re a real browser (one-time CPU check, ~half a second)…'}
+                {scanStatus === 'scanning' && 'Fetching the site and analysing cookies, trackers, and scripts…'}
+              </div>
+            )}
             <p className="mt-2 text-xs text-[#B8B8D4]/60">
               We fetch the URL server-side to read Set-Cookie headers and detect tracking scripts in the HTML. The target site will see a request from our server, not your browser.
             </p>

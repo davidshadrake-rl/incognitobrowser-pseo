@@ -245,13 +245,13 @@ export function HashGeneratorTool() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleVerify(algo)}
-                    className="text-xs text-[#B8B8D4] hover:text-white transition-colors px-2 py-1 border border-white/10 rounded"
+                    className="text-xs text-[#B8B8D4] hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-white/10 rounded min-h-[36px] min-w-[64px]"
                   >
                     Verify
                   </button>
                   <button
                     onClick={() => handleCopy(algo, results[algo])}
-                    className="text-xs text-[#B8B8D4] hover:text-white transition-colors px-2 py-1 border border-white/10 rounded"
+                    className="text-xs text-[#B8B8D4] hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-white/10 rounded min-h-[36px] min-w-[64px]"
                   >
                     {copied === algo ? 'Copied!' : 'Copy'}
                   </button>

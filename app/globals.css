@@ -58,12 +58,15 @@ body {
   font-family: "IBM Plex Mono", monospace;
 }
 
-/* Pill button base */
+/* Pill button base
+   min-height ensures comfortable mobile tap target (Apple HIG 44pt / Material 48dp).
+   We use 44px which still feels balanced visually but meets accessibility floor. */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1.5rem;
+  min-height: 44px;
   border: 2px solid #ffffff;
   border-radius: 9999px;
   font-size: 0.875rem;
@@ -74,6 +77,9 @@ body {
   background: transparent;
   transition: all 0.2s;
   cursor: pointer;
+  /* Remove the 300ms tap delay on older Android browsers and double-tap zoom */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-primary:hover {
@@ -82,11 +88,22 @@ body {
   border-color: #cfcfcf;
 }
 
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1.5rem;
+  min-height: 44px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 9999px;
   font-size: 0.875rem;
@@ -95,11 +112,17 @@ body {
   background: transparent;
   transition: all 0.2s;
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-secondary:hover {
   border-color: rgba(255, 255, 255, 0.5);
   color: #ffffff;
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
 }
 
 /* Form inputs dark theme */

@@ -285,7 +285,12 @@ export function URLAnalyzerTool() {
         <label className="block text-sm font-medium text-[#B8B8D4] mb-2">Enter a URL to analyze</label>
         <div className="flex gap-2">
           <input
-            type="text"
+            type="url"
+            inputMode="url"
+            autoComplete="url"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAnalyze()}

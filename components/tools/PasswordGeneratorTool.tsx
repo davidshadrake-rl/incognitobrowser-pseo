@@ -322,7 +322,7 @@ export function PasswordGeneratorTool() {
             </h3>
             <button
               onClick={() => handleCopy(password)}
-              className="text-xs text-[#B8B8D4] hover:text-white transition-colors px-3 py-1 border border-white/10 rounded"
+              className="text-xs text-[#B8B8D4] hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-white/10 rounded min-h-[36px] min-w-[64px]"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>
@@ -340,12 +340,20 @@ export function PasswordGeneratorTool() {
       {history.length > 1 && (
         <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
           <h3 className="text-sm font-semibold text-white mb-3">Recent ({history.length})</h3>
+          <p className="text-xs text-[#B8B8D4]/50 mb-2">Tap to copy</p>
           <div className="space-y-2">
             {history.slice(1).map((pw, i) => (
-              <div key={i} className="flex items-center justify-between gap-2">
+              // Entire row is the tap target — big mobile-friendly hit area.
+              // Native <button> so keyboard focus/Enter work too.
+              <button
+                key={i}
+                onClick={() => handleCopy(pw)}
+                className="w-full flex items-center justify-between gap-2 px-3 py-2 -mx-1 rounded hover:bg-white/5 transition-colors text-left cursor-pointer"
+                aria-label={`Copy password ${pw.substring(0, 8)}...`}
+              >
                 <code className="text-xs text-[#B8B8D4] font-mono truncate flex-1">{pw}</code>
-                <button onClick={() => handleCopy(pw)} className="text-xs text-[#B8B8D4] hover:text-white shrink-0">Copy</button>
-              </div>
+                <span className="text-xs text-[#B8B8D4]/60 shrink-0 group-hover:text-white">📋</span>
+              </button>
             ))}
           </div>
         </div>

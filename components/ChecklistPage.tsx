@@ -85,53 +85,77 @@ export function ChecklistPage({ data, nicheName }: { data: ChecklistData; nicheN
         <section key={si} className="mb-8">
           <h2 className="text-xl font-semibold text-white mb-4 pb-2 border-b border-white/10">{section.title}</h2>
           <div className="space-y-3">
-            {section.items.map((item) => (
-              <div
-                key={item.id}
-                className={`border rounded-lg transition-all ${
-                  checked[item.id] ? 'bg-green-500/10 border-green-500/20' : 'bg-[#0a0a0a] border-white/10'
-                }`}
-              >
-                <div className="flex items-start p-4">
-                  <input
-                    type="checkbox"
-                    checked={!!checked[item.id]}
-                    onChange={() => toggleItem(item.id)}
-                    className="mt-1 h-5 w-5 rounded border-white/30"
-                  />
-                  <div className="ml-3 flex-1">
-                    <div className="flex items-center justify-between">
-                      <span className={`font-medium ${checked[item.id] ? 'line-through text-white/40' : 'text-white'}`}>
-                        {item.task}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <Badge label={item.priority} variant={item.priority} />
-                        <button
-                          onClick={() => setExpandedItem(expandedItem === item.id ? null : item.id)}
-                          className="text-white/30 hover:text-white/60"
-                        >
-                          <svg className={`w-5 h-5 transition-transform ${expandedItem === item.id ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {section.items.map((item) => {
+              const isExpanded = expandedItem === item.id;
+              const isChecked = !!checked[item.id];
+              return (
+                <div
+                  key={item.id}
+                  className={`border rounded-lg transition-all ${
+                    isChecked ? 'bg-green-500/10 border-green-500/20' : 'bg-[#0a0a0a] border-white/10'
+                  }`}
+                >
+                  <div className="flex items-start p-4">
+                    {/* Checkbox is its own click target — we don't want tapping
+                        the row to accidentally mark the item done. Generous
+                        hit area: wrapping label adds tap padding. */}
+                    <label className="flex items-center mt-0.5 -m-1 p-1 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggleItem(item.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="h-5 w-5 rounded border-white/30 cursor-pointer"
+                        aria-label={`Mark ${item.task} as done`}
+                      />
+                    </label>
+
+                    {/* Entire row body (task + badge + chevron) is one big
+                        tap target that toggles expansion. Native <button>
+                        gives us keyboard focus + Enter/Space activation for
+                        free, plus mobile tap response is instant (no 300ms
+                        delay that older Android browsers add to <div onclick>). */}
+                    <button
+                      type="button"
+                      onClick={() => setExpandedItem(isExpanded ? null : item.id)}
+                      aria-expanded={isExpanded}
+                      aria-controls={`item-${item.id}-detail`}
+                      className="ml-3 flex-1 text-left cursor-pointer"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className={`font-medium ${isChecked ? 'line-through text-white/40' : 'text-white'}`}>
+                          {item.task}
+                        </span>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Badge label={item.priority} variant={item.priority} />
+                          <svg
+                            className={`w-5 h-5 text-white/30 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
-                        </button>
-                      </div>
-                    </div>
-                    {expandedItem === item.id && (
-                      <div className="mt-3 space-y-2 text-sm">
-                        <div className="bg-blue-500/10 border border-blue-500/20 rounded p-3">
-                          <strong className="text-blue-400">Why:</strong>
-                          <span className="text-blue-300 ml-1">{item.why}</span>
-                        </div>
-                        <div className="bg-white/5 border border-white/10 rounded p-3">
-                          <strong className="text-white">How to:</strong>
-                          <span className="text-[#B8B8D4] ml-1">{item.howTo}</span>
                         </div>
                       </div>
-                    )}
+                      {isExpanded && (
+                        <div id={`item-${item.id}-detail`} className="mt-3 space-y-2 text-sm">
+                          <div className="bg-blue-500/10 border border-blue-500/20 rounded p-3">
+                            <strong className="text-blue-400">Why:</strong>
+                            <span className="text-blue-300 ml-1">{item.why}</span>
+                          </div>
+                          <div className="bg-white/5 border border-white/10 rounded p-3">
+                            <strong className="text-white">How to:</strong>
+                            <span className="text-[#B8B8D4] ml-1">{item.howTo}</span>
+                          </div>
+                        </div>
+                      )}
+                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       ))}

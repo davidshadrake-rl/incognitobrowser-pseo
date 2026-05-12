@@ -237,7 +237,7 @@ export function TextEncryptionTool() {
             <h3 className="text-sm font-semibold text-green-400">
               {mode === 'encrypt' ? 'Encrypted Output' : 'Decrypted Text'}
             </h3>
-            <button onClick={handleCopy} className="text-xs text-[#B8B8D4] hover:text-white transition-colors px-3 py-1 border border-white/10 rounded">
+            <button onClick={handleCopy} className="text-xs text-[#B8B8D4] hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-white/10 rounded min-h-[36px] min-w-[64px]">
               {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
