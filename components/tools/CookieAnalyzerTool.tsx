@@ -176,9 +176,14 @@ export function CookieAnalyzerTool() {
 
   /**
    * Fetch a fresh proof-of-work challenge, brute-force the solution in this tab,
-   * and return the encoded Authorization header value. Browser solves a SHA-256
-   * puzzle with up to 100k iterations — typically ~50–300ms. This is what gates
-   * scripted abuse of the /scan-url endpoint.
+   * and return the encoded Authorization header value.
+   *
+   * Uses the synchronous js-sha256 implementation rather than crypto.subtle —
+   * the latter is async and per-call overhead made 100k iterations take ~30s
+   * in real browsers. Sync sha256 does the same workload in ~200–500ms.
+   *
+   * We yield to the event loop every 5k iterations so the page stays responsive
+   * (no spinner freeze) on slower devices.
    */
   const solveAltchaChallenge = async (): Promise<string> => {
     // POST (not GET) — Next.js 16 static export refuses dynamic GET handlers.
@@ -200,16 +205,12 @@ export function CookieAnalyzerTool() {
       expires: number;
     };
 
-    // Brute-force the SHA-256 puzzle. Web Crypto's digest is async, so we batch
-    // to keep the event loop responsive. Most challenges solve in <500ms.
-    const encoder = new TextEncoder();
+    // Dynamic import keeps the lib out of the initial bundle for users who
+    // never click Scan. Adds ~1KB only when the scanner is actually used.
+    const { sha256 } = await import('js-sha256');
     const target = c.challenge.toLowerCase();
     for (let n = 0; n <= c.maxnumber; n++) {
-      const hashBuf = await crypto.subtle.digest('SHA-256', encoder.encode(c.salt + n));
-      const hex = Array.from(new Uint8Array(hashBuf))
-        .map((b) => b.toString(16).padStart(2, '0'))
-        .join('');
-      if (hex === target) {
+      if (sha256(c.salt + n) === target) {
         const solution = {
           algorithm: c.algorithm,
           salt: c.salt,
@@ -217,9 +218,12 @@ export function CookieAnalyzerTool() {
           signature: c.signature,
           expires: c.expires,
         };
-        // base64 of the JSON, sent as "Altcha <token>"
-        const b64 = btoa(JSON.stringify(solution));
-        return `Altcha ${b64}`;
+        return `Altcha ${btoa(JSON.stringify(solution))}`;
+      }
+      // Yield to the event loop every 5000 iterations so the browser stays
+      // responsive and the spinner keeps animating.
+      if (n % 5000 === 0 && n > 0) {
+        await new Promise((r) => setTimeout(r, 0));
       }
     }
     throw new Error('Could not solve challenge within search space');
