@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
+import { IncognitoLogo } from "@/components/ui/IncognitoLogo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -48,16 +48,19 @@ export default function RootLayout({
         {/* Header */}
         <header className="border-b border-white/10 bg-black sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <Link href="/" className="flex items-center gap-3">
-                <Image
-                  src="/icon.svg"
-                  alt="Incognito Browser"
-                  width={32}
-                  height={32}
-                  className="rounded"
-                />
-                <span className="font-semibold text-white text-sm uppercase tracking-wider">Privacy Resources</span>
+            <div className="flex items-center justify-between gap-3 h-16">
+              {/* Logo + wordmark. SVG is a React component (see
+                  components/ui/IncognitoLogo) so it works regardless of
+                  basePath / deploy target — no file-load can fail. */}
+              <Link
+                href="/"
+                className="flex items-center gap-3 min-w-0 shrink-0"
+                aria-label="Privacy Resources home"
+              >
+                <IncognitoLogo size={28} className="rounded" />
+                <span className="font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap">
+                  Privacy Resources
+                </span>
               </Link>
               <nav className="hidden lg:flex items-center gap-1">
                 {navItems.map(item => (
@@ -108,12 +111,7 @@ export default function RootLayout({
               </div>
               <div className="col-span-2">
                 <div className="flex items-center gap-3 mb-4">
-                  <Image
-                    src="/icon.svg"
-                    alt="Incognito Browser"
-                    width={28}
-                    height={28}
-                  />
+                  <IncognitoLogo size={28} />
                   <h3 className="font-semibold text-white text-xs uppercase tracking-wider">Incognito Browser</h3>
                 </div>
                 <p className="text-sm text-[#B8B8D4] leading-relaxed">
