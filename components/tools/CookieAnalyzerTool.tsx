@@ -169,6 +169,56 @@ export function CookieAnalyzerTool() {
     setScanned(true);
   };
 
+  // API base URL — points at the Vercel-hosted scanner endpoint.
+  // For local dev with `npm run dev`, override via NEXT_PUBLIC_SCAN_API in .env.local.
+  const API_BASE =
+    process.env.NEXT_PUBLIC_SCAN_API || 'https://api.incognitobrowser.io';
+
+  /**
+   * Fetch a fresh proof-of-work challenge, brute-force the solution in this tab,
+   * and return the encoded Authorization header value. Browser solves a SHA-256
+   * puzzle with up to 100k iterations — typically ~50–300ms. This is what gates
+   * scripted abuse of the /scan-url endpoint.
+   */
+  const solveAltchaChallenge = async (): Promise<string> => {
+    const cRes = await fetch(`${API_BASE}/challenge`, { method: 'GET' });
+    if (!cRes.ok) {
+      throw new Error(`Challenge service returned ${cRes.status}`);
+    }
+    const c = (await cRes.json()) as {
+      algorithm: string;
+      salt: string;
+      challenge: string;
+      maxnumber: number;
+      signature: string;
+      expires: number;
+    };
+
+    // Brute-force the SHA-256 puzzle. Web Crypto's digest is async, so we batch
+    // to keep the event loop responsive. Most challenges solve in <500ms.
+    const encoder = new TextEncoder();
+    const target = c.challenge.toLowerCase();
+    for (let n = 0; n <= c.maxnumber; n++) {
+      const hashBuf = await crypto.subtle.digest('SHA-256', encoder.encode(c.salt + n));
+      const hex = Array.from(new Uint8Array(hashBuf))
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+      if (hex === target) {
+        const solution = {
+          algorithm: c.algorithm,
+          salt: c.salt,
+          number: n,
+          signature: c.signature,
+          expires: c.expires,
+        };
+        // base64 of the JSON, sent as "Altcha <token>"
+        const b64 = btoa(JSON.stringify(solution));
+        return `Altcha ${b64}`;
+      }
+    }
+    throw new Error('Could not solve challenge within search space');
+  };
+
   const scanURL = async () => {
     if (!urlInput.trim()) return;
     setUrlScanning(true);
@@ -177,9 +227,16 @@ export function CookieAnalyzerTool() {
     setScanned(false);
 
     try {
-      const res = await fetch('https://api.incognitobrowser.io/scan-url', {
+      // 1. Get + solve POW challenge (defends against scripted abuse)
+      const authHeader = await solveAltchaChallenge();
+
+      // 2. Now scan with the token in Authorization
+      const res = await fetch(`${API_BASE}/scan-url`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: authHeader,
+        },
         body: JSON.stringify({ url: urlInput.trim() }),
       });
       const data = await res.json();
@@ -188,8 +245,12 @@ export function CookieAnalyzerTool() {
       } else {
         setUrlResult(data);
       }
-    } catch {
-      setUrlError('Network error. Please check the URL and try again.');
+    } catch (err) {
+      setUrlError(
+        err instanceof Error && err.message.includes('challenge')
+          ? 'Could not verify your browser. Please try again.'
+          : 'Network error. Please check the URL and try again.',
+      );
     }
     setUrlScanning(false);
   };

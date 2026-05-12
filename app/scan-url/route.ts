@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit, getClientIP } from '@/lib/rate-limit';
+import { parseAltchaAuthHeader, verifySolution } from '@/lib/altcha';
+import { corsHeadersFor, isOriginAllowed } from '@/lib/origin';
 
 // Known tracking script patterns to look for in HTML
 const TRACKER_PATTERNS: { pattern: RegExp; name: string; category: 'tracking' | 'analytics' | 'functional'; risk: 'high' | 'medium' | 'low'; description: string }[] = [
@@ -199,31 +201,12 @@ async function readCappedText(response: Response, maxBytes: number): Promise<str
   return out;
 }
 
-const ALLOWED_ORIGINS = [
-  'https://incognitobrowser.io',
-  'https://www.incognitobrowser.io',
-];
-
-function corsHeaders(origin: string | null) {
-  const headers: Record<string, string> = {
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Max-Age': '86400',
-    // Security headers
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Content-Type': 'application/json',
-  };
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    headers['Access-Control-Allow-Origin'] = origin;
-  }
-  return headers;
-}
+// Origin allowlist + CORS helpers come from lib/origin.ts (shared with /challenge).
+// Configure via ALLOWED_ORIGINS env var.
 
 export async function OPTIONS(request: NextRequest) {
   const origin = request.headers.get('origin');
-  return new NextResponse(null, { status: 204, headers: corsHeaders(origin) });
+  return new NextResponse(null, { status: 204, headers: corsHeadersFor(origin) });
 }
 
 // Rate limit: 10 requests per minute per IP
@@ -231,9 +214,21 @@ const RATE_LIMIT_CONFIG = { limit: 10, windowMs: 60_000 };
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
-  const cors = corsHeaders(origin);
+  const cors = corsHeadersFor(origin);
 
-  // Rate limiting
+  // Strict origin check — reject requests from origins not in the allowlist.
+  // This is one of three layers (origin check, POW challenge, rate limit).
+  // Note: Origin is set by the browser and cannot be spoofed from page JS, but
+  // CAN be spoofed by curl/scripts. The POW below is what actually defends
+  // against scripted abuse.
+  if (!isOriginAllowed(origin)) {
+    return NextResponse.json(
+      { error: 'Origin not allowed.' },
+      { status: 403, headers: cors }
+    );
+  }
+
+  // Rate limiting (per IP)
   const clientIP = getClientIP(request.headers);
   const rl = rateLimit(clientIP, RATE_LIMIT_CONFIG);
   const allHeaders = { ...cors, ...rl.headers };
@@ -242,6 +237,22 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
       { status: 429, headers: allHeaders }
+    );
+  }
+
+  // Altcha proof-of-work check. The client must have called /challenge, solved
+  // the SHA-256 puzzle, and put the solution in the Authorization header.
+  // This is what makes scripted abuse expensive — every call costs ~100ms of CPU.
+  const solution = parseAltchaAuthHeader(request.headers.get('authorization'));
+  const altchaResult = verifySolution(solution);
+  if (!altchaResult.valid) {
+    return NextResponse.json(
+      {
+        error:
+          'Missing or invalid proof-of-work token. Call /challenge first, solve it, and send the solution as the Authorization header.',
+        reason: altchaResult.reason,
+      },
+      { status: 401, headers: allHeaders }
     );
   }
 
