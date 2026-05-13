@@ -58,9 +58,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Rate limit per IP
+  // Rate limit per IP — async because KV is HTTP-backed
   const ip = getClientIP(request.headers);
-  const rl = rateLimit(`challenge:${ip}`, CHALLENGE_RATE_LIMIT);
+  const rl = await rateLimit(`challenge:${ip}`, CHALLENGE_RATE_LIMIT);
   const allHeaders = { ...cors, ...rl.headers };
   if (!rl.allowed) {
     return NextResponse.json(

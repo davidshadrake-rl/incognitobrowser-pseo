@@ -28,11 +28,23 @@ Go to Vercel dashboard → your project → **Settings → Environment Variables
 |---|---|---|
 | `ALTCHA_HMAC_KEY` | Random 32+ char hex string | Generate with: `openssl rand -hex 32`. Never commit this. Without it, `/challenge` returns 503 and `/scan-url` rejects all requests. |
 
-### Optional (recommended)
+### Strongly recommended (production)
 
 | Name | Value | Notes |
 |---|---|---|
+| `KV_REST_API_URL` | Auto-set when you enable Vercel KV | Without this, rate limit falls back to per-instance in-memory mode — **proven leaky under concurrent attack** (verified: 30 parallel reqs → 0 blocked). With KV, the counter is shared across all instances → global enforcement. |
+| `KV_REST_API_TOKEN` | Auto-set when you enable Vercel KV | Goes with the URL. |
 | `ALLOWED_ORIGINS` | `https://incognitobrowser.io,https://www.incognitobrowser.io,https://lightshapesallthings.info` | Comma-separated. Include test/staging domains here. If unset, falls back to incognitobrowser.io family only. |
+
+### Enabling Vercel KV (one-time setup)
+
+1. Vercel dashboard → project → **Storage** tab
+2. **Create Database** → **KV** → name it `incognitobrowser-rate-limits` (or similar)
+3. Vercel auto-injects `KV_REST_API_URL`, `KV_REST_API_TOKEN`, etc. into your project's env vars across all environments (production, preview, dev)
+4. Redeploy. The rate limiter auto-detects KV is available and switches modes.
+5. Verify: run the parallel-attack test (30 concurrent requests from one IP). Should now block at request 11 every time, regardless of how many instances are warm.
+
+**Cost:** Vercel KV free tier covers 30k commands/day. Each rate-limit check is 1 pipelined call ≈ ~5 commands. At our scale (well under 100k API calls/day), we'll never approach the limit.
 
 ### Local development
 

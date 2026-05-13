@@ -228,9 +228,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Rate limiting (per IP)
+  // Rate limiting (per IP) — async because KV is HTTP-backed
   const clientIP = getClientIP(request.headers);
-  const rl = rateLimit(clientIP, RATE_LIMIT_CONFIG);
+  const rl = await rateLimit(clientIP, RATE_LIMIT_CONFIG);
   const allHeaders = { ...cors, ...rl.headers };
 
   if (!rl.allowed) {
