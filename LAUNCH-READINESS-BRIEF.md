@@ -36,13 +36,37 @@ We have a defensible application-layer posture. The infrastructure-layer gaps ar
 
 ## Gaps blocking a 9M-user launch
 
-### 🔴 1. In-memory rate limit doesn't actually rate-limit
+### 🔴 1. In-memory rate limit collapses under concurrent load
 
-Verified empirically. 12 sequential curl requests, counter bounces 9 → 8 → 9 → 8 (different Vercel instances, each starting fresh).
+Verified empirically with two tests:
 
-**Real-world impact:** an attacker with a script gets `10 × (warm-instance-count)` requests/min/IP, easily 50–100/min. Add a botnet with rotating IPs and the rate limit is theatre.
+**Test A — 30 sequential requests from one IP (real user pattern):**
+```
+Requests 1-10:  status=401, remaining=9..0  ← perfect linear decrement
+Requests 11-30: status=429                  ← rate limit fires correctly
+```
+Works as designed.
 
-**Fix:** swap `Map`-backed counter for Vercel KV. Provider-native, free tier covers 30k req/day. ~1 hour. Code already isolates the rate-limit module; swap is mechanical.
+**Test B — 30 concurrent requests from one IP (script attack pattern):**
+```
+All 30: status=401   ← ZERO requests rate-limited
+```
+The rate limit **completely fails to engage**. Vercel auto-scales fresh
+instances to absorb the burst; each instance starts with a fresh
+in-memory counter and never hits 10.
+
+**Real-world impact:** an attacker with `Promise.all` or a curl loop gets
+**~180× the supposed limit** from a single IP. With a 100-bot botnet, that's
+~18,000 unauthenticated requests per minute against the API — plenty to
+extract value or amplify abuse.
+
+**The PoW makes each request cost ~200ms of attacker CPU, but the rate limit
+is what would otherwise force them to pace.** Without it, the PoW is the
+ONLY defense, and it's a soft one.
+
+**Fix:** swap `Map`-backed counter for Vercel KV. Provider-native, free tier
+covers 30k req/day. ~1 hour. Code already isolates the rate-limit module;
+swap is mechanical.
 
 ### 🔴 2. No HTTP security headers
 
