@@ -75,6 +75,7 @@ export default function RootLayout({
               </nav>
               <a
                 href="https://incognitobrowser.io"
+                rel="noopener"
                 className="btn-primary hidden sm:inline-flex text-xs"
               >
                 Download Browser
@@ -105,8 +106,8 @@ export default function RootLayout({
               <div>
                 <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Product</h3>
                 <ul className="space-y-2 text-sm text-[#B8B8D4]">
-                  <li><a href="https://incognitobrowser.io" className="hover:text-white transition-colors">Download</a></li>
-                  <li><a href="https://incognitobrowser.io/blog" className="hover:text-white transition-colors">Blog</a></li>
+                  <li><a href="https://incognitobrowser.io" rel="noopener" className="hover:text-white transition-colors">Download</a></li>
+                  <li><a href="https://incognitobrowser.io/blog" rel="noopener" className="hover:text-white transition-colors">Blog</a></li>
                 </ul>
               </div>
               <div className="col-span-2">

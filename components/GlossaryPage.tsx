@@ -89,6 +89,7 @@ export function GlossaryTermPage({ data, validTermSlugs }: GlossaryTermPageProps
               <Link
                 key={i}
                 href={`/glossary/${term}`}
+                aria-label={`Read glossary entry: ${term.replace(/-/g, ' ')}`}
                 className="px-3 py-1.5 border border-white/10 text-[#B8B8D4] rounded-full text-sm hover:border-white/30 hover:text-white transition-colors"
               >
                 {term.replace(/-/g, ' ')}

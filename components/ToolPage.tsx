@@ -64,39 +64,57 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
 
       <form onSubmit={handleSubmit} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6 mb-8">
         <div className="space-y-4">
-          {data.inputs.map(input => (
-            <div key={input.id}>
-              <label className="block text-sm font-medium text-[#B8B8D4] mb-1">{input.label}</label>
-              {input.type === 'textarea' ? (
-                <textarea
-                  value={inputValues[input.id]}
-                  onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
-                  placeholder={input.placeholder}
-                  rows={4}
-                  className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20"
-                />
-              ) : input.type === 'select' && input.options ? (
-                <select
-                  value={inputValues[input.id]}
-                  onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
-                  className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white"
-                >
-                  <option value="">Select...</option>
-                  {input.options.map(opt => (
-                    <option key={opt.value} value={opt.value}>{opt.label}</option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type={input.type}
-                  value={inputValues[input.id]}
-                  onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
-                  placeholder={input.placeholder}
-                  className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20"
-                />
-              )}
-            </div>
-          ))}
+          {data.inputs.map(input => {
+            // Tighten mobile keyboard + autofill behavior based on input type.
+            const isUrl = input.type === 'url';
+            const isEmail = input.type === 'email';
+            const extraProps =
+              isUrl || isEmail
+                ? { autoCapitalize: 'none' as const, autoCorrect: 'off', spellCheck: false, autoComplete: isUrl ? 'url' : 'email', inputMode: isUrl ? ('url' as const) : ('email' as const) }
+                : {};
+            return (
+              <div key={input.id}>
+                <label htmlFor={input.id} className="block text-sm font-medium text-[#B8B8D4] mb-1">
+                  {input.label}
+                </label>
+                {input.type === 'textarea' ? (
+                  <textarea
+                    id={input.id}
+                    name={input.id}
+                    value={inputValues[input.id]}
+                    onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
+                    placeholder={input.placeholder}
+                    rows={4}
+                    className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20"
+                  />
+                ) : input.type === 'select' && input.options ? (
+                  <select
+                    id={input.id}
+                    name={input.id}
+                    value={inputValues[input.id]}
+                    onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white"
+                  >
+                    <option value="">Select...</option>
+                    {input.options.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    id={input.id}
+                    name={input.id}
+                    type={input.type}
+                    value={inputValues[input.id]}
+                    onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
+                    placeholder={input.placeholder}
+                    className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20"
+                    {...extraProps}
+                  />
+                )}
+              </div>
+            );
+          })}
           <button type="submit" className="btn-primary w-full py-3">
             Analyze
           </button>

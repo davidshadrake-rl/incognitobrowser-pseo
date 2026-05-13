@@ -34,7 +34,7 @@ export default function HomePage() {
               href={`/${ct.slug}`}
               className="btn-secondary text-xs"
             >
-              <span>{icons[ct.slug] || ''}</span>
+              <span aria-hidden="true">{icons[ct.slug] || ''}</span>
               {' '}{ct.name}
             </Link>
           ))}
@@ -48,7 +48,7 @@ export default function HomePage() {
           {contentTypes.map(ct => (
             <Link key={ct.slug} href={`/${ct.slug}`} className="group">
               <div className="border border-white/10 rounded-lg p-6 hover:border-white/40 bg-[#0a0a0a] transition-all">
-                <div className="text-3xl mb-3">{icons[ct.slug] || ''}</div>
+                <div className="text-3xl mb-3" aria-hidden="true">{icons[ct.slug] || ''}</div>
                 <h3 className="text-lg font-semibold text-white group-hover:text-[#cfcfcf] mb-1">
                   {ct.name}
                 </h3>
