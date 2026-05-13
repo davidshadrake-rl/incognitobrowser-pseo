@@ -14,14 +14,12 @@
 import { afterEach, beforeEach, describe, it, expect } from 'vitest';
 import { rateLimit, getClientIP } from '../lib/rate-limit';
 
-// Force in-memory mode by unsetting KV env vars (in case they leaked from .env)
+// Force in-memory mode by unsetting Redis env vars (in case they leaked from .env)
 beforeEach(() => {
-  delete process.env.KV_REST_API_URL;
-  delete process.env.KV_REST_API_TOKEN;
+  delete process.env.REDIS_URL;
 });
 afterEach(() => {
-  delete process.env.KV_REST_API_URL;
-  delete process.env.KV_REST_API_TOKEN;
+  delete process.env.REDIS_URL;
 });
 
 describe('Rate Limiter - Basic Enforcement', () => {

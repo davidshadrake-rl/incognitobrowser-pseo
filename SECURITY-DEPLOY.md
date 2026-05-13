@@ -32,19 +32,20 @@ Go to Vercel dashboard → your project → **Settings → Environment Variables
 
 | Name | Value | Notes |
 |---|---|---|
-| `KV_REST_API_URL` | Auto-set when you enable Vercel KV | Without this, rate limit falls back to per-instance in-memory mode — **proven leaky under concurrent attack** (verified: 30 parallel reqs → 0 blocked). With KV, the counter is shared across all instances → global enforcement. |
-| `KV_REST_API_TOKEN` | Auto-set when you enable Vercel KV | Goes with the URL. |
+| `REDIS_URL` | Auto-set when you enable Vercel Redis | Without this, rate limit falls back to per-instance in-memory mode — **proven leaky under concurrent attack** (verified: 30 parallel reqs → 0 blocked). With Redis, the counter is shared across all instances → global enforcement. |
 | `ALLOWED_ORIGINS` | `https://incognitobrowser.io,https://www.incognitobrowser.io,https://lightshapesallthings.info` | Comma-separated. Include test/staging domains here. If unset, falls back to incognitobrowser.io family only. |
 
-### Enabling Vercel KV (one-time setup)
+### Enabling Vercel Redis (one-time setup)
 
 1. Vercel dashboard → project → **Storage** tab
-2. **Create Database** → **KV** → name it `incognitobrowser-rate-limits` (or similar)
-3. Vercel auto-injects `KV_REST_API_URL`, `KV_REST_API_TOKEN`, etc. into your project's env vars across all environments (production, preview, dev)
-4. Redeploy. The rate limiter auto-detects KV is available and switches modes.
+2. **Create Database** → pick **Redis — Official Redis for Vercel** → name it `incognitobrowser-rate-limits` (or similar)
+3. Vercel auto-injects `REDIS_URL` into your project's env vars across all environments (production, preview, dev)
+4. Redeploy. The rate limiter auto-detects `REDIS_URL` is available and switches modes.
 5. Verify: run the parallel-attack test (30 concurrent requests from one IP). Should now block at request 11 every time, regardless of how many instances are warm.
 
-**Cost:** Vercel KV free tier covers 30k commands/day. Each rate-limit check is 1 pipelined call ≈ ~5 commands. At our scale (well under 100k API calls/day), we'll never approach the limit.
+**Cost:** Free tier covers 30k commands/day. Each rate-limit check is 1 MULTI transaction = ~4 commands. At our scale (well under 100k API calls/day), we'll never approach the limit.
+
+**Provider portability:** The implementation uses `ioredis` which speaks the standard Redis protocol. Any Redis (Vercel-managed, Upstash, AWS ElastiCache, self-hosted) works with the same `REDIS_URL` — no code change needed if you ever migrate.
 
 ### Local development
 
