@@ -105,6 +105,9 @@ export interface RateLimitResult {
   /** Seconds until the oldest request in the window expires (for Retry-After header) */
   retryAfterSeconds: number;
   headers: Record<string, string>;
+  /** Which backend served this request — `redis` or `memory`. Surfaced as a
+   *  response header so curl can show it without log archaeology. */
+  backend: 'redis' | 'memory';
 }
 
 function buildHeaders(
@@ -113,11 +116,15 @@ function buildHeaders(
   remaining: number,
   resetUnixSeconds: number,
   retryAfterSeconds: number,
+  backend: 'redis' | 'memory',
 ): Record<string, string> {
   const headers: Record<string, string> = {
     'X-RateLimit-Limit': String(limit),
     'X-RateLimit-Remaining': String(Math.max(0, remaining)),
     'X-RateLimit-Reset': String(resetUnixSeconds),
+    // Debug header: tells curl which backend served this request. Remove once
+    // the Redis path is verified working in prod.
+    'X-RateLimit-Backend': backend,
   };
   if (!allowed) headers['Retry-After'] = String(retryAfterSeconds);
   return headers;
@@ -161,12 +168,14 @@ async function rateLimitRedis(
         limit,
         remaining: 0,
         retryAfterSeconds,
+        backend: 'redis',
         headers: buildHeaders(
           false,
           limit,
           0,
           Math.ceil((oldestScore + windowMs) / 1000),
           retryAfterSeconds,
+          'redis',
         ),
       };
     }
@@ -177,7 +186,8 @@ async function rateLimitRedis(
       limit,
       remaining,
       retryAfterSeconds: 0,
-      headers: buildHeaders(true, limit, remaining, Math.ceil((now + windowMs) / 1000), 0),
+      backend: 'redis',
+      headers: buildHeaders(true, limit, remaining, Math.ceil((now + windowMs) / 1000), 0, 'redis'),
     };
   } catch (err) {
     // Redis outage: fall back to in-memory + log. Fail open so we don't deny legit users.
@@ -219,12 +229,14 @@ function rateLimitInMemory(key: string, { limit, windowMs }: RateLimitConfig): R
       limit,
       remaining: 0,
       retryAfterSeconds,
+      backend: 'memory',
       headers: buildHeaders(
         false,
         limit,
         0,
         Math.ceil((oldestInWindow + windowMs) / 1000),
         retryAfterSeconds,
+        'memory',
       ),
     };
   }
@@ -236,7 +248,8 @@ function rateLimitInMemory(key: string, { limit, windowMs }: RateLimitConfig): R
     limit,
     remaining,
     retryAfterSeconds: 0,
-    headers: buildHeaders(true, limit, remaining, Math.ceil((now + windowMs) / 1000), 0),
+    backend: 'memory',
+    headers: buildHeaders(true, limit, remaining, Math.ceil((now + windowMs) / 1000), 0, 'memory'),
   };
 }
 
