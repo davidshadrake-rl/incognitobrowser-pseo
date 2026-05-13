@@ -1,8 +1,24 @@
 # Privacy Resources — Launch-Readiness Brief
 
 **For:** Technical CEO review
-**Status:** Test environment validated. Not yet launch-ready for a 9M-user product under active threat. ~4 hours of focused work + Vercel Firewall toggle gets us there.
-**Decision needed:** Approve the must-fix list below, or push back on specific items.
+**Status:** Test environment validated. Rate-limit fix committed (`7dea31b`),
+awaiting Vercel KV enablement and CEO go-ahead. Other must-fix items pending.
+**Decision needed:** Approve enabling Vercel KV + the remaining must-fix list,
+or push back on specific items. Revert path for the KV swap is documented at
+the end.
+
+## Current status snapshot
+
+| Must-fix item | Status |
+|---|---|
+| Distributed rate limit (Vercel KV) | ✅ Code shipped (commit `7dea31b`). **Needs:** enable KV in Vercel dashboard + redeploy. |
+| Security headers (CSP, HSTS, Permissions-Policy, COOP, COEP) | ⏳ Not started |
+| Vercel Firewall toggle | ⏳ Dashboard action, not started |
+| Env-var tuning knobs + panic-mode config | ⏳ Not started |
+| Observability alerts wired up | ⏳ Not started |
+
+Quick win path: enable KV (~5 min of dashboard work) closes the
+highest-impact gap immediately. Other items remain ~3 hours of dev work.
 
 ---
 
@@ -114,9 +130,14 @@ We're on Vercel and the WAF / Bot Fight features are included on the Pro plan ($
 
 ## Recommended path
 
-**Total dev work to close the launch-blockers: ~4 hours.** Order of execution doesn't matter much; each ships independently.
+**Remaining dev work: ~3 hours.** Item 1 below is shipped (commit `7dea31b`)
+and just needs Vercel-dashboard enablement.
 
-1. Vercel KV-backed rate limit (1 hour)
+1. ✅ Vercel KV-backed rate limit — **CODE COMPLETE.** Needs:
+    a. Enable KV in Vercel dashboard (Storage → Create → KV) — 2 min
+    b. Vercel auto-injects `KV_REST_API_URL` and `KV_REST_API_TOKEN`
+    c. Redeploy — 60 sec
+    d. Verify with parallel-attack curl test → should now block at request 11
 2. Security headers — API + WordPress (2 hours)
 3. Env-var tuning knobs + panic-mode config (30 min)
 4. Observability alerts wired up (30 min)
@@ -124,14 +145,30 @@ We're on Vercel and the WAF / Bot Fight features are included on the Pro plan ($
 
 Then the should-haves (~2 hours total) and finally the production cutover sequence (DNS + WP upload + sitemap submission, ~30 min).
 
+### Revert path for the KV swap
+
+If the CEO wants a different approach to rate limiting, the swap is in a
+single isolated commit:
+
+```bash
+git revert 7dea31b
+git push origin main
+# Vercel auto-redeploys to in-memory rate-limit in ~60 sec
+# The KV database in Vercel can sit unused or be deleted (free tier)
+```
+
+All other security work (Altcha PoW, Origin allowlist, HMAC tokens, SSRF
+guards, body caps) is unaffected by the revert.
+
 ---
 
 ## What this brief recommends
 
-1. ✅ **Approve the 4-hour must-fix block.** I'll execute, write tests for each, and report back when done.
-2. ✅ **Approve enabling Vercel Firewall** ($20/mo if not already on Pro).
-3. 🟡 **Schedule an external pen test.** Post-launch is fine, but earmark $3–10k and start vendor selection now.
-4. 🟡 **Decide on observability stack.** Vercel's built-in is sufficient for launch. Datadog/Better Stack are upgrades, not requirements.
+1. ✅ **Approve enabling Vercel KV** (~5 min of dashboard work, free tier covers our volume). The KV-backed code is ready; this is the deployment step. Single biggest defense improvement.
+2. ✅ **Approve the remaining ~3-hour must-fix block** (security headers, tuning knobs, observability). I'll execute, write tests, and report back.
+3. ✅ **Approve enabling Vercel Firewall** ($20/mo if not already on Pro).
+4. 🟡 **Schedule an external pen test.** Post-launch is fine, but earmark $3–10k and start vendor selection now.
+5. 🟡 **Decide on observability stack.** Vercel's built-in is sufficient for launch. Datadog/Better Stack are upgrades, not requirements.
 
 ---
 
