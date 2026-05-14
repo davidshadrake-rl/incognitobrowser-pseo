@@ -152,38 +152,56 @@ function buildHeaders(
   return headers;
 }
 
-/** Redis-backed sliding window. One MULTI round trip. */
+/**
+ * Redis-backed fixed-window rate limiter using atomic INCR.
+ *
+ * Why fixed window (instead of sliding-window sorted set):
+ *   Sorted-set zadd+zcard in a MULTI is theoretically atomic but I observed
+ *   under concurrent load that 30 parallel requests reported only ~5 distinct
+ *   counts (1–5), not 1–30 as expected. Whether it's pipeline race, member
+ *   string collision under V8 cold-start timing, or something else, INCR
+ *   sidesteps the entire question — it's a single command, atomic by
+ *   definition.
+ *
+ * Tradeoff: fixed window allows up to 2x burst at window boundaries (limit
+ * requests in the last 100ms of window N + limit requests in the first 100ms
+ * of window N+1 = 2×limit in ~200ms). For our use case, acceptable. The PoW
+ * provides the per-request cost defense regardless.
+ *
+ * Window IDs:
+ *   windowId = floor(now / windowMs)
+ *   Key = `rl:<userKey>:<windowId>`
+ *   Each window has its own key with TTL = windowMs, so old windows expire on
+ *   their own.
+ */
 async function rateLimitRedis(
   client: Redis,
   key: string,
   { limit, windowMs }: RateLimitConfig,
 ): Promise<RateLimitResult> {
   const now = Date.now();
-  const cutoff = now - windowMs;
-  const fullKey = `rl:${key}`;
-  // Unique member name avoids collisions when multiple requests land in same millisecond
-  const member = `${now}:${Math.random().toString(36).slice(2, 10)}`;
   const windowSeconds = Math.ceil(windowMs / 1000);
+  const windowId = Math.floor(now / windowMs);
+  const fullKey = `rl:${key}:${windowId}`;
+  // When this window ends, in unix seconds
+  const windowEndUnix = Math.ceil(((windowId + 1) * windowMs) / 1000);
 
   try {
-    const multi = client.multi();
-    multi.zremrangebyscore(fullKey, 0, cutoff);
-    multi.zadd(fullKey, now, member);
-    multi.zcard(fullKey);
-    multi.expire(fullKey, windowSeconds);
-    const results = await multi.exec();
-    // exec() returns null on transaction failure
-    if (!results) throw new Error('multi exec returned null');
-    // Each entry is [err, result]. zcard is at index 2.
-    const zcardEntry = results[2];
-    if (zcardEntry[0]) throw zcardEntry[0];
-    const count = Number(zcardEntry[1] ?? 0);
+    // INCR is atomic — no race possible.
+    // EXPIRE sets TTL so the key auto-evicts after the window.
+    // Pipeline them in one round trip (separate transactions OK since
+    // EXPIRE is idempotent — calling it on every request is fine).
+    const pipe = client.pipeline();
+    pipe.incr(fullKey);
+    pipe.expire(fullKey, windowSeconds);
+    const results = await pipe.exec();
+    if (!results) throw new Error('pipeline exec returned null');
+    const incrEntry = results[0];
+    if (incrEntry[0]) throw incrEntry[0];
+    const count = Number(incrEntry[1] ?? 0);
 
     if (count > limit) {
-      // Oldest entry → compute retry-after
-      const oldest = (await client.zrange(fullKey, 0, 0, 'WITHSCORES')) as string[];
-      const oldestScore = oldest.length >= 2 ? Number(oldest[1]) : now;
-      const retryAfterMs = oldestScore + windowMs - now;
+      const retryAfterMs = windowEndUnix * 1000 - now;
       const retryAfterSeconds = Math.max(1, Math.ceil(retryAfterMs / 1000));
       return {
         allowed: false,
@@ -191,14 +209,7 @@ async function rateLimitRedis(
         remaining: 0,
         retryAfterSeconds,
         backend: 'redis',
-        headers: buildHeaders(
-          false,
-          limit,
-          0,
-          Math.ceil((oldestScore + windowMs) / 1000),
-          retryAfterSeconds,
-          'redis',
-        ),
+        headers: buildHeaders(false, limit, 0, windowEndUnix, retryAfterSeconds, 'redis'),
       };
     }
 
@@ -209,7 +220,7 @@ async function rateLimitRedis(
       remaining,
       retryAfterSeconds: 0,
       backend: 'redis',
-      headers: buildHeaders(true, limit, remaining, Math.ceil((now + windowMs) / 1000), 0, 'redis'),
+      headers: buildHeaders(true, limit, remaining, windowEndUnix, 0, 'redis'),
     };
   } catch (err) {
     // Redis outage: fall back to in-memory + log. Fail open so we don't deny legit users.
