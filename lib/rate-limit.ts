@@ -87,10 +87,16 @@ function getClient(): Redis | null {
   if (_client) return _client;
   try {
     _client = new Redis(url, {
+      // lazyConnect=true means the connection is deferred until first command.
+      // enableOfflineQueue=true (default) means commands fired before the TCP
+      // handshake completes get queued and flushed once the connection is
+      // ready. This is the right combo for serverless: no overhead on cold
+      // starts that never use Redis, but commands work transparently on
+      // first use without us needing to await an explicit connect().
       lazyConnect: true,
+      enableOfflineQueue: true,
       maxRetriesPerRequest: 2,
-      enableOfflineQueue: false,
-      connectTimeout: 1500,
+      connectTimeout: 3000,
       // Critical for serverless: don't keep reconnecting forever
       retryStrategy: (times) => (times > 2 ? null : Math.min(times * 200, 1000)),
     });
