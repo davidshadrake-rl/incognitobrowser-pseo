@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimit, getClientIP } from '@/lib/rate-limit';
+import { rateLimit, getClientIP, getRedisDiagnostic } from '@/lib/rate-limit';
 import { parseAltchaAuthHeader, verifySolution } from '@/lib/altcha';
 import { corsHeadersFor, isOriginAllowed } from '@/lib/origin';
 
@@ -228,10 +228,20 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Rate limiting (per IP) — async because KV is HTTP-backed
+  // Rate limiting (per IP) — async because Redis is async
   const clientIP = getClientIP(request.headers);
   const rl = await rateLimit(clientIP, RATE_LIMIT_CONFIG);
-  const allHeaders = { ...cors, ...rl.headers };
+
+  // Temporary diagnostic — surface Redis state for prod debugging.
+  // Remove once Redis path is confirmed working.
+  const diag = getRedisDiagnostic();
+  const allHeaders: Record<string, string> = {
+    ...cors,
+    ...rl.headers,
+    'X-RateLimit-Debug-Redis-Url-Set': diag.redisUrlSet ? 'yes' : 'no',
+    'X-RateLimit-Debug-Has-Client': diag.hasClient ? 'yes' : 'no',
+    'X-RateLimit-Debug-Last-Error': diag.lastError ? diag.lastError.replace(/[^\x20-\x7E]/g, '_') : 'none',
+  };
 
   if (!rl.allowed) {
     return NextResponse.json(

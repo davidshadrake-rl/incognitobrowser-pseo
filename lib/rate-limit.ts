@@ -59,7 +59,21 @@ const MEM_CLEANUP_INTERVAL = 60_000;
 // Singleton client per function instance. Lazy: only connects on first use.
 let _client: Redis | null = null;
 let _clientFailedAt: number | null = null;
+let _lastClientError: string | null = null;
 const CLIENT_RETRY_DELAY_MS = 10_000; // After a failure, wait 10s before retrying Redis
+
+/** Diagnostic info surfaced via response headers. Remove once Redis is verified. */
+export function getRedisDiagnostic(): {
+  redisUrlSet: boolean;
+  lastError: string | null;
+  hasClient: boolean;
+} {
+  return {
+    redisUrlSet: Boolean(process.env.REDIS_URL),
+    lastError: _lastClientError,
+    hasClient: _client !== null,
+  };
+}
 
 function getClient(): Redis | null {
   const url = process.env.REDIS_URL;
@@ -80,13 +94,15 @@ function getClient(): Redis | null {
       // Critical for serverless: don't keep reconnecting forever
       retryStrategy: (times) => (times > 2 ? null : Math.min(times * 200, 1000)),
     });
-    _client.on('error', () => {
+    _client.on('error', (err: Error) => {
       // Mark failed; let the next request decide whether to retry or fall back
       _clientFailedAt = Date.now();
+      _lastClientError = err.message.slice(0, 200);
     });
     return _client;
-  } catch {
+  } catch (err) {
     _clientFailedAt = Date.now();
+    _lastClientError = err instanceof Error ? err.message.slice(0, 200) : 'unknown';
     return null;
   }
 }
@@ -191,9 +207,9 @@ async function rateLimitRedis(
     };
   } catch (err) {
     // Redis outage: fall back to in-memory + log. Fail open so we don't deny legit users.
-    console.error(
-      `[rate-limit] Redis unavailable, falling back to in-memory: ${err instanceof Error ? err.message : 'unknown'}`,
-    );
+    const msg = err instanceof Error ? err.message : 'unknown';
+    _lastClientError = msg.slice(0, 200);
+    console.error(`[rate-limit] Redis unavailable, falling back to in-memory: ${msg}`);
     _clientFailedAt = Date.now();
     return rateLimitInMemory(key, { limit, windowMs });
   }
