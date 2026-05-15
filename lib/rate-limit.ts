@@ -144,10 +144,9 @@ function buildHeaders(
     'X-RateLimit-Limit': String(limit),
     'X-RateLimit-Remaining': String(Math.max(0, remaining)),
     'X-RateLimit-Reset': String(resetUnixSeconds),
-    // Debug header: tells curl which backend served this request. Remove once
-    // the Redis path is verified working in prod.
-    'X-RateLimit-Backend': backend,
   };
+  // backend param kept in signature for backwards compat with internal callers
+  void backend;
   if (!allowed) headers['Retry-After'] = String(retryAfterSeconds);
   return headers;
 }
@@ -315,4 +314,38 @@ export function getClientIP(headers: Headers): string {
   const xRealIp = headers.get('x-real-ip');
   if (xRealIp) return xRealIp;
   return 'unknown';
+}
+
+/**
+ * Bucket an IP into a network prefix for rate-limit grouping.
+ *
+ * Per-IP rate limiting breaks on the modern internet because:
+ *   - CGN/mobile carriers vary egress IPs per connection (same user, different IP)
+ *   - Big ISPs / corporate networks share IPs across many users
+ *
+ * Solution: collapse to a network prefix. For IPv4 we use /24 (first 3 octets,
+ * = "same neighborhood NAT"). For IPv6 we use /64 (first 4 hextets, the
+ * standard subnet allocation for residential).
+ *
+ * Tradeoff: legitimate users sharing the same /24 (office, college, big ISP
+ * pool) share a rate-limit budget. We compensate by setting the budget on the
+ * generous side per bucket. The PoW handles the per-request cost defense, so
+ * the rate limit only needs to catch obvious abuse.
+ */
+export function getIpBucket(ip: string): string {
+  if (!ip || ip === 'unknown') return 'unknown';
+  // IPv4
+  if (ip.includes('.') && !ip.includes(':')) {
+    const parts = ip.split('.');
+    if (parts.length >= 4) return parts.slice(0, 3).join('.') + '.0/24';
+    return ip;
+  }
+  // IPv6 (including IPv4-mapped like ::ffff:1.2.3.4)
+  if (ip.includes(':')) {
+    const ipv4Mapped = ip.match(/::ffff:(\d+\.\d+\.\d+\.\d+)/i);
+    if (ipv4Mapped) return getIpBucket(ipv4Mapped[1]);
+    const parts = ip.split(':');
+    return parts.slice(0, 4).join(':') + '::/64';
+  }
+  return ip;
 }

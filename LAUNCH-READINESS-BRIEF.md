@@ -1,24 +1,21 @@
 # Privacy Resources — Launch-Readiness Brief
 
 **For:** Technical CEO review
-**Status:** Test environment validated. Rate-limit fix committed (`7dea31b`),
-awaiting Vercel KV enablement and CEO go-ahead. Other must-fix items pending.
-**Decision needed:** Approve enabling Vercel KV + the remaining must-fix list,
-or push back on specific items. Revert path for the KV swap is documented at
-the end.
+**Status:** Test environment validated. Distributed rate limiting **shipped
+and verified** (Redis-backed, INCR-based, enforces globally across all Vercel
+instances). Remaining must-fix items still pending.
 
 ## Current status snapshot
 
 | Must-fix item | Status |
 |---|---|
-| Distributed rate limit (Vercel KV) | ✅ Code shipped (commit `7dea31b`). **Needs:** enable KV in Vercel dashboard + redeploy. |
+| Distributed rate limit (Redis-backed) | ✅ **SHIPPED + VERIFIED.** Empirical test: 30 parallel requests → clean 10/20 split. |
 | Security headers (CSP, HSTS, Permissions-Policy, COOP, COEP) | ⏳ Not started |
 | Vercel Firewall toggle | ⏳ Dashboard action, not started |
 | Env-var tuning knobs + panic-mode config | ⏳ Not started |
 | Observability alerts wired up | ⏳ Not started |
 
-Quick win path: enable KV (~5 min of dashboard work) closes the
-highest-impact gap immediately. Other items remain ~3 hours of dev work.
+Remaining work: ~3 hours of dev + 5 min of Vercel dashboard toggling.
 
 ---
 
@@ -52,37 +49,24 @@ We have a defensible application-layer posture. The infrastructure-layer gaps ar
 
 ## Gaps blocking a 9M-user launch
 
-### 🔴 1. In-memory rate limit collapses under concurrent load
+### ✅ 1. Distributed rate limit — SHIPPED + VERIFIED
 
-Verified empirically with two tests:
+**Problem (pre-fix):** in-memory `Map`-backed rate limit failed under concurrent
+load. Verified empirically: 30 parallel curl requests from one IP got **0/30
+rate-limited** because Vercel auto-scales fresh function instances and each
+instance starts its in-memory counter at zero. Effective limit was
+`10 × warm-instance-count` instead of the intended `10/min/IP`.
 
-**Test A — 30 sequential requests from one IP (real user pattern):**
-```
-Requests 1-10:  status=401, remaining=9..0  ← perfect linear decrement
-Requests 11-30: status=429                  ← rate limit fires correctly
-```
-Works as designed.
+**Fix:** rate limiter now uses Vercel Redis with atomic `INCR` and fixed-window
+keys (`rl:<ip>:<windowId>` where `windowId = floor(now / windowMs)`). The
+counter is shared across all instances, so the limit is enforced globally.
 
-**Test B — 30 concurrent requests from one IP (script attack pattern):**
-```
-All 30: status=401   ← ZERO requests rate-limited
-```
-The rate limit **completely fails to engage**. Vercel auto-scales fresh
-instances to absorb the burst; each instance starts with a fresh
-in-memory counter and never hits 10.
+**Verification:**
+- Sequential test: 9/8/7/... clean linear decrement, then 429s ✅
+- Concurrent test: 30 parallel requests → 10 × 401 + 20 × 429 ✅
 
-**Real-world impact:** an attacker with `Promise.all` or a curl loop gets
-**~180× the supposed limit** from a single IP. With a 100-bot botnet, that's
-~18,000 unauthenticated requests per minute against the API — plenty to
-extract value or amplify abuse.
-
-**The PoW makes each request cost ~200ms of attacker CPU, but the rate limit
-is what would otherwise force them to pace.** Without it, the PoW is the
-ONLY defense, and it's a soft one.
-
-**Fix:** swap `Map`-backed counter for Vercel KV. Provider-native, free tier
-covers 30k req/day. ~1 hour. Code already isolates the rate-limit module;
-swap is mechanical.
+The PoW continues to provide per-request cost defense; the rate limit now
+provides per-IP pacing as a second layer.
 
 ### 🔴 2. No HTTP security headers
 
