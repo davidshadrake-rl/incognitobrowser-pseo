@@ -232,15 +232,21 @@ export async function POST(request: NextRequest) {
   const clientIP = getClientIP(request.headers);
   const rl = await rateLimit(clientIP, RATE_LIMIT_CONFIG);
 
-  // Temporary diagnostic — surface Redis state for prod debugging.
+  // Temporary diagnostic — surface Redis state + the actual IP key for prod debugging.
   // Remove once Redis path is confirmed working.
   const diag = getRedisDiagnostic();
+  // Sanitize IP for header (remove anything that's not safe in HTTP header value)
+  const safeIP = clientIP.replace(/[^\x20-\x7E]/g, '_').slice(0, 100);
+  // Also surface the raw x-forwarded-for so we can see Vercel's full chain
+  const xff = (request.headers.get('x-forwarded-for') || 'none').replace(/[^\x20-\x7E]/g, '_').slice(0, 200);
   const allHeaders: Record<string, string> = {
     ...cors,
     ...rl.headers,
     'X-RateLimit-Debug-Redis-Url-Set': diag.redisUrlSet ? 'yes' : 'no',
     'X-RateLimit-Debug-Has-Client': diag.hasClient ? 'yes' : 'no',
     'X-RateLimit-Debug-Last-Error': diag.lastError ? diag.lastError.replace(/[^\x20-\x7E]/g, '_') : 'none',
+    'X-RateLimit-Debug-Ip-Key': safeIP,
+    'X-RateLimit-Debug-Xff': xff,
   };
 
   if (!rl.allowed) {
