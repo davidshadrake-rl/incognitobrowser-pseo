@@ -66,10 +66,63 @@ function bytesToBase64(bytes: Uint8Array): string {
 
 function base64ToBytes(b64: string): Uint8Array {
   const clean = b64.replace(/\s+/g, '');
-  const bin = atob(clean);
+  // Pre-validate to give a clear error rather than letting atob throw a cryptic
+  // "Failed to decode" message that bubbles up as "Decryption failed".
+  if (clean.length === 0) {
+    throw new Error('No ciphertext provided.');
+  }
+  if (!/^[A-Za-z0-9+/=]+$/.test(clean)) {
+    throw new Error(
+      'Ciphertext contains characters that are not valid base64. Make sure you copied the full encrypted output exactly.',
+    );
+  }
+  let bin: string;
+  try {
+    bin = atob(clean);
+  } catch {
+    throw new Error('Ciphertext is not valid base64. Check for truncation or extra characters.');
+  }
   const out = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
   return out;
+}
+
+/**
+ * Translate raw exceptions from the crypto path into actionable user-facing
+ * messages. Web Crypto's `OperationError` is the same generic class for
+ * wrong-passphrase, tampered-ciphertext, and bad-IV cases — so we have to
+ * use context (which mode, which step) to infer what likely went wrong.
+ */
+function explainCryptoError(err: unknown, mode: 'encrypt' | 'decrypt'): string {
+  if (err instanceof Error) {
+    const msg = err.message || '';
+    // Errors thrown by our own pre-validation (already user-friendly)
+    if (msg.startsWith('No ciphertext provided') ||
+        msg.startsWith('Ciphertext contains') ||
+        msg.startsWith('Ciphertext is not valid base64') ||
+        msg.startsWith('Ciphertext too short') ||
+        msg === 'Enter text to process.' ||
+        msg === 'Select a file to process.' ||
+        msg === 'File too large. Maximum 100 MB.') {
+      return msg;
+    }
+    // crypto.subtle generally throws OperationError for AES-GCM auth failures
+    if (err.name === 'OperationError' || /OperationError/i.test(msg)) {
+      return mode === 'decrypt'
+        ? 'Decryption failed — the passphrase is wrong, the ciphertext was tampered with, or it was encrypted by a different tool. AES-GCM cannot distinguish these cases for security reasons. Double-check the passphrase and try again.'
+        : 'Encryption failed at the crypto layer. This is usually a browser environment issue — try a different browser or a freshly opened tab.';
+    }
+    // The PBKDF2 import step occasionally fails on non-HTTPS pages (Web Crypto restricted)
+    if (/InvalidAccess|secure context/i.test(msg)) {
+      return 'Encryption requires a secure context (HTTPS). This page must be loaded over HTTPS, or use localhost for testing.';
+    }
+    // QuotaExceededError, NotSupportedError, etc. — show the name + message
+    if (err.name && err.name !== 'Error') {
+      return `${err.name}: ${msg || 'no detail available'}`;
+    }
+    return msg || (mode === 'decrypt' ? 'Decryption failed.' : 'Encryption failed.');
+  }
+  return mode === 'decrypt' ? 'Decryption failed (unknown reason).' : 'Encryption failed (unknown reason).';
 }
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
@@ -122,12 +175,10 @@ export function TextEncryptionTool() {
         const base = inputFile.name.replace(/\.enc$/, '');
         setDownloadName(mode === 'encrypt' ? `${inputFile.name}.enc` : base);
       }
-    } catch {
-      setError(
-        mode === 'decrypt'
-          ? 'Decryption failed. Check your passphrase and ciphertext.'
-          : 'Encryption failed. Please try again.',
-      );
+    } catch (err) {
+      // Surface the actual reason so users can act on it instead of staring
+      // at "Decryption failed." with no context.
+      setError(explainCryptoError(err, mode));
     }
     setProcessing(false);
   };

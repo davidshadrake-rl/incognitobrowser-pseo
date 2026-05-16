@@ -12,6 +12,7 @@ import { PermissionCheckerTool } from './PermissionCheckerTool';
 import { CookieAnalyzerTool } from './CookieAnalyzerTool';
 import { UserAgentAnalyzerTool } from './UserAgentAnalyzerTool';
 import { MetadataViewerTool } from './MetadataViewerTool';
+import { WhatsMyIpTool } from './WhatsMyIpTool';
 
 // Maps toolEngine values to their React components
 const TOOL_ENGINES: Record<string, React.ComponentType> = {
@@ -26,6 +27,7 @@ const TOOL_ENGINES: Record<string, React.ComponentType> = {
   'cookie-analyzer': CookieAnalyzerTool,
   'useragent-analyzer': UserAgentAnalyzerTool,
   'metadata-viewer': MetadataViewerTool,
+  'whats-my-ip': WhatsMyIpTool,
 };
 
 export function getToolEngine(engineId: string): React.ComponentType | null {
