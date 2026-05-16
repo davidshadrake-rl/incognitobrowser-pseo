@@ -22,20 +22,26 @@ export const TOOL_PATHS: Record<string, string> = {
 };
 
 /**
- * The /resources/ basePath is set in next.config.ts for the static export
- * deploy (WordPress). When tests run against the local dev server (server-mode
- * build, no basePath) we strip it.
+ * The /resources/ basePath only applies to static-export deploys
+ * (WordPress / Cloudflare Pages / the DO droplet). Server-mode deploys
+ * (Vercel + local Next dev) don't use basePath — their pages live at root.
+ *
+ * To target the right URL we strip /resources/ for server-mode environments
+ * and keep it for static-export environments.
  */
 export function toolUrl(engine: keyof typeof TOOL_PATHS): string {
   const path = TOOL_PATHS[engine];
   if (!path) throw new Error(`Unknown tool engine: ${String(engine)}`);
-  const baseUrl = process.env.E2E_BASE_URL || '';
-  // Local dev (Next server mode) doesn't apply basePath, so /resources/ is wrong.
-  // The remote URLs (DO droplet, Cloudflare Pages) DO use /resources/.
-  if (baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')) {
-    return path.replace(/^\/resources/, '');
-  }
-  return path;
+  const baseUrl = (process.env.E2E_BASE_URL || '').toLowerCase();
+
+  // Server-mode environments (no basePath applied): local dev + Vercel deploys
+  const isServerMode =
+    !baseUrl ||
+    baseUrl.includes('localhost') ||
+    baseUrl.includes('127.0.0.1') ||
+    baseUrl.includes('vercel.app');
+
+  return isServerMode ? path.replace(/^\/resources/, '') : path;
 }
 
 /**

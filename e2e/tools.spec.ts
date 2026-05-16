@@ -215,10 +215,15 @@ test('cookie-analyzer: scans example.com and renders the result panel', async ({
 // 10. User-Agent Analyzer (no input — auto-runs on load)
 // ─────────────────────────────────────────────────────────────────────────
 test('useragent-analyzer: displays parsed browser + OS info', async ({ page }) => {
-  await page.goto(toolUrl('useragent-analyzer'));
-  // Playwright's user agent is Chrome by default, so we should see "Chrome" in the output
-  await expect(page.getByText(/Chrome|Browser/i).first()).toBeVisible({ timeout: 10_000 });
-  await expect(page.getByText(/Operating System|Mac|Windows|Linux|OS/i).first()).toBeVisible({ timeout: 10_000 });
+  const response = await page.goto(toolUrl('useragent-analyzer'));
+  // First confirm the tool page actually loaded (not a 404). Earlier this test
+  // was matching the browser version string on the 404 page itself and giving
+  // a false pass.
+  expect(response?.status(), 'tool page should not 404').toBeLessThan(400);
+  // Then verify the tool rendered its parsed-UA panel with the labeled fields
+  await expect(page.getByText(/User Agent/i).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/Browser/i).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/Operating System|Platform|Device/i).first()).toBeVisible({ timeout: 10_000 });
 });
 
 // ─────────────────────────────────────────────────────────────────────────
