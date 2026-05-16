@@ -76,7 +76,23 @@ export default function RootLayout({
               <a
                 href="https://incognitobrowser.io"
                 rel="noopener"
-                className="btn-primary hidden sm:inline-flex text-xs"
+                /*
+                 * At narrow viewports the text wraps to two lines ("DOWNLOAD" /
+                 * "BROWSER") because there isn't horizontal room for one line.
+                 * The default btn-primary horizontal padding (1.5rem each side)
+                 * makes the resulting two-line pill look unbalanced — wide
+                 * pill, narrow text inside.
+                 *
+                 * !px-4 → 1rem horizontal padding at sm-md (snug around the
+                 *         wider word "DOWNLOAD")
+                 * md:!px-6 → restores 1.5rem padding at md and up, where the
+                 *            text comfortably fits one line and the original
+                 *            generous padding looks right.
+                 *
+                 * leading-tight + text-center keep the two stacked words
+                 * vertically symmetric inside the pill.
+                 */
+                className="btn-primary hidden sm:inline-flex text-xs leading-tight text-center !px-4 md:!px-6"
               >
                 Download Browser
               </a>
