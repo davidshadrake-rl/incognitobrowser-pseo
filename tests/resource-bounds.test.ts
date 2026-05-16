@@ -16,9 +16,11 @@ function readFile(relativePath: string): string {
 
 describe('Scanner Response Body Cap', () => {
   const routeSource = readFile('app/scan-url/route.ts');
+  const tuningSource = readFile('lib/tuning.ts');
 
-  it('declares MAX_BODY_SIZE as 5MB', () => {
-    expect(routeSource).toContain('const MAX_BODY_SIZE = 5 * 1024 * 1024');
+  it('default body size is 5MB (configurable via MAX_BODY_SIZE_MB env var)', () => {
+    expect(tuningSource).toMatch(/MAX_BODY_SIZE\s*=\s*intEnv\('MAX_BODY_SIZE_MB',\s*5\)\s*\*\s*1024\s*\*\s*1024/);
+    expect(routeSource).toContain('MAX_BODY_SIZE');
   });
 
   it('uses readCappedText instead of unbounded response.text()', () => {
@@ -35,9 +37,11 @@ describe('Scanner Response Body Cap', () => {
 
 describe('Scanner Cookie Array Cap', () => {
   const routeSource = readFile('app/scan-url/route.ts');
+  const tuningSource = readFile('lib/tuning.ts');
 
-  it('declares MAX_COOKIES', () => {
-    expect(routeSource).toContain('const MAX_COOKIES = 100');
+  it('default MAX_COOKIES is 100 (configurable via env var)', () => {
+    expect(tuningSource).toMatch(/MAX_COOKIES\s*=\s*intEnv\('MAX_COOKIES',\s*100\)/);
+    expect(routeSource).toContain('MAX_COOKIES');
   });
 
   it('slices the Set-Cookie array before mapping', () => {
@@ -47,9 +51,11 @@ describe('Scanner Cookie Array Cap', () => {
 
 describe('Scanner Script Regex Loop Cap', () => {
   const routeSource = readFile('app/scan-url/route.ts');
+  const tuningSource = readFile('lib/tuning.ts');
 
-  it('declares MAX_SCRIPT_MATCHES', () => {
-    expect(routeSource).toContain('const MAX_SCRIPT_MATCHES = 500');
+  it('default MAX_SCRIPT_MATCHES is 500 (configurable via env var)', () => {
+    expect(tuningSource).toMatch(/MAX_SCRIPT_MATCHES\s*=\s*intEnv\('MAX_SCRIPT_MATCHES',\s*500\)/);
+    expect(routeSource).toContain('MAX_SCRIPT_MATCHES');
   });
 
   it('breaks the script-src loop after MAX_SCRIPT_MATCHES iterations', () => {

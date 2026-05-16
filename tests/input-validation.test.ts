@@ -25,8 +25,9 @@ describe('API Input Validation - URL Length', () => {
     expect(routeSource).toContain('url.length > MAX_URL_LENGTH');
   });
 
-  it('MAX_URL_LENGTH is 2048', () => {
-    expect(routeSource).toContain('const MAX_URL_LENGTH = 2048');
+  it('MAX_URL_LENGTH default is 2048 (configurable via env var)', () => {
+    const tuningSource = readFile('lib/tuning.ts');
+    expect(tuningSource).toMatch(/MAX_URL_LENGTH.*=.*intEnv\('MAX_URL_LENGTH',\s*2048\)/);
   });
 });
 

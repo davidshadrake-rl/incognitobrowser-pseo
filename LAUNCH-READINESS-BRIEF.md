@@ -1,21 +1,22 @@
 # Privacy Resources — Launch-Readiness Brief
 
 **For:** Technical CEO review
-**Status:** Test environment validated. Distributed rate limiting **shipped
-and verified** (Redis-backed, INCR-based, enforces globally across all Vercel
-instances). Remaining must-fix items still pending.
+**Status:** All must-fix items shipped. Production deploy is gated on dashboard
+configuration only — no remaining code work for launch.
 
 ## Current status snapshot
 
 | Must-fix item | Status |
 |---|---|
 | Distributed rate limit (Redis-backed) | ✅ **SHIPPED + VERIFIED.** Empirical test: 30 parallel requests → clean 10/20 split. |
-| Security headers (CSP, HSTS, Permissions-Policy, COOP, COEP) | ⏳ Not started |
-| Vercel Firewall toggle | ⏳ Dashboard action, not started |
-| Env-var tuning knobs + panic-mode config | ⏳ Not started |
-| Observability alerts wired up | ⏳ Not started |
+| Subnet-bucket rate limiting (defeats VPN/CGN IP rotation) | ✅ **SHIPPED.** Rate limit keys are now /24 (IPv4) or /64 (IPv6) instead of exact IP. |
+| Security headers — Vercel API + server-rendered pages | ✅ **SHIPPED.** CSP, HSTS, Permissions-Policy, COOP, X-Frame-Options, X-Content-Type-Options, Referrer-Policy. Configured in `next.config.ts`. |
+| Security headers — WordPress static deploy | ✅ **SHIPPED.** `.htaccess` config documented in `HEADERS-WP.md` for the WP admin to apply at deploy time. |
+| Env-var tuning knobs + panic-mode config | ✅ **SHIPPED.** All rate limits, PoW difficulty, body caps configurable via Vercel env vars. Panic-mode values documented. |
+| Observability + Vercel Firewall runbook | ✅ **DOCUMENTED.** `OPS-RUNBOOK.md` covers alert configuration, HMAC rotation, incident response, kill-switch options. |
 
-Remaining work: ~3 hours of dev + 5 min of Vercel dashboard toggling.
+**Remaining work to launch:** dashboard configuration only — no code changes.
+Estimated ~45 min once DNS propagates. Full checklist in `OPS-RUNBOOK.md` § 7.
 
 ---
 

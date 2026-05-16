@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimit, getClientIP } from '@/lib/rate-limit';
+import { rateLimit, getClientIP, getIpBucket } from '@/lib/rate-limit';
 import { parseAltchaAuthHeader, verifySolution } from '@/lib/altcha';
 import { corsHeadersFor, isOriginAllowed } from '@/lib/origin';
+import {
+  SCAN_RATE_LIMIT,
+  SCAN_RATE_WINDOW_MS,
+  MAX_URL_LENGTH as TUNING_MAX_URL_LENGTH,
+  MAX_BODY_SIZE as TUNING_MAX_BODY_SIZE,
+  MAX_COOKIES as TUNING_MAX_COOKIES,
+  MAX_SCRIPT_MATCHES as TUNING_MAX_SCRIPT_MATCHES,
+  MAX_THIRD_PARTY_DOMAINS as TUNING_MAX_THIRD_PARTY_DOMAINS,
+  FETCH_TIMEOUT_MS,
+} from '@/lib/tuning';
 
 // Known tracking script patterns to look for in HTML
 const TRACKER_PATTERNS: { pattern: RegExp; name: string; category: 'tracking' | 'analytics' | 'functional'; risk: 'high' | 'medium' | 'low'; description: string }[] = [
@@ -166,12 +176,14 @@ function isBlockedHostname(hostname: string): boolean {
   return false;
 }
 
-// Input length limits
-const MAX_URL_LENGTH = 2048;
-const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB max response to read
-const MAX_COOKIES = 100; // Max Set-Cookie headers to process
-const MAX_SCRIPT_MATCHES = 500; // Max script src regex iterations
-const MAX_THIRD_PARTY_DOMAINS = 50; // Already sliced at response time
+// Input length limits — now sourced from lib/tuning.ts so they can be tweaked
+// via Vercel env vars without a redeploy. See SECURITY-DEPLOY.md for panic-mode
+// values to set during an active incident.
+const MAX_URL_LENGTH = TUNING_MAX_URL_LENGTH;
+const MAX_BODY_SIZE = TUNING_MAX_BODY_SIZE;
+const MAX_COOKIES = TUNING_MAX_COOKIES;
+const MAX_SCRIPT_MATCHES = TUNING_MAX_SCRIPT_MATCHES;
+const MAX_THIRD_PARTY_DOMAINS = TUNING_MAX_THIRD_PARTY_DOMAINS;
 
 // Read a response body with a hard byte cap. Aborts the stream once the cap is hit.
 async function readCappedText(response: Response, maxBytes: number): Promise<string> {
@@ -209,8 +221,8 @@ export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, { status: 204, headers: corsHeadersFor(origin) });
 }
 
-// Rate limit: 10 requests per minute per IP
-const RATE_LIMIT_CONFIG = { limit: 10, windowMs: 60_000 };
+// Rate limit — values from lib/tuning.ts. Defaults: 10 reqs per 60s per IP.
+const RATE_LIMIT_CONFIG = { limit: SCAN_RATE_LIMIT, windowMs: SCAN_RATE_WINDOW_MS };
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
@@ -228,9 +240,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Rate limiting (per IP) — async because Redis is async
+  // Rate limit by /24 IPv4 (or /64 IPv6) network bucket, not exact IP.
+  // Why: VPN/CGN users rotate egress IPs per connection. Exact-IP limiting
+  // gives them effectively unlimited requests. /24 bucketing catches the
+  // common case (same VPN exit pool, same /24) while still scoping abuse
+  // narrowly enough that legit users on a shared NAT aren't unfairly grouped
+  // with the rest of the internet.
   const clientIP = getClientIP(request.headers);
-  const rl = await rateLimit(clientIP, RATE_LIMIT_CONFIG);
+  const bucket = getIpBucket(clientIP);
+  const rl = await rateLimit(bucket, RATE_LIMIT_CONFIG);
   const allHeaders: Record<string, string> = { ...cors, ...rl.headers };
 
   if (!rl.allowed) {
@@ -302,7 +320,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch the URL with a timeout
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
     let response: Response;
     try {

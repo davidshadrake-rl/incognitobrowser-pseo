@@ -17,18 +17,23 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createChallenge } from '@/lib/altcha';
-import { rateLimit, getClientIP } from '@/lib/rate-limit';
+import { rateLimit, getClientIP, getIpBucket } from '@/lib/rate-limit';
 import { getAllowedOrigins, corsHeadersFor, isOriginAllowed } from '@/lib/origin';
+import {
+  CHALLENGE_RATE_LIMIT as TUNING_CHALLENGE_RATE_LIMIT,
+  CHALLENGE_RATE_WINDOW_MS,
+  POW_MAX_NUMBER,
+  POW_TTL_SECONDS,
+} from '@/lib/tuning';
 
-// Issue at most 30 challenges/min/IP. Tighter than /scan-url because each
-// challenge represents a future scan attempt — if you're requesting more than
-// one every 2 seconds, you're either DoS'ing us or building a bot.
-const CHALLENGE_RATE_LIMIT = { limit: 30, windowMs: 60_000 };
-
-// Challenge difficulty. Browser solves in ~50–300ms with maxnumber=100k.
-// Raise if you see abuse; lower if real users complain about lag.
-const POW_MAX_NUMBER = 100_000;
-const POW_TTL_SECONDS = 90;
+// Rate limit values from lib/tuning.ts. Defaults: 30 reqs / 60s / IP.
+// Tighter than /scan-url because each challenge represents a future scan
+// attempt — if you're requesting more than one every 2 seconds, you're either
+// DoS'ing us or building a bot.
+const CHALLENGE_RATE_LIMIT_CONFIG = {
+  limit: TUNING_CHALLENGE_RATE_LIMIT,
+  windowMs: CHALLENGE_RATE_WINDOW_MS,
+};
 
 export async function OPTIONS(request: NextRequest) {
   const origin = request.headers.get('origin');
@@ -58,9 +63,12 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Rate limit per IP — async because KV is HTTP-backed
+  // Rate limit by /24 bucket, not exact IP. Same rationale as /scan-url:
+  // catches the VPN/CGN bypass without unfairly grouping legitimate
+  // shared-network users with the global internet.
   const ip = getClientIP(request.headers);
-  const rl = await rateLimit(`challenge:${ip}`, CHALLENGE_RATE_LIMIT);
+  const bucket = getIpBucket(ip);
+  const rl = await rateLimit(`challenge:${bucket}`, CHALLENGE_RATE_LIMIT_CONFIG);
   const allHeaders = { ...cors, ...rl.headers };
   if (!rl.allowed) {
     return NextResponse.json(
