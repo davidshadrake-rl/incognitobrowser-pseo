@@ -197,10 +197,7 @@ When ready to deploy `/resources/` to `incognitobrowser.io`:
 - [ ] Set `ALLOWED_ORIGINS` on Vercel to include `https://incognitobrowser.io,https://www.incognitobrowser.io`
 - [ ] Confirm `ALTCHA_HMAC_KEY` is set on Vercel (Production env)
 - [ ] Confirm `REDIS_URL` is set on Vercel (Production env)
-- [ ] Wire `api.incognitobrowser.io` DNS → CNAME `cname.vercel-dns.com`
-- [ ] Add `api.incognitobrowser.io` as a custom domain in the Vercel project
-- [ ] Wait for SSL provisioning (~5 min after DNS resolves)
-- [ ] Test: `curl -sI https://api.incognitobrowser.io/challenge -H "Origin: https://incognitobrowser.io"` should return JSON
+- [ ] Test the API: `curl -sI https://incognitobrowser-pseo.vercel.app/challenge -H "Origin: https://incognitobrowser.io" -X POST` should return JSON
 - [ ] Build static site: `npm run build:static`
 - [ ] Upload `out/` to WordPress: `rsync -avz --delete out/ user@incognitobrowser.io:~/public_html/resources/`
 - [ ] Add `.htaccess` routing rule (see DEPLOYMENT.md)
@@ -212,4 +209,18 @@ When ready to deploy `/resources/` to `incognitobrowser.io`:
 - [ ] Configure observability alerts (this runbook, section 2)
 - [ ] Set calendar reminder: rotate HMAC key every 90 days
 
-Estimated total time: ~45 min once DNS propagates.
+Estimated total time: ~30 min.
+
+### Optional: vanity API subdomain
+
+The client code calls the API by its full Vercel URL (`incognitobrowser-pseo.vercel.app`).
+This works perfectly and requires no DNS work. If you ever want a branded
+subdomain (`api.incognitobrowser.io`) for cosmetic reasons:
+
+1. In your DNS provider, add a CNAME: `api → cname.vercel-dns.com`
+2. In Vercel: project → Settings → Domains → add `api.incognitobrowser.io`
+3. Wait for SSL provisioning (~5 min after DNS resolves)
+4. Add `NEXT_PUBLIC_SCAN_API=https://api.incognitobrowser.io` to the build
+   step (Cloudflare Pages / WordPress build) and redeploy
+
+Until then, the `*.vercel.app` URL is the canonical API endpoint and works fine.
