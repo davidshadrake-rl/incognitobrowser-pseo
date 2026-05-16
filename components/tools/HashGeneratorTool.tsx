@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { SecureContextRequired } from './SecureContextRequired';
 
 type Algorithm = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 
@@ -137,6 +138,10 @@ export function HashGeneratorTool() {
 
   return (
     <div className="space-y-6">
+      {/* Show a friendly notice if Web Crypto isn't available (HTTP page).
+          The component renders nothing on HTTPS so it's invisible in prod. */}
+      <SecureContextRequired toolName="Hash Generator" />
+
       {/* Mode toggle */}
       <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex">
         <button

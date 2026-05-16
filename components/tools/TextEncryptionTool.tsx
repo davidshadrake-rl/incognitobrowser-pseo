@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { SecureContextRequired } from './SecureContextRequired';
 
 // OWASP 2023+ recommends ≥600,000 iterations for PBKDF2-SHA256.
 // We bump this explicitly so the tool doesn't look dated.
@@ -191,6 +192,10 @@ export function TextEncryptionTool() {
 
   return (
     <div className="space-y-6">
+      {/* Show a friendly notice if Web Crypto isn't available (HTTP page).
+          The component renders nothing on HTTPS so it's invisible in prod. */}
+      <SecureContextRequired toolName="Text Encryption Tool" />
+
       {/* Mode toggles */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex">

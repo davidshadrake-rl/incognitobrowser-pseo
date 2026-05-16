@@ -16,7 +16,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { toolUrl } from './helpers';
+import { toolUrl, isInsecureContext } from './helpers';
 
 // ─────────────────────────────────────────────────────────────────────────
 // 1. Password Strength Checker
@@ -63,6 +63,10 @@ test('browser-privacy: audit completes and displays at least 10 checks', async (
 // 4. Text Encryption Tool
 // ─────────────────────────────────────────────────────────────────────────
 test('text-encryption: round-trip encrypt → decrypt of "hello world"', async ({ page }) => {
+  // Web Crypto API requires HTTPS (or localhost). On the HTTP-only test droplet
+  // this tool intentionally shows a "secure context required" banner instead
+  // of running — so a round-trip can't happen there.
+  test.skip(isInsecureContext(), 'Text encryption requires HTTPS — Web Crypto API is unavailable on HTTP. The tool shows a friendly banner.');
   test.setTimeout(45_000); // PBKDF2 600k iterations takes ~1-2s each side
   await page.goto(toolUrl('text-encryption'));
 
@@ -94,7 +98,21 @@ test('text-encryption: round-trip encrypt → decrypt of "hello world"', async (
   await expect(page.locator('pre').filter({ hasText: plaintext }).first()).toBeVisible({ timeout: 15_000 });
 });
 
+test('text-encryption: shows HTTPS-required banner on insecure contexts', async ({ page }) => {
+  test.skip(!isInsecureContext(), 'Banner only appears on HTTP — skip on HTTPS/localhost where the tool works normally.');
+  await page.goto(toolUrl('text-encryption'));
+  // Banner explains the issue rather than letting users hit a cryptic TypeError
+  await expect(page.getByText(/secure connection|requires HTTPS|Web Crypto/i).first()).toBeVisible({ timeout: 5_000 });
+});
+
+test('hash-generator: shows HTTPS-required banner on insecure contexts', async ({ page }) => {
+  test.skip(!isInsecureContext(), 'Banner only appears on HTTP — skip on HTTPS/localhost where the tool works normally.');
+  await page.goto(toolUrl('hash-generator'));
+  await expect(page.getByText(/secure connection|requires HTTPS|Web Crypto/i).first()).toBeVisible({ timeout: 5_000 });
+});
+
 test('text-encryption: wrong passphrase shows actionable error', async ({ page }) => {
+  test.skip(isInsecureContext(), 'Decrypt path needs Web Crypto — skip on HTTP.');
   await page.goto(toolUrl('text-encryption'));
   // Switch to decrypt mode
   await page.getByRole('button', { name: 'Decrypt', exact: true }).click();
@@ -131,6 +149,8 @@ test('url-analyzer: trusted domain shows higher score', async ({ page }) => {
 // 6. Hash Generator
 // ─────────────────────────────────────────────────────────────────────────
 test('hash-generator: produces SHA-256 of "abc"', async ({ page }) => {
+  // crypto.subtle.digest also requires a secure context. Skip on HTTP.
+  test.skip(isInsecureContext(), 'Hash generator requires HTTPS — Web Crypto API is unavailable on HTTP. The tool shows a friendly banner.');
   await page.goto(toolUrl('hash-generator'));
   // The tool starts in 'text' mode by default. Fill the textarea; the page
   // auto-computes hashes on every keystroke (no submit button to click).

@@ -37,3 +37,19 @@ export function toolUrl(engine: keyof typeof TOOL_PATHS): string {
   }
   return path;
 }
+
+/**
+ * True when the test target is served over plain HTTP. Browsers block
+ * crypto.subtle (Web Crypto API) outside secure contexts, so tools that
+ * depend on it (text encryption, hash generator) physically cannot work.
+ *
+ * Localhost is special-cased by browsers as "secure enough" — Web Crypto
+ * works there even on HTTP.
+ */
+export function isInsecureContext(): boolean {
+  const baseUrl = process.env.E2E_BASE_URL || '';
+  if (!baseUrl) return false; // local dev defaults — localhost is treated as secure
+  if (baseUrl.startsWith('https://')) return false;
+  if (baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1')) return false;
+  return true;
+}
