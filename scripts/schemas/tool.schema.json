@@ -1,38 +1,132 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["niche", "slug", "title", "metaDescription", "keywords", "toolType", "description", "inputs", "educational"],
+  "required": [
+    "niche",
+    "slug",
+    "title",
+    "metaDescription",
+    "keywords",
+    "toolType",
+    "description",
+    "inputs",
+    "educational",
+    "editorial"
+  ],
   "properties": {
-    "niche": { "type": "string" },
-    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-    "title": { "type": "string", "maxLength": 70 },
-    "metaDescription": { "type": "string", "maxLength": 160 },
-    "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 6 },
-    "toolType": { "type": "string", "enum": ["checker", "analyzer", "generator", "scanner", "calculator", "converter"] },
-    "description": { "type": "string", "maxLength": 300 },
+    "niche": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 70
+    },
+    "metaDescription": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 3,
+      "maxItems": 6
+    },
+    "toolType": {
+      "type": "string",
+      "enum": [
+        "checker",
+        "analyzer",
+        "generator",
+        "scanner",
+        "calculator",
+        "converter"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 300
+    },
     "inputs": {
       "type": "array",
       "minItems": 2,
       "maxItems": 6,
       "items": {
         "type": "object",
-        "required": ["id", "label", "type", "placeholder"],
+        "required": [
+          "id",
+          "label",
+          "type",
+          "placeholder"
+        ],
         "properties": {
-          "id": { "type": "string" },
-          "label": { "type": "string" },
-          "type": { "type": "string", "enum": ["text", "url", "email", "textarea", "select", "number"] },
-          "placeholder": { "type": "string" },
-          "options": { "type": "array", "items": { "type": "object", "properties": { "value": { "type": "string" }, "label": { "type": "string" } } } },
-          "validation": { "type": "string" }
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "url",
+              "email",
+              "textarea",
+              "select",
+              "number"
+            ]
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "validation": {
+            "type": "string"
+          }
         }
       }
     },
     "educational": {
       "type": "object",
       "properties": {
-        "howItWorks": { "type": "string" },
-        "tips": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 5 },
-        "commonMistakes": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 5 }
+        "howItWorks": {
+          "type": "string"
+        },
+        "tips": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 3,
+          "maxItems": 5
+        },
+        "commonMistakes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 3,
+          "maxItems": 5
+        }
       }
     },
     "relatedLinks": {
@@ -40,11 +134,82 @@
       "items": {
         "type": "object",
         "properties": {
-          "title": { "type": "string" },
-          "url": { "type": "string" },
-          "type": { "type": "string" }
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
         }
       }
+    },
+    "editorial": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "reviewed",
+            "published"
+          ],
+          "description": "Editorial gate. Only 'published' pages get indexed in robots meta + sitemap. Promotion requires a human reviewer."
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reviewedBy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "author": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "bio": {
+              "type": "string"
+            },
+            "credentials": {
+              "type": "string"
+            },
+            "profileUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      ],
+      "description": "Named human author. Required when editorial.status === 'published'. Renders as JSON-LD Person + Article author."
     }
   }
 }

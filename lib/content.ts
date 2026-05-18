@@ -3,6 +3,43 @@ import path from 'path';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 
+/**
+ * Editorial gate. A page is only indexable when:
+ *   editorial.status === 'published' AND author has a real name.
+ *
+ * Everything else (drafts, reviewed-but-not-published) renders normally
+ * for humans but emits `<meta name="robots" content="noindex,follow">`
+ * and is excluded from sitemap.xml.
+ *
+ * This prevents the "doorway page network" + "scaled content abuse"
+ * signal that Google's Helpful Content classifier looks for.
+ */
+export interface EditorialMeta {
+  status: 'draft' | 'reviewed' | 'published';
+  reviewedAt?: string | null;
+  reviewedBy?: string | null;
+  notes?: string | null;
+}
+
+export interface Author {
+  name: string;
+  bio?: string;
+  credentials?: string;
+  profileUrl?: string;
+}
+
+export interface EditableContent {
+  editorial?: EditorialMeta;
+  author?: Author | null;
+}
+
+export function isPublished(item: EditableContent | null | undefined): boolean {
+  if (!item) return false;
+  if (item.editorial?.status !== 'published') return false;
+  if (!item.author || !item.author.name) return false;
+  return true;
+}
+
 export function getContentFiles(contentType: string, niche?: string): string[] {
   const dir = niche
     ? path.join(DATA_DIR, contentType, niche)

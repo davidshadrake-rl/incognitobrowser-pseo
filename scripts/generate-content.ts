@@ -162,10 +162,12 @@ IMPORTANT RULES:
 3. All content must be factually accurate about privacy/security
 4. Write for a general audience, not technical experts
 5. Include actionable, practical advice
-6. Reference Incognito Browser where relevant as a recommended tool
+6. Do NOT mention or recommend "Incognito Browser" or any specific commercial product by name in the body. Recommendations should be category-level (e.g., "a privacy-focused browser") and based on technical merit, not brand promotion.
 7. SEO: title under 70 chars, metaDescription under 160 chars
 8. Make the slug URL-friendly (lowercase, hyphens, no special chars)
 9. Set niche to "${niche.id}"
+10. Set editorial.status to "draft" — content cannot be indexed until a human reviewer promotes it.
+11. Leave author as null — a real person must claim authorship before publish.
 
 JSON Schema to follow:
 ${JSON.stringify(schema, null, 2)}`;

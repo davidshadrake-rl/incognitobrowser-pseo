@@ -33,7 +33,9 @@ export function generateMetadata({ title, description, path, type = 'article', n
       title: fullTitle,
       description,
     },
-    robots: noIndex ? { index: false, follow: false } : undefined,
+    // noindex,follow: don't surface in SERPs, but keep crawling internal links so
+    // the link graph still propagates when pages get promoted to 'published'.
+    robots: noIndex ? { index: false, follow: true } : undefined,
   };
 }
 

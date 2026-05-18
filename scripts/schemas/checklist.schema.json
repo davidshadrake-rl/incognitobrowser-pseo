@@ -1,38 +1,110 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["niche", "slug", "title", "metaDescription", "keywords", "difficulty", "estimatedTime", "sections", "pro_tips", "relatedLinks"],
+  "required": [
+    "niche",
+    "slug",
+    "title",
+    "metaDescription",
+    "keywords",
+    "difficulty",
+    "estimatedTime",
+    "sections",
+    "pro_tips",
+    "relatedLinks",
+    "editorial"
+  ],
   "properties": {
-    "niche": { "type": "string", "description": "Niche ID from taxonomy" },
-    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-    "title": { "type": "string", "maxLength": 70 },
-    "metaDescription": { "type": "string", "maxLength": 160 },
-    "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 6 },
-    "difficulty": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] },
-    "estimatedTime": { "type": "string" },
-    "intro": { "type": "string", "maxLength": 300 },
+    "niche": {
+      "type": "string",
+      "description": "Niche ID from taxonomy"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 70
+    },
+    "metaDescription": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 3,
+      "maxItems": 6
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ]
+    },
+    "estimatedTime": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "string",
+      "maxLength": 300
+    },
     "sections": {
       "type": "array",
       "minItems": 3,
       "maxItems": 5,
       "items": {
         "type": "object",
-        "required": ["title", "items"],
+        "required": [
+          "title",
+          "items"
+        ],
         "properties": {
-          "title": { "type": "string" },
+          "title": {
+            "type": "string"
+          },
           "items": {
             "type": "array",
             "minItems": 5,
             "maxItems": 8,
             "items": {
               "type": "object",
-              "required": ["id", "task", "why", "howTo", "priority"],
+              "required": [
+                "id",
+                "task",
+                "why",
+                "howTo",
+                "priority"
+              ],
               "properties": {
-                "id": { "type": "string" },
-                "task": { "type": "string" },
-                "why": { "type": "string", "maxLength": 200 },
-                "howTo": { "type": "string", "maxLength": 300 },
-                "priority": { "type": "string", "enum": ["critical", "high", "medium", "low"] }
+                "id": {
+                  "type": "string"
+                },
+                "task": {
+                  "type": "string"
+                },
+                "why": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "howTo": {
+                  "type": "string",
+                  "maxLength": 300
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": [
+                    "critical",
+                    "high",
+                    "medium",
+                    "low"
+                  ]
+                }
               }
             }
           }
@@ -41,7 +113,9 @@
     },
     "pro_tips": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "minItems": 5,
       "maxItems": 5
     },
@@ -50,11 +124,82 @@
       "items": {
         "type": "object",
         "properties": {
-          "title": { "type": "string" },
-          "url": { "type": "string" },
-          "type": { "type": "string" }
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
         }
       }
+    },
+    "editorial": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "reviewed",
+            "published"
+          ],
+          "description": "Editorial gate. Only 'published' pages get indexed in robots meta + sitemap. Promotion requires a human reviewer."
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reviewedBy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "author": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "bio": {
+              "type": "string"
+            },
+            "credentials": {
+              "type": "string"
+            },
+            "profileUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      ],
+      "description": "Named human author. Required when editorial.status === 'published'. Renders as JSON-LD Person + Article author."
     }
   }
 }

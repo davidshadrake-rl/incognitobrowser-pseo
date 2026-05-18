@@ -1,11 +1,28 @@
 import type { MetadataRoute } from 'next';
-import { getContentFiles, getGlossaryFiles } from '@/lib/content';
+import {
+  getContentFiles,
+  getGlossaryFiles,
+  getContentItem,
+  getGlossaryItem,
+  isPublished,
+  type EditableContent,
+} from '@/lib/content';
 import { getAllNiches, getAllContentTypes } from '@/lib/taxonomy';
 
 export const dynamic = 'force-static';
 
 const SITE_URL = 'https://incognitobrowser.io/resources';
 
+/**
+ * Sitemap only lists pages that are editorially gated as "published".
+ * Drafts and reviewed-but-not-promoted pages exist on the site and
+ * render normally, but they emit noindex,follow and are excluded here
+ * so search engines don't get pointed at unfinished content.
+ *
+ * The top-level index pages (home, /checklists, /guides etc.) and niche
+ * hub pages stay in the sitemap because they're navigational landing
+ * pages — they don't depend on individual article editorial status.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
@@ -39,12 +56,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  // Dynamic content pages
+  // Dynamic content pages — gated by editorial.status === 'published'
   const dynamicTypes = ['checklists', 'guides', 'comparisons', 'tools', 'templates', 'calculators'];
   for (const type of dynamicTypes) {
     const files = getContentFiles(type);
     for (const file of files) {
       const [niche, slug] = file.split('/');
+      const item = getContentItem<EditableContent>(type, niche, slug);
+      if (!isPublished(item)) continue;
       entries.push({
         url: `${SITE_URL}/${type}/${niche}/${slug}`,
         lastModified: new Date(),
@@ -54,9 +73,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  // Glossary pages
+  // Glossary pages — same gate
   const glossaryFiles = getGlossaryFiles();
   for (const term of glossaryFiles) {
+    const item = getGlossaryItem<EditableContent>(term);
+    if (!isPublished(item)) continue;
     entries.push({
       url: `${SITE_URL}/glossary/${term}`,
       lastModified: new Date(),

@@ -1,19 +1,64 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
-  "required": ["niche", "slug", "title", "metaDescription", "keywords", "difficulty", "estimatedTime", "prerequisites", "steps", "pro_tips", "faqs"],
+  "required": [
+    "niche",
+    "slug",
+    "title",
+    "metaDescription",
+    "keywords",
+    "difficulty",
+    "estimatedTime",
+    "prerequisites",
+    "steps",
+    "pro_tips",
+    "faqs",
+    "editorial"
+  ],
   "properties": {
-    "niche": { "type": "string" },
-    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-    "title": { "type": "string", "maxLength": 70 },
-    "metaDescription": { "type": "string", "maxLength": 160 },
-    "keywords": { "type": "array", "items": { "type": "string" }, "minItems": 3, "maxItems": 6 },
-    "difficulty": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] },
-    "estimatedTime": { "type": "string" },
-    "intro": { "type": "string", "maxLength": 300 },
+    "niche": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 70
+    },
+    "metaDescription": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 3,
+      "maxItems": 6
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ]
+    },
+    "estimatedTime": {
+      "type": "string"
+    },
+    "intro": {
+      "type": "string",
+      "maxLength": 300
+    },
     "prerequisites": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "steps": {
       "type": "array",
@@ -21,25 +66,44 @@
       "maxItems": 10,
       "items": {
         "type": "object",
-        "required": ["stepNumber", "title", "description", "actions"],
+        "required": [
+          "stepNumber",
+          "title",
+          "description",
+          "actions"
+        ],
         "properties": {
-          "stepNumber": { "type": "number" },
-          "title": { "type": "string" },
-          "description": { "type": "string" },
+          "stepNumber": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
           "actions": {
             "type": "array",
             "minItems": 2,
             "maxItems": 5,
-            "items": { "type": "string" }
+            "items": {
+              "type": "string"
+            }
           },
-          "proTip": { "type": "string" },
-          "warning": { "type": "string" }
+          "proTip": {
+            "type": "string"
+          },
+          "warning": {
+            "type": "string"
+          }
         }
       }
     },
     "pro_tips": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "minItems": 5,
       "maxItems": 5
     },
@@ -47,10 +111,17 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["question", "answer"],
+        "required": [
+          "question",
+          "answer"
+        ],
         "properties": {
-          "question": { "type": "string" },
-          "answer": { "type": "string" }
+          "question": {
+            "type": "string"
+          },
+          "answer": {
+            "type": "string"
+          }
         }
       }
     },
@@ -59,11 +130,82 @@
       "items": {
         "type": "object",
         "properties": {
-          "title": { "type": "string" },
-          "url": { "type": "string" },
-          "type": { "type": "string" }
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
         }
       }
+    },
+    "editorial": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "reviewed",
+            "published"
+          ],
+          "description": "Editorial gate. Only 'published' pages get indexed in robots meta + sitemap. Promotion requires a human reviewer."
+        },
+        "reviewedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "reviewedBy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "author": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "name"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "bio": {
+              "type": "string"
+            },
+            "credentials": {
+              "type": "string"
+            },
+            "profileUrl": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      ],
+      "description": "Named human author. Required when editorial.status === 'published'. Renders as JSON-LD Person + Article author."
     }
   }
 }

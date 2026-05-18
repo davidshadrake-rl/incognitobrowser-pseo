@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getGlossaryItem, getGlossaryFiles } from '@/lib/content';
+import { getGlossaryItem, getGlossaryFiles, isPublished } from '@/lib/content';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { GlossaryTermPage } from '@/components/GlossaryPage';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -38,6 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${data.term} - Privacy Glossary`,
     description: data.metaDescription,
     path: `/glossary/${term}`,
+    noIndex: !isPublished(data as unknown as Parameters<typeof isPublished>[0]),
   });
 }
 

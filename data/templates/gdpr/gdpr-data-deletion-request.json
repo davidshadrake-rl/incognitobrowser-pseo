@@ -14,10 +14,26 @@
       "heading": "Letter Body",
       "content": "Dear {{company_name}} Data Protection Team,\n\nI am writing to request the deletion of all personal data you hold about me, as is my right under Article 17 of the General Data Protection Regulation (GDPR).\n\nMy details for identification:\n- Full Name: {{your_name}}\n- Email: {{your_email}}\n- Account ID (if applicable): {{account_id}}\n\nPlease confirm within 30 days that:\n1. All my personal data has been erased from your systems\n2. You have instructed any third parties who received my data to also erase it\n3. Any automated decision-making profiles based on my data have been deleted\n\nIf you believe an exemption applies, please provide a detailed explanation.\n\nSincerely,\n{{your_name}}",
       "placeholders": [
-        {"key": "your_name", "label": "Your Full Name", "defaultValue": "John Smith"},
-        {"key": "your_email", "label": "Your Email Address", "defaultValue": "john@example.com"},
-        {"key": "company_name", "label": "Company Name", "defaultValue": "Company Inc."},
-        {"key": "account_id", "label": "Account ID", "defaultValue": "N/A"}
+        {
+          "key": "your_name",
+          "label": "Your Full Name",
+          "defaultValue": "John Smith"
+        },
+        {
+          "key": "your_email",
+          "label": "Your Email Address",
+          "defaultValue": "john@example.com"
+        },
+        {
+          "key": "company_name",
+          "label": "Company Name",
+          "defaultValue": "Company Inc."
+        },
+        {
+          "key": "account_id",
+          "label": "Account ID",
+          "defaultValue": "N/A"
+        }
       ]
     }
   ],
@@ -27,5 +43,12 @@
     "Deleting old accounts you no longer use",
     "Responding to a data breach by requesting erasure"
   ],
-  "relatedLinks": []
+  "relatedLinks": [],
+  "editorial": {
+    "status": "draft",
+    "reviewedAt": null,
+    "reviewedBy": null,
+    "notes": null
+  },
+  "author": null
 }

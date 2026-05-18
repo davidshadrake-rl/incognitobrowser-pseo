@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getContentItem, getContentFiles, getCrossNicheLinks } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { TemplatePage } from '@/components/TemplatePage';
@@ -44,6 +44,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: data.title,
     description: data.metaDescription,
     path: `/templates/${niche}/${slug}`,
+    noIndex: !isPublished(data as unknown as Parameters<typeof isPublished>[0]),
   });
 }
 
