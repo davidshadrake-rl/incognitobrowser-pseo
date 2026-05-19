@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { Badge } from './ui/Badge';
+import { ArticleByline } from './ArticleByline';
 
 interface ToolInput {
   id: string;
@@ -55,6 +56,11 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
 
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-3">{data.title}</h1>
+        <ArticleByline
+          author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
+          editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
+          reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
+        />
         <div className="flex flex-wrap gap-2 mb-4">
           <Badge label={data.toolType} />
           <Badge label="Free" variant="yes" />

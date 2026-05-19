@@ -30,15 +30,30 @@ try {
   process.exit(1);
 }
 
-const author = JSON.parse(
-  fs.readFileSync(path.join(DATA, 'authors', 'darkpool-david.json'), 'utf-8')
-);
+function loadProfile(slug) {
+  return JSON.parse(fs.readFileSync(path.join(DATA, 'authors', `${slug}.json`), 'utf-8'));
+}
+const author = loadProfile('darkpool-david');
 const authorBlock = {
   name: author.name,
   bio: author.tagline || author.bio.slice(0, 160),
   credentials: author.credentials,
   profileUrl: author.profileUrl,
+  sameAs: author.sameAs && author.sameAs.length ? author.sameAs : undefined,
 };
+
+// Pseudonymous byline + named editor model. Every promoted page records
+// the editor block so Article JSON-LD can attribute editorial review to
+// the real-name editor (David Shadrake, LinkedIn-verified) without
+// breaking the writer's pseudonymity.
+const editorProfile = author.editorSlug ? loadProfile(author.editorSlug) : null;
+const editorBlock = editorProfile
+  ? {
+      name: editorProfile.name,
+      profileUrl: editorProfile.profileUrl,
+      sameAs: editorProfile.sameAs && editorProfile.sameAs.length ? editorProfile.sameAs : undefined,
+    }
+  : null;
 
 const SUBDIRS = ['checklists', 'guides', 'comparisons', 'templates', 'calculators', 'glossary'];
 
@@ -73,9 +88,10 @@ for (const sub of SUBDIRS) {
       notes:
         'Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline.',
     };
-    if (!json.author || !json.author.name) {
-      json.author = { ...authorBlock };
-    }
+    // Always restamp author + editor so re-runs pick up profile updates
+    // (e.g., adding LinkedIn to the editor's sameAs).
+    json.author = { ...authorBlock };
+    if (editorBlock) json.editor = { ...editorBlock };
     fs.writeFileSync(fp, JSON.stringify(json, null, 2) + '\n');
     promoted++;
   }

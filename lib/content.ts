@@ -26,11 +26,19 @@ export interface Author {
   bio?: string;
   credentials?: string;
   profileUrl?: string;
+  sameAs?: string[];
+}
+
+export interface Editor {
+  name: string;
+  profileUrl?: string;
+  sameAs?: string[];
 }
 
 export interface EditableContent {
   editorial?: EditorialMeta;
   author?: Author | null;
+  editor?: Editor | null;
 }
 
 export function isPublished(item: EditableContent | null | undefined): boolean {

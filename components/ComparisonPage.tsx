@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
+import { ArticleByline } from './ArticleByline';
 
 interface Product {
   name: string;
@@ -74,6 +75,11 @@ export function ComparisonPage({ data, nicheName }: { data: ComparisonData; nich
 
       <header className="mb-8">
         <h1 className="text-3xl font-bold text-white mb-3">{data.title}</h1>
+        <ArticleByline
+          author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
+          editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
+          reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
+        />
         <p className="text-[#B8B8D4]">{data.intro}</p>
       </header>
 

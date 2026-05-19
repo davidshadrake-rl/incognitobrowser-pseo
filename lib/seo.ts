@@ -10,27 +10,36 @@ interface SEOParams {
   path: string;
   type?: 'article' | 'website';
   noIndex?: boolean;
+  /** ISO 8601 publication timestamp. Surfaces as og:article:published_time. */
+  publishedAt?: string;
+  /** ISO 8601 last-modified timestamp. Surfaces as og:article:modified_time. */
+  modifiedAt?: string;
 }
 
-export function generateMetadata({ title, description, path, type = 'article', noIndex = false }: SEOParams): Metadata {
+export function generateMetadata({ title, description, path, type = 'article', noIndex = false, publishedAt, modifiedAt }: SEOParams): Metadata {
   const url = `${SITE_URL}${BASE_PATH}${path}`;
-  const fullTitle = `${title} | ${SITE_NAME}`;
 
+  // IMPORTANT: don't pre-append " | Incognito Browser" here — layout.tsx's
+  // root metadata sets `title.template = "%s | Incognito Browser"` and
+  // Next applies it automatically. Doing both produced
+  // "Title | Incognito Browser | Incognito Browser" in v16.
   return {
-    title: fullTitle,
+    title,
     description,
     alternates: { canonical: url },
     openGraph: {
-      title: fullTitle,
+      title: `${title} | ${SITE_NAME}`,
       description,
       url,
       siteName: SITE_NAME,
       type,
       locale: 'en_US',
+      ...(type === 'article' && publishedAt ? { publishedTime: publishedAt } : {}),
+      ...(type === 'article' && modifiedAt ? { modifiedTime: modifiedAt } : {}),
     },
     twitter: {
       card: 'summary_large_image',
-      title: fullTitle,
+      title: `${title} | ${SITE_NAME}`,
       description,
     },
     // noindex,follow: don't surface in SERPs, but keep crawling internal links so
@@ -60,7 +69,13 @@ export function generateArticleSchema(opts: {
     profileUrl?: string;
     bio?: string;
     credentials?: string;
+    sameAs?: string[];
   } | null | undefined;
+  editor?: {
+    name: string;
+    profileUrl?: string;
+    sameAs?: string[];
+  } | null;
 }) {
   if (!opts.author || !opts.author.name) return null;
   return {
@@ -78,7 +93,20 @@ export function generateArticleSchema(opts: {
       ...(opts.author.profileUrl ? { url: opts.author.profileUrl } : {}),
       ...(opts.author.bio ? { description: opts.author.bio } : {}),
       ...(opts.author.credentials ? { jobTitle: opts.author.credentials } : {}),
+      ...(opts.author.sameAs && opts.author.sameAs.length > 0 ? { sameAs: opts.author.sameAs } : {}),
     },
+    ...(opts.editor
+      ? {
+          editor: {
+            '@type': 'Person',
+            name: opts.editor.name,
+            ...(opts.editor.profileUrl ? { url: opts.editor.profileUrl } : {}),
+            ...(opts.editor.sameAs && opts.editor.sameAs.length > 0
+              ? { sameAs: opts.editor.sameAs }
+              : {}),
+          },
+        }
+      : {}),
     publisher: {
       '@type': 'Organization',
       name: 'Incognito Browser',

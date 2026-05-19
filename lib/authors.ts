@@ -6,6 +6,17 @@ const AUTHORS_DIR = path.join(process.cwd(), 'data', 'authors');
 export interface AuthorProfile {
   slug: string;
   name: string;
+  /**
+   * 'writer' = produces content under this byline.
+   * 'editor' = reviews content under other bylines; appears as the
+   * accountability layer for pseudonymous writers.
+   */
+  role?: 'writer' | 'editor';
+  /**
+   * Slug of the editor who reviews this writer's content. Surfaces on
+   * the writer's profile page and in Article JSON-LD `editor` field.
+   */
+  editorSlug?: string;
   tagline?: string;
   bio: string;
   credentials?: string;
