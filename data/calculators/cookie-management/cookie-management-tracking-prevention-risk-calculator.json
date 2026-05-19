@@ -36,7 +36,7 @@
         },
         {
           "value": "incognito",
-          "label": "Incognito Browser"
+          "label": "a privacy-focused browser"
         },
         {
           "value": "other",
@@ -176,11 +176,11 @@
       "description": "Percentage of your browsing likely being tracked"
     }
   ],
-  "formula": "const browserScores = {chrome: 7, firefox: 4, safari: 5, edge: 6, incognito: 2, other: 5}; const cookieScores = {'allow-all': 10, default: 7, 'block-third-party': 4, 'block-all': 2}; const clearScores = {daily: 1, weekly: 3, monthly: 5, rarely: 8}; const toolScores = {none: 8, adblocker: 5, 'privacy-extensions': 3, comprehensive: 1}; const socialScores = {none: 0, light: 2, moderate: 4, heavy: 6}; const browserRisk = browserScores[inputs.browserType] || 5; const cookieRisk = cookieScores[inputs.cookieSettings] || 7; const clearRisk = clearScores[inputs.clearFrequency] || 8; const toolRisk = toolScores[inputs.privacyTools] || 8; const browsingRisk = inputs.browsingHabits * 0.8; const socialRisk = socialScores[inputs.socialMediaUse] || 4; const riskScore = Math.min(100, Math.round((browserRisk + cookieRisk + clearRisk + toolRisk + browsingRisk + socialRisk) / 6 * 10)); const riskLevel = riskScore >= 80 ? 'High Risk' : riskScore >= 60 ? 'Moderate Risk' : riskScore >= 40 ? 'Low-Moderate Risk' : 'Low Risk'; const trackingExposure = Math.min(95, riskScore * 0.9 + (inputs.browsingHabits * 2)); return {riskScore, riskLevel, trackingExposure};",
+  "formula": "const browserScores = {chrome: 7, firefox: 4, safari: 5, edge: 6, incognito: 2, other: 5}; const cookieScores = {'allow-all': 10, default: 7, 'block-third-party': 4, 'block-all': 2}; const clearScores = {daily: 1, weekly: 3, monthly: 5, rarely: 8}; const toolScores = {none: 8, adblocker: 5, 'privacy-extensions': 3, comprehensive: 1}; const socialScores = {none: 0, light: 2, moderate: 4, heavy: 6}; const browserRisk = browserScores[inputs.browserType] || 5; const cookieRisk = cookieScores[inputs.cookieSettings] || 7; const clearRisk = clearScores[inputs.clearFrequency] || 8; const toolRisk = toolScores[inputs.privacyTools] || 8; const browsingRisk = inputs.browsingHabits * 0.8; const socialRisk = socialScores[inputs.socialMediaUse] || 4; const riskScore = Math.min(100, Math.round((browserRisk + cookieRisk + clearRisk + toolRisk + browsingRisk + socialRisk) / 6 * 10)); const riskLevel = riskScore >= 80 ? 'High Risk': riskScore >= 60 ? 'Moderate Risk': riskScore >= 40 ? 'Low-Moderate Risk': 'Low Risk'; const trackingExposure = Math.min(95, riskScore * 0.9 + (inputs.browsingHabits * 2)); return {riskScore, riskLevel, trackingExposure};",
   "educational": {
-    "methodology": "This calculator evaluates your cookie and tracking risk based on browser choice, privacy settings, clearing habits, and browsing patterns. Browsers like Incognito Browser and Firefox offer better default privacy, while regular data clearing and privacy tools significantly reduce tracking exposure.",
+    "methodology": "This calculator evaluates your cookie and tracking risk based on browser choice, privacy settings, clearing habits, and browsing patterns. Browsers like a privacy-focused browser and Firefox offer better default privacy, while regular data clearing and privacy tools significantly reduce tracking exposure.",
     "tips": [
-      "Switch to privacy-focused browsers like Incognito Browser for better default protection",
+      "Switch to privacy-focused browsers like a privacy-focused browser for better default protection",
       "Clear cookies and browsing data at least weekly to reset tracking profiles",
       "Block third-party cookies in your browser settings - they're mainly used for tracking",
       "Install privacy extensions or ad blockers to prevent tracking scripts",
@@ -225,16 +225,21 @@
       "type": "guide"
     },
     {
-      "title": "Download Incognito Browser",
+      "title": "Use a privacy-focused browser ",
       "url": "https://incognito-browser.com",
       "type": "external"
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

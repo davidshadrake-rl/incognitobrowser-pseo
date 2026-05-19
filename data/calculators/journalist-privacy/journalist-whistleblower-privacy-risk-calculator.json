@@ -123,7 +123,7 @@
         },
         {
           "value": "advanced",
-          "label": "Tor + VPN + secure browsers like Incognito Browser"
+          "label": "Tor + VPN + secure browsers like a privacy-focused browser"
         }
       ],
       "helpText": "What privacy tools do you use for online research and communication?"
@@ -149,12 +149,12 @@
       "description": "Your current security preparedness out of 100"
     }
   ],
-  "formula": "const commRisk = { 'email': 80, 'encrypted-email': 40, 'messaging': 70, 'secure-messaging': 20, 'anonymous': 10 }[communicationMethods]; const locRisk = { 'low': 20, 'moderate': 50, 'high': 90 }[locationRisk]; const storyRisk = { 'low': 20, 'medium': 50, 'high': 80 }[storyType]; const toolsRisk = { 'none': 90, 'basic': 60, 'intermediate': 30, 'advanced': 10 }[internetUsage]; const deviceFactor = (6 - deviceSecurity) * 15; const sourceFactor = (6 - sourceProtection) * 12; const rawRisk = (commRisk + locRisk + storyRisk + toolsRisk + deviceFactor + sourceFactor) / 6; const overallRisk = Math.min(95, Math.max(5, rawRisk)); const securityScore = Math.round(100 - overallRisk); const riskCategory = overallRisk >= 70 ? 'Critical Risk' : overallRisk >= 50 ? 'High Risk' : overallRisk >= 30 ? 'Moderate Risk' : 'Low Risk'; return { overallRisk: Math.round(overallRisk), securityScore, riskCategory };",
+  "formula": "const commRisk = { 'email': 80, 'encrypted-email': 40, 'messaging': 70, 'secure-messaging': 20, 'anonymous': 10 }[communicationMethods]; const locRisk = { 'low': 20, 'moderate': 50, 'high': 90 }[locationRisk]; const storyRisk = { 'low': 20, 'medium': 50, 'high': 80 }[storyType]; const toolsRisk = { 'none': 90, 'basic': 60, 'intermediate': 30, 'advanced': 10 }[internetUsage]; const deviceFactor = (6 - deviceSecurity) * 15; const sourceFactor = (6 - sourceProtection) * 12; const rawRisk = (commRisk + locRisk + storyRisk + toolsRisk + deviceFactor + sourceFactor) / 6; const overallRisk = Math.min(95, Math.max(5, rawRisk)); const securityScore = Math.round(100 - overallRisk); const riskCategory = overallRisk >= 70 ? 'Critical Risk': overallRisk >= 50 ? 'High Risk': overallRisk >= 30 ? 'Moderate Risk': 'Low Risk'; return { overallRisk: Math.round(overallRisk), securityScore, riskCategory };",
   "educational": {
     "methodology": "This calculator evaluates privacy risks for journalists and whistleblowers by analyzing communication methods, operational security practices, threat environment, and story sensitivity. The assessment considers real-world factors that affect source protection and personal safety in journalism.",
     "tips": [
       "Use Signal or Wire for source communications instead of regular messaging apps",
-      "Consider using Incognito Browser or Tor for sensitive research and source contact",
+      "Consider using a privacy-focused browser or Tor for sensitive research and source contact",
       "Implement full-disk encryption on all devices that could be seized",
       "Establish secure communication protocols before contacting sensitive sources",
       "Regularly update your threat model based on current stories and political climate"
@@ -209,10 +209,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

@@ -184,7 +184,7 @@
       "description": "Descriptive assessment of your threat exposure"
     }
   ],
-  "formula": "const usageRisk = { 'general-browsing': 10, 'research': 25, 'circumvention': 40, 'activism': 60, 'dark-web': 80 }[torUsage]; const setupBonus = { 'default': 0, 'hardened': -15, 'bridges': -10, 'vpn-tor': -20, 'tails': -30 }[torSetup]; const locationRisk = { 'free-country': 5, 'some-censorship': 25, 'heavy-censorship': 50, 'authoritarian': 80 }[location]; const activityRisk = { 'legal-browsing': 5, 'sensitive-research': 20, 'marketplace-browsing': 50, 'file-sharing': 40, 'high-risk': 90 }[activities]; const opsecBonus = (5 - opsecLevel) * 10; const deviceBonus = { 'unsecured': 30, 'standard': 10, 'secured': -5, 'dedicated': -15, 'airgapped': -25 }[deviceSecurity]; const risk = Math.max(0, Math.min(100, usageRisk + locationRisk + activityRisk + setupBonus + opsecBonus + deviceBonus)); const grade = risk <= 20 ? 'A' : risk <= 35 ? 'B' : risk <= 50 ? 'C' : risk <= 70 ? 'D' : 'F'; const threat = risk <= 20 ? 'Very Low Risk' : risk <= 35 ? 'Low Risk' : risk <= 50 ? 'Moderate Risk' : risk <= 70 ? 'High Risk' : 'Very High Risk'; return { overallRisk: risk, riskGrade: grade, threatLevel: threat };",
+  "formula": "const usageRisk = { 'general-browsing': 10, 'research': 25, 'circumvention': 40, 'activism': 60, 'dark-web': 80 }[torUsage]; const setupBonus = { 'default': 0, 'hardened': -15, 'bridges': -10, 'vpn-tor': -20, 'tails': -30 }[torSetup]; const locationRisk = { 'free-country': 5, 'some-censorship': 25, 'heavy-censorship': 50, 'authoritarian': 80 }[location]; const activityRisk = { 'legal-browsing': 5, 'sensitive-research': 20, 'marketplace-browsing': 50, 'file-sharing': 40, 'high-risk': 90 }[activities]; const opsecBonus = (5 - opsecLevel) * 10; const deviceBonus = { 'unsecured': 30, 'standard': 10, 'secured': -5, 'dedicated': -15, 'airgapped': -25 }[deviceSecurity]; const risk = Math.max(0, Math.min(100, usageRisk + locationRisk + activityRisk + setupBonus + opsecBonus + deviceBonus)); const grade = risk <= 20 ? 'A': risk <= 35 ? 'B': risk <= 50 ? 'C': risk <= 70 ? 'D': 'F'; const threat = risk <= 20 ? 'Very Low Risk': risk <= 35 ? 'Low Risk': risk <= 50 ? 'Moderate Risk': risk <= 70 ? 'High Risk': 'Very High Risk'; return { overallRisk: risk, riskGrade: grade, threatLevel: threat };",
   "educational": {
     "methodology": "This calculator evaluates your Tor privacy risk by analyzing your usage patterns, security configuration, geographic location, online activities, operational security practices, and device security. Higher risk scores indicate greater potential for surveillance, traffic analysis, or legal consequences.",
     "tips": [
@@ -245,10 +245,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

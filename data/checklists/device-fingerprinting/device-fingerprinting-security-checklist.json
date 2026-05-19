@@ -28,14 +28,14 @@
           "id": "block-canvas-access",
           "task": "Block or spoof HTML5 Canvas fingerprinting",
           "why": "Canvas fingerprinting forces your browser to draw hidden images, creating unique signatures based on your system's rendering differences.",
-          "howTo": "Install Canvas Blocker extension for Firefox or use Incognito Browser which has built-in canvas protection. Enable 'Block canvas fingerprinting' in settings.",
+          "howTo": "Install Canvas Blocker extension for Firefox or Use a privacy-focused browser which has built-in canvas protection. Enable 'Block canvas fingerprinting' in settings.",
           "priority": "critical"
         },
         {
           "id": "disable-webrtc",
           "task": "Disable WebRTC to prevent IP leaks",
           "why": "WebRTC can expose your real IP address even when using VPN and provides additional fingerprinting data points.",
-          "howTo": "Firefox: Set media.peerconnection.enabled to false in about:config. Chrome: Install WebRTC Leak Prevent extension or use Incognito Browser.",
+          "howTo": "Firefox: Set media.peerconnection.enabled to false in about:config. Chrome: Install WebRTC Leak Prevent extension or Use a privacy-focused browser.",
           "priority": "high"
         },
         {
@@ -56,7 +56,7 @@
           "id": "timezone-spoofing",
           "task": "Mask or standardize timezone information",
           "why": "Your timezone is easily accessible to websites and combined with other data points creates a more unique fingerprint profile.",
-          "howTo": "Use Timezone Guard extension to spoof your timezone to UTC, or use Incognito Browser which includes timezone protection in privacy mode.",
+          "howTo": "Use Timezone Guard extension to spoof your timezone to UTC, or Use a privacy-focused browser which includes timezone protection in privacy mode.",
           "priority": "low"
         }
       ]
@@ -68,14 +68,14 @@
           "id": "audio-fingerprinting-protection",
           "task": "Block audio context fingerprinting",
           "why": "Audio fingerprinting analyzes how your system processes audio signals, creating unique identifiers based on hardware differences.",
-          "howTo": "Install AudioContext Fingerprint Defender extension or use browsers with built-in audio protection like Incognito Browser or Tor Browser.",
+          "howTo": "Install AudioContext Fingerprint Defender extension or use browsers with built-in audio protection like a privacy-focused browser or Tor Browser.",
           "priority": "high"
         },
         {
           "id": "font-enumeration-blocking",
           "task": "Prevent font fingerprinting",
           "why": "Websites can detect installed fonts on your system, creating unique combinations that identify your device across different sites.",
-          "howTo": "Use uBlock Origin with filter lists that block font enumeration, or switch to Incognito Browser which limits font detection capabilities.",
+          "howTo": "Use uBlock Origin with filter lists that block font enumeration, or switch to a privacy-focused browser which limits font detection capabilities.",
           "priority": "medium"
         },
         {
@@ -115,7 +115,7 @@
           "id": "multiple-browser-strategy",
           "task": "Use different browsers for different activities",
           "why": "Compartmentalizing your browsing creates separate fingerprint profiles, making it harder to track your activities across different contexts.",
-          "howTo": "Use Incognito Browser or Tor for sensitive browsing, Firefox with extensions for daily use, and a stock browser for sites that break with modifications.",
+          "howTo": "Use a privacy-focused browser or Tor for sensitive browsing, Firefox with extensions for daily use, and a stock browser for sites that break with modifications.",
           "priority": "medium"
         },
         {
@@ -129,7 +129,7 @@
           "id": "regular-profile-rotation",
           "task": "Rotate browser profiles and clear data",
           "why": "Even with protections, some fingerprint data accumulates over time. Fresh profiles prevent long-term tracking correlation.",
-          "howTo": "Create new Firefox profiles monthly, or use Incognito Browser's session isolation. Clear all browser data including local storage and IndexedDB.",
+          "howTo": "Create new Firefox profiles monthly, or Use a privacy-focused browser's session isolation. Clear all browser data including local storage and IndexedDB.",
           "priority": "high"
         },
         {
@@ -143,7 +143,7 @@
     }
   ],
   "pro_tips": [
-    "Incognito Browser provides comprehensive fingerprinting protection out-of-the-box, including canvas spoofing, WebGL blocking, and timezone masking without requiring manual configuration.",
+    "Privacy-focused browsers provides comprehensive fingerprinting protection out-of-the-box, including canvas spoofing, WebGL blocking, and timezone masking without requiring manual configuration.",
     "Don't make your browser too unique - overly aggressive fingerprint protection can actually make you more identifiable. Aim to blend in with common configurations.",
     "Test your fingerprint protection on multiple testing sites, as each site checks different fingerprinting vectors and may reveal weaknesses in your setup.",
     "Mobile browsers are particularly vulnerable to fingerprinting due to sensor access and touch capabilities. Consider using privacy-focused mobile browsers for sensitive browsing.",
@@ -166,16 +166,21 @@
       "type": "tool"
     },
     {
-      "title": "Incognito Browser - Anti-Fingerprinting Browser",
+      "title": "Anti-Fingerprinting Browser",
       "url": "https://incognitobrowser.com/",
       "type": "product"
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

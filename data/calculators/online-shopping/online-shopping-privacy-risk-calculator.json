@@ -45,7 +45,7 @@
       "options": [
         {
           "value": "incognito-browser",
-          "label": "Incognito Browser or similar privacy browser"
+          "label": "a privacy-focused browser or similar privacy browser"
         },
         {
           "value": "firefox",
@@ -196,11 +196,11 @@
       "description": "How exposed you are to cross-site tracking (0-100)"
     }
   ],
-  "formula": "const weights = { shoppingFrequency: 15, browserType: 25, cookieManagement: 20, incognitoUsage: 15, paymentMethods: 15, accountCreation: 5, priceComparison: 5 }; const scores = { shoppingFrequency: { daily: 100, weekly: 75, monthly: 40, rarely: 10 }, browserType: { 'incognito-browser': 10, firefox: 30, safari: 50, chrome: 90 }, cookieManagement: { always: 10, sometimes: 50, never: 100 }, incognitoUsage: { always: 10, often: 30, sometimes: 60, never: 100 }, paymentMethods: { 'virtual-cards': 10, 'paypal-apple': 40, 'direct-card': 70, 'stored-cards': 100 }, accountCreation: { guest: 20, minimal: 50, always: 100 }, priceComparison: { 'private-tools': 20, 'different-devices': 40, 'same-browser': 100 } }; let totalScore = 0; for (let key in weights) { totalScore += (scores[key][inputs[key]] * weights[key]) / 100; } const privacyRisk = Math.round(totalScore); const trackingExposure = Math.round(totalScore * 0.8 + (inputs.shoppingFrequency === 'daily' ? 20 : 0)); const riskGrade = privacyRisk <= 25 ? 'A' : privacyRisk <= 40 ? 'B' : privacyRisk <= 60 ? 'C' : privacyRisk <= 80 ? 'D' : 'F'; return { privacyRisk, riskGrade, trackingExposure };",
+  "formula": "const weights = { shoppingFrequency: 15, browserType: 25, cookieManagement: 20, incognitoUsage: 15, paymentMethods: 15, accountCreation: 5, priceComparison: 5 }; const scores = { shoppingFrequency: { daily: 100, weekly: 75, monthly: 40, rarely: 10 }, browserType: { 'incognito-browser': 10, firefox: 30, safari: 50, chrome: 90 }, cookieManagement: { always: 10, sometimes: 50, never: 100 }, incognitoUsage: { always: 10, often: 30, sometimes: 60, never: 100 }, paymentMethods: { 'virtual-cards': 10, 'paypal-apple': 40, 'direct-card': 70, 'stored-cards': 100 }, accountCreation: { guest: 20, minimal: 50, always: 100 }, priceComparison: { 'private-tools': 20, 'different-devices': 40, 'same-browser': 100 } }; let totalScore = 0; for (let key in weights) { totalScore += (scores[key][inputs[key]] * weights[key]) / 100; } const privacyRisk = Math.round(totalScore); const trackingExposure = Math.round(totalScore * 0.8 + (inputs.shoppingFrequency === 'daily' ? 20: 0)); const riskGrade = privacyRisk <= 25 ? 'A': privacyRisk <= 40 ? 'B': privacyRisk <= 60 ? 'C': privacyRisk <= 80 ? 'D': 'F'; return { privacyRisk, riskGrade, trackingExposure };",
   "educational": {
     "methodology": "This calculator evaluates your online shopping privacy risk based on browser choice, tracking prevention, payment methods, and shopping habits. Higher scores indicate greater privacy risks including data collection, dynamic pricing exposure, and financial information vulnerability.",
     "tips": [
-      "Use Incognito Browser or enable strict privacy settings to block shopping trackers automatically",
+      "Use a privacy-focused browser or enable strict privacy settings to block shopping trackers automatically",
       "Shop in incognito/private mode to avoid dynamic pricing based on your browsing history",
       "Use virtual credit cards or services like Apple Pay to protect your real payment information",
       "Clear cookies between shopping sessions or use separate browsers for different retailers",
@@ -241,7 +241,7 @@
   },
   "relatedLinks": [
     {
-      "title": "Incognito Browser - Private Shopping Browser",
+      "title": "Private Shopping Browser",
       "url": "https://incognito.com",
       "type": "tool"
     },
@@ -262,10 +262,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

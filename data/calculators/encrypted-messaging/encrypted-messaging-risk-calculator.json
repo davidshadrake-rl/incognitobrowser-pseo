@@ -157,14 +157,14 @@
       "description": "The biggest threat to your messaging privacy"
     }
   ],
-  "formula": "let appRisk = 0; switch(primaryApp) { case 'signal': appRisk = 5; break; case 'whatsapp': appRisk = 25; break; case 'imessage': appRisk = 30; break; case 'telegram': appRisk = 35; break; case 'sms': appRisk = 80; break; default: appRisk = 70; } let backupRisk = backupEnabled === 'yes' ? 30 : (backupEnabled === 'unsure' ? 20 : 0); let groupRisk = Math.min(groupChats * 1.5, 30); let contentRisk = {'never': 0, 'rarely': 10, 'sometimes': 25, 'often': 40}[sensitiveContent] || 25; let disappearingRisk = {'always': 0, 'sometimes': 10, 'no': 20, 'unavailable': 15}[disappearingMessages] || 20; let contactRisk = contactsOnInsecure * 0.3; let totalRisk = Math.min(appRisk + backupRisk + groupRisk + contentRisk + disappearingRisk + contactRisk, 100); let grade = totalRisk <= 20 ? 'A' : totalRisk <= 40 ? 'B' : totalRisk <= 60 ? 'C' : totalRisk <= 80 ? 'D' : 'F'; let concerns = []; if(appRisk >= 30) concerns.push('Insecure messaging app'); if(backupRisk >= 20) concerns.push('Cloud backup exposure'); if(contentRisk >= 25) concerns.push('Sensitive content sharing'); if(contactRisk >= 25) concerns.push('Insecure contacts'); let primaryConcern = concerns[0] || 'Metadata collection'; { riskScore: Math.round(totalRisk), riskGrade: grade, primaryConcern: primaryConcern }",
+  "formula": "let appRisk = 0; switch(primaryApp) { case 'signal': appRisk = 5; break; case 'whatsapp': appRisk = 25; break; case 'imessage': appRisk = 30; break; case 'telegram': appRisk = 35; break; case 'sms': appRisk = 80; break; default: appRisk = 70; } let backupRisk = backupEnabled === 'yes' ? 30: (backupEnabled === 'unsure' ? 20: 0); let groupRisk = Math.min(groupChats * 1.5, 30); let contentRisk = {'never': 0, 'rarely': 10, 'sometimes': 25, 'often': 40}[sensitiveContent] || 25; let disappearingRisk = {'always': 0, 'sometimes': 10, 'no': 20, 'unavailable': 15}[disappearingMessages] || 20; let contactRisk = contactsOnInsecure * 0.3; let totalRisk = Math.min(appRisk + backupRisk + groupRisk + contentRisk + disappearingRisk + contactRisk, 100); let grade = totalRisk <= 20 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': totalRisk <= 80 ? 'D': 'F'; let concerns = []; if(appRisk >= 30) concerns.push('Insecure messaging app'); if(backupRisk >= 20) concerns.push('Cloud backup exposure'); if(contentRisk >= 25) concerns.push('Sensitive content sharing'); if(contactRisk >= 25) concerns.push('Insecure contacts'); let primaryConcern = concerns[0] || 'Metadata collection'; { riskScore: Math.round(totalRisk), riskGrade: grade, primaryConcern: primaryConcern }",
   "educational": {
     "methodology": "This calculator evaluates messaging privacy risks based on app security, backup practices, group chat exposure, content sensitivity, disappearing message usage, and contact security habits. Scores range from 0 (most secure) to 100 (highest risk).",
     "tips": [
       "Switch to Signal for maximum privacy - it's the gold standard for encrypted messaging",
       "Disable cloud backups for messaging apps to prevent government and hacker access",
       "Enable disappearing messages for sensitive conversations to limit data retention",
-      "Use Incognito Browser when accessing web versions of messaging apps for added privacy",
+      "Use a privacy-focused browser when accessing web versions of messaging apps for added privacy",
       "Regularly audit your group chats and leave unnecessary ones to reduce exposure"
     ],
     "interpretation": [
@@ -218,10 +218,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

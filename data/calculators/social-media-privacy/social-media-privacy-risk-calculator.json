@@ -234,12 +234,12 @@
       "description": "Estimated percentage of your data potentially exposed"
     }
   ],
-  "formula": "const platformWeight = { 1: 10, 2: 20, 3: 30, 4: 40, 5: 50 }; const visibilityWeight = { 'restricted': 5, 'private': 15, 'mixed': 35, 'public': 50 }; const infoWeight = { 'minimal': 5, 'basic': 15, 'moderate': 25, 'extensive': 40 }; const postingWeight = { 'rarely': 5, 'monthly': 10, 'weekly': 20, 'daily': 30, 'multiple': 40 }; const locationWeight = { 'never': 0, 'sometimes': 10, 'often': 25, 'always': 35 }; const reviewWeight = { 'month': 0, 'quarter': 10, 'year': 20, 'never': 30 }; const appsWeight = { 'none': 0, 'few': 5, 'several': 15, 'many': 25 }; const adWeight = { 'disabled': 0, 'limited': 10, 'default': 20, 'enabled': 30 }; const riskScore = Math.min(100, platformWeight[inputs.platformCount] + visibilityWeight[inputs.profileVisibility] + infoWeight[inputs.personalInfoShared] + postingWeight[inputs.postingFrequency] + locationWeight[inputs.locationSharing] + reviewWeight[inputs.privacySettingsReview] + appsWeight[inputs.thirdPartyApps] + adWeight[inputs.adPersonalization]); const riskLevel = riskScore <= 30 ? 'Low Risk' : riskScore <= 60 ? 'Medium Risk' : riskScore <= 80 ? 'High Risk' : 'Critical Risk'; const dataExposure = Math.min(95, Math.round(riskScore * 0.8 + Math.random() * 10)); return { riskScore, riskLevel, dataExposure };",
+  "formula": "const platformWeight = { 1: 10, 2: 20, 3: 30, 4: 40, 5: 50 }; const visibilityWeight = { 'restricted': 5, 'private': 15, 'mixed': 35, 'public': 50 }; const infoWeight = { 'minimal': 5, 'basic': 15, 'moderate': 25, 'extensive': 40 }; const postingWeight = { 'rarely': 5, 'monthly': 10, 'weekly': 20, 'daily': 30, 'multiple': 40 }; const locationWeight = { 'never': 0, 'sometimes': 10, 'often': 25, 'always': 35 }; const reviewWeight = { 'month': 0, 'quarter': 10, 'year': 20, 'never': 30 }; const appsWeight = { 'none': 0, 'few': 5, 'several': 15, 'many': 25 }; const adWeight = { 'disabled': 0, 'limited': 10, 'default': 20, 'enabled': 30 }; const riskScore = Math.min(100, platformWeight[inputs.platformCount] + visibilityWeight[inputs.profileVisibility] + infoWeight[inputs.personalInfoShared] + postingWeight[inputs.postingFrequency] + locationWeight[inputs.locationSharing] + reviewWeight[inputs.privacySettingsReview] + appsWeight[inputs.thirdPartyApps] + adWeight[inputs.adPersonalization]); const riskLevel = riskScore <= 30 ? 'Low Risk': riskScore <= 60 ? 'Medium Risk': riskScore <= 80 ? 'High Risk': 'Critical Risk'; const dataExposure = Math.min(95, Math.round(riskScore * 0.8 + Math.random() * 10)); return { riskScore, riskLevel, dataExposure };",
   "educational": {
     "methodology": "This calculator evaluates your social media privacy risk by analyzing platform usage, profile visibility, information sharing patterns, location data, privacy settings maintenance, third-party app connections, and advertising personalization. Each factor is weighted based on typical privacy exposure risks and data harvesting practices across major platforms.",
     "tips": [
       "Review and update privacy settings on all platforms at least quarterly, as platforms frequently change their default settings",
-      "Use private browsing modes like Incognito Browser when accessing social media to limit tracking cookies and data collection",
+      "Use private browsing modes like a privacy-focused browser when accessing social media to limit tracking cookies and data collection",
       "Regularly audit connected third-party apps and remove any you no longer use - they often retain access to your data indefinitely",
       "Disable location sharing for posts and in platform settings to prevent building detailed location profiles",
       "Consider using separate email addresses for social media accounts to limit data linking across services"
@@ -289,10 +289,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

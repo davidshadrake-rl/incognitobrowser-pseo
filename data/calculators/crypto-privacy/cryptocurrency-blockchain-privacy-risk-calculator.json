@@ -195,7 +195,7 @@
       "description": "Likelihood of successful transaction tracking"
     }
   ],
-  "formula": "const cryptoRisk = {bitcoin: 60, ethereum: 70, monero: 5, zcash: 15, litecoin: 65, 'other-transparent': 65, 'other-private': 20}[primaryCrypto]; const walletRisk = {'exchange-custodial': 40, 'software-hot': 25, hardware: 15, 'privacy-focused': 5, multisig: 10}[walletType]; const kycRisk = {never: 0, minimal: 10, regular: 30, exclusive: 50}[exchangeKyc]; const freqRisk = Math.min(transactionFrequency * 0.5, 20); const privacyBonus = {none: 0, basic: -5, intermediate: -15, advanced: -25, expert: -35}[privacyTechniques]; const addressRisk = {always: 25, sometimes: 15, rarely: 5, never: 0}[addressReuse]; const publicRisk = publicActivity ? 15 : 0; const baseScore = cryptoRisk + walletRisk + kycRisk + freqRisk + privacyBonus + addressRisk + publicRisk; const privacyScore = Math.max(0, Math.min(100, baseScore)); const trackingVulnerability = privacyScore; const riskLevel = privacyScore <= 20 ? 'A' : privacyScore <= 40 ? 'B' : privacyScore <= 60 ? 'C' : privacyScore <= 80 ? 'D' : 'F'; return {privacyScore, riskLevel, trackingVulnerability};",
+  "formula": "const cryptoRisk = {bitcoin: 60, ethereum: 70, monero: 5, zcash: 15, litecoin: 65, 'other-transparent': 65, 'other-private': 20}[primaryCrypto]; const walletRisk = {'exchange-custodial': 40, 'software-hot': 25, hardware: 15, 'privacy-focused': 5, multisig: 10}[walletType]; const kycRisk = {never: 0, minimal: 10, regular: 30, exclusive: 50}[exchangeKyc]; const freqRisk = Math.min(transactionFrequency * 0.5, 20); const privacyBonus = {none: 0, basic: -5, intermediate: -15, advanced: -25, expert: -35}[privacyTechniques]; const addressRisk = {always: 25, sometimes: 15, rarely: 5, never: 0}[addressReuse]; const publicRisk = publicActivity ? 15: 0; const baseScore = cryptoRisk + walletRisk + kycRisk + freqRisk + privacyBonus + addressRisk + publicRisk; const privacyScore = Math.max(0, Math.min(100, baseScore)); const trackingVulnerability = privacyScore; const riskLevel = privacyScore <= 20 ? 'A': privacyScore <= 40 ? 'B': privacyScore <= 60 ? 'C': privacyScore <= 80 ? 'D': 'F'; return {privacyScore, riskLevel, trackingVulnerability};",
   "educational": {
     "methodology": "This calculator evaluates cryptocurrency privacy risks by analyzing blockchain transparency, wallet security, exchange usage patterns, and privacy techniques. The scoring system weighs factors like cryptocurrency type (privacy coins score lower), wallet types (hardware and privacy wallets reduce risk), KYC exchange usage (increases traceability), transaction frequency (more transactions create larger patterns), privacy techniques used (mixing and Tor reduce scores), and address reuse patterns (reuse increases linkability).",
     "tips": [
@@ -250,16 +250,21 @@
       "type": "internal"
     },
     {
-      "title": "Incognito Browser for Crypto",
+      "title": "a privacy-focused browser for Crypto",
       "url": "https://incognito.org",
       "type": "tool"
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

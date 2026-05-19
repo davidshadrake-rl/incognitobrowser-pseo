@@ -173,12 +173,12 @@
       "description": "Estimated fine range based on risk factors"
     }
   ],
-  "formula": "let score = 0; const weights = { dataVolume: { low: 5, medium: 15, high: 25 }, dataSensitivity: { basic: 5, standard: 15, sensitive: 25 }, privacyPolicy: { none: 20, basic: 10, compliant: 0 }, consentMechanism: { none: 15, basic: 8, advanced: 0 }, dataProtection: { minimal: 20, moderate: 10, robust: 0 }, thirdPartySharing: { none: 0, some: 5, extensive: 15 } }; Object.keys(weights).forEach(key => { score += weights[key][inputs[key]] || 0; }); if (!inputs.breachResponse) score += 10; if (!inputs.dpoAssigned) score += 5; const riskLevel = score <= 25 ? 'Low Risk' : score <= 50 ? 'Medium Risk' : score <= 75 ? 'High Risk' : 'Critical Risk'; const potentialFine = score <= 25 ? '€0 - €100K' : score <= 50 ? '€100K - €1M' : score <= 75 ? '€1M - €10M' : 'Up to €20M or 4% of revenue'; return { riskScore: Math.min(score, 100), riskLevel, potentialFine };",
+  "formula": "let score = 0; const weights = { dataVolume: { low: 5, medium: 15, high: 25 }, dataSensitivity: { basic: 5, standard: 15, sensitive: 25 }, privacyPolicy: { none: 20, basic: 10, compliant: 0 }, consentMechanism: { none: 15, basic: 8, advanced: 0 }, dataProtection: { minimal: 20, moderate: 10, robust: 0 }, thirdPartySharing: { none: 0, some: 5, extensive: 15 } }; Object.keys(weights).forEach(key => { score += weights[key][inputs[key]] || 0; }); if (!inputs.breachResponse) score += 10; if (!inputs.dpoAssigned) score += 5; const riskLevel = score <= 25 ? 'Low Risk': score <= 50 ? 'Medium Risk': score <= 75 ? 'High Risk': 'Critical Risk'; const potentialFine = score <= 25 ? '€0 - €100K': score <= 50 ? '€100K - €1M': score <= 75 ? '€1M - €10M': 'Up to €20M or 4% of revenue'; return { riskScore: Math.min(score, 100), riskLevel, potentialFine };",
   "educational": {
     "methodology": "This calculator evaluates GDPR compliance risk based on key factors including data processing volume, sensitivity, security measures, consent management, and organizational safeguards. The scoring system reflects common compliance gaps that lead to regulatory enforcement.",
     "tips": [
       "Implement a robust consent management system to clearly document user permissions and allow easy withdrawal",
-      "Use privacy-focused tools like Incognito Browser to minimize unnecessary data collection and protect user privacy",
+      "Use privacy-focused tools like a privacy-focused browser to minimize unnecessary data collection and protect user privacy",
       "Create a comprehensive data breach response plan and test it regularly with your team",
       "Conduct regular privacy impact assessments (PIAs) for new data processing activities",
       "Maintain detailed records of processing activities and ensure all third-party agreements include GDPR clauses"
@@ -228,10 +228,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

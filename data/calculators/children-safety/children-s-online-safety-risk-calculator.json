@@ -176,13 +176,13 @@
       "description": "Number of immediate safety improvements recommended"
     }
   ],
-  "formula": "const ageRisk = childAge <= 8 ? 30 : childAge <= 12 ? 20 : 10; const deviceRisk = deviceAccess === 'unrestricted' ? 25 : deviceAccess === 'limited' ? 15 : deviceAccess === 'supervised' ? 5 : 0; const controlRisk = parentalControls === 'none' ? 25 : parentalControls === 'basic' ? 15 : parentalControls === 'moderate' ? 8 : 0; const socialRisk = socialMediaUse === 'extensive' ? 15 : socialMediaUse === 'moderate' ? 8 : socialMediaUse === 'minimal' ? 3 : 0; const educationRisk = privacyEducation === 'none' ? 15 : privacyEducation === 'basic' ? 10 : privacyEducation === 'moderate' ? 5 : 0; const timeRisk = screenTime > 4 ? 10 : screenTime > 2 ? 5 : 0; const riskScore = Math.min(100, ageRisk + deviceRisk + controlRisk + socialRisk + educationRisk + timeRisk); const riskGrade = riskScore <= 20 ? 'A' : riskScore <= 35 ? 'B' : riskScore <= 50 ? 'C' : riskScore <= 70 ? 'D' : 'F'; const priorityActions = (parentalControls === 'none' ? 1 : 0) + (privacyEducation === 'none' ? 1 : 0) + (deviceAccess === 'unrestricted' && childAge <= 12 ? 1 : 0) + (socialMediaUse === 'extensive' && childAge <= 10 ? 1 : 0); return { riskScore, riskGrade, priorityActions };",
+  "formula": "const ageRisk = childAge <= 8 ? 30: childAge <= 12 ? 20: 10; const deviceRisk = deviceAccess === 'unrestricted' ? 25: deviceAccess === 'limited' ? 15: deviceAccess === 'supervised' ? 5: 0; const controlRisk = parentalControls === 'none' ? 25: parentalControls === 'basic' ? 15: parentalControls === 'moderate' ? 8: 0; const socialRisk = socialMediaUse === 'extensive' ? 15: socialMediaUse === 'moderate' ? 8: socialMediaUse === 'minimal' ? 3: 0; const educationRisk = privacyEducation === 'none' ? 15: privacyEducation === 'basic' ? 10: privacyEducation === 'moderate' ? 5: 0; const timeRisk = screenTime > 4 ? 10: screenTime > 2 ? 5: 0; const riskScore = Math.min(100, ageRisk + deviceRisk + controlRisk + socialRisk + educationRisk + timeRisk); const riskGrade = riskScore <= 20 ? 'A': riskScore <= 35 ? 'B': riskScore <= 50 ? 'C': riskScore <= 70 ? 'D': 'F'; const priorityActions = (parentalControls === 'none' ? 1: 0) + (privacyEducation === 'none' ? 1: 0) + (deviceAccess === 'unrestricted' && childAge <= 12 ? 1: 0) + (socialMediaUse === 'extensive' && childAge <= 10 ? 1: 0); return { riskScore, riskGrade, priorityActions };",
   "educational": {
     "methodology": "This calculator evaluates online safety risk based on your child's age, device access level, current protective measures, online activities, privacy education received, and screen time. Higher risk scores indicate more potential vulnerabilities that should be addressed with appropriate safety measures.",
     "tips": [
       "Start privacy education early - even young children can learn basic concepts about not sharing personal information",
       "Use age-appropriate parental control tools and regularly update settings as your child grows",
-      "Consider using privacy-focused browsers like Incognito Browser for safer web browsing",
+      "Consider using privacy-focused browsers like a privacy-focused browser for safer web browsing",
       "Create a family media agreement that establishes clear rules for online behavior and screen time",
       "Regularly review your child's online activities and friend lists on social platforms"
     ],
@@ -237,10 +237,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

@@ -153,14 +153,14 @@
       "description": "Likelihood of manipulative design patterns"
     }
   ],
-  "formula": "const lengthScore = Math.min(policyLength * 2, 20); const readabilityScores = {middle: 0, high: 5, college: 10, graduate: 20}; const sharingScores = {none: 0, clear: 5, vague: 15, broad: 25}; const consentScores = {explicit: 0, checkbox: 10, implied: 20, bundled: 25}; const changeScores = {direct: 0, email: 5, website: 15, none: 25}; const riskScore = Math.min(lengthScore + readabilityScores[readabilityLevel] + sharingScores[dataSharing] + consentScores[consentMechanism] + (optOutDifficulty * 4) + changeScores[policyChanges], 100); const grades = riskScore <= 20 ? 'A' : riskScore <= 40 ? 'B' : riskScore <= 60 ? 'C' : riskScore <= 80 ? 'D' : 'F'; const darkPatternRisk = Math.min(((consentScores[consentMechanism] + (optOutDifficulty * 5) + (readabilityScores[readabilityLevel] / 2)) / 45) * 100, 100); return {riskScore: Math.round(riskScore), riskGrade: grades, darkPatternRisk: Math.round(darkPatternRisk)};",
+  "formula": "const lengthScore = Math.min(policyLength * 2, 20); const readabilityScores = {middle: 0, high: 5, college: 10, graduate: 20}; const sharingScores = {none: 0, clear: 5, vague: 15, broad: 25}; const consentScores = {explicit: 0, checkbox: 10, implied: 20, bundled: 25}; const changeScores = {direct: 0, email: 5, website: 15, none: 25}; const riskScore = Math.min(lengthScore + readabilityScores[readabilityLevel] + sharingScores[dataSharing] + consentScores[consentMechanism] + (optOutDifficulty * 4) + changeScores[policyChanges], 100); const grades = riskScore <= 20 ? 'A': riskScore <= 40 ? 'B': riskScore <= 60 ? 'C': riskScore <= 80 ? 'D': 'F'; const darkPatternRisk = Math.min(((consentScores[consentMechanism] + (optOutDifficulty * 5) + (readabilityScores[readabilityLevel] / 2)) / 45) * 100, 100); return {riskScore: Math.round(riskScore), riskGrade: grades, darkPatternRisk: Math.round(darkPatternRisk)};",
   "educational": {
     "methodology": "This calculator evaluates privacy policies and terms of service based on transparency, user control, consent mechanisms, and accessibility. Higher scores indicate greater privacy risks, including potential for data misuse, difficult opt-outs, and manipulative design patterns.",
     "tips": [
       "Look for policies under 10 pages - longer policies often hide important details in legal jargon",
       "Avoid services that use pre-checked consent boxes or bundle all permissions together",
       "Check if you can easily delete your account and data - difficult opt-outs are red flags",
-      "Use Incognito Browser to read policies without being tracked by the same company",
+      "Use a privacy-focused browser to read policies without being tracked by the same company",
       "Watch for vague language about 'partners' or 'affiliates' - this often means broad data sharing"
     ],
     "interpretation": [
@@ -214,10 +214,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

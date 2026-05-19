@@ -122,14 +122,14 @@
       "description": "Categorized risk assessment with recommendations"
     }
   ],
-  "formula": "const baseRisk = propertyType === 'urban' ? 30 : propertyType === 'suburban' ? 40 : propertyType === 'rural' ? 50 : 35; const activityRisk = outdoorActivity * 3; const protectionReduction = privacyMeasures === 'none' ? 0 : privacyMeasures === 'basic' ? 10 : privacyMeasures === 'moderate' ? 20 : 30; const sensitiveBonus = sensitiveActivities ? 15 : 0; const airportReduction = nearAirport ? 15 : 0; const lawReduction = localLaws === 'weak' ? 0 : localLaws === 'moderate' ? 10 : 20; const riskScore = Math.max(0, Math.min(100, baseRisk + activityRisk + sensitiveBonus - protectionReduction - airportReduction - lawReduction)); const riskLevel = riskScore >= 70 ? 'High Risk' : riskScore >= 40 ? 'Moderate Risk' : 'Low Risk'; return { riskScore, riskLevel };",
+  "formula": "const baseRisk = propertyType === 'urban' ? 30: propertyType === 'suburban' ? 40: propertyType === 'rural' ? 50: 35; const activityRisk = outdoorActivity * 3; const protectionReduction = privacyMeasures === 'none' ? 0: privacyMeasures === 'basic' ? 10: privacyMeasures === 'moderate' ? 20: 30; const sensitiveBonus = sensitiveActivities ? 15: 0; const airportReduction = nearAirport ? 15: 0; const lawReduction = localLaws === 'weak' ? 0: localLaws === 'moderate' ? 10: 20; const riskScore = Math.max(0, Math.min(100, baseRisk + activityRisk + sensitiveBonus - protectionReduction - airportReduction - lawReduction)); const riskLevel = riskScore >= 70 ? 'High Risk': riskScore >= 40 ? 'Moderate Risk': 'Low Risk'; return { riskScore, riskLevel };",
   "educational": {
     "methodology": "This calculator evaluates drone surveillance risk based on location vulnerability, activity patterns, existing privacy protections, and legal framework strength. Scores consider property exposure, outdoor activity frequency, current countermeasures, and regulatory protections.",
     "tips": [
       "Install visual barriers like privacy screens or plant tall vegetation to block aerial views of sensitive areas",
       "Use drone detection apps or RF scanners to identify unauthorized surveillance drones in your vicinity",
       "Know your local drone laws - many areas prohibit flying over private property without permission",
-      "Consider using Incognito Browser when researching drone detection tools to maintain your privacy online",
+      "Consider using a privacy-focused browser when researching drone detection tools to maintain your privacy online",
       "Document any suspected surveillance incidents with photos, times, and locations for potential legal action"
     ],
     "interpretation": [
@@ -171,10 +171,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

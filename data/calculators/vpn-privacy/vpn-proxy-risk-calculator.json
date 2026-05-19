@@ -188,7 +188,7 @@
       "description": "Suggested action based on your risk level"
     }
   ],
-  "formula": "const serviceRisk = { 'vpn': 0, 'proxy': 30, 'socks': 25, 'free-vpn': 50 }[serviceType] || 40; const jurisdictionRisk = { 'five-eyes': 40, 'nine-eyes': 35, 'fourteen-eyes': 30, 'neutral': 0, 'unknown': 25 }[jurisdiction] || 30; const loggingRisk = { 'no-logs': 0, 'claimed-no-logs': 10, 'some-logs': 30, 'full-logs': 50, 'unknown': 35 }[loggingPolicy] || 40; const encryptionRisk = { 'none': 50, 'basic': 30, 'aes-128': 10, 'aes-256': 0, 'unknown': 25 }[encryption] || 30; const paymentRisk = { 'crypto': 0, 'cash': 0, 'paypal': 15, 'credit-card': 25, 'free': 40 }[paymentMethod] || 30; const killSwitchBonus = killSwitch ? -5 : 10; const dnsBonus = dnsLeakProtection ? -5 : 10; const riskScore = Math.max(0, Math.min(100, serviceRisk + jurisdictionRisk + loggingRisk + encryptionRisk + paymentRisk + killSwitchBonus + dnsBonus)); const riskGrade = riskScore <= 20 ? 'A' : riskScore <= 35 ? 'B' : riskScore <= 50 ? 'C' : riskScore <= 70 ? 'D' : 'F'; const recommendation = riskScore <= 20 ? 'Excellent privacy protection' : riskScore <= 35 ? 'Good privacy, minor improvements possible' : riskScore <= 50 ? 'Moderate risk, consider upgrades' : riskScore <= 70 ? 'High risk, switch providers recommended' : 'Very high risk, change immediately'; return { riskScore, riskGrade, recommendation };",
+  "formula": "const serviceRisk = { 'vpn': 0, 'proxy': 30, 'socks': 25, 'free-vpn': 50 }[serviceType] || 40; const jurisdictionRisk = { 'five-eyes': 40, 'nine-eyes': 35, 'fourteen-eyes': 30, 'neutral': 0, 'unknown': 25 }[jurisdiction] || 30; const loggingRisk = { 'no-logs': 0, 'claimed-no-logs': 10, 'some-logs': 30, 'full-logs': 50, 'unknown': 35 }[loggingPolicy] || 40; const encryptionRisk = { 'none': 50, 'basic': 30, 'aes-128': 10, 'aes-256': 0, 'unknown': 25 }[encryption] || 30; const paymentRisk = { 'crypto': 0, 'cash': 0, 'paypal': 15, 'credit-card': 25, 'free': 40 }[paymentMethod] || 30; const killSwitchBonus = killSwitch ? -5: 10; const dnsBonus = dnsLeakProtection ? -5: 10; const riskScore = Math.max(0, Math.min(100, serviceRisk + jurisdictionRisk + loggingRisk + encryptionRisk + paymentRisk + killSwitchBonus + dnsBonus)); const riskGrade = riskScore <= 20 ? 'A': riskScore <= 35 ? 'B': riskScore <= 50 ? 'C': riskScore <= 70 ? 'D': 'F'; const recommendation = riskScore <= 20 ? 'Excellent privacy protection': riskScore <= 35 ? 'Good privacy, minor improvements possible': riskScore <= 50 ? 'Moderate risk, consider upgrades': riskScore <= 70 ? 'High risk, switch providers recommended': 'Very high risk, change immediately'; return { riskScore, riskGrade, recommendation };",
   "educational": {
     "methodology": "This calculator evaluates privacy risks based on key factors: service type (VPNs offer better protection than proxies), jurisdiction (countries with strong surveillance laws pose higher risks), logging policies (verified no-logs policies are safest), encryption strength (AES-256 is gold standard), payment anonymity (crypto/cash are most private), and security features like kill switches and DNS leak protection.",
     "tips": [
@@ -196,7 +196,7 @@
       "Look for independently audited no-logs policies, not just marketing claims",
       "Use cryptocurrency or cash payments to maintain anonymity when signing up",
       "Always enable kill switch and DNS leak protection features",
-      "Consider using Incognito Browser alongside your VPN for maximum privacy protection"
+      "Consider using a privacy-focused browser alongside your VPN for maximum privacy protection"
     ],
     "interpretation": [
       {
@@ -249,10 +249,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

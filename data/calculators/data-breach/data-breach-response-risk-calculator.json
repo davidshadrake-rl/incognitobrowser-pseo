@@ -150,14 +150,14 @@
       "description": "How urgently you need to take protective actions"
     }
   ],
-  "formula": "const dataTypeScore = {personal: 20, financial: 50, sensitive: 80, comprehensive: 100}[inputs.dataTypes]; const sizeMultiplier = {small: 1.0, medium: 1.2, large: 1.4, massive: 1.6}[inputs.breachSize]; const timeScore = {immediate: 0, days: 10, weeks: 25, months: 50}[inputs.timeAwareness]; const protectionReduction = {none: 0, basic: 15, intermediate: 30, advanced: 50}[inputs.currentProtections]; const accountMultiplier = Math.min(inputs.accountsAffected * 2, 30); const actionBonus = inputs.hasActedYet ? 20 : 0; const baseRisk = dataTypeScore * sizeMultiplier + timeScore + accountMultiplier; const adjustedRisk = Math.max(0, baseRisk - protectionReduction - actionBonus); const riskScore = Math.min(100, Math.round(adjustedRisk)); const riskLevel = riskScore < 30 ? 'Low' : riskScore < 50 ? 'Medium' : riskScore < 75 ? 'High' : 'Critical'; const urgencyScore = Math.min(100, riskScore + (inputs.hasActedYet ? 0 : 20)); return {riskScore, riskLevel, urgencyScore};",
+  "formula": "const dataTypeScore = {personal: 20, financial: 50, sensitive: 80, comprehensive: 100}[inputs.dataTypes]; const sizeMultiplier = {small: 1.0, medium: 1.2, large: 1.4, massive: 1.6}[inputs.breachSize]; const timeScore = {immediate: 0, days: 10, weeks: 25, months: 50}[inputs.timeAwareness]; const protectionReduction = {none: 0, basic: 15, intermediate: 30, advanced: 50}[inputs.currentProtections]; const accountMultiplier = Math.min(inputs.accountsAffected * 2, 30); const actionBonus = inputs.hasActedYet ? 20: 0; const baseRisk = dataTypeScore * sizeMultiplier + timeScore + accountMultiplier; const adjustedRisk = Math.max(0, baseRisk - protectionReduction - actionBonus); const riskScore = Math.min(100, Math.round(adjustedRisk)); const riskLevel = riskScore < 30 ? 'Low': riskScore < 50 ? 'Medium': riskScore < 75 ? 'High': 'Critical'; const urgencyScore = Math.min(100, riskScore + (inputs.hasActedYet ? 0: 20)); return {riskScore, riskLevel, urgencyScore};",
   "educational": {
     "methodology": "This calculator assesses your data breach response risk by analyzing the types of data exposed, breach scale, response timing, existing protections, and credential reuse. Higher scores indicate greater vulnerability to identity theft and financial fraud, requiring more urgent protective actions.",
     "tips": [
       "Change passwords immediately for the affected account and any accounts sharing those credentials",
       "Enable two-factor authentication on all important accounts to add an extra security layer",
       "Consider placing a credit freeze with all three major credit bureaus to prevent new account fraud",
-      "Use Incognito Browser mode when checking accounts to avoid saving sensitive login information",
+      "Use a privacy-focused browser mode when checking accounts to avoid saving sensitive login information",
       "Monitor your credit reports and bank statements closely for signs of fraudulent activity"
     ],
     "interpretation": [
@@ -205,10 +205,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

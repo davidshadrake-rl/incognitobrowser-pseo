@@ -119,12 +119,12 @@
       "description": "Your overall privacy risk category"
     }
   ],
-  "formula": "const socialWeight = {minimal: 10, moderate: 25, heavy: 40, public: 60}; const accountsWeight = Math.min(inputs.onlineAccounts * 0.6, 40); const breachWeight = Math.min(inputs.dataBreaches * 8, 30); const recordsWeight = inputs.publicRecords ? 15 : 0; const spamWeight = Math.min(inputs.phoneSpam * 1.2, 25); const optOutReduction = {none: 0, few: -5, many: -15, service: -25}; const baseScore = socialWeight[inputs.socialMediaActivity] + accountsWeight + breachWeight + recordsWeight + spamWeight; const riskScore = Math.max(0, Math.min(100, baseScore + optOutReduction[inputs.previousOptOuts])); const estimatedBrokers = Math.round((riskScore / 100) * 200 + 20); const riskLevel = riskScore <= 30 ? 'Low' : riskScore <= 60 ? 'Moderate' : riskScore <= 80 ? 'High' : 'Critical'; return {riskScore: Math.round(riskScore), estimatedBrokers, riskLevel};",
+  "formula": "const socialWeight = {minimal: 10, moderate: 25, heavy: 40, public: 60}; const accountsWeight = Math.min(inputs.onlineAccounts * 0.6, 40); const breachWeight = Math.min(inputs.dataBreaches * 8, 30); const recordsWeight = inputs.publicRecords ? 15: 0; const spamWeight = Math.min(inputs.phoneSpam * 1.2, 25); const optOutReduction = {none: 0, few: -5, many: -15, service: -25}; const baseScore = socialWeight[inputs.socialMediaActivity] + accountsWeight + breachWeight + recordsWeight + spamWeight; const riskScore = Math.max(0, Math.min(100, baseScore + optOutReduction[inputs.previousOptOuts])); const estimatedBrokers = Math.round((riskScore / 100) * 200 + 20); const riskLevel = riskScore <= 30 ? 'Low': riskScore <= 60 ? 'Moderate': riskScore <= 80 ? 'High': 'Critical'; return {riskScore: Math.round(riskScore), estimatedBrokers, riskLevel};",
   "educational": {
     "methodology": "This calculator assesses your data broker exposure risk by analyzing key factors that determine how much personal information is likely circulating among data brokers. It considers your digital activity patterns, account proliferation, breach history, public records, and current protection efforts to estimate your overall privacy risk.",
     "tips": [
       "Start with major data brokers like WhitePages, Spokeo, and BeenVerified for manual opt-outs",
-      "Consider using Incognito Browser for sensitive searches to avoid creating new data trails",
+      "Consider using a privacy-focused browser for sensitive searches to avoid creating new data trails",
       "Data removal services like DeleteMe or Incogni can automate the opt-out process across 100+ brokers",
       "Monitor spam calls/texts as they often indicate new data broker exposure",
       "Regularly check haveibeenpwned.com for new breaches affecting your accounts"
@@ -168,16 +168,21 @@
       "type": "internal"
     },
     {
-      "title": "Download Incognito Browser",
+      "title": "Use a privacy-focused browser ",
       "url": "/tools/incognito-browser",
       "type": "tool"
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

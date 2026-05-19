@@ -143,11 +143,11 @@
       "description": "Estimated times your face may be scanned per week"
     }
   ],
-  "formula": "let baseRisk = 0; const locationMultiplier = location === 'urban' ? 30 : location === 'suburban' ? 15 : 5; const publicExposure = (publicSpaces / 80) * 25; const socialRisk = socialMedia === 'frequent' ? 20 : socialMedia === 'moderate' ? 12 : socialMedia === 'limited' ? 5 : 0; const workplaceRisk = workplace === 'extensive' ? 15 : workplace === 'basic' ? 8 : 0; const activismBonus = activism ? 15 : 0; const protectionReduction = protections === 'advanced' ? 0.3 : protections === 'moderate' ? 0.15 : protections === 'basic' ? 0.05 : 0; baseRisk = locationMultiplier + publicExposure + socialRisk + workplaceRisk + activismBonus; const riskScore = Math.max(0, Math.min(100, Math.round(baseRisk * (1 - protectionReduction)))); const riskLevel = riskScore >= 70 ? 'A+' : riskScore >= 50 ? 'B+' : riskScore >= 30 ? 'C+' : 'D+'; const exposureEstimate = Math.round((publicSpaces / 10) * (location === 'urban' ? 3 : location === 'suburban' ? 1.5 : 0.5)); return { riskScore, riskLevel, exposureEstimate };",
+  "formula": "let baseRisk = 0; const locationMultiplier = location === 'urban' ? 30: location === 'suburban' ? 15: 5; const publicExposure = (publicSpaces / 80) * 25; const socialRisk = socialMedia === 'frequent' ? 20: socialMedia === 'moderate' ? 12: socialMedia === 'limited' ? 5: 0; const workplaceRisk = workplace === 'extensive' ? 15: workplace === 'basic' ? 8: 0; const activismBonus = activism ? 15: 0; const protectionReduction = protections === 'advanced' ? 0.3: protections === 'moderate' ? 0.15: protections === 'basic' ? 0.05: 0; baseRisk = locationMultiplier + publicExposure + socialRisk + workplaceRisk + activismBonus; const riskScore = Math.max(0, Math.min(100, Math.round(baseRisk * (1 - protectionReduction)))); const riskLevel = riskScore >= 70 ? 'A+': riskScore >= 50 ? 'B+': riskScore >= 30 ? 'C+': 'D+'; const exposureEstimate = Math.round((publicSpaces / 10) * (location === 'urban' ? 3: location === 'suburban' ? 1.5: 0.5)); return { riskScore, riskLevel, exposureEstimate };",
   "educational": {
     "methodology": "This calculator assesses facial recognition exposure based on location surveillance density, public space usage, digital footprint, workplace systems, and existing protection measures. Risk factors are weighted according to surveillance deployment patterns and biometric data collection practices.",
     "tips": [
-      "Use Incognito Browser to limit online tracking that builds biometric profiles",
+      "Use a privacy-focused browser to limit online tracking that builds biometric profiles",
       "Wear sunglasses and face masks in high-surveillance areas like airports and city centers",
       "Review and tighten social media privacy settings to prevent photo scraping",
       "Research local facial recognition policies and opt-out where legally possible",
@@ -198,10 +198,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

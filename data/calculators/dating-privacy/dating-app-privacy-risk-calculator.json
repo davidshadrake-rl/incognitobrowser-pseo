@@ -191,11 +191,11 @@
       "description": "Number of high-risk privacy exposures identified"
     }
   ],
-  "formula": "const weights = { appType: { tinder: 15, bumble: 10, grindr: 25, hinge: 8, okcupid: 12, multiple: 20 }, locationSharing: { disabled: 0, approximate: 10, precise: 25, unknown: 15 }, photoPrivacy: { unique: 5, limited: 15, 'social-media': 25, identifiable: 35 }, personalInfo: { minimal: 5, some: 15, detailed: 25, extensive: 35 }, messagingHabits: { 'app-only': 5, 'phone-quick': 15, 'social-media': 20, 'video-calls': 0 }, meetingCaution: { high: 0, moderate: 10, basic: 20, low: 30 } }; const riskScore = Math.min(100, weights.appType[inputs.appType] + weights.locationSharing[inputs.locationSharing] + weights.photoPrivacy[inputs.photoPrivacy] + weights.personalInfo[inputs.personalInfo] + weights.messagingHabits[inputs.messagingHabits] + weights.meetingCaution[inputs.meetingCaution]); const vulnerabilities = [inputs.locationSharing === 'precise', inputs.photoPrivacy === 'identifiable', inputs.personalInfo === 'extensive', inputs.messagingHabits === 'phone-quick', inputs.meetingCaution === 'low'].filter(Boolean).length; const riskLevel = riskScore <= 30 ? 'Low Risk' : riskScore <= 60 ? 'Moderate Risk' : riskScore <= 80 ? 'High Risk' : 'Critical Risk'; return { riskScore, riskLevel, vulnerabilities };",
+  "formula": "const weights = { appType: { tinder: 15, bumble: 10, grindr: 25, hinge: 8, okcupid: 12, multiple: 20 }, locationSharing: { disabled: 0, approximate: 10, precise: 25, unknown: 15 }, photoPrivacy: { unique: 5, limited: 15, 'social-media': 25, identifiable: 35 }, personalInfo: { minimal: 5, some: 15, detailed: 25, extensive: 35 }, messagingHabits: { 'app-only': 5, 'phone-quick': 15, 'social-media': 20, 'video-calls': 0 }, meetingCaution: { high: 0, moderate: 10, basic: 20, low: 30 } }; const riskScore = Math.min(100, weights.appType[inputs.appType] + weights.locationSharing[inputs.locationSharing] + weights.photoPrivacy[inputs.photoPrivacy] + weights.personalInfo[inputs.personalInfo] + weights.messagingHabits[inputs.messagingHabits] + weights.meetingCaution[inputs.meetingCaution]); const vulnerabilities = [inputs.locationSharing === 'precise', inputs.photoPrivacy === 'identifiable', inputs.personalInfo === 'extensive', inputs.messagingHabits === 'phone-quick', inputs.meetingCaution === 'low'].filter(Boolean).length; const riskLevel = riskScore <= 30 ? 'Low Risk': riskScore <= 60 ? 'Moderate Risk': riskScore <= 80 ? 'High Risk': 'Critical Risk'; return { riskScore, riskLevel, vulnerabilities };",
   "educational": {
     "methodology": "This calculator evaluates your dating app privacy risk based on six key factors: app choice (some apps have weaker privacy), location sharing settings, photo traceability, personal information exposure, communication habits, and meeting safety practices. Each factor is weighted according to real privacy vulnerabilities reported by security researchers.",
     "tips": [
-      "Use Incognito Browser when accessing dating apps on shared devices to prevent data tracking",
+      "Use a privacy-focused browser when accessing dating apps on shared devices to prevent data tracking",
       "Create unique photos for dating apps that can't be reverse-searched on Google Images",
       "Hide your precise location and use approximate distance settings instead",
       "Keep conversations in-app until you've met and verified the person's identity",
@@ -246,10 +246,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

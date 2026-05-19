@@ -144,7 +144,7 @@
         },
         {
           "value": "strict",
-          "label": "Strict privacy browser (Tor, Incognito Browser)"
+          "label": "Strict privacy browser (Tor, a privacy-focused browser)"
         }
       ],
       "helpText": "Browser privacy settings affect ISP visibility"
@@ -230,12 +230,12 @@
       "description": "How much of your browsing data is visible to your ISP"
     }
   ],
-  "formula": "let baseRisk = 70; if(inputs.dnsProvider === 'isp-default') baseRisk += 20; if(inputs.dnsEncryption === 'none') baseRisk += 15; else if(inputs.dnsEncryption === 'doh' || inputs.dnsEncryption === 'dot') baseRisk -= 25; if(inputs.vpnUsage === 'always') baseRisk -= 30; else if(inputs.vpnUsage === 'often') baseRisk -= 20; else if(inputs.vpnUsage === 'sometimes') baseRisk -= 10; if(inputs.browserPrivacy === 'strict') baseRisk -= 15; else if(inputs.browserPrivacy === 'enhanced') baseRisk -= 10; else if(inputs.browserPrivacy === 'basic') baseRisk -= 5; if(inputs.streamingHabits === 'torrenting') baseRisk += 15; else if(inputs.streamingHabits === 'heavy') baseRisk += 10; if(inputs.dataUsage > 1000) baseRisk += 10; if(inputs.optOutAttempts === 'opted-out') baseRisk -= 10; else if(inputs.optOutAttempts === 'no-option') baseRisk += 5; let riskScore = Math.max(0, Math.min(100, baseRisk)); let privacyGrade = riskScore <= 20 ? 'A' : riskScore <= 40 ? 'B' : riskScore <= 60 ? 'C' : riskScore <= 80 ? 'D' : 'F'; let exposureLevel = riskScore <= 25 ? 'Minimal - Well Protected' : riskScore <= 50 ? 'Moderate - Some Visibility' : riskScore <= 75 ? 'High - Significant Tracking' : 'Critical - Maximum Exposure'; return { riskScore, privacyGrade, exposureLevel };",
+  "formula": "let baseRisk = 70; if(inputs.dnsProvider === 'isp-default') baseRisk += 20; if(inputs.dnsEncryption === 'none') baseRisk += 15; else if(inputs.dnsEncryption === 'doh' || inputs.dnsEncryption === 'dot') baseRisk -= 25; if(inputs.vpnUsage === 'always') baseRisk -= 30; else if(inputs.vpnUsage === 'often') baseRisk -= 20; else if(inputs.vpnUsage === 'sometimes') baseRisk -= 10; if(inputs.browserPrivacy === 'strict') baseRisk -= 15; else if(inputs.browserPrivacy === 'enhanced') baseRisk -= 10; else if(inputs.browserPrivacy === 'basic') baseRisk -= 5; if(inputs.streamingHabits === 'torrenting') baseRisk += 15; else if(inputs.streamingHabits === 'heavy') baseRisk += 10; if(inputs.dataUsage > 1000) baseRisk += 10; if(inputs.optOutAttempts === 'opted-out') baseRisk -= 10; else if(inputs.optOutAttempts === 'no-option') baseRisk += 5; let riskScore = Math.max(0, Math.min(100, baseRisk)); let privacyGrade = riskScore <= 20 ? 'A': riskScore <= 40 ? 'B': riskScore <= 60 ? 'C': riskScore <= 80 ? 'D': 'F'; let exposureLevel = riskScore <= 25 ? 'Minimal - Well Protected': riskScore <= 50 ? 'Moderate - Some Visibility': riskScore <= 75 ? 'High - Significant Tracking': 'Critical - Maximum Exposure'; return { riskScore, privacyGrade, exposureLevel };",
   "educational": {
     "methodology": "This calculator evaluates your ISP tracking risk based on DNS configuration, VPN usage, browser privacy settings, and data usage patterns. It considers how ISPs monitor unencrypted DNS queries, analyze traffic patterns, and collect browsing metadata even when using HTTPS.",
     "tips": [
       "Switch to encrypted DNS (DNS over HTTPS) in your browser settings to hide DNS queries from your ISP",
-      "Use Incognito Browser or a reputable VPN service to encrypt all traffic and hide your browsing from ISP monitoring",
+      "Use a privacy-focused browser or a reputable VPN service to encrypt all traffic and hide your browsing from ISP monitoring",
       "Change your DNS provider from ISP default to privacy-focused options like Cloudflare (1.1.1.1) or Quad9",
       "Check your ISP's privacy policy and opt-out of data sharing programs if available",
       "Consider using Tor browser or other privacy-focused browsers for sensitive browsing activities"
@@ -279,16 +279,21 @@
       "type": "review"
     },
     {
-      "title": "Download Incognito Browser",
+      "title": "Use a privacy-focused browser ",
       "url": "/tools/incognito-browser",
       "type": "tool"
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

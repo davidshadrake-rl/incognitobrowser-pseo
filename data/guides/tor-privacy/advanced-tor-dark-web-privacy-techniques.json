@@ -58,7 +58,7 @@
         "Test for DNS leaks and IP address exposure",
         "Verify the connection chain: You -> Tor -> VPN -> Internet"
       ],
-      "proTip": "Consider using Incognito Browser in conjunction with this setup for an additional privacy layer.",
+      "proTip": "Consider using a privacy-focused browser in conjunction with this setup for an additional privacy layer.",
       "warning": "This configuration can significantly slow down your connection and may not be suitable for all use cases."
     },
     {
@@ -91,12 +91,12 @@
       "title": "Set Up Secure Dark Web Navigation",
       "description": "Establish safe practices for navigating hidden services while maintaining operational security and avoiding common pitfalls.",
       "actions": [
-        "Verify .onion addresses through multiple trusted sources",
+        "Verify.onion addresses through multiple trusted sources",
         "Use only HTTPS-enabled hidden services when possible",
         "Implement bookmark verification procedures",
         "Configure automatic security checks for visited sites"
       ],
-      "proTip": "Keep a verified list of legitimate .onion directories and never trust random links or search results.",
+      "proTip": "Keep a verified list of legitimate.onion directories and never trust random links or search results.",
       "warning": "Many dark web sites are scams or law enforcement honeypots - extreme caution is required."
     },
     {
@@ -116,7 +116,7 @@
     "Use Tails OS for the highest level of anonymity - it routes all traffic through Tor and leaves no traces on your computer.",
     "Never download files through Tor without scanning them in an isolated environment first, as they may contain tracking elements.",
     "Rotate your Tor circuits frequently and use New Identity feature between different browsing sessions for maximum unlinkability.",
-    "Consider using Incognito Browser for clearnet browsing while keeping Tor exclusively for anonymous activities to avoid cross-contamination.",
+    "Consider using a privacy-focused browser for clearnet browsing while keeping Tor exclusively for anonymous activities to avoid cross-contamination.",
     "Always verify your setup through multiple independent testing services and never trust a single anonymity verification tool."
   ],
   "faqs": [
@@ -158,16 +158,21 @@
       "type": "external"
     },
     {
-      "title": "Incognito Browser Privacy Features",
+      "title": "a privacy-focused browser Privacy Features",
       "url": "/tools/incognito-browser",
       "type": "internal"
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

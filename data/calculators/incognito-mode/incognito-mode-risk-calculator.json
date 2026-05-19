@@ -36,7 +36,7 @@
         },
         {
           "value": "incognito-browser",
-          "label": "Incognito Browser"
+          "label": "a privacy-focused browser"
         }
       ],
       "helpText": "Different browsers offer varying levels of private browsing protection"
@@ -140,15 +140,15 @@
       "description": "Estimated percentage of your data that remains trackable"
     }
   ],
-  "formula": "let baseRisk = 40; let browserMultipliers = {chrome: 1.0, firefox: 0.9, safari: 0.95, edge: 1.0, 'incognito-browser': 0.7}; let activityRisks = {shopping: 15, banking: 25, social: 20, research: 10, streaming: 12}; let networkRisks = {home: 5, work: 15, public: 30, mobile: 10}; let frequencyMultiplier = frequency * 0.1; let toolsReduction = additionalTools ? -15 : 0; let sharedRisk = sharedDevice ? 20 : 0; let totalRisk = Math.max(0, Math.min(100, baseRisk * browserMultipliers[browser] + activityRisks[activities] + networkRisks[networkType] + (frequencyMultiplier * 10) + toolsReduction + sharedRisk)); let grade = totalRisk <= 25 ? 'A' : totalRisk <= 40 ? 'B' : totalRisk <= 60 ? 'C' : totalRisk <= 80 ? 'D' : 'F'; let exposurePercent = Math.round(totalRisk * 0.8); return {riskScore: Math.round(totalRisk), protectionLevel: grade, exposurePercentage: exposurePercent};",
+  "formula": "let baseRisk = 40; let browserMultipliers = {chrome: 1.0, firefox: 0.9, safari: 0.95, edge: 1.0, 'incognito-browser': 0.7}; let activityRisks = {shopping: 15, banking: 25, social: 20, research: 10, streaming: 12}; let networkRisks = {home: 5, work: 15, public: 30, mobile: 10}; let frequencyMultiplier = frequency * 0.1; let toolsReduction = additionalTools ? -15: 0; let sharedRisk = sharedDevice ? 20: 0; let totalRisk = Math.max(0, Math.min(100, baseRisk * browserMultipliers[browser] + activityRisks[activities] + networkRisks[networkType] + (frequencyMultiplier * 10) + toolsReduction + sharedRisk)); let grade = totalRisk <= 25 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': totalRisk <= 80 ? 'D': 'F'; let exposurePercent = Math.round(totalRisk * 0.8); return {riskScore: Math.round(totalRisk), protectionLevel: grade, exposurePercentage: exposurePercent};",
   "educational": {
     "methodology": "This calculator evaluates your privacy risk by analyzing your browser choice, online activities, network environment, and additional security measures. It accounts for the fact that incognito mode only prevents local data storage, not network-level tracking or ISP monitoring.",
     "tips": [
       "Combine incognito mode with a VPN for better network-level privacy protection",
-      "Use Incognito Browser for enhanced private browsing with built-in privacy features",
+      "Use a privacy-focused browser for enhanced private browsing with built-in privacy features",
       "Avoid banking or sensitive activities on public WiFi, even in incognito mode",
       "Remember that incognito mode doesn't hide your activity from your ISP or network administrator",
-      "Consider using privacy-focused browsers like Incognito Browser for stronger default protections"
+      "Consider using privacy-focused browsers like a privacy-focused browser for stronger default protections"
     ],
     "interpretation": [
       {
@@ -179,7 +179,7 @@
   },
   "relatedLinks": [
     {
-      "title": "Download Incognito Browser",
+      "title": "Use a privacy-focused browser ",
       "url": "/incognito-browser-download",
       "type": "internal"
     },
@@ -195,10 +195,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

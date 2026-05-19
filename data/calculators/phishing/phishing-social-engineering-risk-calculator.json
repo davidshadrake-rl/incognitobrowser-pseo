@@ -181,12 +181,12 @@
       "description": "How much you could reduce your risk with better practices"
     }
   ],
-  "formula": "const emailRisk = {\"0-10\": 5, \"10-25\": 10, \"25-50\": 20, \"50-100\": 30, \"100+\": 40}[inputs.emailFrequency] || 20; const verifyRisk = {\"always\": 0, \"usually\": 10, \"sometimes\": 25, \"rarely\": 40, \"never\": 50}[inputs.verificationHabits] || 25; const wifiRisk = {\"never\": 0, \"rarely\": 5, \"sometimes\": 15, \"often\": 25, \"always\": 35}[inputs.publicWifi] || 15; const socialRisk = {\"minimal\": 0, \"limited\": 5, \"moderate\": 15, \"extensive\": 25, \"everything\": 35}[inputs.socialMediaSharing] || 15; const trainingBonus = {\"recent\": -15, \"past-year\": -10, \"old\": -5, \"none\": 0}[inputs.securityTraining] || 0; const urlBonus = inputs.urlChecking ? -10 : 0; const baseScore = Math.min(100, Math.max(0, emailRisk + verifyRisk + wifiRisk + socialRisk + trainingBonus + urlBonus)); const riskLevel = baseScore <= 20 ? \"Low Risk\" : baseScore <= 40 ? \"Moderate Risk\" : baseScore <= 60 ? \"High Risk\" : \"Very High Risk\"; const maxPossibleReduction = Math.max(0, baseScore - 10); const improvementPct = Math.round((maxPossibleReduction / Math.max(baseScore, 1)) * 100); return {riskScore: baseScore, riskLevel: riskLevel, improvement: improvementPct};",
+  "formula": "const emailRisk = {\"0-10\": 5, \"10-25\": 10, \"25-50\": 20, \"50-100\": 30, \"100+\": 40}[inputs.emailFrequency] || 20; const verifyRisk = {\"always\": 0, \"usually\": 10, \"sometimes\": 25, \"rarely\": 40, \"never\": 50}[inputs.verificationHabits] || 25; const wifiRisk = {\"never\": 0, \"rarely\": 5, \"sometimes\": 15, \"often\": 25, \"always\": 35}[inputs.publicWifi] || 15; const socialRisk = {\"minimal\": 0, \"limited\": 5, \"moderate\": 15, \"extensive\": 25, \"everything\": 35}[inputs.socialMediaSharing] || 15; const trainingBonus = {\"recent\": -15, \"past-year\": -10, \"old\": -5, \"none\": 0}[inputs.securityTraining] || 0; const urlBonus = inputs.urlChecking ? -10: 0; const baseScore = Math.min(100, Math.max(0, emailRisk + verifyRisk + wifiRisk + socialRisk + trainingBonus + urlBonus)); const riskLevel = baseScore <= 20 ? \"Low Risk\": baseScore <= 40 ? \"Moderate Risk\": baseScore <= 60 ? \"High Risk\": \"Very High Risk\"; const maxPossibleReduction = Math.max(0, baseScore - 10); const improvementPct = Math.round((maxPossibleReduction / Math.max(baseScore, 1)) * 100); return {riskScore: baseScore, riskLevel: riskLevel, improvement: improvementPct};",
   "educational": {
     "methodology": "This calculator evaluates your phishing risk based on email exposure, security habits, training history, and information sharing practices. The scoring system reflects real-world attack patterns and vulnerability research.",
     "tips": [
       "Always hover over links to preview the destination URL before clicking",
-      "Use Incognito Browser or similar privacy-focused browsers to limit tracking and reduce targeted attacks",
+      "Use a privacy-focused browser or similar privacy-focused browsers to limit tracking and reduce targeted attacks",
       "Enable two-factor authentication on all important accounts to limit breach impact",
       "Be skeptical of urgent requests for personal information, even from known contacts",
       "Keep software updated and use reputable antivirus with real-time email scanning"
@@ -231,10 +231,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

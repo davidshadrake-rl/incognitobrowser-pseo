@@ -118,7 +118,7 @@
       "description": "Number of high-priority security actions recommended"
     }
   ],
-  "formula": "let baseRisk = Math.min(extensionCount * 3, 30); let storeRisk = (100 - officialStore) * 0.4; let permissionRisk = highPermissions * 8; let updateRisk = updateFrequency === 'weekly' ? 0 : updateFrequency === 'monthly' ? 5 : updateFrequency === 'quarterly' ? 15 : 25; let reviewBonus = reviewCheck ? -5 : 0; let adBlockBonus = adBlocker === 'ublock' ? -8 : adBlocker === 'adblock' ? -5 : adBlocker === 'other' ? -3 : 0; let riskScore = Math.max(0, Math.min(100, baseRisk + storeRisk + permissionRisk + updateRisk + reviewBonus + adBlockBonus)); let riskLevel = riskScore <= 20 ? 'Low Risk' : riskScore <= 40 ? 'Moderate Risk' : riskScore <= 60 ? 'High Risk' : 'Critical Risk'; let recommendations = (officialStore < 90 ? 1 : 0) + (highPermissions > 3 ? 1 : 0) + (updateFrequency === 'rarely' ? 1 : 0) + (!reviewCheck ? 1 : 0) + (adBlocker === 'none' ? 1 : 0); return { riskScore: Math.round(riskScore), riskLevel, recommendations };",
+  "formula": "let baseRisk = Math.min(extensionCount * 3, 30); let storeRisk = (100 - officialStore) * 0.4; let permissionRisk = highPermissions * 8; let updateRisk = updateFrequency === 'weekly' ? 0: updateFrequency === 'monthly' ? 5: updateFrequency === 'quarterly' ? 15: 25; let reviewBonus = reviewCheck ? -5: 0; let adBlockBonus = adBlocker === 'ublock' ? -8: adBlocker === 'adblock' ? -5: adBlocker === 'other' ? -3: 0; let riskScore = Math.max(0, Math.min(100, baseRisk + storeRisk + permissionRisk + updateRisk + reviewBonus + adBlockBonus)); let riskLevel = riskScore <= 20 ? 'Low Risk': riskScore <= 40 ? 'Moderate Risk': riskScore <= 60 ? 'High Risk': 'Critical Risk'; let recommendations = (officialStore < 90 ? 1: 0) + (highPermissions > 3 ? 1: 0) + (updateFrequency === 'rarely' ? 1: 0) + (!reviewCheck ? 1: 0) + (adBlocker === 'none' ? 1: 0); return { riskScore: Math.round(riskScore), riskLevel, recommendations };",
   "educational": {
     "methodology": "This calculator evaluates browser extension risks based on installation sources, permission levels, maintenance indicators, and security practices. Higher scores indicate greater privacy and security risks from potentially malicious or poorly maintained extensions.",
     "tips": [
@@ -126,7 +126,7 @@
       "Review extension permissions carefully - avoid those requesting access to 'all website data' unless necessary",
       "Use uBlock Origin instead of other ad blockers for better privacy and security protection",
       "Regularly audit your extensions and remove unused ones to minimize attack surface",
-      "Consider using Incognito Browser for enhanced privacy alongside careful extension management"
+      "Consider using a privacy-focused browser for enhanced privacy alongside careful extension management"
     ],
     "interpretation": [
       {
@@ -173,10 +173,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

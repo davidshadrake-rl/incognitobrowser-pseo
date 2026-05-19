@@ -88,10 +88,10 @@
       "actions": [
         "Enable Encrypted SNI (ESNI) or ECH in browsers that support it",
         "Use domain fronting techniques through CDNs when available",
-        "Configure browsers to use Incognito Browser for additional SNI protection",
+        "Configure browsers to Use a privacy-focused browser for additional SNI protection",
         "Test SNI leakage using tools like snileaktest.com"
       ],
-      "proTip": "Incognito Browser includes advanced SNI protection features that automatically mask your website visits from ISP monitoring."
+      "proTip": "Privacy-focused browsers includes advanced SNI protection features that automatically mask your website visits from ISP monitoring."
     },
     {
       "stepNumber": 7,
@@ -120,7 +120,7 @@
   ],
   "pro_tips": [
     "Rotate between different encrypted DNS providers monthly to prevent long-term profiling by any single service.",
-    "Use Incognito Browser's built-in DNS protection features alongside system-level configurations for maximum privacy coverage.",
+    "Use a privacy-focused browser's built-in DNS protection features alongside system-level configurations for maximum privacy coverage.",
     "Monitor ISP forums and social media for reports of new tracking techniques being deployed in your area.",
     "Consider using cellular data or a different ISP occasionally to test if your primary ISP is throttling or blocking specific traffic.",
     "Keep documentation of all your privacy configurations - ISP customer service often requests you disable 'custom DNS settings' when troubleshooting."
@@ -128,7 +128,7 @@
   "faqs": [
     {
       "question": "Can my ISP still track me if I use DNS over HTTPS?",
-      "answer": "DoH prevents ISP DNS monitoring, but they can still see IP addresses you connect to and use traffic analysis. Combine DoH with a VPN and tools like Incognito Browser for comprehensive protection."
+      "answer": "DoH prevents ISP DNS monitoring, but they can still see IP addresses you connect to and use traffic analysis. Combine DoH with a VPN and tools like a privacy-focused browser for comprehensive protection."
     },
     {
       "question": "Will these techniques slow down my internet connection?",
@@ -140,7 +140,7 @@
     },
     {
       "question": "Can I use these techniques on mobile devices?",
-      "answer": "Yes, most mobile operating systems now support DoH. iOS 14+ and Android 9+ have built-in private DNS options. Use browsers like Incognito Browser for additional mobile privacy protection."
+      "answer": "Yes, most mobile operating systems now support DoH. iOS 14+ and Android 9+ have built-in private DNS options. Use browsers like a privacy-focused browser for additional mobile privacy protection."
     },
     {
       "question": "What should I do if my ISP blocks encrypted DNS?",
@@ -169,10 +169,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

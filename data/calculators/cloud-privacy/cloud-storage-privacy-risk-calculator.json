@@ -179,7 +179,7 @@
       "description": "Most important step to improve your privacy"
     }
   ],
-  "formula": "const providerScores = { 'google-drive': 60, 'dropbox': 55, 'onedrive': 65, 'icloud': 70, 'proton-drive': 15, 'tresorit': 10, 'pcloud-crypto': 20, 'other': 80 }; const dataTypeScores = { 'personal': 10, 'business': 25, 'financial': 40, 'medical': 45, 'legal': 35, 'creative': 20 }; const encryptionReduction = { 'none': 0, 'manual': -25, 'zero-knowledge': -30, 'third-party': -20 }; const sharingScores = { 'never': 0, 'rare': 5, 'occasional': 10, 'frequent': 20, 'daily': 30 }; let baseScore = providerScores[provider] || 80; baseScore += dataTypeScores[dataTypes] || 10; baseScore += encryptionReduction[encryptionUsed] || 0; baseScore += sharingScores[sharingFrequency] || 10; if (!twoFactor) baseScore += 15; if (dataAmount > 100) baseScore += 5; if (dataAmount > 500) baseScore += 10; const riskScore = Math.max(0, Math.min(100, baseScore)); let riskLevel, recommendation; if (riskScore <= 25) { riskLevel = 'Low Risk'; recommendation = 'Great privacy practices! Consider using Incognito Browser for additional web privacy.'; } else if (riskScore <= 50) { riskLevel = 'Moderate Risk'; recommendation = 'Enable 2FA and consider encrypted providers like Proton Drive or Tresorit.'; } else if (riskScore <= 75) { riskLevel = 'High Risk'; recommendation = 'Switch to zero-knowledge providers and encrypt sensitive files before upload.'; } else { riskLevel = 'Critical Risk'; recommendation = 'Immediately migrate to encrypted storage like Tresorit and enable all security features.'; } return { riskScore, riskLevel, recommendation };",
+  "formula": "const providerScores = { 'google-drive': 60, 'dropbox': 55, 'onedrive': 65, 'icloud': 70, 'proton-drive': 15, 'tresorit': 10, 'pcloud-crypto': 20, 'other': 80 }; const dataTypeScores = { 'personal': 10, 'business': 25, 'financial': 40, 'medical': 45, 'legal': 35, 'creative': 20 }; const encryptionReduction = { 'none': 0, 'manual': -25, 'zero-knowledge': -30, 'third-party': -20 }; const sharingScores = { 'never': 0, 'rare': 5, 'occasional': 10, 'frequent': 20, 'daily': 30 }; let baseScore = providerScores[provider] || 80; baseScore += dataTypeScores[dataTypes] || 10; baseScore += encryptionReduction[encryptionUsed] || 0; baseScore += sharingScores[sharingFrequency] || 10; if (!twoFactor) baseScore += 15; if (dataAmount > 100) baseScore += 5; if (dataAmount > 500) baseScore += 10; const riskScore = Math.max(0, Math.min(100, baseScore)); let riskLevel, recommendation; if (riskScore <= 25) { riskLevel = 'Low Risk'; recommendation = 'Great privacy practices! Consider using a privacy-focused browser for additional web privacy.'; } else if (riskScore <= 50) { riskLevel = 'Moderate Risk'; recommendation = 'Enable 2FA and consider encrypted providers like Proton Drive or Tresorit.'; } else if (riskScore <= 75) { riskLevel = 'High Risk'; recommendation = 'Switch to zero-knowledge providers and encrypt sensitive files before upload.'; } else { riskLevel = 'Critical Risk'; recommendation = 'Immediately migrate to encrypted storage like Tresorit and enable all security features.'; } return { riskScore, riskLevel, recommendation };",
   "educational": {
     "methodology": "This calculator evaluates your cloud storage privacy risk based on provider security practices, data sensitivity, encryption usage, account security, and sharing habits. Scores range from 0-100, with lower scores indicating better privacy protection.",
     "tips": [
@@ -187,7 +187,7 @@
       "Always enable two-factor authentication on your cloud storage accounts",
       "Encrypt sensitive files locally before uploading to any cloud service",
       "Regularly review and revoke sharing permissions for old files and folders",
-      "Use Incognito Browser when accessing cloud storage to prevent tracking"
+      "Use a privacy-focused browser when accessing cloud storage to prevent tracking"
     ],
     "interpretation": [
       {
@@ -234,10 +234,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

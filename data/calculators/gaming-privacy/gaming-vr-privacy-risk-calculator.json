@@ -142,12 +142,12 @@
       "description": "Number of different data types potentially collected"
     }
   ],
-  "formula": "let platformRisk = inputs.gamingPlatforms * 8; let vrRisk = inputs.vrUsage === 'none' ? 0 : inputs.vrUsage === 'occasional' ? 15 : inputs.vrUsage === 'regular' ? 25 : 35; let voiceRisk = inputs.voiceChat === 'never' ? 0 : inputs.voiceChat === 'rarely' ? 5 : inputs.voiceChat === 'sometimes' ? 15 : 25; let purchaseRisk = Math.min(inputs.inGamePurchases * 0.1, 20); let settingsRisk = inputs.privacySettings === 'optimized' ? -15 : inputs.privacySettings === 'partial' ? -5 : inputs.privacySettings === 'default' ? 10 : 15; let socialRisk = inputs.socialFeatures ? 12 : 0; let childRisk = inputs.childAccount ? 10 : 0; let totalRisk = Math.max(0, Math.min(100, platformRisk + vrRisk + voiceRisk + purchaseRisk + settingsRisk + socialRisk + childRisk)); let riskLevel = totalRisk < 25 ? 'A' : totalRisk < 45 ? 'B' : totalRisk < 65 ? 'C' : totalRisk < 85 ? 'D' : 'F'; let dataTypes = (inputs.gamingPlatforms > 0 ? 1 : 0) + (inputs.vrUsage !== 'none' ? 3 : 0) + (inputs.voiceChat !== 'never' ? 2 : 0) + (inputs.inGamePurchases > 0 ? 2 : 0) + (inputs.socialFeatures ? 2 : 0) + (inputs.childAccount ? 1 : 0); return { riskScore: Math.round(totalRisk), riskLevel: riskLevel, dataExposure: dataTypes };",
+  "formula": "let platformRisk = inputs.gamingPlatforms * 8; let vrRisk = inputs.vrUsage === 'none' ? 0: inputs.vrUsage === 'occasional' ? 15: inputs.vrUsage === 'regular' ? 25: 35; let voiceRisk = inputs.voiceChat === 'never' ? 0: inputs.voiceChat === 'rarely' ? 5: inputs.voiceChat === 'sometimes' ? 15: 25; let purchaseRisk = Math.min(inputs.inGamePurchases * 0.1, 20); let settingsRisk = inputs.privacySettings === 'optimized' ? -15: inputs.privacySettings === 'partial' ? -5: inputs.privacySettings === 'default' ? 10: 15; let socialRisk = inputs.socialFeatures ? 12: 0; let childRisk = inputs.childAccount ? 10: 0; let totalRisk = Math.max(0, Math.min(100, platformRisk + vrRisk + voiceRisk + purchaseRisk + settingsRisk + socialRisk + childRisk)); let riskLevel = totalRisk < 25 ? 'A': totalRisk < 45 ? 'B': totalRisk < 65 ? 'C': totalRisk < 85 ? 'D': 'F'; let dataTypes = (inputs.gamingPlatforms > 0 ? 1: 0) + (inputs.vrUsage !== 'none' ? 3: 0) + (inputs.voiceChat !== 'never' ? 2: 0) + (inputs.inGamePurchases > 0 ? 2: 0) + (inputs.socialFeatures ? 2: 0) + (inputs.childAccount ? 1: 0); return { riskScore: Math.round(totalRisk), riskLevel: riskLevel, dataExposure: dataTypes };",
   "educational": {
     "methodology": "This calculator evaluates privacy risks based on gaming platform usage, VR device data collection, voice chat exposure, purchase tracking, social features, and privacy settings configuration. Scores are weighted by data sensitivity and collection scope.",
     "tips": [
       "Review and optimize privacy settings on all gaming platforms regularly",
-      "Use Incognito Browser when accessing gaming websites to prevent tracking",
+      "Use a privacy-focused browser when accessing gaming websites to prevent tracking",
       "Limit voice chat to trusted friends and disable voice recording features",
       "Consider using a gaming VPN to mask your IP address and location",
       "Regularly audit what data gaming companies have collected about you"
@@ -203,10 +203,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

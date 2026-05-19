@@ -160,11 +160,11 @@
       "description": "Approximate number of ways your data may be collected"
     }
   ],
-  "formula": "const deviceRisk = deviceUsage === 'school-primary' ? 25 : deviceUsage === 'mixed-usage' ? 15 : deviceUsage === 'personal-only' ? 5 : 0; const proctoringRisk = proctoringFrequency === 'always' ? 30 : proctoringFrequency === 'frequently' ? 25 : proctoringFrequency === 'sometimes' ? 15 : proctoringFrequency === 'rarely' ? 8 : 0; const schoolRisk = schoolType === 'k12-public' ? 15 : schoolType === 'k12-private' ? 10 : schoolType === 'public-university' ? 12 : 8; const networkRisk = Math.round(campusWifiUsage * 0.2); const serviceRisk = Math.min(onlineServices * 2, 20); const awarenessBonus = privacyAwareness === 'all' ? -10 : privacyAwareness === 'most' ? -5 : privacyAwareness === 'some' ? -2 : 0; const riskScore = Math.max(0, Math.min(100, deviceRisk + proctoringRisk + schoolRisk + networkRisk + serviceRisk + awarenessBonus)); const riskLevel = riskScore >= 70 ? 'High Risk' : riskScore >= 40 ? 'Moderate Risk' : riskScore >= 20 ? 'Low-Moderate Risk' : 'Low Risk'; const dataExposure = Math.round(3 + (onlineServices * 1.5) + (proctoringRisk/5) + (deviceRisk/5)); return { riskScore, riskLevel, dataExposure };",
+  "formula": "const deviceRisk = deviceUsage === 'school-primary' ? 25: deviceUsage === 'mixed-usage' ? 15: deviceUsage === 'personal-only' ? 5: 0; const proctoringRisk = proctoringFrequency === 'always' ? 30: proctoringFrequency === 'frequently' ? 25: proctoringFrequency === 'sometimes' ? 15: proctoringFrequency === 'rarely' ? 8: 0; const schoolRisk = schoolType === 'k12-public' ? 15: schoolType === 'k12-private' ? 10: schoolType === 'public-university' ? 12: 8; const networkRisk = Math.round(campusWifiUsage * 0.2); const serviceRisk = Math.min(onlineServices * 2, 20); const awarenessBonus = privacyAwareness === 'all' ? -10: privacyAwareness === 'most' ? -5: privacyAwareness === 'some' ? -2: 0; const riskScore = Math.max(0, Math.min(100, deviceRisk + proctoringRisk + schoolRisk + networkRisk + serviceRisk + awarenessBonus)); const riskLevel = riskScore >= 70 ? 'High Risk': riskScore >= 40 ? 'Moderate Risk': riskScore >= 20 ? 'Low-Moderate Risk': 'Low Risk'; const dataExposure = Math.round(3 + (onlineServices * 1.5) + (proctoringRisk/5) + (deviceRisk/5)); return { riskScore, riskLevel, dataExposure };",
   "educational": {
     "methodology": "This calculator evaluates privacy risks based on institutional surveillance capabilities, device monitoring potential, digital proctoring exposure, network usage patterns, and privacy awareness levels. The scoring system weights high-risk factors like comprehensive proctoring and school-issued devices more heavily.",
     "tips": [
-      "Use Incognito Browser or privacy-focused browsers when possible to limit tracking",
+      "Use a privacy-focused browser or privacy-focused browsers when possible to limit tracking",
       "Review FERPA rights and understand what educational data can be collected about you",
       "Consider using a VPN when on campus networks to protect browsing activity",
       "Ask about proctoring software permissions and opt for less invasive alternatives when available",
@@ -215,10 +215,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

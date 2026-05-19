@@ -182,13 +182,13 @@
       "description": "Overall assessment of your email privacy risks"
     }
   ],
-  "formula": "let providerRisk = {gmail: 70, outlook: 65, yahoo: 75, protonmail: 15, tutanota: 20, 'other-secure': 30, 'work-email': 50}[emailProvider] || 50; let volumeMultiplier = {'1-10': 0.8, '10-50': 1.0, '50-100': 1.2, '100+': 1.4}[emailsPerDay] || 1.0; let sensitivityRisk = {never: 0, rarely: 10, sometimes: 20, often: 35, always: 50}[sensitiveContent] || 20; let encryptionReduction = {none: 0, sometimes: -15, 'secure-provider': -35, always: -45}[encryptionUsage] || 0; let trackingReduction = {none: 0, basic: -5, advanced: -15, full: -25}[trackingProtection] || 0; let twoFactorReduction = twoFactorAuth ? -10 : 0; let baseRisk = (providerRisk + sensitivityRisk) * volumeMultiplier; let totalRisk = Math.max(5, Math.min(95, baseRisk + encryptionReduction + trackingReduction + twoFactorReduction)); let grade = totalRisk <= 25 ? 'A' : totalRisk <= 40 ? 'B' : totalRisk <= 60 ? 'C' : totalRisk <= 80 ? 'D' : 'F'; let level = totalRisk <= 25 ? 'Low Risk' : totalRisk <= 50 ? 'Moderate Risk' : totalRisk <= 75 ? 'High Risk' : 'Very High Risk'; return {riskScore: Math.round(totalRisk), securityGrade: grade, riskLevel: level};",
+  "formula": "let providerRisk = {gmail: 70, outlook: 65, yahoo: 75, protonmail: 15, tutanota: 20, 'other-secure': 30, 'work-email': 50}[emailProvider] || 50; let volumeMultiplier = {'1-10': 0.8, '10-50': 1.0, '50-100': 1.2, '100+': 1.4}[emailsPerDay] || 1.0; let sensitivityRisk = {never: 0, rarely: 10, sometimes: 20, often: 35, always: 50}[sensitiveContent] || 20; let encryptionReduction = {none: 0, sometimes: -15, 'secure-provider': -35, always: -45}[encryptionUsage] || 0; let trackingReduction = {none: 0, basic: -5, advanced: -15, full: -25}[trackingProtection] || 0; let twoFactorReduction = twoFactorAuth ? -10: 0; let baseRisk = (providerRisk + sensitivityRisk) * volumeMultiplier; let totalRisk = Math.max(5, Math.min(95, baseRisk + encryptionReduction + trackingReduction + twoFactorReduction)); let grade = totalRisk <= 25 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': totalRisk <= 80 ? 'D': 'F'; let level = totalRisk <= 25 ? 'Low Risk': totalRisk <= 50 ? 'Moderate Risk': totalRisk <= 75 ? 'High Risk': 'Very High Risk'; return {riskScore: Math.round(totalRisk), securityGrade: grade, riskLevel: level};",
   "educational": {
     "methodology": "This calculator evaluates your email privacy risk based on your provider's data practices, encryption usage, authentication methods, and privacy protections. Major providers like Gmail scan emails for advertising, while encrypted providers like ProtonMail offer zero-access encryption.",
     "tips": [
       "Switch to encrypted email providers like ProtonMail or Tutanota for automatic end-to-end encryption",
       "Enable two-factor authentication on all email accounts to prevent unauthorized access",
-      "Use email tracking blockers or privacy-focused browsers like Incognito Browser to prevent pixel tracking",
+      "Use email tracking blockers or privacy-focused browsers like a privacy-focused browser to prevent pixel tracking",
       "Create email aliases for online accounts to protect your main email from data breaches",
       "Avoid sending sensitive information through unencrypted email providers"
     ],
@@ -237,10 +237,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

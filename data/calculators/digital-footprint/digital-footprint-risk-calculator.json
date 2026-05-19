@@ -101,7 +101,7 @@
       "label": "Use Private Browsing Regularly",
       "type": "checkbox",
       "defaultValue": false,
-      "helpText": "Do you regularly use incognito mode or privacy-focused browsers like Incognito Browser"
+      "helpText": "Do you regularly use incognito mode or privacy-focused browsers like a privacy-focused browser"
     },
     {
       "id": "publicRecords",
@@ -149,12 +149,12 @@
       "description": "Number of high-risk areas requiring immediate attention"
     }
   ],
-  "formula": "let baseScore = 0; const weights = { socialMedia: socialMediaProfiles * (privacySettings === 'public' ? 4 : privacySettings === 'mixed' ? 3 : privacySettings === 'private' ? 2 : 1), searchVisibility: searchResults === 'concerning' ? 25 : searchResults === 'extensive' ? 20 : searchResults === 'moderate' ? 15 : searchResults === 'minimal' ? 8 : 0, dataBrokerRisk: Math.max(0, 20 - (dataBrokers * 0.4)), accountSpread: onlineAccounts * 0.15, publicRecords: publicRecords === 'extensive' ? 15 : publicRecords === 'significant' ? 12 : publicRecords === 'some' ? 8 : 3 }; baseScore = weights.socialMedia + weights.searchVisibility + weights.dataBrokerRisk + weights.accountSpread + weights.publicRecords; if (usePrivateBrowsing) baseScore -= 5; const riskScore = Math.min(100, Math.max(0, Math.round(baseScore))); const riskLevel = riskScore >= 70 ? 'High Risk' : riskScore >= 40 ? 'Medium Risk' : riskScore >= 20 ? 'Low Risk' : 'Minimal Risk'; const exposurePoints = (socialMediaProfiles > 8 ? 1 : 0) + (privacySettings === 'public' ? 1 : 0) + (searchResults === 'extensive' || searchResults === 'concerning' ? 1 : 0) + (dataBrokers < 10 ? 1 : 0) + (publicRecords === 'extensive' ? 1 : 0); return { riskScore, riskLevel, exposurePoints };",
+  "formula": "let baseScore = 0; const weights = { socialMedia: socialMediaProfiles * (privacySettings === 'public' ? 4: privacySettings === 'mixed' ? 3: privacySettings === 'private' ? 2: 1), searchVisibility: searchResults === 'concerning' ? 25: searchResults === 'extensive' ? 20: searchResults === 'moderate' ? 15: searchResults === 'minimal' ? 8: 0, dataBrokerRisk: Math.max(0, 20 - (dataBrokers * 0.4)), accountSpread: onlineAccounts * 0.15, publicRecords: publicRecords === 'extensive' ? 15: publicRecords === 'significant' ? 12: publicRecords === 'some' ? 8: 3 }; baseScore = weights.socialMedia + weights.searchVisibility + weights.dataBrokerRisk + weights.accountSpread + weights.publicRecords; if (usePrivateBrowsing) baseScore -= 5; const riskScore = Math.min(100, Math.max(0, Math.round(baseScore))); const riskLevel = riskScore >= 70 ? 'High Risk': riskScore >= 40 ? 'Medium Risk': riskScore >= 20 ? 'Low Risk': 'Minimal Risk'; const exposurePoints = (socialMediaProfiles > 8 ? 1: 0) + (privacySettings === 'public' ? 1: 0) + (searchResults === 'extensive' || searchResults === 'concerning' ? 1: 0) + (dataBrokers < 10 ? 1: 0) + (publicRecords === 'extensive' ? 1: 0); return { riskScore, riskLevel, exposurePoints };",
   "educational": {
     "methodology": "This calculator evaluates your digital footprint risk by analyzing key exposure factors including social media presence, search engine visibility, data broker listings, and public records. The scoring system weighs each factor based on privacy research and expert recommendations to provide an overall risk assessment.",
     "tips": [
       "Audit your social media privacy settings quarterly and limit public posts containing personal information",
-      "Use privacy-focused browsers like Incognito Browser to reduce tracking and passive data collection",
+      "Use privacy-focused browsers like a privacy-focused browser to reduce tracking and passive data collection",
       "Submit opt-out requests to major data brokers like Spokeo, WhitePages, and BeenVerified regularly",
       "Google yourself monthly to monitor what personal information appears in search results",
       "Consider using aliases or separate email addresses for non-essential online accounts"
@@ -204,10 +204,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

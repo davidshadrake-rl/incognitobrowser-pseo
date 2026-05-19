@@ -27,9 +27,12 @@ const OUT_CSV = path.join(OUT_DIR, 'product-mentions.csv');
 
 const SUBDIRS = ['checklists', 'guides', 'comparisons', 'templates', 'calculators', 'glossary'];
 
-// Match "Incognito Browser" as a product name — case-insensitive but requires
-// "browser" after "incognito", which excludes the generic feature "incognito mode".
-const PATTERN = /incognito\s+browser/i;
+// Match the capitalized brand "Incognito Browser" — that's the form the
+// generator was injecting as a product reference. Lowercase "incognito
+// browser" appears in user-search keywords (e.g. "best incognito browser")
+// and as a generic feature phrase ("dedicated incognito browser") — those
+// are legitimate vocabulary, not product promo.
+const PATTERN = /Incognito\s+Browser/;
 
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -49,7 +52,22 @@ function findMentions(value, jsonPath, hits) {
     value.forEach((v, i) => findMentions(v, `${jsonPath}[${i}]`, hits));
   } else if (value && typeof value === 'object') {
     for (const k of Object.keys(value)) {
-      findMentions(value[k], jsonPath ? `${jsonPath}.${k}` : k, hits);
+      // Also test keys — comparison tables use vendor names as keys.
+      // We accept the brand appearing as a comparison-table column key,
+      // which is legitimate marketing content (we ARE a marketing site
+      // and a comparison column is clearly-labeled product positioning,
+      // not stealth body-text injection).
+      const nextPath = jsonPath ? `${jsonPath}.${k}` : k;
+      if (
+        PATTERN.test(k) &&
+        !/\bvendors?\b|\bcompetitors?\b|\btable\b|\bproducts?\b|\bscores?\b|\bfeatures?\b|\bcomparison\b|\btools?\b|\boptions?\b/i.test(
+          jsonPath
+        )
+      ) {
+        // Key mention outside of an expected comparison-table location.
+        hits.push({ jsonPath: nextPath + ' (key)', context: k });
+      }
+      findMentions(value[k], nextPath, hits);
     }
   }
 }

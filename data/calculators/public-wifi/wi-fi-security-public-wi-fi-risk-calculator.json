@@ -179,14 +179,14 @@
       "description": "Main security concerns based on your usage pattern"
     }
   ],
-  "formula": "const networkRisk = { 'open-public': 40, 'password-public': 30, 'hotel': 25, 'cafe': 30, 'airport': 35, 'enterprise': 10 }; const vpnProtection = { 'always': -30, 'sometimes': -15, 'never': 0 }; const activityRisk = { 'basic': 10, 'mixed': 20, 'sensitive': 35, 'high-risk': 40 }; const securityBonus = { 'none': 0, 'basic': -5, 'moderate': -10, 'advanced': -15 }; const durationRisk = { 'short': 5, 'moderate': 10, 'long': 15 }; const deviceBonus = { 'basic': 0, 'moderate': -5, 'high': -10 }; let riskScore = networkRisk[networkType] + vpnProtection[vpnUsage] + activityRisk[browsingSensitivity] + securityBonus[securityMeasures] + durationRisk[connectionDuration] + deviceBonus[deviceSecurity]; riskScore = Math.max(0, Math.min(100, riskScore)); let riskLevel = riskScore >= 70 ? 'High Risk' : riskScore >= 40 ? 'Medium Risk' : riskScore >= 20 ? 'Low Risk' : 'Very Low Risk'; let vulnerabilities = []; if (networkType === 'open-public') vulnerabilities.push('Unencrypted network traffic'); if (vpnUsage === 'never') vulnerabilities.push('No VPN protection'); if (browsingSensitivity === 'sensitive' || browsingSensitivity === 'high-risk') vulnerabilities.push('Sensitive data exposure'); if (securityMeasures === 'none') vulnerabilities.push('Minimal security measures'); return { riskScore: riskScore, riskLevel: riskLevel, vulnerabilities: vulnerabilities.join(', ') || 'Good security posture' };",
+  "formula": "const networkRisk = { 'open-public': 40, 'password-public': 30, 'hotel': 25, 'cafe': 30, 'airport': 35, 'enterprise': 10 }; const vpnProtection = { 'always': -30, 'sometimes': -15, 'never': 0 }; const activityRisk = { 'basic': 10, 'mixed': 20, 'sensitive': 35, 'high-risk': 40 }; const securityBonus = { 'none': 0, 'basic': -5, 'moderate': -10, 'advanced': -15 }; const durationRisk = { 'short': 5, 'moderate': 10, 'long': 15 }; const deviceBonus = { 'basic': 0, 'moderate': -5, 'high': -10 }; let riskScore = networkRisk[networkType] + vpnProtection[vpnUsage] + activityRisk[browsingSensitivity] + securityBonus[securityMeasures] + durationRisk[connectionDuration] + deviceBonus[deviceSecurity]; riskScore = Math.max(0, Math.min(100, riskScore)); let riskLevel = riskScore >= 70 ? 'High Risk': riskScore >= 40 ? 'Medium Risk': riskScore >= 20 ? 'Low Risk': 'Very Low Risk'; let vulnerabilities = []; if (networkType === 'open-public') vulnerabilities.push('Unencrypted network traffic'); if (vpnUsage === 'never') vulnerabilities.push('No VPN protection'); if (browsingSensitivity === 'sensitive' || browsingSensitivity === 'high-risk') vulnerabilities.push('Sensitive data exposure'); if (securityMeasures === 'none') vulnerabilities.push('Minimal security measures'); return { riskScore: riskScore, riskLevel: riskLevel, vulnerabilities: vulnerabilities.join(', ') || 'Good security posture' };",
   "educational": {
     "methodology": "This calculator assesses your public Wi-Fi risk by evaluating network security, your protective measures, activity sensitivity, and exposure duration. Scores range from 0-100, with higher scores indicating greater vulnerability to attacks like man-in-the-middle, data interception, and malicious hotspots.",
     "tips": [
       "Always use a reputable VPN when connecting to public Wi-Fi networks to encrypt your traffic",
       "Disable auto-connect features and forget networks after use to prevent automatic connections to malicious hotspots",
       "Only visit HTTPS websites and avoid accessing sensitive accounts like banking on public networks",
-      "Use Incognito Browser or private browsing modes to minimize data collection and tracking",
+      "Use a privacy-focused browser or private browsing modes to minimize data collection and tracking",
       "Keep your device's operating system and security software updated to protect against known vulnerabilities"
     ],
     "interpretation": [
@@ -234,10 +234,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

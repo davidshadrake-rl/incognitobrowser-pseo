@@ -135,11 +135,11 @@
       "description": "Number of major privacy vulnerabilities identified"
     }
   ],
-  "formula": "const deviceRisk = (voiceAssistants * 8) + (smartCameras * 12) + (iotDevices * 3); const cloudMultiplier = {none: 0.7, some: 1.0, most: 1.3, all: 1.6}[cloudStorage]; const privacyReduction = {none: 0, basic: 10, advanced: 25, maximum: 40}[privacySettings]; const networkReduction = {weak: 0, standard: 15, strong: 30, maximum: 45}[networkSecurity]; const baseRisk = Math.min(deviceRisk * cloudMultiplier, 100); const adjustedRisk = Math.max(baseRisk - privacyReduction - networkReduction, 5); const riskScore = Math.round(adjustedRisk); const riskGrade = riskScore >= 80 ? 'F' : riskScore >= 70 ? 'D' : riskScore >= 60 ? 'C' : riskScore >= 50 ? 'B' : riskScore >= 40 ? 'B+' : riskScore >= 30 ? 'A-' : 'A'; const vulnerabilities = Math.ceil(riskScore / 20); return { riskScore, riskGrade, vulnerabilities };",
+  "formula": "const deviceRisk = (voiceAssistants * 8) + (smartCameras * 12) + (iotDevices * 3); const cloudMultiplier = {none: 0.7, some: 1.0, most: 1.3, all: 1.6}[cloudStorage]; const privacyReduction = {none: 0, basic: 10, advanced: 25, maximum: 40}[privacySettings]; const networkReduction = {weak: 0, standard: 15, strong: 30, maximum: 45}[networkSecurity]; const baseRisk = Math.min(deviceRisk * cloudMultiplier, 100); const adjustedRisk = Math.max(baseRisk - privacyReduction - networkReduction, 5); const riskScore = Math.round(adjustedRisk); const riskGrade = riskScore >= 80 ? 'F': riskScore >= 70 ? 'D': riskScore >= 60 ? 'C': riskScore >= 50 ? 'B': riskScore >= 40 ? 'B+': riskScore >= 30 ? 'A-': 'A'; const vulnerabilities = Math.ceil(riskScore / 20); return { riskScore, riskGrade, vulnerabilities };",
   "educational": {
     "methodology": "This calculator evaluates privacy risks based on device count, cloud dependencies, privacy configurations, and network security. Voice assistants and cameras carry higher risk weights due to their always-listening/watching nature and potential for intimate data collection.",
     "tips": [
-      "Use Incognito Browser when managing smart home settings to prevent tracking of your privacy configurations",
+      "Use a privacy-focused browser when managing smart home settings to prevent tracking of your privacy configurations",
       "Regularly audit and disable unnecessary permissions for voice assistants and smart devices",
       "Set up a separate IoT network to isolate smart devices from personal computers and phones",
       "Choose devices with local processing capabilities to reduce cloud data dependencies",
@@ -190,10 +190,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

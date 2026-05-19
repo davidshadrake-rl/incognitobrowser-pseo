@@ -40,7 +40,7 @@
         },
         {
           "value": "incognito-browser",
-          "label": "Incognito Browser"
+          "label": "a privacy-focused browser"
         },
         {
           "value": "other",
@@ -182,11 +182,11 @@
       "description": "How much you could improve with recommended changes"
     }
   ],
-  "formula": "let baseScore = 0; const browserScores = { 'incognito-browser': 25, 'brave': 20, 'firefox': 15, 'safari': 12, 'edge': 8, 'chrome': 5, 'other': 10 }; baseScore += browserScores[browserType] || 10; const trackingScores = { 'strict': 25, 'custom': 20, 'standard': 10, 'none': 0 }; baseScore += trackingScores[trackingProtection]; const cookieScores = { 'blocked': 20, 'limited': 12, 'allowed': 0 }; baseScore += cookieScores[thirdPartyCookies]; baseScore += Math.min(extensionsInstalled * 3, 15); const incognitoScores = { 'always': 10, 'frequently': 8, 'sometimes': 5, 'rarely': 2, 'never': 0 }; baseScore += incognitoScores[incognitoUsage]; baseScore += syncEnabled ? 0 : 5; const locationScores = { 'blocked': 5, 'ask': 3, 'allowed': 0 }; baseScore += locationScores[locationSharing]; const privacyScore = Math.min(baseScore, 100); let riskLevel = 'High Risk'; if (privacyScore >= 80) riskLevel = 'Low Risk'; else if (privacyScore >= 60) riskLevel = 'Medium Risk'; else if (privacyScore >= 40) riskLevel = 'High Risk'; else riskLevel = 'Very High Risk'; const maxPossible = 100; const improvementPotential = Math.round(((maxPossible - privacyScore) / maxPossible) * 100); return { privacyScore, riskLevel, improvementPotential };",
+  "formula": "let baseScore = 0; const browserScores = { 'incognito-browser': 25, 'brave': 20, 'firefox': 15, 'safari': 12, 'edge': 8, 'chrome': 5, 'other': 10 }; baseScore += browserScores[browserType] || 10; const trackingScores = { 'strict': 25, 'custom': 20, 'standard': 10, 'none': 0 }; baseScore += trackingScores[trackingProtection]; const cookieScores = { 'blocked': 20, 'limited': 12, 'allowed': 0 }; baseScore += cookieScores[thirdPartyCookies]; baseScore += Math.min(extensionsInstalled * 3, 15); const incognitoScores = { 'always': 10, 'frequently': 8, 'sometimes': 5, 'rarely': 2, 'never': 0 }; baseScore += incognitoScores[incognitoUsage]; baseScore += syncEnabled ? 0: 5; const locationScores = { 'blocked': 5, 'ask': 3, 'allowed': 0 }; baseScore += locationScores[locationSharing]; const privacyScore = Math.min(baseScore, 100); let riskLevel = 'High Risk'; if (privacyScore >= 80) riskLevel = 'Low Risk'; else if (privacyScore >= 60) riskLevel = 'Medium Risk'; else if (privacyScore >= 40) riskLevel = 'High Risk'; else riskLevel = 'Very High Risk'; const maxPossible = 100; const improvementPotential = Math.round(((maxPossible - privacyScore) / maxPossible) * 100); return { privacyScore, riskLevel, improvementPotential };",
   "educational": {
     "methodology": "This calculator evaluates your browser privacy based on key factors: browser choice (inherent privacy features), tracking protection settings, cookie policies, privacy extensions, private browsing habits, sync features, and permission settings. Each factor is weighted based on its impact on your overall privacy protection.",
     "tips": [
-      "Switch to privacy-focused browsers like Incognito Browser, Brave, or hardened Firefox for better default protection",
+      "Switch to privacy-focused privacy-focused browsers like Brave, or hardened Firefox for better default protection",
       "Enable strict tracking protection and block third-party cookies in your browser settings",
       "Install essential privacy extensions like uBlock Origin and Privacy Badger",
       "Use private/incognito mode for sensitive browsing, especially on shared devices",
@@ -237,10 +237,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

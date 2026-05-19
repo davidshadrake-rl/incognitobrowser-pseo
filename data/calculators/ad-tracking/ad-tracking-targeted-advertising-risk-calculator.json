@@ -117,7 +117,7 @@
       "label": "Privacy-focused browser usage",
       "type": "checkbox",
       "defaultValue": false,
-      "helpText": "Do you use privacy browsers like Incognito Browser, Brave, or Firefox with strict settings?"
+      "helpText": "Do you use privacy privacy-focused browsers like Brave, or Firefox with strict settings?"
     },
     {
       "id": "device_count",
@@ -150,12 +150,12 @@
       "description": "Percentage of your online activity likely being tracked for advertising"
     }
   ],
-  "formula": "const browsing_weight = browsing_frequency * 2; const social_weights = {'none': 0, '1': 10, '2-3': 25, '4-5': 40, '6+': 60}; const shopping_weights = {'never': 0, 'rarely': 5, 'monthly': 15, 'weekly': 30, 'daily': 50}; const cookie_weights = {'strict': 0, 'reject_third_party': 5, 'default': 25, 'accept_all': 40}; let base_score = browsing_weight + social_weights[social_media_usage] + shopping_weights[shopping_frequency] + cookie_weights[cookie_management] + (device_count * 3); base_score -= ad_blocker_usage ? 15 : 0; base_score -= privacy_browser ? 20 : 0; const risk_score = Math.max(0, Math.min(100, base_score)); const tracking_exposure = Math.min(95, risk_score + 10); let risk_level; if (risk_score <= 25) risk_level = 'Low'; else if (risk_score <= 50) risk_level = 'Medium'; else if (risk_score <= 75) risk_level = 'High'; else risk_level = 'Very High'; return {risk_score, risk_level, tracking_exposure};",
+  "formula": "const browsing_weight = browsing_frequency * 2; const social_weights = {'none': 0, '1': 10, '2-3': 25, '4-5': 40, '6+': 60}; const shopping_weights = {'never': 0, 'rarely': 5, 'monthly': 15, 'weekly': 30, 'daily': 50}; const cookie_weights = {'strict': 0, 'reject_third_party': 5, 'default': 25, 'accept_all': 40}; let base_score = browsing_weight + social_weights[social_media_usage] + shopping_weights[shopping_frequency] + cookie_weights[cookie_management] + (device_count * 3); base_score -= ad_blocker_usage ? 15: 0; base_score -= privacy_browser ? 20: 0; const risk_score = Math.max(0, Math.min(100, base_score)); const tracking_exposure = Math.min(95, risk_score + 10); let risk_level; if (risk_score <= 25) risk_level = 'Low'; else if (risk_score <= 50) risk_level = 'Medium'; else if (risk_score <= 75) risk_level = 'High'; else risk_level = 'Very High'; return {risk_score, risk_level, tracking_exposure};",
   "educational": {
     "methodology": "This calculator evaluates your ad tracking risk based on browsing habits, platform usage, privacy tools, and device footprint. It considers factors like social media presence, online shopping behavior, cookie settings, and protective measures to estimate your exposure to behavioral advertising and cross-site tracking.",
     "tips": [
       "Install a reputable ad blocker and enable strict tracking protection in your browser settings",
-      "Use privacy-focused browsers like Incognito Browser or configure mainstream browsers for maximum privacy",
+      "Use privacy-focused browsers like a privacy-focused browser or configure mainstream browsers for maximum privacy",
       "Regularly clear cookies and browsing data, or use incognito/private browsing mode",
       "Opt out of ad personalization on major platforms like Google, Facebook, and Amazon",
       "Consider using different browsers or profiles for different activities to limit cross-site tracking"
@@ -205,10 +205,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

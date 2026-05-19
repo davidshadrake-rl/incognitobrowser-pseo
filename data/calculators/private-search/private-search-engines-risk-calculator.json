@@ -121,7 +121,7 @@
       "label": "Use Ad Blocker",
       "type": "checkbox",
       "defaultValue": false,
-      "helpText": "Do you use an ad blocker or privacy-focused browser like Incognito Browser?"
+      "helpText": "Do you use an ad blocker or privacy-focused browser like a privacy-focused browser?"
     }
   ],
   "outputFields": [
@@ -144,12 +144,12 @@
       "description": "Approximate number of data points collected about you per year"
     }
   ],
-  "formula": "const engineRisk = { google: 85, bing: 75, yahoo: 80, duckduckgo: 10, startpage: 15, brave: 25 }; const baseRisk = engineRisk[inputs.currentEngine] || 50; const searchMultiplier = Math.min(inputs.dailySearches / 20, 2); const loginPenalty = inputs.loggedIn && ['google', 'bing'].includes(inputs.currentEngine) ? 15 : 0; const typeMultiplier = { general: 0.8, mixed: 1.0, personal: 1.3, professional: 0.9 }[inputs.searchTypes]; const incognitoBonus = { never: 0, rarely: -5, sometimes: -10, often: -20, always: -30 }[inputs.incognitoUsage]; const adBlockBonus = inputs.adBlocker ? -15 : 0; const riskScore = Math.max(0, Math.min(100, (baseRisk + loginPenalty + incognitoBonus + adBlockBonus) * searchMultiplier * typeMultiplier)); const riskLevel = riskScore >= 70 ? 'High' : riskScore >= 40 ? 'Medium' : riskScore >= 20 ? 'Low' : 'Minimal'; const dataPoints = Math.round(inputs.dailySearches * 365 * (riskScore / 100) * 3); return { riskScore: Math.round(riskScore), riskLevel, dataPoints };",
+  "formula": "const engineRisk = { google: 85, bing: 75, yahoo: 80, duckduckgo: 10, startpage: 15, brave: 25 }; const baseRisk = engineRisk[inputs.currentEngine] || 50; const searchMultiplier = Math.min(inputs.dailySearches / 20, 2); const loginPenalty = inputs.loggedIn && ['google', 'bing'].includes(inputs.currentEngine) ? 15: 0; const typeMultiplier = { general: 0.8, mixed: 1.0, personal: 1.3, professional: 0.9 }[inputs.searchTypes]; const incognitoBonus = { never: 0, rarely: -5, sometimes: -10, often: -20, always: -30 }[inputs.incognitoUsage]; const adBlockBonus = inputs.adBlocker ? -15: 0; const riskScore = Math.max(0, Math.min(100, (baseRisk + loginPenalty + incognitoBonus + adBlockBonus) * searchMultiplier * typeMultiplier)); const riskLevel = riskScore >= 70 ? 'High': riskScore >= 40 ? 'Medium': riskScore >= 20 ? 'Low': 'Minimal'; const dataPoints = Math.round(inputs.dailySearches * 365 * (riskScore / 100) * 3); return { riskScore: Math.round(riskScore), riskLevel, dataPoints };",
   "educational": {
     "methodology": "This calculator evaluates your search privacy risk based on your chosen search engine's data collection practices, search frequency, account usage, and protective measures. Private search engines like DuckDuckGo and Startpage significantly reduce tracking compared to Google or Bing.",
     "tips": [
       "Switch to DuckDuckGo or Startpage for anonymous searching without sacrificing quality",
-      "Use Incognito Browser which defaults to private search engines and blocks trackers",
+      "Use a privacy-focused browser which defaults to private search engines and blocks trackers",
       "Sign out of Google/Microsoft accounts when searching to reduce profile building",
       "Use private browsing mode for sensitive searches, even with private search engines",
       "Consider different search engines for different purposes - DuckDuckGo for privacy, Google for local businesses"
@@ -199,10 +199,15 @@
     }
   ],
   "editorial": {
-    "status": "draft",
-    "reviewedAt": null,
-    "reviewedBy": null,
-    "notes": null
+    "status": "published",
+    "reviewedAt": "2026-05-18T23:39:59.780Z",
+    "reviewedBy": "Darkpool David",
+    "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },
-  "author": null
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/resources/authors/darkpool-david/"
+  }
 }

@@ -39,6 +39,54 @@ export function generateMetadata({ title, description, path, type = 'article', n
   };
 }
 
+/**
+ * Article JSON-LD with author attribution.
+ *
+ * Emit this on every editorially-promoted content page so Google can
+ * resolve the byline to a Person entity (the author profile page at
+ * /authors/<slug>) — that's the link Google's quality classifiers
+ * follow to verify authorship.
+ *
+ * Returns null if the page has no author block (draft / unattributed).
+ */
+export function generateArticleSchema(opts: {
+  headline: string;
+  description: string;
+  url: string;
+  datePublished?: string;
+  dateModified?: string;
+  author: {
+    name: string;
+    profileUrl?: string;
+    bio?: string;
+    credentials?: string;
+  } | null | undefined;
+}) {
+  if (!opts.author || !opts.author.name) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: opts.headline,
+    description: opts.description,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': opts.url },
+    url: opts.url,
+    ...(opts.datePublished ? { datePublished: opts.datePublished } : {}),
+    ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
+    author: {
+      '@type': 'Person',
+      name: opts.author.name,
+      ...(opts.author.profileUrl ? { url: opts.author.profileUrl } : {}),
+      ...(opts.author.bio ? { description: opts.author.bio } : {}),
+      ...(opts.author.credentials ? { jobTitle: opts.author.credentials } : {}),
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Incognito Browser',
+      url: 'https://incognitobrowser.io',
+    },
+  };
+}
+
 export interface FAQItem {
   question: string;
   answer: string;
