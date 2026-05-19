@@ -81,12 +81,19 @@ for (const sub of SUBDIRS) {
       skipped++;
       continue;
     }
+    // Preserve drafts. promote-all is for byline/profile restamps + bulk
+    // publish of new content — it must NOT override files that an editor
+    // (or the demote-overlap-duplicates script) intentionally set back to
+    // 'draft'. Without this guard, the F4 doorway demotion gets reverted
+    // every time we re-stamp the author block.
+    const wasDraft = json.editorial?.status === 'draft';
     json.editorial = {
-      status: 'published',
-      reviewedAt: now,
-      reviewedBy: author.name,
-      notes:
-        'Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline.',
+      status: wasDraft ? 'draft' : 'published',
+      reviewedAt: wasDraft ? json.editorial?.reviewedAt || now : now,
+      reviewedBy: wasDraft ? json.editorial?.reviewedBy || author.name : author.name,
+      notes: wasDraft
+        ? json.editorial?.notes || null
+        : 'Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline.',
     };
     // Always restamp author + editor so re-runs pick up profile updates
     // (e.g., adding LinkedIn to the editor's sameAs).
