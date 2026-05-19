@@ -46,7 +46,7 @@ export function RelatedContent({ links, nicheHub }: { links: RelatedLink[]; nich
             href={nicheHub.href}
             className="text-sm text-[#B8B8D4] hover:text-white transition-colors"
           >
-            View all {nicheHub.name} resources &rarr;
+            {`View all ${nicheHub.name} resources →`}
           </Link>
         </div>
       )}

@@ -74,7 +74,7 @@ export default function RootLayout({
                 ))}
               </nav>
               <a
-                href="https://incognitobrowser.io"
+                href="https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser&hl=en_US"
                 rel="noopener"
                 /*
                  * At narrow viewports the text wraps to two lines ("DOWNLOAD" /
@@ -122,8 +122,8 @@ export default function RootLayout({
               <div>
                 <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Product</h3>
                 <ul className="space-y-2 text-sm text-[#B8B8D4]">
-                  <li><a href="https://incognitobrowser.io" rel="noopener" className="hover:text-white transition-colors">Download</a></li>
-                  <li><a href="https://incognitobrowser.io/blog" rel="noopener" className="hover:text-white transition-colors">Blog</a></li>
+                  <li><a href="https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser&hl=en_US" rel="noopener" className="hover:text-white transition-colors">Download</a></li>
+                  <li><a href="https://incognitobrowser.io/news/" rel="noopener" className="hover:text-white transition-colors">Blog</a></li>
                 </ul>
               </div>
               <div className="col-span-2">
