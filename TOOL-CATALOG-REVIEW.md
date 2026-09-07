@@ -150,10 +150,10 @@ The split isn't "basic vs advanced." It's **what a webpage can do vs what only t
 | Uniqueness | 2 | Heuristic-only. VirusTotal / URLVoid do real reputation lookups |
 | Quality | 3 | 420 LOC of heuristics. No reputation data, no live fetch, no screenshot |
 | Conversion | 3 | "This URL looks suspicious" → "Incognito Browser warns you before you click" |
-| Pro extension | 5 | **Real-time link scanner**: check every link before navigation, using Safe Browsing API + our heuristics + reputation feed |
+| Pro extension | 4 | **Real-time link scanner**: run the structural heuristics on every link before navigation, in-browser, no network call |
 
-**Verdict:** ⚠️ **KEEP + UPGRADE.** Free version needs a real reputation lookup (Google Safe Browsing Lookup API is free for non-commercial; or PhishTank feed) to be credible.
-**Free:** heuristics + Safe Browsing lookup.
+**Verdict:** ⚠️ **KEEP, heuristics-only.** A reputation lookup (Safe Browsing / PhishTank) would make it far more credible, but that's an external dep and is ruled out. Instead: deepen the heuristics we own — homograph/confusable-character detection, brand-name-in-subdomain patterns (`paypal.com.evil.tld`), URL-shortener unwrapping via our own scanner, and a clear "this checks structure, not reputation" disclaimer so it's honest about what it can and can't tell you.
+**Free:** structural heuristics, clearly scoped.
 **Pro:** in-browser pre-navigation scanner.
 
 ---
@@ -172,9 +172,9 @@ The split isn't "basic vs advanced." It's **what a webpage can do vs what only t
 | Conversion | 2 | Weak link to browser unless browser has a password manager |
 | Pro extension | 4 | **Password vault audit**: audit saved browser passwords for weakness / reuse / breach-exposure |
 
-**Verdict:** ⚠️ **KEEP + ADD BREACH CHECK.** Add HaveIBeenPwned range API (k-anonymity, no password leaves the browser). That's the one feature that separates it from the 500 others.
-**Free:** strength + breach check.
-**Pro:** vault audit (requires the browser's password manager).
+**Verdict:** ⚠️ **KEEP + MERGE with password-generator.** A breach check (HIBP) would be the differentiator, but it's an external dep and is ruled out. Without it this stays commodity — so combine it with the generator into one "Password Tool" page rather than maintaining two thin ones. Ship a larger in-repo common-password list (top 100k, not top 10k) to at least make the "is this password common" check stronger than the incumbents'.
+**Free:** strength + generator, one page.
+**Pro:** none — no password manager on the roadmap.
 
 ---
 
@@ -224,15 +224,15 @@ The split isn't "basic vs advanced." It's **what a webpage can do vs what only t
 
 | Lens | Score | Note |
 |---|---|---|
-| SEO | 2 | "what is my user agent" has some demand but it's a dev query |
-| Brand fit | 2 | Tangential |
-| Article synergy | 2 | Only fits fingerprinting articles, and browser-privacy already covers that |
-| Uniqueness | 1 | Fully commodity |
-| Quality | 3 | 288 LOC, fine |
-| Conversion | 1 | None |
-| Pro extension | 2 | UA spoofing is a browser setting, not a tool |
+| SEO | 3 | "what is my user agent" is a real, steady query from security-aware users diagnosing what their browser leaks |
+| Brand fit | 4 | The UA string is the first thing every site reads about you. A privacy browser that randomizes or minimizes it has a direct story here |
+| Article synergy | 3 | Fingerprinting, gaming-privacy (where it lives now), workplace-privacy (what your employer's proxy sees), browser-extensions |
+| Uniqueness | 2 | Many exist, but most just echo the string. Ours flags identifying bits + uniqueness — that's the useful part |
+| Quality | 3 | 288 LOC, fine. Could add Client Hints (`Sec-CH-UA-*`) which are replacing UA strings in Chromium and are less understood |
+| Conversion | 3 | "Your UA reveals OS + exact version + device class" → "Incognito Browser sends a minimal UA" (if the browser does this) |
+| Pro extension | 4 | **UA Randomizer / Minimizer**: per-site UA policy, rotate on schedule, show what each site received |
 
-**Verdict:** ❌ **CUT.** Fold the useful part (UA uniqueness score) into browser-privacy as one more check. Retire the standalone.
+**Verdict:** ✅ **KEEP.** Add Client Hints detection (the thing replacing UA strings — most tools miss it). Keep as standalone: it ranks for a distinct query and has a distinct Pro path.
 
 ---
 
@@ -256,19 +256,19 @@ The split isn't "basic vs advanced." It's **what a webpage can do vs what only t
 
 ### 12. hash-generator (Hash Generator) — 1 page
 
-**What it does:** SHA-1/256/384/512 + HMAC of text or files.
+**What it does:** SHA-1/256/384/512 + HMAC of text or files, client-side via Web Crypto.
 
 | Lens | Score | Note |
 |---|---|---|
-| SEO | 2 | "sha256 generator" — dev demand only |
-| Brand fit | 1 | Not a consumer privacy tool at all |
-| Article synergy | 1 | Only fits the crypto-privacy niche |
-| Uniqueness | 1 | Hundreds exist |
-| Quality | 4 | 281 LOC, correct |
-| Conversion | 1 | None |
-| Pro extension | 1 | None |
+| SEO | 3 | "sha256 checksum" / "verify file hash" / "sha256 generator" — steady demand from security-aware users; the "verify download" long-tail is underserved by tools that are actually client-side |
+| Brand fit | 4 | Integrity verification is a core security practice for exactly the audience a privacy browser attracts. Two direct on-brand uses: (a) verifying the Incognito Browser APK download against a published SHA-256, (b) the Web3/crypto audience the brand is courting uses hashes daily |
+| Article synergy | 4 | crypto-privacy, data-breach (hashed-credential explanations), encrypted-messaging (integrity), malware-protection (verifying downloads), tor-privacy (verifying Tor Browser signatures) |
+| Uniqueness | 3 | Many exist, but most are server-side (your file goes to their server). Ours is Web-Crypto client-only — the file never leaves the device. That's the differentiator for a privacy brand and should be the headline |
+| Quality | 4 | 281 LOC, correct, handles files up to 50 MB, HMAC mode |
+| Conversion | 3 | "Verify your Incognito Browser download" CTA on the download page → hash tool → trust reinforcement. Also: HMAC is the same primitive our own scanner API uses for signed challenges, which can be explained inline as proof of engineering seriousness |
+| Pro extension | 3 | **Download Verifier**: auto-hash every downloaded file and compare against a known-good list (browser-published hashes for its own updates, plus community hash databases) |
 
-**Verdict:** ❌ **CUT.** Wrong audience. A crypto-privacy article can link to an external hash tool. Keep the code (it's small and correct) but retire the page.
+**Verdict:** ✅ **KEEP + REPOSITION.** The page should lead with "client-side, nothing uploaded" and add a "Verify your Incognito Browser download" section with the current APK hash. Expand to 2–3 more niches (malware-protection, tor-privacy, data-breach).
 
 ---
 
@@ -282,12 +282,12 @@ The split isn't "basic vs advanced." It's **what a webpage can do vs what only t
 | url-analyzer | 4 | 4 | 4 | 2 | 3 | 3 | 5 | **25** | ⚠️ Keep + upgrade |
 | permission-checker | 2 | 4 | 4 | 3 | 3 | 3 | 5 | **24** | ⚠️ Keep + deepen |
 | metadata-viewer | 3 | 3 | 4 | 3 | 4 | 2 | 4 | **23** | ✅ Keep |
-| password-strength | 4 | 3 | 4 | 1 | 3 | 2 | 4 | **21** | ⚠️ Merge + breach check |
+| password-strength | 4 | 3 | 4 | 1 | 3 | 2 | 1 | **18** | ⚠️ Merge with generator |
 | text-encryption | 2 | 3 | 3 | 2 | 4 | 2 | 4 | **20** | ⚠️ Keep as niche |
+| hash-generator | 3 | 4 | 4 | 3 | 4 | 3 | 3 | **24** | ✅ Keep + reposition |
+| useragent-analyzer | 3 | 4 | 3 | 2 | 3 | 3 | 4 | **22** | ✅ Keep + Client Hints |
 | password-generator | 4 | 2 | 3 | 1 | 4 | 1 | 3 | **18** | ⚠️ Merge |
 | privacy-quiz | 2 | 3 | 3 | 1 | 3 | 2 | 2 | **16** | ⚠️ Consolidate 9→3 |
-| useragent-analyzer | 2 | 2 | 2 | 1 | 3 | 1 | 2 | **13** | ❌ Cut (fold in) |
-| hash-generator | 2 | 1 | 1 | 1 | 4 | 1 | 1 | **11** | ❌ Cut |
 
 ---
 
@@ -301,28 +301,34 @@ Everything below stays genuinely useful as a one-shot. No crippling.
 |---|---|---|
 | **Browser Privacy Audit** | Full fingerprint audit, one-shot | "See how Incognito Browser scores on the same test" side-by-side |
 | **Cookie Tracker Scanner** | Scan one URL at a time | "Incognito Browser shows this for every site you visit, live" |
-| **What's My IP + Leak Test** | IP + WebRTC + DNS leak, self-hosted | "Incognito Browser monitors this continuously and alerts on leaks" |
-| **URL Safety Checker** | Heuristics + Safe Browsing lookup | "Incognito Browser checks every link before you click" |
+| **What's My IP + Leak Test** ⭐ | IP + WebRTC + DNS leak, self-hosted (no ipify/ipapi) | "Incognito Browser's built-in VPN closes these leaks" — **the primary funnel to the VPN feature** |
+| **URL Safety Checker** | Heuristics only (typosquat, punycode, suspicious TLDs, IP-in-URL). No reputation API | "Incognito Browser checks every link before you click" |
 | **Permission Checker** | Enhanced one-shot with per-permission explanations | "Incognito Browser audits every site's permissions" |
 | **Image Metadata Stripper** | Full EXIF view + strip, client-only | "Incognito Browser strips this automatically on every upload" |
-| **Password Tool** (merged) | Strength + breach check + generator | "Incognito Browser audits your saved passwords" (once vault exists) |
-| **Text Encryption** | Full encrypt/decrypt | "Incognito Browser has an encrypted notepad built in" |
+| **Password Tool** (merged) | Strength (entropy + pattern + common-list) + generator. No breach lookup | Generic download CTA until the browser has a vault |
+| **Hash Generator** | SHA-1/256/384/512 + HMAC, client-only, files up to 50 MB | "Verify your Incognito Browser download" — publish the APK hash on the download page |
+| **User Agent Analyzer** | UA parse + identifying-bits flags + Client Hints | "Incognito Browser sends a minimal UA" (if/when the browser does this) |
+| **Text Encryption** | Full encrypt/decrypt | "Incognito Browser has an encrypted notepad built in" (if/when shipped) |
 | **Privacy Quiz** (3 versions) | Full quiz | "Download Incognito Browser to fix the gaps" |
 
 ### PRO (in the Incognito Browser app)
 
 These are the "continuous" versions. Each maps to a free tool so the upgrade story is coherent.
 
-| Pro feature | Extends | Why only the browser can do it |
-|---|---|---|
-| **Fingerprint Watch** | browser-privacy | Needs to observe every site's probes across sessions |
-| **Tracker Live** | cookie-analyzer | Needs real-time per-tab cookie/script interception |
-| **Leak Monitor** | whats-my-ip | Needs to run background checks on a schedule |
-| **Link Guard** | url-analyzer | Needs pre-navigation hook on every click |
-| **Permission Audit** | permission-checker | Needs cross-site permission storage access |
-| **Auto-Strip Uploads** | metadata-viewer | Needs to intercept file uploads before they leave |
-| **Vault Audit** | password tool | Needs the browser's password manager |
-| **Encrypted Notes** | text-encryption | Needs persistent local encrypted storage + sync |
+**Current browser roadmap: VPN is the active build.** That makes **Leak Monitor** the Pro feature to lead with — it's the one the free What's My IP tool funnels into, and it ships alongside the VPN. Everything else below is a candidate for later; don't promise it on the free pages until it exists.
+
+| Pro feature | Extends | Why only the browser can do it | Status |
+|---|---|---|---|
+| **Leak Monitor** ⭐ | whats-my-ip | Background checks that the VPN tunnel is holding; alert on IP/DNS/WebRTC leak | **Ships with VPN** — lead with this |
+| **Fingerprint Watch** | browser-privacy | Observe every site's probes across sessions | Candidate |
+| **Tracker Live** | cookie-analyzer | Real-time per-tab cookie/script interception | Candidate |
+| **Link Guard** | url-analyzer | Pre-navigation hook on every click | Candidate |
+| **Permission Audit** | permission-checker | Cross-site permission storage access | Candidate |
+| **Auto-Strip Uploads** | metadata-viewer | Intercept file uploads before they leave | Candidate |
+| **Download Verifier** | hash-generator | Auto-hash downloads, compare to the browser's own published update hashes | Candidate — small, and tightly on-brand |
+| **UA Minimizer** | useragent-analyzer | Per-site UA policy | Candidate |
+| **Encrypted Notes** | text-encryption | Persistent local encrypted storage | Candidate |
+| ~~Vault Audit~~ | password tool | Would need a password manager | **Not on roadmap** — removed |
 
 ### The upgrade path visualized
 
@@ -348,84 +354,99 @@ Each free tool page gets a consistent "See this in Incognito Browser →" panel 
 
 ## Part 5 — Cut list
 
+No engine gets cut. Two consolidations only:
+
 | Tool | Action | Reason |
 |---|---|---|
-| **hash-generator** | Retire page, keep code | Dev audience, zero brand fit, zero conversion |
-| **useragent-analyzer** | Fold into browser-privacy as one check, retire standalone | Redundant with the fingerprint audit |
 | **privacy-quiz** (6 of 9) | Draft the 6 weakest niche variants, keep 3 | Commodity; 9 copies of one quiz engine reads as thin |
 | **password-generator** | Merge into password-strength → "Password Tool" | Two commodity pages become one stronger one |
 
-**Net effect:** 46 tool pages → ~36. Fewer, stronger pages. Aligns with the doorway-pattern fix (R2) — fewer near-duplicate tool shells.
+**Net effect:** 46 tool pages → ~39. Aligns with the doorway-pattern fix (R2) — fewer near-duplicate tool shells, no loss of capability.
 
 ---
 
 ## Part 6 — Build list (new tools worth adding)
 
-Ranked by (SEO demand × brand fit × Pro extension). Each has a free version that's a strong search-capture page AND a pro version that justifies the install.
+**Constraint: no external dependencies.** Every tool below runs entirely client-side or against our own Vercel API. No third-party data APIs (no HIBP, no Safe Browsing, no Dehashed, no LLM calls at scan time). This rules out some high-demand tools — they're listed at the bottom so the reasoning is visible.
+
+Ranked by (SEO demand × brand fit × Pro extension × VPN-adjacency).
 
 ### Tier 1 — build these first
 
-**1. Email Breach Checker**
-- Free: enter email → HaveIBeenPwned API → list of breaches, what leaked, when
-- Pro: monitor all your emails, alert on new breaches
-- SEO: "has my email been hacked" / "was I in a data breach" — very high demand, emotionally charged
-- Brand fit: 5. Data-breach niche is already a hub.
-- Note: HIBP API requires a key ($3.50/mo). Trivial cost.
+**1. DNS Leak Test** (fold into What's My IP) ⭐ **VPN-adjacent**
+- Free: fires DNS lookups against our own resolver-detection endpoints, reports which DNS servers answered → "your VPN is on but DNS is going to your ISP"
+- Pro: Leak Monitor runs this continuously behind the VPN
+- SEO: "dns leak test" — strong, VPN-buyer intent
+- Brand fit: 5. This is the single most relevant tool to the VPN launch.
+- Deps: none. We host the detection endpoints on Vercel.
 
-**2. Data Broker Opt-Out Generator**
-- Free: enter name + state → generates opt-out request letters for the top 20 data brokers (Spokeo, Whitepages, BeenVerified, etc.), pre-filled per each broker's required format
-- Pro: auto-submits and tracks status, re-submits when brokers re-list you
-- SEO: "remove my info from data brokers" / "opt out of spokeo" — high intent, underserved by good free tools (DeleteMe / Incogni are paid)
-- Brand fit: 5. This is the killer app for a privacy brand — it directly reduces the user's exposure.
-- Uniqueness: 5. Almost nobody does this well for free.
-
-**3. Ad Blocker / Tracker Blocker Test**
-- Free: loads a set of known tracker beacons, reports which got through → "your blocker missed 14 of 50"
+**2. Ad Blocker / Tracker Blocker Test** ⭐
+- Free: page loads a set of known tracker beacon URLs (from a list we maintain in-repo — EasyList-derived, no runtime fetch of the list), reports which got through → "your blocker missed 14 of 50"
 - Pro: continuous — shows the block-rate on every page
 - SEO: "test my ad blocker" / "is my ad blocker working" — solid demand
 - Brand fit: 5. If Incognito Browser blocks trackers, this is the proof.
+- Deps: none.
+
+**3. Data Broker Opt-Out Generator**
+- Free: user enters name / city / state → tool generates pre-filled opt-out request letters for the top ~20 US data brokers (Spokeo, Whitepages, BeenVerified, Radaris, MyLife, etc.), one per broker, in each broker's required format, with the correct mailing/email address and the right legal citation (CCPA §1798.120, or the broker's own opt-out procedure). User copies/downloads and sends them.
+- Pro: none for now — auto-submission would require integrating with each broker, which is an external dep.
+- SEO: "remove my info from data brokers" / "opt out of spokeo" / "delete me from whitepages" — high intent; DeleteMe and Incogni charge $100+/yr, so a good free generator is genuinely differentiated
+- Brand fit: 5. Directly reduces the user's exposure; the most tangible "we're on your side" tool in the catalog.
+- Deps: none. The broker list + templates live in a JSON file we maintain. Nothing leaves the browser — the letters are generated client-side. **This is a build-time content project (broker research + templates) plus a small React form, not an API integration.**
 
 **4. Website Privacy Grade**
-- Free: enter any URL → grade A–F on trackers, cookies, third-party scripts, privacy policy presence, HTTPS, security headers. Essentially cookie-analyzer + security-headers scan + policy detection, unified.
+- Free: enter any URL → grade A–F on trackers, cookies, third-party scripts, HTTPS, security headers. Essentially cookie-analyzer + security-headers scan, unified. Runs through our existing hardened Vercel scanner.
 - Pro: shows the grade in the address bar for every site
-- SEO: "is [site] safe" / "[site] privacy" — long-tail goldmine, one page per popular site could be a pSEO expansion in itself
-- Uniqueness: 4. Blacklight (The Markup) does this well but it's a journalism project, not a product.
+- SEO: "is [site] safe" / "[site] privacy" — long-tail goldmine; one page per popular site is a pSEO expansion vector
+- Deps: none beyond our existing scanner API.
 
 ### Tier 2 — strong but secondary
 
-**5. DNS Leak Test** — fold into whats-my-ip rather than standalone.
+**5. Referrer Leak Checker** — shows exactly what `Referer` / `Origin` headers each site receives from you, with a live demo. Client-side. Fits the browser-privacy cluster.
 
-**6. Privacy Policy Grader** — paste a privacy policy URL → readability score, red-flag clauses (data sale, arbitration, indefinite retention), summary. Pro: auto-summarize every site's policy in a sidebar. Uses Claude API. Cost per scan is non-trivial; rate-limit hard.
+**6. Font / Canvas Fingerprint Deep Dive** — already partially in browser-privacy; make it its own pSEO page for the fingerprinting niche with the canvas image rendered visibly so the user sees what's being hashed.
 
-**7. Phone Number Exposure Check** — is your phone in public records / breach dumps. Adjacent to email breach checker. Needs a data source (HIBP doesn't do phones; would need Dehashed or similar).
+**7. WebRTC Deep Dive** — the WebRTC leak check exists inside What's My IP; split into a dedicated page with an explainer of ICE candidates and per-browser mitigation. Strong VPN-adjacent query ("webrtc leak").
 
-**8. Password Manager Exporter Audit** — upload your 1Password / LastPass / Chrome export → audit for reuse / weakness / breach, client-side only. Bridges to the Pro vault audit.
+### Blocked by the no-external-deps constraint
 
-### Tier 3 — nice to have
+Listed so the reasoning is on record. Revisit if the constraint changes.
 
-**9. Referrer Leak Checker** — shows what referrer info each site gets from you
-**10. Font / Canvas Fingerprint Deep Dive** — already partially in browser-privacy; make it its own pSEO page for the fingerprinting niche
-**11. Cookie Consent Banner Grader** — does this site's cookie banner actually respect your choice? (Requires headless fetch + interaction; complex.)
-**12. Social Media Privacy Settings Checker** — you're logged into X/Facebook/Instagram in another tab; check your visible-to-public settings. (Needs OAuth; heavy.)
+- **Email Breach Checker** — needs HaveIBeenPwned's API. Very high demand ("was I in a data breach"), but no way to answer it without a breach corpus.
+- **Password breach check** (the upgrade to Password Tool) — same HIBP dependency.
+- **URL reputation lookup** (the upgrade to URL Safety Checker) — needs Google Safe Browsing or PhishTank.
+- **Phone Number Exposure Check** — needs Dehashed or equivalent.
+- **Privacy Policy Grader** — needs an LLM call at scan time.
+- **Cookie Consent Banner Grader** — needs headless browser + interaction; heavy infra.
+- **Social Media Privacy Settings Checker** — needs OAuth into each platform.
 
 ---
 
 ## Part 7 — Recommended sequence
 
-**Phase 1 (pre-launch, this week):** Cut list + merge. 46 → 36 pages. Add "See this in Incognito Browser →" panel to every free tool. Ship.
+**Phase 1 (pre-launch):** Consolidate (quiz 9→3, merge password tools). 46 → 39 pages. Reposition hash-generator around download verification. Add the "See this in Incognito Browser →" panel to every free tool — but **only the VPN/Leak Monitor panel makes a concrete promise**; the rest use a generic download CTA until their Pro feature ships.
 
-**Phase 2 (first 30 days):** Upgrade the three tools that need it — self-host IP lookup, add HIBP breach check to password tool, add Safe Browsing lookup to URL checker. These are 1–2 day tasks each.
+**Phase 2 (first 30 days — VPN-aligned):** Self-host the IP lookup (removes ipify/ipapi — a privacy tool shouldn't leak user IPs to third parties). Add DNS leak test to What's My IP. Add Client Hints to UA analyzer. These are 1–2 day tasks and make the free tool that funnels into the VPN as strong as possible before the VPN launches.
 
-**Phase 3 (30–90 days):** Build Tier 1 new tools in order: Email Breach Checker → Data Broker Opt-Out → Ad Blocker Test → Website Privacy Grade. Each is a 3–5 day build plus pSEO content wrapping.
+**Phase 3 (30–90 days):** Build Tier 1 in order: Ad Blocker Test → Data Broker Opt-Out → Website Privacy Grade. Each is 3–5 days of build plus pSEO content wrapping. Data Broker Opt-Out is the largest (broker research is the bulk of the work).
 
-**Phase 4 (browser team, parallel):** Spec the 8 Pro features against the free tools. The marketing site's upgrade panels should reflect what's actually shipped in the browser, so this needs coordination.
+**Phase 4 (browser team, parallel):** Ship Leak Monitor with the VPN. Then pick the next Pro feature from the candidate list — Download Verifier is the smallest and most on-brand follow-up.
 
 ---
 
-## Part 8 — Open decisions for you
+## Part 8 — Decisions
 
-1. **Does Incognito Browser have (or plan) a password manager?** Changes whether Password Tool → Vault Audit is a real Pro path or vaporware.
-2. **Which of the 8 Pro features exist in the browser today?** The upgrade panels on the free tools must not promise things that don't exist.
-3. **HIBP API key ($3.50/mo) + Google Safe Browsing API** — OK to add these external dependencies? Both are privacy-respecting (HIBP uses k-anonymity; Safe Browsing lookup is hashed prefixes).
-4. **Data Broker Opt-Out** is the biggest build and the biggest opportunity. Green-light for Phase 3?
-5. **Cut hash-generator + useragent-analyzer now, or wait for Search Console data?** My recommendation: cut now — they were never going to rank and they dilute the catalog.
+### Settled
+
+| Decision | Answer | Effect on this doc |
+|---|---|---|
+| Password manager in the browser? | **No, not on roadmap** | Vault Audit removed from Pro list. Password Tool keeps a generic download CTA. |
+| Current browser build focus? | **VPN** | Leak Monitor promoted to the lead Pro feature. What's My IP + DNS leak test become the primary free funnel. Phase 2 re-sequenced around VPN launch. |
+| External dependencies? | **None** | HIBP, Safe Browsing, Dehashed, LLM-at-scan-time all ruled out. Email Breach Checker and two tool upgrades moved to the "blocked" list. |
+| Cut hash-generator / useragent-analyzer? | **No** | Both kept. Hash-generator repositioned around download verification + the Web3 audience. UA analyzer gets Client Hints. |
+
+### Still open
+
+1. **Which Pro features beyond Leak Monitor are realistically on the 6-month roadmap?** Until one is confirmed, its free-tool upgrade panel stays as a generic "Download Incognito Browser" CTA — no specific promises.
+2. **Data Broker Opt-Out — proceed?** This is a content-research project (compiling ~20 brokers' opt-out procedures, addresses, and legal citations into a JSON file) plus a small form. No API integration, no external deps, nothing leaves the browser. It's the biggest differentiator available under the current constraints. Estimate: 3–4 days research + 1–2 days build.
+3. **Publish the APK SHA-256 on the download page?** Needed for the hash-generator repositioning to work. Requires a hash to be generated per release and posted — a release-process change on the browser side, not a website change.
