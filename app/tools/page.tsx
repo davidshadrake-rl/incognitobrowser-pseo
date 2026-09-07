@@ -21,7 +21,7 @@ interface ToolMeta {
 }
 
 // The 11 unique tool engines with their display info
-const FEATURED_TOOLS: { engine: string; icon: string; title: string; description: string; badge: string }[] = [
+const FEATURED_TOOLS: { engine: string; icon: string; title: string; description: string; badge: string; processing?: 'client' | 'server' }[] = [
   {
     engine: 'password-strength',
     icon: '🔐',
@@ -49,6 +49,7 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
     title: 'Cookie & Tracker Scanner',
     description: 'Scan any website URL for tracking cookies, analytics scripts, and third-party trackers. Identifies Facebook Pixel, Google Analytics, TikTok, and 30+ more.',
     badge: 'scanner',
+    processing: 'server',
   },
   {
     engine: 'url-analyzer',
@@ -132,7 +133,10 @@ export default function ToolsIndex() {
         Interactive tools to analyze, test, and improve your online privacy.
       </p>
       <p className="text-sm text-[#B8B8D4]/60 mb-8">
-        All tools run 100% in your browser — no data is sent to any server.
+        Most tools run entirely in your browser — no data leaves your device. The
+        cookie &amp; tracker scanner is the exception: it fetches the URL you enter
+        through our server (rate-limited, never logged) so it can read what a site
+        sets before you visit. Server-assisted tools are labeled.
       </p>
 
       {items.length === 0 && (
@@ -166,7 +170,7 @@ export default function ToolsIndex() {
                 <span className="text-green-400/60">●</span>
                 <span>Free</span>
                 <span className="mx-1">·</span>
-                <span>Client-side</span>
+                <span>{tool.processing === 'server' ? 'Server-assisted' : 'Client-side'}</span>
                 <span className="mx-1">·</span>
                 <span>No signup</span>
               </div>

@@ -12,6 +12,12 @@ interface ToolData {
   toolType: string;
   description: string;
   toolEngine?: string;
+  /**
+   * Where the work happens. Defaults to 'client'. The cookie/tracker
+   * scanner is 'server' — it fetches the target URL through our API,
+   * so claiming "client-side" on it would be a false privacy claim.
+   */
+  processing?: 'client' | 'server';
   inputs: Array<{
     id: string;
     label: string;
@@ -44,7 +50,11 @@ export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName:
             <div className="flex flex-wrap gap-2 mb-4">
               <span className="px-2 py-0.5 bg-white/10 rounded text-xs text-[#B8B8D4]">{data.toolType}</span>
               <span className="px-2 py-0.5 bg-green-500/10 rounded text-xs text-green-400">Free</span>
-              <span className="px-2 py-0.5 bg-blue-500/10 rounded text-xs text-blue-400">Client-side</span>
+              {data.processing === 'server' ? (
+                <span className="px-2 py-0.5 bg-amber-500/10 rounded text-xs text-amber-400" title="This tool sends your request to our server to fetch the target URL.">Server-assisted</span>
+              ) : (
+                <span className="px-2 py-0.5 bg-blue-500/10 rounded text-xs text-blue-400">Client-side</span>
+              )}
             </div>
             <p className="text-[#B8B8D4]">{data.description}</p>
           </header>
