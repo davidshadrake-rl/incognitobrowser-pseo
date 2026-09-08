@@ -204,7 +204,10 @@ test('cookie-analyzer: scans example.com and renders the result panel', async ({
   test.setTimeout(60_000);
   await page.goto(toolUrl('cookie-analyzer'));
   await page.locator('input[type="url"], input[type="text"]').first().fill('https://example.com');
-  await page.getByRole('button', { name: /^scan/i }).first().click();
+  // Exact name: the page also has a "Scan a URL" MODE TAB, which /^scan/i + .first()
+  // matched — clicking the already-active tab, so no scan ever ran. The old weak
+  // assertion hid this by matching static page copy.
+  await page.getByRole('button', { name: 'Scan', exact: true }).click();
   // PoW solve + API call + render — give it generous time.
   // Assert on RESULT-PANEL-ONLY text. The previous regex (/cookies|trackers|…/)
   // matched the page's static "How This Tool Works" copy, so this test passed
