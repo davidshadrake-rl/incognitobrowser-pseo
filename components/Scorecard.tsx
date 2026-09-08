@@ -71,7 +71,17 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
         <h3 className="text-sm font-semibold text-white">Share your result</h3>
         <span className="text-xs text-[#B8B8D4]/60">Drawn on your device. Nothing is uploaded.</span>
       </div>
-      <canvas ref={canvasRef} width={SCORECARD_W} height={SCORECARD_H} className="w-full h-auto rounded border border-white/10" aria-label={`Scorecard: ${full.title} ${full.figure}`} />
+      <div className="relative" style={{ aspectRatio: `${SCORECARD_W} / ${SCORECARD_H}` }}>
+        <canvas ref={canvasRef} width={SCORECARD_W} height={SCORECARD_H} className="absolute inset-0 w-full h-full rounded border border-white/10" aria-label={`Scorecard: ${full.title} ${full.figure}`} />
+        {/* The footer row ("domain · Check yours free") drawn on the canvas is a real link here — it can only be a picture once the PNG is shared or downloaded. */}
+        <a
+          href={full.url}
+          onClick={() => track('share_click', { tool: engine, niche, target: 'copy' })}
+          className="absolute inset-x-[4%] bottom-[4%] h-[12%] rounded"
+          aria-label={`Check your own ${full.title} result`}
+          title="Check yours free"
+        />
+      </div>
       <div className="flex flex-wrap gap-2 mt-3">
         <button type="button" onClick={share} className="btn-primary text-sm !px-4 !py-2">{state === 'busy' ? 'Preparing…' : canShareFiles ? 'Share image' : 'Share'}</button>
         <button type="button" onClick={() => download()} className="text-sm px-4 py-2 rounded-full border border-white/15 text-[#B8B8D4] hover:text-white hover:border-white/40">Download PNG</button>

@@ -74,18 +74,34 @@ export function drawScorecard(ctx: CanvasRenderingContext2D, spec: ScorecardSpec
   head.forEach((l, i) => ctx.fillText(l, 64, y + i * 40));
   y += head.length * 40 + 24;
 
-  // stats
+  // stats — each column shrinks its own font (and, failing that, truncates)
+  // so a long IP or location can never overlap the next column.
   if (spec.stats?.length) {
     const cols = Math.min(4, spec.stats.length);
     const colW = (W - 128) / cols;
+    const availW = colW - 16; // gutter between columns
+    const fitText = (text: string, weight: number, startSize: number, minSize: number): { text: string; size: number } => {
+      let size = startSize;
+      ctx.font = `${weight} ${size}px ${FONT}`;
+      while (size > minSize && ctx.measureText(text).width > availW) {
+        size -= 2;
+        ctx.font = `${weight} ${size}px ${FONT}`;
+      }
+      let out = text;
+      while (out.length > 1 && ctx.measureText(out).width > availW) out = out.slice(0, -1);
+      if (out !== text) out = out.replace(/.$/, '…');
+      return { text: out, size };
+    };
     spec.stats.slice(0, 4).forEach((s, i) => {
       const x = 64 + i * colW;
+      const value = fitText(s.value, 700, 34, 18);
       ctx.fillStyle = '#ffffff';
-      ctx.font = `700 34px ${FONT}`;
-      ctx.fillText(s.value, x, y);
+      ctx.font = `700 ${value.size}px ${FONT}`;
+      ctx.fillText(value.text, x, y);
+      const label = fitText(s.label.toUpperCase(), 400, 20, 12);
       ctx.fillStyle = '#B8B8D4';
-      ctx.font = `400 20px ${FONT}`;
-      ctx.fillText(s.label.toUpperCase(), x, y + 42);
+      ctx.font = `400 ${label.size}px ${FONT}`;
+      ctx.fillText(label.text, x, y + 42);
     });
   }
 
