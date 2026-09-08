@@ -43,9 +43,14 @@ function walk(dir, out = []) {
   return out;
 }
 
+// Structured slots where the brand IS the entity (comparison product rows,
+// comparison verdicts, calculator dropdown labels). These are legitimate
+// placements, not body-text injection — mirror of PRESERVE_PATH in the scrubber.
+const PRESERVE_PATH = /(^|\.)products\[\d+\]\.name$|(^|\.)verdict(\.|\[|$)|^intro$|(^|\.)options\[\d+\]\.label$/;
+
 function findMentions(value, jsonPath, hits) {
   if (typeof value === 'string') {
-    if (PATTERN.test(value)) {
+    if (PATTERN.test(value) && !PRESERVE_PATH.test(jsonPath)) {
       hits.push({ jsonPath, context: value.slice(0, 240) });
     }
   } else if (Array.isArray(value)) {

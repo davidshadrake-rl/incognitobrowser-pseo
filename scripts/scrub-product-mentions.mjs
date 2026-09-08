@@ -83,12 +83,24 @@ function scrubString(s) {
   return out;
 }
 
-function scrubValue(v) {
-  if (typeof v === 'string') return scrubString(v);
-  if (Array.isArray(v)) return v.map(scrubValue);
+/**
+ * Structured slots where the brand IS the entity, not promotional prose.
+ * Scrubbing these produced "a privacy-focused browser vs Brave vs Firefox"
+ * comparison tables and a browser dropdown you couldn't pick the product
+ * from. Never scrub them.
+ *   products[].name        — the product's own row in a comparison
+ *   verdict / intro        — comparison prose about the compared products
+ *   inputs[].options[].label — calculator dropdown labels
+ *   scores.* (keys)        — comparison score columns (keys are never scrubbed anyway)
+ */
+const PRESERVE_PATH = /(^|\.)products\[\d+\]\.name$|(^|\.)verdict(\.|\[|$)|^intro$|(^|\.)options\[\d+\]\.label$/;
+
+function scrubValue(v, jsonPath = '') {
+  if (typeof v === 'string') return PRESERVE_PATH.test(jsonPath) ? v : scrubString(v);
+  if (Array.isArray(v)) return v.map((x, i) => scrubValue(x, `${jsonPath}[${i}]`));
   if (v && typeof v === 'object') {
     const out = {};
-    for (const k of Object.keys(v)) out[k] = scrubValue(v[k]);
+    for (const k of Object.keys(v)) out[k] = scrubValue(v[k], jsonPath ? `${jsonPath}.${k}` : k);
     return out;
   }
   return v;
@@ -123,11 +135,14 @@ for (const sub of SUBDIRS) {
       // Count "Incognito Browser" mentions in string VALUES only.
       // Object keys (comparison-table vendor columns) are legitimate
       // and not counted as body-text injection.
-      const count = (function tally(v) {
-        if (typeof v === 'string') return (v.match(/Incognito\s+Browser/g) || []).length;
-        if (Array.isArray(v)) return v.reduce((s, x) => s + tally(x), 0);
+      // Same PRESERVE_PATH exemption as the scrubber: brand in a comparison's
+      // product row / verdict or a calculator dropdown is legitimate, not a
+      // body-text injection, and must not fail the promote gate.
+      const count = (function tally(v, p = '') {
+        if (typeof v === 'string') return PRESERVE_PATH.test(p) ? 0 : (v.match(/Incognito\s+Browser/g) || []).length;
+        if (Array.isArray(v)) return v.reduce((s, x, i) => s + tally(x, `${p}[${i}]`), 0);
         if (v && typeof v === 'object') {
-          return Object.values(v).reduce((s, x) => s + tally(x), 0);
+          return Object.entries(v).reduce((s, [k, x]) => s + tally(x, p ? `${p}.${k}` : k), 0);
         }
         return 0;
       })(json);
