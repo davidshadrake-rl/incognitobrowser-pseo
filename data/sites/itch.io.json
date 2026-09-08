@@ -1,0 +1,97 @@
+{
+  "domain": "itch.io",
+  "finalUrl": "https://itch.io/",
+  "title": "Download the latest indie games - itch.io",
+  "category": {
+    "category": "tech",
+    "label": "Tech & software",
+    "niche": "browser-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 87,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "itchio_token",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".itch.io",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "static.itch.io",
+      "img.itch.zone"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

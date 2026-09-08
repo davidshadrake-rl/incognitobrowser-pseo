@@ -1,0 +1,135 @@
+{
+  "domain": "alibaba.com",
+  "finalUrl": "https://www.alibaba.com/",
+  "title": "Alibaba.com: Manufacturers, Suppliers, Exporters & Importers from the world's largest online B2B marketplace",
+  "category": {
+    "category": "shopping",
+    "label": "Shopping & retail",
+    "niche": "online-shopping"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 72,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 24,
+        "detail": "3 tracking cookies"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 3 tracking cookies before consent, 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "JSESSIONID",
+        "name": "Java Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "Java server-side session cookie — standard functionality",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.alibaba.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "sc_g_cfg_f",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "alibaba.com",
+        "path": "/",
+        "maxAge": "7776000",
+        "expires": "Mon, 07 Dec 2026 02:34:17 GMT"
+      },
+      {
+        "cookieName": "cna",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".alibaba.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 26-Sep-2094 05:48:24 GMT"
+      },
+      {
+        "cookieName": "ug_se_c",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".alibaba.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Fri, 17-May-2058 04:20:56 GMT"
+      },
+      {
+        "cookieName": "ug_se_c_tag",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".alibaba.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 10-Sep-2026 02:34:17 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "s.alicdn.com",
+      "sc01.alicdn.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 3,
+      "analyticsCookies": 1,
+      "functionalCookies": 1,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

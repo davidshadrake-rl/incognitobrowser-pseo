@@ -1,0 +1,103 @@
+{
+  "domain": "store.steampowered.com",
+  "finalUrl": "https://store.steampowered.com/",
+  "title": "Welcome to Steam",
+  "category": {
+    "category": "gaming",
+    "label": "Gaming",
+    "niche": "gaming-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 83,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 tracking cookies before consent, 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "steamCountry",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "store.steampowered.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "browserid",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "store.steampowered.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:16 GMT"
+      },
+      {
+        "cookieName": "sessionid",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "store.steampowered.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "store.fastly.steamstatic.com",
+      "cdn.fastly.steamstatic.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 2,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

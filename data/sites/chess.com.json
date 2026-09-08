@@ -1,0 +1,175 @@
+{
+  "domain": "chess.com",
+  "finalUrl": "https://www.chess.com/",
+  "title": "Chess.com - Play Chess Online - Free Games",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 91,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 1 tracking cookie before consent, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "psid",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "lax",
+        "domain": "chess.com",
+        "path": "/",
+        "maxAge": "1800",
+        "expires": "Tue, 08 Sep 2026 03:04:36 GMT"
+      },
+      {
+        "cookieName": "ATTRIBUTION_V1",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "lax",
+        "domain": "chess.com",
+        "path": "/",
+        "maxAge": "2592000",
+        "expires": "Thu, 08 Oct 2026 02:34:36 GMT"
+      },
+      {
+        "cookieName": "me",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "strict",
+        "domain": "chess.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:36 GMT"
+      },
+      {
+        "cookieName": "BUCKETING_ID_V2",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "lax",
+        "domain": "chess.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:36 GMT"
+      },
+      {
+        "cookieName": "visitorid",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": "www.chess.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:36 GMT"
+      },
+      {
+        "cookieName": "BUCKETING_ID",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "lax",
+        "domain": ".chess.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "PHPSESSID",
+        "name": "PHP Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "PHP server-side session cookie — standard functionality",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": ".chess.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "chess.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:36 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "assets-configurator.chess.com",
+      "images.chesscomfiles.com",
+      "challenges.cloudflare.com",
+      "cdn.cookielaw.org"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 8,
+      "trackingCookies": 1,
+      "analyticsCookies": 3,
+      "functionalCookies": 2,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

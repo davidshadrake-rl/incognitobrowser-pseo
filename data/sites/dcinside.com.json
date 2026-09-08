@@ -1,0 +1,106 @@
+{
+  "domain": "dcinside.com",
+  "finalUrl": "https://www.dcinside.com/",
+  "title": "## CONNECTING HEARTS! 디시인사이드입니다. ##",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 84,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Taboola"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 ad tracker, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "PHPSESSID",
+        "name": "PHP Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "PHP server-side session cookie — standard functionality",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".dcinside.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Taboola",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Taboola content recommendation — tracks browsing for ad personalization"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "nstatic.dcinside.com",
+      "gall.dcinside.com",
+      "dccdn11.dcinside.co.kr",
+      "www.googletagmanager.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

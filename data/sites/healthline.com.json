@@ -1,0 +1,110 @@
+{
+  "domain": "healthline.com",
+  "finalUrl": "https://www.healthline.com/",
+  "title": "Healthline: Medical information and health advice you can trust.",
+  "category": {
+    "category": "health",
+    "label": "Health",
+    "niche": "healthcare-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 80,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Google DoubleClick, Amazon Ads"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 4,
+        "detail": "9 third-party domains"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 ad trackers, 9 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "blab",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": "healthline.com",
+        "path": "/",
+        "maxAge": "315360000",
+        "expires": "Fri, 05 Sep 2036 02:34:40 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "cdn.cookielaw.org",
+      "gtm-server.healthline.com",
+      "media.post.rvohealth.io",
+      "securepubads.g.doubleclick.net",
+      "rvo-cohesion.healthline.com",
+      "config.aps.amazon-adsystem.com",
+      "client.aps.amazon-adsystem.com",
+      "assets.healthline.com",
+      "b.scorecardresearch.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 9,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

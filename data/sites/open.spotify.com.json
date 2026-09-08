@@ -1,0 +1,138 @@
+{
+  "domain": "open.spotify.com",
+  "finalUrl": "https://open.spotify.com/",
+  "title": "Spotify – Web Player",
+  "category": {
+    "category": "streaming",
+    "label": "Streaming & entertainment",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 83,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 tracking cookies before consent, 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "sp_t",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "none",
+        "domain": ".spotify.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "sp_landing",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "none",
+        "domain": ".spotify.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 09 Sep 2026 02:34:11 GMT"
+      },
+      {
+        "cookieName": "sp_t",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".spotify.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": null
+      },
+      {
+        "cookieName": "sp_new",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".spotify.com",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": null
+      },
+      {
+        "cookieName": "sp_landing",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".spotify.com",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "www.google.com",
+      "open.spotifycdn.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 2,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,140 @@
+{
+  "domain": "pinterest.com",
+  "finalUrl": "https://www.pinterest.com/",
+  "title": "Pinterest",
+  "category": {
+    "category": "social",
+    "label": "Social networks",
+    "niche": "social-media-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 79,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Facebook Pixel, Amazon Ads"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 2 ad trackers, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "csrftoken",
+        "name": "CSRF Protection",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cross-site request forgery protection token",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "lax",
+        "domain": "www.pinterest.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "_pinterest_sess",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "none",
+        "domain": ".pinterest.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Fri, 03 Sep 2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "_auth",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".pinterest.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Fri, 03 Sep 2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "_routing_id",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.pinterest.com",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Facebook Pixel",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook/Meta Pixel — tracks conversions and builds ad audiences across the web"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "s.pinimg.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

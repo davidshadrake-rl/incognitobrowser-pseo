@@ -7,6 +7,7 @@ import {
   isPublished,
   type EditableContent,
 } from '@/lib/content';
+import { getAllSites, isSitePublished } from '@/lib/sites';
 import { getAllNiches, getAllContentTypes } from '@/lib/taxonomy';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 
@@ -88,6 +89,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.5,
     });
+  }
+
+  // Website Privacy Report Cards
+  entries.push({ url: `${SITE_URL}/site`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 });
+  entries.push({ url: `${SITE_URL}/site/methodology`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 });
+  for (const s of getAllSites()) {
+    if (!isSitePublished(s)) continue;
+    entries.push({ url: `${SITE_URL}/site/${s.domain}`, lastModified: new Date(s.scannedAt), changeFrequency: 'monthly', priority: 0.6 });
   }
 
   return entries;

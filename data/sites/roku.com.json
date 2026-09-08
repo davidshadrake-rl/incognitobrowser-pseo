@@ -1,0 +1,216 @@
+{
+  "domain": "roku.com",
+  "finalUrl": "https://www.roku.com/",
+  "title": "Roku",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 77,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 2 tracking cookies before consent, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "_csrf",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.roku.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "ks_v_www-ks",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": ".www.roku.com",
+        "path": "/",
+        "maxAge": "1800",
+        "expires": "Tue, 08 Sep 2026 03:04:15 GMT"
+      },
+      {
+        "cookieName": "ks.locale",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".roku.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "amoeba",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".roku.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "amoeba_acct",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".roku.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "amoeba",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".roku.com",
+        "path": "/",
+        "maxAge": "3600",
+        "expires": "Tue, 08 Sep 2026 03:34:15 GMT"
+      },
+      {
+        "cookieName": "_uc",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".roku.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:15 GMT"
+      },
+      {
+        "cookieName": "ks.privacy.ccpa",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".roku.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "roku.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:15 GMT"
+      },
+      {
+        "cookieName": "__cflb",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.roku.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 09 Sep 2026 01:34:15 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "static.cloudflareinsights.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 10,
+      "trackingCookies": 2,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

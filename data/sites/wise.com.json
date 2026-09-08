@@ -1,0 +1,98 @@
+{
+  "domain": "wise.com",
+  "finalUrl": "https://wise.com/",
+  "title": "Wise: The international account | Money without borders | Wise United States",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 92,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      }
+    ],
+    "headline": "Grade A: 1 tracking cookie before consent, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "appToken",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "wise.com",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": "Wed, 09 Sep 2026 02:34:44 GMT"
+      },
+      {
+        "cookieName": "gid",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "wise.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:44 GMT"
+      },
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "wise.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:45 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "sst.wise.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,135 @@
+{
+  "domain": "goodreads.com",
+  "finalUrl": "https://www.goodreads.com/",
+  "title": "Goodreads | Meet your next favorite book",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 84,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Google DoubleClick, Amazon Ads"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 ad trackers, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "ccsid",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.goodreads.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sat, 08 Sep 2046 02:34:22 -0000"
+      },
+      {
+        "cookieName": "logged_out_browsing_page_count",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.goodreads.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Mon, 08 Sep 2036 02:34:22 -0000"
+      },
+      {
+        "cookieName": "locale",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.goodreads.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "_session_id2",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.goodreads.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 08:34:22 -0000"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "s.gr-assets.com",
+      "i.gr-assets.com",
+      "images.gr-assets.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 0,
+      "analyticsCookies": 2,
+      "functionalCookies": 1,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

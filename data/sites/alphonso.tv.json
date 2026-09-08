@@ -1,0 +1,100 @@
+{
+  "domain": "alphonso.tv",
+  "finalUrl": "https://alphonso.tv/",
+  "title": "Alphonso &#8211; The TV Data Company",
+  "category": {
+    "category": "streaming",
+    "label": "Streaming & entertainment",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 87,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 6,
+        "detail": "Google Analytics / GTM, Segment"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "alphonso.tv",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:44 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Segment",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Segment — customer data platform that pipes data to many services"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "www.googletagmanager.com",
+      "oss.maxcdn.com",
+      "tn.alphonso.tv"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

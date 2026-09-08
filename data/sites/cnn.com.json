@@ -1,0 +1,195 @@
+{
+  "domain": "cnn.com",
+  "finalUrl": "https://www.cnn.com/",
+  "title": "Breaking News, Latest News and Videos | CNN",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 46,
+    "grade": "D",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 32,
+        "detail": "6 tracking cookies"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 18,
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade D: 6 tracking cookies before consent, 3 ad trackers, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "SecGpc",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".cnn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "countryCode",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".cnn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "stateCode",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".cnn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "geoData",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".cnn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "FastAB",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": ".cnn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:12 GMT"
+      },
+      {
+        "cookieName": "wbdFch",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "www.cnn.com",
+        "path": "/",
+        "maxAge": "30",
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Stripe",
+        "category": "functional",
+        "risk": "low",
+        "description": "Stripe — payment processing (necessary for transactions)"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "us.cnn.com",
+      "cdn.optimizely.com",
+      "media.cnn.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 6,
+      "trackingCookies": 6,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 9
+    }
+  },
+  "history": [
+    {
+      "scannedAt": "2026-09-08T02:34:09.702Z",
+      "grade": "D",
+      "score": 46,
+      "summary": {
+        "totalCookies": 6,
+        "trackingCookies": 6,
+        "analyticsCookies": 0,
+        "functionalCookies": 0,
+        "totalTrackers": 4,
+        "thirdPartyScripts": 3,
+        "highRiskItems": 9
+      }
+    }
+  ],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

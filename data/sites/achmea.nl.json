@@ -1,0 +1,163 @@
+{
+  "domain": "achmea.nl",
+  "finalUrl": "https://www.achmea.nl/",
+  "title": "Samen leven volgens Achmea | Achmea",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 62,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 18,
+        "detail": "LinkedIn Insight, Google AdSense, Google DoubleClick"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 2 tracking cookies before consent, 3 ad trackers on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "achmea-corporate#lang",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.achmea.nl",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "shell#lang",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.achmea.nl",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "__RequestVerificationToken",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.achmea.nl",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "TS0150e4de",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".achmea.nl",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "TSddf441ed027",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.achmea.nl",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "LinkedIn Insight",
+        "category": "tracking",
+        "risk": "high",
+        "description": "LinkedIn Insight Tag — tracks conversions and retargets LinkedIn users"
+      },
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 2,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 0,
+      "highRiskItems": 5
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

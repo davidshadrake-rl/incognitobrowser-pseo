@@ -15,7 +15,9 @@ function readFile(relativePath: string): string {
 }
 
 describe('Scanner Response Body Cap', () => {
-  const routeSource = readFile('app/scan-url/route.ts');
+  // The caps are enforced in lib/scanner.ts (shared with the offline Report
+  // Card batch); the route wires the tuning constants into it. Grep both.
+  const routeSource = readFile('app/scan-url/route.ts') + '\n' + readFile('lib/scanner.ts');
   const tuningSource = readFile('lib/tuning.ts');
 
   it('default body size is 5MB (configurable via MAX_BODY_SIZE_MB env var)', () => {
@@ -36,7 +38,9 @@ describe('Scanner Response Body Cap', () => {
 });
 
 describe('Scanner Cookie Array Cap', () => {
-  const routeSource = readFile('app/scan-url/route.ts');
+  // The caps are enforced in lib/scanner.ts (shared with the offline Report
+  // Card batch); the route wires the tuning constants into it. Grep both.
+  const routeSource = readFile('app/scan-url/route.ts') + '\n' + readFile('lib/scanner.ts');
   const tuningSource = readFile('lib/tuning.ts');
 
   it('default MAX_COOKIES is 100 (configurable via env var)', () => {
@@ -50,7 +54,9 @@ describe('Scanner Cookie Array Cap', () => {
 });
 
 describe('Scanner Script Regex Loop Cap', () => {
-  const routeSource = readFile('app/scan-url/route.ts');
+  // The caps are enforced in lib/scanner.ts (shared with the offline Report
+  // Card batch); the route wires the tuning constants into it. Grep both.
+  const routeSource = readFile('app/scan-url/route.ts') + '\n' + readFile('lib/scanner.ts');
   const tuningSource = readFile('lib/tuning.ts');
 
   it('default MAX_SCRIPT_MATCHES is 500 (configurable via env var)', () => {
@@ -77,7 +83,9 @@ describe('Scanner Script Regex Loop Cap', () => {
 });
 
 describe('Scanner Redirect Handling', () => {
-  const routeSource = readFile('app/scan-url/route.ts');
+  // The caps are enforced in lib/scanner.ts (shared with the offline Report
+  // Card batch); the route wires the tuning constants into it. Grep both.
+  const routeSource = readFile('app/scan-url/route.ts') + '\n' + readFile('lib/scanner.ts');
 
   it("uses redirect: 'manual' to prevent SSRF-by-redirect", () => {
     expect(routeSource).toContain("redirect: 'manual'");

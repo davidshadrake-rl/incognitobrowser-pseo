@@ -1,0 +1,76 @@
+{
+  "domain": "rakuten.com",
+  "finalUrl": "https://www.rakuten.com/",
+  "title": "Coupons, Promo Codes &amp; Cash Back | Rakuten",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 90,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Facebook Pixel"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 1 ad tracker, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Facebook Pixel",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook/Meta Pixel — tracks conversions and builds ad audiences across the web"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "static.rakuten.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

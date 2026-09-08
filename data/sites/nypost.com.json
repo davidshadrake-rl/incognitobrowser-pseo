@@ -1,0 +1,106 @@
+{
+  "domain": "nypost.com",
+  "finalUrl": "https://nypost.com/ca/",
+  "title": "California Post – Breaking California News, Photos & Videos",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 77,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Google AdSense, Google DoubleClick"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 5,
+        "detail": "10 third-party domains"
+      }
+    ],
+    "headline": "Grade C: 2 ad trackers, 10 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "cdn.cookielaw.org",
+      "tagan.adlightning.com",
+      "www.googletagmanager.com",
+      "cdn.speedcurve.com",
+      "sb.scorecardresearch.com",
+      "tag.bounceexchange.com",
+      "pagesix.com",
+      "ads.nypost.com",
+      "accounts.google.com",
+      "stats.wp.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 10,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,122 @@
+{
+  "domain": "cbsnews.com",
+  "finalUrl": "https://www.cbsnews.com/",
+  "title": "CBS News | Breaking news, top stories &amp; today's latest headlines",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 77,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Google DoubleClick, Amazon Ads"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 4,
+        "detail": "9 third-party domains"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 2 ad trackers, 9 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "fly_device",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".cbsnews.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 02:39:30 GMT"
+      },
+      {
+        "cookieName": "fly_geo",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".cbsnews.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 02:39:30 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "global.ketchcdn.com",
+      "cdn.privacy.paramount.com",
+      "apv-launcher.minute-ly.com",
+      "assets1.cbsnewsstatic.com",
+      "assets2.cbsnewsstatic.com",
+      "assets3.cbsnewsstatic.com",
+      "substack-post-media.s3.amazonaws.com",
+      "substackcdn.com",
+      "disco.headliner.link"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 9,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

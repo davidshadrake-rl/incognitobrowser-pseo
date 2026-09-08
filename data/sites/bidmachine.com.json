@@ -1,0 +1,89 @@
+{
+  "domain": "bidmachine.com",
+  "finalUrl": "https://www.bidmachine.com/",
+  "title": "BidMachine. Fastest Growing Mobile Ad Exchange",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 86,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 2,
+        "detail": "7 third-party domains"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 7 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "_cfuvid",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.bidmachine.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "ajax.googleapis.com",
+      "policy.app.cookieinformation.com",
+      "cdn.prod.website-files.com",
+      "js.bidmachine.io",
+      "js.hsforms.net",
+      "d3e54v103j8qbb.cloudfront.net",
+      "hubspotv2.use1-marketplace-1p-apps-prod-red.if.webflow.services"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 7,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

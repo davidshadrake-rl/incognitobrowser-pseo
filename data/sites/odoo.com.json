@@ -1,0 +1,88 @@
+{
+  "domain": "odoo.com",
+  "finalUrl": "https://www.odoo.com/",
+  "title": "Open Source ERP and CRM | Odoo",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 96,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "frontend_lang",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.odoo.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:37 GMT"
+      },
+      {
+        "cookieName": "session_id",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.odoo.com",
+        "path": "/",
+        "maxAge": "604800",
+        "expires": "Wed, 08 Sep 2027 02:34:37 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "odoocdn.com",
+      "download.odoocdn.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

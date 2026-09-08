@@ -1,0 +1,101 @@
+{
+  "domain": "zhihu.com",
+  "finalUrl": "https://www.zhihu.com/signin?next=%2F",
+  "title": "知乎 - 有问题，就会有答案",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 99,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 5 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "_zap",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".zhihu.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 07 Sep 2028 02:34:46 GMT"
+      },
+      {
+        "cookieName": "_xsrf",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".zhihu.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "BEC",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.zhihu.com",
+        "path": "/",
+        "maxAge": "3600",
+        "expires": null
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "static.zhihu.com",
+      "pic2.zhimg.com",
+      "pic3.zhimg.com",
+      "pica.zhimg.com",
+      "hm.baidu.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 5,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

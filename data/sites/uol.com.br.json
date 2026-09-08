@@ -1,0 +1,87 @@
+{
+  "domain": "uol.com.br",
+  "finalUrl": "https://www.uol.com.br/",
+  "title": "UOL - Seu universo online",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 89,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Google DoubleClick"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 1,
+        "detail": "6 third-party domains"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 ad tracker, 6 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "tm.jsuol.com.br",
+      "securepubads.g.doubleclick.net",
+      "sb.scorecardresearch.com",
+      "me.jsuol.com",
+      "conteudo.imguol.com.br",
+      "e.imguol.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 6,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

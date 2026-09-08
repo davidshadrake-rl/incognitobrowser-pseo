@@ -1,0 +1,93 @@
+{
+  "domain": "netlify.com",
+  "finalUrl": "https://www.netlify.com/",
+  "title": "Push your ideas to the web | Netlify",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 82,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Google DoubleClick"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 6,
+        "detail": "Google Analytics / GTM, HubSpot"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      }
+    ],
+    "headline": "Grade B: 1 ad tracker, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "HubSpot",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "HubSpot — marketing analytics, CRM tracking, and lead scoring"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "cdn.cookielaw.org",
+      "www.googletagmanager.com",
+      "www.youtube.com",
+      "js.hsforms.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

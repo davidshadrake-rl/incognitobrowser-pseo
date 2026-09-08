@@ -1,0 +1,163 @@
+{
+  "domain": "wp.pl",
+  "finalUrl": "https://www.wp.pl/",
+  "title": "Wirtualna Polska - Wszystko co ważne - www.wp.pl",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 64,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 32,
+        "detail": "4 tracking cookies"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 4 tracking cookies before consent, 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "c",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "wp.pl",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 21:59:59 GMT"
+      },
+      {
+        "cookieName": "sgv",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "wp.pl",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:34 GMT"
+      },
+      {
+        "cookieName": "ttlStatid",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "wp.pl",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 09 Sep 2026 02:34:34 GMT"
+      },
+      {
+        "cookieName": "sgVisitId",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "wp.pl",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:34 GMT"
+      },
+      {
+        "cookieName": "WPabs",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "wp.pl",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:34 GMT"
+      },
+      {
+        "cookieName": "STabid",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.wp.pl",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": null
+      },
+      {
+        "cookieName": "STabnoid",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.wp.pl",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "v.wpimg.pl",
+      "dot.wp.pl"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 7,
+      "trackingCookies": 4,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 4
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

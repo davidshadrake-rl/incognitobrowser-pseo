@@ -1,0 +1,84 @@
+{
+  "domain": "xbox.com",
+  "finalUrl": "https://www.xbox.com/en-US/",
+  "title": "XBOX Official Site: Play Games Anywhere | XBOX",
+  "category": {
+    "category": "gaming",
+    "label": "Gaming",
+    "niche": "gaming-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 94,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 2,
+        "detail": "7 third-party domains"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 7 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "aka_locale",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".www.xbox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "cdnjs.cloudflare.com",
+      "assets-xbxweb.xbox.com",
+      "assets.adobedtm.com",
+      "uhf.microsoft.com",
+      "wcpstatic.microsoft.com",
+      "assets.xboxservices.com",
+      "cms-assets.xboxservices.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 7,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

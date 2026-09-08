@@ -1,0 +1,92 @@
+{
+  "domain": "indiatimes.com",
+  "finalUrl": "https://www.indiatimes.com/",
+  "title": "Indiatimes: Latest in Lifestyle, Health, Fashion, and Wellness",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 76,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 18,
+        "detail": "Google DoubleClick, Amazon Ads, Taboola"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      }
+    ],
+    "headline": "Grade C: 3 ad trackers, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Taboola",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Taboola content recommendation — tracks browsing for ad personalization"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "staticimg.publishstory.co",
+      "assets.toiimg.com",
+      "securepubads.g.doubleclick.net",
+      "timesofindia.indiatimes.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

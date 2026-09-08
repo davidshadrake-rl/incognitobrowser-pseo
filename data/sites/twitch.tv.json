@@ -1,0 +1,120 @@
+{
+  "domain": "twitch.tv",
+  "finalUrl": "https://www.twitch.tv/",
+  "title": "Twitch",
+  "category": {
+    "category": "streaming",
+    "label": "Streaming & entertainment",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 80,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 tracking cookies before consent, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "server_session_id",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "none",
+        "domain": ".twitch.tv",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "unique_id",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "none",
+        "domain": ".twitch.tv",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Fri, 08 Oct 2027 02:34:13 GMT"
+      },
+      {
+        "cookieName": "unique_id_durable",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "none",
+        "domain": ".twitch.tv",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Fri, 08 Oct 2027 02:34:13 GMT"
+      },
+      {
+        "cookieName": "twitch.lohp.countryCode",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".twitch.tv",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 03 Oct 2027 02:34:13 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "assets.twitch.tv"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 2,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,120 @@
+{
+  "domain": "xing.com",
+  "finalUrl": "https://www.xing.com/",
+  "title": "Find the right job for you. Or get found!",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 82,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Google DoubleClick"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 1 ad tracker, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "xing_csrf_token",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": "www.xing.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "xing_csrf_checksum",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "www.xing.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "visitor_id",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "xing.com",
+        "path": "/",
+        "maxAge": "63072000",
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "static.xingcdn.com",
+      "cdn-a.yieldlove.com",
+      "securepubads.g.doubleclick.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

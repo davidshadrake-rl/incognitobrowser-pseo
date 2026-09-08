@@ -1,0 +1,114 @@
+{
+  "domain": "seedtag.com",
+  "finalUrl": "https://www.seedtag.com/",
+  "title": "Seedtag | Where Context Becomes Intelligence",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 77,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 6,
+        "detail": "Google Analytics / GTM, HubSpot"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 2,
+        "detail": "7 third-party domains"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 1 tracking cookie before consent, 7 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "_cfuvid",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.seedtag.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "HubSpot",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "HubSpot — marketing analytics, CRM tracking, and lead scoring"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "ajax.googleapis.com",
+      "cdn.jsdelivr.net",
+      "cdn.prod.website-files.com",
+      "d3e54v103j8qbb.cloudfront.net",
+      "hubspotv2.use1-marketplace-1p-apps-prod-red.if.webflow.services",
+      "js.hs-scripts.com",
+      "hubspotonwebflow.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 7,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

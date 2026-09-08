@@ -1,0 +1,133 @@
+{
+  "domain": "seznam.cz",
+  "finalUrl": "https://www.seznam.cz/?noredirect=1",
+  "title": "Seznam – najdu tam, co neznám",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 83,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 8,
+        "detail": "13 third-party domains"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 13 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "requestId",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".seznam.cz",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "euconsent-v2",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.seznam.cz",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "euconsent-v2",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "www.seznam.cz",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "sznlbr",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.seznam.cz",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": null
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "login.szn.cz",
+      "fimg-resp.seznam.cz",
+      "d32-a.sdn.cz",
+      "d15-a.sdn.cz",
+      "d39-a.sdn.cz",
+      "d17-a.sdn.cz",
+      "d16-a.sdn.cz",
+      "d50-a.sdn.cz",
+      "d62-a.sdn.cz",
+      "d8-a.sdn.cz",
+      "d48-a.sdn.cz",
+      "d27-a.sdn.cz",
+      "h.seznam.cz"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 13,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,85 @@
+{
+  "domain": "hostgator.com.br",
+  "finalUrl": "https://www.hostgator.com.br/",
+  "title": "Hospedagem de Sites: Rápida, Segura e Confiável | HostGator",
+  "category": {
+    "category": "tech",
+    "label": "Tech & software",
+    "niche": "browser-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 93,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "hostgator.com.br",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:30 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "static.cloudflareinsights.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

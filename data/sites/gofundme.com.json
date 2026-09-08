@@ -1,0 +1,101 @@
+{
+  "domain": "gofundme.com",
+  "finalUrl": "https://www.gofundme.com/",
+  "title": "GoFundMe | The #1 Crowdfunding and Fundraising Platform",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 88,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "visitor",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".gofundme.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "gdid",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".gofundme.com",
+        "path": "/",
+        "maxAge": "315360000",
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "pg.feroot.com",
+      "www.google.com",
+      "fast.wistia.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 1,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

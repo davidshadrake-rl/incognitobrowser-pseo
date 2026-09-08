@@ -1,0 +1,186 @@
+{
+  "domain": "wired.com",
+  "finalUrl": "https://www.wired.com/",
+  "title": "WIRED - The Latest in Technology, Science, Culture and Business | WIRED",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 50,
+    "grade": "D",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 24,
+        "detail": "3 tracking cookies"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Google DoubleClick, Google Platform"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 4,
+        "detail": "9 third-party domains"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade D: 3 tracking cookies before consent, 2 ad trackers, 9 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "xid1",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".wired.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 02:34:41 GMT"
+      },
+      {
+        "cookieName": "CN_segments",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".wired.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 07 Mar 2027 02:34:26 GMT"
+      },
+      {
+        "cookieName": "CN_xid_refresh",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": ".wired.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:26 GMT"
+      },
+      {
+        "cookieName": "CN_xid",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".wired.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 07 Mar 2027 02:34:26 GMT"
+      },
+      {
+        "cookieName": "CN_geo_country_code",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".wired.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 07 Mar 2027 02:34:26 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Google Platform",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Google Platform JS — enables sign-in and social features with tracking"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "privacy.condenastdigital.com",
+      "securepubads.g.doubleclick.net",
+      "ads-static.conde.digital",
+      "apis.google.com",
+      "news.google.com",
+      "martech.condenastdigital.com",
+      "www.googletagmanager.com",
+      "media.wired.com",
+      "dwgyu36up6iuz.cloudfront.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 3,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 9,
+      "highRiskItems": 4
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

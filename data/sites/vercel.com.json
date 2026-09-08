@@ -1,0 +1,83 @@
+{
+  "domain": "vercel.com",
+  "finalUrl": "https://vercel.com/",
+  "title": "Agentic Infrastructure - Vercel",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 99,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "_v-anonymous-id",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "lax",
+        "domain": ".vercel.com",
+        "path": "/",
+        "maxAge": "7776000",
+        "expires": "Mon, 07 Dec 2026 02:34:29 GMT"
+      },
+      {
+        "cookieName": "_v-anonymous-id-renewed",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "lax",
+        "domain": ".vercel.com",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": "Wed, 09 Sep 2026 02:34:29 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "lishhsx6kmthaacj.public.blob.vercel-storage.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 0,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

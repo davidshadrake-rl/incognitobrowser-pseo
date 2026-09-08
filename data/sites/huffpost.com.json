@@ -1,0 +1,129 @@
+{
+  "domain": "huffpost.com",
+  "finalUrl": "https://www.huffpost.com/",
+  "title": "HuffPost - Breaking News, Politics, Entertainment & Opinion",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 84,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Amazon Ads, Outbrain"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 ad trackers, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "bf-geo-country",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.huffpost.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 09 Sep 2026 02:34:44 GMT"
+      },
+      {
+        "cookieName": "bf-geo-region",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.huffpost.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 09 Sep 2026 02:34:44 GMT"
+      },
+      {
+        "cookieName": "ccpa",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.huffpost.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 22 Sep 2026 02:34:44 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Outbrain",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Outbrain content recommendation and native advertising tracker"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "cdn.cookielaw.org",
+      "modulous.huffpost.com",
+      "img.huffingtonpost.com",
+      "sb.scorecardresearch.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

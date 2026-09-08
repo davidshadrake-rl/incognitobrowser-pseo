@@ -1,0 +1,186 @@
+{
+  "domain": "msn.com",
+  "finalUrl": "https://www.msn.com/",
+  "title": "MSN",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 67,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 32,
+        "detail": "4 tracking cookies"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 4 tracking cookies before consent, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "_C_ETH",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "_C_Auth",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "Web-User",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "none",
+        "domain": ".msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 15 Sep 2026 02:34:11 GMT"
+      },
+      {
+        "cookieName": "sptmarket",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Fri, 08 Sep 2028 02:34:11 GMT"
+      },
+      {
+        "cookieName": "USRLOC",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "none",
+        "domain": ".msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Fri, 08 Sep 2028 02:34:11 GMT"
+      },
+      {
+        "cookieName": "MUID",
+        "name": "Microsoft/Bing",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Microsoft universal identifier — tracks across Bing and Microsoft services",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "none",
+        "domain": ".msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 03 Oct 2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "MUIDB",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 03 Oct 2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "_EDGE_S",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "_EDGE_V",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".msn.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 03 Oct 2027 02:34:11 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "assets.msn.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 9,
+      "trackingCookies": 4,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

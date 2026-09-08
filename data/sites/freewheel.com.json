@@ -1,0 +1,109 @@
+{
+  "domain": "freewheel.com",
+  "finalUrl": "https://www.freewheel.com/",
+  "title": "Direct Connections to Streaming Video Inventory | FreeWheel",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 82,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Facebook Pixel"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 6,
+        "detail": "Google Analytics / GTM, HubSpot"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Facebook Pixel (inline)"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      }
+    ],
+    "headline": "Grade B: 1 ad tracker, 5 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.freewheel.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:38 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Facebook Pixel",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook/Meta Pixel — tracks conversions and builds ad audiences across the web"
+      },
+      {
+        "name": "HubSpot",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "HubSpot — marketing analytics, CRM tracking, and lead scoring"
+      }
+    ],
+    "inlineTrackers": [
+      "Facebook Pixel (inline)"
+    ],
+    "thirdPartyDomains": [
+      "cdn.cookielaw.org",
+      "player.vimeo.com",
+      "www.googletagmanager.com",
+      "js.hs-scripts.com",
+      "cdn.jsdelivr.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 5,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

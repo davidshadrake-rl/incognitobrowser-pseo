@@ -1,0 +1,124 @@
+{
+  "domain": "above.com",
+  "finalUrl": "https://www.above.com/",
+  "title": "Above.com Domain Investment Platform - Registrar, Monetization, Marketplace",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 75,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Facebook Pixel"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 6,
+        "detail": "Google Analytics / GTM, HubSpot"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 6,
+        "detail": "Facebook Pixel (inline), Google Analytics (inline)"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 1 ad tracker, 5 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "PHPSESSID",
+        "name": "PHP Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "PHP server-side session cookie — standard functionality",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.above.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Facebook Pixel",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook/Meta Pixel — tracks conversions and builds ad audiences across the web"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      },
+      {
+        "name": "HubSpot",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "HubSpot — marketing analytics, CRM tracking, and lead scoring"
+      }
+    ],
+    "inlineTrackers": [
+      "Facebook Pixel (inline)",
+      "Google Analytics (inline)"
+    ],
+    "thirdPartyDomains": [
+      "stackpath.bootstrapcdn.com",
+      "ajax.googleapis.com",
+      "www.facebook.com",
+      "www.googletagmanager.com",
+      "www.google.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 5,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

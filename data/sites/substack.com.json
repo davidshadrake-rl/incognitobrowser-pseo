@@ -1,0 +1,187 @@
+{
+  "domain": "substack.com",
+  "finalUrl": "https://substack.com/",
+  "title": "Substack",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 75,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 24,
+        "detail": "3 tracking cookies"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 3 tracking cookies before consent, 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "ab_experiment_sampled",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:22 GMT"
+      },
+      {
+        "cookieName": "ab_testing_id",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:22 GMT"
+      },
+      {
+        "cookieName": "AWSALBTG",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 15 Sep 2026 02:34:21 GMT"
+      },
+      {
+        "cookieName": "AWSALBTGCORS",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 15 Sep 2026 02:34:21 GMT"
+      },
+      {
+        "cookieName": "cookie_storage_key",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": "7776000",
+        "expires": "Mon, 07 Dec 2026 02:34:21 GMT"
+      },
+      {
+        "cookieName": "ajs_anonymous_id",
+        "name": "Segment",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Segment anonymous visitor identifier",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "Strict",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:21 GMT"
+      },
+      {
+        "cookieName": "visit_id",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "Strict",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": "1800",
+        "expires": "Tue, 08 Sep 2026 03:04:21 GMT"
+      },
+      {
+        "cookieName": "substack.lli",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": "7776000",
+        "expires": "Mon, 07 Dec 2026 02:34:21 GMT"
+      },
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "substack.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:22 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "substackcdn.com",
+      "static.cloudflareinsights.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 9,
+      "trackingCookies": 3,
+      "analyticsCookies": 3,
+      "functionalCookies": 1,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

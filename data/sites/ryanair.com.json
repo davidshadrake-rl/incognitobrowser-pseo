@@ -1,0 +1,123 @@
+{
+  "domain": "ryanair.com",
+  "finalUrl": "https://www.ryanair.com/us/en",
+  "title": "Ryanair",
+  "category": {
+    "category": "travel",
+    "label": "Travel & maps",
+    "niche": "location-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 96,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Hotjar"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "fr-correlation-id",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": "www.ryanair.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "rid",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "www.ryanair.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 00:00:00 GMT"
+      },
+      {
+        "cookieName": "rid.sig",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "www.ryanair.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 00:00:00 GMT"
+      },
+      {
+        "cookieName": "xid",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": "www.ryanair.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 15 Sep 2026 00:00:00 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Hotjar",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Hotjar — records user sessions, heatmaps, and click tracking"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "polyfill.ryanair.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

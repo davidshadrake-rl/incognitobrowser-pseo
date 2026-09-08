@@ -1,0 +1,120 @@
+{
+  "domain": "lg.com",
+  "finalUrl": "https://www.lg.com/us/",
+  "title": "LG Electronics &amp; Home Appliances | Shop Now | LG USA",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 88,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "AKA_A2",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "lg.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08-Sep-2026 03:34:38 GMT"
+      },
+      {
+        "cookieName": "akacd_pr_lgcom_us",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "www.lg.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sat, 01 Jan 2000 00:00:00 GMT"
+      },
+      {
+        "cookieName": "ak_bmsc",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".lg.com",
+        "path": "/",
+        "maxAge": "7200",
+        "expires": "Tue, 08 Sep 2026 04:34:38 GMT"
+      },
+      {
+        "cookieName": "bm_mi",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".lg.com",
+        "path": "/",
+        "maxAge": "0",
+        "expires": "Tue, 08 Sep 2026 02:34:38 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "media.us.lg.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

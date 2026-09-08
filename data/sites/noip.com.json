@@ -1,0 +1,138 @@
+{
+  "domain": "noip.com",
+  "finalUrl": "https://www.noip.com/",
+  "title": "No-IP | Smarter DNS Starts Here",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 84,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 6,
+        "detail": "Google Analytics / GTM, HubSpot"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "XSRF-TOKEN",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.noip.com",
+        "path": "/",
+        "maxAge": "7200",
+        "expires": "Tue, 08 Sep 2026 04:34:34 GMT"
+      },
+      {
+        "cookieName": "shortstar_session",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "www.noip.com",
+        "path": "/",
+        "maxAge": "7200",
+        "expires": "Tue, 08 Sep 2026 04:34:34 GMT"
+      },
+      {
+        "cookieName": "NOIP_BID",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": "www.noip.com",
+        "path": "/",
+        "maxAge": "15552000",
+        "expires": "Sun, 07 Mar 2027 02:34:34 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      },
+      {
+        "name": "HubSpot",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "HubSpot — marketing analytics, CRM tracking, and lead scoring"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "cdn.firstpromoter.com",
+      "dmej8g5cpdyqd.cloudfront.net",
+      "www.googletagmanager.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 0,
+      "analyticsCookies": 1,
+      "functionalCookies": 2,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

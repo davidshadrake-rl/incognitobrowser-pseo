@@ -1,0 +1,110 @@
+{
+  "domain": "roblox.com",
+  "finalUrl": "https://www.roblox.com/",
+  "title": "Roblox",
+  "category": {
+    "category": "gaming",
+    "label": "Gaming",
+    "niche": "gaming-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 91,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 1 tracking cookie before consent, 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "rbx-ip2",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "roblox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08-Sep-2026 03:34:11 GMT"
+      },
+      {
+        "cookieName": "RBXEventTrackerV2",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "roblox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sat, 24-Jan-2054 02:34:11 GMT"
+      },
+      {
+        "cookieName": "GuestData",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".roblox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sat, 24-Jan-2054 02:34:11 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Sentry",
+        "category": "functional",
+        "risk": "low",
+        "description": "Sentry — error monitoring and performance tracking (developer tool)"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "js.rbxcdn.com",
+      "roblox.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 1,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

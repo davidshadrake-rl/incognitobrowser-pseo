@@ -1,0 +1,141 @@
+{
+  "domain": "slack.com",
+  "finalUrl": "https://slack.com/",
+  "title": "Slack | AI Work Platform &amp; Productivity Tools",
+  "category": {
+    "category": "tech",
+    "label": "Tech & software",
+    "niche": "browser-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 69,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 24,
+        "detail": "3 tracking cookies"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 3 tracking cookies before consent, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "utm",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".slack.com",
+        "path": "/",
+        "maxAge": "1209600",
+        "expires": "Tue, 22-Sep-2026 02:34:19 GMT"
+      },
+      {
+        "cookieName": "b",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".slack.com",
+        "path": "/",
+        "maxAge": "315619200",
+        "expires": "Mon, 08-Sep-2036 02:34:19 GMT"
+      },
+      {
+        "cookieName": "x",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".slack.com",
+        "path": "/",
+        "maxAge": "900",
+        "expires": "Tue, 08-Sep-2026 02:49:19 GMT"
+      },
+      {
+        "cookieName": "ui",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": ".slack.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08-Sep-2027 02:34:19 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "a.slack-edge.com",
+      "cdn.cookielaw.org",
+      "reveal.clearbit.com",
+      "d34u8crftukxnk.cloudfront.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 3,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

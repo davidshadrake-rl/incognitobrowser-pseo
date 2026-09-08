@@ -1,0 +1,84 @@
+{
+  "domain": "opera.com",
+  "finalUrl": "https://www.opera.com/",
+  "title": "Opera Web Browser | Faster, Safer, Smarter | Opera",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 87,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Facebook Pixel"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 6,
+        "detail": "Google Analytics / GTM, Microsoft Clarity"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 ad tracker, 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Facebook Pixel",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook/Meta Pixel — tracks conversions and builds ad audiences across the web"
+      },
+      {
+        "name": "Microsoft Clarity",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Microsoft Clarity — free session recording and heatmap analytics"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "cdn-production-opera-website.operacdn.com",
+      "www.googletagmanager.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

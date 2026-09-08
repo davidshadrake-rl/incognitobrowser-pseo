@@ -1,0 +1,97 @@
+{
+  "domain": "latimes.com",
+  "finalUrl": "https://www.latimes.com/",
+  "title": "News from California, across the nation and world - Los Angeles Times",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 76,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 18,
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 3,
+        "detail": "8 third-party domains"
+      }
+    ],
+    "headline": "Grade C: 3 ad trackers, 8 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "ca-times.brightspotcdn.com",
+      "libs.platform.latimes.com",
+      "cdn.confiant-integrations.net",
+      "securepubads.g.doubleclick.net",
+      "68547f8f-2fd8-4ff3-9b63-51e86e2edee8.edge.permutive.app",
+      "cdn.speedcurve.com",
+      "activate.platform.californiatimes.com",
+      "ca-times-cdn.platform.californiatimes.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 8,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

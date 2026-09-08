@@ -1,0 +1,142 @@
+{
+  "domain": "nikkei.com",
+  "finalUrl": "https://www.nikkei.com/",
+  "title": "日本経済新聞 - ニュース・速報 最新情報",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 91,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Facebook Pixel"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Facebook Pixel (inline)"
+      }
+    ],
+    "headline": "Grade A: 1 ad tracker, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "atlasId",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": ".nikkei.com",
+        "path": "/",
+        "maxAge": "157680000",
+        "expires": null
+      },
+      {
+        "cookieName": "RNikkeiAuth",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.nikkei.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "RNikkeiUserInfo",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.nikkei.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "RNikkeiAuth",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "nikkei.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "RNikkeiUserInfo",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "nikkei.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Facebook Pixel",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook/Meta Pixel — tracks conversions and builds ad audiences across the web"
+      }
+    ],
+    "inlineTrackers": [
+      "Facebook Pixel (inline)"
+    ],
+    "thirdPartyDomains": [
+      "cdn.speedcurve.com",
+      "article-image-ix.nikkei.com",
+      "cf-images.ap-northeast-1.prod.boltdns.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 0,
+      "analyticsCookies": 1,
+      "functionalCookies": 2,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,116 @@
+{
+  "domain": "wix.com",
+  "finalUrl": "https://www.wix.com/",
+  "title": "Website Builder - Create a Free Website In Minutes | Wix.com",
+  "category": {
+    "category": "tech",
+    "label": "Tech & software",
+    "niche": "browser-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 80,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 tracking cookies before consent, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "ssr-caching",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.wix.com",
+        "path": "/",
+        "maxAge": "20",
+        "expires": null
+      },
+      {
+        "cookieName": "_wixCIDX",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".wix.com",
+        "path": "/",
+        "maxAge": "7776000",
+        "expires": "Mon, 07 Dec 2026 02:34:28 GMT"
+      },
+      {
+        "cookieName": "_wixUIDX",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".wix.com",
+        "path": "/",
+        "maxAge": "7776000",
+        "expires": "Mon, 07 Dec 2026 02:34:28 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Sentry",
+        "category": "functional",
+        "risk": "low",
+        "description": "Sentry — error monitoring and performance tracking (developer tool)"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "static.parastorage.com",
+      "accounts.google.com",
+      "static.wixstatic.com",
+      "browser.sentry-cdn.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 2,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

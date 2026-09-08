@@ -1,0 +1,132 @@
+{
+  "domain": "dropbox.com",
+  "finalUrl": "https://www.dropbox.com/",
+  "title": "Dropbox: Secure cloud storage, file sharing, and more",
+  "category": {
+    "category": "tech",
+    "label": "Tech & software",
+    "niche": "browser-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 83,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 tracking cookies before consent, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "gvc",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.dropbox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 07 Sep 2031 02:34:12 GMT"
+      },
+      {
+        "cookieName": "t",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "dropbox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:12 GMT"
+      },
+      {
+        "cookieName": "__Host-js_csrf",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "www.dropbox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:12 GMT"
+      },
+      {
+        "cookieName": "__Host-ss",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Strict",
+        "domain": "www.dropbox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:12 GMT"
+      },
+      {
+        "cookieName": "locale",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "dropbox.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Sun, 07 Sep 2031 02:34:12 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "edge.cofra.me",
+      "cfl.dropboxstatic.com",
+      "fjord.dropboxstatic.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 2,
+      "analyticsCookies": 1,
+      "functionalCookies": 1,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -361,3 +361,35 @@ describe.skipIf(!HAS_TARGET)('tool pages are indexable (regression guard)', () =
     expect(s.body).not.toMatch(/email-privacy\/privacy-score-quiz/);
   });
 });
+
+describe.skipIf(!HAS_TARGET)('website privacy report cards', () => {
+  it('a report card page renders grade, itemised deductions, canonical, and is indexable', async () => {
+    const r = await fetchText('/site/cnn.com/');
+    expect(r.ok).toBe(true);
+    expect(r.body).toMatch(/data-grade="[ABCDF]"/);
+    expect(r.body).toMatch(/Every point, itemised/);
+    expect(r.body).toMatch(/rel="canonical"[^>]*href="https:\/\/incognitobrowser\.io\/resources\/site\/cnn\.com\/?"/);
+    expect(r.body).not.toMatch(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/);
+    expect(r.body).toMatch(/\/site\/methodology/);
+  });
+
+  it('a report card satisfies the pSEO internal-link rule (siblings + cross-category + hubs ≥ 12)', async () => {
+    const r = await fetchText('/site/cnn.com/');
+    const siblings = (r.body.match(/href="[^"]*\/site\/[a-z0-9.-]+\/?"/g) || []).length;
+    const related = (r.body.match(/href="[^"]*\/(guides|checklists|comparisons|tools|templates|calculators)\/[^"]+"/g) || []).length;
+    expect(siblings + related).toBeGreaterThanOrEqual(12);
+    expect(r.body).toMatch(/View all [^<]+? resources →/); // niche names may contain &amp;
+  });
+
+  it('the index lists sites with grades and links to the methodology', async () => {
+    const r = await fetchText('/site/');
+    expect(r.ok).toBe(true);
+    expect((r.body.match(/data-grade="/g) || []).length).toBeGreaterThan(100);
+    expect(r.body).toMatch(/\/site\/methodology/);
+  });
+
+  it('the sitemap includes report cards', async () => {
+    const r = await fetchText(ROUTES.sitemap);
+    expect((r.body.match(/\/site\/[a-z0-9.-]+<\/loc>/g) || []).length).toBeGreaterThanOrEqual(400);
+  });
+});

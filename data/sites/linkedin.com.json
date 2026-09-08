@@ -1,0 +1,151 @@
+{
+  "domain": "linkedin.com",
+  "finalUrl": "https://www.linkedin.com/",
+  "title": "LinkedIn: Log In or Sign Up",
+  "category": {
+    "category": "social",
+    "label": "Social networks",
+    "niche": "social-media-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 67,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 32,
+        "detail": "4 tracking cookies"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 4 tracking cookies before consent, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "JSESSIONID",
+        "name": "Java Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "Java server-side session cookie — standard functionality",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".www.linkedin.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "lang",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "linkedin.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "bcookie",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".linkedin.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "bscookie",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": ".www.linkedin.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "lidc",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".linkedin.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 09 Sep 2026 02:34:11 GMT"
+      },
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "linkedin.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:11 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "static.licdn.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 6,
+      "trackingCookies": 4,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 4
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,83 @@
+{
+  "domain": "digitalocean.com",
+  "finalUrl": "https://www.digitalocean.com/",
+  "title": "AI-Native Cloud | DigitalOcean",
+  "category": {
+    "category": "tech",
+    "label": "Tech & software",
+    "niche": "browser-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 93,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Amplitude"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: no trackers or tracking cookies detected on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "digitalocean.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:27 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Amplitude",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Amplitude — product analytics and user behavior tracking"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 0,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

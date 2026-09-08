@@ -1,0 +1,106 @@
+{
+  "domain": "discord.com",
+  "finalUrl": "https://discord.com/",
+  "title": "Discord - Group Chat That’s All Fun &amp; Games",
+  "category": {
+    "category": "social",
+    "label": "Social networks",
+    "niche": "social-media-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 80,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 1,
+        "detail": "6 third-party domains"
+      }
+    ],
+    "headline": "Grade B: 2 tracking cookies before consent, 6 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "__dcfduid",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "discord.com",
+        "path": "/",
+        "maxAge": "157680000",
+        "expires": "Sun, 07 Sep 2031 02:34:12 GMT"
+      },
+      {
+        "cookieName": "__sdcfduid",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "discord.com",
+        "path": "/",
+        "maxAge": "157680000",
+        "expires": "Sun, 07 Sep 2031 02:34:12 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "ajax.googleapis.com",
+      "cdn.localizeapi.com",
+      "cdn.prod.website-files.com",
+      "cdn.discordapp.com",
+      "d3e54v103j8qbb.cloudfront.net",
+      "hubspotonwebflow.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 2,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 6,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

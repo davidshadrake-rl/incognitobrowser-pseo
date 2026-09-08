@@ -1,0 +1,159 @@
+{
+  "domain": "mercadolivre.com.br",
+  "finalUrl": "https://www.mercadolivre.com.br/",
+  "title": "Mercado Livre Brasil - Frete Grátis no mesmo dia",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 60,
+    "grade": "D",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 24,
+        "detail": "3 tracking cookies"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Google AdSense, Google DoubleClick"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Hotjar"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade D: 3 tracking cookies before consent, 2 ad trackers, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "_d2id",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".mercadolivre.com.br",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08 Sep 2027 02:34:34 GMT"
+      },
+      {
+        "cookieName": "_csrf",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.mercadolivre.com.br",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "_mldataSessionId",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "mercadolivre.com.br",
+        "path": "/",
+        "maxAge": "1800",
+        "expires": "Tue, 08 Sep 2026 03:04:34 GMT"
+      },
+      {
+        "cookieName": "x-theme",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.mercadolivre.com.br",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "c_ZHeE5a",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "www.mercadolivre.com.br",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 08 Oct 2026 02:34:34 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Hotjar",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Hotjar — records user sessions, heatmaps, and click tracking"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "http2.mlstatic.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 3,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 5
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

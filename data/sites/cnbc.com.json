@@ -1,0 +1,130 @@
+{
+  "domain": "cnbc.com",
+  "finalUrl": "https://www.cnbc.com/",
+  "title": "Stock Markets, Business News, Financials, Earnings - CNBC",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 80,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 tracking cookies before consent, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "AWSALB",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.cnbc.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 15 Sep 2026 02:34:23 GMT"
+      },
+      {
+        "cookieName": "AWSALBCORS",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "www.cnbc.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 15 Sep 2026 02:34:23 GMT"
+      },
+      {
+        "cookieName": "region",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".cnbc.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Mon, 07-Dec-2026 02:34:23 GMT"
+      },
+      {
+        "cookieName": "akaas_CNBC_AudienceSegmentation",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".www.cnbc.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 08 Oct 2026 02:34:23 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "assets.adobedtm.com",
+      "static-redesign.cnbcfm.com",
+      "image.cnbcfm.com",
+      "zephr-templates.cnbc.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 2,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

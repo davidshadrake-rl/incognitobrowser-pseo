@@ -1,0 +1,159 @@
+{
+  "domain": "dailymail.com",
+  "finalUrl": "https://www.dailymail.com/ushome/index.html",
+  "title": "US Home | Daily Mail Online",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 68,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 24,
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Outbrain"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 1,
+        "detail": "6 third-party domains"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 4 ad trackers, 6 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "AKA_A2",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "dailymail.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08-Sep-2026 03:34:31 GMT"
+      },
+      {
+        "cookieName": "gab",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".www.dailymail.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "bm_s",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".dailymail.com",
+        "path": "/",
+        "maxAge": "2678400",
+        "expires": "Fri, 09 Oct 2026 02:34:32 GMT"
+      },
+      {
+        "cookieName": "bm_so",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".dailymail.com",
+        "path": "/",
+        "maxAge": "86399",
+        "expires": "Wed, 09 Sep 2026 02:34:31 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Outbrain",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Outbrain content recommendation and native advertising tracker"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "coolguesthouse.com",
+      "scripts.dailymail.co.uk",
+      "i.dailymail.co.uk",
+      "i.dailymail.com",
+      "scripts.dailymail.com",
+      "video.dailymail.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 4,
+      "trackingCookies": 0,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 6,
+      "highRiskItems": 4
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

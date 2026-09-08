@@ -1,0 +1,189 @@
+{
+  "domain": "kleinanzeigen.de",
+  "finalUrl": "https://www.kleinanzeigen.de/",
+  "title": "Kleinanzeigen – früher eBay Kleinanzeigen. Anzeigen gratis inserieren mit Kleinanzeigen",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 56,
+    "grade": "D",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 24,
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Criteo"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Hotjar"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 5,
+        "detail": "10 third-party domains"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade D: 1 tracking cookie before consent, 4 ad trackers, 10 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "kameleoonVisitorCode",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": ".kleinanzeigen.de",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": null
+      },
+      {
+        "cookieName": "lnFeMonitoring",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Strict",
+        "domain": "www.kleinanzeigen.de",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "ak_bmsc",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".kleinanzeigen.de",
+        "path": "/",
+        "maxAge": "7199",
+        "expires": "Tue, 08 Sep 2026 04:34:37 GMT"
+      },
+      {
+        "cookieName": "bm_mi",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".kleinanzeigen.de",
+        "path": "/",
+        "maxAge": "0",
+        "expires": "Tue, 08 Sep 2026 02:34:38 GMT"
+      },
+      {
+        "cookieName": "bm_sz",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".kleinanzeigen.de",
+        "path": "/",
+        "maxAge": "14399",
+        "expires": "Tue, 08 Sep 2026 06:34:37 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Criteo",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Criteo retargeting — follows you across sites to show personalized ads"
+      },
+      {
+        "name": "Hotjar",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Hotjar — records user sessions, heatmaps, and click tracking"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "cdn.confiant-integrations.net",
+      "pe5gcbmdizh9q7xnj.ay.delivery",
+      "c.amazon-adsystem.com",
+      "securepubads.g.doubleclick.net",
+      "www.google.com",
+      "static.criteo.net",
+      "ats-wrapper.privacymanager.io",
+      "server.sgtm-legacy.kleinanzeigen.de",
+      "static.kleinanzeigen.de",
+      "img.kleinanzeigen.de"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 5,
+      "thirdPartyScripts": 10,
+      "highRiskItems": 4
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

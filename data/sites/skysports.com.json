@@ -1,0 +1,122 @@
+{
+  "domain": "skysports.com",
+  "finalUrl": "https://www.skysports.com/",
+  "title": "Sky Sports - Sports News, Transfers, Scores | Watch Live Sport",
+  "category": {
+    "category": "streaming",
+    "label": "Streaming & entertainment",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 81,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 12,
+        "detail": "Google AdSense, Outbrain"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 ad trackers, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "bm_s",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".skysports.com",
+        "path": "/",
+        "maxAge": "2678400",
+        "expires": "Fri, 09 Oct 2026 02:34:47 GMT"
+      },
+      {
+        "cookieName": "bm_so",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".skysports.com",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": "Wed, 09 Sep 2026 02:34:47 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Outbrain",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Outbrain content recommendation and native advertising tracker"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "cdn.privacy-mgmt.com",
+      "e0.365dm.com",
+      "img001-eu-mo-prd.delivery.skycdp.com",
+      "img.skysports.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 0,
+      "analyticsCookies": 1,
+      "functionalCookies": 0,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

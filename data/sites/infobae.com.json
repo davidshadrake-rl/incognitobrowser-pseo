@@ -1,0 +1,124 @@
+{
+  "domain": "infobae.com",
+  "finalUrl": "https://www.infobae.com/estados-unidos/",
+  "title": "Infobae EE.UU. | Últimas Noticias de Estados Unidos en Español - Infobae",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 67,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 18,
+        "detail": "Facebook Pixel, Google DoubleClick, Facebook SDK"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 9,
+        "detail": "Facebook Pixel (inline), Google gtag (inline), Google Analytics (inline)"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 2,
+        "detail": "7 third-party domains"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 3 ad trackers, 7 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "AKA_A2",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "infobae.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08-Sep-2026 03:34:43 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Facebook Pixel",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook/Meta Pixel — tracks conversions and builds ad audiences across the web"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Facebook SDK",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook SDK — enables social features but tracks all visitors"
+      }
+    ],
+    "inlineTrackers": [
+      "Facebook Pixel (inline)",
+      "Google gtag (inline)",
+      "Google Analytics (inline)"
+    ],
+    "thirdPartyDomains": [
+      "functions.adnami.io",
+      "www.googletagmanager.com",
+      "a564e303-c351-48a1-b5d1-38585e343734.edge.permutive.app",
+      "cdn.onesignal.com",
+      "d1bl11pgu3tw3h.cloudfront.net",
+      "sb.scorecardresearch.com",
+      "www.facebook.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 1,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 7,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

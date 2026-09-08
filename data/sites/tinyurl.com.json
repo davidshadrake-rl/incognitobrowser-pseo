@@ -1,0 +1,139 @@
+{
+  "domain": "tinyurl.com",
+  "finalUrl": "https://tinyurl.com/",
+  "title": "URL Shortener, Branded Short Links & Analytics | TinyURL",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 86,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Amazon Ads"
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 1 ad tracker, 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "XSRF-TOKEN",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "lax",
+        "domain": ".tinyurl.com",
+        "path": "/",
+        "maxAge": "7200",
+        "expires": "Tue, 08 Sep 2026 04:34:16 GMT"
+      },
+      {
+        "cookieName": "tinyurl-session",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": ".tinyurl.com",
+        "path": "/",
+        "maxAge": "7200",
+        "expires": "Tue, 08 Sep 2026 04:34:16 GMT"
+      },
+      {
+        "cookieName": "tinyUUID",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": ".tinyurl.com",
+        "path": "/",
+        "maxAge": "34560000",
+        "expires": "Wed, 13 Oct 2027 02:34:16 GMT"
+      },
+      {
+        "cookieName": "early-access",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": ".tinyurl.com",
+        "path": "/",
+        "maxAge": "34560000",
+        "expires": "Wed, 13 Oct 2027 02:34:16 GMT"
+      },
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "tinyurl.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:16 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "a.pub.network",
+      "static.cloudflareinsights.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 1,
+      "analyticsCookies": 1,
+      "functionalCookies": 3,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

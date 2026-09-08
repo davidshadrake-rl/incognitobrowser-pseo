@@ -1,0 +1,92 @@
+{
+  "domain": "foxnews.com",
+  "finalUrl": "https://www.foxnews.com/",
+  "title": "Fox News - Breaking News Updates | Latest News Headlines | Photos &amp; News Videos",
+  "category": {
+    "category": "news",
+    "label": "News & media",
+    "niche": "ad-tracking"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 67,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 30,
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Criteo, Taboola"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      }
+    ],
+    "headline": "Grade C: 5 ad trackers, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google AdSense",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Criteo",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Criteo retargeting — follows you across sites to show personalized ads"
+      },
+      {
+        "name": "Taboola",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Taboola content recommendation — tracks browsing for ad personalization"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "a57.foxnews.com",
+      "images.foxweather.com",
+      "static.foxnews.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 5,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 5
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

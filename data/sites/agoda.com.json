@@ -1,0 +1,260 @@
+{
+  "domain": "agoda.com",
+  "finalUrl": "https://www.agoda.com/",
+  "title": "agoda.com",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 72,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 24,
+        "detail": "3 tracking cookies"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 3 tracking cookies before consent, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "ASP.NET_SessionId",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "Lax",
+        "domain": "www.agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "agoda.version.03",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 00:00:00 GMT"
+      },
+      {
+        "cookieName": "agoda.landings",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 00:00:00 GMT"
+      },
+      {
+        "cookieName": "agoda.attr.fe",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 00:00:00 GMT"
+      },
+      {
+        "cookieName": "agoda.attr.03",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 00:00:00 GMT"
+      },
+      {
+        "cookieName": "agoda.cid",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 09:34:37 GMT"
+      },
+      {
+        "cookieName": "agoda.price.trk.01",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 09:34:37 GMT"
+      },
+      {
+        "cookieName": "agoda.price.01",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 09:34:37 GMT"
+      },
+      {
+        "cookieName": "xsrf_token",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "strict",
+        "domain": "www.agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "t_pp",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08-Sep-2026 03:34:37 GMT"
+      },
+      {
+        "cookieName": "agoda.user.03",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 02:34:37 GMT"
+      },
+      {
+        "cookieName": "t_rc",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 09-Sep-2026 02:34:37 GMT"
+      },
+      {
+        "cookieName": "agoda.analytics",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08-Sep-2026 03:34:37 GMT"
+      },
+      {
+        "cookieName": "agoda.prius",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".agoda.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Wed, 08-Sep-2027 02:34:37 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "cdn6.agoda.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 14,
+      "trackingCookies": 3,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 3
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

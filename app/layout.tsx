@@ -36,6 +36,7 @@ const navItems = [
   { label: "Glossary", href: "/glossary" },
   { label: "Templates", href: "/templates" },
   { label: "Calculators", href: "/calculators" },
+  { label: "Report Cards", href: "/site" },
 ];
 
 // The Pro deployment has no pSEO content — only the Tools section.

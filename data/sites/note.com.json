@@ -1,0 +1,112 @@
+{
+  "domain": "note.com",
+  "finalUrl": "https://note.com/",
+  "title": "note ――つくる、つながる、とどける。",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 88,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "note_gql_auth_token",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".note.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      },
+      {
+        "cookieName": "_note_session_v5",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".note.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Mon, 14 Sep 2026 09:13:37 GMT"
+      },
+      {
+        "cookieName": "note_web_visitor_id",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": ".note.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:39 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 0,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,113 @@
+{
+  "domain": "parklogic.com",
+  "finalUrl": "https://parklogic.com/",
+  "title": "ParkLogic",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 84,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 1,
+        "detail": "6 third-party domains"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 6 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "PHPSESSID",
+        "name": "PHP Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "PHP server-side session cookie — standard functionality",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "parklogic.com",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": "Wed, 09-Sep-2026 02:34:31 GMT"
+      },
+      {
+        "cookieName": "uidinfer",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "parklogic.com",
+        "path": "/",
+        "maxAge": "2592000",
+        "expires": "Thu, 08-Oct-2026 02:34:31 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "code.jquery.com",
+      "cdnjs.cloudflare.com",
+      "cdn.datatables.net",
+      "cdn.jsdelivr.net",
+      "www.gstatic.com",
+      "www.google.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 6,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

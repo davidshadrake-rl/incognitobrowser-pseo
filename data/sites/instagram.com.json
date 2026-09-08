@@ -1,0 +1,106 @@
+{
+  "domain": "instagram.com",
+  "finalUrl": "https://www.instagram.com/",
+  "title": "Instagram",
+  "category": {
+    "category": "social",
+    "label": "Social networks",
+    "niche": "social-media-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 85,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Google DoubleClick"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 1 ad tracker, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "csrftoken",
+        "name": "CSRF Protection",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cross-site request forgery protection token",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".instagram.com",
+        "path": "/",
+        "maxAge": "34560000",
+        "expires": "Wed, 13-Oct-2027 02:34:11 GMT"
+      },
+      {
+        "cookieName": "mid",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": ".instagram.com",
+        "path": "/",
+        "maxAge": "34560000",
+        "expires": "Wed, 13-Oct-2027 02:34:11 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "static.cdninstagram.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 1,
+      "totalTrackers": 2,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 2
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,129 @@
+{
+  "domain": "elmundo.es",
+  "finalUrl": "https://www.elmundo.es/",
+  "title": "EL MUNDO - Diario online l�der de informaci�n en espa�ol",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 53,
+    "grade": "D",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 30,
+        "detail": "Facebook Pixel, Google DoubleClick, Amazon Ads, Taboola, Facebook SDK"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 4,
+        "detail": "9 third-party domains"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade D: 5 ad trackers, 9 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Facebook Pixel",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook/Meta Pixel — tracks conversions and builds ad audiences across the web"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Amazon Ads",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Taboola",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Taboola content recommendation — tracks browsing for ad personalization"
+      },
+      {
+        "name": "Facebook SDK",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Facebook SDK — enables social features but tracks all visitors"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "e01-elmundo.uecdn.es",
+      "adtcdn.unidadeditorial.es",
+      "sdk.privacy-center.org",
+      "e00-elmundo.uecdn.es",
+      "e00-ue.uecdn.es",
+      "s2.dmcdn.net",
+      "impes.tradedoubler.com",
+      "fundingchoicesmessages.google.com",
+      "cdn.taboola.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 6,
+      "thirdPartyScripts": 9,
+      "highRiskItems": 5
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

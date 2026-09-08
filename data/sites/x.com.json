@@ -1,0 +1,144 @@
+{
+  "domain": "x.com",
+  "finalUrl": "https://x.com/",
+  "title": "X. It’s what’s happening / X",
+  "category": {
+    "category": "social",
+    "label": "Social networks",
+    "niche": "social-media-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 67,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 32,
+        "detail": "4 tracking cookies"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 4 tracking cookies before consent, 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "guest_id_marketing",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".x.com",
+        "path": "/",
+        "maxAge": "63072000",
+        "expires": "Thu, 07 Sep 2028 02:34:10 GMT"
+      },
+      {
+        "cookieName": "guest_id_ads",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".x.com",
+        "path": "/",
+        "maxAge": "63072000",
+        "expires": "Thu, 07 Sep 2028 02:34:10 GMT"
+      },
+      {
+        "cookieName": "gt",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": ".x.com",
+        "path": "/",
+        "maxAge": "9000",
+        "expires": "Tue, 08 Sep 2026 05:04:10 GMT"
+      },
+      {
+        "cookieName": "personalization_id",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".x.com",
+        "path": "/",
+        "maxAge": "63072000",
+        "expires": "Thu, 07 Sep 2028 02:34:10 GMT"
+      },
+      {
+        "cookieName": "guest_id",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": ".x.com",
+        "path": "/",
+        "maxAge": "63072000",
+        "expires": "Thu, 07 Sep 2028 02:34:10 GMT"
+      },
+      {
+        "cookieName": "ct0",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": ".x.com",
+        "path": "/",
+        "maxAge": "-1788834849",
+        "expires": "Thu, 01 Jan 1970 00:00:01 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "abs.twimg.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 6,
+      "trackingCookies": 4,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 4
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

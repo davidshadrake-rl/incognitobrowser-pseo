@@ -1,0 +1,146 @@
+{
+  "domain": "ok.ru",
+  "finalUrl": "https://ok.ru/",
+  "title": "OK social network. Communication with friends on OK. Your meeting place with classmates",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 88,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 5 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "bci",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "ok.ru",
+        "path": "/",
+        "maxAge": "2147483647",
+        "expires": "Sun, 26 Sep 2094 05:48:26 GMT"
+      },
+      {
+        "cookieName": "_statid",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": "ok.ru",
+        "path": "/",
+        "maxAge": "2147483647",
+        "expires": "Sun, 26 Sep 2094 05:48:26 GMT"
+      },
+      {
+        "cookieName": "JSESSIONID",
+        "name": "Java Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "Java server-side session cookie — standard functionality",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "none",
+        "domain": "ok.ru",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "cookieChoice",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "ok.ru",
+        "path": "/",
+        "maxAge": "118719488",
+        "expires": "Thu, 13 Jun 2030 04:12:27 GMT"
+      },
+      {
+        "cookieName": "ss_wb",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "ok.ru",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": null
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "mc.yandex.ru",
+      "top-fwz1.mail.ru",
+      "www.googletagmanager.com",
+      "st.okcdn.ru",
+      "r3.mail.ru"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 5,
+      "trackingCookies": 1,
+      "analyticsCookies": 3,
+      "functionalCookies": 1,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 5,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -28,7 +28,7 @@ export function RelatedContent({ links, nicheHub }: { links: RelatedLink[]; nich
           <Link
             key={i}
             href={link.url}
-            className="flex items-center gap-3 p-3 border border-white/10 rounded-lg hover:border-white/30 bg-white/[0.02] transition-all"
+            className="flex items-center gap-3 p-3 border border-white/10 rounded-lg hover:border-white/30 bg-white/[0.02] transition-all related-card"
           >
             <span className="text-base">
               {TYPE_ICONS[link.type] || TYPE_ICONS.internal}

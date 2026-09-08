@@ -1,0 +1,95 @@
+{
+  "domain": "coursera.org",
+  "finalUrl": "https://www.coursera.org/",
+  "title": "Coursera | Online Courses, Certificates, &amp; Degrees",
+  "category": {
+    "category": "education",
+    "label": "Education",
+    "niche": "student-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 96,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 2 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "CSRF3-Token",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "Lax",
+        "domain": ".coursera.org",
+        "path": "/",
+        "maxAge": "864000",
+        "expires": "Fri, 18 Sep 2026 02:34:50 GMT"
+      },
+      {
+        "cookieName": "__204u",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".coursera.org",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08 Sep 2027 02:34:50 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Sentry",
+        "category": "functional",
+        "risk": "low",
+        "description": "Sentry — error monitoring and performance tracking (developer tool)"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "d3njjcbhbojbot.cloudfront.net",
+      "browser.sentry-cdn.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 0,
+      "analyticsCookies": 1,
+      "functionalCookies": 1,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 2,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

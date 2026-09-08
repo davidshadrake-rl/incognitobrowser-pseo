@@ -1,0 +1,103 @@
+{
+  "domain": "agora.io",
+  "finalUrl": "https://www.agora.io/en/",
+  "title": "Real-Time Engagement &amp; Conversational AI Platform | Agora",
+  "category": {
+    "category": "tech",
+    "label": "Tech & software",
+    "niche": "browser-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 81,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 9,
+        "detail": "Google Analytics / GTM, Microsoft Clarity, HubSpot"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "Third-party script domains beyond a reasonable five",
+        "points": 7,
+        "detail": "12 third-party domains"
+      }
+    ],
+    "headline": "Grade B: 12 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Microsoft Clarity",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Microsoft Clarity — free session recording and heatmap analytics"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      },
+      {
+        "name": "HubSpot",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "HubSpot — marketing analytics, CRM tracking, and lead scoring"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "ajax.googleapis.com",
+      "cdn-prod.securiti.ai",
+      "cdn-cookieyes.com",
+      "cdn.jsdelivr.net",
+      "script.superagi.com",
+      "www.googletagmanager.com",
+      "www.clarity.ms",
+      "cdn.prod.website-files.com",
+      "player.vimeo.com",
+      "cdn.expertise.ai",
+      "d3e54v103j8qbb.cloudfront.net",
+      "awsmfl2.s3.amazonaws.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": true,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 4,
+      "thirdPartyScripts": 12,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

@@ -1,0 +1,108 @@
+{
+  "domain": "microsoft.com",
+  "finalUrl": "https://www.microsoft.com/en-us",
+  "title": "Microsoft – AI, Cloud, Productivity, Computing, Gaming &amp; Apps",
+  "category": {
+    "category": "tech",
+    "label": "Tech & software",
+    "niche": "browser-privacy"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 85,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Microsoft Clarity"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 1 tracking cookie before consent, 5 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "CAS_PROGRAM",
+        "name": "Third-Party Cookie",
+        "category": "tracking",
+        "risk": "high",
+        "description": "SameSite=None allows cross-site tracking",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "None",
+        "domain": "www.microsoft.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08-Sep-2026 02:34:18 GMT"
+      },
+      {
+        "cookieName": "ak_bmsc",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".microsoft.com",
+        "path": "/",
+        "maxAge": "7199",
+        "expires": "Tue, 08 Sep 2026 04:34:10 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Microsoft Clarity",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Microsoft Clarity — free session recording and heatmap analytics"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "rum.hlx.page",
+      "www.clarity.ms",
+      "uhf.microsoft.com",
+      "cdn-dynmedia-1.microsoft.com",
+      "wcpstatic.microsoft.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 2,
+      "trackingCookies": 1,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 5,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

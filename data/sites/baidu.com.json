@@ -1,0 +1,150 @@
+{
+  "domain": "baidu.com",
+  "finalUrl": "https://www.baidu.com/",
+  "title": "百度一下，你就知道",
+  "category": {
+    "category": "search",
+    "label": "Search engines",
+    "niche": "private-search"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 80,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade B: 2 tracking cookies before consent, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "BAIDUID",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".baidu.com",
+        "path": "/",
+        "maxAge": "2147483647",
+        "expires": "Thu, 31-Dec-37 23:55:55 GMT"
+      },
+      {
+        "cookieName": "BIDUPSID",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".baidu.com",
+        "path": "/",
+        "maxAge": "2147483647",
+        "expires": "Thu, 31-Dec-37 23:55:55 GMT"
+      },
+      {
+        "cookieName": "PSTM",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".baidu.com",
+        "path": "/",
+        "maxAge": "2147483647",
+        "expires": "Thu, 31-Dec-37 23:55:55 GMT"
+      },
+      {
+        "cookieName": "BAIDUID",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".baidu.com",
+        "path": "/",
+        "maxAge": "31536000",
+        "expires": "Wed, 08-Sep-27 02:34:14 GMT"
+      },
+      {
+        "cookieName": "BDSVRTM",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.baidu.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      },
+      {
+        "cookieName": "BD_HOME",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.baidu.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": null
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "su.bdimg.com",
+      "pss.bdstatic.com",
+      "psstatic.cdn.bcebos.com"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 6,
+      "trackingCookies": 2,
+      "analyticsCookies": 2,
+      "functionalCookies": 0,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

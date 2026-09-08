@@ -142,7 +142,8 @@ export default function ToolsIndex() {
         Most tools run entirely in your browser — no data leaves your device. The
         cookie &amp; tracker scanner is the exception: it fetches the URL you enter
         through our server (rate-limited, never logged) so it can read what a site
-        sets before you visit. Server-assisted tools are labeled.
+        sets before you visit. Server-assisted tools are labeled.{' '}
+        {!IS_PRO_DEPLOYMENT && (<>Want to see how popular sites score? <Link href="/site" className="underline hover:text-white">500 website privacy report cards →</Link></>)}
       </p>
 
       {items.length === 0 && (

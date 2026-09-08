@@ -1,0 +1,101 @@
+{
+  "domain": "nic.ru",
+  "finalUrl": "https://www.nic.ru/",
+  "title": "Корпоративный регистратор доменов Руцентр",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 96,
+    "grade": "A",
+    "deductions": [
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade A: 1 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "pofm_cid",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": "www.nic.ru",
+        "path": "/",
+        "maxAge": "157680000",
+        "expires": "Sun, 07-Sep-2031 02:34:17 GMT"
+      },
+      {
+        "cookieName": "session",
+        "name": "Functional",
+        "category": "functional",
+        "risk": "low",
+        "description": "Likely a functional/security cookie",
+        "secure": false,
+        "httpOnly": true,
+        "sameSite": "lax",
+        "domain": "www.nic.ru",
+        "path": "/",
+        "maxAge": "7200",
+        "expires": "Tue, 08-Sep-2026 04:34:17 GMT"
+      },
+      {
+        "cookieName": "preventRedirectToCustomMainPage",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": false,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.nic.ru",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+      }
+    ],
+    "trackers": [],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "yastatic.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": true,
+      "hasPermPolicy": false,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 3,
+      "trackingCookies": 0,
+      "analyticsCookies": 1,
+      "functionalCookies": 1,
+      "totalTrackers": 0,
+      "thirdPartyScripts": 1,
+      "highRiskItems": 0
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

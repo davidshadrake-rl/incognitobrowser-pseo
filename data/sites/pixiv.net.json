@@ -1,0 +1,229 @@
+{
+  "domain": "pixiv.net",
+  "finalUrl": "https://www.pixiv.net/en/",
+  "title": "Online community for artist [pixiv]",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 76,
+    "grade": "C",
+    "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Google DoubleClick"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Google Analytics / GTM"
+      },
+      {
+        "reason": "Inline tracking pixels",
+        "points": 3,
+        "detail": "Google gtag (inline)"
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      },
+      {
+        "reason": "No Permissions-Policy",
+        "points": 1
+      }
+    ],
+    "headline": "Grade C: 1 tracking cookie before consent, 1 ad tracker, 4 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [
+      {
+        "cookieName": "first_visit_datetime_pc",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.pixiv.net",
+        "path": "/",
+        "maxAge": "63072000",
+        "expires": "Thu, 07 Sep 2028 02:34:41 GMT"
+      },
+      {
+        "cookieName": "PHPSESSID",
+        "name": "PHP Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "PHP server-side session cookie — standard functionality",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".pixiv.net",
+        "path": "/",
+        "maxAge": "3600",
+        "expires": "Tue, 08 Sep 2026 03:34:41 GMT"
+      },
+      {
+        "cookieName": "cc1",
+        "name": "Unknown",
+        "category": "unknown",
+        "risk": "low",
+        "description": "Purpose unknown — could be functional or tracking",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".pixiv.net",
+        "path": "/",
+        "maxAge": "86400",
+        "expires": "Wed, 09 Sep 2026 02:34:41 GMT"
+      },
+      {
+        "cookieName": "PHPSESSID",
+        "name": "PHP Session",
+        "category": "functional",
+        "risk": "low",
+        "description": "PHP server-side session cookie — standard functionality",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "not set",
+        "domain": ".pixiv.net",
+        "path": "/",
+        "maxAge": "3600",
+        "expires": "Tue, 08 Sep 2026 03:34:41 GMT"
+      },
+      {
+        "cookieName": "p_ab_id",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".pixiv.net",
+        "path": "/",
+        "maxAge": "157680000",
+        "expires": "Sun, 07 Sep 2031 02:34:41 GMT"
+      },
+      {
+        "cookieName": "p_ab_id_2",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".pixiv.net",
+        "path": "/",
+        "maxAge": "157680000",
+        "expires": "Sun, 07 Sep 2031 02:34:41 GMT"
+      },
+      {
+        "cookieName": "p_ab_d_id",
+        "name": "Long-Lived Cookie",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cookie with extended expiry — persistent tracking possible",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".pixiv.net",
+        "path": "/",
+        "maxAge": "157680000",
+        "expires": "Sun, 07 Sep 2031 02:34:41 GMT"
+      },
+      {
+        "cookieName": "yuid_b",
+        "name": "Unknown Tracker",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Likely a tracking cookie based on naming pattern",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": "www.pixiv.net",
+        "path": "/",
+        "maxAge": "63072000",
+        "expires": "Thu, 07 Sep 2028 02:34:41 GMT"
+      },
+      {
+        "cookieName": "__cf_bm",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare bot management — necessary for security",
+        "secure": true,
+        "httpOnly": true,
+        "sameSite": "None",
+        "domain": "pixiv.net",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Tue, 08 Sep 2026 03:04:41 GMT"
+      }
+    ],
+    "trackers": [
+      {
+        "name": "Google Analytics / GTM",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Google DoubleClick",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "reCAPTCHA",
+        "category": "functional",
+        "risk": "medium",
+        "description": "Google reCAPTCHA — bot protection that also sends data to Google"
+      }
+    ],
+    "inlineTrackers": [
+      "Google gtag (inline)"
+    ],
+    "thirdPartyDomains": [
+      "source.pixiv.net",
+      "a.pixiv.org",
+      "www.googletagmanager.com",
+      "imp.pixiv.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": false,
+      "hasHSTS": true
+    },
+    "summary": {
+      "totalCookies": 9,
+      "trackingCookies": 1,
+      "analyticsCookies": 4,
+      "functionalCookies": 3,
+      "totalTrackers": 3,
+      "thirdPartyScripts": 4,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}

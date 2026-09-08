@@ -1,0 +1,72 @@
+{
+  "domain": "focus.de",
+  "finalUrl": "https://www.focus.de/",
+  "title": "FOCUS online - Aktuelle Nachrichten",
+  "category": {
+    "category": "general",
+    "label": "General",
+    "niche": "cookie-management"
+  },
+  "scannedAt": "2026-09-08T02:34:10.697Z",
+  "grade": {
+    "score": 88,
+    "grade": "B",
+    "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Criteo"
+      },
+      {
+        "reason": "No HSTS (Strict-Transport-Security)",
+        "points": 3
+      },
+      {
+        "reason": "No Content-Security-Policy",
+        "points": 3
+      }
+    ],
+    "headline": "Grade B: 1 ad tracker, 3 third-party domains on the homepage."
+  },
+  "scan": {
+    "status": 200,
+    "cookies": [],
+    "trackers": [
+      {
+        "name": "Criteo",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Criteo retargeting — follows you across sites to show personalized ads"
+      }
+    ],
+    "inlineTrackers": [],
+    "thirdPartyDomains": [
+      "cmp.focus.de",
+      "quadro.burda-forward.de",
+      "static.criteo.net"
+    ],
+    "security": {
+      "isHTTPS": true,
+      "hasCSP": false,
+      "hasPermPolicy": true,
+      "hasHSTS": false
+    },
+    "summary": {
+      "totalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 0,
+      "totalTrackers": 1,
+      "thirdPartyScripts": 3,
+      "highRiskItems": 1
+    }
+  },
+  "history": [],
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Automated report card from our own scanner; methodology published on the page."
+  },
+  "author": null
+}
