@@ -16,7 +16,7 @@
   "description": "See exactly what your IP address reveals about you, and verify your VPN isn't leaking your real IP via WebRTC.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool makes two queries when you open the page: (1) a public IP lookup API to read what your egress IP looks like to the public internet, and (2) a WebRTC ICE candidate probe that asks your browser for the IPs it would advertise during a peer-to-peer connection. The WebRTC probe is what reveals VPN leaks — a properly-configured VPN should mask both the lookup IP AND the WebRTC-advertised IP. If you see your real ISP IP in the WebRTC section while connected to a VPN, the VPN isn't patching WebRTC and sites can still identify you.",
+    "howItWorks": "This tool makes two checks when you open the page: (1) it asks our own server what IP address your request arrived from, plus the city/region/country/timezone the edge network already attached to that request — nothing is sent to any third-party IP lookup service; and (2) a WebRTC ICE candidate probe that asks your browser for the IPs it would advertise during a peer-to-peer connection. The WebRTC probe is what reveals VPN leaks — a properly-configured VPN should mask both the server-seen IP AND the WebRTC-advertised IP. If you see your real ISP IP in the WebRTC section while connected to a VPN, the VPN isn't patching WebRTC and sites can still identify you.",
     "tips": [
       "Run this tool with your VPN OFF and note your real IP, then turn the VPN ON and run again — both IPs should differ",
       "If WebRTC shows your real IP while the VPN is on, install a WebRTC blocker extension or switch to a VPN that patches the API",
@@ -33,7 +33,16 @@
     ]
   },
   "relatedLinks": [
-    { "title": "WebRTC: Everything You Need to Know", "url": "https://webrtc-security.github.io/", "type": "external" },
-    { "title": "Why VPNs leak via WebRTC", "url": "https://restoreprivacy.com/vpn/webrtc-leaks/", "type": "external" }
-  ]
+    {
+      "title": "WebRTC: Everything You Need to Know",
+      "url": "https://webrtc-security.github.io/",
+      "type": "external"
+    },
+    {
+      "title": "Why VPNs leak via WebRTC",
+      "url": "https://restoreprivacy.com/vpn/webrtc-leaks/",
+      "type": "external"
+    }
+  ],
+  "processing": "server"
 }

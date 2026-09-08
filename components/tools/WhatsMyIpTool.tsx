@@ -14,6 +14,8 @@ interface IpInfo {
   isVpn?: boolean;
   isProxy?: boolean;
   isHosting?: boolean;
+  /** No proxy headers on the request (local dev) — IP shown is a loopback placeholder. */
+  isLocal?: boolean;
 }
 
 interface WebRtcResult {
@@ -76,47 +78,50 @@ async function discoverWebRtcIPs(): Promise<WebRtcResult> {
 }
 
 /**
- * Fetch the public IP + geolocation/ASN from a free third-party API.
- * ipapi.co allows ~30 req/day without an API key. If you outgrow this, swap for
- * ipinfo.io (50k/month free) by changing the URL — both return compatible JSON.
+ * Fetch the public IP + geolocation from OUR OWN API (POST /ip).
+ *
+ * Previously this hit api.ipify.org + ipapi.co directly, which (a) shipped
+ * every visitor's IP to two third parties from a privacy tool, and (b) was
+ * blocked by our CSP connect-src on the Vercel build, so the tool timed out.
+ *
+ * /ip answers from the inbound request headers only (x-forwarded-for + the
+ * geo headers Vercel attaches) — no outbound call, no external dependency.
+ * ISP/ASN are intentionally not provided (would need an external database);
+ * the UI is conditional on those fields so they simply don't render.
+ *
+ * Same API base resolution as the cookie scanner so both tools behave
+ * identically per deploy target. Override for local dev via
+ * NEXT_PUBLIC_SCAN_API in .env.local.
  */
+const API_BASE = process.env.NEXT_PUBLIC_SCAN_API || 'https://api.incognitobrowser.io';
+
 async function fetchPublicIpInfo(): Promise<IpInfo> {
-  // Two parallel requests:
-  //   1. ipify for the raw IP (super reliable, no rate limit, no metadata)
-  //   2. ipapi.co for ISP/geolocation/VPN detection
-  // We can return after both settle and merge what we got.
-  const [ipResult, infoResult] = await Promise.allSettled([
-    fetch('https://api.ipify.org?format=json').then((r) => r.json()),
-    fetch('https://ipapi.co/json/').then((r) => r.json()),
-  ]);
-
+  const res = await fetch(`${API_BASE}/ip`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: '{}',
+    cache: 'no-store',
+  });
+  if (!res.ok) {
+    throw new Error(
+      res.status === 403
+        ? 'This page is not allowed to query the IP service (origin not allowlisted).'
+        : res.status === 429
+          ? 'Too many lookups — wait a minute and refresh.'
+          : `IP lookup failed (${res.status}).`,
+    );
+  }
+  const d = (await res.json()) as {
+    ip: string; version: 'v4' | 'v6'; local: boolean;
+    city: string | null; region: string | null; country: string | null; timezone: string | null;
+  };
   const out: IpInfo = {};
-
-  if (ipResult.status === 'fulfilled' && ipResult.value?.ip) {
-    const ip = ipResult.value.ip as string;
-    if (ip.includes(':')) out.ipv6 = ip;
-    else out.ipv4 = ip;
-  }
-
-  if (infoResult.status === 'fulfilled') {
-    const d = infoResult.value as Record<string, unknown>;
-    // ipapi.co returns 'ip' which may be v4 or v6
-    if (typeof d.ip === 'string' && !out.ipv4 && !out.ipv6) {
-      if (d.ip.includes(':')) out.ipv6 = d.ip;
-      else out.ipv4 = d.ip;
-    }
-    if (typeof d.city === 'string') out.city = d.city;
-    if (typeof d.region === 'string') out.region = d.region;
-    if (typeof d.country_name === 'string') out.country = d.country_name;
-    if (typeof d.org === 'string') out.org = d.org;
-    if (typeof d.asn === 'string') out.asn = d.asn;
-    if (typeof d.timezone === 'string') out.timezone = d.timezone;
-    // ipapi.co doesn't have explicit VPN flags on free tier — we can heuristically
-    // detect hosting providers (Vercel, AWS, DigitalOcean) by ASN/org strings.
-    const orgLower = (d.org as string | undefined)?.toLowerCase() || '';
-    out.isHosting = /digitalocean|amazon|aws|google cloud|gcp|microsoft|azure|vercel|cloudflare|linode|hetzner|ovh|vultr/.test(orgLower);
-  }
-
+  if (d.version === 'v6') out.ipv6 = d.ip; else out.ipv4 = d.ip;
+  if (d.city) out.city = d.city;
+  if (d.region) out.region = d.region;
+  if (d.country) out.country = d.country;
+  if (d.timezone) out.timezone = d.timezone;
+  if (d.local) out.isLocal = true;
   return out;
 }
 
@@ -156,7 +161,7 @@ export function WhatsMyIpTool() {
       {/* Refresh button */}
       <div className="flex items-center justify-between">
         <div className="text-sm text-[#B8B8D4]">
-          Your public IP, ISP, location, and WebRTC leak status. All checks run live in your browser.
+          Your public IP, location, and WebRTC leak status. The IP is read from the request our own server sees — nothing is sent to third-party lookup services.
         </div>
         <button
           onClick={() => setRefreshTick((t) => t + 1)}
@@ -195,8 +200,11 @@ export function WhatsMyIpTool() {
                   <span className="text-xs text-[#B8B8D4]">IPv6</span>
                 </div>
               )}
+              {ipInfo.isLocal && (
+                <p className="text-xs text-yellow-400/80">Running locally — no public IP is visible to this server, so a loopback address is shown.</p>
+              )}
               {!ipInfo.ipv4 && !ipInfo.ipv6 && (
-                <p className="text-sm text-yellow-400">Could not detect your public IP. The lookup service may be rate-limited or blocked by your network.</p>
+                <p className="text-sm text-yellow-400">Could not detect your public IP. Refresh, or check that this page is allowed to reach the IP service.</p>
               )}
             </div>
           </div>
@@ -265,7 +273,7 @@ export function WhatsMyIpTool() {
                     <div className="text-sm text-red-400 mb-3">
                       ⚠️ <strong>WebRTC is leaking public IPs:</strong> {webrtc.publicIPs.join(', ')}
                       <p className="mt-1 text-[#B8B8D4]">
-                        Even when using a VPN, sites can read these via WebRTC unless your VPN patches the API. Use a WebRTC blocker extension or switch to a VPN that specifically blocks this.
+                        Even when using a VPN, sites can read these via WebRTC unless your VPN patches the API. Use a browser that patches WebRTC, or a VPN that specifically blocks this.
                       </p>
                     </div>
                   )}
