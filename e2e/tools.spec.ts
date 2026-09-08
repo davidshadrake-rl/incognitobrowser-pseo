@@ -205,10 +205,16 @@ test('cookie-analyzer: scans example.com and renders the result panel', async ({
   await page.goto(toolUrl('cookie-analyzer'));
   await page.locator('input[type="url"], input[type="text"]').first().fill('https://example.com');
   await page.getByRole('button', { name: /^scan/i }).first().click();
-  // PoW solve + API call + render — give it generous time
+  // PoW solve + API call + render — give it generous time.
+  // Assert on RESULT-PANEL-ONLY text. The previous regex (/cookies|trackers|…/)
+  // matched the page's static "How This Tool Works" copy, so this test passed
+  // on Vercel while the scan itself was failing with a 403 from a dead API host.
+  // "Total Cookies" / "No cookies detected" only render after a completed scan.
   await expect(
-    page.getByText(/cookies|trackers|third-party|security headers|no cookies found/i).first(),
+    page.getByText(/^Total Cookies$|^No cookies detected$/).first(),
   ).toBeVisible({ timeout: 60_000 });
+  // And it must NOT have errored.
+  await expect(page.getByText(/network error/i)).toHaveCount(0);
 });
 
 // ─────────────────────────────────────────────────────────────────────────

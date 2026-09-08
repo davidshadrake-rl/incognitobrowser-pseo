@@ -44,7 +44,7 @@ describe('CORS - Origin Whitelist (lib/origin.ts)', () => {
   it('checks origin against allowed list before setting header', () => {
     expect(originLibSource).toContain('isOriginAllowed');
     // The route uses isOriginAllowed() — strict origin enforcement
-    expect(routeSource).toContain('isOriginAllowed(origin)');
+    expect(routeSource).toContain('isOriginAllowed(origin');
   });
 });
 
@@ -85,7 +85,7 @@ describe('Security Headers on API Responses', () => {
 
 describe('Origin enforcement on the route', () => {
   it('rejects requests from non-allowed origins with 403', () => {
-    expect(routeSource).toMatch(/!isOriginAllowed\(origin\)/);
+    expect(routeSource).toMatch(/!isOriginAllowed\(origin(, host)?\)/);
     expect(routeSource).toContain("'Origin not allowed.'");
     expect(routeSource).toMatch(/status:\s*403/);
   });

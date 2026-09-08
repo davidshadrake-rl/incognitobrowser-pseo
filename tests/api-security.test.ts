@@ -247,7 +247,7 @@ describe('scan-url route enforces POW + origin', () => {
   const src = readFile('app/scan-url/route.ts');
 
   it('rejects non-allowed origins with 403', () => {
-    expect(src).toMatch(/!isOriginAllowed\(origin\)/);
+    expect(src).toMatch(/!isOriginAllowed\(origin(, host)?\)/);
     expect(src).toContain("'Origin not allowed.'");
     expect(src).toMatch(/status:\s*403/);
   });
@@ -274,7 +274,7 @@ describe('challenge endpoint exists with rate limit', () => {
   });
 
   it('checks origin before issuing a challenge', () => {
-    expect(src).toMatch(/!isOriginAllowed\(origin\)/);
+    expect(src).toMatch(/!isOriginAllowed\(origin(, host)?\)/);
   });
 
   it('rate limits per IP', () => {
@@ -288,15 +288,19 @@ describe('challenge endpoint exists with rate limit', () => {
 });
 
 describe('client wiring', () => {
-  const src = readFile('components/tools/CookieAnalyzerTool.tsx');
+  // The PoW flow lives in the shared browser client; the cookie tool must USE it.
+  // Behavioral coverage of the flow itself is in tests/scan-client.test.ts.
+  const src = readFile('lib/scan-client.ts');
+  const cookieSrc = readFile('components/tools/CookieAnalyzerTool.tsx');
 
   it('calls /challenge before /scan-url', () => {
     expect(src).toMatch(/\/challenge/);
-    expect(src).toMatch(/solveAltchaChallenge/);
+    expect(src).toMatch(/solveChallenge/);
+    expect(cookieSrc).toMatch(/scanUrl(<[^>]*>)?\(/); // allow the generic type arg
   });
 
   it('sends Authorization header with the scan request', () => {
-    expect(src).toMatch(/Authorization:\s*authHeader/);
+    expect(src).toMatch(/Authorization:\s*authorization/);
   });
 
   it('uses NEXT_PUBLIC_SCAN_API override when available', () => {

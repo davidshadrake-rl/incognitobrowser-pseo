@@ -89,11 +89,15 @@ async function discoverWebRtcIPs(): Promise<WebRtcResult> {
  * ISP/ASN are intentionally not provided (would need an external database);
  * the UI is conditional on those fields so they simply don't render.
  *
- * Same API base resolution as the cookie scanner so both tools behave
- * identically per deploy target. Override for local dev via
- * NEXT_PUBLIC_SCAN_API in .env.local.
+ * API base resolution (shared convention with the cookie scanner):
+ *   - server-mode / Vercel: '' → same-origin. No env var, no CORS.
+ *   - static export (droplet / WordPress): NEXT_PUBLIC_SCAN_API, defaulted
+ *     in next.config.ts to the Vercel API host for BUILD_TARGET=static.
+ * Never fall back to a hardcoded hostname — the old default
+ * ('https://api.incognitobrowser.io') doesn't resolve and silently broke
+ * both tools on Vercel.
  */
-const API_BASE = process.env.NEXT_PUBLIC_SCAN_API || 'https://api.incognitobrowser.io';
+const API_BASE = process.env.NEXT_PUBLIC_SCAN_API ?? '';
 
 async function fetchPublicIpInfo(): Promise<IpInfo> {
   const res = await fetch(`${API_BASE}/ip`, {

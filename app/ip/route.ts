@@ -87,7 +87,7 @@ export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      ...corsHeadersFor(origin),
+      ...corsHeadersFor(origin, request.headers.get('host')),
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400',
@@ -97,9 +97,10 @@ export async function OPTIONS(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
-  const cors = { ...corsHeadersFor(origin), ...NO_STORE };
+  const host = request.headers.get('host');
+  const cors = { ...corsHeadersFor(origin, host), ...NO_STORE };
 
-  if (!isOriginAllowed(origin)) {
+  if (!isOriginAllowed(origin, host)) {
     return NextResponse.json({ error: 'Origin not allowed.' }, { status: 403, headers: cors });
   }
 

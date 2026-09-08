@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { scanUrl } from '@/lib/scan-client';
 
 interface CookieInfo {
   name: string;
@@ -172,63 +173,6 @@ export function CookieAnalyzerTool() {
     setScanned(true);
   };
 
-  // API base URL — points at the Vercel-hosted scanner endpoint.
-  // For local dev with `npm run dev`, override via NEXT_PUBLIC_SCAN_API in .env.local.
-  const API_BASE =
-    process.env.NEXT_PUBLIC_SCAN_API || 'https://api.incognitobrowser.io';
-
-  /**
-   * Fetch a fresh proof-of-work challenge, brute-force the solution in this tab,
-   * and return the encoded Authorization header value.
-   *
-   * Uses the synchronous js-sha256 implementation rather than crypto.subtle —
-   * the latter is async and per-call overhead made 100k iterations take ~30s
-   * in real browsers. Sync sha256 does the same workload in ~200–500ms.
-   *
-   * We yield to the event loop every 5k iterations so the page stays responsive
-   * (no spinner freeze) on slower devices.
-   */
-  const solveAltchaChallenge = async (): Promise<string> => {
-    setScanStatus('verifying');
-    const cRes = await fetch(`${API_BASE}/challenge`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: '{}',
-    });
-    if (!cRes.ok) {
-      throw new Error(`Challenge service returned ${cRes.status}`);
-    }
-    const c = (await cRes.json()) as {
-      algorithm: string;
-      salt: string;
-      challenge: string;
-      maxnumber: number;
-      signature: string;
-      expires: number;
-    };
-
-    setScanStatus('solving');
-    const { sha256 } = await import('js-sha256');
-    const target = c.challenge.toLowerCase();
-    for (let n = 0; n <= c.maxnumber; n++) {
-      if (sha256(c.salt + n) === target) {
-        const solution = {
-          algorithm: c.algorithm,
-          salt: c.salt,
-          number: n,
-          signature: c.signature,
-          expires: c.expires,
-        };
-        return `Altcha ${btoa(JSON.stringify(solution))}`;
-      }
-      // Yield to the event loop every 5000 iterations so the spinner animates
-      // and the UI stays responsive on slower devices.
-      if (n % 5000 === 0 && n > 0) {
-        await new Promise((r) => setTimeout(r, 0));
-      }
-    }
-    throw new Error('Could not solve challenge within search space');
-  };
 
   const scanURL = async () => {
     if (!urlInput.trim()) return;
@@ -239,29 +183,23 @@ export function CookieAnalyzerTool() {
 
     try {
       // 1. Get + solve POW challenge (defends against scripted abuse)
-      const authHeader = await solveAltchaChallenge();
-
-      // 2. Now scan with the token in Authorization
-      setScanStatus('scanning');
-      const res = await fetch(`${API_BASE}/scan-url`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: authHeader,
-        },
-        body: JSON.stringify({ url: urlInput.trim() }),
-      });
-      const data = await res.json();
+      // Shared client: challenge → solve → POST /scan-url with the proof.
+      const { res, data } = await scanUrl<URLScanResult>(urlInput.trim(), setScanStatus);
       if (!res.ok) {
         setUrlError(data.error || 'Failed to scan URL');
       } else {
         setUrlResult(data);
       }
     } catch (err) {
+      // Say what actually went wrong. A 403 is OUR allowlist rejecting this
+      // page's origin — not a bad URL. Blaming the URL sent people in circles.
+      const msg = err instanceof Error ? err.message : '';
       setUrlError(
-        err instanceof Error && err.message.includes('challenge')
-          ? 'Could not verify your browser. Please try again.'
-          : 'Network error. Please check the URL and try again.',
+        /403/.test(msg)
+          ? 'This page isn\u2019t allowed to use the scanner (origin not allowlisted).'
+          : /challenge/i.test(msg)
+            ? 'Could not verify your browser. Please try again.'
+            : 'Could not reach the scanner. Check your connection or ad blocker and try again.',
       );
     }
     setUrlScanning(false);

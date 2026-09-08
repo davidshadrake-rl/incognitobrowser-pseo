@@ -86,6 +86,17 @@ const SECURITY_HEADERS = [
 ];
 
 const nextConfig: NextConfig = {
+  // Client-side API base for the cookie scanner + What's My IP.
+  //   server mode (Vercel): "" → same-origin, no env var, no CORS.
+  //   static export (droplet/WordPress): the Vercel API host, cross-origin.
+  // An explicit NEXT_PUBLIC_SCAN_API always wins. Never default to a hostname
+  // that might not exist — the old 'api.incognitobrowser.io' fallback didn't
+  // resolve and silently broke both tools in production.
+  env: {
+    NEXT_PUBLIC_SCAN_API:
+      process.env.NEXT_PUBLIC_SCAN_API ??
+      (isStatic ? "https://incognitobrowser-pseo.vercel.app" : ""),
+  },
   // Pin Turbopack to this project's directory. Without this, Next.js 16 walks
   // up the filesystem looking for a lockfile and may pick a parent directory's
   // node_modules — which contains an incompatible React JSX runtime and breaks

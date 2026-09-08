@@ -40,7 +40,7 @@ export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      ...corsHeadersFor(origin),
+      ...corsHeadersFor(origin, request.headers.get('host')),
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Max-Age': '86400',
@@ -50,13 +50,15 @@ export async function OPTIONS(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
-  const cors = corsHeadersFor(origin);
+  const host = request.headers.get('host');
+  const cors = corsHeadersFor(origin, host);
 
-  // Strict origin check — reject requests that aren't from an allowlisted origin.
+  // Origin check — same-origin (the deployed site calling its own API) is
+  // always allowed; anything else must be in ALLOWED_ORIGINS.
   // Note: Origin can be spoofed by non-browser clients. This isn't the only
   // defense — the POW itself, the rate limit, and the server-side scan validation
   // are all in play. This just filters out the easy/lazy abusers.
-  if (!isOriginAllowed(origin)) {
+  if (!isOriginAllowed(origin, host)) {
     return NextResponse.json(
       { error: 'Origin not allowed.' },
       { status: 403, headers: cors },

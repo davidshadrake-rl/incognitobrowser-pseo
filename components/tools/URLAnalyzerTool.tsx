@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { scanUrl } from '@/lib/scan-client';
 
 interface URLAnalysis {
   url: string;
@@ -257,12 +258,10 @@ export function URLAnalyzerTool() {
     setUnfurlError('');
     setUnfurled('');
     try {
-      const res = await fetch('https://api.incognitobrowser.io/scan-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: analysis.url }),
-      });
-      const data = await res.json();
+      // Goes through the shared scanner client: fetches + solves the PoW
+      // challenge, then POSTs with the proof. The old direct fetch had no
+      // proof (rejected) AND targeted a hostname that does not resolve.
+      const { res, data } = await scanUrl(analysis.url);
       // The scanner API returns 400 + redirectTo when it hits a 3xx response.
       // This is exactly what we want for shorteners.
       if (data.redirectTo) {

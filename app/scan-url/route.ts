@@ -218,7 +218,7 @@ async function readCappedText(response: Response, maxBytes: number): Promise<str
 
 export async function OPTIONS(request: NextRequest) {
   const origin = request.headers.get('origin');
-  return new NextResponse(null, { status: 204, headers: corsHeadersFor(origin) });
+  return new NextResponse(null, { status: 204, headers: corsHeadersFor(origin, request.headers.get('host')) });
 }
 
 // Rate limit — values from lib/tuning.ts. Defaults: 10 reqs per 60s per IP.
@@ -226,14 +226,15 @@ const RATE_LIMIT_CONFIG = { limit: SCAN_RATE_LIMIT, windowMs: SCAN_RATE_WINDOW_M
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
-  const cors = corsHeadersFor(origin);
+  const host = request.headers.get('host');
+  const cors = corsHeadersFor(origin, host);
 
   // Strict origin check — reject requests from origins not in the allowlist.
   // This is one of three layers (origin check, POW challenge, rate limit).
   // Note: Origin is set by the browser and cannot be spoofed from page JS, but
   // CAN be spoofed by curl/scripts. The POW below is what actually defends
   // against scripted abuse.
-  if (!isOriginAllowed(origin)) {
+  if (!isOriginAllowed(origin, host)) {
     return NextResponse.json(
       { error: 'Origin not allowed.' },
       { status: 403, headers: cors }

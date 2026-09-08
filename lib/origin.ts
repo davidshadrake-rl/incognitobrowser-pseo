@@ -38,8 +38,32 @@ export function _resetOriginCacheForTests() {
   cachedAllowed = null;
 }
 
-export function isOriginAllowed(origin: string | null): boolean {
+/**
+ * Is this Origin allowed to call the API?
+ *
+ * Two ways to be allowed:
+ *   1. Same-origin: the Origin's host equals the request's own Host. The
+ *      Vercel server-mode deploy serves pages AND the API from one host,
+ *      so a page calling its own API is inherently trusted. Without this,
+ *      the deployed site could not call itself unless someone remembered
+ *      to add its own hostname to ALLOWED_ORIGINS — which is exactly how
+ *      production shipped with the cookie scanner and /ip returning 403.
+ *   2. Allowlisted: in ALLOWED_ORIGINS (or the default set). This is what
+ *      genuinely cross-origin callers need — the static droplet/WordPress
+ *      build calls the Vercel API from a different host.
+ *
+ * `requestHost` is `request.headers.get('host')`. Pass it from every route.
+ * Comparing `URL.host` to the Host header keeps ports in the comparison.
+ */
+export function isOriginAllowed(origin: string | null, requestHost?: string | null): boolean {
   if (!origin) return false;
+  if (requestHost) {
+    try {
+      if (new URL(origin).host === requestHost) return true;
+    } catch {
+      // malformed Origin — fall through to the allowlist, which will reject it
+    }
+  }
   return getAllowedOrigins().includes(origin);
 }
 
@@ -48,7 +72,7 @@ export function isOriginAllowed(origin: string | null): boolean {
  * If the incoming Origin is allowed, mirrors it in Access-Control-Allow-Origin.
  * Otherwise omits the ACAO header (browsers will block the response).
  */
-export function corsHeadersFor(origin: string | null): Record<string, string> {
+export function corsHeadersFor(origin: string | null, requestHost?: string | null): Record<string, string> {
   const headers: Record<string, string> = {
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
@@ -59,7 +83,7 @@ export function corsHeadersFor(origin: string | null): Record<string, string> {
     'Content-Type': 'application/json',
     Vary: 'Origin',
   };
-  if (origin && isOriginAllowed(origin)) {
+  if (origin && isOriginAllowed(origin, requestHost)) {
     headers['Access-Control-Allow-Origin'] = origin;
     headers['Access-Control-Allow-Credentials'] = 'false';
   }

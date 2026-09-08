@@ -91,6 +91,25 @@ describe('POST /ip', () => {
     expect(res.headers.get('vary')).toMatch(/Origin/);
   });
 
+  it('allows a SAME-ORIGIN caller with no allowlist configured (the deployed site calling itself)', async () => {
+    delete process.env.ALLOWED_ORIGINS; // nothing configured at all
+    const { POST } = await loadRoute();
+    const res = await POST(
+      req({ origin: 'https://incognitobrowser-pseo.vercel.app', host: 'incognitobrowser-pseo.vercel.app', 'x-forwarded-for': '203.0.113.9' }, false),
+    );
+    expect(res.status).toBe(200);
+    expect(res.headers.get('access-control-allow-origin')).toBe('https://incognitobrowser-pseo.vercel.app');
+  });
+
+  it('does NOT treat a different host as same-origin (allowlist still governs cross-origin)', async () => {
+    delete process.env.ALLOWED_ORIGINS;
+    const { POST } = await loadRoute();
+    const res = await POST(
+      req({ origin: 'https://206-189-186-34.nip.io', host: 'incognitobrowser-pseo.vercel.app' }, false),
+    );
+    expect(res.status).toBe(403);
+  });
+
   it('rejects a non-allowlisted origin with 403', async () => {
     const { POST } = await loadRoute();
     const res = await POST(req({ origin: 'https://evil.example' }, false));
