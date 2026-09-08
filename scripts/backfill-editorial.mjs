@@ -50,7 +50,11 @@ for (const sub of SUBDIRS) {
 
     let changed = false;
     if (!json.editorial) {
-      json.editorial = { status: 'draft', reviewedAt: null, reviewedBy: null, notes: null };
+      // Tools are hand-built (not LLM articles) and must be indexable by default.
+      // Defaulting them to draft + promote-all's preserve-drafts guard left every
+      // tool page noindexed in production. Content types default to draft.
+      const status = sub === 'tools' ? 'published' : 'draft';
+      json.editorial = { status, reviewedAt: null, reviewedBy: null, notes: null };
       changed = true;
     }
     if (!('author' in json)) {
