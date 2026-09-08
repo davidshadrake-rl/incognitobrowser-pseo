@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { scanUrl } from '@/lib/scan-client';
+import { useReportResult, severityFromScore } from './ResultContext';
 
 interface URLAnalysis {
   url: string;
@@ -241,6 +242,18 @@ function analyzeURL(urlString: string): URLAnalysis {
 export function URLAnalyzerTool() {
   const [url, setUrl] = useState('');
   const [analysis, setAnalysis] = useState<URLAnalysis | null>(null);
+  const report = useReportResult();
+  useEffect(() => {
+    if (!analysis) { report(null); return; }
+    const high = analysis.risks.filter((r) => r.severity === 'high').length;
+    const sev = high > 0 ? 'red' : severityFromScore(analysis.score);
+    report({
+      severity: sev,
+      score: analysis.score,
+      headline: analysis.suspectedImpersonation ? `This link imitates ${analysis.suspectedImpersonation.brand}` : high ? `This link shows ${high} high-risk phishing signs` : analysis.risks.length ? `This link has ${analysis.risks.length} warning signs` : `No phishing signs found in this link`,
+      stats: [{ label: 'Safety score', value: `${analysis.score}/100` }, { label: 'High risk', value: String(high) }, { label: 'Warnings', value: String(analysis.risks.length) }, { label: 'HTTPS', value: analysis.isHTTPS ? 'yes' : 'no' }],
+    });
+  }, [analysis, report]);
   const [unfurling, setUnfurling] = useState(false);
   const [unfurled, setUnfurled] = useState('');
   const [unfurlError, setUnfurlError] = useState('');

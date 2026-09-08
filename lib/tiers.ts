@@ -38,13 +38,23 @@ export function tierOfEngine(engine: string | undefined | null): Tier {
 export const TIER: Tier = process.env.NEXT_PUBLIC_TIER === 'pro' ? 'pro' : 'free';
 export const IS_PRO_DEPLOYMENT = TIER === 'pro';
 
-/** Where the Pro deployment lives — the free site links Pro-engine pages here. */
+/**
+ * Where the Pro deployment lives — the free site links Pro-engine pages here.
+ * Default is the LIVE host. pro.incognitobrowser.io has no DNS yet; when it
+ * does, set NEXT_PUBLIC_PRO_URL (or change this default) — never default to
+ * a host that does not resolve, or every free→Pro link ships dead.
+ */
 export const PRO_BASE_URL: string =
-  process.env.NEXT_PUBLIC_PRO_URL?.replace(/\/$/, '') || 'https://pro.incognitobrowser.io';
+  process.env.NEXT_PUBLIC_PRO_URL?.replace(/\/$/, '') || 'https://incognitobrowser-pro.vercel.app';
 
-/** Where the free marketing site lives — the Pro deployment links back here. */
+/**
+ * Where the free marketing site lives — the Pro deployment links back here.
+ * Default is the LIVE host: incognitobrowser.io/resources currently 301s to
+ * the WordPress home page (the static bundle is not deployed there yet).
+ * Set NEXT_PUBLIC_FREE_URL when it is.
+ */
 export const FREE_BASE_URL: string =
-  process.env.NEXT_PUBLIC_FREE_URL?.replace(/\/$/, '') || 'https://incognitobrowser.io/resources';
+  process.env.NEXT_PUBLIC_FREE_URL?.replace(/\/$/, '') || 'https://incognitobrowser-pseo.vercel.app';
 
 /**
  * Should this deployment render, list, or link a given engine's tool pages?

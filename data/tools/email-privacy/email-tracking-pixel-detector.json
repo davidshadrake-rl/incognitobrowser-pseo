@@ -1,0 +1,71 @@
+{
+  "niche": "email-privacy",
+  "slug": "email-tracking-pixel-detector",
+  "title": "Email Tracking-Pixel Detector",
+  "metaDescription": "Paste an email's source or drop a .eml file to find hidden tracking pixels, click-tracking links and the platform that sent it. Runs entirely in your browser.",
+  "keywords": [
+    "email tracking pixel detector",
+    "tracking pixel checker",
+    "email spy pixel",
+    "email open tracking",
+    "tracked links in email",
+    "check email for trackers"
+  ],
+  "toolType": "analyzer",
+  "toolEngine": "email-pixel-detector",
+  "description": "Find out whether an email reports back to its sender when you open it. Paste the raw source or drop a .eml file to reveal hidden tracking pixels, click-tracking redirects and the marketing platform behind the message.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "The detector parses the raw message the way a mail client does: it reads the header block, walks every MIME part (including nested multipart/alternative and multipart/mixed containers), and decodes quoted-printable and base64 bodies so the real HTML is visible. It then inspects every <img> tag for the signatures of an open-tracking beacon — width or height of two pixels or less, inline styles that hide the image (display:none, visibility:hidden, opacity:0), open-tracking style paths, and hosts that belong to more than forty known email-marketing and sales-tracking services. Each <a href> is checked for click-tracking wrappers, either by matching those same vendor domains or by spotting redirect-style hosts and paths; where the true destination is visible inside the wrapper (a URL or base64 query parameter, or an encoded path segment) it is decoded and shown. Finally, delivery headers such as X-Mailer, List-Unsubscribe, Feedback-ID, X-SG-EID, X-MC-*, X-SES-* and the bounce/Return-Path domain are weighed together to name the sending platform. Nothing is fetched: the images and links are only read as text, so running the check never triggers the trackers it finds.",
+    "tips": [
+      "Turn off automatic remote-image loading in your mail client, or use a provider that proxies images — that single setting defeats nearly every open-tracking pixel",
+      "Hover over links before clicking; if the visible domain does not match the destination shown in the status bar, the click is being logged through a redirect",
+      "Copy the full source from \"Show original\" or \"View source\" rather than the rendered page — the headers are where the sending platform gives itself away",
+      "A tiny, hidden or vendor-hosted image is a strong signal, but any remote image can be used to infer an open; treat \"remote images\" as a soft warning, not a pass",
+      "When a message from an individual contains a sales-tracking pixel, replying via a fresh plain-text email avoids feeding their read receipts"
+    ],
+    "commonMistakes": [
+      "Assuming a plain-looking personal email cannot track you — sales add-ons inject one-pixel beacons into ordinary one-to-one messages",
+      "Opening the email to \"check\" it in a normal client with images enabled, which fires the pixel before you have inspected anything",
+      "Judging a link by its anchor text instead of its actual href — wrapped links look identical until you read the source",
+      "Pasting only the rendered text of the message, which strips the HTML and hides both pixels and redirect wrappers",
+      "Trusting that unsubscribing removes tracking; the unsubscribe link itself usually carries a per-recipient identifier"
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Web beacon — how tracking pixels work",
+      "url": "https://en.wikipedia.org/wiki/Web_beacon",
+      "type": "external"
+    },
+    {
+      "title": "Remote content in messages (Thunderbird support)",
+      "url": "https://support.mozilla.org/en-US/kb/remote-content-in-messages",
+      "type": "external"
+    }
+  ],
+  "processing": "client",
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T12:00:00.000Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Tool page: hand-built, indexable by default."
+  },
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/author/david/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/darkpool-david/"
+    ]
+  },
+  "editor": {
+    "name": "David Shadrake",
+    "profileUrl": "https://www.linkedin.com/in/davidshadrake/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/david-shadrake/"
+    ]
+  },
+  "tier": "free"
+}

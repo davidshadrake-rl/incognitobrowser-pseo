@@ -21,7 +21,10 @@
     "test:e2e:droplet-https": "E2E_BASE_URL=https://206-189-186-34.nip.io playwright test",
     "test:e2e:vercel": "E2E_BASE_URL=https://incognitobrowser-pseo.vercel.app playwright test",
     "test:e2e:prod": "E2E_BASE_URL=https://incognitobrowser.io playwright test",
-    "test:e2e:install": "playwright install chromium --with-deps"
+    "test:e2e:install": "playwright install chromium --with-deps",
+    "postbuild:static": "vitest run tests/rendered-pages.test.ts tests/link-audit.test.ts && node scripts/audit-links.mjs out --mode static --base /resources",
+    "security:smoke": "node scripts/security-smoke.mjs",
+    "audit:links": "node scripts/audit-links.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",

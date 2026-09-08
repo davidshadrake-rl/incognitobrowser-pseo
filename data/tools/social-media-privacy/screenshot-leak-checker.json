@@ -1,0 +1,71 @@
+{
+  "niche": "social-media-privacy",
+  "slug": "screenshot-leak-checker",
+  "title": "Screenshot Leak Checker",
+  "metaDescription": "See what a screenshot gives away before you post it: GPS, embedded thumbnails, device and app names, timestamps and personal data. Runs in your browser.",
+  "keywords": [
+    "screenshot metadata checker",
+    "screenshot leak",
+    "remove metadata from screenshot",
+    "screenshot EXIF data",
+    "hidden data in screenshots",
+    "screenshot privacy check"
+  ],
+  "toolType": "analyzer",
+  "toolEngine": "screenshot-leak-checker",
+  "description": "Drop a PNG, JPEG or WebP screenshot and see everything it carries that nobody can see on screen: GPS coordinates, an embedded thumbnail of the uncropped image, device and app names, timestamps and personal details in the metadata or file name. Then download a copy with all of it stripped.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "An image file is a container, and the pixels are only one thing inside it. PNG files carry named text chunks (tEXt, iTXt, zTXt) where capture apps write their own name, the author, comments and creation time, plus optional eXIf and tIME chunks. JPEG files carry APP1 segments holding Exif (camera make and model, software, dates, serial numbers, a GPS sub-directory with latitude, longitude and altitude, and an IFD1 block that points at a small embedded thumbnail) and XMP (an XML packet with the creator tool, document IDs, an edit history and sometimes GPS again), plus APP13 Photoshop IPTC records and free-text COM segments. WebP wraps the same Exif and XMP payloads in RIFF chunks. This tool reads the file's bytes in your browser, walks those structures by their declared lengths, decodes every string it finds, and converts GPS rationals into decimal degrees. It then scans every extracted string and the file name for personal-data patterns: email addresses, phone numbers, street addresses, coordinate pairs, IBANs, card numbers that pass the Luhn check, social handles, names in authorship fields and usernames in Windows or Unix home paths. The verdict is red if there is a location, an embedded thumbnail or personal data, amber if only device, software, timestamp or username details are present, and green if nothing was found. The clean copy is produced by drawing the decoded pixels onto a canvas and re-encoding, which discards every metadata block because the canvas only ever held pixels.",
+    "tips": [
+      "Screenshots taken on phones often carry the OS name and version in the Software tag, and photos of your screen carry full camera Exif including GPS. Check both before posting",
+      "If the tool shows an embedded thumbnail, look at it closely. Editors that crop or blur the main picture frequently leave the original thumbnail behind, so the part you removed can still be in the file",
+      "Rename the file before sharing. Default names like IMG_4471.jpg reveal the camera app and shot count, and names copied from a desktop can include your username or a client name",
+      "Use the clean copy for anything public. Re-encoding through a canvas drops every metadata block; a PNG stays lossless, while a JPEG is recompressed slightly at quality 92",
+      "Metadata is only half the problem. Read the visible content too: notification banners, open tabs, taskbar clocks, Wi-Fi names and reflections leak just as much as Exif"
+    ],
+    "commonMistakes": [
+      "Assuming a screenshot has no metadata because it is not a camera photo. Capture apps write their own name, the OS, timestamps and sometimes the user account into PNG text chunks",
+      "Blurring or cropping sensitive parts and then sharing the same file. The Exif thumbnail and the XMP edit history can both survive the edit and expose the original",
+      "Trusting a messaging app or social network to strip metadata. Some do, some only resize, and files sent as documents or attachments usually keep everything",
+      "Believing that converting between formats cleans the file. Many converters copy Exif and XMP across unchanged; only a pixel-level re-encode drops them",
+      "Checking only for GPS. A serial number, document ID or Windows username in a path links every file you have ever published, even without a location"
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "Exif 2.3 specification (CIPA DC-008)",
+      "url": "https://www.cipa.jp/std/documents/e/DC-008-2012_E.pdf",
+      "type": "external"
+    },
+    {
+      "title": "PNG specification: ancillary text chunks",
+      "url": "https://www.w3.org/TR/png-3/",
+      "type": "external"
+    }
+  ],
+  "processing": "client",
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T12:00:00.000Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Tool page: hand-built, indexable by default."
+  },
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/author/david/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/darkpool-david/"
+    ]
+  },
+  "editor": {
+    "name": "David Shadrake",
+    "profileUrl": "https://www.linkedin.com/in/davidshadrake/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/david-shadrake/"
+    ]
+  },
+  "tier": "free"
+}

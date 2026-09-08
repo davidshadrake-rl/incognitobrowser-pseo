@@ -349,3 +349,8 @@ export function getIpBucket(ip: string): string {
   }
   return ip;
 }
+
+/** The shared ioredis client (null when REDIS_URL is unset). For counters and single-use tokens that share the rate limiter's connection. */
+export function getRedisClient(): Redis | null {
+  return getClient();
+}

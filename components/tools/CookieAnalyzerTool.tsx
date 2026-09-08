@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { scanUrl } from '@/lib/scan-client';
+import { useReportResult } from './ResultContext';
 
 interface CookieInfo {
   name: string;
@@ -146,6 +147,19 @@ export function CookieAnalyzerTool() {
   // proof-of-work step in particular looks suspiciously slow without context.
   const [scanStatus, setScanStatus] = useState<'' | 'verifying' | 'solving' | 'scanning'>('');
   const [urlResult, setUrlResult] = useState<URLScanResult | null>(null);
+  const report = useReportResult();
+  useEffect(() => {
+    if (!urlResult) { report(null); return; }
+    const sm = urlResult.summary;
+    let host = urlInput.trim();
+    try { host = new URL(host.startsWith('http') ? host : `https://${host}`).hostname; } catch { /* keep as typed */ }
+    const severity = sm.trackingCookies > 0 || sm.totalTrackers >= 3 ? 'red' : sm.totalTrackers > 0 || sm.thirdPartyScripts > 5 ? 'amber' : 'green';
+    report({
+      severity,
+      headline: `${host} sets ${sm.trackingCookies} tracking cookies and loads ${sm.totalTrackers} trackers before you click anything`,
+      stats: [{ label: 'Tracking cookies', value: String(sm.trackingCookies) }, { label: 'Trackers', value: String(sm.totalTrackers) }, { label: 'Third parties', value: String(sm.thirdPartyScripts) }, { label: 'Cookies', value: String(sm.totalCookies) }],
+    });
+  }, [urlResult, urlInput, report]);
   const [urlError, setUrlError] = useState('');
 
   const scanBrowserCookies = () => {

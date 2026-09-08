@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useReportResult, severityFromScore } from './ResultContext';
 
 interface Question {
   id: string;
@@ -222,6 +223,22 @@ export function PrivacyQuizTool() {
     const catMax = catQuestions.length * 10;
     return { category: cat, score: Math.round((catTotal / catMax) * 100) };
   });
+
+  const report = useReportResult();
+  useEffect(() => {
+    if (!finished) { report(null); return; }
+    const g = getGrade(totalScore);
+    const letter = g.letter.replace('+', '') as 'A' | 'B' | 'C' | 'D' | 'F';
+    report({
+      severity: severityFromScore(totalScore),
+      score: totalScore,
+      grade: letter,
+      headline: `Privacy habits: ${g.letter}, ${g.label}`,
+      shareText: `My privacy habits scored ${g.letter} (${totalScore}/100). Take the quiz:`,
+      stats: [{ label: 'Score', value: `${totalScore}/100` }, ...categoryScores.slice(0, 3).map((c) => ({ label: c.category, value: `${c.score}%` }))],
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finished, totalScore, report]);
 
   if (finished) {
     const grade = getGrade(totalScore);

@@ -92,10 +92,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Echo back the allowed origins (debug) — clients use this if they want to
-  // pre-check before solving. Omit in production by setting DEBUG_ORIGINS=0.
+  // Debug echo of the allowlist size is OPT-IN (DEBUG_ORIGINS=1); nothing about
+  // the allowlist leaves the server by default.
   const debug =
-    process.env.DEBUG_ORIGINS !== '0'
+    process.env.DEBUG_ORIGINS === '1'
       ? { allowedOriginCount: getAllowedOrigins().length }
       : undefined;
 

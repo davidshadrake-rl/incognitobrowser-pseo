@@ -8,6 +8,7 @@ import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { generateBreadcrumbSchema } from '@/lib/seo';
 import type { Metadata } from 'next';
+import { proofToolFor } from '@/lib/proof-route';
 
 interface ChecklistData {
   niche: string;
@@ -96,7 +97,7 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <ChecklistPage data={data} nicheName={nicheName} />
+      <ChecklistPage data={data} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

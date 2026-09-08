@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import Link from 'next/link';
 import { getAllNiches, getNicheBySlug, getRelatedNiches } from '@/lib/taxonomy';
-import { getContentFiles, getContentItemTitle, isToolVisible } from '@/lib/content';
+import { getContentFiles, getContentItemTitle, isToolListed } from '@/lib/content';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
@@ -49,7 +49,7 @@ export default async function NicheHubPage({ params }: PageProps) {
 
   // Gather all content for this niche across content types
   const sections = CONTENT_TYPES.map(ct => {
-    const files = getContentFiles(ct.slug, niche).filter(slug => ct.slug !== 'tools' || isToolVisible(niche, slug));
+    const files = getContentFiles(ct.slug, niche).filter(slug => ct.slug !== 'tools' || isToolListed(niche, slug));
     const items = files.map(slug => ({
       slug,
       title: getContentItemTitle(ct.slug, niche, slug),

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useReportResult } from './ResultContext';
 
 interface PermissionResult {
   name: string;
@@ -108,6 +109,18 @@ function getStateLabel(state: string) {
 
 export function PermissionCheckerTool() {
   const [results, setResults] = useState<PermissionResult[]>([]);
+  const report = useReportResult();
+  useEffect(() => {
+    if (!results.length) { report(null); return; }
+    const g = results.filter((r) => r.state === 'granted').length;
+    const d = results.filter((r) => r.state === 'denied').length;
+    const p = results.filter((r) => r.state === 'prompt').length;
+    report({
+      severity: g > 0 ? 'amber' : 'green',
+      headline: g ? `This site already holds ${g} of ${results.length} permissions` : `No permission is granted to this site; ${p} would prompt`,
+      stats: [{ label: 'Granted', value: String(g) }, { label: 'Denied', value: String(d) }, { label: 'Would prompt', value: String(p) }, { label: 'Checked', value: String(results.length) }],
+    });
+  }, [results, report]);
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState(false);
 

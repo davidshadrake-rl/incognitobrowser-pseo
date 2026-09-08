@@ -224,7 +224,7 @@ describe.skipIf(!HAS_TARGET)('header + footer link integrity', () => {
 
   it('header Download button points to the Play Store', () => {
     expect(homeHtml).toMatch(
-      /href="https:\/\/play\.google\.com\/store\/apps\/details\?id=com\.androidbull\.incognito\.browser[^"]*"[^>]*>[^<]*Download[^<]*Browser/
+      /href="https:\/\/play\.google\.com\/store\/apps\/details\?id=com\.androidbull\.incognito\.browser[^"]*"[\s\S]{0,400}?Download[^<]*Browser/
     );
   });
 
@@ -427,10 +427,11 @@ describe.skipIf(!HAS_TARGET)('free/Pro split — Pro tools are absent from the f
   // Same-site hrefs only: absolute links to the Pro deployment are the intended hand-off.
   const sameSiteHref = (p: string) => new RegExp(`href="(?:/resources)?${esc(p)}/?"`);
 
-  it('derives the agreed 22 Pro tool paths and 24 free ones (18 published) from data', () => {
+  it('derives the agreed 22 Pro tool paths and the free ones from data (free grew with the funnel tools)', () => {
     expect(PRO_PATHS.length).toBe(22);
-    expect(FREE_PATHS.length).toBe(24);
-    expect(FREE_PUBLISHED_PATHS.length).toBe(18);
+    expect(FREE_PATHS.length).toBeGreaterThanOrEqual(24);
+    // 6 privacy-quiz duplicates are deliberate drafts: built (noindex) but never listed.
+    expect(FREE_PATHS.length - FREE_PUBLISHED_PATHS.length).toBe(6);
   });
 
   it('builds no Pro-engine tool page, and still builds every free one', async () => {
@@ -455,7 +456,9 @@ describe.skipIf(!HAS_TARGET)('free/Pro split — Pro tools are absent from the f
     const r = await fetchText('/tools/');
     expect(r.ok).toBe(true);
     for (const p of PRO_PATHS) expect(r.body, `catalogue links ${p}`).not.toMatch(sameSiteHref(p));
-    for (const p of FREE_PATHS) expect(r.body, `catalogue lost ${p}`).toMatch(sameSiteHref(p));
+    for (const p of FREE_PUBLISHED_PATHS) expect(r.body, `catalogue lost ${p}`).toMatch(sameSiteHref(p));
+    // Drafted duplicates render (noindex) but must not be advertised here.
+    for (const p of FREE_PATHS.filter((x) => !FREE_PUBLISHED_PATHS.includes(x))) expect(r.body, `catalogue advertises draft ${p}`).not.toMatch(sameSiteHref(p));
   });
 
   it('a niche whose only tools are Pro has no tool hub; a niche with a free tool keeps its hub', async () => {
@@ -526,7 +529,7 @@ describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', 
   it('layout: search + letters at the top, page content in the middle, the A–Z list at the bottom', async () => {
     const tools = await fetchText('/tools/');
     const controls = tools.body.indexOf('data-catalogue="tools"');
-    const featured = tools.body.indexOf('No signup');
+    const featured = tools.body.indexOf('data-featured-tools');
     const list = tools.body.indexOf('id="a-to-z"');
     expect(controls).toBeGreaterThan(0);
     expect(featured).toBeGreaterThan(controls);
@@ -537,6 +540,52 @@ describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', 
     for (const route of ['/guides/', '/glossary/']) {
       const r = await fetchText(route);
       expect(r.body.indexOf('id="a-to-z"'), route).toBeGreaterThan(r.body.indexOf('href="#letter-'));
+    }
+  });
+});
+
+/**
+ * Funnel surfaces (2026-09-08). The result moment must exist in the HTML:
+ * report cards carry the funnel block; the tools catalogue on the free
+ * site points at Incognito Pro for the Pro-only tools; Play links never
+ * carry an unrendered template literal; the header serves phones.
+ */
+describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
+  it('report cards render the result-moment funnel with a Play referrer that names the grade', async () => {
+    const r = await fetchText('/site/cnn.com/');
+    expect(r.ok).toBe(true);
+    expect(r.body).toMatch(/data-report-card-funnel="[A-F]"/);
+    expect(r.body).toMatch(/data-result-cta="(red|amber|green|info)"/);
+    expect(r.body).toMatch(/data-scorecard="report-card"/);
+    expect(r.body).not.toMatch(/\{grade/);
+    expect(r.body).toMatch(/utm_medium%3Dcta[^"]*utm_content%3Dgrade-[A-F]/);
+  });
+  it('every Play link on sampled pages carries an attributed referrer and no template residue', async () => {
+    for (const route of ['/', '/tools/', ROUTES.publishedGuide, '/site/google.com/']) {
+      const r = await fetchText(route);
+      const links = r.body.match(/href="https:\/\/play\.google\.com[^"]*"/g) || [];
+      expect(links.length, route).toBeGreaterThan(0);
+      for (const l of links) {
+        expect(l, route).toMatch(/referrer=utm_source%3D(resources|pro)%26utm_medium%3D/);
+        expect(l, route).not.toMatch(/[{}]/);
+      }
+    }
+  });
+  it('the free tools catalogue points at Incognito Pro for the Pro-only tools and features What\'s My IP', async () => {
+    const r = await fetchText('/tools/');
+    expect(r.body).toMatch(/href="https:\/\/[^"]+\/tools"[^>]*>Incognito Pro/);
+    expect(r.body).toMatch(/WebRTC Leak Test/);
+  });
+  it('the header serves phones: a no-JS menu and an always-visible CTA', async () => {
+    const r = await fetchText('/tools/');
+    expect(r.body).toMatch(/<details[^>]*lg:hidden/);
+    expect(r.body).toMatch(/Get app/);
+  });
+  it('content pages carry a "Check yours now" proof route to a free tool', async () => {
+    for (const route of [ROUTES.publishedGuide, ROUTES.publishedChecklist]) {
+      const r = await fetchText(route);
+      expect(r.body, route).toMatch(/data-check-yours="[a-z0-9-]+"/);
+      expect(r.body, route).toMatch(/href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>Run the check/);
     }
   });
 });

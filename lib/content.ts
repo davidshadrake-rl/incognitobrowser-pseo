@@ -111,6 +111,12 @@ export function isToolVisible(niche: string, slug: string): boolean {
   return !!item && engineVisibleInThisTier(item.toolEngine);
 }
 
+/** Visible in this tier AND published — the filter for every LISTING surface (catalogue, hubs, topic hubs, related links). Drafts still render (noindex) but are not advertised. */
+export function isToolListed(niche: string, slug: string): boolean {
+  if (!isToolVisible(niche, slug)) return false;
+  return isPublished(getContentItem<EditableContent>('tools', niche, slug));
+}
+
 /** Absolute prefix for pages that exist only on the free site (empty on the free site itself). */
 export function freeSitePrefix(): string {
   return IS_PRO_DEPLOYMENT ? FREE_BASE_URL : '';
@@ -139,7 +145,7 @@ export function getCrossNicheLinks(
     for (const slug of files) {
       if (links.length >= limit) break;
       if (ct === currentType && slug === currentSlug) continue;
-      if (ct === 'tools' && !isToolVisible(niche, slug)) continue;
+      if (ct === 'tools' && !isToolListed(niche, slug)) continue;
       const title = getContentItemTitle(ct, niche, slug);
       const prefix = ct === 'tools' ? '' : contentPrefix;
       links.push({ title, url: `${prefix}/${ct}/${niche}/${slug}`, type: typeLabels[ct] });

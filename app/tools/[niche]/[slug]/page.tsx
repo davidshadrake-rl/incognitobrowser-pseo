@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, freeSitePrefix } from '@/lib/content';
+import { IS_PRO_DEPLOYMENT, tierOfEngine, proUrlFor } from '@/lib/tiers';
+import type { NextStepsData } from '@/components/NextSteps';
 import { getNicheById } from '@/lib/taxonomy';
 import { engineVisibleInThisTier } from '@/lib/tiers';
 import { generateMetadata as genMeta, generateWebApplicationSchema, generateBreadcrumbSchema, generateArticleSchema, absoluteUrl } from '@/lib/seo';
@@ -27,6 +29,27 @@ interface ToolData {
     tips?: string[];
     commonMistakes?: string[];
   };
+}
+
+/** Three concrete steps from the niche's first published checklist — the post-result "what to do now" block. */
+function nextStepsFor(niche: string, nicheName: string): NextStepsData | null {
+  for (const slug of getContentFiles('checklists', niche)) {
+    const c = getContentItem<{ title: string; sections?: Array<{ items?: Array<{ task: string; why: string }> }> } & Parameters<typeof isPublished>[0]>('checklists', niche, slug);
+    if (!c || !isPublished(c)) continue;
+    const steps = (c.sections || []).flatMap((sec) => sec.items || []).filter((i) => i.task && i.why).slice(0, 3).map((i) => ({ task: i.task, why: i.why }));
+    if (steps.length) return { nicheName, checklistTitle: c.title, checklistHref: `${freeSitePrefix()}/checklists/${niche}/${slug}`, steps };
+  }
+  return null;
+}
+
+/** On the free site: the Pro web tool for this niche, if the niche has one. */
+function proWebUrlFor(niche: string): string | undefined {
+  if (IS_PRO_DEPLOYMENT) return undefined;
+  for (const slug of getContentFiles('tools', niche)) {
+    const t = getContentItem<{ toolEngine?: string }>('tools', niche, slug);
+    if (t && tierOfEngine(t.toolEngine) === 'pro') return proUrlFor(niche, slug);
+  }
+  return undefined;
 }
 
 export const dynamicParams = false;
@@ -100,7 +123,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       <JsonLd data={appSchema} />
-      <ToolPageClient data={data} nicheName={nicheName} />
+      <ToolPageClient data={data} nicheName={nicheName} nextSteps={nextStepsFor(niche, nicheName)} proWebUrl={proWebUrlFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `${freeSitePrefix()}/topics/${niche}` }}

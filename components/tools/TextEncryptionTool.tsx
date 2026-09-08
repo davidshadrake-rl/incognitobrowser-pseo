@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { SecureContextRequired } from './SecureContextRequired';
+import { useReportResult } from './ResultContext';
 
 // OWASP 2023+ recommends ≥600,000 iterations for PBKDF2-SHA256.
 // We bump this explicitly so the tool doesn't look dated.
@@ -136,6 +137,11 @@ export function TextEncryptionTool() {
   const [inputText, setInputText] = useState('');
   const [password, setPassword] = useState('');
   const [output, setOutput] = useState('');
+  const report = useReportResult();
+  useEffect(() => {
+    if (!output) { report(null); return; }
+    report({ severity: 'info', headline: 'Encrypted with AES-256-GCM on your device. Nothing was sent anywhere.', stats: [{ label: 'Output', value: `${output.length} chars` }] });
+  }, [output, report]);
   const [error, setError] = useState('');
   const [processing, setProcessing] = useState(false);
   const [copied, setCopied] = useState(false);

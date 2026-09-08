@@ -4,7 +4,8 @@ import type { Metadata } from 'next';
 import { getAllSites, getSite, getSiblingSites, gradeChange, isSitePublished } from '@/lib/sites';
 import { getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
-import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
+import { generateMetadata as genMeta, generateBreadcrumbSchema, absoluteUrl } from '@/lib/seo';
+import { ReportCardFunnel } from '@/components/ReportCardFunnel';
 import { GRADE_LABEL } from '@/lib/site-grade';
 import { IS_PRO_DEPLOYMENT, proUrlFor } from '@/lib/tiers';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
@@ -197,19 +198,22 @@ export default async function SiteReportPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* CTA — the result moment */}
-      <section className="mb-10 bg-[#0a0a0a] border border-white/10 rounded-lg p-5">
-        <h2 className="text-lg font-semibold text-white mb-1">
-          {grade.grade === 'A' || grade.grade === 'B' ? `Most sites are not this careful.` : `${domain} is watching before you click anything.`}
-        </h2>
-        <p className="text-sm text-[#B8B8D4] mb-3">
-          Incognito Browser blocks tracking cookies and ad trackers like these on every site by default — no consent banners to fight, nothing to configure.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <a href="https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser&hl=en_US&referrer=utm_source%3Dresources%26utm_medium%3Dreport-card%26utm_campaign%3Dsite%26utm_content%3Dgrade-{grade.grade}" rel="noopener" className="btn-primary text-xs">Get Incognito Browser</a>
-          <a href={proUrlFor('ad-tracking', 'cookie-tracker-scanner')} className="text-sm text-[#B8B8D4] hover:text-white self-center">Scan any URL with Incognito Pro →</a>
-        </div>
-      </section>
+      {/* The result moment: the grade is the proof, the ask follows it, the scorecard makes it shareable */}
+      <ReportCardFunnel
+        domain={domain}
+        niche={category.niche}
+        grade={grade.grade}
+        score={grade.score}
+        headline={grade.headline}
+        stats={[
+          { label: 'Tracking cookies', value: String(scan.summary.trackingCookies) },
+          { label: 'Trackers', value: String(scan.summary.totalTrackers) },
+          { label: 'Third parties', value: String(scan.thirdPartyDomains.length) },
+          { label: 'HTTPS', value: scan.security.isHTTPS ? 'yes' : 'no' },
+        ]}
+        proUrl={proUrlFor('ad-tracking', 'cookie-tracker-scanner')}
+        pageUrl={absoluteUrl(`/site/${domain}`)}
+      />
 
       {/* Siblings — same category */}
       {siblings.length > 0 && (

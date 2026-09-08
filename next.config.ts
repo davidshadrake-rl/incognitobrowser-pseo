@@ -36,7 +36,11 @@ const basePath =
 // HSTS only enables once we're on the real production domain. Vercel's default
 // *.vercel.app domain auto-HSTS, but we set it explicitly to keep behavior
 // consistent across environments.
+const IS_PRO = process.env.NEXT_PUBLIC_TIER === "pro";
+
 const SECURITY_HEADERS = [
+  // Pro is a product surface, not an SEO surface: noindex at the header level too.
+  ...(IS_PRO ? [{ key: "X-Robots-Tag", value: "noindex, follow" }] : []),
   {
     key: "Content-Security-Policy",
     value: [
@@ -45,7 +49,7 @@ const SECURITY_HEADERS = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
-      "connect-src 'self' https://api.incognitobrowser.io https://incognitobrowser-pseo.vercel.app",
+      "connect-src 'self' https://incognitobrowser-pseo.vercel.app",
       "frame-ancestors 'none'",
       "form-action 'self'",
       "base-uri 'self'",

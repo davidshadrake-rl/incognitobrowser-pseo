@@ -1,0 +1,71 @@
+{
+  "niche": "ad-tracking",
+  "slug": "link-unwrapper",
+  "title": "Link Unwrapper",
+  "metaDescription": "Paste any link from an email, ad or post to peel off redirect wrappers, see every tracking ID it carries and who it reports to, and copy a clean version.",
+  "keywords": [
+    "link unwrapper",
+    "remove tracking parameters from URL",
+    "fbclid gclid remover",
+    "unwrap redirect link",
+    "safelinks decoder",
+    "URL tracking checker"
+  ],
+  "toolType": "analyzer",
+  "toolEngine": "link-unwrapper",
+  "description": "See what a link knows about you before you click it: the redirect services it passes through, the tracking IDs it carries, which vendors they report to, and a clean version you can open instead.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "Everything happens in your browser and the link is never fetched, so no click is ever registered by the sender, the redirect service or the destination. First the tool checks whether the address is a known redirect wrapper (Google, Facebook, Instagram, LinkedIn, YouTube, Microsoft Safe Links, Proofpoint URL Defense, Bing and generic /redirect or /click handlers) and decodes the real destination from the wrapper's own parameters, including percent-encoded, base64-encoded and Proofpoint's substituted forms, repeating up to five times because wrappers are often nested. It then splits the final URL's query string and fragment into individual parameters and looks each one up in a table of more than ninety known tracking keys. Each match is labelled identity-level when it carries a unique click or subscriber ID that singles you out (fbclid, gclid, msclkid, mc_eid, _hsenc and the like) or campaign-level when it only describes the mailing or ad (utm_source, utm_campaign, mc_cid). Parameters it does not recognise are left alone and clearly marked as kept. Finally it rebuilds the destination without the tracking parameters and reports how much was stripped.",
+    "tips": [
+      "Paste links from emails and text messages before opening them; email links are the most heavily wrapped because every mail platform adds its own click-tracking layer",
+      "Copy the clean link and open that instead of the original so the sender never receives the click and the destination never receives the click ID",
+      "Treat identity-level IDs as the serious ones: a campaign tag says which newsletter you read, a click ID says exactly which person clicked and lets the ad network match that to your account",
+      "Shorteners such as bit.ly and t.co cannot be decoded without fetching; if the destination matters, ask the sender for the direct address instead of expanding it through a third-party service",
+      "Watch for a wrapper you use at work, such as Safe Links or Proofpoint, on personal mail: it means every link you open is logged by that gateway, not only the ones at the office"
+    ],
+    "commonMistakes": [
+      "Assuming a link starting with google.com or facebook.com is safe: those hosts are redirect shims, and the real destination is buried in a parameter that can point anywhere",
+      "Deleting only the utm_ parameters and keeping the rest: the click ID that identifies you personally is usually a different key, such as fbclid, gclid or mc_eid",
+      "Opening the link first and then trying to clean it: by then every redirect hop has already logged the click and set its cookies",
+      "Expanding shortened links through an online expander service, which simply hands your interest in the link to yet another third party",
+      "Removing every parameter in sight, which breaks links that legitimately need an ID, a page number or a search query; the tool keeps unknown parameters for this reason"
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "UTM parameters",
+      "url": "https://en.wikipedia.org/wiki/UTM_parameters",
+      "type": "external"
+    },
+    {
+      "title": "About auto-tagging (gclid) in Google Ads",
+      "url": "https://support.google.com/google-ads/answer/3095550",
+      "type": "external"
+    }
+  ],
+  "processing": "client",
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T12:00:00.000Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Tool page: hand-built, indexable by default."
+  },
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/author/david/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/darkpool-david/"
+    ]
+  },
+  "editor": {
+    "name": "David Shadrake",
+    "profileUrl": "https://www.linkedin.com/in/davidshadrake/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/david-shadrake/"
+    ]
+  },
+  "tier": "free"
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useReportResult } from './ResultContext';
 
 interface ExifField {
   tag: string;
@@ -265,6 +266,18 @@ function getPrivacyColor(privacy: string) {
 
 export function MetadataViewerTool() {
   const [fields, setFields] = useState<ExifField[]>([]);
+  const report = useReportResult();
+  useEffect(() => {
+    if (!fields.length) { report(null); return; }
+    const high = fields.filter((x) => x.privacy === 'high').length;
+    const gps = fields.some((x) => /gps|latitude|longitude/i.test(x.tag));
+    const exifCount = Math.max(0, fields.length - 4);
+    report({
+      severity: gps || high > 0 ? 'red' : exifCount > 0 ? 'amber' : 'green',
+      headline: gps ? `This photo carries the GPS location where it was taken` : high ? `This photo carries ${high} identifying metadata fields` : exifCount ? `This photo carries ${exifCount} metadata fields` : 'This photo carries no embedded metadata',
+      stats: [{ label: 'High-risk', value: String(high) }, { label: 'GPS', value: gps ? 'yes' : 'no' }, { label: 'Fields', value: String(exifCount) }],
+    });
+  }, [fields, report]);
   const [format, setFormat] = useState<ImageFormat>('unknown');
   const [scanned, setScanned] = useState(false);
   const [imagePreview, setImagePreview] = useState('');

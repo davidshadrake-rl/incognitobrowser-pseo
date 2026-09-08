@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Badge } from './ui/Badge';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { ArticleByline } from './ArticleByline';
+import { CheckYoursNow } from './CheckYoursNow';
+import type { ProofRoute } from '@/lib/proof-route';
 
 interface GuideStep {
   stepNumber: number;
@@ -32,7 +34,7 @@ interface GuideData {
   faqs: FAQ[];
 }
 
-export function GuidePage({ data, nicheName }: { data: GuideData; nicheName: string }) {
+export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; nicheName: string; proofRoute?: ProofRoute | null }) {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
@@ -57,6 +59,7 @@ export function GuidePage({ data, nicheName }: { data: GuideData; nicheName: str
         </div>
         {data.intro && <p className="text-[#B8B8D4]">{data.intro}</p>}
       </header>
+      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {data.prerequisites.length > 0 && (
         <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-8">

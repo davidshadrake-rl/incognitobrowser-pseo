@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useReportResult } from './ResultContext';
 
 interface IpInfo {
   ipv4?: string;
@@ -132,6 +133,19 @@ async function fetchPublicIpInfo(): Promise<IpInfo> {
 export function WhatsMyIpTool() {
   const [ipInfo, setIpInfo] = useState<IpInfo | null>(null);
   const [webrtc, setWebrtc] = useState<WebRtcResult | null>(null);
+  const report = useReportResult();
+  useEffect(() => {
+    if (!ipInfo) { report(null); return; }
+    const seen = [ipInfo.ipv4, ipInfo.ipv6].filter(Boolean) as string[];
+    const leaked = (webrtc?.publicIPs || []).filter((ip) => !seen.includes(ip));
+    const where = [ipInfo.city, ipInfo.country].filter(Boolean).join(', ');
+    report({
+      severity: leaked.length ? 'red' : 'info',
+      headline: leaked.length ? `WebRTC leaks your real IP ${leaked[0]} around your VPN` : `Every site sees ${ipInfo.ipv4 || ipInfo.ipv6 || 'your IP'}${where ? ` in ${where}` : ''}`,
+      shareText: leaked.length ? 'My browser leaks my real IP through WebRTC. Check yours:' : 'Every site I visit sees my IP and location. Check yours:',
+      stats: [{ label: 'IP', value: ipInfo.ipv4 || ipInfo.ipv6 || '?' }, { label: 'Location', value: where || 'unknown' }, { label: 'Network', value: ipInfo.org || ipInfo.asn || 'unknown' }, { label: 'WebRTC IPs', value: String(webrtc?.publicIPs.length ?? 0) }],
+    });
+  }, [ipInfo, webrtc, report]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [refreshTick, setRefreshTick] = useState(0);

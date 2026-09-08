@@ -13,6 +13,11 @@ import { CookieAnalyzerTool } from './CookieAnalyzerTool';
 import { UserAgentAnalyzerTool } from './UserAgentAnalyzerTool';
 import { MetadataViewerTool } from './MetadataViewerTool';
 import { WhatsMyIpTool } from './WhatsMyIpTool';
+import { AdBlockerTestTool } from './AdBlockerTestTool';
+import { DnsLeakTestTool } from './DnsLeakTestTool';
+import { ScreenshotLeakCheckerTool } from './ScreenshotLeakCheckerTool';
+import { EmailPixelDetectorTool } from './EmailPixelDetectorTool';
+import { LinkUnwrapperTool } from './LinkUnwrapperTool';
 
 // Maps toolEngine values to their React components
 const TOOL_ENGINES: Record<string, React.ComponentType> = {
@@ -28,6 +33,11 @@ const TOOL_ENGINES: Record<string, React.ComponentType> = {
   'useragent-analyzer': UserAgentAnalyzerTool,
   'metadata-viewer': MetadataViewerTool,
   'whats-my-ip': WhatsMyIpTool,
+  'ad-blocker-test': AdBlockerTestTool,
+  'dns-leak-test': DnsLeakTestTool,
+  'screenshot-leak-checker': ScreenshotLeakCheckerTool,
+  'email-pixel-detector': EmailPixelDetectorTool,
+  'link-unwrapper': LinkUnwrapperTool,
 };
 
 export function getToolEngine(engineId: string): React.ComponentType | null {

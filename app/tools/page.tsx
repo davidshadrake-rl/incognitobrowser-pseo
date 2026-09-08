@@ -2,12 +2,14 @@ import Link from 'next/link';
 import { getAllContentItems, isPublished, type EditableContent } from '@/lib/content';
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
-import { IS_PRO_DEPLOYMENT, engineVisibleInThisTier, tierOfEngine } from '@/lib/tiers';
+import { IS_PRO_DEPLOYMENT, engineVisibleInThisTier, tierOfEngine, PRO_BASE_URL } from '@/lib/tiers';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
 
 export const metadata = genMeta({
   title: IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools',
-  description: 'Free interactive privacy tools: password checker, browser fingerprint audit, text encryption, URL safety scanner, and more. All run client-side.',
+  description: IS_PRO_DEPLOYMENT
+    ? 'Pro privacy tools: cookie & tracker scanner, browser privacy audit, URL safety checker and image metadata viewer. No signup.'
+    : 'Free privacy tools that run in your browser: What\'s My IP with WebRTC leak test, password strength checker, secure password generator, hash generator, text encryption, permission checker, user-agent analyzer and a privacy quiz. No signup.',
   path: '/tools',
   type: 'website',
 });
@@ -24,6 +26,14 @@ interface ToolMeta {
 
 // The 11 unique tool engines with their display info
 const FEATURED_TOOLS: { engine: string; icon: string; title: string; description: string; badge: string; processing?: 'client' | 'server' }[] = [
+  {
+    engine: 'whats-my-ip',
+    icon: '\u{1F4CD}',
+    title: 'What\'s My IP + WebRTC Leak Test',
+    description: 'See the IP address and location every site sees, and check whether WebRTC leaks your real IP around your VPN.',
+    badge: 'checker',
+    processing: 'server',
+  },
   {
     engine: 'password-strength',
     icon: '🔐',
@@ -102,10 +112,51 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
     description: 'Generate cryptographically random passwords or memorable passphrases using the Web Crypto API (CSPRNG). Configurable length, charset, and format.',
     badge: 'generator',
   },
+  {
+    engine: 'link-unwrapper',
+    icon: '🧅',
+    title: 'Link Unwrapper',
+    description: "Paste any link from an email, ad or post: peel off redirect wrappers, name every tracking ID it carries, and copy a clean version.",
+    badge: 'analyzer',
+    processing: 'client',
+  },
+  {
+    engine: 'email-pixel-detector',
+    icon: '📧',
+    title: 'Email Tracking-Pixel Detector',
+    description: "Paste an email's source or drop a .eml to reveal hidden open-tracking pixels, click-tracking links and the platform that sent it.",
+    badge: 'analyzer',
+    processing: 'client',
+  },
+  {
+    engine: 'screenshot-leak-checker',
+    icon: '📸',
+    title: 'Screenshot Leak Checker',
+    description: "Find GPS, embedded thumbnails, device and app names, timestamps and personal data hiding in a screenshot, then download a clean copy.",
+    badge: 'analyzer',
+    processing: 'client',
+  },
+  {
+    engine: 'dns-leak-test',
+    icon: '💧',
+    title: 'DNS Leak Test',
+    description: "See which DNS resolver really answers your lookups, via our own nameserver, no third parties, and whether it belongs to your ISP.",
+    badge: 'checker',
+    processing: 'server',
+  },
+  {
+    engine: 'ad-blocker-test',
+    icon: '🚫',
+    title: 'Ad-Blocker Test',
+    description: "Fires 50 first-party ad and tracker bait requests at paths generic filter lists block and counts how many your blocker actually stops.",
+    badge: 'checker',
+    processing: 'client',
+  },
 ];
 
 export default function ToolsIndex() {
-  const items = getAllContentItems<ToolMeta>('tools').filter(i => engineVisibleInThisTier(i.toolEngine));
+  // Listed = this tier's engines AND published: the six drafted quiz duplicates render (noindex) but are not advertised here.
+  const items = getAllContentItems<ToolMeta>('tools').filter(i => engineVisibleInThisTier(i.toolEngine) && isPublished(i as unknown as EditableContent));
   const niches = getAllNiches();
   const nicheMap = Object.fromEntries(niches.map(n => [n.id, n]));
 
@@ -133,11 +184,11 @@ export default function ToolsIndex() {
         Interactive tools to analyze, test, and improve your online privacy.
       </p>
       <p className="text-sm text-[#B8B8D4]/60 mb-8">
-        Most tools run entirely in your browser — no data leaves your device. The
-        cookie &amp; tracker scanner is the exception: it fetches the URL you enter
-        through our server (rate-limited, never logged) so it can read what a site
-        sets before you visit. Server-assisted tools are labeled.{' '}
-        {!IS_PRO_DEPLOYMENT && (<>Want to see how popular sites score? <Link href="/site" className="underline hover:text-white">500 website privacy report cards →</Link></>)}
+        {IS_PRO_DEPLOYMENT ? (
+          <>Most tools run entirely in your browser — no data leaves your device. The cookie &amp; tracker scanner is the exception: it fetches the URL you enter through our server (rate-limited, never logged) so it can read what a site sets before you visit. Server-assisted tools are labeled.</>
+        ) : (
+          <>Every tool here runs in your browser — no data leaves your device — except What&apos;s My IP, which asks our own server what address your request arrived from (never logged). Server-assisted tools are labeled. Looking for the cookie &amp; tracker scanner, browser privacy audit, URL safety checker or image metadata viewer? They live in <a href={`${PRO_BASE_URL}/tools`} className="underline hover:text-white">Incognito Pro →</a>{' '}Want to see how popular sites score? <Link href="/site" className="underline hover:text-white">500 website privacy report cards →</Link></>
+        )}
       </p>
 
       {items.length === 0 && (
@@ -159,7 +210,7 @@ export default function ToolsIndex() {
         topics={Array.from(new Set(items.map(i => i._niche))).map(n => ({ label: nicheMap[n]?.name || n, href: `/tools/${n}` })).sort((a, b) => a.label.localeCompare(b.label))}
       >
       {/* Featured tools grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16" data-featured-tools>
         {FEATURED_TOOLS.filter(t => engineVisibleInThisTier(t.engine)).map(tool => {
           const link = engineToLink[tool.engine];
           if (!link) return null;

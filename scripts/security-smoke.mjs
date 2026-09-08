@@ -139,7 +139,9 @@ let token = null;
 // E. Deployment-specific posture
 if (isPro) {
   const robots = await req('/robots.txt');
-  ok(robots.status === 200 && /Disallow:\s*\/\s*$/m.test(robots.text), 'Pro robots.txt disallows everything', robots.text.replace(/\n/g, ' | ').slice(0, 80));
+  ok(robots.status === 200 && !/Disallow:\s*\/\s*$/m.test(robots.text), 'Pro robots.txt is crawlable (noindex is enforced by meta + header, not by Disallow)', robots.text.replace(/\n/g, ' | ').slice(0, 80));
+  const hdr = await fetch(base + '/tools', { redirect: 'follow' });
+  ok(/noindex/.test(hdr.headers.get('x-robots-tag') || ''), 'Pro sends X-Robots-Tag: noindex', hdr.headers.get('x-robots-tag') || '(none)');
   const sm = await req('/sitemap.xml');
   ok(sm.status === 404 || !/<loc>/.test(sm.text), 'Pro exposes no sitemap URLs (404 or empty urlset)', `${sm.status} locs=${(sm.text.match(/<loc>/g) || []).length}`);
   const tool = await fetch(base + '/tools/ad-tracking/cookie-tracker-scanner', { redirect: 'follow' }).then((r) => r.text());

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getAllContentItems, freeSitePrefix } from '@/lib/content';
+import { getAllContentItems, freeSitePrefix, isPublished, type EditableContent } from '@/lib/content';
 import { engineVisibleInThisTier } from '@/lib/tiers';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
@@ -24,7 +24,7 @@ export const dynamicParams = false;
 
 /** Tools this deployment actually builds — a hub must never list a tool page that does not exist here. */
 function visibleTools() {
-  return getAllContentItems<ToolMeta>('tools').filter(i => engineVisibleInThisTier(i.toolEngine));
+  return getAllContentItems<ToolMeta>('tools').filter(i => engineVisibleInThisTier(i.toolEngine) && isPublished(i as unknown as EditableContent));
 }
 
 export async function generateStaticParams() {

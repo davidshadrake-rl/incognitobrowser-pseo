@@ -1,0 +1,71 @@
+{
+  "niche": "ad-tracking",
+  "slug": "ad-blocker-test",
+  "title": "Ad-Blocker Test",
+  "metaDescription": "Test your ad blocker: 50 first-party bait requests that mirror EasyList and EasyPrivacy patterns, plus 12 cosmetic checks. Runs in your browser, nothing logged.",
+  "keywords": [
+    "ad blocker test",
+    "is my ad blocker working",
+    "adblock test",
+    "tracker blocking test",
+    "uBlock Origin test",
+    "EasyList"
+  ],
+  "toolType": "checker",
+  "toolEngine": "ad-blocker-test",
+  "description": "See whether your ad blocker actually stops ads and trackers: this test fires 50 first-party bait requests and 12 hidden-element checks, then shows exactly which ones got through.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "Most ad-blocker tests load real scripts from real ad networks and check whether they arrive — which means a privacy site ends up sending your browser to the very companies you are trying to avoid. This test never does that. Filter lists such as EasyList and EasyPrivacy contain two kinds of rule: host rules that block a domain (doubleclick.net, for example) and generic rules that block a URL pattern on any domain, first-party included — /gtm.js, /pixel.gif?, /300x250.$image and so on. Every one of the 50 requests here is a tiny file served from this site at a path that matches one of those generic rules: 35 scripts that do nothing except set a marker to prove they ran, and 15 transparent 1×1 GIFs. A blocker with those lists enabled cancels the request before it leaves your browser; a browser without one quietly loads the file. Scripts that arrive but never run are counted as blocked, because that is what a blocker substituting a harmless stub looks like. Alongside the network probes, 12 invisible page elements are inserted with class names that generic element-hiding rules target, and the test checks whether cosmetic filtering collapsed them. The honest limitation: the test measures URL-pattern filtering, which is what browser extensions and built-in browser shields do. A DNS-level blocker that only knows domains will score low here even though it stops real ad networks.",
+    "tips": [
+      "Run the test once with your blocker on and once with it paused for this site — the difference is the protection you are actually getting",
+      "If scripts are blocked but tracking pixels get through, enable EasyPrivacy (or your blocker's tracking-protection list) alongside the default ad list",
+      "Keep filter lists auto-updating; a blocker with stale lists lets new patterns through while still looking like it works",
+      "If you use a DNS-level blocker, pair it with a browser extension — the two catch different things and this test only sees the second",
+      "Re-run after any browser update or extension change; permission and manifest changes have silently disabled blockers before"
+    ],
+    "commonMistakes": [
+      "Assuming a browser's built-in tracking protection blocks ads — most only block known third-party trackers, not generic ad URL patterns",
+      "Trusting a VPN's advertised ad blocking, which is usually domain-only and cannot filter first-party or path-based requests",
+      "Whitelisting a site to make one thing work and forgetting to remove it, leaving every ad and tracker on that site unblocked",
+      "Running two blockers at once and believing that doubles protection — they often interfere and one ends up doing nothing",
+      "Judging a blocker by how few ads you see; native ads, sponsored content and tracking pixels are invisible whether they load or not"
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "EasyList — the filter lists most ad blockers use",
+      "url": "https://easylist.to/",
+      "type": "external"
+    },
+    {
+      "title": "uBlock Origin wiki — how filtering works",
+      "url": "https://github.com/gorhill/uBlock/wiki",
+      "type": "external"
+    }
+  ],
+  "processing": "client",
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T12:00:00.000Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Tool page: hand-built, indexable by default."
+  },
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/author/david/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/darkpool-david/"
+    ]
+  },
+  "editor": {
+    "name": "David Shadrake",
+    "profileUrl": "https://www.linkedin.com/in/davidshadrake/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/david-shadrake/"
+    ]
+  },
+  "tier": "free"
+}

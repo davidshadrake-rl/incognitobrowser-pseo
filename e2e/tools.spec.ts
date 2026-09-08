@@ -268,3 +268,84 @@ test('whats-my-ip: displays a public IP address', async ({ page }) => {
     page.locator('code').filter({ hasText: /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$|^[0-9a-f]+:[0-9a-f:]*$/i }).first(),
   ).toBeVisible({ timeout: 30_000 });
 });
+
+// ─────────────────────────────────────────────────────────────────────────
+// Funnel surfaces: the result moment (CTA + scorecard + next steps)
+// ─────────────────────────────────────────────────────────────────────────
+test('funnel: a password result shows the crack-time panel, the result-moment CTA, the scorecard and next steps', async ({ page }) => {
+  await page.goto(toolUrl('password-strength'));
+  await page.locator('input[type="password"], input[type="text"]').first().fill('password123');
+  await expect(page.locator('[data-cracked-in]')).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('[data-result-cta]')).toBeVisible();
+  await expect(page.locator('[data-result-cta]')).toHaveAttribute('data-result-cta', /red|amber/);
+  await expect(page.locator('[data-scorecard="password-strength"]')).toBeVisible();
+  await expect(page.getByRole('button', { name: /Download PNG/ })).toBeVisible();
+  await expect(page.locator('[data-next-steps]')).toBeVisible();
+});
+
+test('funnel: the scorecard renders a real PNG on the device', async ({ page }) => {
+  await page.goto(toolUrl('password-strength'));
+  await page.locator('input[type="password"], input[type="text"]').first().fill('correct horse battery staple');
+  await expect(page.locator('[data-scorecard="password-strength"] canvas')).toBeVisible({ timeout: 10_000 });
+  const dataUrl = await page.locator('[data-scorecard="password-strength"] canvas').evaluate((c) => (c as HTMLCanvasElement).toDataURL('image/png'));
+  expect(dataUrl.startsWith('data:image/png;base64,')).toBe(true);
+  expect(dataUrl.length).toBeGreaterThan(20_000); // a drawn card, not a blank canvas
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// 13. Link Unwrapper (client-side redirect + tracking-parameter parser)
+// ─────────────────────────────────────────────────────────────────────────
+test('link-unwrapper: unwraps a Google redirect and flags the Facebook click ID', async ({ page }) => {
+  await page.goto(toolUrl('link-unwrapper'));
+  await page
+    .locator('input[type="url"], input[type="text"]')
+    .first()
+    .fill('https://www.google.com/url?q=https%3A%2F%2Fexample.com%2Fsale%3Ffbclid%3DIwAR0abc123def456%26utm_source%3Dnewsletter&sa=D&source=editors');
+  await page.getByRole('button', { name: /unwrap|analyze/i }).first().click();
+  await expect(page.getByText(/carried 2 trackers from 2 vendors across 1 redirect/i).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('fbclid', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText(/Identity/).first()).toBeVisible();
+  await expect(page.getByText('https://example.com/sale', { exact: true }).first()).toBeVisible();
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// 14. Email Tracking-Pixel Detector (client-side; the example loads instantly)
+// ─────────────────────────────────────────────────────────────────────────
+test('email-pixel-detector: example email reveals tracking pixels and the sender platform', async ({ page }) => {
+  await page.goto(toolUrl('email-pixel-detector'));
+  await page.getByRole('button', { name: 'Load example', exact: true }).click();
+  await expect(page.getByText(/contains \d+ tracking pixels?/i).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/Mailchimp open-tracking pixel/).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/Suspected pixel \(unknown vendor\)/).first()).toBeVisible({ timeout: 10_000 });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// 15. Screenshot Leak Checker (needs a binary upload for a full run — page-load check only)
+// ─────────────────────────────────────────────────────────────────────────
+test('screenshot-leak-checker: tool page loads with upload control and privacy note', async ({ page }) => {
+  await page.goto(toolUrl('screenshot-leak-checker'));
+  await expect(page.locator('input[type="file"]').first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/never leaves your device/i).first()).toBeVisible({ timeout: 10_000 });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// 16. DNS Leak Test
+// ─────────────────────────────────────────────────────────────────────────
+test('dns-leak-test: run produces a verdict or an honest inconclusive state', async ({ page }) => {
+  test.setTimeout(45_000);
+  await page.goto(toolUrl('dns-leak-test'));
+  await page.getByRole('button', { name: /run dns leak test/i }).first().click();
+  await expect(
+    page.getByText(/DNS leak detected|No DNS leak detected|Baseline recorded|Inconclusive/i).first(),
+  ).toBeVisible({ timeout: 20_000 });
+});
+
+// ─────────────────────────────────────────────────────────────────────────
+// 17. Ad-Blocker Test
+// ─────────────────────────────────────────────────────────────────────────
+test('ad-blocker-test: probes 50 first-party baits and reports a blocked count', async ({ page }) => {
+  await page.goto(toolUrl('ad-blocker-test'));
+  await page.getByRole('button', { name: 'Run Ad-Blocker Test' }).click();
+  await expect(page.getByText(/Blocked \d+ of 50 requests/).first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText(/hid \d+ of 12 ad elements/).first()).toBeVisible({ timeout: 5_000 });
+});

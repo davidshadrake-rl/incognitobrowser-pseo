@@ -7,6 +7,7 @@ import { ComparisonPage } from '@/components/ComparisonPage';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
+import { proofToolFor } from '@/lib/proof-route';
 
 interface ComparisonData {
   niche: string;
@@ -104,7 +105,7 @@ export default async function ComparisonDetailPage({ params }: PageProps) {
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       {faqSchema && <JsonLd data={faqSchema} />}
-      <ComparisonPage data={data} nicheName={nicheName} />
+      <ComparisonPage data={data} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

@@ -7,6 +7,7 @@ import { CalculatorPage } from '@/components/CalculatorPage';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
+import { proofToolFor } from '@/lib/proof-route';
 
 interface CalculatorData {
   niche: string;
@@ -116,7 +117,7 @@ export default async function CalculatorDetailPage({ params }: PageProps) {
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       <JsonLd data={appSchema} />
-      <CalculatorPage data={data} nicheName={nicheName} />
+      <CalculatorPage data={data} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

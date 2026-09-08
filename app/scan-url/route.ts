@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimit, getClientIP, getIpBucket } from '@/lib/rate-limit';
+import { rateLimit, getClientIP, getIpBucket, getRedisClient } from '@/lib/rate-limit';
 import { parseAltchaAuthHeader, verifySolution } from '@/lib/altcha';
 import { corsHeadersFor, isOriginAllowed } from '@/lib/origin';
 import {
@@ -88,6 +88,20 @@ export async function POST(request: NextRequest) {
       },
       { status: 401, headers: allHeaders }
     );
+  }
+  // Single use: a solved token buys exactly one scan when Redis is configured
+  // (SET NX on the signature for the token's remaining lifetime). Without
+  // Redis the 90 s TTL + rate limit remain the only replay bound.
+  const redis = getRedisClient();
+  if (redis && solution) {
+    try {
+      const fresh = await redis.set(`pow:${solution.signature}`, '1', 'EX', 120, 'NX');
+      if (fresh === null) {
+        return NextResponse.json({ error: 'This proof-of-work token was already used. Request a new challenge.', reason: 'replayed' }, { status: 401, headers: allHeaders });
+      }
+    } catch {
+      /* Redis hiccup: fall through to the TTL bound rather than fail the scan */
+    }
   }
 
   try {

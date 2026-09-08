@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { Badge } from './ui/Badge';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { ArticleByline } from './ArticleByline';
+import { CheckYoursNow } from './CheckYoursNow';
+import type { ProofRoute } from '@/lib/proof-route';
 
 interface ChecklistItem {
   id: string;
@@ -29,7 +31,7 @@ interface ChecklistData {
   sections: ChecklistSection[];
 }
 
-export function ChecklistPage({ data, nicheName }: { data: ChecklistData; nicheName: string }) {
+export function ChecklistPage({ data, nicheName, proofRoute }: { data: ChecklistData; nicheName: string; proofRoute?: ProofRoute | null }) {
   const storageKey = `checklist-${data.niche}-${data.slug}`;
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
@@ -71,6 +73,7 @@ export function ChecklistPage({ data, nicheName }: { data: ChecklistData; nicheN
         </div>
         {data.intro && <p className="text-[#B8B8D4]">{data.intro}</p>}
       </header>
+      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {/* Progress bar */}
       <div className="mb-8">

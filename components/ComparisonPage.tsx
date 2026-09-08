@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { ArticleByline } from './ArticleByline';
+import { CheckYoursNow } from './CheckYoursNow';
+import type { ProofRoute } from '@/lib/proof-route';
 
 interface Product {
   name: string;
@@ -58,7 +60,7 @@ const scoreDisplay: Record<string, { label: string; color: string }> = {
   poor: { label: 'Poor', color: 'text-red-400 bg-red-500/15' },
 };
 
-export function ComparisonPage({ data, nicheName }: { data: ComparisonData; nicheName: string }) {
+export function ComparisonPage({ data, nicheName, proofRoute }: { data: ComparisonData; nicheName: string; proofRoute?: ProofRoute | null }) {
   const [sortBy, setSortBy] = useState<'rating' | 'name'>('rating');
 
   const sortedProducts = [...data.products].sort((a, b) =>
@@ -82,6 +84,7 @@ export function ComparisonPage({ data, nicheName }: { data: ComparisonData; nich
         />
         <p className="text-[#B8B8D4]">{data.intro}</p>
       </header>
+      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
         {sortedProducts.map((product) => (

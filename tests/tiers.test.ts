@@ -8,6 +8,7 @@
  *   - URL defaults are overridable and never trailing-slashed
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import fs from 'node:fs';
 
 async function load(env: Record<string, string | undefined>) {
   vi.resetModules();
@@ -54,9 +55,10 @@ describe('engineVisibleInThisTier', () => {
 describe('cross-deployment URLs', () => {
   it('has sane defaults and builds a Pro tool URL without /resources', async () => {
     const { PRO_BASE_URL, FREE_BASE_URL, proUrlFor } = await load({});
-    expect(PRO_BASE_URL).toBe('https://pro.incognitobrowser.io');
-    expect(FREE_BASE_URL).toBe('https://incognitobrowser.io/resources');
-    expect(proUrlFor('ad-tracking', 'cookie-tracker-scanner')).toBe('https://pro.incognitobrowser.io/tools/ad-tracking/cookie-tracker-scanner');
+    // Defaults must be hosts that RESOLVE today (audit 2026-09-08: the old pro.incognitobrowser.io default shipped 502 dead links).
+    expect(PRO_BASE_URL).toBe('https://incognitobrowser-pro.vercel.app');
+    expect(FREE_BASE_URL).toBe('https://incognitobrowser-pseo.vercel.app');
+    expect(proUrlFor('ad-tracking', 'cookie-tracker-scanner')).toBe('https://incognitobrowser-pro.vercel.app/tools/ad-tracking/cookie-tracker-scanner');
   });
   it('honours overrides and strips a trailing slash', async () => {
     const { PRO_BASE_URL, FREE_BASE_URL } = await load({ NEXT_PUBLIC_PRO_URL: 'https://pro.example/', NEXT_PUBLIC_FREE_URL: 'https://free.example/x/' });
@@ -66,18 +68,56 @@ describe('cross-deployment URLs', () => {
 });
 
 describe('app/robots.ts', () => {
-  it('free: allows all and points at the sitemap', async () => {
+  it('free: allows all except the ad-blocker bait files, and points at the sitemap', async () => {
     await load({});
     const { default: robots } = await import('../app/robots');
     const r = robots();
-    expect(r.rules).toEqual({ userAgent: '*', allow: '/' });
+    // /adtest/* are deliberately ad-shaped bait files for the Ad-Blocker Test, never content.
+    expect(r.rules).toEqual({ userAgent: '*', allow: '/', disallow: '/adtest/' });
     expect(r.sitemap).toBe('https://incognitobrowser.io/resources/sitemap.xml');
   });
-  it('pro: disallows everything and has no sitemap', async () => {
+  it('pro: crawlable (so the noindex is read) and has no sitemap; X-Robots-Tag header carries noindex', async () => {
     await load({ NEXT_PUBLIC_TIER: 'pro' });
     const { default: robots } = await import('../app/robots');
     const r = robots();
-    expect(r.rules).toEqual({ userAgent: '*', disallow: '/' });
+    expect(r.rules).toEqual({ userAgent: '*', allow: '/' });
     expect(r.sitemap).toBeUndefined();
+    const cfg = fs.readFileSync('next.config.ts', 'utf-8');
+    expect(cfg).toMatch(/IS_PRO \? \[\{ key: "X-Robots-Tag", value: "noindex, follow" \}\]/);
+  });
+});
+
+describe('isToolVisible / isToolListed (lib/content) follow the tier', () => {
+  async function loadContent(env: Record<string, string | undefined>) {
+    vi.resetModules();
+    for (const k of ['NEXT_PUBLIC_TIER']) delete process.env[k];
+    for (const [k, v] of Object.entries(env)) if (v !== undefined) process.env[k] = v;
+    return import('../lib/content');
+  }
+  it('free: free tools visible, Pro tools not; drafted duplicates are visible but not listed', async () => {
+    const { isToolVisible, isToolListed } = await loadContent({});
+    expect(isToolVisible('vpn-privacy', 'whats-my-ip')).toBe(true);
+    expect(isToolVisible('ad-tracking', 'cookie-tracker-scanner')).toBe(false);
+    expect(isToolListed('vpn-privacy', 'whats-my-ip')).toBe(true);
+    expect(isToolListed('email-privacy', 'privacy-score-quiz')).toBe(false); // deliberate draft duplicate
+  });
+  it('pro: only Pro tools visible', async () => {
+    const { isToolVisible } = await loadContent({ NEXT_PUBLIC_TIER: 'pro' });
+    expect(isToolVisible('ad-tracking', 'cookie-tracker-scanner')).toBe(true);
+    expect(isToolVisible('vpn-privacy', 'whats-my-ip')).toBe(false);
+  });
+});
+
+describe('playUrl attribution', () => {
+  it('carries source/medium/campaign/content/term in the install referrer, source by tier', async () => {
+    vi.resetModules(); delete process.env.NEXT_PUBLIC_TIER;
+    const { playUrl, parsePlayReferrer } = await import('../lib/play');
+    const u = playUrl({ medium: 'cta', campaign: 'whats-my-ip', content: 'vpn-privacy', term: 'tool' });
+    expect(u.startsWith('https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser')).toBe(true);
+    expect(parsePlayReferrer(u)).toEqual({ utm_source: 'resources', utm_medium: 'cta', utm_campaign: 'whats-my-ip', utm_content: 'vpn-privacy', utm_term: 'tool' });
+    vi.resetModules(); process.env.NEXT_PUBLIC_TIER = 'pro';
+    const pro = await import('../lib/play');
+    expect(pro.parsePlayReferrer(pro.playUrl({ medium: 'site', campaign: 'header' })).utm_source).toBe('pro');
+    delete process.env.NEXT_PUBLIC_TIER;
   });
 });

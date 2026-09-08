@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SecureContextRequired } from './SecureContextRequired';
+import { useReportResult } from './ResultContext';
 
 type Algorithm = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 
@@ -36,6 +37,12 @@ const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50 MB
 export function HashGeneratorTool() {
   const [inputText, setInputText] = useState('');
   const [results, setResults] = useState<Record<string, string>>({});
+  const report = useReportResult();
+  useEffect(() => {
+    const n = Object.keys(results).length;
+    if (!n) { report(null); return; }
+    report({ severity: 'info', headline: `${n} hashes computed on your device`, stats: [{ label: 'Algorithms', value: String(n) }] });
+  }, [results, report]);
   const [copied, setCopied] = useState('');
   const [inputMode, setInputMode] = useState<'text' | 'file'>('text');
   const [fileInfo, setFileInfo] = useState<{ name: string; size: number } | null>(null);

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useReportResult, severityFromScore } from './ResultContext';
 
 interface PrivacyCheck {
   name: string;
@@ -128,6 +129,18 @@ function getBorderColor(status: string) {
 export function BrowserPrivacyTool() {
   const [checks, setChecks] = useState<PrivacyCheck[]>([]);
   const [score, setScore] = useState<number | null>(null);
+  const report = useReportResult();
+  useEffect(() => {
+    if (score === null) { report(null); return; }
+    const bad = checks.filter((c) => c.status === 'bad').length;
+    const warn = checks.filter((c) => c.status === 'warning').length;
+    report({
+      severity: severityFromScore(score),
+      score,
+      headline: bad ? `Your browser fails ${bad} of ${checks.length} privacy checks` : warn ? `Your browser passes with ${warn} warnings` : `Your browser passes all ${checks.length} privacy checks`,
+      stats: [{ label: 'Score', value: `${score}/100` }, { label: 'Failed', value: String(bad) }, { label: 'Warnings', value: String(warn) }, { label: 'Checks', value: String(checks.length) }],
+    });
+  }, [score, checks, report]);
   const [scanning, setScanning] = useState(false);
 
   const runAudit = async () => {

@@ -7,6 +7,7 @@ import { GuidePage } from '@/components/GuidePage';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
+import { proofToolFor } from '@/lib/proof-route';
 
 interface GuideData {
   niche: string;
@@ -99,7 +100,7 @@ export default async function GuideDetailPage({ params }: PageProps) {
       {articleSchema && <JsonLd data={articleSchema} />}
       <JsonLd data={howToSchema} />
       {faqSchema && <JsonLd data={faqSchema} />}
-      <GuidePage data={data} nicheName={nicheName} />
+      <GuidePage data={data} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

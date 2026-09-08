@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
+import { useReportResult } from './ResultContext';
 
 type Mode = 'password' | 'passphrase' | 'pin';
 
@@ -168,6 +169,11 @@ export function PasswordGeneratorTool() {
   const [wordCount, setWordCount] = useState(5);
   const [pinLength, setPinLength] = useState(6);
   const [password, setPassword] = useState('');
+  const report = useReportResult();
+  useEffect(() => {
+    if (!password) { report(null); return; }
+    report({ severity: 'info', headline: `A ${password.length}-character password, generated on your device`, stats: [{ label: 'Length', value: String(password.length) }] });
+  }, [password, report]);
   const [history, setHistory] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 

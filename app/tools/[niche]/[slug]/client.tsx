@@ -3,7 +3,10 @@
 import Link from 'next/link';
 import { ToolPage } from '@/components/ToolPage';
 import { renderToolEngine } from '@/components/tools/registry';
-import { IS_PRO_DEPLOYMENT, proUrlFor, FREE_BASE_URL } from '@/lib/tiers';
+import { IS_PRO_DEPLOYMENT, FREE_BASE_URL } from '@/lib/tiers';
+import { ResultProvider } from '@/components/tools/ResultContext';
+import { FunnelSurfaces } from '@/components/FunnelSurfaces';
+import type { NextStepsData } from '@/components/NextSteps';
 
 interface ToolData {
   niche: string;
@@ -19,7 +22,7 @@ interface ToolData {
    * so claiming "client-side" on it would be a false privacy claim.
    */
   processing?: 'client' | 'server';
-  /** 'pro' engines live on the Pro deployment; the free site keeps the one-shot version. */
+  /** 'pro' engines live on the Pro deployment only (clean split, 2026-09-08). */
   tier?: 'free' | 'pro';
   inputs: Array<{
     id: string;
@@ -35,12 +38,13 @@ interface ToolData {
   };
 }
 
-export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName: string }) {
+export function ToolPageClient({ data, nicheName, nextSteps, proWebUrl }: { data: ToolData; nicheName: string; nextSteps?: NextStepsData | null; proWebUrl?: string }) {
   // If the tool has an engine, render the dedicated component
   if (data.toolEngine) {
     const engine = renderToolEngine(data.toolEngine);
     if (engine) {
       return (
+        <ResultProvider>
         <article className="max-w-3xl mx-auto">
           <nav className="mb-6 flex items-center gap-2 text-sm text-[#B8B8D4]">
             <Link href="/tools" className="hover:text-white transition-colors">Tools</Link>
@@ -62,12 +66,8 @@ export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName:
               ) : (
                 <span className="px-2 py-0.5 bg-blue-500/10 rounded text-xs text-blue-400">Client-side</span>
               )}
-              {data.tier === 'pro' && (
-                IS_PRO_DEPLOYMENT ? (
-                  <a href={`${FREE_BASE_URL}/tools`} className="px-2 py-0.5 bg-white/5 rounded text-xs text-[#B8B8D4] hover:text-white" title="The free privacy tools on the marketing site">← Free tools</a>
-                ) : (
-                  <a href={proUrlFor(data.niche, data.slug)} className="px-2 py-0.5 bg-purple-500/10 rounded text-xs text-purple-300 hover:text-purple-200" title="Deeper version on Incognito Pro">Pro version →</a>
-                )
+              {IS_PRO_DEPLOYMENT && (
+                <a href={`${FREE_BASE_URL}/tools`} className="px-2 py-0.5 bg-white/5 rounded text-xs text-[#B8B8D4] hover:text-white" title="The free privacy tools on the marketing site">← Free tools</a>
               )}
             </div>
             <p className="text-[#B8B8D4]">{data.description}</p>
@@ -77,6 +77,9 @@ export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName:
           <div className="mb-8">
             {engine}
           </div>
+
+          {/* Result moment: CTA, shareable scorecard, what to do now */}
+          <FunnelSurfaces engine={data.toolEngine} niche={data.niche} title={data.title} nextSteps={nextSteps} proWebUrl={proWebUrl} />
 
           {/* Educational content */}
           <div className="space-y-6">
@@ -116,6 +119,7 @@ export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName:
             )}
           </div>
         </article>
+        </ResultProvider>
       );
     }
   }

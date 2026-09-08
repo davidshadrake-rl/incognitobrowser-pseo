@@ -3,6 +3,8 @@
 import { useState, useMemo } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { ArticleByline } from './ArticleByline';
+import { CheckYoursNow } from './CheckYoursNow';
+import type { ProofRoute } from '@/lib/proof-route';
 
 interface CalcInput {
   id: string;
@@ -46,7 +48,7 @@ interface CalculatorData {
   };
 }
 
-export function CalculatorPage({ data, nicheName }: { data: CalculatorData; nicheName: string }) {
+export function CalculatorPage({ data, nicheName, proofRoute }: { data: CalculatorData; nicheName: string; proofRoute?: ProofRoute | null }) {
   const [inputValues, setInputValues] = useState<Record<string, number | string | boolean>>(
     Object.fromEntries(data.inputs.map(i => [i.id, i.defaultValue]))
   );
@@ -95,6 +97,7 @@ export function CalculatorPage({ data, nicheName }: { data: CalculatorData; nich
         />
         <p className="text-[#B8B8D4]">{data.description}</p>
       </header>
+      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-5">

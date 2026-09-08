@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useReportResult } from './ResultContext';
 
 interface UADetails {
   raw: string;
@@ -120,6 +121,16 @@ export function UserAgentAnalyzerTool() {
   const [useCustom, setUseCustom] = useState(false);
   const [customUA, setCustomUA] = useState('');
   const [hints, setHints] = useState<ClientHints | null>(null);
+  const report = useReportResult();
+  useEffect(() => {
+    if (!details) { report(null); return; }
+    const n = details.uniquenessFactors.length;
+    report({
+      severity: details.privacyConcerns.length >= 3 ? 'amber' : 'info',
+      headline: `Your browser announces ${details.browser.name} ${details.browser.version} on ${details.os.name}${details.os.version ? ' ' + details.os.version : ''} to every site`,
+      stats: [{ label: 'Browser', value: `${details.browser.name} ${details.browser.version}` }, { label: 'OS', value: details.os.name }, { label: 'Uniqueness factors', value: String(n) }, { label: 'Concerns', value: String(details.privacyConcerns.length) }],
+    });
+  }, [details, report]);
 
   // Fetch high-entropy Client Hints on mount (Chromium only, async).
   useEffect(() => {

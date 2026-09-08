@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Badge } from './ui/Badge';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { ArticleByline } from './ArticleByline';
+import { CheckYoursNow } from './CheckYoursNow';
+import type { ProofRoute } from '@/lib/proof-route';
 
 interface Placeholder {
   key: string;
@@ -43,7 +45,7 @@ function prettifyKey(key: string) {
     .join(' ');
 }
 
-export function TemplatePage({ data, nicheName }: { data: TemplateData; nicheName: string }) {
+export function TemplatePage({ data, nicheName, proofRoute }: { data: TemplateData; nicheName: string; proofRoute?: ProofRoute | null }) {
   // Start with whatever the JSON declared, de-duplicated by key.
   const declared = new Map(
     data.sections.flatMap(s => s.placeholders || []).map(p => [p.key, p])
@@ -134,6 +136,7 @@ export function TemplatePage({ data, nicheName }: { data: TemplateData; nicheNam
         </div>
         <p className="text-[#B8B8D4]">{data.description}</p>
       </header>
+      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {uniquePlaceholders.length > 0 && (
         <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-5 mb-8">

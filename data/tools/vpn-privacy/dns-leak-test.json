@@ -1,0 +1,71 @@
+{
+  "niche": "vpn-privacy",
+  "slug": "dns-leak-test",
+  "title": "DNS Leak Test",
+  "metaDescription": "Test whether your DNS requests leak outside your VPN. Our own nameserver records which resolver answers for you — no third-party lookup services involved.",
+  "keywords": [
+    "DNS leak test",
+    "VPN DNS leak",
+    "DNS resolver check",
+    "is my VPN leaking DNS",
+    "DNS leak checker",
+    "VPN leak test"
+  ],
+  "toolType": "checker",
+  "toolEngine": "dns-leak-test",
+  "description": "Find out which DNS resolver really answers your lookups. If you are on a VPN and the resolver belongs to your home ISP, every site name you visit is still visible to it — this test catches that using our own nameserver.",
+  "inputs": [],
+  "educational": {
+    "howItWorks": "When you run the test, our server issues a random 12-character test id and your browser is asked to load six hostnames that exist only for that id, under a domain whose nameserver we operate ourselves. Nothing is meant to load — the hostnames point at a server with nothing listening — but to attempt the request your browser first has to resolve the names, and the recursive resolver it hands that job to has to ask our nameserver, because no one else knows the answer. Our nameserver records the IP address each query arrived from against the test id and keeps it for ten minutes. The page then reads those records back and compares the resolver's network range to the public IP our server saw your request come from, and to a baseline you can record with the VPN off. With a VPN on, the public IP is the VPN's exit; a resolver on that same network means your lookups travel through the tunnel, while a resolver on the network your ISP handed you with the VPN off means they are leaking around it. We do not look up who owns any address, so results are shown as address ranges, not provider names, and the page cannot know whether your VPN is on — you tell it. Six names are used because resolvers often spread queries across several outgoing addresses, and a single lookup could miss that.",
+    "tips": [
+      "Run the test once with your VPN off first — that records the resolver your ISP hands you, which is what the VPN-on run needs to recognise a leak",
+      "Repeat the test after switching networks (home, mobile hotspot, office) — a VPN that seals DNS on one network can leak on another",
+      "If your browser uses DNS over HTTPS, you will see that provider's resolver rather than your ISP's; decide deliberately whether that is the behaviour you want",
+      "Check IPv6 separately: a resolver reached over IPv6 shows up with a hextet-style address, and many VPNs only tunnel IPv4",
+      "A verdict of 'inconclusive' is information, not a pass — re-run it before trusting the connection for anything sensitive"
+    ],
+    "commonMistakes": [
+      "Treating a VPN browser extension as full protection — it changes where web traffic exits but leaves the operating system's DNS settings, and therefore the resolver, untouched",
+      "Assuming a resolver on a different network from your VPN exit is automatically a leak — public resolvers like Cloudflare or Google also look different, which is why a VPN-off baseline matters",
+      "Ignoring resolvers that appear only once — a single stray query to your ISP's resolver still reveals the site name",
+      "Testing only once, right after connecting — some VPN clients lose their DNS override after sleep, reconnects, or updates",
+      "Reading a 'no queries reached our nameserver' result as a clean bill of health — it means the test could not observe anything, not that nothing leaked"
+    ]
+  },
+  "relatedLinks": [
+    {
+      "title": "What is DNS? — Cloudflare Learning Center",
+      "url": "https://www.cloudflare.com/learning/dns/what-is-dns/",
+      "type": "external"
+    },
+    {
+      "title": "Firefox DNS over HTTPS — Mozilla Support",
+      "url": "https://support.mozilla.org/en-US/kb/firefox-dns-over-https",
+      "type": "external"
+    }
+  ],
+  "processing": "server",
+  "editorial": {
+    "status": "published",
+    "reviewedAt": "2026-09-08T12:00:00.000Z",
+    "reviewedBy": "David Shadrake",
+    "notes": "Tool page: hand-built, indexable by default."
+  },
+  "author": {
+    "name": "Darkpool David",
+    "bio": "Privacy & browser-security writer",
+    "credentials": "Writes pseudonymously. 10+ years following the consumer browser-privacy and surveillance-economy beat. Editorial voice behind the incognitobrowser.io resource library and supporting publications.",
+    "profileUrl": "https://incognitobrowser.io/author/david/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/darkpool-david/"
+    ]
+  },
+  "editor": {
+    "name": "David Shadrake",
+    "profileUrl": "https://www.linkedin.com/in/davidshadrake/",
+    "sameAs": [
+      "https://incognitobrowser.io/resources/authors/david-shadrake/"
+    ]
+  },
+  "tier": "free"
+}

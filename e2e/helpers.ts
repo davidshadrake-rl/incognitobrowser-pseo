@@ -19,6 +19,11 @@ export const TOOL_PATHS: Record<string, string> = {
   'useragent-analyzer': '/resources/tools/gaming-privacy/useragent-analyzer/',
   'metadata-viewer': '/resources/tools/dating-privacy/image-metadata-checker/',
   'whats-my-ip': '/resources/tools/vpn-privacy/whats-my-ip/',
+  'ad-blocker-test': '/resources/tools/ad-tracking/ad-blocker-test/',
+  'dns-leak-test': '/resources/tools/vpn-privacy/dns-leak-test/',
+  'screenshot-leak-checker': '/resources/tools/social-media-privacy/screenshot-leak-checker/',
+  'email-pixel-detector': '/resources/tools/email-privacy/email-tracking-pixel-detector/',
+  'link-unwrapper': '/resources/tools/ad-tracking/link-unwrapper/',
 };
 
 /**

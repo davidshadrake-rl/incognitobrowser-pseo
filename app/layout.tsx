@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { IncognitoLogo } from "@/components/ui/IncognitoLogo";
 import { IS_PRO_DEPLOYMENT } from "@/lib/tiers";
+import { playUrl } from "@/lib/play";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -78,8 +79,19 @@ export default function RootLayout({
                   </Link>
                 ))}
               </nav>
+              {/* Mobile menu: a native <details> so it works without JS on the static export */}
+              <details className="lg:hidden relative ml-auto">
+                <summary className="list-none cursor-pointer px-3 py-2 text-xs uppercase tracking-wider text-[#B8B8D4] hover:text-white select-none" aria-label="Open menu">Menu</summary>
+                <div className="absolute right-0 mt-2 w-56 bg-[#0a0a0a] border border-white/10 rounded-lg p-2 shadow-xl z-50">
+                  {visibleNav.map(item => (
+                    <Link key={item.href} href={item.href} className="block px-3 py-2 text-xs uppercase tracking-wider text-[#B8B8D4] hover:text-white hover:bg-white/5 rounded">
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </details>
               <a
-                href="https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser&hl=en_US&referrer=utm_source%3Dresources%26utm_medium%3Dsite%26utm_campaign%3Dheader"
+                href={playUrl({ medium: 'site', campaign: 'header' })}
                 rel="noopener"
                 /*
                  * At narrow viewports the text wraps to two lines ("DOWNLOAD" /
@@ -97,9 +109,10 @@ export default function RootLayout({
                  * leading-tight + text-center keep the two stacked words
                  * vertically symmetric inside the pill.
                  */
-                className="btn-primary hidden sm:inline-flex text-xs leading-tight text-center !px-4 md:!px-6"
+                className="btn-primary inline-flex text-xs leading-tight text-center !px-3 sm:!px-4 md:!px-6"
               >
-                Download Browser
+                <span className="sm:hidden">Get app</span>
+                <span className="hidden sm:inline">Download Browser</span>
               </a>
             </div>
           </div>
@@ -127,7 +140,7 @@ export default function RootLayout({
               <div>
                 <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Product</h3>
                 <ul className="space-y-2 text-sm text-[#B8B8D4]">
-                  <li><a href="https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser&hl=en_US&referrer=utm_source%3Dresources%26utm_medium%3Dsite%26utm_campaign%3Dfooter" rel="noopener" className="hover:text-white transition-colors">Download</a></li>
+                  <li><a href={playUrl({ medium: 'site', campaign: 'footer' })} rel="noopener" className="hover:text-white transition-colors">Download</a></li>
                   <li><a href="https://incognitobrowser.io/news/" rel="noopener" className="hover:text-white transition-colors">Blog</a></li>
                 </ul>
               </div>

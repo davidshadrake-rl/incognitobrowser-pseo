@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useReportResult, severityFromScore } from './ResultContext';
 
 interface PasswordAnalysis {
   score: number; // 0-100
@@ -206,6 +207,17 @@ export function PasswordStrengthTool() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [analysis, setAnalysis] = useState<PasswordAnalysis | null>(null);
+  const report = useReportResult();
+  useEffect(() => {
+    if (!analysis) { report(null); return; }
+    report({
+      severity: severityFromScore(analysis.score),
+      score: analysis.score,
+      headline: `This password would be cracked in ${analysis.crackTime}`,
+      shareText: `My password would be cracked in ${analysis.crackTime}. Check yours:`,
+      stats: [{ label: 'Cracked in', value: analysis.crackTime }, { label: 'Strength', value: `${analysis.score}/100` }, { label: 'Entropy', value: `${Math.round(analysis.entropy)} bits` }, { label: 'Length', value: String(analysis.length) }],
+    });
+  }, [analysis, report]);
 
   const handleAnalyze = useCallback((value: string) => {
     setPassword(value);
@@ -244,6 +256,13 @@ export function PasswordStrengthTool() {
       </div>
 
       {/* Results */}
+      {analysis && (
+        <div className={`rounded-lg border p-6 text-center ${analysis.score < 50 ? 'border-red-500/30 bg-red-500/[0.06]' : analysis.score < 80 ? 'border-amber-500/30 bg-amber-500/[0.06]' : 'border-green-500/30 bg-green-500/[0.06]'}`} data-cracked-in>
+          <div className="text-xs uppercase tracking-wider text-[#B8B8D4]/70 mb-1">An offline attacker would crack this password in</div>
+          <div className={`text-4xl sm:text-5xl font-bold ${analysis.score < 50 ? 'text-red-400' : analysis.score < 80 ? 'text-amber-400' : 'text-green-400'}`}>{analysis.crackTime}</div>
+          <div className="text-xs text-[#B8B8D4] mt-2">{Math.round(analysis.entropy)} bits of entropy. Nothing you type here leaves your device.</div>
+        </div>
+      )}
       {analysis && (
         <div className="space-y-4">
           {/* Score bar */}
