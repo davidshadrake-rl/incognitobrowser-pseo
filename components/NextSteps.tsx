@@ -23,7 +23,7 @@ export function NextSteps({ data, engine, niche }: { data: NextStepsData; engine
             <span className="shrink-0 w-6 h-6 rounded-full bg-white/10 text-white text-xs flex items-center justify-center">{i + 1}</span>
             <div>
               <div className="text-sm text-white">{s.task}</div>
-              <div className="text-xs text-[#B8B8D4] mt-0.5">{s.why}</div>
+              {s.why && <div className="text-xs text-[#B8B8D4] mt-0.5">{s.why}</div>}
             </div>
           </li>
         ))}

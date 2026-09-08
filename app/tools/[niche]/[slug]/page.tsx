@@ -31,13 +31,40 @@ interface ToolData {
   };
 }
 
-/** Three concrete steps from the niche's first published checklist — the post-result "what to do now" block. */
-function nextStepsFor(niche: string, nicheName: string): NextStepsData | null {
+/**
+ * Three concrete steps for the post-result "what to do now" block. Tries, in
+ * order: (1) a published checklist in the tool's own niche, (2) a published
+ * checklist in a related niche (data/taxonomy.json relatedNiches — most
+ * niches share enough ground that this reads naturally), (3) the tool's own
+ * "tips" as a last resort, so a niche whose checklists are still drafts (a
+ * genuine content-pipeline gap, confirmed 2026-09-08 for digital-footprint
+ * and encrypted-messaging) never silently drops this funnel surface.
+ */
+function checklistSteps(niche: string, nicheName: string): NextStepsData | null {
   for (const slug of getContentFiles('checklists', niche)) {
     const c = getContentItem<{ title: string; sections?: Array<{ items?: Array<{ task: string; why: string }> }> } & Parameters<typeof isPublished>[0]>('checklists', niche, slug);
     if (!c || !isPublished(c)) continue;
     const steps = (c.sections || []).flatMap((sec) => sec.items || []).filter((i) => i.task && i.why).slice(0, 3).map((i) => ({ task: i.task, why: i.why }));
     if (steps.length) return { nicheName, checklistTitle: c.title, checklistHref: `${freeSitePrefix()}/checklists/${niche}/${slug}`, steps };
+  }
+  return null;
+}
+
+function nextStepsFor(niche: string, nicheName: string, fallbackTips: string[] | undefined): NextStepsData | null {
+  const own = checklistSteps(niche, nicheName);
+  if (own) return own;
+  const related = getNicheById(niche)?.relatedNiches || [];
+  for (const r of related) {
+    const viaRelated = checklistSteps(r, getNicheById(r)?.name || r);
+    if (viaRelated) return { ...viaRelated, nicheName };
+  }
+  if (fallbackTips?.length) {
+    return {
+      nicheName,
+      checklistTitle: `${nicheName} tips`,
+      checklistHref: `${freeSitePrefix()}/topics/${niche}`,
+      steps: fallbackTips.slice(0, 3).map((tip) => ({ task: tip, why: '' })),
+    };
   }
   return null;
 }
@@ -123,7 +150,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       <JsonLd data={appSchema} />
-      <ToolPageClient data={data} nicheName={nicheName} nextSteps={nextStepsFor(niche, nicheName)} proWebUrl={proWebUrlFor(niche)} />
+      <ToolPageClient data={data} nicheName={nicheName} nextSteps={nextStepsFor(niche, nicheName, data.educational?.tips)} proWebUrl={proWebUrlFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `${freeSitePrefix()}/topics/${niche}` }}

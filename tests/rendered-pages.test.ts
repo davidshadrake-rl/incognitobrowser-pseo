@@ -589,3 +589,39 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
     }
   });
 });
+
+/**
+ * Funnel completeness (2026-09-08): reported live — the Privacy Score
+ * Calculator's finished screen had the Pro CTA and the scorecard, but no
+ * "What to do now" block, because its niche's checklists are still drafts
+ * (digital-footprint, encrypted-messaging). nextStepsFor() now falls back
+ * to a related niche's checklist, then to the tool's own tips, so this can
+ * never silently disappear. This guard covers EVERY published free tool
+ * page, not a sample, and would have caught the original gap.
+ */
+describe.skipIf(!HAS_TARGET)('every published free tool renders "What to do now"', () => {
+  const PRO_ENGINES = ['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer'];
+  const toolsRoot = path.join(process.cwd(), 'data', 'tools');
+  const publishedFreeTools: string[] = [];
+  for (const niche of fs.readdirSync(toolsRoot)) {
+    const d = path.join(toolsRoot, niche);
+    if (!fs.statSync(d).isDirectory()) continue;
+    for (const f of fs.readdirSync(d)) {
+      if (!f.endsWith('.json')) continue;
+      const j = JSON.parse(fs.readFileSync(path.join(d, f), 'utf-8'));
+      if (PRO_ENGINES.includes(j.toolEngine)) continue;
+      if (j.editorial?.status !== 'published') continue;
+      publishedFreeTools.push(`/tools/${niche}/${f.replace(/\.json$/, '')}`);
+    }
+  }
+
+  it('found every published free tool page from data/tools (sanity check on the test itself)', () => {
+    expect(publishedFreeTools.length).toBeGreaterThanOrEqual(20);
+  });
+
+  it.each(publishedFreeTools)('%s renders a non-empty next-steps block', async (route) => {
+    const r = await fetchText(route + '/');
+    expect(r.ok, route).toBe(true);
+    expect(r.body, route).toMatch(/data-next-steps="[^"]+"/);
+  });
+});
