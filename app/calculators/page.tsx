@@ -1,7 +1,6 @@
 import { getAllContentItems } from '@/lib/content';
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
-import { Card } from '@/components/ui/Card';
 import { redirect } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
@@ -26,12 +25,6 @@ export default function CalculatorsIndex() {
   const niches = getAllNiches();
   const nicheMap = Object.fromEntries(niches.map(n => [n.id, n]));
 
-  const grouped = items.reduce<Record<string, typeof items>>((acc, item) => {
-    const key = item._niche;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
-    return acc;
-  }, {});
 
   return (
     <div>
@@ -50,9 +43,8 @@ export default function CalculatorsIndex() {
           
           keywords: item._niche,
         }))}
+        topics={Array.from(new Set(items.map(i => i._niche))).map(n => ({ label: nicheMap[n]?.name || n, href: `/calculators/${n}` })).sort((a, b) => a.label.localeCompare(b.label))}
       />
-
-      <h2 className="text-xl font-semibold text-white mb-6 pt-8 border-t border-white/10">Browse by topic</h2>
 
       {items.length === 0 && (
         <div className="text-center py-12 text-[#B8B8D4]/60">
@@ -60,23 +52,6 @@ export default function CalculatorsIndex() {
         </div>
       )}
 
-      {Object.entries(grouped).map(([nicheId, nicheItems]) => (
-        <section key={nicheId} className="mb-10">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            {nicheMap[nicheId]?.name || nicheId}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {nicheItems.map(item => (
-              <Card
-                key={item._slug}
-                title={item.title}
-                description={item.metaDescription}
-                href={`/calculators/${item._niche}/${item._slug}`}
-              />
-            ))}
-          </div>
-        </section>
-      ))}
     </div>
   );
 }

@@ -44,6 +44,7 @@ export default function SiteIndexPage() {
         Every point is itemised on each page. <Link href="/site/methodology" className="underline hover:text-white">Read the methodology</Link> — and argue with it.
       </p>
 
+
       <AtoZCatalogue
         noun="websites"
         entries={all.map(s => ({
@@ -51,11 +52,11 @@ export default function SiteIndexPage() {
           href: `/site/${s.domain}`,
           description: s.grade.headline,
           meta: `${s.category.label} · ${s.grade.score}/100`,
-          badge: `Grade ${s.grade.grade}`,
+          grade: s.grade.grade,
           keywords: `${s.category.category} grade ${s.grade.grade}`,
         }))}
-      />
-
+        topics={(Object.keys(byCat) as SiteCategory[]).map(c => ({ label: CATEGORY_LABEL[c], query: CATEGORY_LABEL[c] })).sort((a, b) => a.label.localeCompare(b.label))}
+      >
       {/* Distribution */}
       <div className="flex flex-wrap gap-3 mb-10">
         {(['A', 'B', 'C', 'D', 'F'] as const).map((g) => (
@@ -77,18 +78,7 @@ export default function SiteIndexPage() {
           {best.map((s) => <Row key={s.domain} s={s} />)}
         </section>
       </div>
-
-      {/* Full list by category */}
-      {(Object.keys(byCat) as SiteCategory[])
-        .sort((a, b) => byCat[b].length - byCat[a].length)
-        .map((cat) => (
-          <section key={cat} className="mb-8">
-            <h2 className="text-xl font-semibold text-white mb-2">{CATEGORY_LABEL[cat]} <span className="text-sm text-[#B8B8D4]/60 font-normal">({byCat[cat].length})</span></h2>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg divide-y divide-white/5">
-              {byCat[cat].map((s) => <Row key={s.domain} s={s} />)}
-            </div>
-          </section>
-        ))}
+      </AtoZCatalogue>
     </div>
   );
 }

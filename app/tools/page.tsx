@@ -125,13 +125,6 @@ export default function ToolsIndex() {
     }
   }
 
-  // Group items by engine for the "all tools by topic" section
-  const byEngine = items.reduce<Record<string, typeof items>>((acc, item) => {
-    const engine = item.toolEngine || 'other';
-    if (!acc[engine]) acc[engine] = [];
-    acc[engine].push(item);
-    return acc;
-  }, {});
 
   return (
     <div>
@@ -163,8 +156,8 @@ export default function ToolsIndex() {
           badge: item.toolType,
           keywords: [item.toolEngine, item._niche].filter(Boolean).join(' '),
         }))}
-      />
-
+        topics={Array.from(new Set(items.map(i => i._niche))).map(n => ({ label: nicheMap[n]?.name || n, href: `/tools/${n}` })).sort((a, b) => a.label.localeCompare(b.label))}
+      >
       {/* Featured tools grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
         {FEATURED_TOOLS.filter(t => engineVisibleInThisTier(t.engine)).map(tool => {
@@ -198,36 +191,7 @@ export default function ToolsIndex() {
           );
         })}
       </div>
-
-      {/* Browse by topic */}
-      <div className="border-t border-white/10 pt-10">
-        <h2 className="text-xl font-semibold text-white mb-2">Browse by Privacy Topic</h2>
-        <p className="text-sm text-[#B8B8D4] mb-6">
-          Each privacy niche has a tailored tool with topic-specific guidance and tips.
-        </p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-          {items.map(item => (
-            <Link
-              key={`${item._niche}-${item._slug}`}
-              href={`/tools/${item._niche}/${item._slug}`}
-              className="flex items-center gap-3 bg-[#0a0a0a] border border-white/5 rounded-lg px-4 py-3 hover:border-white/15 transition-colors group"
-            >
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-white truncate group-hover:text-white/90">
-                  {item.title}
-                </div>
-                <div className="text-xs text-[#B8B8D4]/60 truncate">
-                  {nicheMap[item._niche]?.name || item._niche}
-                </div>
-              </div>
-              <span className="text-xs px-2 py-1 bg-white/5 rounded text-[#B8B8D4]/60 shrink-0">
-                {item.toolType}
-              </span>
-            </Link>
-          ))}
-        </div>
-      </div>
+      </AtoZCatalogue>
     </div>
   );
 }

@@ -49,6 +49,7 @@ export default function GlossaryIndex() {
           badge: term.category,
           keywords: term.category,
         }))}
+        topics={Array.from(new Set(terms.map(t => t.category))).sort().map(c => ({ label: c, query: c }))}
       />
     </div>
   );

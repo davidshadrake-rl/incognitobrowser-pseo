@@ -520,6 +520,23 @@ describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', 
       expect((r.body.match(/href="#letter-[A-Z]"/g) || []).length).toBeGreaterThanOrEqual(5);
       expect((r.body.match(/catalogue-entry/g) || []).length).toBeGreaterThanOrEqual(min);
       expect(r.body).toMatch(/id="letter-[A-Z]"/);
+      expect((r.body.match(/topic-chip/g) || []).length, `${route} topic chips`).toBeGreaterThanOrEqual(5);
     });
   }
+  it('layout: search + letters at the top, page content in the middle, the A–Z list at the bottom', async () => {
+    const tools = await fetchText('/tools/');
+    const controls = tools.body.indexOf('data-catalogue="tools"');
+    const featured = tools.body.indexOf('No signup');
+    const list = tools.body.indexOf('id="a-to-z"');
+    expect(controls).toBeGreaterThan(0);
+    expect(featured).toBeGreaterThan(controls);
+    expect(list).toBeGreaterThan(featured);
+    const site = await fetchText('/site/');
+    expect(site.body.indexOf('Most aggressive tracking')).toBeGreaterThan(site.body.indexOf('data-catalogue="websites"'));
+    expect(site.body.indexOf('id="a-to-z"')).toBeGreaterThan(site.body.indexOf('Most aggressive tracking'));
+    for (const route of ['/guides/', '/glossary/']) {
+      const r = await fetchText(route);
+      expect(r.body.indexOf('id="a-to-z"'), route).toBeGreaterThan(r.body.indexOf('href="#letter-'));
+    }
+  });
 });

@@ -15,8 +15,10 @@ export interface CatalogueEntry {
   description?: string;
   /** Secondary line, e.g. the niche name — also disambiguates duplicate titles. */
   meta?: string;
-  /** Small chip, e.g. difficulty, tool type, grade. */
+  /** Small chip, e.g. difficulty, tool type. */
   badge?: string;
+  /** Report-card letter grade — rendered as the coloured GradeBadge instead of a text chip. */
+  grade?: 'A' | 'B' | 'C' | 'D' | 'F';
   /** Extra searchable text that is not displayed (engine id, category, aliases). */
   keywords?: string;
 }
