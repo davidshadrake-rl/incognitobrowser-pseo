@@ -3,6 +3,7 @@ import { getAllContentItems, isPublished, type EditableContent } from '@/lib/con
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { IS_PRO_DEPLOYMENT, engineVisibleInThisTier, tierOfEngine } from '@/lib/tiers';
+import { AtoZCatalogue } from '@/components/AtoZCatalogue';
 
 export const metadata = genMeta({
   title: IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools',
@@ -151,6 +152,18 @@ export default function ToolsIndex() {
           <p className="text-lg">Tools are being generated. Check back soon!</p>
         </div>
       )}
+
+      <AtoZCatalogue
+        noun="tools"
+        entries={items.map(item => ({
+          title: item.title,
+          href: `/tools/${item._niche}/${item._slug}`,
+          description: item.metaDescription,
+          meta: nicheMap[item._niche]?.name || item._niche,
+          badge: item.toolType,
+          keywords: [item.toolEngine, item._niche].filter(Boolean).join(' '),
+        }))}
+      />
 
       {/* Featured tools grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">

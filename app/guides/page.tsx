@@ -2,6 +2,9 @@ import { getAllContentItems } from '@/lib/content';
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { Card } from '@/components/ui/Card';
+import { redirect } from 'next/navigation';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
+import { AtoZCatalogue } from '@/components/AtoZCatalogue';
 
 export const metadata = genMeta({
   title: 'Privacy Guides',
@@ -19,6 +22,7 @@ interface GuideMeta {
 }
 
 export default function GuidesIndex() {
+  if (IS_PRO_DEPLOYMENT) redirect('/tools'); // the Pro deployment serves tools only
   const items = getAllContentItems<GuideMeta>('guides');
   const niches = getAllNiches();
   const nicheMap = Object.fromEntries(niches.map(n => [n.id, n]));
@@ -36,6 +40,20 @@ export default function GuidesIndex() {
       <p className="text-[#B8B8D4] mb-8">
         Step-by-step guides to help you protect your privacy online. From beginner basics to advanced techniques.
       </p>
+
+      <AtoZCatalogue
+        noun="guides"
+        entries={items.map(item => ({
+          title: item.title,
+          href: `/guides/${item._niche}/${item._slug}`,
+          description: item.metaDescription,
+          meta: nicheMap[item._niche]?.name || item._niche,
+          badge: item.difficulty,
+          keywords: item._niche,
+        }))}
+      />
+
+      <h2 className="text-xl font-semibold text-white mb-6 pt-8 border-t border-white/10">Browse by topic</h2>
 
       {items.length === 0 && (
         <div className="text-center py-12 text-[#B8B8D4]/60">

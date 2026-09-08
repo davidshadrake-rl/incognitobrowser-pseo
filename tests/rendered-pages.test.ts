@@ -350,7 +350,9 @@ describe.skipIf(!HAS_TARGET)('tool pages are indexable (regression guard)', () =
   it('the sitemap includes tool URLs', async () => {
     const r = await fetchText(ROUTES.sitemap);
     const n = (r.body.match(/\/tools\//g) || []).length;
-    expect(n).toBeGreaterThanOrEqual(30);
+    // 46 tool pages − 22 Pro-engine pages (Pro deployment only) − 6 drafted
+    // quiz duplicates = 18 published free tool URLs.
+    expect(n).toBeGreaterThanOrEqual(18);
   });
 
   it('a deliberately drafted duplicate quiz emits noindex and is absent from the sitemap', async () => {
@@ -392,4 +394,132 @@ describe.skipIf(!HAS_TARGET)('website privacy report cards', () => {
     const r = await fetchText(ROUTES.sitemap);
     expect((r.body.match(/\/site\/[a-z0-9.-]+<\/loc>/g) || []).length).toBeGreaterThanOrEqual(400);
   });
+});
+
+/**
+ * Free / Pro split (2026-09-08: "pro tools are still in the free privacy
+ * tools catalogue" → clean division). Pro-engine tool pages live ONLY on the
+ * Pro deployment. On the free site they must not be built, must not be in
+ * the sitemap, and must not be linked from ANY page — a link to a page that
+ * does not exist here is a 404 for users and a dead edge for crawlers.
+ * The Pro path list is derived from data/ so the guard follows the data.
+ */
+describe.skipIf(!HAS_TARGET)('free/Pro split — Pro tools are absent from the free site', () => {
+  const PRO_ENGINES = new Set(['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer']);
+  const toolsRoot = path.join(process.cwd(), 'data', 'tools');
+  const byNiche: Record<string, { slug: string; pro: boolean; published: boolean }[]> = {};
+  for (const niche of fs.readdirSync(toolsRoot)) {
+    const d = path.join(toolsRoot, niche);
+    if (!fs.statSync(d).isDirectory()) continue;
+    for (const f of fs.readdirSync(d)) {
+      if (!f.endsWith('.json')) continue;
+      const j = JSON.parse(fs.readFileSync(path.join(d, f), 'utf-8')) as { toolEngine?: string; editorial?: { status?: string } };
+      (byNiche[niche] ||= []).push({ slug: f.replace(/\.json$/, ''), pro: PRO_ENGINES.has(j.toolEngine || ''), published: j.editorial?.status === 'published' });
+    }
+  }
+  const PRO_PATHS = Object.entries(byNiche).flatMap(([n, ts]) => ts.filter(t => t.pro).map(t => `/tools/${n}/${t.slug}`));
+  const FREE_PATHS = Object.entries(byNiche).flatMap(([n, ts]) => ts.filter(t => !t.pro).map(t => `/tools/${n}/${t.slug}`));
+  // Drafted free tools (the 6 quiz duplicates) render with noindex and stay out of the sitemap by design.
+  const FREE_PUBLISHED_PATHS = Object.entries(byNiche).flatMap(([n, ts]) => ts.filter(t => !t.pro && t.published).map(t => `/tools/${n}/${t.slug}`));
+  const proOnlyNiche = Object.entries(byNiche).find(([, ts]) => ts.length > 0 && ts.every(t => t.pro))?.[0];
+  const mixedOrFreeNiche = Object.entries(byNiche).find(([, ts]) => ts.some(t => !t.pro))?.[0];
+  const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // Same-site hrefs only: absolute links to the Pro deployment are the intended hand-off.
+  const sameSiteHref = (p: string) => new RegExp(`href="(?:/resources)?${esc(p)}/?"`);
+
+  it('derives the agreed 22 Pro tool paths and 24 free ones (18 published) from data', () => {
+    expect(PRO_PATHS.length).toBe(22);
+    expect(FREE_PATHS.length).toBe(24);
+    expect(FREE_PUBLISHED_PATHS.length).toBe(18);
+  });
+
+  it('builds no Pro-engine tool page, and still builds every free one', async () => {
+    for (const p of PRO_PATHS) {
+      const r = await fetchText(p + '/');
+      expect(r.status, `${p} must not exist on the free site`).toBe(404);
+    }
+    for (const p of FREE_PATHS) {
+      const r = await fetchText(p + '/');
+      expect(r.ok, `${p} must still exist on the free site`).toBe(true);
+    }
+  }, 120_000);
+
+  it('keeps every Pro-engine URL out of the sitemap', async () => {
+    const r = await fetchText(ROUTES.sitemap);
+    expect(r.ok).toBe(true);
+    for (const p of PRO_PATHS) expect(r.body, p).not.toMatch(new RegExp(`${esc(p)}/?</loc>`));
+    for (const p of FREE_PUBLISHED_PATHS) expect(r.body, p).toMatch(new RegExp(`${esc(p)}/?</loc>`));
+  });
+
+  it('the tools catalogue lists free tools only', async () => {
+    const r = await fetchText('/tools/');
+    expect(r.ok).toBe(true);
+    for (const p of PRO_PATHS) expect(r.body, `catalogue links ${p}`).not.toMatch(sameSiteHref(p));
+    for (const p of FREE_PATHS) expect(r.body, `catalogue lost ${p}`).toMatch(sameSiteHref(p));
+  });
+
+  it('a niche whose only tools are Pro has no tool hub; a niche with a free tool keeps its hub', async () => {
+    expect(proOnlyNiche, 'expected at least one Pro-only niche in data').toBeTruthy();
+    expect(mixedOrFreeNiche).toBeTruthy();
+    expect((await fetchText(`/tools/${proOnlyNiche}/`)).status).toBe(404);
+    expect((await fetchText(`/tools/${mixedOrFreeNiche}/`)).ok).toBe(true);
+  });
+
+  it('report cards hand scanning off to the Pro deployment by absolute link, never a same-site Pro path', async () => {
+    for (const route of ['/site/cnn.com/', '/site/', '/site/methodology/']) {
+      const r = await fetchText(route);
+      expect(r.ok, route).toBe(true);
+      expect(r.body, route).toMatch(/href="https?:\/\/[^"]+\/tools\/ad-tracking\/cookie-tracker-scanner"/);
+      expect(r.body, route).not.toMatch(sameSiteHref('/tools/ad-tracking/cookie-tracker-scanner'));
+    }
+  });
+
+  it('no page anywhere in the site links to a Pro-engine tool page (whole-export link audit)', async () => {
+    const offenders: string[] = [];
+    const check = (name: string, html: string) => {
+      for (const p of PRO_PATHS) if (sameSiteHref(p).test(html)) offenders.push(`${name} → ${p}`);
+    };
+    if (IS_LIVE) {
+      // Live: audit the surfaces most likely to list tools plus one of each content type.
+      const sample = ['/', '/tools/', '/site/', '/site/methodology/', '/site/cnn.com/', ROUTES.topicHub,
+        `/topics/${proOnlyNiche}/`, ROUTES.publishedGuide, ROUTES.publishedChecklist, ...FREE_PATHS.slice(0, 3).map(p => p + '/')];
+      for (const route of sample) {
+        const r = await fetchText(route);
+        expect(r.ok, route).toBe(true);
+        check(route, r.body);
+      }
+    } else {
+      // Static export: every HTML file in out/.
+      const walk = (dir: string): string[] => fs.readdirSync(dir, { withFileTypes: true })
+        .flatMap(e => e.isDirectory() ? walk(path.join(dir, e.name)) : e.name.endsWith('.html') ? [path.join(dir, e.name)] : []);
+      const files = walk(OUT_DIR);
+      expect(files.length).toBeGreaterThan(1000);
+      for (const f of files) check(path.relative(OUT_DIR, f), fs.readFileSync(f, 'utf-8'));
+    }
+    expect(offenders, offenders.slice(0, 10).join('\n')).toEqual([]);
+  }, 120_000);
+});
+
+/**
+ * Wayfinding (2026-09-08): every index page carries the same search box,
+ * clickable letter bar and server-rendered A–Z list (modelled on the
+ * Privacy Glossary), so the full alphabetized catalogue is in the HTML for
+ * crawlers and no-JS visitors, and the search is a client-side enhancement.
+ */
+describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', () => {
+  const INDEXES: Array<[string, string, number]> = [
+    ['/tools/', 'tools', 20], ['/guides/', 'guides', 40], ['/checklists/', 'checklists', 40], ['/comparisons/', 'comparisons', 40],
+    ['/templates/', 'templates', 40], ['/calculators/', 'calculators', 40], ['/glossary/', 'terms', 50], ['/site/', 'websites', 400],
+  ];
+  for (const [route, noun, min] of INDEXES) {
+    it(`${route} has a search box, letter links, and ≥${min} alphabetized entries in the HTML`, async () => {
+      const r = await fetchText(route);
+      expect(r.ok, route).toBe(true);
+      expect(r.body).toMatch(new RegExp(`data-catalogue="${noun}" data-count="(\\d+)"`));
+      expect(r.body).toMatch(/<input[^>]*type="search"/);
+      expect((r.body.match(/href="#letter-[A-Z]"/g) || []).length).toBeGreaterThanOrEqual(5);
+      expect((r.body.match(/catalogue-entry/g) || []).length).toBeGreaterThanOrEqual(min);
+      expect(r.body).toMatch(/id="letter-[A-Z]"/);
+    });
+  }
 });

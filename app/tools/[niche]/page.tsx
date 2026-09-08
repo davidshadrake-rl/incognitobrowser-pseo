@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getAllContentItems } from '@/lib/content';
+import { getAllContentItems, freeSitePrefix } from '@/lib/content';
+import { engineVisibleInThisTier } from '@/lib/tiers';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { Card } from '@/components/ui/Card';
@@ -12,6 +13,7 @@ interface ToolMeta {
   title: string;
   metaDescription: string;
   toolType: string;
+  toolEngine?: string;
 }
 
 interface PageProps {
@@ -20,9 +22,13 @@ interface PageProps {
 
 export const dynamicParams = false;
 
+/** Tools this deployment actually builds — a hub must never list a tool page that does not exist here. */
+function visibleTools() {
+  return getAllContentItems<ToolMeta>('tools').filter(i => engineVisibleInThisTier(i.toolEngine));
+}
+
 export async function generateStaticParams() {
-  const items = getAllContentItems<ToolMeta>('tools');
-  return Array.from(new Set(items.map(i => i._niche))).map(niche => ({ niche }));
+  return Array.from(new Set(visibleTools().map(i => i._niche))).map(niche => ({ niche }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -38,7 +44,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ToolsByNiche({ params }: PageProps) {
   const { niche } = await params;
-  const items = getAllContentItems<ToolMeta>('tools').filter(i => i._niche === niche);
+  const items = visibleTools().filter(i => i._niche === niche);
   if (items.length === 0) notFound();
   const nicheData = getNicheById(niche);
 
@@ -74,7 +80,7 @@ export default async function ToolsByNiche({ params }: PageProps) {
       <div className="mt-10 pt-8 border-t border-white/10">
         <p className="text-sm text-[#B8B8D4]">
           Looking for more on this topic?{' '}
-          <Link href={`/topics/${niche}`} className="text-white underline hover:no-underline">
+          <Link href={`${freeSitePrefix()}/topics/${niche}`} className="text-white underline hover:no-underline">
             View the full {nicheData?.name ?? niche} hub
           </Link>
         </p>

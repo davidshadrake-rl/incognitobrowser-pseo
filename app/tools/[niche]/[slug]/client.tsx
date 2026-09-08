@@ -64,7 +64,7 @@ export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName:
               )}
               {data.tier === 'pro' && (
                 IS_PRO_DEPLOYMENT ? (
-                  <a href={`${FREE_BASE_URL}/tools/${data.niche}/${data.slug}`} className="px-2 py-0.5 bg-white/5 rounded text-xs text-[#B8B8D4] hover:text-white" title="The free one-shot version on the marketing site">← Free version</a>
+                  <a href={`${FREE_BASE_URL}/tools`} className="px-2 py-0.5 bg-white/5 rounded text-xs text-[#B8B8D4] hover:text-white" title="The free privacy tools on the marketing site">← Free tools</a>
                 ) : (
                   <a href={proUrlFor(data.niche, data.slug)} className="px-2 py-0.5 bg-purple-500/10 rounded text-xs text-purple-300 hover:text-purple-200" title="Deeper version on Incognito Pro">Pro version →</a>
                 )

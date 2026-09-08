@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
-import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, freeSitePrefix } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { engineVisibleInThisTier } from '@/lib/tiers';
-import { generateMetadata as genMeta, generateWebApplicationSchema, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
+import { generateMetadata as genMeta, generateWebApplicationSchema, generateBreadcrumbSchema, generateArticleSchema, absoluteUrl } from '@/lib/seo';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ToolPageClient } from './client';
@@ -39,7 +39,7 @@ export async function generateStaticParams() {
   const files = getContentFiles('tools');
   return files
     .map(f => { const [niche, slug] = f.split('/'); return { niche, slug }; })
-    // The Pro deployment renders only Pro engines; the free site renders every tool.
+    // Each deployment renders only its own tier's engines (free: free, Pro: Pro).
     .filter(({ niche, slug }) => engineVisibleInThisTier(getContentItem<{ toolEngine?: string }>('tools', niche, slug)?.toolEngine));
 }
 
@@ -68,7 +68,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
   const appSchema = generateWebApplicationSchema(
     data.title,
     data.description,
-    `https://incognitobrowser.io/resources/tools/${niche}/${slug}`
+    absoluteUrl(`/tools/${niche}/${slug}`)
   );
   const breadcrumbs = generateBreadcrumbSchema([
     { name: 'Resources', url: '/' },
@@ -87,7 +87,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
     description: (data as unknown as { metaDescription?: string; definition?: string }).metaDescription
       || (data as unknown as { definition?: string }).definition
       || '',
-    url: 'https://incognitobrowser.io/resources' + `/tools/${niche}/${slug}`,
+    url: absoluteUrl(`/tools/${niche}/${slug}`),
     datePublished: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
     dateModified: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
     author: (data as unknown as { author?: { name: string; bio?: string; credentials?: string; profileUrl?: string; sameAs?: string[] } | null }).author,
@@ -103,7 +103,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
       <ToolPageClient data={data} nicheName={nicheName} />
       <RelatedContent
         links={crossLinks}
-        nicheHub={{ name: nicheName, href: `/topics/${niche}` }}
+        nicheHub={{ name: nicheName, href: `${freeSitePrefix()}/topics/${niche}` }}
       />
     </>
   );

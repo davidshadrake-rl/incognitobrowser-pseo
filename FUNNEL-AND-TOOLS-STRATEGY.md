@@ -1,4 +1,4 @@
-# Funnel rethink + tool roadmap — free tools → Incognito Browser Pro subscribers
+ # Funnel rethink + tool roadmap — free tools → Incognito Browser Pro subscribers
 
 **Date:** 2026-09-07
 **Grounding:** the live site as of today (`incognitobrowser-pseo.vercel.app`, `incognitobrowser-pro.vercel.app`), the code, and the Play Store listing. Where I state a number I don't have, it's marked as a hypothesis to measure.

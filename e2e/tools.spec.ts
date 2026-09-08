@@ -16,7 +16,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { toolUrl, isInsecureContext } from './helpers';
+import { toolUrl, isInsecureContext, hasProTarget } from './helpers';
 
 // ─────────────────────────────────────────────────────────────────────────
 // 1. Password Strength Checker
@@ -51,6 +51,7 @@ test('password-generator: produces a password on click', async ({ page }) => {
 // 3. Browser Privacy Audit
 // ─────────────────────────────────────────────────────────────────────────
 test('browser-privacy: audit completes and displays at least 10 checks', async ({ page }) => {
+  test.skip(!hasProTarget(), 'Pro engine — lives on the Pro deployment only; set E2E_PRO_BASE_URL.');
   await page.goto(toolUrl('browser-privacy'));
   await page.getByRole('button', { name: /run audit|start audit|audit/i }).first().click();
   // Each check renders a category label — wait for several to appear
@@ -131,6 +132,7 @@ test('text-encryption: wrong passphrase shows actionable error', async ({ page }
 // 5. URL Safety Checker
 // ─────────────────────────────────────────────────────────────────────────
 test('url-analyzer: flags an obvious typosquat', async ({ page }) => {
+  test.skip(!hasProTarget(), 'Pro engine — lives on the Pro deployment only; set E2E_PRO_BASE_URL.');
   await page.goto(toolUrl('url-analyzer'));
   await page.locator('input[type="text"], input[type="url"]').first().fill('http://paypa1.com/login');
   await page.getByRole('button', { name: /analyze|check|scan/i }).first().click();
@@ -139,6 +141,7 @@ test('url-analyzer: flags an obvious typosquat', async ({ page }) => {
 });
 
 test('url-analyzer: trusted domain shows higher score', async ({ page }) => {
+  test.skip(!hasProTarget(), 'Pro engine — lives on the Pro deployment only; set E2E_PRO_BASE_URL.');
   await page.goto(toolUrl('url-analyzer'));
   await page.locator('input[type="text"], input[type="url"]').first().fill('https://github.com');
   await page.getByRole('button', { name: /analyze|check|scan/i }).first().click();
@@ -201,6 +204,7 @@ test('permission-checker: shows status for at least camera and microphone', asyn
 // 9. Cookie & Tracker Scanner (talks to Vercel API)
 // ─────────────────────────────────────────────────────────────────────────
 test('cookie-analyzer: scans example.com and renders the result panel', async ({ page }) => {
+  test.skip(!hasProTarget(), 'Pro engine — lives on the Pro deployment only; set E2E_PRO_BASE_URL.');
   test.setTimeout(60_000);
   await page.goto(toolUrl('cookie-analyzer'));
   await page.locator('input[type="url"], input[type="text"]').first().fill('https://example.com');
@@ -239,6 +243,7 @@ test('useragent-analyzer: displays parsed browser + OS info', async ({ page }) =
 // 11. Image Metadata Viewer (skipped — needs binary upload, separate test)
 // ─────────────────────────────────────────────────────────────────────────
 test('metadata-viewer: tool page loads with upload control', async ({ page }) => {
+  test.skip(!hasProTarget(), 'Pro engine — lives on the Pro deployment only; set E2E_PRO_BASE_URL.');
   await page.goto(toolUrl('metadata-viewer'));
   // Without a real image file we just verify the file input is present
   await expect(page.locator('input[type="file"]').first()).toBeVisible({ timeout: 10_000 });

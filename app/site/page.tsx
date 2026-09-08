@@ -3,8 +3,9 @@ import { redirect } from 'next/navigation';
 import { getAllSites, getSitesByCategory, getExtremes, gradeDistribution } from '@/lib/sites';
 import { CATEGORY_LABEL, type SiteCategory } from '@/lib/site-categories';
 import { generateMetadata as genMeta } from '@/lib/seo';
-import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
+import { IS_PRO_DEPLOYMENT, proUrlFor } from '@/lib/tiers';
 import { GradeBadge } from '@/components/GradeBadge';
+import { AtoZCatalogue } from '@/components/AtoZCatalogue';
 
 export const metadata = genMeta({
   title: 'Website Privacy Report Cards: 500 Sites Graded A–F',
@@ -39,9 +40,21 @@ export default function SiteIndexPage() {
         tracking cookies, ad and analytics trackers, third-party scripts, and security headers.
       </p>
       <p className="text-sm text-[#B8B8D4]/60 mb-6">
-        Scanned {scannedAt} with the same scanner behind our <Link href="/tools/ad-tracking/cookie-tracker-scanner" className="underline hover:text-white">Cookie &amp; Tracker Scanner</Link>.
+        Scanned {scannedAt} with the same scanner behind the <a href={proUrlFor('ad-tracking', 'cookie-tracker-scanner')} className="underline hover:text-white">Cookie &amp; Tracker Scanner in Incognito Pro</a>.
         Every point is itemised on each page. <Link href="/site/methodology" className="underline hover:text-white">Read the methodology</Link> — and argue with it.
       </p>
+
+      <AtoZCatalogue
+        noun="websites"
+        entries={all.map(s => ({
+          title: s.domain,
+          href: `/site/${s.domain}`,
+          description: s.grade.headline,
+          meta: `${s.category.label} · ${s.grade.score}/100`,
+          badge: `Grade ${s.grade.grade}`,
+          keywords: `${s.category.category} grade ${s.grade.grade}`,
+        }))}
+      />
 
       {/* Distribution */}
       <div className="flex flex-wrap gap-3 mb-10">

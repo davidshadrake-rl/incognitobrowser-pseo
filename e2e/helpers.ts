@@ -29,19 +29,32 @@ export const TOOL_PATHS: Record<string, string> = {
  * To target the right URL we strip /resources/ for server-mode environments
  * and keep it for static-export environments.
  */
+/** Engines that exist only on the Pro deployment (mirror of lib/tiers PRO_ENGINES). */
+export const PRO_ENGINES = new Set(['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer']);
+
+/** Pro tools are tested against E2E_PRO_BASE_URL; without it their tests skip. */
+export function hasProTarget(): boolean {
+  return !!process.env.E2E_PRO_BASE_URL;
+}
+
+function isServerModeBase(baseUrl: string): boolean {
+  const b = baseUrl.toLowerCase();
+  return !b || b.includes('localhost') || b.includes('127.0.0.1') || b.includes('vercel.app');
+}
+
 export function toolUrl(engine: keyof typeof TOOL_PATHS): string {
   const path = TOOL_PATHS[engine];
   if (!path) throw new Error(`Unknown tool engine: ${String(engine)}`);
-  const baseUrl = (process.env.E2E_BASE_URL || '').toLowerCase();
+
+  // Pro engines are not built on the free site: route them to the Pro deployment (absolute URL).
+  if (PRO_ENGINES.has(engine)) {
+    const proBase = (process.env.E2E_PRO_BASE_URL || '').replace(/\/$/, '');
+    if (!proBase) throw new Error(`${String(engine)} is a Pro engine — set E2E_PRO_BASE_URL (tests skip without it)`);
+    return proBase + (isServerModeBase(proBase) ? path.replace(/^\/resources/, '') : path);
+  }
 
   // Server-mode environments (no basePath applied): local dev + Vercel deploys
-  const isServerMode =
-    !baseUrl ||
-    baseUrl.includes('localhost') ||
-    baseUrl.includes('127.0.0.1') ||
-    baseUrl.includes('vercel.app');
-
-  return isServerMode ? path.replace(/^\/resources/, '') : path;
+  return isServerModeBase(process.env.E2E_BASE_URL || '') ? path.replace(/^\/resources/, '') : path;
 }
 
 /**

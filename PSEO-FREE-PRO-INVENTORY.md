@@ -153,7 +153,7 @@ Until a Pro feature actually ships, its panel shows a generic download CTA. **On
 |---|---|---|
 | Pro **tools** | cookie-analyzer, browser-privacy, url-analyzer, metadata-viewer | `lib/tiers.ts` PRO_ENGINES; `tier` on each tool JSON |
 | Pro **shape** | separate deployment, same repo, second Vercel project, `NEXT_PUBLIC_TIER=pro` | `lib/tiers.ts`; Pro build renders only the 22 Pro tool pages, noindex sitewide, no sitemap, robots disallow |
-| Free site | keeps every tool incl. the one-shot of Pro engines (they are the flagship funnels); Pro-engine pages link "Pro version →" | `app/tools/[niche]/[slug]/client.tsx` |
+| Free site | free engines only — Pro-engine tool pages are not built, not in the sitemap, and never linked (2026-09-08: clean split); report cards link "Scan any URL with Incognito Pro →" | `app/tools/[niche]/[slug]/client.tsx` |
 | Gate | **later** — "for now we are simply dividing the tools up" | n/a |
 | Pro promises on free pages | specific only for Leak Monitor (ships with VPN); generic elsewhere | copy, not yet encoded |
 | Privacy quiz | 9 → 3 (digital-footprint general, us-state-privacy compliance, student-privacy); 6 drafted | `data/tools/*/…quiz*.json` editorial.status |

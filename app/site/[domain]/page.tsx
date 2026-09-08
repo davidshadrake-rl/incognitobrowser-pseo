@@ -6,7 +6,7 @@ import { getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { GRADE_LABEL } from '@/lib/site-grade';
-import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
+import { IS_PRO_DEPLOYMENT, proUrlFor } from '@/lib/tiers';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -207,7 +207,7 @@ export default async function SiteReportPage({ params }: PageProps) {
         </p>
         <div className="flex flex-wrap gap-3">
           <a href="https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser&hl=en_US&referrer=utm_source%3Dresources%26utm_medium%3Dreport-card%26utm_campaign%3Dsite%26utm_content%3Dgrade-{grade.grade}" rel="noopener" className="btn-primary text-xs">Get Incognito Browser</a>
-          <Link href="/tools/ad-tracking/cookie-tracker-scanner" className="text-sm text-[#B8B8D4] hover:text-white self-center">Scan any URL yourself →</Link>
+          <a href={proUrlFor('ad-tracking', 'cookie-tracker-scanner')} className="text-sm text-[#B8B8D4] hover:text-white self-center">Scan any URL with Incognito Pro →</a>
         </div>
       </section>
 

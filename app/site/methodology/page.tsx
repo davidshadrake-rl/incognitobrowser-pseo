@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { generateMetadata as genMeta } from '@/lib/seo';
-import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
+import { IS_PRO_DEPLOYMENT, proUrlFor } from '@/lib/tiers';
 
 export const metadata = genMeta({
   title: 'How We Grade Website Privacy (Methodology)',
@@ -29,7 +29,7 @@ export default function MethodologyPage() {
         <li>Every <code>&lt;script src&gt;</code> that loads from a domain other than the site's own.</li>
         <li>Security headers: HTTPS, HSTS, Content-Security-Policy, Permissions-Policy.</li>
       </ul>
-      <p className="text-[#B8B8D4]">It is the same code that powers our public <Link href="/tools/ad-tracking/cookie-tracker-scanner" className="underline hover:text-white">Cookie &amp; Tracker Scanner</Link>, so you can reproduce any grade yourself.</p>
+      <p className="text-[#B8B8D4]">It is the same code that powers the <a href={proUrlFor('ad-tracking', 'cookie-tracker-scanner')} className="underline hover:text-white">Cookie &amp; Tracker Scanner in Incognito Pro</a>, so any grade can be reproduced with the same tool.</p>
 
       <h2 className="text-xl font-semibold text-white mt-8 mb-2">The rubric</h2>
       <p className="text-[#B8B8D4]">Every site starts at 100. Deductions, each capped so one category can't dominate:</p>

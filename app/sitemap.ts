@@ -6,6 +6,7 @@ import {
   getGlossaryItem,
   isPublished,
   type EditableContent,
+  isToolVisible,
 } from '@/lib/content';
 import { getAllSites, isSitePublished } from '@/lib/sites';
 import { getAllNiches, getAllContentTypes } from '@/lib/taxonomy';
@@ -69,6 +70,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       const [niche, slug] = file.split('/');
       const item = getContentItem<EditableContent>(type, niche, slug);
       if (!isPublished(item)) continue;
+      if (type === 'tools' && !isToolVisible(niche, slug)) continue; // Pro-engine pages live on the Pro deployment
       entries.push({
         url: `${SITE_URL}/${type}/${niche}/${slug}`,
         lastModified: new Date(),

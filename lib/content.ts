@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { engineVisibleInThisTier, IS_PRO_DEPLOYMENT, FREE_BASE_URL } from './tiers';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 
@@ -100,6 +101,21 @@ export function getAllContentItems<T>(contentType: string): Array<T & { _niche: 
   return items;
 }
 
+/**
+ * Is this tool page part of the current deployment (free or Pro)?
+ * Every place that lists or links a tool must go through this — a tool page
+ * that is not built here must never be linked from here.
+ */
+export function isToolVisible(niche: string, slug: string): boolean {
+  const item = getContentItem<{ toolEngine?: string }>('tools', niche, slug);
+  return !!item && engineVisibleInThisTier(item.toolEngine);
+}
+
+/** Absolute prefix for pages that exist only on the free site (empty on the free site itself). */
+export function freeSitePrefix(): string {
+  return IS_PRO_DEPLOYMENT ? FREE_BASE_URL : '';
+}
+
 export function getCrossNicheLinks(
   niche: string,
   currentType: string,
@@ -112,6 +128,10 @@ export function getCrossNicheLinks(
     tools: 'tool', templates: 'template', calculators: 'calculator',
   };
   const links: Array<{ title: string; url: string; type: string }> = [];
+  // Content pages (guides, checklists, …) are built only on the free site; the
+  // Pro deployment links to them absolutely. Tool links are always same-site
+  // and only to tools this tier actually builds.
+  const contentPrefix = freeSitePrefix();
 
   for (const ct of contentTypes) {
     if (links.length >= limit) break;
@@ -119,8 +139,10 @@ export function getCrossNicheLinks(
     for (const slug of files) {
       if (links.length >= limit) break;
       if (ct === currentType && slug === currentSlug) continue;
+      if (ct === 'tools' && !isToolVisible(niche, slug)) continue;
       const title = getContentItemTitle(ct, niche, slug);
-      links.push({ title, url: `/${ct}/${niche}/${slug}`, type: typeLabels[ct] });
+      const prefix = ct === 'tools' ? '' : contentPrefix;
+      links.push({ title, url: `${prefix}/${ct}/${niche}/${slug}`, type: typeLabels[ct] });
     }
   }
   return links;

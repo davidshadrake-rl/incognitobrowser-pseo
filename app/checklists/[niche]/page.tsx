@@ -5,6 +5,7 @@ import { getAllContentItems } from '@/lib/content';
 import { getAllNiches, getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { Card } from '@/components/ui/Card';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 
 interface ChecklistMeta {
   niche: string;
@@ -21,6 +22,7 @@ interface PageProps {
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
+  if (IS_PRO_DEPLOYMENT) return []; // Pro deployment serves tools only
   const items = getAllContentItems<ChecklistMeta>('checklists');
   return Array.from(new Set(items.map(i => i._niche))).map(niche => ({ niche }));
 }

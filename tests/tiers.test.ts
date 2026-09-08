@@ -3,7 +3,8 @@
  *
  * Guards:
  *   - exactly the four agreed engines are Pro
- *   - the free deployment shows every engine; the Pro deployment only Pro ones
+ *   - the free deployment shows only free engines; the Pro deployment only Pro ones
+ *     (2026-09-08: "pro tools are still in the free privacy tools catalogue" → clean split)
  *   - URL defaults are overridable and never trailing-slashed
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -30,11 +31,13 @@ describe('tierOfEngine', () => {
 });
 
 describe('engineVisibleInThisTier', () => {
-  it('free deployment (default) shows every engine, including pro ones as the free one-shot', async () => {
+  it('free deployment (default) shows only free engines — Pro tools are not in the free catalogue', async () => {
     const { engineVisibleInThisTier, IS_PRO_DEPLOYMENT, TIER } = await load({});
     expect(TIER).toBe('free');
     expect(IS_PRO_DEPLOYMENT).toBe(false);
-    for (const e of [...PRO, ...FREE]) expect(engineVisibleInThisTier(e)).toBe(true);
+    for (const e of FREE) expect(engineVisibleInThisTier(e)).toBe(true);
+    for (const e of PRO) expect(engineVisibleInThisTier(e)).toBe(false);
+    expect(engineVisibleInThisTier(undefined)).toBe(true); // engine-less tool pages are free content
   });
   it('pro deployment shows only pro engines', async () => {
     const { engineVisibleInThisTier, IS_PRO_DEPLOYMENT } = await load({ NEXT_PUBLIC_TIER: 'pro' });

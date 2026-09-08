@@ -1,9 +1,21 @@
 import type { Metadata } from 'next';
-import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
+import { IS_PRO_DEPLOYMENT, PRO_BASE_URL } from '@/lib/tiers';
 
 const SITE_URL = 'https://incognitobrowser.io';
 const BASE_PATH = '/resources';
 const SITE_NAME = 'Incognito Browser';
+
+/**
+ * Public origin of THIS deployment. Canonicals, og:url and JSON-LD must name
+ * the deployment the page is actually served from: a Pro page that
+ * canonicalises to the free site points at a URL that does not exist there.
+ */
+const PUBLIC_ORIGIN = IS_PRO_DEPLOYMENT ? PRO_BASE_URL : `${SITE_URL}${BASE_PATH}`;
+
+/** Absolute URL for a site path on this deployment. */
+export function absoluteUrl(path: string): string {
+  return `${PUBLIC_ORIGIN}${path === '/' ? '' : path}`;
+}
 
 interface SEOParams {
   title: string;
@@ -18,7 +30,7 @@ interface SEOParams {
 }
 
 export function generateMetadata({ title, description, path, type = 'article', noIndex = false, publishedAt, modifiedAt }: SEOParams): Metadata {
-  const url = `${SITE_URL}${BASE_PATH}${path}`;
+  const url = absoluteUrl(path);
 
   // IMPORTANT: don't pre-append " | Incognito Browser" here — layout.tsx's
   // root metadata sets `title.template = "%s | Incognito Browser"` and
@@ -176,7 +188,7 @@ export function generateBreadcrumbSchema(items: Array<{ name: string; url: strin
       '@type': 'ListItem',
       position: i + 1,
       name: item.name,
-      item: `${SITE_URL}${BASE_PATH}${item.url}`,
+      item: absoluteUrl(item.url),
     })),
   };
 }
