@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import Link from 'next/link';
 import { getAllNiches, getNicheBySlug, getRelatedNiches } from '@/lib/taxonomy';
 import { getContentFiles, getContentItemTitle } from '@/lib/content';
@@ -22,6 +23,7 @@ const CONTENT_TYPES = [
 ];
 
 export async function generateStaticParams() {
+  if (IS_PRO_DEPLOYMENT) return []; // Pro deployment serves tools only
   const niches = getAllNiches();
   return niches.map(n => ({ niche: n.slug }));
 }

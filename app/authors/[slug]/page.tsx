@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { getAuthor, authorJsonLd, getAllAuthors } from '@/lib/authors';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -11,6 +12,7 @@ interface PageProps {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
+  if (IS_PRO_DEPLOYMENT) return []; // Pro deployment serves tools only
   return getAllAuthors().map((a) => ({ slug: a.slug }));
 }
 

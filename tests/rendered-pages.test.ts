@@ -104,7 +104,7 @@ describe.skipIf(!HAS_TARGET)('robots.txt', () => {
   it('exists and points at the sitemap', async () => {
     const r = await fetchText(ROUTES.robots);
     expect(r.ok).toBe(true);
-    expect(r.body).toMatch(/User-agent:\s*\*/);
+    expect(r.body).toMatch(/User-agent:\s*\*/i);
     expect(r.body).toMatch(/Sitemap:\s*https?:\/\/incognitobrowser\.io\/resources\/sitemap\.xml/);
   });
 });

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ToolPage } from '@/components/ToolPage';
 import { renderToolEngine } from '@/components/tools/registry';
+import { IS_PRO_DEPLOYMENT, proUrlFor, FREE_BASE_URL } from '@/lib/tiers';
 
 interface ToolData {
   niche: string;
@@ -18,6 +19,8 @@ interface ToolData {
    * so claiming "client-side" on it would be a false privacy claim.
    */
   processing?: 'client' | 'server';
+  /** 'pro' engines live on the Pro deployment; the free site keeps the one-shot version. */
+  tier?: 'free' | 'pro';
   inputs: Array<{
     id: string;
     label: string;
@@ -54,6 +57,13 @@ export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName:
                 <span className="px-2 py-0.5 bg-amber-500/10 rounded text-xs text-amber-400" title="This tool sends your request to our server to fetch the target URL.">Server-assisted</span>
               ) : (
                 <span className="px-2 py-0.5 bg-blue-500/10 rounded text-xs text-blue-400">Client-side</span>
+              )}
+              {data.tier === 'pro' && (
+                IS_PRO_DEPLOYMENT ? (
+                  <a href={`${FREE_BASE_URL}/tools/${data.niche}/${data.slug}`} className="px-2 py-0.5 bg-white/5 rounded text-xs text-[#B8B8D4] hover:text-white" title="The free one-shot version on the marketing site">← Free version</a>
+                ) : (
+                  <a href={proUrlFor(data.niche, data.slug)} className="px-2 py-0.5 bg-purple-500/10 rounded text-xs text-purple-300 hover:text-purple-200" title="Deeper version on Incognito Pro">Pro version →</a>
+                )
               )}
             </div>
             <p className="text-[#B8B8D4]">{data.description}</p>

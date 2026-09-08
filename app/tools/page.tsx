@@ -2,9 +2,10 @@ import Link from 'next/link';
 import { getAllContentItems, isPublished, type EditableContent } from '@/lib/content';
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
+import { IS_PRO_DEPLOYMENT, engineVisibleInThisTier, tierOfEngine } from '@/lib/tiers';
 
 export const metadata = genMeta({
-  title: 'Free Privacy Tools',
+  title: IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools',
   description: 'Free interactive privacy tools: password checker, browser fingerprint audit, text encryption, URL safety scanner, and more. All run client-side.',
   path: '/tools',
   type: 'website',
@@ -103,7 +104,7 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
 ];
 
 export default function ToolsIndex() {
-  const items = getAllContentItems<ToolMeta>('tools');
+  const items = getAllContentItems<ToolMeta>('tools').filter(i => engineVisibleInThisTier(i.toolEngine));
   const niches = getAllNiches();
   const nicheMap = Object.fromEntries(niches.map(n => [n.id, n]));
 
@@ -133,7 +134,7 @@ export default function ToolsIndex() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-white mb-2">Free Privacy Tools</h1>
+      <h1 className="text-3xl font-bold text-white mb-2">{IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools'}</h1>
       <p className="text-[#B8B8D4] mb-2">
         Interactive tools to analyze, test, and improve your online privacy.
       </p>
@@ -152,7 +153,7 @@ export default function ToolsIndex() {
 
       {/* Featured tools grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
-        {FEATURED_TOOLS.map(tool => {
+        {FEATURED_TOOLS.filter(t => engineVisibleInThisTier(t.engine)).map(tool => {
           const link = engineToLink[tool.engine];
           if (!link) return null;
           return (
@@ -173,7 +174,7 @@ export default function ToolsIndex() {
               </p>
               <div className="mt-4 flex items-center gap-1 text-xs text-[#B8B8D4]/60">
                 <span className="text-green-400/60">●</span>
-                <span>Free</span>
+                <span>{tierOfEngine(tool.engine) === 'pro' ? 'Pro' : 'Free'}</span>
                 <span className="mx-1">·</span>
                 <span>{tool.processing === 'server' ? 'Server-assisted' : 'Client-side'}</span>
                 <span className="mx-1">·</span>

@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { getAllNiches, getAllContentTypes } from '@/lib/taxonomy';
 
 const icons: Record<string, string> = {
@@ -12,6 +14,8 @@ const icons: Record<string, string> = {
 };
 
 export default function HomePage() {
+  // The Pro deployment has no pSEO home — it IS the tools section.
+  if (IS_PRO_DEPLOYMENT) redirect('/tools');
   const contentTypes = getAllContentTypes();
   const niches = getAllNiches();
   const tierOneNiches = niches.filter(n => n.tier === 1);

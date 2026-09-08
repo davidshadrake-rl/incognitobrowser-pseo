@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
+import { engineVisibleInThisTier } from '@/lib/tiers';
 import { generateMetadata as genMeta, generateWebApplicationSchema, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -36,10 +37,10 @@ interface PageProps {
 
 export async function generateStaticParams() {
   const files = getContentFiles('tools');
-  return files.map(f => {
-    const [niche, slug] = f.split('/');
-    return { niche, slug };
-  });
+  return files
+    .map(f => { const [niche, slug] = f.split('/'); return { niche, slug }; })
+    // The Pro deployment renders only Pro engines; the free site renders every tool.
+    .filter(({ niche, slug }) => engineVisibleInThisTier(getContentItem<{ toolEngine?: string }>('tools', niche, slug)?.toolEngine));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

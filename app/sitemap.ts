@@ -8,6 +8,7 @@ import {
   type EditableContent,
 } from '@/lib/content';
 import { getAllNiches, getAllContentTypes } from '@/lib/taxonomy';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 
 export const dynamic = 'force-static';
 
@@ -24,6 +25,9 @@ const SITE_URL = 'https://incognitobrowser.io/resources';
  * pages — they don't depend on individual article editorial status.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
+  // The Pro deployment is a product surface (gate coming), noindex sitewide,
+  // and must not compete with the free site for the same content: no sitemap.
+  if (IS_PRO_DEPLOYMENT) return [];
   const entries: MetadataRoute.Sitemap = [];
 
   // Home page

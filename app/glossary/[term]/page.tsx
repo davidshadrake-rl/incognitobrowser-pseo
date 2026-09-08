@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { getGlossaryItem, getGlossaryFiles, isPublished } from '@/lib/content';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { GlossaryTermPage } from '@/components/GlossaryPage';
@@ -26,6 +27,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
+  if (IS_PRO_DEPLOYMENT) return []; // Pro deployment serves tools only
   const files = getGlossaryFiles();
   return files.map(term => ({ term }));
 }

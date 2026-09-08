@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 
 const SITE_URL = 'https://incognitobrowser.io';
 const BASE_PATH = '/resources';
@@ -44,7 +45,8 @@ export function generateMetadata({ title, description, path, type = 'article', n
     },
     // noindex,follow: don't surface in SERPs, but keep crawling internal links so
     // the link graph still propagates when pages get promoted to 'published'.
-    robots: noIndex ? { index: false, follow: true } : undefined,
+    // The Pro deployment is noindex sitewide (see lib/tiers.ts).
+    robots: noIndex || IS_PRO_DEPLOYMENT ? { index: false, follow: true } : undefined,
   };
 }
 

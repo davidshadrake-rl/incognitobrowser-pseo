@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { IncognitoLogo } from "@/components/ui/IncognitoLogo";
+import { IS_PRO_DEPLOYMENT } from "@/lib/tiers";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -37,6 +38,9 @@ const navItems = [
   { label: "Calculators", href: "/calculators" },
 ];
 
+// The Pro deployment has no pSEO content — only the Tools section.
+const visibleNav = IS_PRO_DEPLOYMENT ? navItems.filter(i => i.href === "/tools") : navItems;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -59,11 +63,11 @@ export default function RootLayout({
               >
                 <IncognitoLogo size={28} className="rounded" />
                 <span className="font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap">
-                  Privacy Resources
+                  {IS_PRO_DEPLOYMENT ? "Incognito Pro" : "Privacy Resources"}
                 </span>
               </Link>
               <nav className="hidden lg:flex items-center gap-1">
-                {navItems.map(item => (
+                {visibleNav.map(item => (
                   <Link
                     key={item.href}
                     href={item.href}
@@ -112,7 +116,7 @@ export default function RootLayout({
               <div>
                 <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Resources</h3>
                 <ul className="space-y-2 text-sm text-[#B8B8D4]">
-                  {navItems.map(item => (
+                  {visibleNav.map(item => (
                     <li key={item.href}>
                       <Link href={item.href} className="hover:text-white transition-colors">{item.label}</Link>
                     </li>

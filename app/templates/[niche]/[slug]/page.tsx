@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
@@ -29,6 +30,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
+  if (IS_PRO_DEPLOYMENT) return []; // Pro deployment serves tools only
   const files = getContentFiles('templates');
   return files.map(f => {
     const [niche, slug] = f.split('/');
