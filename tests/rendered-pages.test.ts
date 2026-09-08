@@ -32,6 +32,15 @@ const IS_LIVE = LIVE_BASE.length > 0;
 const OUT_DIR = path.join(process.cwd(), 'out');
 
 /**
+ * This suite verifies BUILD OUTPUT, so it can only run after a build
+ * (or against a live URL). The `build` npm script runs `vitest run`
+ * BEFORE `next build`, so on a clean CI/Vercel checkout there is no
+ * `out/` yet. We must SKIP in that case — never throw — or every
+ * Vercel deploy fails before it compiles (this is what broke prod).
+ */
+const HAS_TARGET = IS_LIVE || fs.existsSync(OUT_DIR);
+
+/**
  * Routes to spot-check. The first entry of each kind is the canonical
  * sample; if more variety is needed, add more here rather than expanding
  * the assertions.
@@ -81,14 +90,17 @@ async function fetchText(route: string): Promise<{ ok: boolean; status: number; 
 }
 
 beforeAll(() => {
-  if (!IS_LIVE && !fs.existsSync(OUT_DIR)) {
-    throw new Error(
-      'No out/ directory found. Run `BUILD_TARGET=static npx next build` first, or set PAGES_TEST_BASE_URL to test live.'
+  if (!HAS_TARGET) {
+    // Skipped via describe.skipIf below; this is informational only.
+    // Do NOT throw here — a throw fails `vitest run`, which fails the
+    // Vercel build before `next build` ever runs.
+    console.warn(
+      '[rendered-pages] no out/ and no PAGES_TEST_BASE_URL — skipping. Run after a static build or set PAGES_TEST_BASE_URL.'
     );
   }
 });
 
-describe('robots.txt', () => {
+describe.skipIf(!HAS_TARGET)('robots.txt', () => {
   it('exists and points at the sitemap', async () => {
     const r = await fetchText(ROUTES.robots);
     expect(r.ok).toBe(true);
@@ -97,7 +109,7 @@ describe('robots.txt', () => {
   });
 });
 
-describe('sitemap.xml', () => {
+describe.skipIf(!HAS_TARGET)('sitemap.xml', () => {
   it('serves a non-empty XML sitemap', async () => {
     const r = await fetchText(ROUTES.sitemap);
     expect(r.ok).toBe(true);
@@ -121,7 +133,7 @@ describe('sitemap.xml', () => {
   });
 });
 
-describe('published article page (checklist)', () => {
+describe.skipIf(!HAS_TARGET)('published article page (checklist)', () => {
   let html = '';
   beforeAll(async () => {
     const r = await fetchText(ROUTES.publishedChecklist);
@@ -168,7 +180,7 @@ describe('published article page (checklist)', () => {
   });
 });
 
-describe('demoted F4 doorway-duplicate page', () => {
+describe.skipIf(!HAS_TARGET)('demoted F4 doorway-duplicate page', () => {
   let html = '';
   let status = 0;
   beforeAll(async () => {
@@ -188,7 +200,7 @@ describe('demoted F4 doorway-duplicate page', () => {
   });
 });
 
-describe('author profile pages', () => {
+describe.skipIf(!HAS_TARGET)('author profile pages', () => {
   it('writer profile page emits Person JSON-LD with name=Darkpool David', async () => {
     const r = await fetchText(ROUTES.authorWriter);
     expect(r.ok).toBe(true);
@@ -203,7 +215,7 @@ describe('author profile pages', () => {
   });
 });
 
-describe('header + footer link integrity', () => {
+describe.skipIf(!HAS_TARGET)('header + footer link integrity', () => {
   let homeHtml = '';
   beforeAll(async () => {
     const r = await fetchText(ROUTES.home);
@@ -226,7 +238,7 @@ describe('header + footer link integrity', () => {
   });
 });
 
-describe('JSX whitespace regression — "View all <niche> resources →"', () => {
+describe.skipIf(!HAS_TARGET)('JSX whitespace regression — "View all <niche> resources →"', () => {
   it('renders the RelatedContent link with proper spacing', async () => {
     const r = await fetchText(ROUTES.publishedChecklist);
     expect(r.ok).toBe(true);
@@ -240,7 +252,7 @@ describe('JSX whitespace regression — "View all <niche> resources →"', () =>
   });
 });
 
-describe('no missing-space concatenations in visible text', () => {
+describe.skipIf(!HAS_TARGET)('no missing-space concatenations in visible text', () => {
   /**
    * Allow-list of legitimate brand names that are CamelCase by design.
    * Anything else that looks like wordWord is suspicious.
@@ -297,7 +309,7 @@ describe('no missing-space concatenations in visible text', () => {
   }
 });
 
-describe('every published article from a sample list has the byline', () => {
+describe.skipIf(!HAS_TARGET)('every published article from a sample list has the byline', () => {
   // Spot-check 5 published article URLs across content types. If any of
   // these regresses, the patcher script didn't reach a page template.
   const SAMPLE = [
