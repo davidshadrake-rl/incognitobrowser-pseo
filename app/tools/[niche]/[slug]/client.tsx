@@ -52,7 +52,11 @@ export function ToolPageClient({ data, nicheName }: { data: ToolData; nicheName:
             <h1 className="text-3xl font-bold text-white mb-3">{data.title}</h1>
             <div className="flex flex-wrap gap-2 mb-4">
               <span className="px-2 py-0.5 bg-white/10 rounded text-xs text-[#B8B8D4]">{data.toolType}</span>
-              <span className="px-2 py-0.5 bg-green-500/10 rounded text-xs text-green-400">Free</span>
+              {IS_PRO_DEPLOYMENT ? (
+                <span className="px-2 py-0.5 bg-purple-500/10 rounded text-xs text-purple-300">Pro</span>
+              ) : (
+                <span className="px-2 py-0.5 bg-green-500/10 rounded text-xs text-green-400">Free</span>
+              )}
               {data.processing === 'server' ? (
                 <span className="px-2 py-0.5 bg-amber-500/10 rounded text-xs text-amber-400" title="This tool sends your request to our server to fetch the target URL.">Server-assisted</span>
               ) : (
