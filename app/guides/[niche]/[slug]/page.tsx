@@ -37,7 +37,7 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  if (IS_PRO_DEPLOYMENT) return []; // Pro deployment serves tools only
+  if (IS_PRO_DEPLOYMENT) return [{ niche: '_pro_export_placeholder_', slug: '_pro_export_placeholder_' }]; // Pro serves tools only; output:export needs ≥1 static param per dynamic route, so this ships one placeholder that resolves to no real content (notFound() below skips it in the actual output)
   const files = getContentFiles('guides');
   return files.map(f => {
     const [niche, slug] = f.split('/');

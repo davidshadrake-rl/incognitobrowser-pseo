@@ -21,7 +21,7 @@ interface PageProps {
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  if (IS_PRO_DEPLOYMENT) return []; // Pro deployment serves tools only
+  if (IS_PRO_DEPLOYMENT) return [{ niche: '_pro_export_placeholder_' }]; // Pro serves tools only; output:export needs ≥1 static param per dynamic route, so this ships one placeholder that resolves to no real content (notFound() below skips it in the actual output)
   const items = getAllContentItems<TemplateMeta>('templates');
   return Array.from(new Set(items.map(i => i._niche))).map(niche => ({ niche }));
 }
