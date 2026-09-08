@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getAllContentItems } from '@/lib/content';
+import { getAllContentItems, isPublished, type EditableContent } from '@/lib/content';
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 
@@ -107,9 +107,14 @@ export default function ToolsIndex() {
   const niches = getAllNiches();
   const nicheMap = Object.fromEntries(niches.map(n => [n.id, n]));
 
-  // Find the best link for each featured tool (pick first niche that uses this engine)
+  // Find the best link for each featured tool. Prefer a PUBLISHED page for the
+  // engine; fall back to any page. Without this, drafting a duplicate could leave
+  // the featured card pointing at a noindexed page.
   const engineToLink: Record<string, { href: string; niche: string }> = {};
-  for (const item of items) {
+  const orderedItems = [...items].sort(
+    (a, b) => Number(isPublished(b as unknown as EditableContent)) - Number(isPublished(a as unknown as EditableContent)),
+  );
+  for (const item of orderedItems) {
     if (item.toolEngine && !engineToLink[item.toolEngine]) {
       engineToLink[item.toolEngine] = {
         href: `/tools/${item._niche}/${item._slug}`,

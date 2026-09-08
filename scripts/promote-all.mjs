@@ -55,7 +55,10 @@ const editorBlock = editorProfile
     }
   : null;
 
-const SUBDIRS = ['checklists', 'guides', 'comparisons', 'templates', 'calculators', 'glossary'];
+// tools included: they are hand-built, always indexable unless explicitly drafted.
+// Omitting them left every tool page with no editorial block → isPublished=false
+// → noindex + out of the sitemap in production. Never again.
+const SUBDIRS = ['checklists', 'guides', 'comparisons', 'templates', 'calculators', 'glossary', 'tools'];
 
 function walk(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {

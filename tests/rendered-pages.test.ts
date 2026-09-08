@@ -336,3 +336,28 @@ describe.skipIf(!HAS_TARGET)('every published article from a sample list has the
     });
   }
 });
+
+describe.skipIf(!HAS_TARGET)('tool pages are indexable (regression guard)', () => {
+  // Tools were excluded from the editorial backfill, so they had no editorial
+  // block, isPublished() returned false, and EVERY tool page shipped to
+  // production with noindex and no sitemap entry. Nothing caught it.
+  it('a flagship tool page does NOT emit noindex', async () => {
+    const r = await fetchText('/tools/vpn-privacy/whats-my-ip/');
+    expect(r.ok).toBe(true);
+    expect(r.body).not.toMatch(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/);
+  });
+
+  it('the sitemap includes tool URLs', async () => {
+    const r = await fetchText(ROUTES.sitemap);
+    const n = (r.body.match(/\/tools\//g) || []).length;
+    expect(n).toBeGreaterThanOrEqual(30);
+  });
+
+  it('a deliberately drafted duplicate quiz emits noindex and is absent from the sitemap', async () => {
+    const r = await fetchText('/tools/email-privacy/privacy-score-quiz/');
+    expect(r.status).toBe(200);
+    expect(r.body).toMatch(/<meta[^>]+name="robots"[^>]+content="noindex,?\s*follow"/);
+    const s = await fetchText(ROUTES.sitemap);
+    expect(s.body).not.toMatch(/email-privacy\/privacy-score-quiz/);
+  });
+});
