@@ -148,18 +148,37 @@ export function CookieAnalyzerTool() {
   const [scanStatus, setScanStatus] = useState<'' | 'verifying' | 'solving' | 'scanning'>('');
   const [urlResult, setUrlResult] = useState<URLScanResult | null>(null);
   const report = useReportResult();
+  // One effect for all three modes. "This Page" and "Paste" used to render
+  // their result panel without ever reporting — no CTA, no scorecard on 5
+  // Pro pages (found 2026-09-08). The URL branch also read the host from the
+  // input box, so typing a new URL without scanning relabelled the old result.
   useEffect(() => {
-    if (!urlResult) { report(null); return; }
-    const sm = urlResult.summary;
-    let host = urlInput.trim();
-    try { host = new URL(host.startsWith('http') ? host : `https://${host}`).hostname; } catch { /* keep as typed */ }
-    const severity = sm.trackingCookies > 0 || sm.totalTrackers >= 3 ? 'red' : sm.totalTrackers > 0 || sm.thirdPartyScripts > 5 ? 'amber' : 'green';
+    if (mode === 'url') {
+      if (!urlResult) { report(null); return; }
+      const sm = urlResult.summary;
+      let host = '';
+      try { host = new URL(urlResult.url).hostname; } catch { host = 'This site'; }
+      const severity = sm.trackingCookies > 0 || sm.totalTrackers >= 3 ? 'red' : sm.totalTrackers > 0 || sm.thirdPartyScripts > 5 ? 'amber' : 'green';
+      report({
+        severity,
+        headline: `${host} sets ${sm.trackingCookies} tracking cookies and loads ${sm.totalTrackers} trackers before you click anything`,
+        stats: [{ label: 'Tracking cookies', value: String(sm.trackingCookies) }, { label: 'Trackers', value: String(sm.totalTrackers) }, { label: 'Third parties', value: String(sm.thirdPartyScripts) }, { label: 'Cookies', value: String(sm.totalCookies) }],
+      });
+      return;
+    }
+    if (!scanned) { report(null); return; }
+    const tracking = cookies.filter((c) => c.category === 'tracking').length;
+    const analytics = cookies.filter((c) => c.category === 'analytics').length;
+    const functional = cookies.filter((c) => c.category === 'functional').length;
+    const what = mode === 'browser' ? 'This page' : 'This cookie set';
     report({
-      severity,
-      headline: `${host} sets ${sm.trackingCookies} tracking cookies and loads ${sm.totalTrackers} trackers before you click anything`,
-      stats: [{ label: 'Tracking cookies', value: String(sm.trackingCookies) }, { label: 'Trackers', value: String(sm.totalTrackers) }, { label: 'Third parties', value: String(sm.thirdPartyScripts) }, { label: 'Cookies', value: String(sm.totalCookies) }],
+      severity: tracking > 0 ? 'red' : analytics > 0 ? 'amber' : 'green',
+      headline: cookies.length === 0
+        ? `${what} holds no cookies`
+        : `${what} holds ${cookies.length} cookies: ${tracking} tracking, ${analytics} analytics`,
+      stats: [{ label: 'Tracking', value: String(tracking) }, { label: 'Analytics', value: String(analytics) }, { label: 'Functional', value: String(functional) }, { label: 'Cookies', value: String(cookies.length) }],
     });
-  }, [urlResult, urlInput, report]);
+  }, [mode, urlResult, scanned, cookies, report]);
   const [urlError, setUrlError] = useState('');
 
   const scanBrowserCookies = () => {
@@ -286,7 +305,8 @@ export function CookieAnalyzerTool() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    // Safari starts the download asynchronously; revoking synchronously yields "Failed – No file".
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
   };
 
   // Calculate privacy grade for URL scan
@@ -439,7 +459,7 @@ export function CookieAnalyzerTool() {
                     <div className="text-5xl font-bold" style={{ color: grade.color }}>{grade.letter}</div>
                     <div className="text-xs text-[#B8B8D4] mt-1">{grade.label}</div>
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <div className="text-sm text-white font-medium mb-1 truncate">{urlResult.url}</div>
                     <div className="text-xs text-[#B8B8D4] mb-3">HTTP {urlResult.status}</div>
                     <div className="grid grid-cols-3 gap-3">
@@ -557,9 +577,9 @@ export function CookieAnalyzerTool() {
               <div className="space-y-3">
                 {urlResult.cookies.map((c, i) => (
                   <div key={i} className="border border-white/5 rounded-lg p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <code className="text-sm font-mono text-white">{c.cookieName}</code>
-                      <div className="flex gap-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                      <code className="text-sm font-mono text-white min-w-0 break-all">{c.cookieName}</code>
+                      <div className="flex gap-2 shrink-0">
                         <span className={`text-xs px-2 py-0.5 rounded ${getCategoryColor(c.category)}`}>
                           {c.category}
                         </span>
@@ -667,9 +687,9 @@ export function CookieAnalyzerTool() {
             <div className="space-y-2">
               {cookies.map((c, i) => (
                 <div key={i} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <code className="text-sm font-mono text-white">{c.name}</code>
-                    <div className="flex gap-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                    <code className="text-sm font-mono text-white min-w-0 break-all">{c.name}</code>
+                    <div className="flex gap-2 shrink-0">
                       <span className={`text-xs px-2 py-0.5 rounded ${getCategoryColor(c.category)}`}>
                         {c.category}
                       </span>

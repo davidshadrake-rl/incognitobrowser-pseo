@@ -393,9 +393,10 @@ export function URLAnalyzerTool() {
             <h3 className="text-sm font-semibold text-white mb-3">URL Details</h3>
             <div className="space-y-2">
               {analysis.details.map((d, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <span className="text-sm text-[#B8B8D4]">{d.label}</span>
-                  <span className={`text-sm font-mono ${d.safe ? 'text-green-400' : 'text-yellow-400'}`}>{d.value}</span>
+                <div key={i} className="flex items-start justify-between gap-3">
+                  <span className="text-sm text-[#B8B8D4] shrink-0">{d.label}</span>
+                  {/* Phishing URLs are exactly the long ones: let the path wrap instead of overflowing the card. */}
+                  <span className={`text-sm font-mono min-w-0 break-all text-right ${d.safe ? 'text-green-400' : 'text-yellow-400'}`}>{d.value}</span>
                 </div>
               ))}
             </div>

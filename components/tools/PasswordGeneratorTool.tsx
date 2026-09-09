@@ -1,5 +1,7 @@
 'use client';
 
+import { copyText } from '@/lib/clipboard';
+
 import { useCallback, useState, useEffect } from 'react';
 import { useReportResult } from './ResultContext';
 
@@ -188,7 +190,7 @@ export function PasswordGeneratorTool() {
   }, [options, mode, wordCount, pinLength]);
 
   const handleCopy = async (text: string) => {
-    await navigator.clipboard.writeText(text);
+    if (!(await copyText(text))) return; // insecure context / denied: the password stays selectable on screen
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

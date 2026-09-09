@@ -117,17 +117,52 @@ if (!redis) console.warn('REDIS_URL not set — queries will be answered but NOT
 
 const MAX_LIST_LENGTH = 200; // per test id; bounds a flood against one id
 
-function record(testId, resolverIp, qname) {
+// Per-source token bucket so one resolver (or one attacker) cannot write faster
+// than the tests it could legitimately be answering for.
+const RECORD_BUCKET = new Map(); // sourceIp -> { tokens, ts }
+const RECORD_RATE_PER_SEC = 20;
+const RECORD_BURST = 60;
+function allowRecord(sourceIp) {
+  const now = Date.now();
+  const b = RECORD_BUCKET.get(sourceIp) || { tokens: RECORD_BURST, ts: now };
+  b.tokens = Math.min(RECORD_BURST, b.tokens + ((now - b.ts) / 1000) * RECORD_RATE_PER_SEC);
+  b.ts = now;
+  if (b.tokens < 1) { RECORD_BUCKET.set(sourceIp, b); return false; }
+  b.tokens -= 1;
+  RECORD_BUCKET.set(sourceIp, b);
+  if (RECORD_BUCKET.size > 10000) RECORD_BUCKET.clear(); // bounded memory; a reset is harmless
+  return true;
+}
+
+// Global budget for the EXISTS round-trips themselves. UDP sources are
+// trivially spoofed, so a per-source bucket alone still lets a flood turn into
+// an unbounded stream of Redis commands (billed per command on Upstash).
+let globalTokens = 200, globalTs = Date.now();
+function allowGlobal() {
+  const now = Date.now();
+  globalTokens = Math.min(200, globalTokens + ((now - globalTs) / 1000) * 200);
+  globalTs = now;
+  if (globalTokens < 1) return false;
+  globalTokens -= 1;
+  return true;
+}
+
+async function record(testId, resolverIp, qname) {
   if (!redis) return;
-  const key = seenKey(testId);
-  const entry = JSON.stringify({ resolverIp, ts: Date.now(), qname });
-  redis
-    .multi()
-    .rpush(key, entry)
-    .ltrim(key, -MAX_LIST_LENGTH, -1)
-    .expire(key, TEST_TTL_SECONDS)
-    .exec()
-    .catch((err) => console.error(`[redis] record failed: ${err.message}`));
+  if (!allowRecord(resolverIp) || !allowGlobal()) return;
+  try {
+    // Only tests that /dns-leak/start actually created. Without this check any
+    // well-formed 12-char label minted a list with a 600 s TTL in the SAME Redis
+    // the API's rate limiter uses — a query flood could exhaust it and the limiter
+    // fails open to per-instance memory (security audit 2026-09-08).
+    const exists = await redis.exists(`dnsleak:test:${testId}`);
+    if (!exists) return;
+    const key = seenKey(testId);
+    const entry = JSON.stringify({ resolverIp, ts: Date.now(), qname: String(qname).slice(0, 253) });
+    await redis.multi().rpush(key, entry).ltrim(key, -MAX_LIST_LENGTH, -1).expire(key, TEST_TTL_SECONDS).exec();
+  } catch (err) {
+    console.error(`[redis] record failed: ${err.message}`);
+  }
 }
 
 const socket = dgram.createSocket({ type: bind.includes(':') ? 'udp6' : 'udp4', reuseAddr: true });
@@ -142,7 +177,7 @@ socket.on('message', (msg, rinfo) => {
     if (err) console.error(`[udp] send to ${rinfo.address}:${rinfo.port} failed: ${err.message}`);
   });
 
-  if (inZone && testId) record(testId, rinfo.address, query.question.name);
+  if (inZone && testId) void record(testId, rinfo.address, query.question.name);
   if (verbose) {
     console.log(
       `${new Date().toISOString()} ${rinfo.address} ${query.question.name} type=${query.question.type}` +

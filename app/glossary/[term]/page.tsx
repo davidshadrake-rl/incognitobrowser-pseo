@@ -63,7 +63,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
   // David, pseudonymous writer) and editor (David Shadrake, LinkedIn-
   // verified) so Google can attribute the page to real entities.
   const articleSchema = generateArticleSchema({
-    headline: (data as unknown as { title: string }).title,
+    headline: (data as unknown as { term?: string; title?: string }).term || (data as unknown as { title?: string }).title || term, // glossary items carry `term`, not `title` — every Article schema shipped without a headline
     description: (data as unknown as { metaDescription?: string; definition?: string }).metaDescription
       || (data as unknown as { definition?: string }).definition
       || '',

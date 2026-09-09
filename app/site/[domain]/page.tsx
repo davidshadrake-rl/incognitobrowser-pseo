@@ -75,7 +75,7 @@ export default async function SiteReportPage({ params }: PageProps) {
     <article className="max-w-3xl mx-auto">
       <JsonLd data={breadcrumbSchema} />
       <JsonLd data={pageSchema} />
-      <Breadcrumbs items={[{ label: 'Resources', href: '/' }, { label: 'Report Cards', href: '/site' }, { label: domain }]} />
+      <Breadcrumbs items={[{ label: 'Report Cards', href: '/site' }, { label: domain }]} />
 
       <header className="mb-8">
         <p className="text-xs uppercase tracking-wider text-[#B8B8D4] mb-2">Website Privacy Report Card · {category.label}</p>

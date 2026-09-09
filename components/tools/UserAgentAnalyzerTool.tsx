@@ -110,14 +110,18 @@ function parseUserAgent(ua: string): UADetails {
   return result;
 }
 
-// Lazy initializer: reads navigator.userAgent at render time on the client and
-// parses it once. Avoids the setState-in-effect anti-pattern.
-const initialUA = typeof navigator !== 'undefined' ? navigator.userAgent : '';
-const initialDetails = initialUA ? parseUserAgent(initialUA) : null;
-
 export function UserAgentAnalyzerTool() {
-  const [ua] = useState(initialUA);
-  const [details, setDetails] = useState<UADetails | null>(initialDetails);
+  // Read navigator.userAgent AFTER mount. Reading it at module load made the
+  // server render ('' / no result) differ from the client's first render (a
+  // full result tree) — a React hydration error, a visible flash, and the
+  // result-bus effect firing twice on every single visit.
+  const [ua, setUa] = useState('');
+  const [details, setDetails] = useState<UADetails | null>(null);
+  useEffect(() => {
+    const u = navigator.userAgent;
+    setUa(u);
+    setDetails(parseUserAgent(u));
+  }, []);
   const [useCustom, setUseCustom] = useState(false);
   const [customUA, setCustomUA] = useState('');
   const [hints, setHints] = useState<ClientHints | null>(null);
@@ -128,7 +132,9 @@ export function UserAgentAnalyzerTool() {
     report({
       severity: details.privacyConcerns.length >= 3 ? 'amber' : 'info',
       headline: `Your browser announces ${details.browser.name} ${details.browser.version} on ${details.os.name}${details.os.version ? ' ' + details.os.version : ''} to every site`,
-      stats: [{ label: 'Browser', value: `${details.browser.name} ${details.browser.version}` }, { label: 'OS', value: details.os.name }, { label: 'Uniqueness factors', value: String(n) }, { label: 'Concerns', value: String(details.privacyConcerns.length) }],
+      // stats[0] is the scorecard's big figure — the browser name alone; the
+      // full "Microsoft Edge 128.0.2739.42" string does not fit at 120px.
+      stats: [{ label: 'Browser', value: details.browser.name }, { label: 'Version', value: details.browser.version }, { label: 'OS', value: details.os.name }, { label: 'Uniqueness factors', value: String(n) }],
     });
   }, [details, report]);
 

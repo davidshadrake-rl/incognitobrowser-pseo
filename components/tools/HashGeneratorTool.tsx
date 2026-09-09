@@ -1,5 +1,7 @@
 'use client';
 
+import { copyText } from '@/lib/clipboard';
+
 import { useState, useEffect } from 'react';
 import { SecureContextRequired } from './SecureContextRequired';
 import { useReportResult } from './ResultContext';
@@ -127,7 +129,7 @@ export function HashGeneratorTool() {
   };
 
   const handleCopy = async (algo: string, hash: string) => {
-    await navigator.clipboard.writeText(hash);
+    if (!(await copyText(hash))) return; // insecure context / denied: the value stays selectable on screen
     setCopied(algo);
     setTimeout(() => setCopied(''), 2000);
   };

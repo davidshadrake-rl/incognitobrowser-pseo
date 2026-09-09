@@ -264,6 +264,9 @@ function parseRationalString(s: string): number | undefined {
 
 /** Extract the interesting keys from an XMP packet. Exported for tests. */
 export function parseXmpPacket(xml: string, source: string): { fields: MetaField[]; gps: GpsFix | null } {
+  // The element regexes below are O(n²) on a hostile packet; real XMP is a few KB.
+  const MAX_XMP = 1 << 20;
+  if (xml.length > MAX_XMP) xml = xml.slice(0, MAX_XMP);
   const fields: MetaField[] = [];
   for (const [q, label] of XMP_KEYS) {
     const vals = uniq(xmpValues(xml, q));

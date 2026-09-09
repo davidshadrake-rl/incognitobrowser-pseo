@@ -1,5 +1,7 @@
 'use client';
 
+import { copyText } from '@/lib/clipboard';
+
 import { useEffect, useState } from 'react';
 import { SecureContextRequired } from './SecureContextRequired';
 import { useReportResult } from './ResultContext';
@@ -138,10 +140,6 @@ export function TextEncryptionTool() {
   const [password, setPassword] = useState('');
   const [output, setOutput] = useState('');
   const report = useReportResult();
-  useEffect(() => {
-    if (!output) { report(null); return; }
-    report({ severity: 'info', headline: 'Encrypted with AES-256-GCM on your device. Nothing was sent anywhere.', stats: [{ label: 'Output', value: `${output.length} chars` }] });
-  }, [output, report]);
   const [error, setError] = useState('');
   const [processing, setProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -150,6 +148,18 @@ export function TextEncryptionTool() {
   const [inputFile, setInputFile] = useState<File | null>(null);
   const [downloadUrl, setDownloadUrl] = useState('');
   const [downloadName, setDownloadName] = useState('');
+  // Result bus. File mode used to produce its "Encrypted File Ready" panel
+  // without ever reporting — no CTA or scorecard on 4 pages (found 2026-09-08).
+  // The headline also said "Encrypted" after a decrypt.
+  useEffect(() => {
+    if (!output && !downloadUrl) { report(null); return; }
+    const verb = mode === 'encrypt' ? 'Encrypted' : 'Decrypted';
+    report({
+      severity: 'info',
+      headline: `${verb} with AES-256-GCM on your device. Nothing was sent anywhere.`,
+      stats: [{ label: 'Output', value: source === 'file' ? (downloadName || 'file') : `${output.length} chars` }],
+    });
+  }, [output, downloadUrl, downloadName, mode, source, report]);
 
   useEffect(() => () => { if (downloadUrl) URL.revokeObjectURL(downloadUrl); }, [downloadUrl]);
 
@@ -191,7 +201,7 @@ export function TextEncryptionTool() {
   };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(output);
+    if (!(await copyText(output))) return; // insecure context / denied: the output stays selectable on screen
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

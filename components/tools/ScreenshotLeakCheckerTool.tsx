@@ -44,9 +44,23 @@ async function inflate(data: Uint8Array): Promise<string | null> {
   if (typeof DecompressionStream === 'undefined') return null;
   try {
     const copy = new Uint8Array(data); // own ArrayBuffer, detached from the file view
-    const stream = new Blob([copy]).stream().pipeThrough(new DecompressionStream('deflate'));
-    const buf = await new Response(stream).arrayBuffer();
-    return new TextDecoder().decode(buf);
+    const reader = new Blob([copy]).stream().pipeThrough(new DecompressionStream('deflate')).getReader();
+    // A compressed text chunk of zeros inflates ~1000:1 (a 24 MB zTXt → tab
+    // out of memory). Read with a budget instead of buffering the whole stream.
+    const MAX_INFLATED = 4 * 1024 * 1024;
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > MAX_INFLATED) { await reader.cancel(); return null; }
+      chunks.push(value);
+    }
+    const out = new Uint8Array(total);
+    let off = 0;
+    for (const c of chunks) { out.set(c, off); off += c.byteLength; }
+    return new TextDecoder().decode(out);
   } catch {
     return null;
   }

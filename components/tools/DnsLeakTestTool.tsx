@@ -1,5 +1,7 @@
 'use client';
 
+import { maskIp } from '@/lib/privacy-mask';
+
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { SCAN_API_BASE } from '@/lib/scan-client';
 import { useReportResult, type ToolResult } from '@/components/tools/ResultContext';
@@ -297,8 +299,12 @@ export function DnsLeakTestTool() {
       report(null);
       return;
     }
+    // stats[0] is the scorecard's big figure: a one-word verdict, never the raw
+    // address (IPv6 overflows the card; a real IP has no place in a share image).
+    const verdict = classification.severity === 'red' ? 'Leaking' : classification.severity === 'green' ? 'No leak' : classification.severity === 'amber' ? 'Inconclusive' : 'Baseline';
     const stats: ToolResult['stats'] = [
-      { label: 'Public IP', value: result.publicIp ?? 'unknown' },
+      { label: 'Verdict', value: verdict },
+      { label: 'Public IP', value: maskIp(result.publicIp) },
       { label: 'Resolvers seen', value: String(result.resolvers.length) },
       { label: 'Resolver networks', value: classification.networks.length ? classification.networks.join(', ') : '—' },
       { label: 'VPN', value: testedWithVpnOn ? 'on' : 'off' },

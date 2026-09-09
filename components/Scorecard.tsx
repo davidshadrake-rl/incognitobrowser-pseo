@@ -9,6 +9,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { drawScorecard, renderScorecard, scorecardFilename, SCORECARD_H, SCORECARD_W, type ScorecardSpec } from '@/lib/scorecard';
 import { track } from '@/lib/track';
+import { pageLinkFor } from '@/lib/handoff';
 
 interface Props extends Omit<ScorecardSpec, 'url'> {
   url?: string;
@@ -23,7 +24,7 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
   const [state, setState] = useState<'idle' | 'busy' | 'done'>('idle');
 
   useEffect(() => {
-    if (!url) setPageUrl(window.location.href.split('#')[0]);
+    if (!url) setPageUrl(pageLinkFor(window.location.href)); // origin + path: no query/hash in share text or on the card
     setCanShareFiles(typeof navigator !== 'undefined' && typeof navigator.canShare === 'function' && navigator.canShare({ files: [new File([''], 'x.png', { type: 'image/png' })] }));
   }, [url]);
 
@@ -67,7 +68,7 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
 
   return (
     <section className="mt-6 rounded-lg border border-white/10 bg-[#0a0a0a] p-4" data-scorecard={engine}>
-      <div className="flex items-center justify-between gap-3 mb-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-3">
         <h3 className="text-sm font-semibold text-white">Share your result</h3>
         <span className="text-xs text-[#B8B8D4]/60">Drawn on your device. Nothing is uploaded.</span>
       </div>
@@ -76,7 +77,7 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
         {/* The footer row ("domain · Check yours free") drawn on the canvas is a real link here — it can only be a picture once the PNG is shared or downloaded. */}
         <a
           href={full.url}
-          onClick={() => track('share_click', { tool: engine, niche, target: 'copy' })}
+          onClick={() => track('share_click', { tool: engine, niche, target: 'check-yours' })}
           className="absolute inset-x-[4%] bottom-[4%] h-[12%] rounded"
           aria-label={`Check your own ${full.title} result`}
           title="Check yours free"

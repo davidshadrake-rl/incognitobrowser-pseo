@@ -12,15 +12,22 @@
  * aggregate counts only; there is nothing else to return.
  */
 import { NextRequest, NextResponse } from 'next/server';
-import { getRedisClient } from '@/lib/rate-limit';
+import { timingSafeEqual } from 'node:crypto';
+import { getRedisClient, rateLimit, getClientIP, getIpBucket } from '@/lib/rate-limit';
 import { dayOf } from '@/lib/event-schema';
 
 export async function POST(request: NextRequest) {
   const token = process.env.STATS_TOKEN;
   const headers = { 'Cache-Control': 'no-store, private' };
   if (!token) return new NextResponse(null, { status: 404, headers });
+  // Throttle first: a bearer check with no limit is a free brute-force target.
+  const rl = await rateLimit(`stats:${getIpBucket(getClientIP(request.headers))}`, { limit: 10, windowMs: 60_000 });
+  if (!rl.allowed) return NextResponse.json({ error: 'Too many requests' }, { status: 429, headers: { ...headers, ...rl.headers } });
+  // Constant-time compare on equal-length buffers; `!==` short-circuits on the first differing byte.
   const auth = request.headers.get('authorization') || '';
-  if (auth !== `Bearer ${token}`) return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers });
+  const expected = Buffer.from(`Bearer ${token}`);
+  const given = Buffer.from(auth);
+  if (given.length !== expected.length || !timingSafeEqual(given, expected)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401, headers });
 
   let body: unknown = {};
   try { body = await request.json(); } catch { /* empty body is fine */ }

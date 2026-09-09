@@ -184,7 +184,9 @@ export function baitScriptSource(id: string): string {
  * Resolved from the page's own pathname so one bundle works in both.
  */
 export function basePathFrom(pathname: string): string {
-  return pathname === '/resources' || pathname.startsWith('/resources/') ? '/resources' : '';
+  // Both static copies on the droplet: /resources (free) and /resources-pro (Pro).
+  const m = /^\/resources(-pro)?(?=\/|$)/.exec(pathname);
+  return m ? m[0] : '';
 }
 
 /**

@@ -22,6 +22,16 @@ import { analyzeScan, readCappedText, isBlockedHostname } from '../lib/scanner';
 import { gradeSite } from '../lib/site-grade';
 import { categorize } from '../lib/site-categories';
 
+/**
+ * Report-card domains are URL path segments and filenames: lowercase, no
+ * "www.". Two cards once shipped as Princeton.EDU and WWW.garmin.com, so
+ * /site/princeton.edu was a 404 and a later garmin.com scan would have
+ * duplicated the page (audit 2026-09-08). Guarded by tests/sites-data.test.ts.
+ */
+function normalizeDomain(host: string): string {
+  return host.trim().toLowerCase().replace(/^www\./, '');
+}
+
 const OUT_DIR = path.resolve(__dirname, '..', 'data', 'sites');
 
 const args = process.argv.slice(2);
@@ -107,7 +117,7 @@ async function worker() {
       } catch { /* ignore */ }
     }
     const doc = {
-      domain: host,
+      domain: normalizeDomain(host), // lowercase, no www. — the filename and the URL path derive from this
       finalUrl: r.finalUrl,
       title: r.title,
       category: categorize(host),

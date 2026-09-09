@@ -10,7 +10,7 @@
     "test:pages:droplet": "PAGES_TEST_BASE_URL=https://206-189-186-34.nip.io vitest run tests/rendered-pages.test.ts",
     "test:pages:prod": "PAGES_TEST_BASE_URL=https://incognitobrowser.io vitest run tests/rendered-pages.test.ts",
     "build": "vitest run && next build",
-    "build:static": "vitest run && BUILD_TARGET=static next build",
+    "build:static": "vitest run && BUILD_TARGET=static next build && node scripts/write-build-marker.mjs --target static --tier free --base /resources",
     "start": "next start",
     "lint": "eslint",
     "generate": "tsx scripts/generate-content.ts",

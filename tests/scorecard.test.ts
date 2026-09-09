@@ -119,3 +119,31 @@ describe('wrapLines', () => {
     expect(lines[0].startsWith('This')).toBe(true);
   });
 });
+
+describe('drawScorecard — footer URL never runs into "Check yours free"', () => {
+  it('shrinks/truncates a long path (the exact URL reported live) so the two footer texts do not overlap', () => {
+    const ctx = new FakeCtx();
+    drawScorecard(ctx as unknown as CanvasRenderingContext2D, {
+      ...BASE,
+      url: 'https://incognitobrowser-pseo.vercel.app/tools/children-safety/permission-checker',
+    });
+    const label = ctx.calls.find((c) => c.text === 'Check yours free');
+    const url = ctx.calls.find((c) => c.text.startsWith('incognitobrowser-pseo'));
+    expect(label).toBeTruthy();
+    expect(url).toBeTruthy();
+    // URL is drawn left-aligned from x=64; the label is drawn right-aligned ending at x=W-64.
+    ctx.font = url!.font;
+    const urlEnd = url!.x + ctx.measureText(url!.text).width;
+    ctx.font = label!.font;
+    const labelStart = label!.x - ctx.measureText(label!.text).width;
+    expect(urlEnd, `url ends at ${urlEnd}, label starts at ${labelStart}`).toBeLessThan(labelStart);
+  });
+
+  it('leaves a short URL at full size and untruncated', () => {
+    const ctx = new FakeCtx();
+    drawScorecard(ctx as unknown as CanvasRenderingContext2D, { ...BASE, url: 'https://example.com/x' });
+    const url = ctx.calls.find((c) => c.text === 'example.com/x');
+    expect(url).toBeTruthy();
+    expect(url!.font).toMatch(/400 22px/);
+  });
+});

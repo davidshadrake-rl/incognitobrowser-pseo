@@ -24,14 +24,16 @@ import { toolUrl, isInsecureContext, hasProTarget } from './helpers';
 test('password-strength: weak password shows low score', async ({ page }) => {
   await page.goto(toolUrl('password-strength'));
   await page.locator('input[type="password"], input[type="text"]').first().fill('password123');
-  // Result panel appears immediately on input
-  await expect(page.getByText(/entropy|crack time|strength|weak/i).first()).toBeVisible({ timeout: 10_000 });
+  // The result (not the page copy, which also says "entropy" and "crack time"): the entropy readout and the funnel CTA.
+  await expect(page.getByText(/\d+(\.\d+)? bits of entropy/i).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('[data-result-cta]').first()).toBeVisible({ timeout: 10_000 });
 });
 
 test('password-strength: strong password shows high score', async ({ page }) => {
   await page.goto(toolUrl('password-strength'));
   await page.locator('input[type="password"], input[type="text"]').first().fill('Tr0ub4dor&3Vault-Wallets!Z');
-  await expect(page.getByText(/strong|excellent|very strong|crack time/i).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/Centuries|Very Strong|Strong/).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('[data-result-cta]').first()).toBeVisible({ timeout: 10_000 });
 });
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -145,7 +147,8 @@ test('url-analyzer: trusted domain shows higher score', async ({ page }) => {
   await page.goto(toolUrl('url-analyzer'));
   await page.locator('input[type="text"], input[type="url"]').first().fill('https://github.com');
   await page.getByRole('button', { name: /analyze|check|scan/i }).first().click();
-  await expect(page.getByText(/safe|low risk|HTTPS|trusted/i).first()).toBeVisible({ timeout: 10_000 });
+  // "safe" also appears in the H1 "URL Safety Checker"; the funnel CTA only exists after a result.
+  await expect(page.locator('[data-result-cta]').first()).toBeVisible({ timeout: 10_000 });
 });
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -186,7 +189,9 @@ test('privacy-quiz: answer all questions and reach the results page', async ({ p
     const isDone = await page.getByText(/your score|recommendations|results|retake/i).count();
     if (isDone) break;
   }
-  await expect(page.getByText(/score|recommendation/i).first()).toBeVisible({ timeout: 10_000 });
+  // "score" and "recommendation" are in the page copy before any answer; the CTA is the finished state.
+  await expect(page.locator('[data-result-cta]').first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('[data-scorecard]').first()).toBeVisible({ timeout: 10_000 });
 });
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -194,10 +199,13 @@ test('privacy-quiz: answer all questions and reach the results page', async ({ p
 // ─────────────────────────────────────────────────────────────────────────
 test('permission-checker: shows status for at least camera and microphone', async ({ page }) => {
   await page.goto(toolUrl('permission-checker'));
+  // "camera"/"microphone" are in the page copy before any check runs — run it.
+  await page.getByRole('button', { name: /check permissions/i }).first().click();
   await expect(page.getByText(/camera/i).first()).toBeVisible({ timeout: 10_000 });
   await expect(page.getByText(/microphone/i).first()).toBeVisible({ timeout: 10_000 });
-  // Each shows granted/prompt/denied state
-  await expect(page.getByText(/granted|prompt|denied|allowed|blocked/i).first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText(/granted|prompt|denied|allowed|blocked|unsupported/i).first()).toBeVisible({ timeout: 10_000 });
+  // The funnel end state exists only after a result (info on browsers that expose no permission states).
+  await expect(page.locator('[data-result-cta]').first()).toBeVisible({ timeout: 10_000 });
 });
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -258,10 +266,8 @@ test('whats-my-ip: displays a public IP address', async ({ page }) => {
   // First check the page even exists on this deployment. The tool was added
   // recently — older static deploys won't have it. Skip the test with a clear
   // explanation rather than fail.
-  if (response && response.status() === 404) {
-    test.skip(true, 'whats-my-ip tool not yet deployed at this URL — redeploy the static site to pick it up');
-    return;
-  }
+  // A missing page is a failure, not a skip — a 404 here once passed silently.
+  expect(response?.status(), 'whats-my-ip page must exist on this deployment').toBeLessThan(400);
   // Either an IPv4 or IPv6 should render. The component shows the IP inside
   // <code> elements. Permissive regex — IPv4 dotted-quad or IPv6 hextet form.
   await expect(

@@ -448,7 +448,7 @@ export function BrowserPrivacyTool() {
                         <span className={`${getStatusColor(check.status)} text-sm`}>{getStatusIcon(check.status)}</span>
                         <span className="text-sm font-medium text-white">{check.name}</span>
                       </div>
-                      <span className="text-sm font-mono text-[#B8B8D4]">{check.value}</span>
+                      <span className="text-sm font-mono text-[#B8B8D4] min-w-0 break-all text-right">{check.value}</span>
                     </div>
                     <p className="text-xs text-[#B8B8D4]/80 ml-6">{check.detail}</p>
                   </div>

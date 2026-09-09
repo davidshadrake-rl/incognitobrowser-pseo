@@ -38,7 +38,24 @@ const OUT_DIR = path.join(process.cwd(), 'out');
  * `out/` yet. We must SKIP in that case — never throw — or every
  * Vercel deploy fails before it compiles (this is what broke prod).
  */
-const HAS_TARGET = IS_LIVE || fs.existsSync(OUT_DIR);
+/**
+ * A local out/ is only graded when its marker (scripts/write-build-marker.mjs)
+ * says it is the FREE STATIC export at /resources — a leftover Pro export, a
+ * partial build, or an iCloud conflict copy was otherwise judged with these
+ * expectations and failed or passed for the wrong reasons (audit 2026-09-08).
+ */
+function localOutIsFreeStatic(): boolean {
+  try {
+    const m = JSON.parse(fs.readFileSync(path.join(OUT_DIR, '.build-marker.json'), 'utf-8')) as { target?: string; tier?: string; basePath?: string };
+    const ok = m.target === 'static' && m.tier === 'free' && m.basePath === '/resources';
+    if (!ok) console.warn(`[rendered-pages] out/ marker is ${JSON.stringify(m)} — not the free static export; skipping.`);
+    return ok;
+  } catch {
+    if (fs.existsSync(OUT_DIR)) console.warn('[rendered-pages] out/ has no .build-marker.json — run scripts/write-build-marker.mjs after the export; skipping.');
+    return false;
+  }
+}
+const HAS_TARGET = IS_LIVE || localOutIsFreeStatic();
 
 /**
  * Routes to spot-check. The first entry of each kind is the canonical
@@ -323,13 +340,12 @@ describe.skipIf(!HAS_TARGET)('every published article from a sample list has the
   for (const route of SAMPLE) {
     it(`${route} renders byline + Article schema`, async () => {
       const r = await fetchText(route);
-      if (r.status === 404) {
-        // The sample list may drift; skip rather than fail when a page
-        // is renamed. The byline guarantees are exercised by the main
-        // suite above; this is breadth coverage.
-        console.warn(`SKIP missing route: ${route}`);
-        return;
-      }
+      // A missing sample page is a failure, not a skip. With the build marker
+      // this suite only ever grades a complete free export (or a live site),
+      // so a 404 here means the page really is gone — the old "skip when
+      // renamed" branch turned a stale, partial build into a green run
+      // (audit 2026-09-08). Rename the sample entry if a page moves.
+      expect(r.status, `${route} must exist — update SAMPLE if the page was renamed`).not.toBe(404);
       expect(r.ok).toBe(true);
       expect(r.body).toContain('data-testid="article-byline"');
       expect(r.body).toMatch(/"@type":"Article"/);

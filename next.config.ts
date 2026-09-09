@@ -123,10 +123,44 @@ const nextConfig: NextConfig = {
   // equivalent. For Vercel server deploys, these apply to every response.
   async headers() {
     if (isStatic) return [];
+    // Same list as SECURITY_HEADERS' Permissions-Policy, but the features the
+    // Permission Checker queries are `self` instead of `()` — see the comment
+    // on the /tools entry below.
+    const TOOL_PERMISSIONS_POLICY = [
+      "accelerometer=(self)",
+      "ambient-light-sensor=()",
+      "autoplay=()",
+      "camera=(self)",
+      "encrypted-media=()",
+      "fullscreen=(self)",
+      "geolocation=(self)",
+      "gyroscope=(self)",
+      "magnetometer=(self)",
+      "microphone=(self)",
+      "midi=(self)",
+      "payment=()",
+      "picture-in-picture=()",
+      "publickey-credentials-get=(self)",
+      "sync-xhr=()",
+      "usb=()",
+      "interest-cohort=()",
+    ].join(", ");
     return [
       {
         source: "/:path*",
         headers: SECURITY_HEADERS,
+      },
+      {
+        // Tool pages: the Permission Checker calls navigator.permissions.query
+        // for camera/microphone/geolocation/etc. Per the Permissions API spec a
+        // feature that this response's Permissions-Policy disallows queries as
+        // "denied" — so the sitewide `camera=()` etc. made the tool report 7 of
+        // 11 permissions as BLOCKED for every visitor (found 2026-09-08). `self`
+        // lets the page *ask*, which is all the query needs; no tool actually
+        // activates a camera or sensor. Later entries override earlier ones for
+        // the same header name. The droplet .htaccess mirrors this (deploy-droplet.sh).
+        source: "/tools/:path*",
+        headers: [{ key: "Permissions-Policy", value: TOOL_PERMISSIONS_POLICY }],
       },
     ];
   },

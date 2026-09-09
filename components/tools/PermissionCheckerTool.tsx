@@ -115,10 +115,22 @@ export function PermissionCheckerTool() {
     const g = results.filter((r) => r.state === 'granted').length;
     const d = results.filter((r) => r.state === 'denied').length;
     const p = results.filter((r) => r.state === 'prompt').length;
+    const supported = results.length - results.filter((r) => r.state === 'unsupported').length;
+    if (supported === 0) {
+      // Safari/Firefox reject most Permissions API names: every query threw.
+      // Reporting green here told those visitors "you are protected" beside a
+      // panel that checked nothing (found 2026-09-08).
+      report({
+        severity: 'info',
+        headline: 'This browser does not expose permission states to web pages',
+        stats: [{ label: 'Checked', value: '0' }, { label: 'Unsupported', value: String(results.length) }],
+      });
+      return;
+    }
     report({
       severity: g > 0 ? 'amber' : 'green',
-      headline: g ? `This site already holds ${g} of ${results.length} permissions` : `No permission is granted to this site; ${p} would prompt`,
-      stats: [{ label: 'Granted', value: String(g) }, { label: 'Denied', value: String(d) }, { label: 'Would prompt', value: String(p) }, { label: 'Checked', value: String(results.length) }],
+      headline: g ? `This site already holds ${g} of ${supported} permissions` : `No permission is granted to this site; ${p} would prompt`,
+      stats: [{ label: 'Granted', value: String(g) }, { label: 'Denied', value: String(d) }, { label: 'Would prompt', value: String(p) }, { label: 'Checked', value: String(supported) }],
     });
   }, [results, report]);
   const [scanning, setScanning] = useState(false);

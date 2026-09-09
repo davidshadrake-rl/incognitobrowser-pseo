@@ -17,7 +17,7 @@ export interface TrackProps {
   tool?: string;
   niche?: string;
   severity?: 'red' | 'amber' | 'green' | 'info';
-  target?: 'play' | 'pro-web' | 'email' | 'copy' | 'share' | 'download' | 'checklist';
+  target?: 'play' | 'pro-web' | 'email' | 'copy' | 'share' | 'download' | 'checklist' | 'check-yours';
 }
 
 export type Platform = 'android' | 'ios' | 'desktop' | 'other';

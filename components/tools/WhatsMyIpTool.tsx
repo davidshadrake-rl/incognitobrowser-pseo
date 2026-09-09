@@ -1,5 +1,7 @@
 'use client';
 
+import { maskIp } from '@/lib/privacy-mask';
+
 import { useEffect, useState } from 'react';
 import { useReportResult } from './ResultContext';
 
@@ -48,7 +50,11 @@ async function discoverWebRtcIPs(): Promise<WebRtcResult> {
       ],
     });
     pc.createDataChannel('ip-probe');
-    await new Promise<void>((resolve) => {
+    // ICE gathering only starts on setLocalDescription(). The handler must be
+    // attached first, but the wait must come AFTER the offer is applied —
+    // awaiting here before the offer (as this once did) just times out with
+    // zero candidates and reports "no leak" to everyone, including leaking VPNs.
+    const gathered = new Promise<void>((resolve) => {
       const t = setTimeout(resolve, 2500);
       pc.onicecandidate = (ev) => {
         if (!ev.candidate) { clearTimeout(t); resolve(); return; }
@@ -66,6 +72,7 @@ async function discoverWebRtcIPs(): Promise<WebRtcResult> {
     });
     const offer = await pc.createOffer({ offerToReceiveAudio: true });
     await pc.setLocalDescription(offer);
+    await gathered;
     pc.close();
   } catch (e) {
     return {
@@ -143,7 +150,15 @@ export function WhatsMyIpTool() {
       severity: leaked.length ? 'red' : 'info',
       headline: leaked.length ? `WebRTC leaks your real IP ${leaked[0]} around your VPN` : `Every site sees ${ipInfo.ipv4 || ipInfo.ipv6 || 'your IP'}${where ? ` in ${where}` : ''}`,
       shareText: leaked.length ? 'My browser leaks my real IP through WebRTC. Check yours:' : 'Every site I visit sees my IP and location. Check yours:',
-      stats: [{ label: 'IP', value: ipInfo.ipv4 || ipInfo.ipv6 || '?' }, { label: 'Location', value: where || 'unknown' }, { label: 'Network', value: ipInfo.org || ipInfo.asn || 'unknown' }, { label: 'WebRTC IPs', value: String(webrtc?.publicIPs.length ?? 0) }],
+      // stats[0] is the scorecard's big figure: a verdict, not the raw address
+      // (an IPv6 does not fit at 120px, and a privacy brand should not put the
+      // visitor's real IP in an image it asks them to share — see lib/privacy-mask).
+      stats: [
+        { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Exposed' },
+        { label: 'IP', value: maskIp(ipInfo.ipv4 || ipInfo.ipv6) },
+        { label: 'Location', value: where || 'unknown' },
+        { label: 'WebRTC IPs', value: String(webrtc?.publicIPs.length ?? 0) },
+      ],
     });
   }, [ipInfo, webrtc, report]);
   const [loading, setLoading] = useState(true);
@@ -231,7 +246,7 @@ export function WhatsMyIpTool() {
           {(ipInfo.city || ipInfo.country || ipInfo.org) && (
             <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
               <h3 className="text-sm font-semibold text-white mb-3">Network &amp; Location</h3>
-              <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-2 gap-3 text-sm [&>div]:min-w-0 [&>div]:break-all">
                 {ipInfo.city && (
                   <>
                     <div className="text-[#B8B8D4]">City</div>

@@ -162,7 +162,8 @@ export function EmailPixelDetectorTool() {
           id="email-pixel-source"
           value={raw}
           onChange={(e) => {
-            setRaw(e.target.value);
+            // Same cap as the .eml path: the parser's regexes are quadratic on pathological input.
+            setRaw(e.target.value.slice(0, 2 * 1024 * 1024));
             setFileName('');
           }}
           placeholder={'Delivered-To: you@example.com\nReceived: from ...\nContent-Type: multipart/alternative; boundary="..."\n\n...or paste only the <html> body.'}

@@ -26,7 +26,20 @@ const FONT = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
 
 /** Greedy word wrap that respects the canvas measure. */
 export function wrapLines(ctx: { measureText(s: string): { width: number } }, text: string, maxWidth: number, maxLines = 3): string[] {
-  const words = text.split(/\s+/).filter(Boolean);
+  // A single token wider than the line (a 60-char hostname, a long URL) is
+  // hard-split into pieces that fit; otherwise the greedy loop below would
+  // emit it whole and let it run past the edge.
+  const words = text.split(/\s+/).filter(Boolean).flatMap((w) => {
+    if (ctx.measureText(w).width <= maxWidth) return [w];
+    const parts: string[] = [];
+    let piece = '';
+    for (const ch of w) {
+      if (ctx.measureText(piece + ch).width > maxWidth && piece) { parts.push(piece); piece = ch; }
+      else piece += ch;
+    }
+    if (piece) parts.push(piece);
+    return parts;
+  });
   const lines: string[] = [];
   let cur = '';
   for (const w of words) {
@@ -52,19 +65,49 @@ export function drawScorecard(ctx: CanvasRenderingContext2D, spec: ScorecardSpec
   ctx.fillStyle = '#B8B8D4';
   ctx.font = `600 22px ${FONT}`;
   ctx.textBaseline = 'top';
+  ctx.textAlign = 'left'; // never inherit a stale 'right' from a previous draw
   ctx.fillText('INCOGNITO BROWSER  ·  PRIVACY REPORT', 64, 60);
 
-  // title
-  ctx.fillStyle = '#ffffff';
-  ctx.font = `700 52px ${FONT}`;
-  const title = wrapLines(ctx, spec.title, W - 128, 2);
-  title.forEach((l, i) => ctx.fillText(l, 64, 110 + i * 62));
-  let y = 110 + title.length * 62 + 18;
+  // Shrinks text to fit availW (and, failing that, truncates with an
+  // ellipsis, re-measured) so no two fixed-position canvas draws can ever
+  // collide — the fix for every "long value ran into its neighbor" bug on
+  // this card (stat columns, the footer URL running into "Check yours
+  // free", an IPv6 address or "Microsoft Edge 128.0.2739.42" as the
+  // figure, a long domain as the title). Canvas has no wrap/overflow
+  // handling, unlike the site's CSS layouts, so every fixed-coordinate
+  // text draw here MUST go through this, never a bare fillText.
+  const fitText = (text: string, weight: number, startSize: number, minSize: number, availW: number): { text: string; size: number } => {
+    let size = startSize;
+    ctx.font = `${weight} ${size}px ${FONT}`;
+    while (size > minSize && ctx.measureText(text).width > availW) {
+      size -= 2;
+      ctx.font = `${weight} ${size}px ${FONT}`;
+    }
+    let out = text;
+    if (ctx.measureText(out).width > availW) {
+      while (out.length > 1 && ctx.measureText(out + '…').width > availW) out = out.slice(0, -1);
+      out += '…';
+    }
+    return { text: out, size };
+  };
 
-  // figure
+  // title — always ONE line (shrunk to fit). A two-line title pushed the
+  // whole stack down 62px: with a two-line headline the stat labels then
+  // ended at y=558, over the footer at y=546 — measured live on 19 report
+  // cards with long domains (audit 2026-09-08). One line keeps the stack at
+  // most 496px tall by construction, 50px clear of the footer.
+  const ttl = fitText(spec.title, 700, 52, 34, W - 128);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = `700 ${ttl.size}px ${FONT}`;
+  ctx.fillText(ttl.text, 64, 110);
+  let y = 110 + 62 + 18;
+
+  // figure — the visitor's own number. Drawn huge, so it is the first thing
+  // to run off the card when an engine hands over a long string.
+  const fig = fitText(spec.figure, 800, 120, 48, W - 128);
   ctx.fillStyle = TONE_COLOR[spec.tone];
-  ctx.font = `800 120px ${FONT}`;
-  ctx.fillText(spec.figure, 64, y);
+  ctx.font = `800 ${fig.size}px ${FONT}`;
+  ctx.fillText(fig.text, 64, y);
   y += 140;
 
   // headline
@@ -80,37 +123,34 @@ export function drawScorecard(ctx: CanvasRenderingContext2D, spec: ScorecardSpec
     const cols = Math.min(4, spec.stats.length);
     const colW = (W - 128) / cols;
     const availW = colW - 16; // gutter between columns
-    const fitText = (text: string, weight: number, startSize: number, minSize: number): { text: string; size: number } => {
-      let size = startSize;
-      ctx.font = `${weight} ${size}px ${FONT}`;
-      while (size > minSize && ctx.measureText(text).width > availW) {
-        size -= 2;
-        ctx.font = `${weight} ${size}px ${FONT}`;
-      }
-      let out = text;
-      while (out.length > 1 && ctx.measureText(out).width > availW) out = out.slice(0, -1);
-      if (out !== text) out = out.replace(/.$/, '…');
-      return { text: out, size };
-    };
     spec.stats.slice(0, 4).forEach((s, i) => {
       const x = 64 + i * colW;
-      const value = fitText(s.value, 700, 34, 18);
+      const value = fitText(s.value, 700, 34, 18, availW);
       ctx.fillStyle = '#ffffff';
       ctx.font = `700 ${value.size}px ${FONT}`;
       ctx.fillText(value.text, x, y);
-      const label = fitText(s.label.toUpperCase(), 400, 20, 12);
+      const label = fitText(s.label.toUpperCase(), 400, 20, 12, availW);
       ctx.fillStyle = '#B8B8D4';
       ctx.font = `400 ${label.size}px ${FONT}`;
       ctx.fillText(label.text, x, y + 42);
     });
   }
 
-  // footer
-  ctx.fillStyle = '#B8B8D4';
+  // footer — "Check yours free" is fixed and short; the URL gets whatever
+  // width is left after it, with a gutter, so a long path (a real one
+  // reported live: "incognitobrowser-pseo.vercel.app/tools/children-safety/
+  // permission-checker") shrinks/truncates instead of running into it.
+  const FOOTER_LABEL = 'Check yours free';
   ctx.font = `400 22px ${FONT}`;
-  ctx.fillText(spec.url.replace(/^https?:\/\//, ''), 64, H - 84);
+  const labelW = ctx.measureText(FOOTER_LABEL).width;
+  const urlAvailW = W - 128 - labelW - 24;
+  const url = fitText(spec.url.replace(/^https?:\/\//, ''), 400, 22, 14, urlAvailW);
+  ctx.fillStyle = '#B8B8D4';
+  ctx.font = `400 ${url.size}px ${FONT}`;
+  ctx.fillText(url.text, 64, H - 84);
+  ctx.font = `400 22px ${FONT}`;
   ctx.textAlign = 'right';
-  ctx.fillText('Check yours free', W - 64, H - 84);
+  ctx.fillText(FOOTER_LABEL, W - 64, H - 84);
   ctx.textAlign = 'left';
 }
 

@@ -125,6 +125,14 @@ let token = null;
   if (s429 === 0) info('no 429 seen — an in-memory limiter behind several serverless instances cannot share counters; set REDIS_URL on this project');
 }
 
+// C2. /event — counters only for known tool ids (unbounded key cardinality otherwise)
+{
+  const junk = await req('/event', { method: 'POST', origin: ORIGIN, body: { event: 'tool_run', tool: 'zzz-not-a-tool-9' } });
+  ok(junk.status === 400, '/event rejects an unknown tool id (400)', String(junk.status));
+  const good = await req('/event', { method: 'POST', origin: ORIGIN, body: { event: 'tool_run', tool: 'whats-my-ip' } });
+  ok(good.status === 202, '/event accepts a registered tool id (202)', String(good.status));
+}
+
 // D. /ip
 {
   const evil = await req('/ip', { method: 'POST', origin: EVIL, body: {} });

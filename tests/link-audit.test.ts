@@ -17,7 +17,14 @@ import path from 'node:path';
 
 const OUT_DIR = path.join(process.cwd(), 'out');
 
-describe.skipIf(!fs.existsSync(OUT_DIR))('link audit — free static export', () => {
+function outIsFreeStatic(): boolean {
+  try {
+    const m = JSON.parse(fs.readFileSync(path.join(OUT_DIR, '.build-marker.json'), 'utf-8')) as { target?: string; tier?: string; basePath?: string };
+    return m.target === 'static' && m.tier === 'free' && m.basePath === '/resources';
+  } catch { return false; }
+}
+
+describe.skipIf(!outIsFreeStatic())('link audit — free static export', () => {
   it('has zero dangling same-site links across the whole build', () => {
     const r = spawnSync(process.execPath, ['scripts/audit-links.mjs', OUT_DIR, '--mode', 'static', '--base', '/resources'], { encoding: 'utf-8' });
     expect(r.status, r.stdout + r.stderr).toBe(0);

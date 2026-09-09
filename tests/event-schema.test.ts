@@ -1,3 +1,4 @@
+import path from 'node:path';
 /** lib/event-schema — the allowlist that keeps /event from being a free-text sink, and the bounded key fan-out. */
 import { describe, expect, it } from 'vitest';
 import { validateEvent, eventKeys, dayOf, EVENT_TTL_SECONDS } from '../lib/event-schema';
@@ -62,8 +63,20 @@ describe('/event route (source guards)', () => {
   it('/stats is POST (static export excludes it), 404s without STATS_TOKEN, and requires a bearer token', () => {
     const s = fs.readFileSync('app/stats/route.ts', 'utf-8');
     expect(s).toMatch(/if \(!token\) return new NextResponse\(null, \{ status: 404/);
-    expect(s).toMatch(/auth !== `Bearer \$\{token\}`/);
+    expect(s).toMatch(/timingSafeEqual\(/); // constant-time bearer compare (audit 2026-09-08)
+    expect(s).toMatch(/rateLimit\(`stats:/); // throttled: a bearer check with no limit is a free brute-force target
     expect(s).toMatch(/export async function POST/);
     expect(s).not.toMatch(/export async function GET/);
+  });
+});
+
+describe('TOOL_IDS matches the engine registry', () => {
+  it('every registered engine is an allowed counter key and nothing else is (except report-card)', async () => {
+    const { TOOL_IDS } = await import('../lib/event-schema');
+    const src = fs.readFileSync(path.join(process.cwd(), 'components/tools/registry.tsx'), 'utf-8');
+    const registered = new Set([...src.matchAll(/^\s*'([a-z0-9-]+)':\s*[A-Z]\w+Tool,?$/gm)].map((m) => m[1]));
+    expect(registered.size).toBeGreaterThanOrEqual(17);
+    for (const id of registered) expect(TOOL_IDS.has(id), id).toBe(true);
+    for (const id of TOOL_IDS) if (id !== 'report-card') expect(registered.has(id), id).toBe(true);
   });
 });

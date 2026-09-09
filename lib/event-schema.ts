@@ -13,14 +13,25 @@ export interface EventPayload {
   tool?: string;
   niche?: string;
   severity?: 'red' | 'amber' | 'green' | 'info';
-  target?: 'play' | 'pro-web' | 'email' | 'copy' | 'share' | 'download' | 'checklist';
+  target?: 'play' | 'pro-web' | 'email' | 'copy' | 'share' | 'download' | 'checklist' | 'check-yours';
   platform?: 'android' | 'ios' | 'desktop' | 'other';
   inApp?: boolean;
 }
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,47}$/;
 const SEVERITIES = new Set(['red', 'amber', 'green', 'info']);
-const TARGETS = new Set(['play', 'pro-web', 'email', 'copy', 'share', 'download', 'checklist']);
+const TARGETS = new Set(['play', 'pro-web', 'email', 'copy', 'share', 'download', 'checklist', 'check-yours']);
+// Every tool id that can appear in a counter key. Without this, any slug that
+// matched SLUG minted new Redis keys with a 400-day TTL — unbounded key
+// cardinality, and /stats SCANs the whole day's keyspace (audit 2026-09-08).
+// Keep in step with components/tools/registry.tsx (guarded by tests/event-schema.test.ts).
+export const TOOL_IDS = new Set([
+  'ad-blocker-test', 'browser-privacy', 'cookie-analyzer', 'dns-leak-test', 'email-pixel-detector',
+  'hash-generator', 'link-unwrapper', 'metadata-viewer', 'password-generator', 'password-strength',
+  'permission-checker', 'privacy-quiz', 'screenshot-leak-checker', 'text-encryption', 'url-analyzer',
+  'useragent-analyzer', 'whats-my-ip',
+  'report-card',
+]);
 const PLATFORMS = new Set(['android', 'ios', 'desktop', 'other']);
 
 export type Validation = { ok: true; value: EventPayload } | { ok: false; error: string };
@@ -36,6 +47,7 @@ export function validateEvent(input: unknown): Validation {
     v[k] = o[k] as string;
   }
   if (o.severity !== undefined) { if (!SEVERITIES.has(o.severity as string)) return { ok: false, error: 'bad severity' }; v.severity = o.severity as EventPayload['severity']; }
+  if (v.tool !== undefined && !TOOL_IDS.has(v.tool)) return { ok: false, error: 'unknown tool' };
   if (o.target !== undefined) { if (!TARGETS.has(o.target as string)) return { ok: false, error: 'bad target' }; v.target = o.target as EventPayload['target']; }
   if (o.platform !== undefined) { if (!PLATFORMS.has(o.platform as string)) return { ok: false, error: 'bad platform' }; v.platform = o.platform as EventPayload['platform']; }
   if (o.inApp !== undefined) { if (typeof o.inApp !== 'boolean') return { ok: false, error: 'bad inApp' }; v.inApp = o.inApp; }

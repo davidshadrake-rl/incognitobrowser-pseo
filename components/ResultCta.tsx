@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { Severity } from '@/components/tools/ResultContext';
 import { composeCta, IN_APP_COPY } from '@/lib/cta-copy';
 import { playUrl } from '@/lib/play';
+import { handoffMailBody, handoffMailto } from '@/lib/handoff';
 import { detectPlatform, isInsideIncognitoApp, track, type Platform } from '@/lib/track';
 
 interface Props {
@@ -53,17 +54,43 @@ export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUr
   const copy = useMemo(() => composeCta(engine, niche, severity), [engine, niche, severity]);
   const play = playUrl({ medium: 'cta', campaign: engine, content: content || niche, term });
   const pageHref = pageUrl || (typeof window !== 'undefined' ? window.location.href : '');
-  const mailto = `mailto:?subject=${encodeURIComponent('Incognito Pro (Android)')}&body=${encodeURIComponent(`Get Incognito Pro on Google Play: ${play}\n\nThe check I ran: ${pageHref}`)}`;
+  // See lib/handoff.ts: CRLF body (RFC 6068 — bare "\n" breaks Outlook on Windows), hash stripped.
+  const mailBody = handoffMailBody(play, pageHref);
+  const mailto = handoffMailto(play, pageHref);
+  const [mailFallback, setMailFallback] = useState(false);
+  const [msgCopied, setMsgCopied] = useState(false);
 
   const click = (target: 'play' | 'pro-web' | 'email' | 'copy') => track('cta_click', { tool: engine, niche, severity, target });
   const copyLink = async () => {
     click('copy');
     try { await navigator.clipboard.writeText(play); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch { /* clipboard unavailable */ }
   };
+  const copyMessage = async () => {
+    try { await navigator.clipboard.writeText(mailBody); setMsgCopied(true); setTimeout(() => setMsgCopied(false), 2000); } catch { /* insecure context: the textarea below is selectable instead */ }
+  };
+  // A mailto: link gives the page no success signal. If no mail handler is
+  // registered (the norm on Windows for people who use Gmail in a browser),
+  // nothing happens at all — the second reason "Email me the link" appeared
+  // dead on a colleague's Windows machine. A registered handler always takes
+  // focus (a desktop app) or opens a tab (webmail), so the page blurs or is
+  // hidden; if neither happens within 1.5 s, reveal the message to copy.
+  // The native navigation is not prevented, so nothing changes when it works.
+  const emailClick = () => {
+    click('email');
+    let left = false;
+    const onLeave = () => { left = true; };
+    window.addEventListener('blur', onLeave, { once: true });
+    document.addEventListener('visibilitychange', onLeave, { once: true });
+    window.setTimeout(() => {
+      window.removeEventListener('blur', onLeave);
+      document.removeEventListener('visibilitychange', onLeave);
+      if (!left && document.hasFocus()) setMailFallback(true);
+    }, 1500);
+  };
 
   return (
     <aside className={`mt-8 rounded-lg border p-5 ${TONE[severity]}`} data-result-cta={severity} data-engine={engine}>
-      {headline && <p className="text-xs uppercase tracking-wider text-[#B8B8D4]/70 mb-2">{headline}</p>}
+      {headline && <p className="text-xs uppercase tracking-wider text-[#B8B8D4]/70 mb-2 break-words">{headline}</p>}
       <h3 className="text-xl font-semibold text-white mb-2">{inApp ? IN_APP_COPY.headline : copy.headline}</h3>
       <p className="text-sm text-[#B8B8D4] mb-4">{inApp ? IN_APP_COPY.body : copy.body}</p>
       <ul className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
@@ -81,7 +108,7 @@ export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUr
         ) : (
           <>
             <a href={play} rel="noopener" onClick={() => click('play')} className="btn-primary text-sm !px-5 !py-2.5">Get Incognito Browser for Android</a>
-            <a href={mailto} onClick={() => click('email')} className="text-sm px-4 py-2 rounded-full border border-white/15 text-[#B8B8D4] hover:text-white hover:border-white/40">Email me the link</a>
+            <a href={mailto} onClick={emailClick} className="text-sm px-4 py-2 rounded-full border border-white/15 text-[#B8B8D4] hover:text-white hover:border-white/40">Email me the link</a>
             <button type="button" onClick={copyLink} className="text-sm px-4 py-2 rounded-full border border-white/15 text-[#B8B8D4] hover:text-white hover:border-white/40">{copied ? 'Copied' : 'Copy link'}</button>
           </>
         )}
@@ -89,6 +116,13 @@ export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUr
           <a href={proWebUrl} rel="noopener" onClick={() => click('pro-web')} className="text-sm text-purple-300 hover:text-purple-200 underline">Open the Pro web app →</a>
         )}
       </div>
+      {mailFallback && (
+        <div className="mt-3 rounded border border-white/10 bg-black/30 p-3" role="status" aria-live="polite" data-mail-fallback>
+          <p className="text-xs text-[#B8B8D4] mb-2">No email app opened on this device. Copy the message and send it from your email instead:</p>
+          <textarea readOnly value={mailBody} rows={3} onFocus={(e) => e.currentTarget.select()} aria-label="Message to send yourself" className="w-full text-xs font-mono bg-[#0a0a0a] border border-white/10 rounded p-2 text-[#B8B8D4]" />
+          <button type="button" onClick={copyMessage} className="mt-2 text-xs px-3 py-1.5 rounded-full border border-white/15 text-[#B8B8D4] hover:text-white hover:border-white/40">{msgCopied ? 'Copied' : 'Copy message'}</button>
+        </div>
+      )}
       {platform !== 'android' && !inApp && (
         <p className="text-xs text-[#B8B8D4]/60 mt-3">Incognito Browser is an Android app; Pro is unlocked inside it. Send the link to your phone and the check re-runs there.</p>
       )}
