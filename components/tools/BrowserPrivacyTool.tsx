@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useReportResult, severityFromScore } from './ResultContext';
-import { Icon, type IconName } from '@/components/ui/Icon';
+import { ConsoleFrame, statusFromSeverity, type ConsoleGroup } from './ConsoleFrame';
+import type { Status } from '@/components/ui/StatusDot';
 
 /**
  * Canvas-fingerprint probe string. The emoji is deliberate: colour-font
@@ -108,30 +109,13 @@ async function audioFingerprintHash(): Promise<string> {
   }
 }
 
-function getStatusIcon(status: string): IconName {
+/** PrivacyCheck.status -> the console's Status vocabulary. */
+function checkStatus(status: string): Status {
   switch (status) {
-    case 'good': return 'check';
+    case 'good': return 'ok';
     case 'warning': return 'warn';
-    case 'bad': return 'x';
+    case 'bad': return 'danger';
     default: return 'info';
-  }
-}
-
-function getStatusColor(status: string) {
-  switch (status) {
-    case 'good': return 'text-ok';
-    case 'warning': return 'text-warn';
-    case 'bad': return 'text-danger';
-    default: return 'text-info';
-  }
-}
-
-function getBorderColor(status: string) {
-  switch (status) {
-    case 'good': return 'border-ok/30';
-    case 'warning': return 'border-warn/30';
-    case 'bad': return 'border-danger/30';
-    default: return 'border-info/30';
   }
 }
 
@@ -419,53 +403,27 @@ export function BrowserPrivacyTool() {
       </div>
 
       {score !== null && (
-        <>
-          {/* Score */}
-          <div className="bg-s0 border border-b1 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-lg font-bold text-white">Privacy Score</span>
-              <span className="text-3xl font-bold" style={{
-                color: score >= 70 ? '#22c55e' : score >= 40 ? '#eab308' : '#ef4444'
-              }}>{score}/100</span>
-            </div>
-            <div className="h-3 bg-s0 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{
-                  width: `${score}%`,
-                  backgroundColor: score >= 70 ? '#22c55e' : score >= 40 ? '#eab308' : '#ef4444'
-                }}
-              />
-            </div>
-            <div className="mt-3 flex gap-4 text-xs text-t2">
-              <span className="text-ok">{checks.filter(c => c.status === 'good').length} Good</span>
-              <span className="text-warn">{checks.filter(c => c.status === 'warning').length} Warnings</span>
-              <span className="text-danger">{checks.filter(c => c.status === 'bad').length} Issues</span>
-              <span className="text-info">{checks.filter(c => c.status === 'info').length} Info</span>
-            </div>
-          </div>
-
-          {/* Results by category */}
-          {categories.map(cat => (
-            <div key={cat}>
-              <h3 className="text-sm font-semibold text-t2 uppercase tracking-wider mb-3">{cat}</h3>
-              <div className="space-y-2">
-                {checks.filter(c => c.category === cat).map((check, i) => (
-                  <div key={i} className={`bg-s0 border ${getBorderColor(check.status)} rounded-lg p-4`}>
-                    <div className="flex items-start justify-between mb-1">
-                      <div className="flex items-center gap-2">
-                        <Icon name={getStatusIcon(check.status)} size={14} className={getStatusColor(check.status)} title={check.status} />
-                        <span className="text-sm font-medium text-white">{check.name}</span>
-                      </div>
-                      <span className="text-sm font-mono text-t2 min-w-0 break-all text-right">{check.value}</span>
-                    </div>
-                    <p className="text-xs text-t2/80 ml-6">{check.detail}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </>
+        <ConsoleFrame
+          engine="browser-privacy"
+          status={statusFromSeverity(severityFromScore(score))}
+          checks={checks.length}
+          processing="client"
+          score={score}
+          tally={{
+            fails: checks.filter((c) => c.status === 'bad').length,
+            warns: checks.filter((c) => c.status === 'warning').length,
+            passes: checks.filter((c) => c.status === 'good').length,
+          }}
+          groups={categories.map((cat): ConsoleGroup => ({
+            name: cat,
+            rows: checks.filter((c) => c.category === cat).map((check) => ({
+              status: checkStatus(check.status),
+              name: check.name,
+              value: check.value,
+              detail: check.detail,
+            })),
+          }))}
+        />
       )}
     </div>
   );

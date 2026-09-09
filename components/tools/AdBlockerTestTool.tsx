@@ -13,6 +13,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReportResult, type ToolResult } from '@/components/tools/ResultContext';
 import { Icon } from '@/components/ui/Icon';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import {
   NETWORK_BAITS,
   COSMETIC_BAITS,
@@ -164,10 +165,6 @@ async function probeCosmetic(baits: readonly CosmeticBait[], settleMs: number): 
 
 // ------- Presentation helpers -------
 
-function severityHex(severity: 'green' | 'amber' | 'red'): string {
-  return severity === 'green' ? '#22c55e' : severity === 'amber' ? '#eab308' : '#ef4444';
-}
-
 function reasonText(r: ProbeResult): string {
   switch (r.reason) {
     case 'error': return 'Request cancelled before it completed';
@@ -247,7 +244,6 @@ export function AdBlockerTestTool() {
   const hidden = cosmetic.filter((c) => c.hidden).length;
   const byCategory = summarizeByCategory(blockedResults.map((r) => r.bait.id), NETWORK_BAITS);
   const cleanCategories = byCategory.filter((c) => c.total > 0 && c.blocked === c.total).length;
-  const colour = severityHex(score.severity);
   const running = phase === 'running';
 
   return (
@@ -283,48 +279,28 @@ export function AdBlockerTestTool() {
       )}
 
       {phase === 'done' && (
+        <ConsoleFrame
+          engine="ad-blocker-test"
+          status={statusFromSeverity(score.severity)}
+          checks={score.total}
+          processing="client"
+          score={score.percent}
+          gaugeLabel="blocked"
+          statTiles={[
+            { label: 'Blocked', value: `${score.blocked}/${score.total}` },
+            { label: 'Allowed', value: score.allowed },
+            { label: 'Elements hidden', value: `${hidden}/${cosmetic.length}` },
+            { label: 'Categories', value: `${cleanCategories}/${byCategory.length} clean` },
+          ]}
+        >
         <>
-          {/* Score */}
-          <div className="bg-s0 border border-b1 rounded-lg p-6">
-            <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">
-                  Blocked {score.blocked} of {score.total} requests
-                </h2>
-                <p className="text-sm text-t2 mt-1">
-                  Cosmetic filtering hid {hidden} of {cosmetic.length} ad elements
-                </p>
-              </div>
-              <span className="text-3xl font-bold" style={{ color: colour }}>{score.percent}%</span>
-            </div>
-            <div className="h-3 bg-s0 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{ width: `${score.percent}%`, backgroundColor: colour }}
-              />
-            </div>
-            <p className="mt-4 text-sm text-t2">{verdictFor(score, hidden, cosmetic.length)}</p>
-          </div>
-
-          {/* Summary */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-s0 border border-ok/30 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-ok">{score.blocked}</div>
-              <div className="text-xs text-t2">Blocked</div>
-            </div>
-            <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-danger">{score.allowed}</div>
-              <div className="text-xs text-t2">Allowed</div>
-            </div>
-            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-white">{hidden}<span className="text-base text-t2">/{cosmetic.length}</span></div>
-              <div className="text-xs text-t2">Elements hidden</div>
-            </div>
-            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-white">{cleanCategories}<span className="text-base text-t2">/{byCategory.length}</span></div>
-              <div className="text-xs text-t2">Categories fully blocked</div>
-            </div>
-          </div>
+          <h2 className="text-lg font-semibold text-white">
+            Blocked {score.blocked} of {score.total} requests
+          </h2>
+          <p className="text-sm text-t2">
+            Cosmetic filtering hid {hidden} of {cosmetic.length} ad elements
+          </p>
+          <p className="text-sm text-t2">{verdictFor(score, hidden, cosmetic.length)}</p>
 
           {/* Per-bait results by category */}
           {CATEGORY_ORDER.map((category) => {
@@ -427,6 +403,7 @@ export function AdBlockerTestTool() {
             </p>
           </div>
         </>
+        </ConsoleFrame>
       )}
     </div>
   );

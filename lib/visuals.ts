@@ -37,3 +37,37 @@ export const NICHE_DIAGRAM: Record<string, Diagram> = {
   'location-tracking': 'exif', 'dating-privacy': 'exif', 'drone-surveillance': 'exif', 'smart-home-privacy': 'exif', 'webcam-privacy': 'exif',
   'encrypted-messaging': 'cipher', 'password-security': 'cipher', 'online-banking': 'cipher', 'cloud-privacy': 'cipher', 'crypto-privacy': 'cipher', 'workplace-privacy': 'cipher', 'healthcare-privacy': 'cipher', 'student-privacy': 'cipher', 'children-safety': 'cipher',
 };
+
+/** Diagram id for a niche, falling back to 'tracking' when the niche is
+ * missing from NICHE_DIAGRAM (new taxonomy entries land here before the
+ * table catches up). Callers should use this instead of indexing
+ * NICHE_DIAGRAM directly. */
+export function diagramForNiche(niche: string): Diagram {
+  return NICHE_DIAGRAM[niche] ?? 'tracking';
+}
+
+/**
+ * Amendment A (DESIGN-SPEC-AMENDMENT-COLORS.md, owner decision 2026-09-09):
+ * four family hues, used ONLY for IconTile's `family` prop, one Diagram
+ * subject stroke per motif, the free tool-card left rail and the tool
+ * PageHero figure rule. `funnel` and every Pro surface stay `pro` blue —
+ * familyOfEngine/familyOfNiche fold that case to 'trace' only because those
+ * two helpers must always return a paintable family (an icon tile has no
+ * separate "pro blue" family slot; Pro tone wins over family at the call
+ * site, per Icon.tsx).
+ */
+export type Family = 'net' | 'trace' | 'identity' | 'cipher';
+export const DIAGRAM_FAMILY: Record<Diagram, Family | 'pro'> = {
+  leak: 'net', tracking: 'trace', pixel: 'trace', phish: 'trace',
+  fingerprint: 'identity', exif: 'identity', cipher: 'cipher', funnel: 'pro',
+};
+export function familyOfEngine(engine: string): Family {
+  const d = ENGINE_DIAGRAM[engine] ?? 'tracking';
+  const f = DIAGRAM_FAMILY[d];
+  return f === 'pro' ? 'trace' : f;
+}
+export function familyOfNiche(niche: string): Family {
+  const d = diagramForNiche(niche);
+  const f = DIAGRAM_FAMILY[d];
+  return f === 'pro' ? 'trace' : f;
+}

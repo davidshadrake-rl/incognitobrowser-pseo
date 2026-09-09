@@ -14,14 +14,25 @@ const CHAR_W = 12; // fake monospace width per character, matches a real font cl
 
 class FakeCtx {
   calls: Array<{ text: string; x: number; y: number; font: string }> = [];
+  arcs: Array<{ x: number; y: number; radius: number; startAngle: number; endAngle: number; strokeStyle: string }> = [];
   fillStyle = '';
   font = '';
   textAlign: CanvasTextAlign = 'left';
   textBaseline: CanvasTextBaseline = 'alphabetic';
   strokeStyle = '';
   lineWidth = 0;
+  lineCap: CanvasLineCap = 'butt';
   fillRect() {}
   strokeRect() {}
+  save() {}
+  restore() {}
+  beginPath() {}
+  stroke() {}
+  // Records the arc so gauge tests can assert on its sweep without caring
+  // about fill/stroke pixel output (jsdom has no real canvas backend).
+  arc(x: number, y: number, radius: number, startAngle: number, endAngle: number) {
+    this.arcs.push({ x, y, radius, startAngle, endAngle, strokeStyle: this.strokeStyle });
+  }
   measureText(s: string) {
     const sizeMatch = /(\d+)px/.exec(this.font);
     const size = sizeMatch ? Number(sizeMatch[1]) : 16;
@@ -145,5 +156,54 @@ describe('drawScorecard — footer URL never runs into "Check yours free"', () =
     const url = ctx.calls.find((c) => c.text === 'example.com/x');
     expect(url).toBeTruthy();
     expect(url!.font).toMatch(/400 22px/);
+  });
+});
+
+describe('drawScorecard — gauge arc (DESIGN-SPEC 4.2)', () => {
+  it('omits the arc entirely when no score is given (pre-existing layout is untouched)', () => {
+    const ctx = new FakeCtx();
+    drawScorecard(ctx as unknown as CanvasRenderingContext2D, BASE);
+    expect(ctx.arcs).toEqual([]);
+  });
+
+  it('draws a track arc and a value arc swept to the score, and a centred score readout', () => {
+    const ctx = new FakeCtx();
+    drawScorecard(ctx as unknown as CanvasRenderingContext2D, { ...BASE, score: 63 });
+    expect(ctx.arcs.length).toBe(2);
+    const [track, value] = ctx.arcs;
+    // Same centre and radius for both arcs of one gauge.
+    expect(value.x).toBe(track.x);
+    expect(value.y).toBe(track.y);
+    expect(value.radius).toBe(track.radius);
+    // Track always sweeps the full semicircle; the value arc stops at score%.
+    expect(track.endAngle - track.startAngle).toBeCloseTo(Math.PI, 5);
+    expect(value.endAngle - value.startAngle).toBeCloseTo(Math.PI * 0.63, 5);
+    const score = ctx.calls.find((c) => c.text === '63');
+    expect(score).toBeTruthy();
+    expect(ctx.calls.some((c) => c.text === 'SCORE')).toBe(true);
+  });
+
+  it('clamps an out-of-range score instead of drawing past a full sweep', () => {
+    const ctx = new FakeCtx();
+    drawScorecard(ctx as unknown as CanvasRenderingContext2D, { ...BASE, score: 140 });
+    const [, value] = ctx.arcs;
+    expect(value.endAngle - value.startAngle).toBeCloseTo(Math.PI, 5);
+    expect(ctx.calls.some((c) => c.text === '100')).toBe(true);
+  });
+
+  it('reserves room so a long title never runs under the gauge', () => {
+    const ctx = new FakeCtx();
+    drawScorecard(ctx as unknown as CanvasRenderingContext2D, {
+      ...BASE,
+      title: 'a-genuinely-long-domain-name-that-would-otherwise-run-edge-to-edge.example.com',
+      score: 92,
+    });
+    const title = ctx.calls.find((c) => c.font.startsWith('700') && /example\.com|…/.test(c.text));
+    expect(title).toBeTruthy();
+    ctx.font = title!.font;
+    const titleEnd = title!.x + ctx.measureText(title!.text).width;
+    const [track] = ctx.arcs;
+    const gaugeLeftEdge = track.x - track.radius;
+    expect(titleEnd, `title ends at ${titleEnd}, gauge starts at ${gaugeLeftEdge}`).toBeLessThan(gaugeLeftEdge);
   });
 });

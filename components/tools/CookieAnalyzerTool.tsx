@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { scanUrl } from '@/lib/scan-client';
-import { useReportResult } from './ResultContext';
+import { useReportResult, severityFromScore } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
+import type { Grade } from '@/lib/site-grade';
 
 interface CookieInfo {
   name: string;
@@ -310,8 +312,8 @@ export function CookieAnalyzerTool() {
     setTimeout(() => URL.revokeObjectURL(url), 5000);
   };
 
-  // Calculate privacy grade for URL scan
-  const getPrivacyGrade = (result: URLScanResult) => {
+  // Calculate privacy score + letter grade for a URL scan.
+  const getPrivacyScore = (result: URLScanResult): number => {
     const { summary, security } = result;
     let score = 100;
     score -= summary.highRiskItems * 10;
@@ -322,13 +324,15 @@ export function CookieAnalyzerTool() {
     if (!security.isHTTPS) score -= 20;
     if (!security.hasCSP) score -= 5;
     if (!security.hasHSTS) score -= 5;
-    score = Math.max(0, Math.min(100, score));
+    return Math.max(0, Math.min(100, score));
+  };
 
-    if (score >= 85) return { letter: 'A', color: '#10b981', label: 'Excellent' };
-    if (score >= 70) return { letter: 'B', color: '#22c55e', label: 'Good' };
-    if (score >= 50) return { letter: 'C', color: '#eab308', label: 'Fair' };
-    if (score >= 30) return { letter: 'D', color: '#f97316', label: 'Poor' };
-    return { letter: 'F', color: '#ef4444', label: 'Very Poor' };
+  const gradeFromScore = (score: number): { letter: Grade; label: string } => {
+    if (score >= 85) return { letter: 'A', label: 'Excellent' };
+    if (score >= 70) return { letter: 'B', label: 'Good' };
+    if (score >= 50) return { letter: 'C', label: 'Fair' };
+    if (score >= 30) return { letter: 'D', label: 'Poor' };
+    return { letter: 'F', label: 'Very Poor' };
   };
 
   return (
@@ -448,40 +452,30 @@ export function CookieAnalyzerTool() {
       )}
 
       {/* ===== URL SCAN RESULTS ===== */}
-      {urlResult && (
+      {urlResult && (() => {
+        const score = getPrivacyScore(urlResult);
+        const grade = gradeFromScore(score);
+        return (
+        <ConsoleFrame
+          engine="cookie-analyzer"
+          status={statusFromSeverity(severityFromScore(score))}
+          processing="server"
+          score={score}
+          gaugeLabel={`grade ${grade.letter}`}
+          tally={{
+            fails: urlResult.summary.trackingCookies,
+            warns: urlResult.summary.analyticsCookies,
+            passes: urlResult.summary.functionalCookies,
+          }}
+          statTiles={[
+            { label: 'Grade', value: `${grade.letter} · ${grade.label}` },
+            { label: 'Cookies', value: urlResult.summary.totalCookies },
+            { label: 'Trackers', value: urlResult.summary.totalTrackers },
+            { label: '3rd party scripts', value: urlResult.summary.thirdPartyScripts },
+          ]}
+        >
         <div className="space-y-4">
-          {/* Privacy grade + summary */}
-          {(() => {
-            const grade = getPrivacyGrade(urlResult);
-            return (
-              <div className="bg-s0 border border-b1 rounded-lg p-6">
-                <div className="flex items-center gap-6">
-                  <div className="text-center">
-                    <div className="text-5xl font-bold" style={{ color: grade.color }}>{grade.letter}</div>
-                    <div className="text-xs text-t2 mt-1">{grade.label}</div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-white font-medium mb-1 truncate">{urlResult.url}</div>
-                    <div className="text-xs text-t2 mb-3">HTTP {urlResult.status}</div>
-                    <div className="grid grid-cols-3 gap-3">
-                      <div>
-                        <div className="text-lg font-bold text-white">{urlResult.summary.totalCookies}</div>
-                        <div className="text-xs text-t2">Cookies</div>
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-white">{urlResult.summary.totalTrackers}</div>
-                        <div className="text-xs text-t2">Trackers</div>
-                      </div>
-                      <div>
-                        <div className="text-lg font-bold text-white">{urlResult.summary.thirdPartyScripts}</div>
-                        <div className="text-xs text-t2">3rd Party Scripts</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
+          <p className="text-sm text-white font-medium truncate">{urlResult.url} <span className="text-t2 font-normal">HTTP {urlResult.status}</span></p>
 
           {/* Cookie breakdown */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -651,30 +645,25 @@ export function CookieAnalyzerTool() {
             </div>
           )}
         </div>
-      )}
+        </ConsoleFrame>
+        );
+      })()}
 
       {/* ===== BROWSER / PASTE RESULTS ===== */}
       {scanned && mode !== 'url' && (
-        <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-white">{cookies.length}</div>
-              <div className="text-xs text-t2">Total Cookies</div>
-            </div>
-            <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-danger">{tracking.length}</div>
-              <div className="text-xs text-t2">Tracking</div>
-            </div>
-            <div className="bg-s0 border border-warn/30 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-warn">{analytics.length}</div>
-              <div className="text-xs text-t2">Analytics</div>
-            </div>
-            <div className="bg-s0 border border-ok/30 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-ok">{functional.length}</div>
-              <div className="text-xs text-t2">Functional</div>
-            </div>
-          </div>
-
+        <ConsoleFrame
+          engine="cookie-analyzer"
+          status={statusFromSeverity(tracking.length > 0 ? 'red' : analytics.length > 0 ? 'amber' : 'green')}
+          checks={cookies.length}
+          processing="client"
+          tally={{ fails: tracking.length, warns: analytics.length, passes: functional.length }}
+          statTiles={[
+            { label: 'Total cookies', value: cookies.length },
+            { label: 'Tracking', value: tracking.length },
+            { label: 'Analytics', value: analytics.length },
+            { label: 'Functional', value: functional.length },
+          ]}
+        >
           {cookies.length === 0 ? (
             <div className="bg-s0 border border-ok/30 rounded-lg p-6 text-center">
               <div className="text-ok text-lg font-semibold mb-2">No cookies detected</div>
@@ -707,7 +696,7 @@ export function CookieAnalyzerTool() {
               ))}
             </div>
           )}
-        </>
+        </ConsoleFrame>
       )}
     </div>
   );

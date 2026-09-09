@@ -67,13 +67,13 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
   };
 
   return (
-    <section className="mt-6 rounded-lg border border-b1 bg-s0 p-4" data-scorecard={engine}>
+    <section className="mt-6 rounded-[16px] border border-b1 bg-s0 p-4" data-scorecard={engine}>
       <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-3">
-        <h3 className="text-sm font-semibold text-white">Share your result</h3>
-        <span className="text-xs text-t3">Drawn on your device. Nothing is uploaded.</span>
+        <h3 className="text-row font-semibold text-t1">Share your result</h3>
+        <span className="text-meta text-t3">Drawn on your device. Nothing is uploaded.</span>
       </div>
       <div className="relative" style={{ aspectRatio: `${SCORECARD_W} / ${SCORECARD_H}` }}>
-        <canvas ref={canvasRef} width={SCORECARD_W} height={SCORECARD_H} className="absolute inset-0 w-full h-full rounded border border-b1" aria-label={`Scorecard: ${full.title} ${full.figure}`} />
+        <canvas ref={canvasRef} width={SCORECARD_W} height={SCORECARD_H} className="absolute inset-0 w-full h-full rounded-[12px] border border-b1" aria-label={`Scorecard: ${full.title} ${full.figure}`} />
         {/* The footer row ("domain · Check yours free") drawn on the canvas is a real link here — it can only be a picture once the PNG is shared or downloaded. */}
         <a
           href={full.url}

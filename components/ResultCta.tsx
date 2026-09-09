@@ -17,6 +17,9 @@ import { composeCta, IN_APP_COPY } from '@/lib/cta-copy';
 import { playUrl } from '@/lib/play';
 import { handoffMailBody, handoffMailto } from '@/lib/handoff';
 import { detectPlatform, isInsideIncognitoApp, track, type Platform } from '@/lib/track';
+import { PRO_FOOTNOTE, PRO_WEB_GATED } from '@/lib/tiers';
+import { Icon } from '@/components/ui/Icon';
+import { PhoneFrame } from '@/components/ui/PhoneFrame';
 
 interface Props {
   engine: string;
@@ -34,11 +37,12 @@ interface Props {
   term?: string;
 }
 
+/** DESIGN-SPEC 5.4: tone is now a 2px top border only, not a fill or side border. */
 const TONE: Record<Severity, string> = {
-  red: 'border-danger/30 bg-danger-dim',
-  amber: 'border-warn/30 bg-warn-dim',
-  green: 'border-ok/30 bg-ok-dim',
-  info: 'border-b1 bg-white/[0.03]',
+  red: 'border-t-danger',
+  amber: 'border-t-warn',
+  green: 'border-t-ok',
+  info: 'border-t-b2',
 };
 
 export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUrl, content, term = 'tool' }: Props) {
@@ -89,43 +93,54 @@ export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUr
   };
 
   return (
-    <aside className={`mt-8 rounded-lg border p-5 ${TONE[severity]}`} data-result-cta={severity} data-engine={engine}>
-      {headline && <p className="text-xs uppercase tracking-wider text-t3 mb-2 break-words">{headline}</p>}
-      <h3 className="text-xl font-semibold text-white mb-2">{inApp ? IN_APP_COPY.headline : copy.headline}</h3>
-      <p className="text-sm text-t2 mb-4">{inApp ? IN_APP_COPY.body : copy.body}</p>
-      <ul className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
-        {copy.benefits.map((b) => (
-          <li key={b.key} className="text-xs text-t2 bg-black/30 border border-hair rounded p-2">
-            <span className="text-white font-medium">{b.title}</span> {b.line}
-          </li>
-        ))}
-      </ul>
-      <div className="flex flex-wrap items-center gap-3">
-        {inApp || platform === 'android' ? (
-          <a href={play} rel="noopener" onClick={() => click('play')} className="btn-primary text-sm !px-5 !py-2.5">
-            {inApp ? IN_APP_COPY.button : 'Get the app, unlock Pro'}
-          </a>
-        ) : (
-          <>
-            <a href={play} rel="noopener" onClick={() => click('play')} className="btn-primary text-sm !px-5 !py-2.5">Get Incognito Browser for Android</a>
-            <a href={mailto} onClick={emailClick} className="btn-ghost text-sm !px-4 !py-2">Email me the link</a>
-            <button type="button" onClick={copyLink} className="btn-ghost text-sm !px-4 !py-2">{copied ? 'Copied' : 'Copy link'}</button>
-          </>
-        )}
-        {proWebUrl && !inApp && (
-          <a href={proWebUrl} rel="noopener" onClick={() => click('pro-web')} className="text-sm text-pro underline underline-offset-4">Open the Pro web app →</a>
-        )}
-      </div>
-      {mailFallback && (
-        <div className="mt-3 rounded border border-b1 bg-black/30 p-3" role="status" aria-live="polite" data-mail-fallback>
-          <p className="text-xs text-t2 mb-2">No email app opened on this device. Copy the message and send it from your email instead:</p>
-          <textarea readOnly value={mailBody} rows={3} onFocus={(e) => e.currentTarget.select()} aria-label="Message to send yourself" className="w-full text-xs font-mono bg-s0 border border-b1 rounded p-2 text-t2" />
-          <button type="button" onClick={copyMessage} className="btn-ghost mt-2 text-xs !px-3 !py-1.5 !min-h-0">{msgCopied ? 'Copied' : 'Copy message'}</button>
+    <aside
+      className={`relative mt-8 grid gap-6 overflow-hidden rounded-[16px] border border-b1 border-t-2 ${TONE[severity]} bg-s0 p-5 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pro lg:grid-cols-[1fr_200px]`}
+      data-result-cta={severity}
+      data-engine={engine}
+    >
+      <div className="min-w-0">
+        {headline && <p className="text-kicker uppercase text-t3 mb-2 break-words">{headline}</p>}
+        <h3 className="font-mono text-h2 text-t1 mb-2">{inApp ? IN_APP_COPY.headline : copy.headline}</h3>
+        <p className="prose-ib text-[15px] mb-4">{inApp ? IN_APP_COPY.body : copy.body}</p>
+        <ul className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
+          {copy.benefits.map((b) => (
+            <li key={b.key} className="flex gap-2 rounded-lg border border-hair bg-black p-3">
+              <Icon name={b.icon} size={16} className="text-pro" />
+              <span className="text-row text-t2"><span className="font-medium text-t1">{b.title}</span> {b.line}</span>
+            </li>
+          ))}
+        </ul>
+        {/* PR4 (DESIGN-SPEC 6.2): <TierCompare rows={['price', 'coming']} /> renders here when proWebUrl is present. */}
+        <div className="flex flex-wrap items-center gap-3">
+          {inApp || platform === 'android' ? (
+            <a href={play} rel="noopener" onClick={() => click('play')} className="btn-pro text-sm !px-5 !py-2.5">
+              {inApp ? IN_APP_COPY.button : 'Get the app, then upgrade to Pro'}
+            </a>
+          ) : (
+            <>
+              <a href={play} rel="noopener" onClick={() => click('play')} className="btn-primary text-sm !px-5 !py-2.5">Get Incognito Browser for Android</a>
+              <a href={mailto} onClick={emailClick} className="btn-ghost text-sm !px-4 !py-2">Email me the link</a>
+              <button type="button" onClick={copyLink} className="btn-ghost text-sm !px-4 !py-2">{copied ? 'Copied' : 'Copy link'}</button>
+            </>
+          )}
+          {proWebUrl && !inApp && (
+            <a href={proWebUrl} rel="noopener" onClick={() => click('pro-web')} className="text-sm text-pro underline underline-offset-4">
+              {PRO_WEB_GATED ? 'Pro version of this check →' : 'Pro version of this check, free for now →'}
+            </a>
+          )}
         </div>
-      )}
-      {platform !== 'android' && !inApp && (
-        <p className="text-xs text-t3 mt-3">Incognito Browser is an Android app; Pro is unlocked inside it. Send the link to your phone and the check re-runs there.</p>
-      )}
+        {mailFallback && (
+          <div className="mt-3 rounded border border-b1 bg-black/30 p-3" role="status" aria-live="polite" data-mail-fallback>
+            <p className="text-xs text-t2 mb-2">No email app opened on this device. Copy the message and send it from your email instead:</p>
+            <textarea readOnly value={mailBody} rows={3} onFocus={(e) => e.currentTarget.select()} aria-label="Message to send yourself" className="w-full text-xs font-mono bg-s0 border border-b1 rounded p-2 text-t2" />
+            <button type="button" onClick={copyMessage} className="btn-ghost mt-2 text-xs !px-3 !py-1.5 !min-h-0">{msgCopied ? 'Copied' : 'Copy message'}</button>
+          </div>
+        )}
+        <p className="text-meta text-t3 mt-3">{PRO_FOOTNOTE}</p>
+      </div>
+      <div className="hidden lg:block">
+        <PhoneFrame />
+      </div>
     </aside>
   );
 }

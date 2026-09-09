@@ -26,6 +26,16 @@
   --danger: #f87171;  --danger-dim: #f871711f;
   --info: #8c8ca6;    --info-dim: #8c8ca61f;
 
+  /* Amendment A (owner decision 2026-09-09): four family hues. IconTile
+     family prop, one Diagram subject stroke per motif, the free tool-card
+     rail and the tool PageHero figure rule ONLY — see the five surfaces in
+     DESIGN-SPEC-AMENDMENT-COLORS.md. Blue stays Pro-only; status stays
+     status-only; everything else in section 2.1 stands. */
+  --fam-net:      #2dd4bf; --fam-net-dim:      #2dd4bf1f;
+  --fam-trace:    #fb923c; --fam-trace-dim:    #fb923c1f;
+  --fam-identity: #a78bfa; --fam-identity-dim: #a78bfa1f;
+  --fam-cipher:   #f472b6; --fam-cipher-dim:   #f472b61f;
+
   /* brand hero glow, verbatim from incognitobrowser.io */
   --accent-gradient: linear-gradient(-41deg, rgba(61,61,82,0) 10%, rgba(61,61,82,0.75) 40%);
   --scan-grid: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 24px),
@@ -60,6 +70,13 @@
   --color-warn: var(--warn);     --color-warn-dim: var(--warn-dim);
   --color-danger: var(--danger); --color-danger-dim: var(--danger-dim);
   --color-info: var(--info);     --color-info-dim: var(--info-dim);
+
+  /* Amendment A: four family hues (icon tiles, one diagram stroke, free
+     tool-card rail, tool PageHero figure rule — nowhere else). */
+  --color-fam-net: var(--fam-net);           --color-fam-net-dim: var(--fam-net-dim);
+  --color-fam-trace: var(--fam-trace);       --color-fam-trace-dim: var(--fam-trace-dim);
+  --color-fam-identity: var(--fam-identity); --color-fam-identity-dim: var(--fam-identity-dim);
+  --color-fam-cipher: var(--fam-cipher);     --color-fam-cipher-dim: var(--fam-cipher-dim);
   /* keep the two names other files already use */
   --color-background: var(--base);
   --color-foreground: var(--t1);
@@ -179,6 +196,18 @@ details summary::-webkit-details-marker { display: none; }
 .dgm-trace { stroke: var(--pro); stroke-width: 1.5; fill: none; stroke-dasharray: 4 5; stroke-linecap: round; }
 .dgm-label { font-family: var(--font-console); font-size: 9px; letter-spacing: .08em; fill: var(--t3); text-transform: uppercase; }
 .dgm-block { stroke: var(--danger); stroke-width: 2; fill: none; stroke-linecap: round; }
+
+/* Amendment A §"Diagram subject accent": the motif's subject shape (the
+   phone, the tunnel, the URL bar, the keyed box, the photo card) may take
+   its family hue. Named dgm-fam-* (not dgm-<family>) so it never collides
+   with .dgm-trace, which stays the pro-blue dashed "data leaving" line
+   regardless of family. One hue per diagram; combine with .dgm or .dgm-fill
+   (e.g. className="dgm-fill dgm-fam-net") to keep that class's fill/width
+   and override only the stroke colour. */
+.dgm-fam-net      { stroke: var(--fam-net); }
+.dgm-fam-trace    { stroke: var(--fam-trace); }
+.dgm-fam-identity { stroke: var(--fam-identity); }
+.dgm-fam-cipher   { stroke: var(--fam-cipher); }
 @media (prefers-reduced-motion: no-preference) {
   .dgm-trace { animation: dgm-flow 1.6s linear infinite; }
   @keyframes dgm-flow { to { stroke-dashoffset: -18; } }

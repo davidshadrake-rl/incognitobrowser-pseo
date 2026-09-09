@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useReportResult, severityFromScore } from './ResultContext';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import { Icon } from '@/components/ui/Icon';
 
 interface PasswordAnalysis {
@@ -196,14 +197,6 @@ function analyzePassword(password: string): PasswordAnalysis {
   return { score, label, crackTime, entropy: Math.round(entropy * 10) / 10, length, charsets, warnings, suggestions, patterns };
 }
 
-function getScoreColor(score: number): string {
-  if (score <= 20) return '#ef4444';
-  if (score <= 40) return '#f97316';
-  if (score <= 60) return '#eab308';
-  if (score <= 80) return '#22c55e';
-  return '#10b981';
-}
-
 export function PasswordStrengthTool() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -265,43 +258,20 @@ export function PasswordStrengthTool() {
         </div>
       )}
       {analysis && (
+        <ConsoleFrame
+          engine="password-strength"
+          status={statusFromSeverity(severityFromScore(analysis.score))}
+          processing="client"
+          score={analysis.score}
+          gaugeLabel={analysis.label}
+          statTiles={[
+            { label: 'Cracked in', value: analysis.crackTime },
+            { label: 'Strength', value: `${analysis.score}/100` },
+            { label: 'Entropy', value: `${Math.round(analysis.entropy)} bits` },
+            { label: 'Length', value: analysis.length },
+          ]}
+        >
         <div className="space-y-4">
-          {/* Score bar */}
-          <div className="bg-s0 border border-b1 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-lg font-bold" style={{ color: getScoreColor(analysis.score) }}>
-                {analysis.label}
-              </span>
-              <span className="text-2xl font-bold text-white">{analysis.score}/100</span>
-            </div>
-            <div className="h-3 bg-s0 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500"
-                style={{ width: `${analysis.score}%`, backgroundColor: getScoreColor(analysis.score) }}
-              />
-            </div>
-          </div>
-
-          {/* Metrics grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-white">{analysis.length}</div>
-              <div className="text-xs text-t2">Characters</div>
-            </div>
-            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-white">{analysis.entropy}</div>
-              <div className="text-xs text-t2">Entropy (bits)</div>
-            </div>
-            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-white">{analysis.charsets.filter(c => c.found).length}/4</div>
-              <div className="text-xs text-t2">Char Types</div>
-            </div>
-            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
-              <div className="text-lg font-bold text-white leading-tight">{analysis.crackTime}</div>
-              <div className="text-xs text-t2">Crack Time</div>
-            </div>
-          </div>
-
           {/* Character breakdown */}
           <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">Character Breakdown</h3>
@@ -359,6 +329,7 @@ export function PasswordStrengthTool() {
             </div>
           )}
         </div>
+        </ConsoleFrame>
       )}
     </div>
   );

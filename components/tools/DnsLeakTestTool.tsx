@@ -5,6 +5,7 @@ import { maskIp } from '@/lib/privacy-mask';
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { SCAN_API_BASE } from '@/lib/scan-client';
 import { useReportResult, type ToolResult } from '@/components/tools/ResultContext';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import {
   classifyDnsLeak,
   ispRangeOf,
@@ -398,6 +399,18 @@ export function DnsLeakTestTool() {
       )}
 
       {phase === 'done' && classification && result && sev && (
+        <ConsoleFrame
+          engine="dns-leak-test"
+          status={statusFromSeverity(classification.severity)}
+          checks={6}
+          processing="server"
+          statTiles={[
+            { label: 'Verdict', value: verdictTitle(classification) },
+            { label: 'Public IP', value: maskIp(result.publicIp) },
+            { label: 'Resolvers seen', value: result.resolvers.length },
+            { label: 'VPN', value: testedWithVpnOn ? 'on' : 'off' },
+          ]}
+        >
         <>
           {/* Verdict */}
           <div className={`bg-s0 border ${sev.border} rounded-lg p-6`}>
@@ -484,6 +497,7 @@ export function DnsLeakTestTool() {
             </ul>
           </div>
         </>
+        </ConsoleFrame>
       )}
     </div>
   );

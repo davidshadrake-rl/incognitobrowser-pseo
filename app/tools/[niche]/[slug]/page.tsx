@@ -8,6 +8,7 @@ import { generateMetadata as genMeta, generateWebApplicationSchema, generateBrea
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ToolPageClient } from './client';
+import { ENGINE_DIAGRAM, familyOfEngine } from '@/lib/visuals';
 import type { Metadata } from 'next';
 
 interface ToolData {
@@ -17,6 +18,7 @@ interface ToolData {
   metaDescription: string;
   toolType: string;
   description: string;
+  toolEngine?: string;
   inputs: Array<{
     id: string;
     label: string;
@@ -150,7 +152,16 @@ export default async function ToolDetailPage({ params }: PageProps) {
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       <JsonLd data={appSchema} />
-      <ToolPageClient data={data} nicheName={nicheName} nextSteps={nextStepsFor(niche, nicheName, data.educational?.tips)} proWebUrl={proWebUrlFor(niche)} />
+      <ToolPageClient
+        data={data}
+        nicheName={nicheName}
+        niche={niche}
+        nextSteps={nextStepsFor(niche, nicheName, data.educational?.tips)}
+        proWebUrl={proWebUrlFor(niche)}
+        diagram={data.toolEngine ? (ENGINE_DIAGRAM[data.toolEngine] ?? 'tracking') : 'tracking'}
+        family={data.toolEngine ? familyOfEngine(data.toolEngine) : 'trace'}
+        tier={tierOfEngine(data.toolEngine)}
+      />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `${freeSitePrefix()}/topics/${niche}` }}

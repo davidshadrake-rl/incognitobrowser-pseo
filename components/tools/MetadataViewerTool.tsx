@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useReportResult } from './ResultContext';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
 interface ExifField {
   tag: string;
@@ -402,6 +403,25 @@ export function MetadataViewerTool() {
       </div>
 
       {scanned && (
+        <ConsoleFrame
+          engine="metadata-viewer"
+          status={statusFromSeverity(
+            fields.some((x) => /gps|latitude|longitude/i.test(x.tag)) || highRisk.length > 0
+              ? 'red'
+              : Math.max(0, fields.length - 4) > 0
+                ? 'amber'
+                : 'green'
+          )}
+          checks={fields.length}
+          processing="client"
+          tally={{ fails: highRisk.length, warns: medRisk.length, passes: Math.max(0, fields.length - highRisk.length - medRisk.length) }}
+          statTiles={[
+            { label: 'High risk', value: highRisk.length },
+            { label: 'Medium risk', value: medRisk.length },
+            { label: 'Total fields', value: fields.length },
+            { label: 'GPS', value: hasGps ? 'yes' : 'no' },
+          ]}
+        >
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {imagePreview && (
@@ -411,28 +431,13 @@ export function MetadataViewerTool() {
                 <div className="mt-2 text-xs text-t3">Format: <span className="text-white uppercase">{format}</span></div>
               </div>
             )}
-            <div className="bg-s0 border border-b1 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-white mb-3">Privacy Risk Summary</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-t2">High Risk Fields</span>
-                  <span className={`text-sm font-bold ${highRisk.length > 0 ? 'text-danger' : 'text-ok'}`}>{highRisk.length}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-t2">Medium Risk Fields</span>
-                  <span className={`text-sm font-bold ${medRisk.length > 0 ? 'text-warn' : 'text-ok'}`}>{medRisk.length}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-t2">Total Fields</span>
-                  <span className="text-sm font-bold text-white">{fields.length}</span>
-                </div>
-              </div>
-              {highRisk.length > 0 && (
-                <div className="mt-3 p-3 bg-danger-dim rounded text-xs text-danger">
+            {highRisk.length > 0 && (
+              <div className="bg-s0 border border-b1 rounded-lg p-4">
+                <div className="p-3 bg-danger-dim rounded text-xs text-danger">
                   This image contains sensitive metadata that could reveal your identity or location.
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Action bar */}
@@ -468,6 +473,7 @@ export function MetadataViewerTool() {
             ))}
           </div>
         </>
+        </ConsoleFrame>
       )}
     </div>
   );

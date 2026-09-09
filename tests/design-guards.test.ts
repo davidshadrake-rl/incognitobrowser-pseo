@@ -176,3 +176,40 @@ describe('(f) gate day: PRO_WEB_GATED=true removes every "free for now"', () => 
     expect(src.toLowerCase()).not.toContain('free for now');
   });
 });
+
+describe('(g) Amendment A: the four family hues stay confined to their five surfaces', () => {
+  it('every ENGINE_DIAGRAM value has a DIAGRAM_FAMILY entry', async () => {
+    const { ENGINE_DIAGRAM, DIAGRAM_FAMILY } = await import('../lib/visuals');
+    for (const d of new Set(Object.values(ENGINE_DIAGRAM))) {
+      expect(DIAGRAM_FAMILY[d], `DIAGRAM_FAMILY[${d}]`).toBeTruthy();
+    }
+  });
+
+  it('"fam-" appears only in Icon.tsx, Diagram.tsx, ToolCard.tsx, PageHero.tsx and globals.css', () => {
+    // ToolCard.tsx does not exist until PR2 (DESIGN-SPEC 5.3); it stays on
+    // the allow-list so this guard does not need editing when it lands.
+    // DESIGN-SPEC 5.3 places it at components/ToolCard.tsx (not components/ui/) —
+    // corrected here to match where it actually landed.
+    const ALLOWED = new Set([
+      'app/globals.css',
+      'components/ui/Icon.tsx',
+      'components/ui/Diagram.tsx',
+      'components/ToolCard.tsx',
+      'components/ui/PageHero.tsx',
+    ]);
+    const files = SOURCE_DIRS.flatMap((d) => walk(d, ['.tsx', '.ts', '.css']));
+    const offenders = files.filter((f) => /fam-/.test(read(f)) && !ALLOWED.has(f));
+    expect(offenders).toEqual([]);
+  });
+
+  it('the four family hex values appear only in globals.css', () => {
+    const HEXES = ['#2dd4bf', '#fb923c', '#a78bfa', '#f472b6'];
+    const files = SOURCE_DIRS.flatMap((d) => walk(d, ['.tsx', '.ts', '.css'])).filter((f) => f !== 'app/globals.css');
+    const offenders: string[] = [];
+    for (const f of files) {
+      const src = read(f);
+      for (const hex of HEXES) if (src.includes(hex)) offenders.push(`${f}: ${hex}`);
+    }
+    expect(offenders).toEqual([]);
+  });
+});

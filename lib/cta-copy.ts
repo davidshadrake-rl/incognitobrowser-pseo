@@ -11,14 +11,16 @@
  * Everything here is data; components only compose it.
  */
 import type { Severity } from '@/components/tools/ResultContext';
+import type { IconName } from '@/components/ui/Icon';
 
 export type ProBenefit = 'vpn' | 'adblock' | 'tools' | 'more';
 
-export const PRO_BENEFITS: Record<ProBenefit, { title: string; line: string }> = {
-  vpn: { title: 'Built-in VPN', line: 'hides your real IP and location from every site and your ISP.' },
-  adblock: { title: 'Pro ad blocking', line: 'stops ads and the trackers behind them before they load.' },
-  tools: { title: 'Every tool built in', line: 'the checks on this site run inside the browser, on every page you visit.' },
-  more: { title: 'And more', line: 'one subscription, every Pro protection, no accounts on our side.' },
+/** Icon per benefit tile (DESIGN-SPEC 5.4, ResultCta). */
+export const PRO_BENEFITS: Record<ProBenefit, { title: string; line: string; icon: IconName }> = {
+  vpn: { title: 'Built-in VPN', line: 'hides your real IP and location from every site and your ISP.', icon: 'shield' },
+  adblock: { title: 'Pro ad blocking', line: 'stops ads and the trackers behind them before they load.', icon: 'block' },
+  tools: { title: 'Every tool built in', line: 'the checks on this site run inside the browser, on every page you visit.', icon: 'finger' },
+  more: { title: 'And more', line: 'one subscription, every Pro protection, no accounts on our side.', icon: 'star' },
 };
 
 interface SeverityCopy { headline: string; body: string }
@@ -195,7 +197,7 @@ export const NICHE_HOOK: Record<string, string> = {
 export interface ComposedCta {
   headline: string;
   body: string;
-  benefits: Array<{ key: ProBenefit; title: string; line: string }>;
+  benefits: Array<{ key: ProBenefit; title: string; line: string; icon: IconName }>;
 }
 
 /** Compose the CTA copy for an engine, niche and severity. Pure. */

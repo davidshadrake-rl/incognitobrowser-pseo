@@ -13,6 +13,8 @@ import Link from 'next/link';
 import { LETTERS, filterEntries, groupByLetter, letterOf, type CatalogueEntry } from '@/lib/catalogue';
 import { GradeBadge } from '@/components/GradeBadge';
 import { Badge } from '@/components/ui/Badge';
+import { ToolCard } from '@/components/ToolCard';
+import { ENGINE_ICON } from '@/lib/visuals';
 
 export interface CatalogueTopic {
   label: string;
@@ -120,7 +122,7 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
           <p className="text-t3 py-8">No {noun} match “{q}”. Try a shorter word, a topic name, or clear the search.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-results={matches!.length}>
-            {matches!.map((e) => <Entry key={e.href} e={e} />)}
+            {matches!.map((e) => <Entry key={e.href} e={e} noun={noun} />)}
           </div>
         )
       )}
@@ -137,7 +139,7 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
           <section key={g.letter} id={`letter-${g.letter === '#' ? 'num' : g.letter}`} className="mb-8 scroll-mt-24">
             <h3 className="text-2xl font-bold text-white mb-4 sticky top-16 bg-black py-2 z-10">{g.letter === '#' ? '0–9' : g.letter}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {g.entries.map((e) => <Entry key={e.href} e={e} />)}
+              {g.entries.map((e) => <Entry key={e.href} e={e} noun={noun} />)}
             </div>
           </section>
         ))}
@@ -147,7 +149,36 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
   );
 }
 
-function Entry({ e }: { e: CatalogueEntry }) {
+/**
+ * Amendment A / DESIGN-SPEC 5.3: on the tools catalogue, entries render as a
+ * compact 32px ToolCard — the engine comes from the `keywords` field every
+ * tools-page entry already carries (`${toolEngine} ${niche} ...`), matched
+ * against ENGINE_ICON's own key list. Every other catalogue (guides,
+ * checklists, comparisons, templates, calculators, glossary, site) keeps the
+ * plain entry card below — those have no engine to key a tool card off.
+ */
+function engineFromKeywords(keywords?: string): string | undefined {
+  if (!keywords) return undefined;
+  return keywords.split(/\s+/).find((w) => w in ENGINE_ICON);
+}
+
+function Entry({ e, noun }: { e: CatalogueEntry; noun: string }) {
+  const engine = noun === 'tools' ? engineFromKeywords(e.keywords) : undefined;
+  if (engine) {
+    return (
+      <div className="catalogue-entry" data-letter={letterOf(e.title)}>
+        <ToolCard
+          engine={engine}
+          title={e.title}
+          blurb={e.description ?? ''}
+          href={e.href}
+          processing={e.keywords?.includes('server-assisted') ? 'server' : undefined}
+          tileSize={32}
+          compact
+        />
+      </div>
+    );
+  }
   return (
     <Link href={e.href} className="block border border-b1 rounded-lg p-4 bg-s0 hover:border-b2 transition-all catalogue-entry" data-letter={letterOf(e.title)}>
       <div className="flex items-start justify-between gap-3">

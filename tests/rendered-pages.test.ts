@@ -589,7 +589,14 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
   });
   it('the free tools catalogue points at Incognito Pro for the Pro-only tools and features What\'s My IP', async () => {
     const r = await fetchText('/tools/');
-    expect(r.body).toMatch(/href="https:\/\/[^"]+\/tools"[^>]*>Incognito Pro/);
+    // DESIGN-SPEC 5.3 (PR2): the single "Incognito Pro →" lede link was
+    // replaced by the Pro band, which hand-lists the four Pro tools with
+    // absolute PRO_BASE_URL hrefs (never through the link generators).
+    // PR4's guard forbids the old "Incognito Pro →" string outright, so this
+    // now asserts the band and its four cross-deployment tool links.
+    expect(r.body).toMatch(/data-pro-band/);
+    const proLinks = new Set((r.body.match(/href="https:\/\/[^"]+\/tools\/[a-z0-9-]+\/[a-z0-9-]+"/g) || []));
+    expect(proLinks.size).toBeGreaterThanOrEqual(4);
     expect(r.body).toMatch(/WebRTC Leak Test/);
   });
   it('the header serves phones: a no-JS menu and an always-visible CTA', async () => {

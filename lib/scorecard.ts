@@ -16,13 +16,72 @@ export interface ScorecardSpec {
   url: string;
   /** Colour of the figure */
   tone: 'red' | 'amber' | 'green' | 'info';
+  /**
+   * 0-100. When present, draws the same gauge arc as the page's <Gauge>
+   * (DESIGN-SPEC 4.2: "the shared PNG matches the page") in the card's top
+   * right. Optional and additive: omitting it reproduces the pre-existing
+   * layout exactly (no engine passes it yet — see openQuestions).
+   */
+  score?: number;
 }
 
 export const SCORECARD_W = 1200;
 export const SCORECARD_H = 630;
 
-const TONE_COLOR: Record<ScorecardSpec['tone'], string> = { red: '#f87171', amber: '#fbbf24', green: '#4ade80', info: '#e5e7eb' };
+// DESIGN-SPEC 2.1 tokens, as literal hex — canvas cannot read CSS custom
+// properties, so these are the --base/--s0/--s1/--t1/--t2/--t3/--b1/--ok/
+// --warn/--danger/--info values from app/globals.css, copied, not reinvented.
+const TOKEN = {
+  base: '#000000', s0: '#191b1c', s1: '#2b2b36',
+  t1: '#ffffff', t2: '#b8b8d4', t3: '#8c8ca6',
+  b1: '#ffffff33',
+  ok: '#4ade80', warn: '#facc15', danger: '#f87171', info: '#8c8ca6',
+} as const;
+
+const TONE_COLOR: Record<ScorecardSpec['tone'], string> = { red: TOKEN.danger, amber: TOKEN.warn, green: TOKEN.ok, info: TOKEN.info };
 const FONT = 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace';
+
+// Same geometry family as components/ui/Gauge.tsx (0-100 score, semicircle,
+// track then value arc), redrawn with canvas arc() instead of an SVG path
+// since Canvas 2D has no elliptical-arc primitive to match Gauge's `A70 70`
+// command directly. Canvas angles increase clockwise from 3 o'clock; a
+// semicircle open at the bottom runs from PI (9 o'clock) to 2*PI (3 o'clock)
+// through -PI/2 (12 o'clock).
+const GAUGE_R = 64;
+const GAUGE_STROKE = 14;
+/** Reserved width on the right so a long title/figure (through fitText) never runs under the gauge. */
+const GAUGE_RESERVE = 210;
+
+type FitText = (text: string, weight: number, startSize: number, minSize: number, availW: number) => { text: string; size: number };
+
+function drawGaugeArc(ctx: CanvasRenderingContext2D, cx: number, cy: number, score: number, color: string, fit: FitText): void {
+  const clamped = Math.max(0, Math.min(100, Math.round(score)));
+  ctx.save();
+  ctx.lineCap = 'round';
+  ctx.lineWidth = GAUGE_STROKE;
+  ctx.strokeStyle = TOKEN.s1;
+  ctx.beginPath();
+  ctx.arc(cx, cy, GAUGE_R, Math.PI, 2 * Math.PI, false);
+  ctx.stroke();
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  ctx.arc(cx, cy, GAUGE_R, Math.PI, Math.PI + Math.PI * (clamped / 100), false);
+  ctx.stroke();
+  ctx.restore();
+
+  // score + label, centred in the arc — through fitText like every other
+  // data-driven draw on this card, even though a 0-100 integer rarely needs to shrink.
+  ctx.textAlign = 'center';
+  const value = fit(String(clamped), 800, 40, 22, GAUGE_R * 1.5);
+  ctx.fillStyle = TOKEN.t1;
+  ctx.font = `800 ${value.size}px ${FONT}`;
+  ctx.fillText(value.text, cx, cy - 26);
+  const label = fit('SCORE', 400, 16, 10, GAUGE_R * 1.5);
+  ctx.fillStyle = TOKEN.t3;
+  ctx.font = `400 ${label.size}px ${FONT}`;
+  ctx.fillText(label.text, cx, cy + 16);
+  ctx.textAlign = 'left';
+}
 
 /** Greedy word wrap that respects the canvas measure. */
 export function wrapLines(ctx: { measureText(s: string): { width: number } }, text: string, maxWidth: number, maxLines = 3): string[] {
@@ -55,14 +114,14 @@ export function wrapLines(ctx: { measureText(s: string): { width: number } }, te
 
 export function drawScorecard(ctx: CanvasRenderingContext2D, spec: ScorecardSpec): void {
   const W = SCORECARD_W, H = SCORECARD_H;
-  ctx.fillStyle = '#0a0a0a';
+  ctx.fillStyle = TOKEN.s0; // DESIGN-SPEC 2.3 codemod: #0a0a0a -> s0
   ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+  ctx.strokeStyle = TOKEN.b1; // "brand divider; card borders"
   ctx.lineWidth = 2;
   ctx.strokeRect(24, 24, W - 48, H - 48);
 
   // brand
-  ctx.fillStyle = '#B8B8D4';
+  ctx.fillStyle = TOKEN.t2;
   ctx.font = `600 22px ${FONT}`;
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left'; // never inherit a stale 'right' from a previous draw
@@ -91,27 +150,35 @@ export function drawScorecard(ctx: CanvasRenderingContext2D, spec: ScorecardSpec
     return { text: out, size };
   };
 
+  // DESIGN-SPEC 4.2: when a score is given, a gauge arc (same shape as the
+  // page's <Gauge>) sits top-right. Title and figure reserve that width
+  // through fitText's availW so a long value can never run under it.
+  const hasGauge = typeof spec.score === 'number';
+  const rightReserve = hasGauge ? GAUGE_RESERVE : 0;
+
   // title — always ONE line (shrunk to fit). A two-line title pushed the
   // whole stack down 62px: with a two-line headline the stat labels then
   // ended at y=558, over the footer at y=546 — measured live on 19 report
   // cards with long domains (audit 2026-09-08). One line keeps the stack at
   // most 496px tall by construction, 50px clear of the footer.
-  const ttl = fitText(spec.title, 700, 52, 34, W - 128);
-  ctx.fillStyle = '#ffffff';
+  const ttl = fitText(spec.title, 700, 52, 34, W - 128 - rightReserve);
+  ctx.fillStyle = TOKEN.t1;
   ctx.font = `700 ${ttl.size}px ${FONT}`;
   ctx.fillText(ttl.text, 64, 110);
   let y = 110 + 62 + 18;
 
+  if (hasGauge) drawGaugeArc(ctx, W - 160, 130, spec.score as number, TONE_COLOR[spec.tone], fitText);
+
   // figure — the visitor's own number. Drawn huge, so it is the first thing
   // to run off the card when an engine hands over a long string.
-  const fig = fitText(spec.figure, 800, 120, 48, W - 128);
+  const fig = fitText(spec.figure, 800, 120, 48, W - 128 - rightReserve);
   ctx.fillStyle = TONE_COLOR[spec.tone];
   ctx.font = `800 ${fig.size}px ${FONT}`;
   ctx.fillText(fig.text, 64, y);
   y += 140;
 
   // headline
-  ctx.fillStyle = '#e5e7eb';
+  ctx.fillStyle = TOKEN.t2;
   ctx.font = `500 30px ${FONT}`;
   const head = wrapLines(ctx, spec.headline, W - 128, 2);
   head.forEach((l, i) => ctx.fillText(l, 64, y + i * 40));
@@ -126,11 +193,11 @@ export function drawScorecard(ctx: CanvasRenderingContext2D, spec: ScorecardSpec
     spec.stats.slice(0, 4).forEach((s, i) => {
       const x = 64 + i * colW;
       const value = fitText(s.value, 700, 34, 18, availW);
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = TOKEN.t1;
       ctx.font = `700 ${value.size}px ${FONT}`;
       ctx.fillText(value.text, x, y);
       const label = fitText(s.label.toUpperCase(), 400, 20, 12, availW);
-      ctx.fillStyle = '#B8B8D4';
+      ctx.fillStyle = TOKEN.t2;
       ctx.font = `400 ${label.size}px ${FONT}`;
       ctx.fillText(label.text, x, y + 42);
     });
@@ -145,7 +212,7 @@ export function drawScorecard(ctx: CanvasRenderingContext2D, spec: ScorecardSpec
   const labelW = ctx.measureText(FOOTER_LABEL).width;
   const urlAvailW = W - 128 - labelW - 24;
   const url = fitText(spec.url.replace(/^https?:\/\//, ''), 400, 22, 14, urlAvailW);
-  ctx.fillStyle = '#B8B8D4';
+  ctx.fillStyle = TOKEN.t2;
   ctx.font = `400 ${url.size}px ${FONT}`;
   ctx.fillText(url.text, 64, H - 84);
   ctx.font = `400 22px ${FONT}`;

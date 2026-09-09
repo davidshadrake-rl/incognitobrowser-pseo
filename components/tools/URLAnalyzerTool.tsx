@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { scanUrl } from '@/lib/scan-client';
 import { useReportResult, severityFromScore } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
 interface URLAnalysis {
   url: string;
@@ -318,26 +319,22 @@ export function URLAnalyzerTool() {
       </div>
 
       {analysis && (
+        <ConsoleFrame
+          engine="url-analyzer"
+          status={statusFromSeverity(
+            analysis.risks.filter((r) => r.severity === 'high').length > 0 ? 'red' : severityFromScore(analysis.score)
+          )}
+          checks={analysis.details.length}
+          processing="client"
+          score={analysis.score}
+          gaugeLabel="safety"
+          tally={{
+            fails: analysis.risks.filter((r) => r.severity === 'high').length,
+            warns: analysis.risks.filter((r) => r.severity === 'medium').length,
+            passes: analysis.risks.filter((r) => r.severity === 'low').length,
+          }}
+        >
         <div className="space-y-4">
-          {/* Score */}
-          <div className="bg-s0 border border-b1 rounded-lg p-6">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-lg font-bold text-white">Safety Score</span>
-              <span className="text-3xl font-bold" style={{
-                color: analysis.score >= 70 ? '#22c55e' : analysis.score >= 40 ? '#eab308' : '#ef4444'
-              }}>{analysis.score}/100</span>
-            </div>
-            <div className="h-3 bg-s0 rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-300"
-                style={{
-                  width: `${analysis.score}%`,
-                  backgroundColor: analysis.score >= 70 ? '#22c55e' : analysis.score >= 40 ? '#eab308' : '#ef4444',
-                }}
-              />
-            </div>
-          </div>
-
           {/* Visual URL breakdown */}
           <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">URL Breakdown</h3>
@@ -428,6 +425,7 @@ export function URLAnalyzerTool() {
             </div>
           </div>
         </div>
+        </ConsoleFrame>
       )}
     </div>
   );

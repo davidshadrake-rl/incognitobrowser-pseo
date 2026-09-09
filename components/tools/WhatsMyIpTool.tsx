@@ -5,6 +5,7 @@ import { maskIp } from '@/lib/privacy-mask';
 import { useEffect, useState } from 'react';
 import { useReportResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
 interface IpInfo {
   ipv4?: string;
@@ -216,7 +217,23 @@ export function WhatsMyIpTool() {
         <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger">{error}</div>
       )}
 
-      {!loading && !error && ipInfo && (
+      {!loading && !error && ipInfo && (() => {
+        const seen = [ipInfo.ipv4, ipInfo.ipv6].filter(Boolean) as string[];
+        const leaked = (webrtc?.publicIPs || []).filter((ip) => !seen.includes(ip));
+        const where = [ipInfo.city, ipInfo.country].filter(Boolean).join(', ');
+        return (
+        <ConsoleFrame
+          engine="whats-my-ip"
+          status={statusFromSeverity(leaked.length ? 'red' : 'info')}
+          checks={2}
+          processing="server"
+          statTiles={[
+            { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Exposed' },
+            { label: 'IP', value: maskIp(ipInfo.ipv4 || ipInfo.ipv6) },
+            { label: 'Location', value: where || 'unknown' },
+            { label: 'WebRTC IPs', value: webrtc?.publicIPs.length ?? 0 },
+          ]}
+        >
         <>
           {/* Hero — your public IP */}
           <div className="bg-s0 border border-b1 rounded-lg p-6">
@@ -347,7 +364,9 @@ export function WhatsMyIpTool() {
             </p>
           </div>
         </>
-      )}
+        </ConsoleFrame>
+        );
+      })()}
     </div>
   );
 }

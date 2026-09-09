@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { Badge } from './ui/Badge';
 import { Icon } from './ui/Icon';
+import { PageHero } from './ui/PageHero';
 import { ArticleByline } from './ArticleByline';
 
 interface ToolInput {
@@ -55,19 +56,25 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
         { label: data.title },
       ]} />
 
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-3">{data.title}</h1>
-        <ArticleByline
-          author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-          editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
-          reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-        />
-        <div className="flex flex-wrap items-center gap-1.5 mb-4">
-          <Badge label={data.toolType} />
-          <Badge variant="free" />
-        </div>
-        <p className="text-t2">{data.description}</p>
-      </header>
+      <PageHero
+        icon="hat"
+        kicker={`${nicheName} · ${data.toolType}`}
+        title={data.title}
+        description={data.description}
+        badges={
+          <>
+            <Badge label={data.toolType} />
+            <Badge variant="free" />
+          </>
+        }
+        action={
+          <ArticleByline
+            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
+            editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
+            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
+          />
+        }
+      />
 
       <form onSubmit={handleSubmit} className="bg-s0 border border-b1 rounded-lg p-6 mb-8">
         <div className="space-y-4">
@@ -130,40 +137,40 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
 
       {submitted && <div className="mb-8">{renderTool(inputValues)}</div>}
 
-      <div className="space-y-6">
+      <div>
         {data.educational.howItWorks && (
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-3">How This Tool Works</h2>
-            <p className="text-t2">{data.educational.howItWorks}</p>
-          </section>
+          <details className="panel">
+            <summary>
+              <span className="folio">01</span> How it works <Icon name="chevron" size={16} />
+            </summary>
+            <div className="panel-body">
+              <p className="prose-ib">{data.educational.howItWorks.replace(/^This tool /, '').replace(/^\w/, (c) => c.toUpperCase())}</p>
+            </div>
+          </details>
         )}
 
-        {data.educational.tips && data.educational.tips.length > 0 && (
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-3">Tips</h2>
-            <ul className="space-y-2">
-              {data.educational.tips.map((tip, i) => (
-                <li key={i} className="flex items-start text-sm text-t2">
-                  <Icon name="check" size={16} className="text-ok mr-2 mt-0.5" />
-                  {tip}
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {data.educational.commonMistakes && data.educational.commonMistakes.length > 0 && (
-          <section>
-            <h2 className="text-xl font-semibold text-white mb-3">Common Mistakes to Avoid</h2>
-            <ul className="space-y-2">
-              {data.educational.commonMistakes.map((mistake, i) => (
-                <li key={i} className="flex items-start text-sm text-t2">
-                  <Icon name="x" size={16} className="text-danger mr-2 mt-0.5" />
-                  {mistake}
-                </li>
-              ))}
-            </ul>
-          </section>
+        {((data.educational.tips && data.educational.tips.length > 0) || (data.educational.commonMistakes && data.educational.commonMistakes.length > 0)) && (
+          <details className="panel">
+            <summary>
+              <span className="folio">02</span> Notes ({(data.educational.tips?.length ?? 0) + (data.educational.commonMistakes?.length ?? 0)}) <Icon name="chevron" size={16} />
+            </summary>
+            <div className="panel-body">
+              <ul className="space-y-2">
+                {data.educational.tips?.map((tip, i) => (
+                  <li key={`tip-${i}`} className="flex items-start gap-2 prose-ib text-row">
+                    <Icon name="check" size={16} className="text-ok mt-0.5 shrink-0" />
+                    {tip}
+                  </li>
+                ))}
+                {data.educational.commonMistakes?.map((mistake, i) => (
+                  <li key={`mistake-${i}`} className="flex items-start gap-2 prose-ib text-row">
+                    <Icon name="x" size={16} className="text-danger mt-0.5 shrink-0" />
+                    {mistake}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </details>
         )}
       </div>
     </article>

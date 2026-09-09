@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react';
+import type { Family } from '@/lib/visuals';
 
 /**
  * Inline SVG glyphs (DESIGN-SPEC 3.1). One style: 24 grid, 1.75 stroke, round
@@ -68,10 +69,36 @@ export function Icon({ name, size = 24, className = '', title, ...rest }: { name
   );
 }
 
-/** Tinted square behind an icon. `tone="pro"` is the only coloured tile. */
-export function IconTile({ name, size = 40, tone = 'free', className = '' }: { name: IconName; size?: 40 | 32 | 56; tone?: 'free' | 'pro'; className?: string }) {
+// Amendment A: family tile looks. Literal class strings (not template-
+// interpolated) so Tailwind's content scanner can find them.
+const FAMILY_LOOK: Record<Family, string> = {
+  net: 'bg-fam-net-dim border-fam-net/40 text-fam-net',
+  trace: 'bg-fam-trace-dim border-fam-trace/40 text-fam-trace',
+  identity: 'bg-fam-identity-dim border-fam-identity/40 text-fam-identity',
+  cipher: 'bg-fam-cipher-dim border-fam-cipher/40 text-fam-cipher',
+};
+
+/**
+ * Tinted square behind an icon. `tone="pro"` is the only coloured tile
+ * outside the amendment's four surfaces; when both are given, `tone="pro"`
+ * wins (Pro tiles always stay blue) and `family` is ignored.
+ */
+export function IconTile({
+  name,
+  size = 40,
+  tone = 'free',
+  family,
+  className = '',
+}: {
+  name: IconName;
+  size?: 40 | 32 | 56;
+  tone?: 'free' | 'pro';
+  /** Amendment A: free-tile hue by content family. Ignored when tone="pro". */
+  family?: Family;
+  className?: string;
+}) {
   const dims = size === 56 ? 'w-14 h-14 rounded-[14px]' : size === 32 ? 'w-8 h-8 rounded-lg' : 'w-10 h-10 rounded-[10px]';
-  const look = tone === 'pro' ? 'bg-pro-dim border-pro/40 text-pro' : 'bg-s1 border-b1 text-t2';
+  const look = tone === 'pro' ? 'bg-pro-dim border-pro/40 text-pro' : family ? FAMILY_LOOK[family] : 'bg-s1 border-b1 text-t2';
   return (
     <span className={`inline-flex items-center justify-center border ${dims} ${look} ${className}`}>
       <Icon name={name} size={size === 56 ? 28 : size === 32 ? 16 : 20} />
