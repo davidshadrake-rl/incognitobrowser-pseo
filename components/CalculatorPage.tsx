@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { ArticleByline } from './ArticleByline';
 import { CheckYoursNow } from './CheckYoursNow';
+import { Icon } from './ui/Icon';
 import type { ProofRoute } from '@/lib/proof-route';
 
 interface CalcInput {
@@ -192,16 +193,19 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
       </div>
 
       {data.educational.tips && data.educational.tips.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-xl font-semibold text-white mb-4">Tips for Improvement</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <details className="panel mt-10">
+          <summary>
+            Tips for Improvement
+            <Icon name="chevron" size={16} />
+          </summary>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-5">
             {data.educational.tips.map((tip, i) => (
               <div key={i} className="bg-ok-dim border border-ok/30 rounded-lg p-4 text-sm text-ok">
                 {tip}
               </div>
             ))}
           </div>
-        </section>
+        </details>
       )}
 
       {data.educational.methodology && (
