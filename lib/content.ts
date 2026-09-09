@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { engineVisibleInThisTier, IS_PRO_DEPLOYMENT, FREE_BASE_URL } from './tiers';
+import { getRelatedNiches } from './taxonomy';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 
@@ -122,35 +123,82 @@ export function freeSitePrefix(): string {
   return IS_PRO_DEPLOYMENT ? FREE_BASE_URL : '';
 }
 
+const CROSS_LINK_TYPES = ['guides', 'checklists', 'comparisons', 'tools', 'templates', 'calculators'];
+const CROSS_LINK_TYPE_LABELS: Record<string, string> = {
+  guides: 'guide', checklists: 'checklist', comparisons: 'comparison',
+  tools: 'tool', templates: 'template', calculators: 'calculator',
+};
+
+/**
+ * Related links for a content page: at least `limit` of them, spread across
+ * content types AND across niches.
+ *
+ * Two properties matter, and the previous implementation had neither:
+ *   - Breadth of type. It drained one content type before starting the next,
+ *     so a niche with many guides returned guides only.
+ *     Now types are drained round-robin, one item per pass.
+ *   - Breadth of niche. Every link came from the page's own niche, which is
+ *     not a cross-niche block at all. Now half the block comes from this
+ *     niche and the rest from `relatedNiches`, backfilling from this niche
+ *     only when the related ones cannot fill it.
+ */
 export function getCrossNicheLinks(
   niche: string,
   currentType: string,
   currentSlug: string,
-  limit = 6
+  limit = 12,
+  /**
+   * Fraction of the block drawn from the page's own niche. Topic hubs pass 0:
+   * they already list their whole niche above, so same-niche links there are
+   * pure duplication and the block is only useful if it reaches outward.
+   */
+  ownNicheShare = 0.5
 ): Array<{ title: string; url: string; type: string }> {
-  const contentTypes = ['guides', 'checklists', 'comparisons', 'tools', 'templates', 'calculators'];
-  const typeLabels: Record<string, string> = {
-    guides: 'guide', checklists: 'checklist', comparisons: 'comparison',
-    tools: 'tool', templates: 'template', calculators: 'calculator',
-  };
-  const links: Array<{ title: string; url: string; type: string }> = [];
   // Content pages (guides, checklists, …) are built only on the free site; the
   // Pro deployment links to them absolutely. Tool links are always same-site
   // and only to tools this tier actually builds.
   const contentPrefix = freeSitePrefix();
+  const links: Array<{ title: string; url: string; type: string }> = [];
+  const seen = new Set<string>();
 
-  for (const ct of contentTypes) {
-    if (links.length >= limit) break;
-    const files = getContentFiles(ct, niche);
-    for (const slug of files) {
-      if (links.length >= limit) break;
-      if (ct === currentType && slug === currentSlug) continue;
-      if (ct === 'tools' && !isToolListed(niche, slug)) continue;
-      const title = getContentItemTitle(ct, niche, slug);
-      const prefix = ct === 'tools' ? '' : contentPrefix;
-      links.push({ title, url: `${prefix}/${ct}/${niche}/${slug}`, type: typeLabels[ct] });
+  const take = (ct: string, n: string, slug: string): boolean => {
+    if (links.length >= limit) return false;
+    if (ct === currentType && slug === currentSlug && n === niche) return false;
+    if (ct === 'tools' && !isToolListed(n, slug)) return false;
+    const prefix = ct === 'tools' ? '' : contentPrefix;
+    const url = `${prefix}/${ct}/${n}/${slug}`;
+    if (seen.has(url)) return false;
+    seen.add(url);
+    links.push({ title: getContentItemTitle(ct, n, slug), url, type: CROSS_LINK_TYPE_LABELS[ct] });
+    return true;
+  };
+
+  /** Round-robin across content types within one niche, up to `cap` links. */
+  const drain = (n: string, cap: number): void => {
+    const queues = CROSS_LINK_TYPES.map(ct => ({ ct, files: getContentFiles(ct, n), i: 0 }));
+    let added = 0;
+    for (let progressed = true; progressed && added < cap && links.length < limit; ) {
+      progressed = false;
+      for (const q of queues) {
+        if (added >= cap || links.length >= limit) break;
+        while (q.i < q.files.length) {
+          if (take(q.ct, n, q.files[q.i++])) { added++; progressed = true; break; }
+        }
+      }
     }
+  };
+
+  drain(niche, Math.ceil(limit * ownNicheShare));
+  const related = getRelatedNiches(niche);
+  // Spread whatever the own-niche pass left across the related niches, so a
+  // hub asking for cross-niche links only still fills its block.
+  const perRelated = related.length ? Math.ceil((limit - links.length) / related.length) : 0;
+  for (const r of related) {
+    if (links.length >= limit) break;
+    drain(r.id, perRelated);
   }
+  if (links.length < limit) drain(niche, limit);
+
   return links;
 }
 

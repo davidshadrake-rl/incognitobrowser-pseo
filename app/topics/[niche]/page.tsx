@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import Link from 'next/link';
 import { getAllNiches, getNicheBySlug, getRelatedNiches } from '@/lib/taxonomy';
-import { getContentFiles, getContentItemTitle, isToolListed } from '@/lib/content';
+import { getContentFiles, getContentItemTitle, isToolListed, getCrossNicheLinks } from '@/lib/content';
+import { RelatedContent } from '@/components/seo/RelatedContent';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { IconTile } from '@/components/ui/Icon';
@@ -144,6 +145,11 @@ export default async function NicheHubPage({ params }: PageProps) {
           </div>
         </section>
       )}
+
+      {/* Deeper links into neighbouring topics. This hub already lists its own
+          niche in full above, so this block is cross-niche only (ownNicheShare 0)
+          — otherwise it would just repeat the sections above. */}
+      <RelatedContent links={getCrossNicheLinks(niche, 'topics', niche, 12, 0)} />
 
       {/* Keywords for SEO */}
       {nicheData.keywords.length > 0 && (

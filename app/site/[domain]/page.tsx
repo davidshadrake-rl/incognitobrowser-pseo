@@ -51,7 +51,7 @@ export default async function SiteReportPage({ params }: PageProps) {
   const niche = getNicheById(category.niche);
   const nicheName = niche?.name || category.label;
   const siblings = getSiblingSites(site, 6);
-  const crossLinks = getCrossNicheLinks(category.niche, 'site', domain, 6);
+  const crossLinks = getCrossNicheLinks(category.niche, 'site', domain);
   const change = gradeChange(site);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
