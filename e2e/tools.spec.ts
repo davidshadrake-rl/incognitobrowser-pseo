@@ -186,8 +186,11 @@ test('privacy-quiz: answer all questions and reach the results page', async ({ p
       break;
     }
     await page.waitForTimeout(400);
-    const isDone = await page.getByText(/your score|recommendations|results|retake/i).count();
-    if (isDone) break;
+    // Done when the funnel CTA exists — it renders only from a finished result.
+    // (The old check matched "personalized recommendations" in the page copy
+    // after the FIRST click and stopped at question 2; the test then passed on
+    // the same static copy. Found in the 2026-09-08 audit.)
+    if (await page.locator('[data-result-cta]').count()) break;
   }
   // "score" and "recommendation" are in the page copy before any answer; the CTA is the finished state.
   await expect(page.locator('[data-result-cta]').first()).toBeVisible({ timeout: 10_000 });
