@@ -97,7 +97,7 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
           <div className="flex flex-wrap gap-2">
             {topics.map((t) =>
               t.href ? (
-                <Link key={t.label} href={t.href} className="text-xs px-2.5 py-1 rounded-[4px] border border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white transition-colors topic-chip">
+                <Link key={t.label} href={t.href} className="text-row px-2.5 py-1 rounded-[4px] border border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white transition-colors topic-chip">
                   {t.label}
                 </Link>
               ) : (
@@ -106,7 +106,7 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
                   type="button"
                   onClick={() => setQuery(query.trim() === (t.query ?? t.label) ? '' : (t.query ?? t.label))}
                   aria-pressed={query.trim() === (t.query ?? t.label)}
-                  className={`text-xs px-2.5 py-1 rounded-[4px] border transition-colors topic-chip ${query.trim() === (t.query ?? t.label) ? 'border-b2 bg-s2 text-white' : 'border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white'}`}
+                  className={`text-row px-2.5 py-1 rounded-[4px] border transition-colors topic-chip ${query.trim() === (t.query ?? t.label) ? 'border-b2 bg-s2 text-white' : 'border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white'}`}
                 >
                   {t.label}
                 </button>
