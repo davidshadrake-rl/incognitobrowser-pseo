@@ -6,6 +6,8 @@ import { generateMetadata as genMeta } from '@/lib/seo';
 import { IS_PRO_DEPLOYMENT, proUrlFor } from '@/lib/tiers';
 import { GradeBadge } from '@/components/GradeBadge';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
+import { PageHero } from '@/components/ui/PageHero';
+import { TYPE_ICON } from '@/lib/visuals';
 
 export const metadata = genMeta({
   title: 'Website Privacy Report Cards: 500 Sites Graded A–F',
@@ -34,11 +36,18 @@ export default function SiteIndexPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-white mb-2">Website Privacy Report Cards</h1>
-      <p className="text-t2 mb-2 max-w-2xl">
-        {all.length} popular websites, graded A–F on what they do to a first-time visitor <em>before</em> any consent banner is clicked:
-        tracking cookies, ad and analytics trackers, third-party scripts, and security headers.
-      </p>
+      <PageHero
+        icon={TYPE_ICON.site}
+        kicker="Report cards"
+        title="Website privacy report cards"
+        description={
+          <>
+            {all.length} popular websites, graded A&ndash;F on what they do to a first-time visitor before any
+            consent banner is clicked.
+          </>
+        }
+        figure={{ value: all.length, label: 'sites' }}
+      />
       <p className="text-sm text-t3 mb-6">
         Scanned {scannedAt} with the same scanner behind the <a href={proUrlFor('ad-tracking', 'cookie-tracker-scanner')} className="underline hover:text-white">Cookie &amp; Tracker Scanner in Incognito Pro</a>.
         Every point is itemised on each page. <Link href="/site/methodology" className="underline hover:text-white">Read the methodology</Link> — and argue with it.
@@ -47,6 +56,7 @@ export default function SiteIndexPage() {
 
       <AtoZCatalogue
         noun="websites"
+        icon={TYPE_ICON.site}
         entries={all.map(s => ({
           title: s.domain,
           href: `/site/${s.domain}`,

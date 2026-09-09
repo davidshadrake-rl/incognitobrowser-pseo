@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
-import { Icon, type IconName } from './ui/Icon';
+import { PageHero } from './ui/PageHero';
+import { Icon } from './ui/Icon';
+import { Badge, resolveBadgeVariant } from './ui/Badge';
 import { ArticleByline } from './ArticleByline';
 import { CheckYoursNow } from './CheckYoursNow';
+import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
 
 interface Product {
@@ -51,15 +54,12 @@ interface ComparisonData {
   faqs: FAQ[];
 }
 
-// Status is never colour-only: glyph + word (DESIGN-SPEC 3.3 / 9).
-const scoreDisplay: Record<string, { label: string; color: string; icon?: IconName }> = {
-  yes: { label: 'Yes', icon: 'check', color: 'text-ok bg-ok-dim' },
-  no: { label: 'No', icon: 'x', color: 'text-danger bg-danger-dim' },
-  partial: { label: 'Partial', color: 'text-warn bg-warn-dim' },
-  excellent: { label: 'Excellent', color: 'text-ok bg-ok-dim' },
-  good: { label: 'Good', color: 'text-info bg-info-dim' },
-  fair: { label: 'Fair', color: 'text-warn bg-warn-dim' },
-  poor: { label: 'Poor', color: 'text-danger bg-danger-dim' },
+// Status is never colour-only: the Badge word is always present alongside
+// the colour (DESIGN-SPEC 5.6 / 9). resolveBadgeVariant already maps
+// yes/no/partial/excellent/good/fair/poor to ok/danger/warn/info.
+const SCORE_LABEL: Record<FeatureScore['value'], string> = {
+  yes: 'Yes', no: 'No', partial: 'Partial',
+  excellent: 'Excellent', good: 'Good', fair: 'Fair', poor: 'Poor',
 };
 
 export function ComparisonPage({ data, nicheName, proofRoute }: { data: ComparisonData; nicheName: string; proofRoute?: ProofRoute | null }) {
@@ -77,36 +77,50 @@ export function ComparisonPage({ data, nicheName, proofRoute }: { data: Comparis
         { label: data.title },
       ]} />
 
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-3">{data.title}</h1>
-        <ArticleByline
-          author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-          editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
-          reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-        />
-        <p className="text-t2">{data.intro}</p>
-      </header>
+      <PageHero
+        icon={TYPE_ICON.comparison}
+        kicker={`${nicheName} · comparison`}
+        title={data.title}
+        badges={
+          <>
+            <Badge label={`${data.products.length} compared`} />
+            <Badge label={`${data.features.length} criteria`} />
+          </>
+        }
+        action={
+          <ArticleByline
+            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
+            editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
+            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
+          />
+        }
+        figure={{ value: data.features.length, label: 'criteria' }}
+        diagram={diagramForNiche(data.niche)}
+      />
+
+      <p className="prose-ib text-lede mb-8">{data.intro}</p>
+
       {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
         {sortedProducts.map((product) => (
           <div key={product.slug} className="border border-b1 rounded-lg p-5 bg-s0">
             <div className="flex items-start justify-between mb-2">
-              <h3 className="font-semibold text-white">{product.name}</h3>
-              <span className="text-lg font-bold text-white">{product.rating}/10</span>
+              <h3 className="font-semibold text-t1">{product.name}</h3>
+              <span className="text-lg font-bold text-t1 tnum">{product.rating}/10</span>
             </div>
-            <p className="text-sm text-t3 mb-3">{product.tagline}</p>
-            {product.pricing && <p className="text-xs text-white/30 mb-3">{product.pricing}</p>}
+            <p className="text-row text-t3 mb-3">{product.tagline}</p>
+            {product.pricing && <p className="text-meta text-t3/70 mb-3">{product.pricing}</p>}
             <div className="space-y-2">
               <div>
-                <h4 className="text-xs font-medium text-ok uppercase">Pros</h4>
-                <ul className="text-sm text-t2 space-y-1">
+                <h4 className="text-meta font-medium text-ok uppercase">Pros</h4>
+                <ul className="text-row text-t2 space-y-1">
                   {product.pros.map((p, i) => <li key={i} className="flex items-start"><span className="text-ok mr-1">+</span>{p}</li>)}
                 </ul>
               </div>
               <div>
-                <h4 className="text-xs font-medium text-danger uppercase">Cons</h4>
-                <ul className="text-sm text-t2 space-y-1">
+                <h4 className="text-meta font-medium text-danger uppercase">Cons</h4>
+                <ul className="text-row text-t2 space-y-1">
                   {product.cons.map((c, i) => <li key={i} className="flex items-start"><span className="text-danger mr-1">-</span>{c}</li>)}
                 </ul>
               </div>
@@ -116,39 +130,38 @@ export function ComparisonPage({ data, nicheName, proofRoute }: { data: Comparis
       </div>
 
       <section className="mb-10">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-white">Feature Comparison</h2>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <h2 className="font-mono text-h2 font-semibold text-t1">Feature comparison</h2>
           <div className="flex gap-2">
-            <button onClick={() => setSortBy('rating')} className={`text-sm px-3 py-1 rounded-lg ${sortBy === 'rating' ? 'bg-white text-black' : 'text-t2 border border-b1'}`}>By Rating</button>
-            <button onClick={() => setSortBy('name')} className={`text-sm px-3 py-1 rounded-lg ${sortBy === 'name' ? 'bg-white text-black' : 'text-t2 border border-b1'}`}>By Name</button>
+            <button onClick={() => setSortBy('rating')} className={sortBy === 'rating' ? 'btn-primary text-xs' : 'btn-ghost text-xs'}>By rating</button>
+            <button onClick={() => setSortBy('name')} className={sortBy === 'name' ? 'btn-primary text-xs' : 'btn-ghost text-xs'}>By name</button>
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto border border-b1 rounded-[12px]">
           <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-b1">
-                <th className="text-left p-3 font-medium text-t2">Feature</th>
+            <thead className="bg-s1">
+              <tr>
+                <th className="text-left p-3 font-medium text-t2 text-row">Feature</th>
                 {sortedProducts.map(p => (
-                  <th key={p.slug} className="text-center p-3 font-medium text-white">{p.name}</th>
+                  <th key={p.slug} className="text-center p-3 font-medium text-t1 text-row">{p.name}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {data.features.map((feature, i) => (
-                <tr key={i} className="border-b border-hair hover:bg-white/5">
+                <tr key={i} className="border-t border-hair hover:bg-s0">
                   <td className="p-3">
-                    <div className="font-medium text-white text-sm">{feature.name}</div>
-                    <div className="text-xs text-t3">{feature.description}</div>
+                    <div className="font-medium text-t1 text-row">{feature.name}</div>
+                    <div className="text-meta text-t3">{feature.description}</div>
                   </td>
                   {sortedProducts.map(p => {
                     const score = feature.scores[p.slug];
-                    const display = score ? scoreDisplay[score.value] : null;
                     return (
                       <td key={p.slug} className="text-center p-3">
-                        {display ? (
-                          <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-sm font-medium ${display.color}`}>{display.icon && <Icon name={display.icon} size={14} />}{display.label}</span>
+                        {score ? (
+                          <Badge variant={resolveBadgeVariant(score.value)} label={SCORE_LABEL[score.value]} />
                         ) : (
-                          <span className="text-white/20">-</span>
+                          <span className="text-t3">—</span>
                         )}
                       </td>
                     );
@@ -160,15 +173,15 @@ export function ComparisonPage({ data, nicheName, proofRoute }: { data: Comparis
         </div>
       </section>
 
-      <section className="bg-white/5 border border-b1 rounded-lg p-6 mb-10">
-        <h2 className="text-xl font-bold text-white mb-3">Verdict</h2>
-        <p className="text-t2 mb-4">{data.verdict.summary}</p>
+      <section className="bg-s0 border border-b1 rounded-[16px] p-6 mb-10">
+        <h2 className="font-mono text-h2 font-semibold text-t1 mb-3">Verdict</h2>
+        <p className="prose-ib text-[15px] mb-4">{data.verdict.summary}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {data.verdict.bestFor.map((item, i) => (
-            <div key={i} className="bg-s0 border border-b1 rounded-lg p-4">
-              <div className="text-sm text-t3">{item.useCase}</div>
-              <div className="font-semibold text-white">{item.product}</div>
-              <div className="text-sm text-t2 mt-1">{item.reason}</div>
+            <div key={i} className="bg-black border border-hair rounded-lg p-4">
+              <div className="text-meta text-t3">{item.useCase}</div>
+              <div className="font-semibold text-t1">{item.product}</div>
+              <div className="prose-ib text-row mt-1">{item.reason}</div>
             </div>
           ))}
         </div>
@@ -176,12 +189,15 @@ export function ComparisonPage({ data, nicheName, proofRoute }: { data: Comparis
 
       {data.faqs.length > 0 && (
         <section>
-          <h2 className="text-2xl font-bold text-white mb-6">FAQ</h2>
-          <div className="space-y-4">
+          <h2 className="font-mono text-h2 font-semibold text-t1 mb-6">FAQ</h2>
+          <div className="space-y-0">
             {data.faqs.map((faq, i) => (
-              <details key={i} className="border border-b1 rounded-lg bg-s0">
-                <summary className="p-4 font-medium text-white cursor-pointer hover:text-t2">{faq.question}</summary>
-                <div className="px-4 pb-4 text-t2">{faq.answer}</div>
+              <details key={i} className="panel">
+                <summary>
+                  <span>{faq.question}</span>
+                  <Icon name="chevron" size={16} />
+                </summary>
+                <div className="panel-body prose-ib text-row">{faq.answer}</div>
               </details>
             ))}
           </div>

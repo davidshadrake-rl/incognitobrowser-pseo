@@ -284,6 +284,11 @@ describe.skipIf(!HAS_TARGET)('no missing-space concatenations in visible text', 
     'OpenAI', 'ChatGPT', 'OpenVPN', 'WireGuard', 'BitTorrent',
     'AdBlock', 'uBlock', 'AdGuard', 'PrivacyBadger',
     'resistFingerprinting', 'privacyResistFingerprinting',
+    // More about:config pref identifiers, same class as resistFingerprinting
+    // above. These became visible when ChecklistPage stopped hiding item.why
+    // / item.howTo behind a useState expander (DESIGN-SPEC 5.6): the prefs
+    // were always in the data, they are now always in the HTML.
+    'disablePrefetch', 'XOriginPolicy',
   ]);
 
   // Pages to sweep. Each page type is sampled.

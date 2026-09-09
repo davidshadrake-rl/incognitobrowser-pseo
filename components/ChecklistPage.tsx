@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react';
 import { Badge } from './ui/Badge';
 import { Icon } from './ui/Icon';
 import { Breadcrumbs } from './ui/Breadcrumbs';
+import { PageHero } from './ui/PageHero';
 import { ArticleByline } from './ArticleByline';
 import { CheckYoursNow } from './CheckYoursNow';
+import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
 
 interface ChecklistItem {
@@ -35,7 +37,6 @@ interface ChecklistData {
 export function ChecklistPage({ data, nicheName, proofRoute }: { data: ChecklistData; nicheName: string; proofRoute?: ProofRoute | null }) {
   const storageKey = `checklist-${data.niche}-${data.slug}`;
   const [checked, setChecked] = useState<Record<string, boolean>>({});
-  const [expandedItem, setExpandedItem] = useState<string | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
@@ -60,120 +61,101 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
         { label: data.title },
       ]} />
 
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-3">{data.title}</h1>
-        <ArticleByline
-          author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-          editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
-          reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-        />
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Badge label={data.difficulty} variant={data.difficulty} />
-          <Badge label={data.estimatedTime} />
-          <Badge label={`${completedItems}/${totalItems} completed`} />
-        </div>
-        {data.intro && <p className="text-t2">{data.intro}</p>}
-      </header>
+      <PageHero
+        icon={TYPE_ICON.checklist}
+        kicker={`${nicheName} · checklist`}
+        title={data.title}
+        badges={
+          <>
+            <Badge label={data.difficulty} variant={data.difficulty} />
+            <Badge label={data.estimatedTime} />
+            <Badge label={`${completedItems}/${totalItems} completed`} />
+          </>
+        }
+        action={
+          <ArticleByline
+            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
+            editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
+            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
+          />
+        }
+        figure={{ value: totalItems, label: 'items' }}
+        diagram={diagramForNiche(data.niche)}
+      />
+
+      {data.intro && <p className="prose-ib text-lede mb-8">{data.intro}</p>}
+
       {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {/* Progress bar */}
       <div className="mb-8">
-        <div className="flex justify-between text-sm text-t2 mb-1">
+        <div className="flex justify-between text-row text-t2 mb-1">
           <span>Progress</span>
-          <span>{progress}%</span>
+          <span className="tnum">{progress}%</span>
         </div>
-        <div className="w-full bg-white/10 rounded-full h-3">
+        <div className="w-full bg-s1 rounded-full h-3">
           <div
-            className="bg-white h-3 rounded-full transition-all duration-300"
+            className="bg-t1 h-3 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
       </div>
 
-      {/* Sections */}
+      {/* Sections: native <details>, first open — no JS collapse (DESIGN-SPEC §9). */}
       {data.sections.map((section, si) => (
-        <section key={si} className="mb-8">
-          <h2 className="text-xl font-semibold text-white mb-4 pb-2 border-b border-b1">{section.title}</h2>
-          <div className="space-y-3">
+        <details key={si} className="panel" open={si === 0}>
+          <summary>
+            <span className="folio">{String(si + 1).padStart(2, '0')}</span>
+            <span>{section.title}</span>
+            <span className="text-meta text-t3">({section.items.length})</span>
+            <Icon name="chevron" size={16} />
+          </summary>
+          <div className="panel-body space-y-3">
             {section.items.map((item) => {
-              const isExpanded = expandedItem === item.id;
               const isChecked = !!checked[item.id];
               return (
-                <div
+                <label
                   key={item.id}
-                  className={`border rounded-lg transition-all ${
+                  className={`flex items-start gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${
                     isChecked ? 'bg-ok-dim border-ok/30' : 'bg-s0 border-b1'
                   }`}
                 >
-                  <div className="flex items-start p-4">
-                    {/* Checkbox is its own click target — we don't want tapping
-                        the row to accidentally mark the item done. Generous
-                        hit area: wrapping label adds tap padding. */}
-                    <label className="flex items-center mt-0.5 -m-1 p-1 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => toggleItem(item.id)}
-                        onClick={(e) => e.stopPropagation()}
-                        className="h-5 w-5 rounded border-b2 cursor-pointer"
-                        aria-label={`Mark ${item.task} as done`}
-                      />
-                    </label>
-
-                    {/* Entire row body (task + badge + chevron) is one big
-                        tap target that toggles expansion. Native <button>
-                        gives us keyboard focus + Enter/Space activation for
-                        free, plus mobile tap response is instant (no 300ms
-                        delay that older Android browsers add to <div onclick>). */}
-                    <button
-                      type="button"
-                      onClick={() => setExpandedItem(isExpanded ? null : item.id)}
-                      aria-expanded={isExpanded}
-                      aria-controls={`item-${item.id}-detail`}
-                      className="ml-3 flex-1 text-left cursor-pointer"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className={`font-medium ${isChecked ? 'line-through text-white/40' : 'text-white'}`}>
-                          {item.task}
-                        </span>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <Badge label={item.priority} variant={item.priority} />
-                          <svg
-                            className={`w-5 h-5 text-white/30 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            aria-hidden="true"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        </div>
-                      </div>
-                      {isExpanded && (
-                        <div id={`item-${item.id}-detail`} className="mt-3 space-y-2 text-sm">
-                          <div className="bg-info-dim border border-info/30 rounded p-3">
-                            <strong className="text-info">Why:</strong>
-                            <span className="text-info ml-1">{item.why}</span>
-                          </div>
-                          <div className="bg-white/5 border border-b1 rounded p-3">
-                            <strong className="text-white">How to:</strong>
-                            <span className="text-t2 ml-1">{item.howTo}</span>
-                          </div>
-                        </div>
-                      )}
-                    </button>
-                  </div>
-                </div>
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => toggleItem(item.id)}
+                    className="h-5 w-5 rounded border-b2 mt-0.5 shrink-0 cursor-pointer"
+                    aria-label={`Mark ${item.task} as done`}
+                  />
+                  <span className="flex-1 min-w-0">
+                    <span className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className={`font-medium ${isChecked ? 'line-through text-t3' : 'text-t1'}`}>
+                        {item.task}
+                      </span>
+                      <Badge label={item.priority} variant={item.priority} />
+                    </span>
+                    <span className="block mt-2 prose-ib text-row">
+                      <b className="text-t3 font-medium not-italic">Why — </b>
+                      {item.why}
+                    </span>
+                    <span className="block mt-1 prose-ib text-row">
+                      <b className="text-t3 font-medium not-italic">How — </b>
+                      {item.howTo}
+                    </span>
+                  </span>
+                </label>
               );
             })}
           </div>
-        </section>
+        </details>
       ))}
 
       {progress === 100 && (
-        <div className="bg-ok-dim border border-ok/30 rounded-lg p-6 text-center">
-          <div className="flex items-center justify-center gap-2 mb-2 text-ok"><Icon name="check" size={28} /><span className="text-kicker uppercase">Done</span></div>
-          <h3 className="text-lg font-semibold text-ok">All done!</h3>
+        <div className="mt-8 bg-ok-dim border border-ok/30 rounded-lg p-6 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2 text-ok">
+            <Icon name="check" size={28} />
+            <span className="text-kicker uppercase">All done</span>
+          </div>
           <p className="text-ok mt-1">You&apos;ve completed every item on this checklist.</p>
         </div>
       )}

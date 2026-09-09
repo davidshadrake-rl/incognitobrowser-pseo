@@ -4,6 +4,8 @@ import { generateMetadata as genMeta } from '@/lib/seo';
 import { redirect } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
+import { PageHero } from '@/components/ui/PageHero';
+import { TYPE_ICON } from '@/lib/visuals';
 
 export const metadata = genMeta({
   title: 'Privacy Calculators',
@@ -28,13 +30,17 @@ export default function CalculatorsIndex() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-white mb-2">Privacy Calculators</h1>
-      <p className="text-t2 mb-8">
-        Interactive calculators to assess your privacy risk, estimate data exposure, and more.
-      </p>
+      <PageHero
+        icon={TYPE_ICON.calculators}
+        kicker="Calculators"
+        title="Privacy calculators"
+        description="Interactive calculators to assess your privacy risk, estimate data exposure and more."
+        figure={{ value: items.length, label: 'calculators' }}
+      />
 
       <AtoZCatalogue
         noun="calculators"
+        icon={TYPE_ICON.calculators}
         entries={items.map(item => ({
           title: item.title,
           href: `/calculators/${item._niche}/${item._slug}`,

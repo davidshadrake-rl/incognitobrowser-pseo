@@ -4,6 +4,8 @@ import { generateMetadata as genMeta } from '@/lib/seo';
 import { redirect } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
+import { PageHero } from '@/components/ui/PageHero';
+import { TYPE_ICON } from '@/lib/visuals';
 
 export const metadata = genMeta({
   title: 'Privacy Checklists',
@@ -29,13 +31,17 @@ export default function ChecklistsIndex() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-white mb-2">Privacy Checklists</h1>
-      <p className="text-t2 mb-8">
-        Interactive checklists to help you secure your digital life. Check off items as you go — your progress is saved.
-      </p>
+      <PageHero
+        icon={TYPE_ICON.checklists}
+        kicker="Checklists"
+        title="Privacy checklists"
+        description="Interactive checklists to secure your digital life. Check off items as you go; your progress is saved."
+        figure={{ value: items.length, label: 'checklists' }}
+      />
 
       <AtoZCatalogue
         noun="checklists"
+        icon={TYPE_ICON.checklists}
         entries={items.map(item => ({
           title: item.title,
           href: `/checklists/${item._niche}/${item._slug}`,

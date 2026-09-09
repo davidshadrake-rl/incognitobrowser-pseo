@@ -2,9 +2,12 @@
 
 import { useState, useMemo } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
+import { PageHero } from './ui/PageHero';
+import { Badge } from './ui/Badge';
 import { ArticleByline } from './ArticleByline';
 import { CheckYoursNow } from './CheckYoursNow';
 import { Icon } from './ui/Icon';
+import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
 
 interface CalcInput {
@@ -89,24 +92,37 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
         { label: data.title },
       ]} />
 
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-3">{data.title}</h1>
-        <ArticleByline
-          author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-          editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
-          reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-        />
-        <p className="text-t2">{data.description}</p>
-      </header>
+      <PageHero
+        icon={TYPE_ICON.calculator}
+        kicker={`${nicheName} · calculator`}
+        title={data.title}
+        badges={
+          <>
+            <Badge label={`${data.inputs.length} inputs`} />
+            <Badge label={`${data.outputFields.length} results`} />
+          </>
+        }
+        action={
+          <ArticleByline
+            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
+            editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
+            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
+          />
+        }
+        diagram={diagramForNiche(data.niche)}
+      />
+
+      <p className="prose-ib text-lede mb-8">{data.description}</p>
+
       {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-s0 border border-b1 rounded-lg p-5">
-          <h2 className="font-semibold text-white mb-4">Your Settings</h2>
+        <div className="bg-s0 border border-b1 rounded-[12px] p-5">
+          <h2 className="font-mono text-h3 font-semibold text-t1 mb-4">Your settings</h2>
           <div className="space-y-4">
             {data.inputs.map(input => (
               <div key={input.id}>
-                <label className="block text-sm font-medium text-t2 mb-1">{input.label}</label>
+                <label className="block text-row font-medium text-t2 mb-1">{input.label}</label>
                 {input.type === 'number' && (
                   <input
                     type="number"
@@ -115,7 +131,7 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
                     max={input.max}
                     step={input.step}
                     onChange={e => setInputValues({ ...inputValues, [input.id]: Number(e.target.value) })}
-                    className="w-full px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white"
+                    className="w-full px-3 py-2 rounded-[8px] text-row"
                   />
                 )}
                 {input.type === 'range' && (
@@ -129,14 +145,14 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
                       onChange={e => setInputValues({ ...inputValues, [input.id]: Number(e.target.value) })}
                       className="w-full"
                     />
-                    <div className="text-sm text-t2 text-center">{String(inputValues[input.id])}</div>
+                    <div className="text-row text-t2 text-center tnum">{String(inputValues[input.id])}</div>
                   </div>
                 )}
                 {input.type === 'select' && input.options && (
                   <select
                     value={String(inputValues[input.id])}
                     onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
-                    className="w-full px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white"
+                    className="w-full px-3 py-2 rounded-[8px] text-row"
                   >
                     {input.options.map(opt => (
                       <option key={String(opt.value)} value={String(opt.value)}>{opt.label}</option>
@@ -151,39 +167,39 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
                     className="h-4 w-4 rounded border-b2"
                   />
                 )}
-                {input.helpText && <p className="text-xs text-t3 mt-1">{input.helpText}</p>}
+                {input.helpText && <p className="text-meta text-t3 mt-1">{input.helpText}</p>}
               </div>
             ))}
           </div>
         </div>
 
         <div>
-          <div className="bg-white/5 border border-b1 rounded-lg p-5 mb-6">
-            <h2 className="font-semibold text-white mb-4">Results</h2>
+          <div className="bg-s1 border border-b1 rounded-[12px] p-5 mb-6">
+            <h2 className="font-mono text-h3 font-semibold text-t1 mb-4">Results</h2>
             <div className="space-y-4">
               {data.outputFields.map(field => (
                 <div key={field.id} className="bg-s0 border border-b1 rounded-lg p-4">
-                  <div className="text-sm text-t3">{field.label}</div>
-                  <div className={`text-2xl font-bold ${
-                    field.format === 'score' ? getScoreColor(Number(results[field.id])) : 'text-white'
+                  <div className="text-meta text-t3">{field.label}</div>
+                  <div className={`text-2xl font-bold tnum ${
+                    field.format === 'score' ? getScoreColor(Number(results[field.id])) : 'text-t1'
                   }`}>
                     {formatValue(field, results[field.id])}
                   </div>
-                  {field.description && <p className="text-xs text-t3 mt-1">{field.description}</p>}
+                  {field.description && <p className="text-meta text-t3 mt-1">{field.description}</p>}
                 </div>
               ))}
             </div>
           </div>
 
           {data.educational.interpretation && (
-            <div className="border border-b1 rounded-lg p-5 bg-s0">
-              <h3 className="font-semibold text-white mb-3">How to Read Your Score</h3>
+            <div className="border border-b1 rounded-[12px] p-5 bg-s0">
+              <h3 className="font-mono text-h3 font-semibold text-t1 mb-3">How to read your score</h3>
               <div className="space-y-2">
                 {data.educational.interpretation.map((interp, i) => (
-                  <div key={i} className="flex items-center gap-3 text-sm">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: interp.color }} />
-                    <span className="font-medium text-white">{interp.range}:</span>
-                    <span className="text-t2">{interp.label} &mdash; {interp.description}</span>
+                  <div key={i} className="flex items-center gap-3 text-row">
+                    <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: interp.color }} />
+                    <span className="font-medium text-t1">{interp.range}:</span>
+                    <span className="prose-ib text-row">{interp.label} &mdash; {interp.description}</span>
                   </div>
                 ))}
               </div>
@@ -193,15 +209,16 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
       </div>
 
       {data.educational.tips && data.educational.tips.length > 0 && (
-        <details className="panel mt-10">
+        <details className="panel mt-10" open>
           <summary>
-            Tips for Improvement
+            <span>Tips for improvement</span>
             <Icon name="chevron" size={16} />
           </summary>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-5">
+          <div className="panel-body grid grid-cols-1 md:grid-cols-2 gap-3">
             {data.educational.tips.map((tip, i) => (
-              <div key={i} className="bg-ok-dim border border-ok/30 rounded-lg p-4 text-sm text-ok">
-                {tip}
+              <div key={i} className="flex items-start gap-2 bg-ok-dim border border-ok/30 rounded-lg p-4 text-row text-ok">
+                <Icon name="star" size={14} className="mt-0.5 shrink-0" />
+                <span>{tip}</span>
               </div>
             ))}
           </div>
@@ -209,9 +226,9 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
       )}
 
       {data.educational.methodology && (
-        <section className="mt-8 text-sm text-t3">
-          <h3 className="font-medium text-white/70 mb-1">Methodology</h3>
-          <p>{data.educational.methodology}</p>
+        <section className="mt-8">
+          <h3 className="text-kicker uppercase text-t3 mb-1">Methodology</h3>
+          <p className="prose-ib text-row">{data.educational.methodology}</p>
         </section>
       )}
     </article>

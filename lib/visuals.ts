@@ -20,6 +20,8 @@ export const ENGINE_DIAGRAM: Record<string, Diagram> = {
 };
 /** Content-type icon. Keys are the slugs used by app/page.tsx `icons`, RelatedContent TYPE_ICONS and navItems. */
 export const TYPE_ICON: Record<string, IconName> = {
+  topics: 'hash',
+  topic: 'hash',
   tools: 'hat', tool: 'hat', guides: 'book', guide: 'book', checklists: 'list', checklist: 'list',
   comparisons: 'vs', comparison: 'vs', calculators: 'calc', calculator: 'calc', templates: 'doc', template: 'doc',
   glossary: 'az', site: 'grade', 'report-card': 'grade', internal: 'arrow', external: 'external',

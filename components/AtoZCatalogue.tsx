@@ -12,8 +12,8 @@ import { useId, useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { LETTERS, filterEntries, groupByLetter, letterOf, type CatalogueEntry } from '@/lib/catalogue';
 import { GradeBadge } from '@/components/GradeBadge';
-import { Badge } from '@/components/ui/Badge';
 import { ToolCard } from '@/components/ToolCard';
+import { IconTile, type IconName } from '@/components/ui/Icon';
 import { ENGINE_ICON } from '@/lib/visuals';
 
 export interface CatalogueTopic {
@@ -28,6 +28,12 @@ interface Props {
   entries: CatalogueEntry[];
   /** Plural noun for the count line and placeholder, e.g. "guides". */
   noun: string;
+  /**
+   * DESIGN-SPEC 5.5: the 32px IconTile every non-tool entry carries (the
+   * same TYPE_ICON the page's own PageHero uses). Unused on the tools
+   * catalogue, where each entry derives its own icon from its engine.
+   */
+  icon?: IconName;
   /** Optional heading above the list; omit to render only search + letters + entries. */
   heading?: string;
   /** Compact "Browse by topic" chip row under the letter bar — sits high without pushing the A–Z down. */
@@ -36,18 +42,29 @@ interface Props {
   children?: ReactNode;
 }
 
+// DESIGN-SPEC 5.5: the A–Z list uses a "rules grid" — 1px hairline gaps from
+// a shared bg-b1 ground, not 1,300 individually-rounded boxes — everywhere
+// except the tools catalogue, whose entries are full ToolCards (kept as PR2
+// styled them; a hairline grid would clip the tier rail and schematic).
+function entryGridClass(noun: string): string {
+  return noun === 'tools'
+    ? 'grid grid-cols-1 md:grid-cols-2 gap-3'
+    : 'grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-b1 rounded-[12px] overflow-hidden';
+}
+
 /**
  * Layout on every index page: [search + letter bar + topic chips] at the very
  * top beneath the heading → search results (only while typing) → the page's
  * own content → the full A–Z list at the bottom (letter links jump to it).
  */
-export function AtoZCatalogue({ entries, noun, heading, topics, children }: Props) {
+export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, children }: Props) {
   const [query, setQuery] = useState('');
   const inputId = useId();
   const groups = useMemo(() => groupByLetter(entries), [entries]);
   const present = useMemo(() => new Set(groups.map((g) => g.letter)), [groups]);
   const q = query.trim();
   const matches = useMemo(() => (q ? filterEntries(groupByLetter(entries).flatMap((g) => g.entries), q) : null), [entries, q]);
+  const gridClass = entryGridClass(noun);
 
   return (
     <>
@@ -121,8 +138,8 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
         matches!.length === 0 ? (
           <p className="text-t3 py-8">No {noun} match “{q}”. Try a shorter word, a topic name, or clear the search.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-results={matches!.length}>
-            {matches!.map((e) => <Entry key={e.href} e={e} noun={noun} />)}
+          <div className={gridClass} data-results={matches!.length}>
+            {matches!.map((e) => <Entry key={e.href} e={e} noun={noun} icon={icon} />)}
           </div>
         )
       )}
@@ -138,8 +155,8 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
         {groups.map((g) => (
           <section key={g.letter} id={`letter-${g.letter === '#' ? 'num' : g.letter}`} className="mb-8 scroll-mt-24">
             <h3 className="text-2xl font-bold text-white mb-4 sticky top-16 bg-black py-2 z-10">{g.letter === '#' ? '0–9' : g.letter}</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {g.entries.map((e) => <Entry key={e.href} e={e} noun={noun} />)}
+            <div className={gridClass}>
+              {g.entries.map((e) => <Entry key={e.href} e={e} noun={noun} icon={icon} />)}
             </div>
           </section>
         ))}
@@ -162,7 +179,7 @@ function engineFromKeywords(keywords?: string): string | undefined {
   return keywords.split(/\s+/).find((w) => w in ENGINE_ICON);
 }
 
-function Entry({ e, noun }: { e: CatalogueEntry; noun: string }) {
+function Entry({ e, noun, icon }: { e: CatalogueEntry; noun: string; icon: IconName }) {
   const engine = noun === 'tools' ? engineFromKeywords(e.keywords) : undefined;
   if (engine) {
     return (
@@ -179,14 +196,19 @@ function Entry({ e, noun }: { e: CatalogueEntry; noun: string }) {
       </div>
     );
   }
+  // DESIGN-SPEC 5.5 entry anatomy: 32px IconTile (GradeBadge instead, on the
+  // report-card index — the only catalogue whose entries carry a grade),
+  // font-mono title, text-meta/t3 meta line, prose-ib description clamped to
+  // 2 lines. No badge here — the tier chip is a tool-only affordance and
+  // renders through the ToolCard branch above (DESIGN-SPEC 5.9).
   return (
-    <Link href={e.href} className="block border border-b1 rounded-lg p-4 bg-s0 hover:border-b2 transition-all catalogue-entry" data-letter={letterOf(e.title)}>
-      <div className="flex items-start justify-between gap-3">
-        <h4 className="font-semibold text-white">{e.title}</h4>
-        {e.grade ? <GradeBadge grade={e.grade} size="sm" /> : e.badge && <Badge label={e.badge} className="shrink-0" />}
+    <Link href={e.href} className="relative flex items-start gap-3 p-4 bg-base hover:bg-s0 transition-colors catalogue-entry" data-letter={letterOf(e.title)}>
+      {e.grade ? <GradeBadge grade={e.grade} size="sm" /> : <IconTile name={icon} size={32} />}
+      <div className="min-w-0">
+        <h4 className="font-mono text-[15px] font-semibold text-t1">{e.title}</h4>
+        {e.meta && <p className="text-meta text-t3 mt-0.5">{e.meta}</p>}
+        {e.description && <p className="prose-ib text-row line-clamp-2 mt-1">{e.description}</p>}
       </div>
-      {e.meta && <p className="text-xs text-t3 mt-0.5">{e.meta}</p>}
-      {e.description && <p className="text-sm text-t2 mt-1 line-clamp-2">{e.description}</p>}
     </Link>
   );
 }

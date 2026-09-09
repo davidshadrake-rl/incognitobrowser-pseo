@@ -84,7 +84,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <GlossaryTermPage data={data} validTermSlugs={validTermSlugs} />
+      <GlossaryTermPage data={data} validTermSlugs={validTermSlugs} niche={glossaryNiche} nicheName={nicheName} />
       {/* Glossary terms previously linked only to sibling terms, never into the
           guides/checklists/tools that explain them. The niche comes from a
           hand-authored map (see nicheForGlossaryTerm). */}

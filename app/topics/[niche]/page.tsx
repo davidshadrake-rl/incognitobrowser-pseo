@@ -7,7 +7,8 @@ import { RelatedContent } from '@/components/seo/RelatedContent';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { IconTile } from '@/components/ui/Icon';
-import { TYPE_ICON } from '@/lib/visuals';
+import { PageHero } from '@/components/ui/PageHero';
+import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { Metadata } from 'next';
 
 export const dynamicParams = false;
@@ -83,23 +84,21 @@ export default async function NicheHubPage({ params }: PageProps) {
       <JsonLd data={breadcrumbs} />
       <JsonLd data={collectionSchema} />
 
-      {/* Hero */}
-      <section className="py-12 mb-10" style={{ background: 'linear-gradient(-41deg, rgba(61,61,82,0) 10%, rgba(61,61,82,0.75) 40%)' }}>
-        <nav className="text-sm text-t3 mb-4">
-          <Link href="/" className="hover:text-white">Resources</Link>
-          <span className="mx-2">/</span>
-          <span className="text-t2">{nicheData.name}</span>
-        </nav>
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
-          {nicheData.name}
-        </h1>
-        <p className="text-lg text-t2 max-w-3xl mb-4">
-          {nicheData.description}
-        </p>
-        <p className="text-sm text-t3">
-          {totalItems} resources across {sections.length} categories
-        </p>
-      </section>
+      <nav className="text-sm text-t3 mb-4">
+        <Link href="/" className="hover:text-white">Resources</Link>
+        <span className="mx-2">/</span>
+        <span className="text-t2">{nicheData.name}</span>
+      </nav>
+
+      {/* Section 5.5: the topic hub hero uses this niche's own diagram. */}
+      <PageHero
+        icon={TYPE_ICON.topics}
+        kicker="Topic"
+        title={nicheData.name}
+        description={nicheData.description}
+        figure={{ value: totalItems, label: 'resources' }}
+        diagram={diagramForNiche(nicheData.id)}
+      />
 
       {/* Content sections */}
       {sections.map(section => (

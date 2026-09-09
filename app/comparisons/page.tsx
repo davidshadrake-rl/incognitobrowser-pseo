@@ -4,6 +4,8 @@ import { generateMetadata as genMeta } from '@/lib/seo';
 import { redirect } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
+import { PageHero } from '@/components/ui/PageHero';
+import { TYPE_ICON } from '@/lib/visuals';
 
 export const metadata = genMeta({
   title: 'Privacy Comparisons',
@@ -28,13 +30,17 @@ export default function ComparisonsIndex() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-white mb-2">Privacy Comparisons</h1>
-      <p className="text-t2 mb-8">
-        Side-by-side comparisons to help you choose the best privacy tools for your needs.
-      </p>
+      <PageHero
+        icon={TYPE_ICON.comparisons}
+        kicker="Comparisons"
+        title="Privacy comparisons"
+        description="Side-by-side comparisons to help you choose the right privacy tools for your needs."
+        figure={{ value: items.length, label: 'comparisons' }}
+      />
 
       <AtoZCatalogue
         noun="comparisons"
+        icon={TYPE_ICON.comparisons}
         entries={items.map(item => ({
           title: item.title,
           href: `/comparisons/${item._niche}/${item._slug}`,
