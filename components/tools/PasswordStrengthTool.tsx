@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useReportResult, severityFromScore } from './ResultContext';
+import { Icon } from '@/components/ui/Icon';
 
 interface PasswordAnalysis {
   score: number; // 0-100
@@ -231,49 +232,49 @@ export function PasswordStrengthTool() {
   return (
     <div className="space-y-6">
       {/* Input */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
-        <label className="block text-sm font-medium text-[#B8B8D4] mb-2">Enter a password to analyze</label>
+      <div className="bg-s0 border border-b1 rounded-lg p-6">
+        <label className="block text-sm font-medium text-t2 mb-2">Enter a password to analyze</label>
         <div className="relative">
           <input
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => handleAnalyze(e.target.value)}
             placeholder="Type or paste a password..."
-            className="w-full px-4 py-3 bg-[#191b1c] border border-white/10 rounded-md text-white placeholder-white/20 pr-24 font-mono"
+            className="w-full px-4 py-3 bg-s0 border border-b1 rounded-md text-white placeholder-white/20 pr-24 font-mono"
             autoComplete="off"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#B8B8D4] hover:text-white transition-colors px-2 py-1 border border-white/10 rounded"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-t2 hover:text-white transition-colors px-2 py-1 border border-b1 rounded"
           >
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
-        <p className="mt-2 text-xs text-[#B8B8D4]/60">
+        <p className="mt-2 text-xs text-t3">
           This tool runs entirely in your browser. No passwords are sent to any server.
         </p>
       </div>
 
       {/* Results */}
       {analysis && (
-        <div className={`rounded-lg border p-6 text-center ${analysis.score < 50 ? 'border-red-500/30 bg-red-500/[0.06]' : analysis.score < 80 ? 'border-amber-500/30 bg-amber-500/[0.06]' : 'border-green-500/30 bg-green-500/[0.06]'}`} data-cracked-in>
-          <div className="text-xs uppercase tracking-wider text-[#B8B8D4]/70 mb-1">An offline attacker would crack this password in</div>
-          <div className={`text-4xl sm:text-5xl font-bold ${analysis.score < 50 ? 'text-red-400' : analysis.score < 80 ? 'text-amber-400' : 'text-green-400'}`}>{analysis.crackTime}</div>
-          <div className="text-xs text-[#B8B8D4] mt-2">{Math.round(analysis.entropy)} bits of entropy. Nothing you type here leaves your device.</div>
+        <div className={`rounded-lg border p-6 text-center ${analysis.score < 50 ? 'border-danger/30 bg-danger-dim' : analysis.score < 80 ? 'border-warn/30 bg-warn-dim' : 'border-ok/30 bg-ok-dim'}`} data-cracked-in>
+          <div className="text-xs uppercase tracking-wider text-t3 mb-1">An offline attacker would crack this password in</div>
+          <div className={`text-4xl sm:text-5xl font-bold ${analysis.score < 50 ? 'text-danger' : analysis.score < 80 ? 'text-warn' : 'text-ok'}`}>{analysis.crackTime}</div>
+          <div className="text-xs text-t2 mt-2">{Math.round(analysis.entropy)} bits of entropy. Nothing you type here leaves your device.</div>
         </div>
       )}
       {analysis && (
         <div className="space-y-4">
           {/* Score bar */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <div className="flex items-center justify-between mb-3">
               <span className="text-lg font-bold" style={{ color: getScoreColor(analysis.score) }}>
                 {analysis.label}
               </span>
               <span className="text-2xl font-bold text-white">{analysis.score}/100</span>
             </div>
-            <div className="h-3 bg-[#191b1c] rounded-full overflow-hidden">
+            <div className="h-3 bg-s0 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{ width: `${analysis.score}%`, backgroundColor: getScoreColor(analysis.score) }}
@@ -283,32 +284,32 @@ export function PasswordStrengthTool() {
 
           {/* Metrics grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-center">
+            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-white">{analysis.length}</div>
-              <div className="text-xs text-[#B8B8D4]">Characters</div>
+              <div className="text-xs text-t2">Characters</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-center">
+            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-white">{analysis.entropy}</div>
-              <div className="text-xs text-[#B8B8D4]">Entropy (bits)</div>
+              <div className="text-xs text-t2">Entropy (bits)</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-center">
+            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-white">{analysis.charsets.filter(c => c.found).length}/4</div>
-              <div className="text-xs text-[#B8B8D4]">Char Types</div>
+              <div className="text-xs text-t2">Char Types</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-center">
+            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
               <div className="text-lg font-bold text-white leading-tight">{analysis.crackTime}</div>
-              <div className="text-xs text-[#B8B8D4]">Crack Time</div>
+              <div className="text-xs text-t2">Crack Time</div>
             </div>
           </div>
 
           {/* Character breakdown */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">Character Breakdown</h3>
             <div className="grid grid-cols-2 gap-3">
               {analysis.charsets.map(cs => (
                 <div key={cs.name} className="flex items-center justify-between">
-                  <span className="text-sm text-[#B8B8D4]">{cs.name}</span>
-                  <span className={`text-sm font-mono ${cs.found ? 'text-green-400' : 'text-red-400'}`}>
+                  <span className="text-sm text-t2">{cs.name}</span>
+                  <span className={`text-sm font-mono ${cs.found ? 'text-ok' : 'text-danger'}`}>
                     {cs.found ? `${cs.count} found` : 'missing'}
                   </span>
                 </div>
@@ -318,12 +319,12 @@ export function PasswordStrengthTool() {
 
           {/* Patterns detected */}
           {analysis.patterns.length > 0 && (
-            <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-red-400 mb-3">Patterns Detected</h3>
+            <div className="bg-s0 border border-danger/30 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-danger mb-3">Patterns Detected</h3>
               <ul className="space-y-2">
                 {analysis.patterns.map((p, i) => (
-                  <li key={i} className="flex items-start text-sm text-red-300">
-                    <span className="mr-2 text-red-500">&#9888;</span>{p}
+                  <li key={i} className="flex items-start text-sm text-danger">
+                    <Icon name="warn" size={14} className="mr-2 mt-0.5 text-danger" />{p}
                   </li>
                 ))}
               </ul>
@@ -332,12 +333,12 @@ export function PasswordStrengthTool() {
 
           {/* Warnings */}
           {analysis.warnings.length > 0 && (
-            <div className="bg-[#0a0a0a] border border-yellow-500/20 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-yellow-400 mb-3">Warnings</h3>
+            <div className="bg-s0 border border-warn/30 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-warn mb-3">Warnings</h3>
               <ul className="space-y-2">
                 {analysis.warnings.map((w, i) => (
-                  <li key={i} className="flex items-start text-sm text-yellow-300">
-                    <span className="mr-2">&#9888;</span>{w}
+                  <li key={i} className="flex items-start text-sm text-warn">
+                    <Icon name="warn" size={14} className="mr-2 mt-0.5" />{w}
                   </li>
                 ))}
               </ul>
@@ -346,12 +347,12 @@ export function PasswordStrengthTool() {
 
           {/* Suggestions */}
           {analysis.suggestions.length > 0 && (
-            <div className="bg-[#0a0a0a] border border-blue-500/20 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-blue-400 mb-3">Recommendations</h3>
+            <div className="bg-s0 border border-info/30 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-info mb-3">Recommendations</h3>
               <ul className="space-y-2">
                 {analysis.suggestions.map((s, i) => (
-                  <li key={i} className="flex items-start text-sm text-blue-300">
-                    <span className="mr-2 text-blue-500">&#10132;</span>{s}
+                  <li key={i} className="flex items-start text-sm text-info">
+                    <Icon name="arrow" size={14} className="mr-2 mt-0.5 text-info" />{s}
                   </li>
                 ))}
               </ul>

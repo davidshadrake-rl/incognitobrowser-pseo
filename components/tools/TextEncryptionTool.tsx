@@ -214,26 +214,26 @@ export function TextEncryptionTool() {
 
       {/* Mode toggles */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex">
+        <div className="bg-s0 border border-b1 rounded-lg p-2 flex">
           {(['encrypt', 'decrypt'] as Mode[]).map((m) => (
             <button
               key={m}
               onClick={() => { setMode(m); setOutput(''); setError(''); }}
               className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-                mode === m ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+                mode === m ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
               }`}
             >
               {m === 'encrypt' ? 'Encrypt' : 'Decrypt'}
             </button>
           ))}
         </div>
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex">
+        <div className="bg-s0 border border-b1 rounded-lg p-2 flex">
           {(['text', 'file'] as Source[]).map((s) => (
             <button
               key={s}
               onClick={() => { setSource(s); setOutput(''); setError(''); setInputText(''); setInputFile(null); }}
               className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-                source === s ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+                source === s ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
               }`}
             >
               {s === 'text' ? 'Text' : 'File'}
@@ -243,10 +243,10 @@ export function TextEncryptionTool() {
       </div>
 
       {/* Input */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6 space-y-4">
+      <div className="bg-s0 border border-b1 rounded-lg p-6 space-y-4">
         {source === 'text' ? (
           <div>
-            <label className="block text-sm font-medium text-[#B8B8D4] mb-1">
+            <label className="block text-sm font-medium text-t2 mb-1">
               {mode === 'encrypt' ? 'Plaintext' : 'Encrypted Text (Base64)'}
             </label>
             <textarea
@@ -254,21 +254,21 @@ export function TextEncryptionTool() {
               onChange={(e) => setInputText(e.target.value)}
               placeholder={mode === 'encrypt' ? 'Enter text to encrypt...' : 'Paste encrypted base64 text...'}
               rows={5}
-              className="w-full px-4 py-3 bg-[#191b1c] border border-white/10 rounded-md text-white placeholder-white/20 font-mono text-sm"
+              className="w-full px-4 py-3 bg-s0 border border-b1 rounded-md text-white placeholder-white/20 font-mono text-sm"
             />
           </div>
         ) : (
           <div>
-            <label className="block text-sm font-medium text-[#B8B8D4] mb-1">
+            <label className="block text-sm font-medium text-t2 mb-1">
               {mode === 'encrypt' ? 'File to encrypt' : 'Encrypted file to decrypt (.enc)'}
             </label>
             <input
               type="file"
               onChange={(e) => setInputFile(e.target.files?.[0] ?? null)}
-              className="w-full text-sm text-[#B8B8D4] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
+              className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
             />
             {inputFile && (
-              <p className="mt-2 text-xs text-[#B8B8D4]">
+              <p className="mt-2 text-xs text-t2">
                 {inputFile.name} ({(inputFile.size / 1024).toLocaleString()} KB)
               </p>
             )}
@@ -276,15 +276,15 @@ export function TextEncryptionTool() {
         )}
 
         <div>
-          <label className="block text-sm font-medium text-[#B8B8D4] mb-1">Passphrase</label>
+          <label className="block text-sm font-medium text-t2 mb-1">Passphrase</label>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter a strong passphrase..."
-            className="w-full px-4 py-3 bg-[#191b1c] border border-white/10 rounded-md text-white placeholder-white/20"
+            className="w-full px-4 py-3 bg-s0 border border-b1 rounded-md text-white placeholder-white/20"
           />
-          <p className="mt-1 text-xs text-[#B8B8D4]/60">
+          <p className="mt-1 text-xs text-t3">
             AES-256-GCM with PBKDF2-SHA256 ({PBKDF2_ITERATIONS.toLocaleString()} iterations). A 4+ word random passphrase is strongly recommended.
           </p>
         </div>
@@ -299,22 +299,22 @@ export function TextEncryptionTool() {
       </div>
 
       {error && (
-        <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-sm text-red-400">{error}</div>
+        <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger">{error}</div>
       )}
 
       {/* Text output */}
       {output && source === 'text' && (
-        <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-6">
+        <div className="bg-s0 border border-ok/30 rounded-lg p-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-green-400">
+            <h3 className="text-sm font-semibold text-ok">
               {mode === 'encrypt' ? 'Encrypted Output' : 'Decrypted Text'}
             </h3>
-            <button onClick={handleCopy} className="text-xs text-[#B8B8D4] hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-white/10 rounded min-h-[36px] min-w-[64px]">
+            <button onClick={handleCopy} className="text-xs text-t2 hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-b1 rounded min-h-[36px] min-w-[64px]">
               {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
-          <pre className="bg-[#191b1c] p-4 rounded-md text-sm text-white font-mono break-all whitespace-pre-wrap">{output}</pre>
-          <p className="mt-3 text-xs text-[#B8B8D4]/60">
+          <pre className="bg-s0 p-4 rounded-md text-sm text-white font-mono break-all whitespace-pre-wrap">{output}</pre>
+          <p className="mt-3 text-xs text-t3">
             {mode === 'encrypt'
               ? 'Share this text safely. The recipient needs the same passphrase to decrypt.'
               : 'Decrypted entirely in your browser. No data was sent to any server.'}
@@ -324,18 +324,18 @@ export function TextEncryptionTool() {
 
       {/* File output */}
       {downloadUrl && source === 'file' && (
-        <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-6">
-          <h3 className="text-sm font-semibold text-green-400 mb-3">
+        <div className="bg-s0 border border-ok/30 rounded-lg p-6">
+          <h3 className="text-sm font-semibold text-ok mb-3">
             {mode === 'encrypt' ? 'Encrypted File Ready' : 'Decrypted File Ready'}
           </h3>
           <a
             href={downloadUrl}
             download={downloadName}
-            className="inline-block px-4 py-2 border border-green-500/20 rounded text-green-400 hover:bg-green-500/10 text-sm"
+            className="inline-block px-4 py-2 border border-ok/30 rounded text-ok hover:bg-ok-dim text-sm"
           >
             Download {downloadName}
           </a>
-          <p className="mt-3 text-xs text-[#B8B8D4]/60">
+          <p className="mt-3 text-xs text-t3">
             {mode === 'encrypt'
               ? 'Encrypted as AES-256-GCM. Share the file + passphrase through separate channels.'
               : 'Decrypted entirely in your browser. Nothing was uploaded.'}
@@ -344,17 +344,17 @@ export function TextEncryptionTool() {
       )}
 
       {/* Info */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+      <div className="bg-s0 border border-b1 rounded-lg p-6">
         <h3 className="text-sm font-semibold text-white mb-3">Encryption Details</h3>
         <div className="grid grid-cols-2 gap-3 text-xs">
-          <div className="text-[#B8B8D4]">Algorithm</div><div className="text-white">AES-256-GCM</div>
-          <div className="text-[#B8B8D4]">Key Derivation</div><div className="text-white">PBKDF2-SHA256</div>
-          <div className="text-[#B8B8D4]">Iterations</div><div className="text-white">{PBKDF2_ITERATIONS.toLocaleString()}</div>
-          <div className="text-[#B8B8D4]">Salt</div><div className="text-white">Random 128-bit</div>
-          <div className="text-[#B8B8D4]">IV</div><div className="text-white">Random 96-bit</div>
-          <div className="text-[#B8B8D4]">Container</div><div className="text-white">IBE1 magic + salt + iv + ciphertext</div>
-          <div className="text-[#B8B8D4]">Processing</div><div className="text-white">100% client-side</div>
-          <div className="text-[#B8B8D4]">Max file size</div><div className="text-white">100 MB</div>
+          <div className="text-t2">Algorithm</div><div className="text-white">AES-256-GCM</div>
+          <div className="text-t2">Key Derivation</div><div className="text-white">PBKDF2-SHA256</div>
+          <div className="text-t2">Iterations</div><div className="text-white">{PBKDF2_ITERATIONS.toLocaleString()}</div>
+          <div className="text-t2">Salt</div><div className="text-white">Random 128-bit</div>
+          <div className="text-t2">IV</div><div className="text-white">Random 96-bit</div>
+          <div className="text-t2">Container</div><div className="text-white">IBE1 magic + salt + iv + ciphertext</div>
+          <div className="text-t2">Processing</div><div className="text-white">100% client-side</div>
+          <div className="text-t2">Max file size</div><div className="text-white">100 MB</div>
         </div>
       </div>
     </div>

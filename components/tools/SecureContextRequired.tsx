@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Icon } from '@/components/ui/Icon';
 
 /**
  * Renders a friendly notice when the browser's Web Crypto API is unavailable —
@@ -26,11 +27,11 @@ export function SecureContextRequired({ toolName }: { toolName: string }) {
   if (!isInsecure) return null;
 
   return (
-    <div className="bg-[#0a0a0a] border border-yellow-500/30 rounded-lg p-6 mb-6">
-      <h3 className="text-sm font-semibold text-yellow-400 mb-2">
-        🔒 This tool requires a secure connection
+    <div className="bg-s0 border border-warn/30 rounded-lg p-6 mb-6">
+      <h3 className="text-sm font-semibold text-warn mb-2 flex items-center gap-2">
+        <Icon name="lock" size={16} /> This tool requires a secure connection
       </h3>
-      <p className="text-sm text-[#B8B8D4] mb-4">
+      <p className="text-sm text-t2 mb-4">
         The {toolName} uses the browser&apos;s Web Crypto API, which is only available on
         HTTPS pages (or on <code className="text-white">localhost</code>). This page is
         served over plain HTTP, so the cryptography functions are blocked by your browser
@@ -44,7 +45,7 @@ export function SecureContextRequired({ toolName }: { toolName: string }) {
           Try over HTTPS
         </a>
       )}
-      <p className="text-xs text-[#B8B8D4]/60 mt-4">
+      <p className="text-xs text-t3 mt-4">
         On the production site, this tool works normally. All cryptography still happens
         100% in your browser — the HTTPS requirement is a browser security policy, not a
         server one.

@@ -213,13 +213,13 @@ function verdictTitle(c: DnsLeakClassification): string {
 function severityClasses(s: DnsLeakClassification['severity']): { border: string; text: string } {
   switch (s) {
     case 'red':
-      return { border: 'border-red-500/30', text: 'text-red-400' };
+      return { border: 'border-danger/30', text: 'text-danger' };
     case 'green':
-      return { border: 'border-green-500/20', text: 'text-green-400' };
+      return { border: 'border-ok/30', text: 'text-ok' };
     case 'amber':
-      return { border: 'border-yellow-500/30', text: 'text-yellow-400' };
+      return { border: 'border-warn/30', text: 'text-warn' };
     default:
-      return { border: 'border-blue-500/20', text: 'text-blue-400' };
+      return { border: 'border-info/30', text: 'text-info' };
   }
 }
 
@@ -327,27 +327,27 @@ export function DnsLeakTestTool() {
 
   return (
     <div className="space-y-6">
-      <div className="text-sm text-[#B8B8D4]">
+      <div className="text-sm text-t2">
         Your browser is asked to resolve six hostnames that exist only for this test, under a domain we run the
         nameserver for. Whichever DNS resolver asks our nameserver for them is the resolver you are really using —
         no third-party leak-test service is involved, and the record expires after ten minutes.
       </div>
 
       {/* Controls */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6 space-y-4">
+      <div className="bg-s0 border border-b1 rounded-lg p-6 space-y-4">
         <div>
-          <div className="text-xs uppercase tracking-wider text-[#B8B8D4]/60 mb-2">Is your VPN on right now?</div>
-          <p className="text-xs text-[#B8B8D4] mb-3">
+          <div className="text-xs uppercase tracking-wider text-t3 mb-2">Is your VPN on right now?</div>
+          <p className="text-xs text-t2 mb-3">
             We cannot detect this ourselves. For the clearest answer, run once with the VPN <strong className="text-white">off</strong> to record your ISP&apos;s resolver, then again with it <strong className="text-white">on</strong>.
           </p>
-          <div className="inline-flex rounded border border-white/10 overflow-hidden" role="group" aria-label="VPN state">
+          <div className="inline-flex rounded border border-b1 overflow-hidden" role="group" aria-label="VPN state">
             <button
               type="button"
               aria-pressed={!vpnOn}
               onClick={() => setVpnOn(false)}
               disabled={running}
               className={`px-4 py-2 text-sm transition-colors disabled:opacity-50 ${
-                !vpnOn ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+                !vpnOn ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
               }`}
             >
               VPN is OFF
@@ -357,8 +357,8 @@ export function DnsLeakTestTool() {
               aria-pressed={vpnOn}
               onClick={() => setVpnOn(true)}
               disabled={running}
-              className={`px-4 py-2 text-sm border-l border-white/10 transition-colors disabled:opacity-50 ${
-                vpnOn ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+              className={`px-4 py-2 text-sm border-l border-b1 transition-colors disabled:opacity-50 ${
+                vpnOn ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
               }`}
             >
               VPN is ON
@@ -375,11 +375,11 @@ export function DnsLeakTestTool() {
           >
             {running ? 'Testing…' : 'Run DNS leak test'}
           </button>
-          {running && <span className="text-sm text-[#B8B8D4]">{PHASE_LABEL[phase]}</span>}
+          {running && <span className="text-sm text-t2">{PHASE_LABEL[phase]}</span>}
         </div>
 
         {baseline && (
-          <div className="text-xs text-[#B8B8D4] border-t border-white/10 pt-3 flex items-start justify-between gap-3 flex-wrap">
+          <div className="text-xs text-t2 border-t border-b1 pt-3 flex items-start justify-between gap-3 flex-wrap">
             <div>
               <span className="text-white">VPN-off baseline saved</span>
               {baseline.savedAt ? ` at ${formatTime(baseline.savedAt)}` : ''}:{' '}
@@ -394,58 +394,58 @@ export function DnsLeakTestTool() {
       </div>
 
       {phase === 'error' && error && (
-        <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-sm text-red-400">{error}</div>
+        <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger">{error}</div>
       )}
 
       {phase === 'done' && classification && result && sev && (
         <>
           {/* Verdict */}
-          <div className={`bg-[#0a0a0a] border ${sev.border} rounded-lg p-6`}>
-            <div className="text-xs uppercase tracking-wider text-[#B8B8D4]/60 mb-2">Verdict</div>
+          <div className={`bg-s0 border ${sev.border} rounded-lg p-6`}>
+            <div className="text-xs uppercase tracking-wider text-t3 mb-2">Verdict</div>
             <h3 className={`text-lg font-semibold ${sev.text} mb-2`}>{verdictTitle(classification)}</h3>
             <p className="text-sm text-white">{classification.headline}</p>
-            <p className="mt-2 text-sm text-[#B8B8D4]">{classification.detail}</p>
+            <p className="mt-2 text-sm text-t2">{classification.detail}</p>
             {classification.reason === 'no-backend' && (
-              <p className="mt-3 text-xs text-yellow-400/80">
+              <p className="mt-3 text-xs text-warn/80">
                 Inconclusive because the test backend is not configured on this deployment — no resolver could be recorded, so no verdict is possible.
               </p>
             )}
             {classification.reason === 'no-observations' && (
-              <p className="mt-3 text-xs text-yellow-400/80">
+              <p className="mt-3 text-xs text-warn/80">
                 Inconclusive because no DNS query reached our nameserver — the test zone may not be delegated yet, or a resolver cached a wildcard; try again in a minute.
               </p>
             )}
           </div>
 
           {/* Public IP */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
-            <div className="text-xs uppercase tracking-wider text-[#B8B8D4]/60 mb-2">Your public IP</div>
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
+            <div className="text-xs uppercase tracking-wider text-t3 mb-2">Your public IP</div>
             {result.publicIp ? (
               <div className="flex items-baseline justify-between gap-3 flex-wrap">
                 <code className="text-2xl text-white font-mono break-all select-all">{result.publicIp}</code>
-                <span className="text-xs text-[#B8B8D4]">
+                <span className="text-xs text-t2">
                   network {ispRangeOf(result.publicIp) ?? '—'} · VPN {testedWithVpnOn ? 'on' : 'off'}
                 </span>
               </div>
             ) : (
-              <p className="text-sm text-[#B8B8D4]">
+              <p className="text-sm text-t2">
                 Not available — {result.storage === 'none' ? 'the test backend is not configured on this deployment' : 'the test record expired or no public IP was visible to the server'}.
               </p>
             )}
           </div>
 
           {/* Resolvers */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">
               Resolvers that asked our nameserver ({result.resolvers.length})
             </h3>
             {result.resolvers.length === 0 ? (
-              <p className="text-sm text-[#B8B8D4]">None recorded for this test.</p>
+              <p className="text-sm text-t2">None recorded for this test.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-left text-xs uppercase tracking-wider text-[#B8B8D4]/60">
+                    <tr className="text-left text-xs uppercase tracking-wider text-t3">
                       <th className="py-2 pr-4 font-normal">Resolver IP</th>
                       <th className="py-2 pr-4 font-normal">Network</th>
                       <th className="py-2 pr-4 font-normal">Queries</th>
@@ -454,29 +454,29 @@ export function DnsLeakTestTool() {
                   </thead>
                   <tbody>
                     {result.resolvers.map((r) => (
-                      <tr key={r.ip} className="border-t border-white/10">
+                      <tr key={r.ip} className="border-t border-b1">
                         <td className="py-2 pr-4"><code className="font-mono text-white break-all">{r.ip}</code></td>
-                        <td className="py-2 pr-4 font-mono text-xs text-[#B8B8D4]">{r.network}</td>
-                        <td className="py-2 pr-4 text-[#B8B8D4]">{r.count}</td>
-                        <td className="py-2 text-[#B8B8D4]">{formatTime(r.firstSeen)}</td>
+                        <td className="py-2 pr-4 font-mono text-xs text-t2">{r.network}</td>
+                        <td className="py-2 pr-4 text-t2">{r.count}</td>
+                        <td className="py-2 text-t2">{formatTime(r.firstSeen)}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             )}
-            <p className="mt-3 text-xs text-[#B8B8D4]/60">
+            <p className="mt-3 text-xs text-t3">
               Networks are shown as address ranges, not provider names — we do not run geo or ASN lookups on anyone.
               {result.observations > 0 && ` ${result.observations} quer${result.observations === 1 ? 'y' : 'ies'} reached our nameserver in total.`}
             </p>
           </div>
 
           {/* What to do */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-2">
               {classification.verdict === 'leak' ? 'How to stop the leak' : 'What a DNS leak would mean'}
             </h3>
-            <ul className="space-y-2 text-sm text-[#B8B8D4]">
+            <ul className="space-y-2 text-sm text-t2">
               <li>• <strong className="text-white">Every site name you visit</strong> goes to the resolver first. If that resolver belongs to your ISP, your browsing destinations are visible to it even when your traffic is inside a VPN tunnel.</li>
               <li>• <strong className="text-white">The fix is a VPN that owns the DNS path.</strong> The VPN in Incognito Pro answers every lookup from its own resolver inside the tunnel, so nothing reaches your ISP&apos;s resolver.</li>
               <li>• <strong className="text-white">Check the operating system too.</strong> Browser-only VPN extensions leave system DNS untouched, and some VPN clients lose their DNS override after updates.</li>

@@ -29,7 +29,7 @@ export default function CalculatorsIndex() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-white mb-2">Privacy Calculators</h1>
-      <p className="text-[#B8B8D4] mb-8">
+      <p className="text-t2 mb-8">
         Interactive calculators to assess your privacy risk, estimate data exposure, and more.
       </p>
 
@@ -47,7 +47,7 @@ export default function CalculatorsIndex() {
       />
 
       {items.length === 0 && (
-        <div className="text-center py-12 text-[#B8B8D4]/60">
+        <div className="text-center py-12 text-t3">
           <p className="text-lg">Calculators are being generated. Check back soon!</p>
         </div>
       )}

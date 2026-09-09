@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useReportResult, severityFromScore } from './ResultContext';
+import { Icon } from '@/components/ui/Icon';
 
 interface Question {
   id: string;
@@ -245,11 +246,11 @@ export function PrivacyQuizTool() {
     return (
       <div className="space-y-6">
         {/* Overall score */}
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-8 text-center">
+        <div className="bg-s0 border border-b1 rounded-lg p-8 text-center">
           <div className="text-6xl font-bold mb-2" style={{ color: grade.color }}>{grade.letter}</div>
           <div className="text-lg text-white mb-1">{grade.label}</div>
           <div className="text-3xl font-bold text-white mb-4">{totalScore}/100</div>
-          <div className="h-3 bg-[#191b1c] rounded-full overflow-hidden max-w-xs mx-auto">
+          <div className="h-3 bg-s0 rounded-full overflow-hidden max-w-xs mx-auto">
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{ width: `${totalScore}%`, backgroundColor: grade.color }}
@@ -258,7 +259,7 @@ export function PrivacyQuizTool() {
         </div>
 
         {/* Category breakdown */}
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+        <div className="bg-s0 border border-b1 rounded-lg p-6">
           <h3 className="text-sm font-semibold text-white mb-4">Category Breakdown</h3>
           <div className="space-y-3">
             {categoryScores.map(({ category, score }) => {
@@ -266,12 +267,12 @@ export function PrivacyQuizTool() {
               return (
                 <div key={category}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-[#B8B8D4]">{category}</span>
+                    <span className="text-sm text-t2">{category}</span>
                     <span className="text-sm font-bold" style={{ color: catGrade.color }}>
                       {score}%
                     </span>
                   </div>
-                  <div className="h-2 bg-[#191b1c] rounded-full overflow-hidden">
+                  <div className="h-2 bg-s0 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-500"
                       style={{ width: `${score}%`, backgroundColor: catGrade.color }}
@@ -284,8 +285,8 @@ export function PrivacyQuizTool() {
         </div>
 
         {/* Improvement tips — ranked by impact × (how far the user is from the ideal) */}
-        <div className="bg-[#0a0a0a] border border-blue-500/20 rounded-lg p-6">
-          <h3 className="text-sm font-semibold text-blue-400 mb-3">Top Recommendations</h3>
+        <div className="bg-s0 border border-info/30 rounded-lg p-6">
+          <h3 className="text-sm font-semibold text-info mb-3">Top Recommendations</h3>
           <ul className="space-y-2">
             {QUESTIONS
               .filter((q) => (answers[q.id] || 0) < 6)
@@ -293,8 +294,8 @@ export function PrivacyQuizTool() {
               .sort((a, b) => b.priority - a.priority)
               .slice(0, 5)
               .map(({ q }) => (
-                <li key={q.id} className="flex items-start text-sm text-[#B8B8D4]">
-                  <span className="mr-2 text-blue-500 shrink-0">&#10132;</span>
+                <li key={q.id} className="flex items-start text-sm text-t2">
+                  <Icon name="arrow" size={14} className="mr-2 mt-0.5 text-info" />
                   <span>
                     <strong className="text-white">{q.category}:</strong>{' '}
                     {q.options[0].label} (you answered: {q.options.find((o) => o.score === answers[q.id])?.label})
@@ -302,7 +303,7 @@ export function PrivacyQuizTool() {
                 </li>
               ))}
             {QUESTIONS.filter((q) => (answers[q.id] || 0) < 6).length === 0 && (
-              <li className="text-sm text-green-400">You&apos;re already doing great across all areas!</li>
+              <li className="text-sm text-ok">You&apos;re already doing great across all areas!</li>
             )}
           </ul>
         </div>
@@ -311,7 +312,7 @@ export function PrivacyQuizTool() {
           <button onClick={reset} className="btn-primary py-3">Retake Quiz</button>
           <button
             onClick={shareLink}
-            className="py-3 border border-white/10 rounded text-white hover:bg-white/5"
+            className="py-3 border border-b1 rounded text-white hover:bg-white/5"
           >
             {shared ? 'Link copied!' : 'Copy shareable link'}
           </button>
@@ -326,12 +327,12 @@ export function PrivacyQuizTool() {
   return (
     <div className="space-y-6">
       {/* Progress */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+      <div className="bg-s0 border border-b1 rounded-lg p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-[#B8B8D4]">Question {currentQ + 1} of {QUESTIONS.length}</span>
-          <span className="text-xs text-[#B8B8D4]">{q.category}</span>
+          <span className="text-xs text-t2">Question {currentQ + 1} of {QUESTIONS.length}</span>
+          <span className="text-xs text-t2">{q.category}</span>
         </div>
-        <div className="h-2 bg-[#191b1c] rounded-full overflow-hidden">
+        <div className="h-2 bg-s0 rounded-full overflow-hidden">
           <div
             className="h-full bg-white/30 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
@@ -340,7 +341,7 @@ export function PrivacyQuizTool() {
       </div>
 
       {/* Question */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+      <div className="bg-s0 border border-b1 rounded-lg p-6">
         <h3 className="text-lg font-semibold text-white mb-6">{q.text}</h3>
         <div className="space-y-3">
           {q.options.map((opt, i) => (
@@ -349,8 +350,8 @@ export function PrivacyQuizTool() {
               onClick={() => handleAnswer(q.id, opt.score)}
               className={`w-full text-left p-4 rounded-lg border transition-colors ${
                 answers[q.id] === opt.score
-                  ? 'border-white/30 bg-white/10 text-white'
-                  : 'border-white/10 bg-[#191b1c] text-[#B8B8D4] hover:border-white/20 hover:text-white'
+                  ? 'border-b2 bg-white/10 text-white'
+                  : 'border-b1 bg-s0 text-t2 hover:border-white/20 hover:text-white'
               }`}
             >
               {opt.label}

@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { IncognitoLogo } from "@/components/ui/IncognitoLogo";
-import { IS_PRO_DEPLOYMENT } from "@/lib/tiers";
+import { IS_PRO_DEPLOYMENT, PRO_DEFINITION } from "@/lib/tiers";
 import { playUrl } from "@/lib/play";
 import "./globals.css";
 
@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   },
 };
 
+// theme-color is the page base (#000000); nothing else declares it.
+export const viewport: Viewport = { themeColor: "#000000" };
+
 const navItems = [
   { label: "Checklists", href: "/checklists" },
   { label: "Tools", href: "/tools" },
@@ -52,7 +55,7 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col bg-black text-white font-mono">
         {/* Header */}
-        <header className="border-b border-white/10 bg-black sticky top-0 z-50">
+        <header className="border-b border-b1 bg-black sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between gap-3 h-16">
               {/* Logo + wordmark. SVG is a React component (see
@@ -73,7 +76,7 @@ export default function RootLayout({
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="px-3 py-2 text-xs uppercase tracking-wider text-[#B8B8D4] hover:text-white transition-colors"
+                    className="px-3 py-2 text-xs uppercase tracking-wider text-t2 hover:text-white transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -81,39 +84,35 @@ export default function RootLayout({
               </nav>
               {/* Mobile menu: a native <details> so it works without JS on the static export */}
               <details className="lg:hidden relative ml-auto">
-                <summary className="list-none cursor-pointer px-3 py-2 text-xs uppercase tracking-wider text-[#B8B8D4] hover:text-white select-none" aria-label="Open menu">Menu</summary>
-                <div className="absolute right-0 mt-2 w-56 bg-[#0a0a0a] border border-white/10 rounded-lg p-2 shadow-xl z-50">
+                <summary className="list-none cursor-pointer px-3 py-2 text-xs uppercase tracking-wider text-t2 hover:text-white select-none" aria-label="Open menu">Menu</summary>
+                <div className="absolute right-0 mt-2 w-56 bg-s0 border border-b1 rounded-lg p-2 shadow-xl z-50">
                   {visibleNav.map(item => (
-                    <Link key={item.href} href={item.href} className="block px-3 py-2 text-xs uppercase tracking-wider text-[#B8B8D4] hover:text-white hover:bg-white/5 rounded">
+                    <Link key={item.href} href={item.href} className="block px-3 py-2 text-xs uppercase tracking-wider text-t2 hover:text-white hover:bg-white/5 rounded">
                       {item.label}
                     </Link>
                   ))}
                 </div>
               </details>
-              <a
-                href={playUrl({ medium: 'site', campaign: 'header' })}
-                rel="noopener"
-                /*
-                 * At narrow viewports the text wraps to two lines ("DOWNLOAD" /
-                 * "BROWSER") because there isn't horizontal room for one line.
-                 * The default btn-primary horizontal padding (1.5rem each side)
-                 * makes the resulting two-line pill look unbalanced — wide
-                 * pill, narrow text inside.
-                 *
-                 * !px-4 → 1rem horizontal padding at sm-md (snug around the
-                 *         wider word "DOWNLOAD")
-                 * md:!px-6 → restores 1.5rem padding at md and up, where the
-                 *            text comfortably fits one line and the original
-                 *            generous padding looks right.
-                 *
-                 * leading-tight + text-center keep the two stacked words
-                 * vertically symmetric inside the pill.
-                 */
-                className="btn-primary inline-flex text-xs leading-tight text-center !px-3 sm:!px-4 md:!px-6"
-              >
-                <span className="sm:hidden">Get app</span>
-                <span className="hidden sm:inline">Download Browser</span>
-              </a>
+              {IS_PRO_DEPLOYMENT ? (
+                <a
+                  href={playUrl({ medium: 'site', campaign: 'header' })}
+                  rel="noopener"
+                  title={PRO_DEFINITION}
+                  className="btn-pro text-xs !px-3 sm:!px-4 !min-h-10 whitespace-nowrap"
+                >
+                  <span className="sm:hidden">Upgrade to Pro</span>
+                  <span className="hidden sm:inline">Upgrade to Pro in the app</span>
+                </a>
+              ) : (
+                <a
+                  href={playUrl({ medium: 'site', campaign: 'header' })}
+                  rel="noopener"
+                  className="btn-primary text-xs !px-3 sm:!px-4 !min-h-10 whitespace-nowrap"
+                >
+                  <span className="sm:hidden">Get app</span>
+                  <span className="hidden sm:inline">Download Browser</span>
+                </a>
+              )}
             </div>
           </div>
         </header>
@@ -124,12 +123,12 @@ export default function RootLayout({
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-white/10 bg-[#0a0a0a] mt-auto">
+        <footer className="border-t border-b1 bg-s0 mt-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div>
                 <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Resources</h3>
-                <ul className="space-y-2 text-sm text-[#B8B8D4]">
+                <ul className="space-y-2 text-sm text-t2">
                   {visibleNav.map(item => (
                     <li key={item.href}>
                       <Link href={item.href} className="hover:text-white transition-colors">{item.label}</Link>
@@ -139,7 +138,7 @@ export default function RootLayout({
               </div>
               <div>
                 <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Product</h3>
-                <ul className="space-y-2 text-sm text-[#B8B8D4]">
+                <ul className="space-y-2 text-sm text-t2">
                   <li><a href={playUrl({ medium: 'site', campaign: 'footer' })} rel="noopener" className="hover:text-white transition-colors">Download</a></li>
                   <li><a href="https://incognitobrowser.io/news/" rel="noopener" className="hover:text-white transition-colors">Blog</a></li>
                 </ul>
@@ -149,13 +148,13 @@ export default function RootLayout({
                   <IncognitoLogo size={28} />
                   <h3 className="font-semibold text-white text-xs uppercase tracking-wider">Incognito Browser</h3>
                 </div>
-                <p className="text-sm text-[#B8B8D4] leading-relaxed">
+                <p className="text-sm text-t2 leading-relaxed">
                   Free privacy resources provided by Incognito Browser. Protecting your online
                   privacy with tools, guides, and educational content.
                 </p>
               </div>
             </div>
-            <div className="mt-8 pt-6 border-t border-white/10 text-center text-xs text-[#B8B8D4]/60">
+            <div className="mt-8 pt-6 border-t border-b1 text-center text-xs text-t3">
               &copy; {new Date().getFullYear()} Incognito Browser. All rights reserved.
             </div>
           </div>

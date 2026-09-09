@@ -12,6 +12,7 @@ import { useId, useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { LETTERS, filterEntries, groupByLetter, letterOf, type CatalogueEntry } from '@/lib/catalogue';
 import { GradeBadge } from '@/components/GradeBadge';
+import { Badge } from '@/components/ui/Badge';
 
 export interface CatalogueTopic {
   label: string;
@@ -61,9 +62,9 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
           onChange={(e) => setQuery(e.target.value)}
           placeholder={`Search ${entries.length} ${noun}…`}
           autoComplete="off"
-          className="w-full md:max-w-md bg-[#0a0a0a] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-[#B8B8D4]/50 focus:outline-none focus:border-white/40"
+          className="w-full md:max-w-md bg-s0 border border-b1 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-t3 focus:outline-none focus:border-b2"
         />
-        <p className="text-xs text-[#B8B8D4]/60 mt-2" aria-live="polite">
+        <p className="text-xs text-t3 mt-2" aria-live="polite">
           {q ? `${matches!.length} of ${entries.length} ${noun} match “${q}”` : `${entries.length} ${noun}, A to Z. Jump to a letter or search.`}
         </p>
       </div>
@@ -75,12 +76,12 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
             <a
               key={letter}
               href={`#letter-${letter === '#' ? 'num' : letter}`}
-              className="w-8 h-8 flex items-center justify-center rounded bg-white/5 text-sm font-medium text-[#B8B8D4] border border-white/10 hover:bg-white/10 hover:text-white"
+              className="w-8 h-8 flex items-center justify-center rounded bg-white/5 text-sm font-medium text-t2 border border-b1 hover:bg-white/10 hover:text-white"
             >
               {letter}
             </a>
           ) : (
-            <span key={letter} aria-hidden="true" className="w-8 h-8 flex items-center justify-center rounded text-sm text-[#B8B8D4]/25 border border-white/5">
+            <span key={letter} aria-hidden="true" className="w-8 h-8 flex items-center justify-center rounded text-sm text-t2/25 border border-hair">
               {letter}
             </span>
           ),
@@ -90,11 +91,11 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
       {/* Browse by topic — chips, not a second full listing */}
       {topics && topics.length > 0 && (
         <div className="mb-8" data-topics={topics.length}>
-          <h3 className="text-xs uppercase tracking-wider text-[#B8B8D4]/60 mb-2">Browse by topic</h3>
+          <h3 className="text-xs uppercase tracking-wider text-t3 mb-2">Browse by topic</h3>
           <div className="flex flex-wrap gap-2">
             {topics.map((t) =>
               t.href ? (
-                <Link key={t.label} href={t.href} className="text-xs px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-[#B8B8D4] hover:bg-white/10 hover:text-white transition-colors topic-chip">
+                <Link key={t.label} href={t.href} className="text-xs px-2.5 py-1 rounded-[4px] border border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white transition-colors topic-chip">
                   {t.label}
                 </Link>
               ) : (
@@ -103,7 +104,7 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
                   type="button"
                   onClick={() => setQuery(query.trim() === (t.query ?? t.label) ? '' : (t.query ?? t.label))}
                   aria-pressed={query.trim() === (t.query ?? t.label)}
-                  className={`text-xs px-2.5 py-1 rounded-full border transition-colors topic-chip ${query.trim() === (t.query ?? t.label) ? 'border-white/40 bg-white/15 text-white' : 'border-white/10 bg-white/5 text-[#B8B8D4] hover:bg-white/10 hover:text-white'}`}
+                  className={`text-xs px-2.5 py-1 rounded-[4px] border transition-colors topic-chip ${query.trim() === (t.query ?? t.label) ? 'border-b2 bg-s2 text-white' : 'border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white'}`}
                 >
                   {t.label}
                 </button>
@@ -116,7 +117,7 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
       {/* Search results — directly under the box, so typing never sends you off-screen */}
       {q && (
         matches!.length === 0 ? (
-          <p className="text-[#B8B8D4]/70 py-8">No {noun} match “{q}”. Try a shorter word, a topic name, or clear the search.</p>
+          <p className="text-t3 py-8">No {noun} match “{q}”. Try a shorter word, a topic name, or clear the search.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3" data-results={matches!.length}>
             {matches!.map((e) => <Entry key={e.href} e={e} />)}
@@ -130,7 +131,7 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
 
     {/* Full A–Z list at the bottom of the page (hidden while a search is active) */}
     {!q && (
-      <section id="a-to-z" className="mt-12 pt-8 border-t border-white/10 scroll-mt-24" data-atoz={noun}>
+      <section id="a-to-z" className="mt-12 pt-8 border-t border-b1 scroll-mt-24" data-atoz={noun}>
         <h2 className="text-xl font-semibold text-white mb-6">All {entries.length} {noun}, A to Z</h2>
         {groups.map((g) => (
           <section key={g.letter} id={`letter-${g.letter === '#' ? 'num' : g.letter}`} className="mb-8 scroll-mt-24">
@@ -148,13 +149,13 @@ export function AtoZCatalogue({ entries, noun, heading, topics, children }: Prop
 
 function Entry({ e }: { e: CatalogueEntry }) {
   return (
-    <Link href={e.href} className="block border border-white/10 rounded-lg p-4 bg-[#0a0a0a] hover:border-white/30 transition-all catalogue-entry" data-letter={letterOf(e.title)}>
+    <Link href={e.href} className="block border border-b1 rounded-lg p-4 bg-s0 hover:border-b2 transition-all catalogue-entry" data-letter={letterOf(e.title)}>
       <div className="flex items-start justify-between gap-3">
         <h4 className="font-semibold text-white">{e.title}</h4>
-        {e.grade ? <GradeBadge grade={e.grade} size="sm" /> : e.badge && <span className="shrink-0 text-xs bg-white/5 text-[#B8B8D4]/70 px-2 py-0.5 rounded border border-white/5">{e.badge}</span>}
+        {e.grade ? <GradeBadge grade={e.grade} size="sm" /> : e.badge && <Badge label={e.badge} className="shrink-0" />}
       </div>
-      {e.meta && <p className="text-xs text-[#B8B8D4]/60 mt-0.5">{e.meta}</p>}
-      {e.description && <p className="text-sm text-[#B8B8D4] mt-1 line-clamp-2">{e.description}</p>}
+      {e.meta && <p className="text-xs text-t3 mt-0.5">{e.meta}</p>}
+      {e.description && <p className="text-sm text-t2 mt-1 line-clamp-2">{e.description}</p>}
     </Link>
   );
 }

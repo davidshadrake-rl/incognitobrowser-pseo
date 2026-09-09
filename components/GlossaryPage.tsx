@@ -50,24 +50,24 @@ export function GlossaryTermPage({ data, validTermSlugs }: GlossaryTermPageProps
         <Badge label={data.category} />
       </header>
 
-      <div className="bg-white/5 border-l-4 border-white/40 p-5 mb-8 rounded-r-lg">
-        <p className="text-lg text-[#cfcfcf] font-medium">{data.definition}</p>
+      <div className="bg-white/5 border-l-4 border-b2 p-5 mb-8 rounded-r-lg">
+        <p className="text-lg text-t2 font-medium">{data.definition}</p>
       </div>
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-white mb-3">In Simple Terms</h2>
-        <p className="text-[#B8B8D4]">{data.simpleExplanation}</p>
+        <p className="text-t2">{data.simpleExplanation}</p>
       </section>
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-white mb-3">Why It Matters</h2>
-        <p className="text-[#B8B8D4]">{data.whyItMatters}</p>
+        <p className="text-t2">{data.whyItMatters}</p>
       </section>
 
       {data.technicalDetail && (
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-white mb-3">Technical Details</h2>
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-sm text-[#B8B8D4] font-mono">
+          <div className="bg-s0 border border-b1 rounded-lg p-4 text-sm text-t2 font-mono">
             {data.technicalDetail}
           </div>
         </section>
@@ -78,9 +78,9 @@ export function GlossaryTermPage({ data, validTermSlugs }: GlossaryTermPageProps
           <h2 className="text-xl font-semibold text-white mb-4">Real-World Examples</h2>
           <div className="space-y-4">
             {data.examples.map((ex, i) => (
-              <div key={i} className="border border-white/10 rounded-lg p-4 bg-[#0a0a0a]">
+              <div key={i} className="border border-b1 rounded-lg p-4 bg-s0">
                 <h3 className="font-medium text-white mb-2">{ex.scenario}</h3>
-                <p className="text-sm text-[#B8B8D4]">{ex.explanation}</p>
+                <p className="text-sm text-t2">{ex.explanation}</p>
               </div>
             ))}
           </div>
@@ -88,7 +88,7 @@ export function GlossaryTermPage({ data, validTermSlugs }: GlossaryTermPageProps
       )}
 
       {filteredRelatedTerms.length > 0 && (
-        <section className="mt-10 pt-6 border-t border-white/10">
+        <section className="mt-10 pt-6 border-t border-b1">
           <h2 className="text-lg font-semibold text-white mb-3">Related Terms</h2>
           <div className="flex flex-wrap gap-2">
             {filteredRelatedTerms.map((term, i) => (
@@ -96,7 +96,7 @@ export function GlossaryTermPage({ data, validTermSlugs }: GlossaryTermPageProps
                 key={i}
                 href={`/glossary/${term}`}
                 aria-label={`Read glossary entry: ${term.replace(/-/g, ' ')}`}
-                className="px-3 py-1.5 border border-white/10 text-[#B8B8D4] rounded-full text-sm hover:border-white/30 hover:text-white transition-colors"
+                className="px-3 py-1.5 border border-b1 bg-s1 text-t2 rounded-[4px] text-sm hover:border-b2 hover:text-white transition-colors"
               >
                 {term.replace(/-/g, ' ')}
               </Link>

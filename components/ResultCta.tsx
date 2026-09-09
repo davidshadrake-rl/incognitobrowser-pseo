@@ -35,10 +35,10 @@ interface Props {
 }
 
 const TONE: Record<Severity, string> = {
-  red: 'border-red-500/30 bg-red-500/[0.06]',
-  amber: 'border-amber-500/30 bg-amber-500/[0.06]',
-  green: 'border-green-500/30 bg-green-500/[0.06]',
-  info: 'border-white/10 bg-white/[0.03]',
+  red: 'border-danger/30 bg-danger-dim',
+  amber: 'border-warn/30 bg-warn-dim',
+  green: 'border-ok/30 bg-ok-dim',
+  info: 'border-b1 bg-white/[0.03]',
 };
 
 export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUrl, content, term = 'tool' }: Props) {
@@ -90,12 +90,12 @@ export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUr
 
   return (
     <aside className={`mt-8 rounded-lg border p-5 ${TONE[severity]}`} data-result-cta={severity} data-engine={engine}>
-      {headline && <p className="text-xs uppercase tracking-wider text-[#B8B8D4]/70 mb-2 break-words">{headline}</p>}
+      {headline && <p className="text-xs uppercase tracking-wider text-t3 mb-2 break-words">{headline}</p>}
       <h3 className="text-xl font-semibold text-white mb-2">{inApp ? IN_APP_COPY.headline : copy.headline}</h3>
-      <p className="text-sm text-[#B8B8D4] mb-4">{inApp ? IN_APP_COPY.body : copy.body}</p>
+      <p className="text-sm text-t2 mb-4">{inApp ? IN_APP_COPY.body : copy.body}</p>
       <ul className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
         {copy.benefits.map((b) => (
-          <li key={b.key} className="text-xs text-[#B8B8D4] bg-black/30 border border-white/5 rounded p-2">
+          <li key={b.key} className="text-xs text-t2 bg-black/30 border border-hair rounded p-2">
             <span className="text-white font-medium">{b.title}</span> {b.line}
           </li>
         ))}
@@ -108,23 +108,23 @@ export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUr
         ) : (
           <>
             <a href={play} rel="noopener" onClick={() => click('play')} className="btn-primary text-sm !px-5 !py-2.5">Get Incognito Browser for Android</a>
-            <a href={mailto} onClick={emailClick} className="text-sm px-4 py-2 rounded-full border border-white/15 text-[#B8B8D4] hover:text-white hover:border-white/40">Email me the link</a>
-            <button type="button" onClick={copyLink} className="text-sm px-4 py-2 rounded-full border border-white/15 text-[#B8B8D4] hover:text-white hover:border-white/40">{copied ? 'Copied' : 'Copy link'}</button>
+            <a href={mailto} onClick={emailClick} className="btn-ghost text-sm !px-4 !py-2">Email me the link</a>
+            <button type="button" onClick={copyLink} className="btn-ghost text-sm !px-4 !py-2">{copied ? 'Copied' : 'Copy link'}</button>
           </>
         )}
         {proWebUrl && !inApp && (
-          <a href={proWebUrl} rel="noopener" onClick={() => click('pro-web')} className="text-sm text-purple-300 hover:text-purple-200 underline">Open the Pro web app →</a>
+          <a href={proWebUrl} rel="noopener" onClick={() => click('pro-web')} className="text-sm text-pro underline underline-offset-4">Open the Pro web app →</a>
         )}
       </div>
       {mailFallback && (
-        <div className="mt-3 rounded border border-white/10 bg-black/30 p-3" role="status" aria-live="polite" data-mail-fallback>
-          <p className="text-xs text-[#B8B8D4] mb-2">No email app opened on this device. Copy the message and send it from your email instead:</p>
-          <textarea readOnly value={mailBody} rows={3} onFocus={(e) => e.currentTarget.select()} aria-label="Message to send yourself" className="w-full text-xs font-mono bg-[#0a0a0a] border border-white/10 rounded p-2 text-[#B8B8D4]" />
-          <button type="button" onClick={copyMessage} className="mt-2 text-xs px-3 py-1.5 rounded-full border border-white/15 text-[#B8B8D4] hover:text-white hover:border-white/40">{msgCopied ? 'Copied' : 'Copy message'}</button>
+        <div className="mt-3 rounded border border-b1 bg-black/30 p-3" role="status" aria-live="polite" data-mail-fallback>
+          <p className="text-xs text-t2 mb-2">No email app opened on this device. Copy the message and send it from your email instead:</p>
+          <textarea readOnly value={mailBody} rows={3} onFocus={(e) => e.currentTarget.select()} aria-label="Message to send yourself" className="w-full text-xs font-mono bg-s0 border border-b1 rounded p-2 text-t2" />
+          <button type="button" onClick={copyMessage} className="btn-ghost mt-2 text-xs !px-3 !py-1.5 !min-h-0">{msgCopied ? 'Copied' : 'Copy message'}</button>
         </div>
       )}
       {platform !== 'android' && !inApp && (
-        <p className="text-xs text-[#B8B8D4]/60 mt-3">Incognito Browser is an Android app; Pro is unlocked inside it. Send the link to your phone and the check re-runs there.</p>
+        <p className="text-xs text-t3 mt-3">Incognito Browser is an Android app; Pro is unlocked inside it. Send the link to your phone and the check re-runs there.</p>
       )}
     </aside>
   );

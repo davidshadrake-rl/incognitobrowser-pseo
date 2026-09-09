@@ -27,19 +27,19 @@ export default function SiteIndexPage() {
     <Link href={`/site/${s.domain}`} className="flex items-center gap-3 py-2 px-3 rounded hover:bg-white/5 transition-colors">
       <GradeBadge grade={s.grade.grade} size="sm" />
       <span className="text-sm text-white flex-1 truncate">{s.domain}</span>
-      <span className="text-xs text-[#B8B8D4]/60 w-14 text-right">{s.grade.score}/100</span>
-      <span className="text-xs text-[#B8B8D4]/60 w-24 text-right hidden sm:inline">{s.scan.summary.totalTrackers} trackers</span>
+      <span className="text-xs text-t3 w-14 text-right">{s.grade.score}/100</span>
+      <span className="text-xs text-t3 w-24 text-right hidden sm:inline">{s.scan.summary.totalTrackers} trackers</span>
     </Link>
   );
 
   return (
     <div>
       <h1 className="text-3xl font-bold text-white mb-2">Website Privacy Report Cards</h1>
-      <p className="text-[#B8B8D4] mb-2 max-w-2xl">
+      <p className="text-t2 mb-2 max-w-2xl">
         {all.length} popular websites, graded A–F on what they do to a first-time visitor <em>before</em> any consent banner is clicked:
         tracking cookies, ad and analytics trackers, third-party scripts, and security headers.
       </p>
-      <p className="text-sm text-[#B8B8D4]/60 mb-6">
+      <p className="text-sm text-t3 mb-6">
         Scanned {scannedAt} with the same scanner behind the <a href={proUrlFor('ad-tracking', 'cookie-tracker-scanner')} className="underline hover:text-white">Cookie &amp; Tracker Scanner in Incognito Pro</a>.
         Every point is itemised on each page. <Link href="/site/methodology" className="underline hover:text-white">Read the methodology</Link> — and argue with it.
       </p>
@@ -60,20 +60,20 @@ export default function SiteIndexPage() {
       {/* Distribution */}
       <div className="flex flex-wrap gap-3 mb-10">
         {(['A', 'B', 'C', 'D', 'F'] as const).map((g) => (
-          <div key={g} className="flex items-center gap-2 bg-[#0a0a0a] border border-white/10 rounded-lg px-3 py-2">
+          <div key={g} className="flex items-center gap-2 bg-s0 border border-b1 rounded-lg px-3 py-2">
             <GradeBadge grade={g} size="sm" />
             <span className="text-sm text-white">{dist[g]}</span>
-            <span className="text-xs text-[#B8B8D4]/60">sites</span>
+            <span className="text-xs text-t3">sites</span>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        <section className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+        <section className="bg-s0 border border-b1 rounded-lg p-4">
           <h2 className="text-lg font-semibold text-white mb-2">Most aggressive tracking</h2>
           {worst.map((s) => <Row key={s.domain} s={s} />)}
         </section>
-        <section className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+        <section className="bg-s0 border border-b1 rounded-lg p-4">
           <h2 className="text-lg font-semibold text-white mb-2">Cleanest</h2>
           {best.map((s) => <Row key={s.domain} s={s} />)}
         </section>

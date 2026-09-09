@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { ToolPage } from '@/components/ToolPage';
 import { renderToolEngine } from '@/components/tools/registry';
 import { IS_PRO_DEPLOYMENT, FREE_BASE_URL } from '@/lib/tiers';
+import { Badge } from '@/components/ui/Badge';
+import { Icon } from '@/components/ui/Icon';
 import { ResultProvider } from '@/components/tools/ResultContext';
 import { FunnelSurfaces } from '@/components/FunnelSurfaces';
 import type { NextStepsData } from '@/components/NextSteps';
@@ -46,7 +48,7 @@ export function ToolPageClient({ data, nicheName, nextSteps, proWebUrl }: { data
       return (
         <ResultProvider>
         <article className="max-w-3xl mx-auto">
-          <nav className="mb-6 flex items-center gap-2 text-sm text-[#B8B8D4]">
+          <nav className="mb-6 flex items-center gap-2 text-sm text-t2">
             <Link href="/tools" className="hover:text-white transition-colors">Tools</Link>
             <span>/</span>
             <span className="text-white">{nicheName}</span>
@@ -54,23 +56,15 @@ export function ToolPageClient({ data, nicheName, nextSteps, proWebUrl }: { data
 
           <header className="mb-8">
             <h1 className="text-3xl font-bold text-white mb-3">{data.title}</h1>
-            <div className="flex flex-wrap gap-2 mb-4">
-              <span className="px-2 py-0.5 bg-white/10 rounded text-xs text-[#B8B8D4]">{data.toolType}</span>
-              {IS_PRO_DEPLOYMENT ? (
-                <span className="px-2 py-0.5 bg-purple-500/10 rounded text-xs text-purple-300">Pro</span>
-              ) : (
-                <span className="px-2 py-0.5 bg-green-500/10 rounded text-xs text-green-400">Free</span>
-              )}
-              {data.processing === 'server' ? (
-                <span className="px-2 py-0.5 bg-amber-500/10 rounded text-xs text-amber-400" title="This tool sends your request to our server to fetch the target URL.">Server-assisted</span>
-              ) : (
-                <span className="px-2 py-0.5 bg-blue-500/10 rounded text-xs text-blue-400">Client-side</span>
-              )}
+            <div className="flex flex-wrap items-center gap-1.5 mb-4">
+              <Badge label={data.toolType} />
+              <Badge variant={IS_PRO_DEPLOYMENT ? 'pro' : 'free'} />
+              <Badge variant={data.processing === 'server' ? 'server' : 'client'} />
               {IS_PRO_DEPLOYMENT && (
-                <a href={`${FREE_BASE_URL}/tools`} className="px-2 py-0.5 bg-white/5 rounded text-xs text-[#B8B8D4] hover:text-white" title="The free privacy tools on the marketing site">← Free tools</a>
+                <a href={`${FREE_BASE_URL}/tools`} className="text-meta text-t2 hover:text-t1 underline underline-offset-4" title="The free privacy tools on the marketing site">← Free tools</a>
               )}
             </div>
-            <p className="text-[#B8B8D4]">{data.description}</p>
+            <p className="text-t2">{data.description}</p>
           </header>
 
           {/* Interactive tool */}
@@ -86,7 +80,7 @@ export function ToolPageClient({ data, nicheName, nextSteps, proWebUrl }: { data
             {data.educational.howItWorks && (
               <section>
                 <h2 className="text-xl font-semibold text-white mb-3">How This Tool Works</h2>
-                <p className="text-[#B8B8D4]">{data.educational.howItWorks}</p>
+                <p className="text-t2">{data.educational.howItWorks}</p>
               </section>
             )}
 
@@ -95,8 +89,8 @@ export function ToolPageClient({ data, nicheName, nextSteps, proWebUrl }: { data
                 <h2 className="text-xl font-semibold text-white mb-3">Tips</h2>
                 <ul className="space-y-2">
                   {data.educational.tips.map((tip, i) => (
-                    <li key={i} className="flex items-start text-sm text-[#B8B8D4]">
-                      <span className="text-green-400 mr-2">&#10003;</span>
+                    <li key={i} className="flex items-start text-sm text-t2">
+                      <Icon name="check" size={16} className="text-ok mr-2 mt-0.5" />
                       {tip}
                     </li>
                   ))}
@@ -109,8 +103,8 @@ export function ToolPageClient({ data, nicheName, nextSteps, proWebUrl }: { data
                 <h2 className="text-xl font-semibold text-white mb-3">Common Mistakes to Avoid</h2>
                 <ul className="space-y-2">
                   {data.educational.commonMistakes.map((mistake, i) => (
-                    <li key={i} className="flex items-start text-sm text-[#B8B8D4]">
-                      <span className="text-red-400 mr-2">&#10007;</span>
+                    <li key={i} className="flex items-start text-sm text-t2">
+                      <Icon name="x" size={16} className="text-danger mr-2 mt-0.5" />
                       {mistake}
                     </li>
                   ))}
@@ -130,7 +124,7 @@ export function ToolPageClient({ data, nicheName, nextSteps, proWebUrl }: { data
       data={data}
       nicheName={nicheName}
       renderTool={() => (
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6 text-center text-[#B8B8D4]">
+        <div className="bg-s0 border border-b1 rounded-lg p-6 text-center text-t2">
           Tool analysis complete. For enhanced privacy protection, try Incognito Browser.
         </div>
       )}

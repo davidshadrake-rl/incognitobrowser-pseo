@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useReportResult } from './ResultContext';
+import { Icon } from '@/components/ui/Icon';
 
 interface UADetails {
   raw: string;
@@ -179,9 +180,9 @@ export function UserAgentAnalyzerTool() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+      <div className="bg-s0 border border-b1 rounded-lg p-6">
         <h3 className="text-sm font-semibold text-white mb-2">Your User Agent</h3>
-        <code className="block bg-[#191b1c] p-4 rounded-md text-xs text-[#B8B8D4] font-mono break-all">
+        <code className="block bg-s0 p-4 rounded-md text-xs text-t2 font-mono break-all">
           {ua}
         </code>
         <div className="mt-3 flex items-center gap-4">
@@ -192,7 +193,7 @@ export function UserAgentAnalyzerTool() {
               onChange={(e) => setUseCustom(e.target.checked)}
               className="accent-white"
             />
-            <span className="text-xs text-[#B8B8D4]">Analyze a different user agent</span>
+            <span className="text-xs text-t2">Analyze a different user agent</span>
           </label>
         </div>
         {useCustom && (
@@ -202,7 +203,7 @@ export function UserAgentAnalyzerTool() {
               value={customUA}
               onChange={(e) => setCustomUA(e.target.value)}
               placeholder="Paste a user agent string..."
-              className="flex-1 px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20 font-mono"
+              className="flex-1 px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white placeholder-white/20 font-mono"
             />
             <button onClick={analyzeCustom} className="btn-primary px-4 text-sm">Analyze</button>
           </div>
@@ -212,87 +213,87 @@ export function UserAgentAnalyzerTool() {
       {details && (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
-              <div className="text-xs text-[#B8B8D4] mb-1">Browser</div>
+            <div className="bg-s0 border border-b1 rounded-lg p-4">
+              <div className="text-xs text-t2 mb-1">Browser</div>
               <div className="text-lg font-bold text-white">{details.browser.name}</div>
-              <div className="text-xs text-[#B8B8D4]">v{details.browser.version}</div>
+              <div className="text-xs text-t2">v{details.browser.version}</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
-              <div className="text-xs text-[#B8B8D4] mb-1">Operating System</div>
+            <div className="bg-s0 border border-b1 rounded-lg p-4">
+              <div className="text-xs text-t2 mb-1">Operating System</div>
               <div className="text-lg font-bold text-white">{details.os.name}</div>
-              <div className="text-xs text-[#B8B8D4]">{details.os.version}</div>
+              <div className="text-xs text-t2">{details.os.version}</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
-              <div className="text-xs text-[#B8B8D4] mb-1">Device</div>
+            <div className="bg-s0 border border-b1 rounded-lg p-4">
+              <div className="text-xs text-t2 mb-1">Device</div>
               <div className="text-lg font-bold text-white">{details.device}</div>
-              <div className="text-xs text-[#B8B8D4]">{details.is64bit ? '64-bit' : '32-bit'}</div>
+              <div className="text-xs text-t2">{details.is64bit ? '64-bit' : '32-bit'}</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
-              <div className="text-xs text-[#B8B8D4] mb-1">Rendering Engine</div>
+            <div className="bg-s0 border border-b1 rounded-lg p-4">
+              <div className="text-xs text-t2 mb-1">Rendering Engine</div>
               <div className="text-lg font-bold text-white">{details.engine.name}</div>
-              <div className="text-xs text-[#B8B8D4]">v{details.engine.version}</div>
+              <div className="text-xs text-t2">v{details.engine.version}</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
-              <div className="text-xs text-[#B8B8D4] mb-1">Mobile</div>
+            <div className="bg-s0 border border-b1 rounded-lg p-4">
+              <div className="text-xs text-t2 mb-1">Mobile</div>
               <div className="text-lg font-bold text-white">{details.isMobile ? 'Yes' : 'No'}</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
-              <div className="text-xs text-[#B8B8D4] mb-1">UA Length</div>
+            <div className="bg-s0 border border-b1 rounded-lg p-4">
+              <div className="text-xs text-t2 mb-1">UA Length</div>
               <div className="text-lg font-bold text-white">{details.raw.length}</div>
-              <div className="text-xs text-[#B8B8D4]">characters</div>
+              <div className="text-xs text-t2">characters</div>
             </div>
           </div>
 
           {/* Client Hints (UA-CH) */}
           {hints && (
-            <div className="bg-[#0a0a0a] border border-orange-500/20 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-orange-400 mb-1">High-Entropy Client Hints</h3>
-              <p className="text-xs text-[#B8B8D4] mb-3">
+            <div className="bg-s0 border border-warn/30 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-warn mb-1">High-Entropy Client Hints</h3>
+              <p className="text-xs text-t2 mb-3">
                 Chrome is phasing out the classic UA string and exposing these details via the{' '}
-                <code className="text-orange-400">userAgentData</code> API. Sites actively request these to
+                <code className="text-warn">userAgentData</code> API. Sites actively request these to
                 fingerprint you:
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs font-mono">
-                <div className="text-[#B8B8D4]">Brands: <span className="text-white">{hints.brands}</span></div>
-                <div className="text-[#B8B8D4]">Full version: <span className="text-white">{hints.fullVersion}</span></div>
-                <div className="text-[#B8B8D4]">Platform version: <span className="text-white">{hints.platformVersion}</span></div>
-                <div className="text-[#B8B8D4]">Architecture: <span className="text-white">{hints.architecture}</span></div>
-                <div className="text-[#B8B8D4]">Bitness: <span className="text-white">{hints.bitness}</span></div>
-                <div className="text-[#B8B8D4]">Device model: <span className="text-white">{hints.model || '(empty)'}</span></div>
+                <div className="text-t2">Brands: <span className="text-white">{hints.brands}</span></div>
+                <div className="text-t2">Full version: <span className="text-white">{hints.fullVersion}</span></div>
+                <div className="text-t2">Platform version: <span className="text-white">{hints.platformVersion}</span></div>
+                <div className="text-t2">Architecture: <span className="text-white">{hints.architecture}</span></div>
+                <div className="text-t2">Bitness: <span className="text-white">{hints.bitness}</span></div>
+                <div className="text-t2">Device model: <span className="text-white">{hints.model || '(empty)'}</span></div>
               </div>
             </div>
           )}
 
           {details.privacyConcerns.length > 0 && (
-            <div className="bg-[#0a0a0a] border border-yellow-500/20 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-yellow-400 mb-3">Privacy Concerns</h3>
+            <div className="bg-s0 border border-warn/30 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-warn mb-3">Privacy Concerns</h3>
               <ul className="space-y-2">
                 {details.privacyConcerns.map((c, i) => (
-                  <li key={i} className="flex items-start text-sm text-yellow-300">
-                    <span className="mr-2 text-yellow-500 shrink-0">&#9888;</span>{c}
+                  <li key={i} className="flex items-start text-sm text-warn">
+                    <Icon name="warn" size={14} className="mr-2 mt-0.5 text-warn" />{c}
                   </li>
                 ))}
               </ul>
             </div>
           )}
 
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">Fingerprint Factors</h3>
-            <p className="text-xs text-[#B8B8D4] mb-3">
+            <p className="text-xs text-t2 mb-3">
               These details from your user agent contribute to your browser fingerprint:
             </p>
             <div className="space-y-2">
               {details.uniquenessFactors.map((f, i) => (
-                <div key={i} className="flex items-center gap-2 text-sm text-[#B8B8D4]">
-                  <span className="text-blue-400">&#8226;</span>{f}
+                <div key={i} className="flex items-center gap-2 text-sm text-t2">
+                  <span className="text-info">&#8226;</span>{f}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-[#0a0a0a] border border-blue-500/20 rounded-lg p-6">
-            <h3 className="text-sm font-semibold text-blue-400 mb-3">What This Means</h3>
-            <p className="text-sm text-[#B8B8D4]">
+          <div className="bg-s0 border border-info/30 rounded-lg p-6">
+            <h3 className="text-sm font-semibold text-info mb-3">What This Means</h3>
+            <p className="text-sm text-t2">
               Your user agent string reveals your browser, OS, and device information to every website you visit.
               Combined with other browser properties, this creates a &quot;fingerprint&quot; that can track you
               without cookies. Consider using a privacy-focused browser that reduces or randomizes this data.

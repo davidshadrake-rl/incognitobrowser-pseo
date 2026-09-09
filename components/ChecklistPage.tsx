@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Badge } from './ui/Badge';
+import { Icon } from './ui/Icon';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { ArticleByline } from './ArticleByline';
 import { CheckYoursNow } from './CheckYoursNow';
@@ -71,13 +72,13 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
           <Badge label={data.estimatedTime} />
           <Badge label={`${completedItems}/${totalItems} completed`} />
         </div>
-        {data.intro && <p className="text-[#B8B8D4]">{data.intro}</p>}
+        {data.intro && <p className="text-t2">{data.intro}</p>}
       </header>
       {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {/* Progress bar */}
       <div className="mb-8">
-        <div className="flex justify-between text-sm text-[#B8B8D4] mb-1">
+        <div className="flex justify-between text-sm text-t2 mb-1">
           <span>Progress</span>
           <span>{progress}%</span>
         </div>
@@ -92,7 +93,7 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
       {/* Sections */}
       {data.sections.map((section, si) => (
         <section key={si} className="mb-8">
-          <h2 className="text-xl font-semibold text-white mb-4 pb-2 border-b border-white/10">{section.title}</h2>
+          <h2 className="text-xl font-semibold text-white mb-4 pb-2 border-b border-b1">{section.title}</h2>
           <div className="space-y-3">
             {section.items.map((item) => {
               const isExpanded = expandedItem === item.id;
@@ -101,7 +102,7 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
                 <div
                   key={item.id}
                   className={`border rounded-lg transition-all ${
-                    isChecked ? 'bg-green-500/10 border-green-500/20' : 'bg-[#0a0a0a] border-white/10'
+                    isChecked ? 'bg-ok-dim border-ok/30' : 'bg-s0 border-b1'
                   }`}
                 >
                   <div className="flex items-start p-4">
@@ -114,7 +115,7 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
                         checked={isChecked}
                         onChange={() => toggleItem(item.id)}
                         onClick={(e) => e.stopPropagation()}
-                        className="h-5 w-5 rounded border-white/30 cursor-pointer"
+                        className="h-5 w-5 rounded border-b2 cursor-pointer"
                         aria-label={`Mark ${item.task} as done`}
                       />
                     </label>
@@ -150,13 +151,13 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
                       </div>
                       {isExpanded && (
                         <div id={`item-${item.id}-detail`} className="mt-3 space-y-2 text-sm">
-                          <div className="bg-blue-500/10 border border-blue-500/20 rounded p-3">
-                            <strong className="text-blue-400">Why:</strong>
-                            <span className="text-blue-300 ml-1">{item.why}</span>
+                          <div className="bg-info-dim border border-info/30 rounded p-3">
+                            <strong className="text-info">Why:</strong>
+                            <span className="text-info ml-1">{item.why}</span>
                           </div>
-                          <div className="bg-white/5 border border-white/10 rounded p-3">
+                          <div className="bg-white/5 border border-b1 rounded p-3">
                             <strong className="text-white">How to:</strong>
-                            <span className="text-[#B8B8D4] ml-1">{item.howTo}</span>
+                            <span className="text-t2 ml-1">{item.howTo}</span>
                           </div>
                         </div>
                       )}
@@ -170,10 +171,10 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
       ))}
 
       {progress === 100 && (
-        <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-6 text-center">
-          <div className="text-4xl mb-2">&#127881;</div>
-          <h3 className="text-lg font-semibold text-green-400">All done!</h3>
-          <p className="text-green-300 mt-1">You&apos;ve completed every item on this checklist.</p>
+        <div className="bg-ok-dim border border-ok/30 rounded-lg p-6 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2 text-ok"><Icon name="check" size={28} /><span className="text-kicker uppercase">Done</span></div>
+          <h3 className="text-lg font-semibold text-ok">All done!</h3>
+          <p className="text-ok mt-1">You&apos;ve completed every item on this checklist.</p>
         </div>
       )}
     </article>

@@ -30,12 +30,12 @@ export default function GlossaryIndex() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-white mb-2">Privacy Glossary</h1>
-      <p className="text-[#B8B8D4] mb-8">
+      <p className="text-t2 mb-8">
         {terms.length} privacy and security terms explained in plain language.
       </p>
 
       {terms.length === 0 && (
-        <div className="text-center py-12 text-[#B8B8D4]/60">
+        <div className="text-center py-12 text-t3">
           <p className="text-lg">Glossary terms are being generated. Check back soon!</p>
         </div>
       )}

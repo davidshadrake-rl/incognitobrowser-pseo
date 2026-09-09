@@ -5,161 +5,186 @@
 @import "@fontsource/ibm-plex-mono/700.css";
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
-  --muted: #B8B8D4;
-  --muted-dark: #cfcfcf;
-  --surface: #2b2b36;
-  --surface-dark: #191b1c;
-  --border: rgba(255, 255, 255, 0.2);
-  --border-hover: rgba(255, 255, 255, 0.5);
-  --accent: #3d3d52;
+  color-scheme: dark; /* native <details>, <select>, scrollbars render dark in static and server builds */
+
+  --base: #000000;
+  --s0: #191b1c;
+  --s1: #2b2b36;
+  --s2: #3d3d52;
+  --t1: #ffffff;
+  --t2: #b8b8d4;
+  --t3: #8c8ca6;
+  --hair: #ffffff14;
+  --b1: #ffffff33;
+  --b2: #ffffff66;
+
+  --pro: #41b4f6;
+  --pro-dim: #41b4f61f;
+
+  --ok: #4ade80;      --ok-dim: #4ade801f;
+  --warn: #facc15;    --warn-dim: #facc151f;
+  --danger: #f87171;  --danger-dim: #f871711f;
+  --info: #8c8ca6;    --info-dim: #8c8ca61f;
+
+  /* brand hero glow, verbatim from incognitobrowser.io */
   --accent-gradient: linear-gradient(-41deg, rgba(61,61,82,0) 10%, rgba(61,61,82,0.75) 40%);
-  --green: #4ade80;
-  --green-muted: rgba(74, 222, 128, 0.15);
-  --red: #f87171;
-  --red-muted: rgba(248, 113, 113, 0.15);
-  --yellow: #facc15;
-  --yellow-muted: rgba(250, 204, 21, 0.15);
-  --blue: #60a5fa;
-  --blue-muted: rgba(96, 165, 250, 0.15);
-  --purple: #c084fc;
-  --purple-muted: rgba(192, 132, 252, 0.15);
+  --scan-grid: repeating-linear-gradient(0deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 24px),
+               repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 24px);
+
+  /* legacy aliases so nothing breaks between PR1 and the codemod */
+  --background: var(--base);
+  --foreground: var(--t1);
+  --muted: var(--t2);
+  --surface: var(--s1);
+  --surface-dark: var(--s0);
+  --border: var(--b1);
+  --border-hover: var(--b2);
+  --accent: var(--s2);
+  --green: var(--ok); --red: var(--danger); --yellow: var(--warn); --blue: var(--pro);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-mono: "IBM Plex Mono", monospace;
+  --color-base: var(--base);
+  --color-s0: var(--s0);
+  --color-s1: var(--s1);
+  --color-s2: var(--s2);
+  --color-t1: var(--t1);
+  --color-t2: var(--t2);
+  --color-t3: var(--t3);
+  --color-hair: var(--hair);
+  --color-b1: var(--b1);
+  --color-b2: var(--b2);
+  --color-pro: var(--pro);
+  --color-pro-dim: var(--pro-dim);
+  --color-ok: var(--ok);         --color-ok-dim: var(--ok-dim);
+  --color-warn: var(--warn);     --color-warn-dim: var(--warn-dim);
+  --color-danger: var(--danger); --color-danger-dim: var(--danger-dim);
+  --color-info: var(--info);     --color-info-dim: var(--info-dim);
+  /* keep the two names other files already use */
+  --color-background: var(--base);
+  --color-foreground: var(--t1);
+
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-console: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-prose: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* type scale (px expressed in rem) */
+  --text-kicker: 0.6875rem;  --text-kicker--line-height: 1rem;      --text-kicker--letter-spacing: 0.08em; /* 11px uppercase */
+  --text-meta: 0.75rem;      --text-meta--line-height: 1rem;        /* 12px chips, timestamps */
+  --text-row: 0.8125rem;     --text-row--line-height: 1.25rem;      /* 13px check rows, card blurbs */
+  --text-console: 0.875rem;  --text-console--line-height: 1.4rem;   /* 14px console body */
+  --text-prose: 1rem;        --text-prose--line-height: 1.65;       /* 16px prose */
+  --text-lede: 1.125rem;     --text-lede--line-height: 1.6;         /* 18px */
+  --text-h3: 1.125rem;       --text-h3--line-height: 1.4;           /* 18px */
+  --text-h2: 1.375rem;       --text-h2--line-height: 1.3;           /* 22px */
+  --text-h1: 1.75rem;        --text-h1--line-height: 1.2;           /* 28px; 24px below md via class */
+  --text-h1-lg: 2.5rem;      --text-h1-lg--line-height: 1.1;        /* 40px home + index heroes */
+  --text-gauge: 2.5rem;      --text-gauge--line-height: 1;          /* 40px gauge value */
+  --text-figure: 3.5rem;     --text-figure--line-height: 1;  --text-figure--letter-spacing: -0.02em; /* 56px pull-quote */
+
+  --radius-chip: 4px;
+  --radius-ctl: 8px;     /* buttons, inputs: brand block button radius */
+  --radius-tile: 10px;   /* 40px icon tile */
+  --radius-tile-lg: 14px;/* 56px hero tile */
+  --radius-card: 12px;
+  --radius-frame: 16px;  /* console frame, page hero: brand featured-image radius */
+  --radius-phone: 24px;
+
+  --shadow-ok: 0 0 8px #4ade8080;
+  --shadow-warn: 0 0 8px #facc1580;
+  --shadow-danger: 0 0 8px #f8717180;
+  --shadow-pro: 0 0 0 1px #41b4f6;
+  --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #3d3d52 #212223;
-}
+* { scrollbar-width: thin; scrollbar-color: var(--s2) var(--s0); }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--s0); }
+::-webkit-scrollbar-thumb { background: var(--s2); border-radius: 4px; }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #212223;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #3d3d52;
-  border-radius: 4px;
-}
-
+html { background: var(--base); }
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "IBM Plex Mono", monospace;
-}
-
-/* Pill button base
-   min-height ensures comfortable mobile tap target (Apple HIG 44pt / Material 48dp).
-   We use 44px which still feels balanced visually but meets accessibility floor. */
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1.5rem;
-  min-height: 44px;
-  border: 2px solid #ffffff;
-  border-radius: 9999px;
+  background: var(--base);
+  color: var(--t1);
+  font-family: var(--font-console);
   font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  background: transparent;
-  transition: all 0.2s;
-  cursor: pointer;
-  /* Remove the 300ms tap delay on older Android browsers and double-tap zoom */
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
 }
 
-.btn-primary:hover {
-  background: #cfcfcf;
-  color: #191b1c;
-  border-color: #cfcfcf;
+/* Prose register. Applied ONLY to long-form copy (guides, checklists, comparisons,
+   templates, glossary, notes panels). Never inside .console. One class = one-line revert. */
+.prose-ib {
+  font-family: var(--font-prose);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--t2);
+  max-width: 65ch;
+}
+.prose-ib strong { color: var(--t1); font-weight: 600; }
+.prose-ib a { color: var(--t1); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--b2); }
+.prose-ib a:hover { text-decoration-color: var(--t1); }
+.prose-ib h2, .prose-ib h3 { font-family: var(--font-console); color: var(--t1); }
+
+/* Tabular numerals on every value column */
+.tnum { font-variant-numeric: tabular-nums; }
+
+/* Buttons: brand element style (white fill, black text, 2px white border, 8px radius, sentence case) */
+.btn-primary, .btn-secondary, .btn-pro, .btn-ghost {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 44px; padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-ctl);
+  font-family: var(--font-console); font-size: 0.9375rem; font-weight: 500;
+  text-transform: none; letter-spacing: 0;
+  border: 2px solid transparent;
+  transition: background-color .15s, color .15s, border-color .15s;
+  cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.btn-primary { background: #fff; color: #000; border-color: #fff; }
+.btn-primary:hover { background: var(--t2); color: var(--s1); border-color: var(--t2); }
+.btn-secondary, .btn-ghost { background: transparent; color: var(--t1); border-color: var(--b2); }
+.btn-secondary:hover, .btn-ghost:hover { border-color: #fff; }
+.btn-pro { background: var(--pro); color: #000; border-color: var(--pro); }
+.btn-pro:hover { background: #6cc6f8; border-color: #6cc6f8; }
+.btn-primary:active, .btn-secondary:active, .btn-pro:active, .btn-ghost:active { transform: scale(0.98); }
+.btn-primary:disabled, .btn-pro:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+/* Focus: white ring, never blue (blue = Pro) */
+:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Inputs */
+input[type="text"], input[type="url"], input[type="email"], input[type="number"], input[type="password"], textarea, select {
+  background: var(--s0) !important; border: 1px solid var(--b1) !important; color: var(--t1) !important;
+  border-radius: var(--radius-ctl); font-family: var(--font-console);
+}
+input:focus, textarea:focus, select:focus { border-color: var(--b2) !important; outline: none; box-shadow: 0 0 0 2px rgba(255,255,255,.12); }
+input[type="checkbox"] { accent-color: var(--t1); }
+input[type="range"] { accent-color: var(--t1); }
+
+/* Collapsible panel (native, no JS, works on the Apache export) */
+details.panel { border-top: 1px solid var(--b1); }
+details.panel > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: .75rem;
+  padding: 1rem 0; font-family: var(--font-console); font-size: 0.9375rem; color: var(--t1);
+}
+details.panel > summary::-webkit-details-marker { display: none; }
+details.panel > summary .folio { font-size: 0.6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--t3); min-width: 2.5rem; }
+details.panel > summary svg { margin-left: auto; transition: transform .15s; }
+details.panel[open] > summary svg { transform: rotate(90deg); }
+details.panel > .panel-body { padding: 0 0 1.25rem 3.25rem; }
+details summary { cursor: pointer; }
+details summary::-webkit-details-marker { display: none; }
+
+/* Diagram trace: brand blue dashed = "your data leaving". CSS-only animation. */
+.dgm { stroke: var(--t2); stroke-width: 1.25; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.dgm-fill { fill: var(--s1); stroke: var(--t2); stroke-width: 1.25; }
+.dgm-trace { stroke: var(--pro); stroke-width: 1.5; fill: none; stroke-dasharray: 4 5; stroke-linecap: round; }
+.dgm-label { font-family: var(--font-console); font-size: 9px; letter-spacing: .08em; fill: var(--t3); text-transform: uppercase; }
+.dgm-block { stroke: var(--danger); stroke-width: 2; fill: none; stroke-linecap: round; }
+@media (prefers-reduced-motion: no-preference) {
+  .dgm-trace { animation: dgm-flow 1.6s linear infinite; }
+  @keyframes dgm-flow { to { stroke-dashoffset: -18; } }
 }
 
-.btn-primary:active {
-  transform: scale(0.98);
-}
-
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1.5rem;
-  min-height: 44px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 9999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #B8B8D4;
-  background: transparent;
-  transition: all 0.2s;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.btn-secondary:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #ffffff;
-}
-
-.btn-secondary:active {
-  transform: scale(0.98);
-}
-
-/* Form inputs dark theme */
-input[type="text"],
-input[type="url"],
-input[type="email"],
-input[type="number"],
-textarea,
-select {
-  background: var(--surface-dark) !important;
-  border-color: var(--border) !important;
-  color: #ffffff !important;
-}
-
-input[type="text"]:focus,
-input[type="url"]:focus,
-input[type="email"]:focus,
-input[type="number"]:focus,
-textarea:focus,
-select:focus {
-  border-color: var(--border-hover) !important;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-}
-
-input[type="checkbox"] {
-  accent-color: var(--green);
-}
-
-input[type="range"] {
-  accent-color: #ffffff;
-}
-
-details summary {
-  cursor: pointer;
-}
-
-details summary::-webkit-details-marker {
-  display: none;
-}
+/* Pull-quote figure: 2px rule above, drawn from a number already on the page */
+.figure { border-top: 2px solid var(--t1); padding-top: .75rem; font-family: var(--font-console); }
+.figure b { display: block; font-size: 3.5rem; line-height: 1; font-weight: 600; letter-spacing: -.02em; color: var(--t1); font-variant-numeric: tabular-nums; }
+.figure span { display: block; margin-top: .375rem; font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--t3); }

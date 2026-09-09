@@ -4,6 +4,7 @@ import { copyText } from '@/lib/clipboard';
 
 import { useCallback, useState, useEffect } from 'react';
 import { useReportResult } from './ResultContext';
+import { Icon } from '@/components/ui/Icon';
 
 type Mode = 'password' | 'passphrase' | 'pin';
 
@@ -205,7 +206,7 @@ export function PasswordGeneratorTool() {
   return (
     <div className="space-y-6">
       {/* Mode toggle */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex gap-1">
+      <div className="bg-s0 border border-b1 rounded-lg p-2 flex gap-1">
         {(['password', 'passphrase', 'pin'] as Mode[]).map((m) => (
           <button
             key={m}
@@ -214,7 +215,7 @@ export function PasswordGeneratorTool() {
               setPassword('');
             }}
             className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-              mode === m ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+              mode === m ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
             }`}
           >
             {m === 'password' ? 'Random Password' : m === 'passphrase' ? 'Passphrase' : 'PIN'}
@@ -223,13 +224,13 @@ export function PasswordGeneratorTool() {
       </div>
 
       {/* Options */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6 space-y-4">
+      <div className="bg-s0 border border-b1 rounded-lg p-6 space-y-4">
         {mode === 'password' ? (
           <>
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-medium text-[#B8B8D4]">Length: {options.length}</label>
-                <span className="text-xs text-[#B8B8D4]/60">{entropy} bits of entropy</span>
+                <label className="text-sm font-medium text-t2">Length: {options.length}</label>
+                <span className="text-xs text-t3">{entropy} bits of entropy</span>
               </div>
               <input
                 type="range"
@@ -239,7 +240,7 @@ export function PasswordGeneratorTool() {
                 onChange={(e) => setOptions({ ...options, length: Number(e.target.value) })}
                 className="w-full accent-white"
               />
-              <div className="flex justify-between text-xs text-[#B8B8D4]/40"><span>8</span><span>64</span></div>
+              <div className="flex justify-between text-xs text-t2/40"><span>8</span><span>64</span></div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -256,15 +257,15 @@ export function PasswordGeneratorTool() {
                     type="checkbox"
                     checked={options[key]}
                     onChange={(e) => setOptions({ ...options, [key]: e.target.checked })}
-                    className="rounded border-white/20 bg-[#191b1c] accent-white"
+                    className="rounded border-white/20 bg-s0 accent-white"
                   />
-                  <span className="text-sm text-[#B8B8D4]">{label}</span>
+                  <span className="text-sm text-t2">{label}</span>
                 </label>
               ))}
             </div>
 
             <div>
-              <label className="text-sm font-medium text-[#B8B8D4] block mb-1">
+              <label className="text-sm font-medium text-t2 block mb-1">
                 Extra characters to include (optional)
               </label>
               <input
@@ -272,9 +273,9 @@ export function PasswordGeneratorTool() {
                 value={options.customChars}
                 onChange={(e) => setOptions({ ...options, customChars: e.target.value })}
                 placeholder="e.g. 漢字 or additional symbols"
-                className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20 font-mono"
+                className="w-full px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white placeholder-white/20 font-mono"
               />
-              <p className="mt-1 text-xs text-[#B8B8D4]/60">
+              <p className="mt-1 text-xs text-t3">
                 These get added to the pool. Some systems reject Unicode — use with care.
               </p>
             </div>
@@ -282,8 +283,8 @@ export function PasswordGeneratorTool() {
         ) : mode === 'passphrase' ? (
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-[#B8B8D4]">Words: {wordCount}</label>
-              <span className="text-xs text-[#B8B8D4]/60">{entropy} bits of entropy</span>
+              <label className="text-sm font-medium text-t2">Words: {wordCount}</label>
+              <span className="text-xs text-t3">{entropy} bits of entropy</span>
             </div>
             <input
               type="range"
@@ -293,13 +294,13 @@ export function PasswordGeneratorTool() {
               onChange={(e) => setWordCount(Number(e.target.value))}
               className="w-full accent-white"
             />
-            <div className="flex justify-between text-xs text-[#B8B8D4]/40"><span>3</span><span>10</span></div>
+            <div className="flex justify-between text-xs text-t2/40"><span>3</span><span>10</span></div>
           </div>
         ) : (
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-[#B8B8D4]">PIN length: {pinLength}</label>
-              <span className="text-xs text-[#B8B8D4]/60">{entropy} bits of entropy</span>
+              <label className="text-sm font-medium text-t2">PIN length: {pinLength}</label>
+              <span className="text-xs text-t3">{entropy} bits of entropy</span>
             </div>
             <input
               type="range"
@@ -309,8 +310,8 @@ export function PasswordGeneratorTool() {
               onChange={(e) => setPinLength(Number(e.target.value))}
               className="w-full accent-white"
             />
-            <div className="flex justify-between text-xs text-[#B8B8D4]/40"><span>4</span><span>12</span></div>
-            <p className="mt-2 text-xs text-[#B8B8D4]/60">
+            <div className="flex justify-between text-xs text-t2/40"><span>4</span><span>12</span></div>
+            <p className="mt-2 text-xs text-t3">
               For phone unlocks, 2FA backup codes, or anywhere only digits are accepted.
             </p>
           </div>
@@ -323,22 +324,22 @@ export function PasswordGeneratorTool() {
 
       {/* Generated output */}
       {password && (
-        <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-6">
+        <div className="bg-s0 border border-ok/30 rounded-lg p-6">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-green-400">
+            <h3 className="text-sm font-semibold text-ok">
               Generated {mode === 'password' ? 'Password' : mode === 'passphrase' ? 'Passphrase' : 'PIN'}
             </h3>
             <button
               onClick={() => handleCopy(password)}
-              className="text-xs text-[#B8B8D4] hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-white/10 rounded min-h-[36px] min-w-[64px]"
+              className="text-xs text-t2 hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-b1 rounded min-h-[36px] min-w-[64px]"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
-          <div className="bg-[#191b1c] p-4 rounded-md font-mono text-lg text-white break-all select-all">
+          <div className="bg-s0 p-4 rounded-md font-mono text-lg text-white break-all select-all">
             {password}
           </div>
-          <div className="mt-3 flex gap-4 text-xs text-[#B8B8D4]">
+          <div className="mt-3 flex gap-4 text-xs text-t2">
             <span>{password.length} characters</span>
             <span>{entropy} bits entropy</span>
           </div>
@@ -346,9 +347,9 @@ export function PasswordGeneratorTool() {
       )}
 
       {history.length > 1 && (
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+        <div className="bg-s0 border border-b1 rounded-lg p-6">
           <h3 className="text-sm font-semibold text-white mb-3">Recent ({history.length})</h3>
-          <p className="text-xs text-[#B8B8D4]/50 mb-2">Tap to copy</p>
+          <p className="text-xs text-t3 mb-2">Tap to copy</p>
           <div className="space-y-2">
             {history.slice(1).map((pw, i) => (
               // Entire row is the tap target — big mobile-friendly hit area.
@@ -359,15 +360,15 @@ export function PasswordGeneratorTool() {
                 className="w-full flex items-center justify-between gap-2 px-3 py-2 -mx-1 rounded hover:bg-white/5 transition-colors text-left cursor-pointer"
                 aria-label={`Copy password ${pw.substring(0, 8)}...`}
               >
-                <code className="text-xs text-[#B8B8D4] font-mono truncate flex-1">{pw}</code>
-                <span className="text-xs text-[#B8B8D4]/60 shrink-0 group-hover:text-white">📋</span>
+                <code className="text-xs text-t2 font-mono truncate flex-1">{pw}</code>
+                <Icon name="list" size={14} className="text-t3 group-hover:text-white" title="Copy" />
               </button>
             ))}
           </div>
         </div>
       )}
 
-      <p className="text-xs text-[#B8B8D4]/60 text-center">
+      <p className="text-xs text-t3 text-center">
         Generated using the Web Crypto API with unbiased rejection sampling. Nothing leaves your browser.
       </p>
     </div>

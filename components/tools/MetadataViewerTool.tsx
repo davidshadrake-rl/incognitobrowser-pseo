@@ -256,11 +256,11 @@ function detectFormat(buffer: ArrayBuffer): ImageFormat {
 function getPrivacyColor(privacy: string) {
   switch (privacy) {
     case 'high':
-      return 'text-red-400 border-red-500/20';
+      return 'text-danger border-danger/30';
     case 'medium':
-      return 'text-yellow-400 border-yellow-500/20';
+      return 'text-warn border-warn/30';
     default:
-      return 'text-green-400 border-green-500/20';
+      return 'text-ok border-ok/30';
   }
 }
 
@@ -388,15 +388,15 @@ export function MetadataViewerTool() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
-        <label className="block text-sm font-medium text-[#B8B8D4] mb-3">Upload an image to inspect its metadata</label>
+      <div className="bg-s0 border border-b1 rounded-lg p-6">
+        <label className="block text-sm font-medium text-t2 mb-3">Upload an image to inspect its metadata</label>
         <input
           type="file"
           accept="image/*,.heic,.heif"
           onChange={handleFile}
-          className="w-full text-sm text-[#B8B8D4] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
+          className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
         />
-        <p className="mt-2 text-xs text-[#B8B8D4]/60">
+        <p className="mt-2 text-xs text-t3">
           Supports JPEG (full EXIF + GPS), PNG (tEXt/iTXt chunks), HEIC (basic detection), WebP, GIF, TIFF. Processed entirely in your browser.
         </p>
       </div>
@@ -405,30 +405,30 @@ export function MetadataViewerTool() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {imagePreview && (
-              <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+              <div className="bg-s0 border border-b1 rounded-lg p-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={imagePreview} alt="Uploaded preview" className="w-full h-48 object-contain rounded" />
-                <div className="mt-2 text-xs text-[#B8B8D4]/60">Format: <span className="text-white uppercase">{format}</span></div>
+                <div className="mt-2 text-xs text-t3">Format: <span className="text-white uppercase">{format}</span></div>
               </div>
             )}
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+            <div className="bg-s0 border border-b1 rounded-lg p-4">
               <h3 className="text-sm font-semibold text-white mb-3">Privacy Risk Summary</h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-[#B8B8D4]">High Risk Fields</span>
-                  <span className={`text-sm font-bold ${highRisk.length > 0 ? 'text-red-400' : 'text-green-400'}`}>{highRisk.length}</span>
+                  <span className="text-sm text-t2">High Risk Fields</span>
+                  <span className={`text-sm font-bold ${highRisk.length > 0 ? 'text-danger' : 'text-ok'}`}>{highRisk.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-[#B8B8D4]">Medium Risk Fields</span>
-                  <span className={`text-sm font-bold ${medRisk.length > 0 ? 'text-yellow-400' : 'text-green-400'}`}>{medRisk.length}</span>
+                  <span className="text-sm text-t2">Medium Risk Fields</span>
+                  <span className={`text-sm font-bold ${medRisk.length > 0 ? 'text-warn' : 'text-ok'}`}>{medRisk.length}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-[#B8B8D4]">Total Fields</span>
+                  <span className="text-sm text-t2">Total Fields</span>
                   <span className="text-sm font-bold text-white">{fields.length}</span>
                 </div>
               </div>
               {highRisk.length > 0 && (
-                <div className="mt-3 p-3 bg-red-500/10 rounded text-xs text-red-400">
+                <div className="mt-3 p-3 bg-danger-dim rounded text-xs text-danger">
                   This image contains sensitive metadata that could reveal your identity or location.
                 </div>
               )}
@@ -436,20 +436,20 @@ export function MetadataViewerTool() {
           </div>
 
           {/* Action bar */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 flex flex-wrap gap-3 items-center">
+          <div className="bg-s0 border border-b1 rounded-lg p-4 flex flex-wrap gap-3 items-center">
             <button onClick={stripMetadata} className="btn-primary text-sm px-4 py-2">
               Strip metadata &amp; download
             </button>
             {hasGps && (
               <button
                 onClick={openGpsOnMap}
-                className="text-sm px-4 py-2 border border-white/10 rounded text-[#B8B8D4] hover:text-white hover:border-white/30"
+                className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
               >
                 View GPS on map
               </button>
             )}
             {stripped && (
-              <a href={stripped} download={strippedName} className="text-sm px-4 py-2 border border-green-500/20 rounded text-green-400 hover:bg-green-500/10">
+              <a href={stripped} download={strippedName} className="text-sm px-4 py-2 border border-ok/30 rounded text-ok hover:bg-ok-dim">
                 Download clean image ({strippedName})
               </a>
             )}
@@ -457,13 +457,13 @@ export function MetadataViewerTool() {
 
           <div className="space-y-2">
             {fields.map((f, i) => (
-              <div key={i} className={`bg-[#0a0a0a] border ${getPrivacyColor(f.privacy).split(' ')[1]} rounded-lg p-4`}>
+              <div key={i} className={`bg-s0 border ${getPrivacyColor(f.privacy).split(' ')[1]} rounded-lg p-4`}>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm font-medium text-white">{f.tag}</span>
                   <span className={`text-xs ${getPrivacyColor(f.privacy).split(' ')[0]}`}>{f.privacy} risk</span>
                 </div>
-                <code className="block text-sm text-[#B8B8D4] font-mono break-all">{f.value}</code>
-                {f.warning && <p className="mt-1 text-xs text-yellow-400/80">{f.warning}</p>}
+                <code className="block text-sm text-t2 font-mono break-all">{f.value}</code>
+                {f.warning && <p className="mt-1 text-xs text-warn/80">{f.warning}</p>}
               </div>
             ))}
           </div>

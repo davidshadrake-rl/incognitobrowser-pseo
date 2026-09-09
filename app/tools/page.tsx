@@ -4,6 +4,9 @@ import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { IS_PRO_DEPLOYMENT, engineVisibleInThisTier, tierOfEngine, PRO_BASE_URL } from '@/lib/tiers';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
+import { Badge } from '@/components/ui/Badge';
+import { IconTile } from '@/components/ui/Icon';
+import { ENGINE_ICON } from '@/lib/visuals';
 
 export const metadata = genMeta({
   title: IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools',
@@ -24,11 +27,10 @@ interface ToolMeta {
   description?: string;
 }
 
-// The 11 unique tool engines with their display info
-const FEATURED_TOOLS: { engine: string; icon: string; title: string; description: string; badge: string; processing?: 'client' | 'server' }[] = [
+// The 17 tool engines with their display info. Icons come from ENGINE_ICON[engine] (lib/visuals).
+const FEATURED_TOOLS: { engine: string; title: string; description: string; badge: string; processing?: 'client' | 'server' }[] = [
   {
     engine: 'whats-my-ip',
-    icon: '\u{1F4CD}',
     title: 'What\'s My IP + WebRTC Leak Test',
     description: 'See the IP address and location every site sees, and check whether WebRTC leaks your real IP around your VPN.',
     badge: 'checker',
@@ -36,28 +38,24 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
   },
   {
     engine: 'password-strength',
-    icon: '🔐',
     title: 'Password Strength Checker',
     description: 'Analyze any password with entropy calculation, crack time estimation, pattern detection, and character breakdown. Uses the same metrics as professional security tools.',
     badge: 'checker',
   },
   {
     engine: 'browser-privacy',
-    icon: '🛡️',
     title: 'Browser Privacy Audit',
     description: 'Run 14 privacy checks on your browser: Do Not Track, WebRTC leak detection, canvas fingerprinting, device memory exposure, CPU cores, and more.',
     badge: 'analyzer',
   },
   {
     engine: 'text-encryption',
-    icon: '🔒',
     title: 'Text Encryption Tool',
     description: 'Encrypt and decrypt messages using AES-256-GCM with PBKDF2 key derivation (100k iterations). Military-grade encryption, entirely client-side.',
     badge: 'converter',
   },
   {
     engine: 'cookie-analyzer',
-    icon: '🍪',
     title: 'Cookie & Tracker Scanner',
     description: 'Scan any website URL for tracking cookies, analytics scripts, and third-party trackers. Identifies Facebook Pixel, Google Analytics, TikTok, and 30+ more.',
     badge: 'scanner',
@@ -65,56 +63,48 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
   },
   {
     engine: 'url-analyzer',
-    icon: '🔗',
     title: 'URL Safety Checker',
     description: 'Analyze any URL for phishing indicators: suspicious TLDs, homograph attacks, IP-based URLs, URL shorteners, and credential-harvesting patterns.',
     badge: 'checker',
   },
   {
     engine: 'privacy-quiz',
-    icon: '📊',
     title: 'Privacy Score Quiz',
     description: '12-question assessment covering browsing, network security, accounts, communication, and devices. Get a letter grade and personalized recommendations.',
     badge: 'calculator',
   },
   {
     engine: 'hash-generator',
-    icon: '#️⃣',
     title: 'Cryptographic Hash Generator',
     description: 'Generate SHA-1, SHA-256, SHA-384, and SHA-512 hashes for text or files. Verify file integrity with one-click hash comparison.',
     badge: 'generator',
   },
   {
     engine: 'permission-checker',
-    icon: '📱',
     title: 'Permission Checker',
     description: 'Audit which browser permissions (location, camera, microphone, clipboard, sensors) are granted, blocked, or set to prompt.',
     badge: 'checker',
   },
   {
     engine: 'metadata-viewer',
-    icon: '📷',
     title: 'Image Metadata Viewer',
     description: 'Upload any JPEG to inspect hidden EXIF data: GPS coordinates, camera model, timestamps, and software info. All processed locally.',
     badge: 'analyzer',
   },
   {
     engine: 'useragent-analyzer',
-    icon: '🌐',
     title: 'User Agent Analyzer',
     description: 'See exactly what your browser reveals to every website: browser version, OS, device type, rendering engine, and fingerprint factors.',
     badge: 'analyzer',
   },
   {
     engine: 'password-generator',
-    icon: '🎲',
     title: 'Secure Password Generator',
     description: 'Generate cryptographically random passwords or memorable passphrases using the Web Crypto API (CSPRNG). Configurable length, charset, and format.',
     badge: 'generator',
   },
   {
     engine: 'link-unwrapper',
-    icon: '🧅',
     title: 'Link Unwrapper',
     description: "Paste any link from an email, ad or post: peel off redirect wrappers, name every tracking ID it carries, and copy a clean version.",
     badge: 'analyzer',
@@ -122,7 +112,6 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
   },
   {
     engine: 'email-pixel-detector',
-    icon: '📧',
     title: 'Email Tracking-Pixel Detector',
     description: "Paste an email's source or drop a .eml to reveal hidden open-tracking pixels, click-tracking links and the platform that sent it.",
     badge: 'analyzer',
@@ -130,7 +119,6 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
   },
   {
     engine: 'screenshot-leak-checker',
-    icon: '📸',
     title: 'Screenshot Leak Checker',
     description: "Find GPS, embedded thumbnails, device and app names, timestamps and personal data hiding in a screenshot, then download a clean copy.",
     badge: 'analyzer',
@@ -138,7 +126,6 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
   },
   {
     engine: 'dns-leak-test',
-    icon: '💧',
     title: 'DNS Leak Test',
     description: "See which DNS resolver really answers your lookups, via our own nameserver, no third parties, and whether it belongs to your ISP.",
     badge: 'checker',
@@ -146,7 +133,6 @@ const FEATURED_TOOLS: { engine: string; icon: string; title: string; description
   },
   {
     engine: 'ad-blocker-test',
-    icon: '🚫',
     title: 'Ad-Blocker Test',
     description: "Fires 50 first-party ad and tracker bait requests at paths generic filter lists block and counts how many your blocker actually stops.",
     badge: 'checker',
@@ -180,10 +166,10 @@ export default function ToolsIndex() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-white mb-2">{IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools'}</h1>
-      <p className="text-[#B8B8D4] mb-2">
+      <p className="text-t2 mb-2">
         Interactive tools to analyze, test, and improve your online privacy.
       </p>
-      <p className="text-sm text-[#B8B8D4]/60 mb-8">
+      <p className="text-sm text-t3 mb-8">
         {IS_PRO_DEPLOYMENT ? (
           <>Most tools run entirely in your browser — no data leaves your device. The cookie &amp; tracker scanner is the exception: it fetches the URL you enter through our server (rate-limited, never logged) so it can read what a site sets before you visit. Server-assisted tools are labeled.</>
         ) : (
@@ -192,7 +178,7 @@ export default function ToolsIndex() {
       </p>
 
       {items.length === 0 && (
-        <div className="text-center py-12 text-[#B8B8D4]/60">
+        <div className="text-center py-12 text-t3">
           <p className="text-lg">Tools are being generated. Check back soon!</p>
         </div>
       )}
@@ -214,29 +200,27 @@ export default function ToolsIndex() {
         {FEATURED_TOOLS.filter(t => engineVisibleInThisTier(t.engine)).map(tool => {
           const link = engineToLink[tool.engine];
           if (!link) return null;
+          const tier = tierOfEngine(tool.engine);
           return (
             <Link
               key={tool.engine}
               href={link.href}
-              className="group bg-[#0a0a0a] border border-white/10 rounded-lg p-6 hover:border-white/25 transition-colors"
+              className="group bg-s0 border border-b1 rounded-lg p-6 hover:border-b2 transition-colors"
             >
               <div className="flex items-start justify-between mb-3">
-                <span className="text-2xl">{tool.icon}</span>
-                <span className="text-xs px-2 py-0.5 bg-white/10 rounded text-[#B8B8D4]">{tool.badge}</span>
+                <IconTile name={ENGINE_ICON[tool.engine] ?? 'hat'} tone={tier} />
+                <Badge label={tool.badge} />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-white/90">
                 {tool.title}
               </h3>
-              <p className="text-sm text-[#B8B8D4] leading-relaxed">
+              <p className="text-sm text-t2 leading-relaxed">
                 {tool.description}
               </p>
-              <div className="mt-4 flex items-center gap-1 text-xs text-[#B8B8D4]/60">
-                <span className="text-green-400/60">●</span>
-                <span>{tierOfEngine(tool.engine) === 'pro' ? 'Pro' : 'Free'}</span>
-                <span className="mx-1">·</span>
-                <span>{tool.processing === 'server' ? 'Server-assisted' : 'Client-side'}</span>
-                <span className="mx-1">·</span>
-                <span>No signup</span>
+              <div className="mt-4 flex flex-wrap items-center gap-1.5">
+                <Badge variant={tier} />
+                <Badge variant={tool.processing === 'server' ? 'server' : 'client'} />
+                <span className="text-meta text-t3">No signup</span>
               </div>
             </Link>
           );

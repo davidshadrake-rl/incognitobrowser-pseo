@@ -14,16 +14,16 @@ export interface NextStepsData { nicheName: string; checklistTitle: string; chec
 export function NextSteps({ data, engine, niche }: { data: NextStepsData; engine: string; niche?: string }) {
   if (!data.steps.length) return null;
   return (
-    <section className="mt-8 rounded-lg border border-white/10 bg-[#0a0a0a] p-5" data-next-steps={niche}>
+    <section className="mt-8 rounded-lg border border-b1 bg-s0 p-5" data-next-steps={niche}>
       <h3 className="text-lg font-semibold text-white mb-1">What to do now</h3>
-      <p className="text-xs text-[#B8B8D4]/60 mb-4">Three steps from the {data.nicheName} checklist. Each one is verifiable.</p>
+      <p className="text-xs text-t3 mb-4">Three steps from the {data.nicheName} checklist. Each one is verifiable.</p>
       <ol className="space-y-3">
         {data.steps.map((s, i) => (
           <li key={i} className="flex gap-3">
             <span className="shrink-0 w-6 h-6 rounded-full bg-white/10 text-white text-xs flex items-center justify-center">{i + 1}</span>
             <div>
               <div className="text-sm text-white">{s.task}</div>
-              {s.why && <div className="text-xs text-[#B8B8D4] mt-0.5">{s.why}</div>}
+              {s.why && <div className="text-xs text-t2 mt-0.5">{s.why}</div>}
             </div>
           </li>
         ))}

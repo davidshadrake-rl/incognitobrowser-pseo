@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { scanUrl } from '@/lib/scan-client';
 import { useReportResult } from './ResultContext';
+import { Icon } from '@/components/ui/Icon';
 
 interface CookieInfo {
   name: string;
@@ -111,27 +112,27 @@ function categorizeCookie(name: string, value: string): CookieInfo {
 
 function getCategoryColor(cat: string) {
   switch (cat) {
-    case 'tracking': return 'text-red-400 bg-red-500/10';
-    case 'analytics': return 'text-yellow-400 bg-yellow-500/10';
-    case 'functional': return 'text-green-400 bg-green-500/10';
-    default: return 'text-[#B8B8D4] bg-white/5';
+    case 'tracking': return 'text-danger bg-danger-dim';
+    case 'analytics': return 'text-warn bg-warn-dim';
+    case 'functional': return 'text-ok bg-ok-dim';
+    default: return 'text-t2 bg-white/5';
   }
 }
 
 function getRiskColor(risk: string) {
   switch (risk) {
-    case 'high': return 'text-red-400';
-    case 'medium': return 'text-yellow-400';
-    default: return 'text-green-400';
+    case 'high': return 'text-danger';
+    case 'medium': return 'text-warn';
+    default: return 'text-ok';
   }
 }
 
 function getSecurityIcon(ok: boolean) {
-  return ok ? '✓' : '✗';
+  return <Icon name={ok ? 'check' : 'x'} size={14} className="inline-block align-[-2px]" title={ok ? 'yes' : 'no'} />;
 }
 
 function getSecurityColor(ok: boolean) {
-  return ok ? 'text-green-400' : 'text-red-400';
+  return ok ? 'text-ok' : 'text-danger';
 }
 
 export function CookieAnalyzerTool() {
@@ -333,11 +334,11 @@ export function CookieAnalyzerTool() {
   return (
     <div className="space-y-6">
       {/* Mode toggle */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex">
+      <div className="bg-s0 border border-b1 rounded-lg p-2 flex">
         <button
           onClick={() => { setMode('url'); setScanned(false); setUrlResult(null); setUrlError(''); }}
           className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            mode === 'url' ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+            mode === 'url' ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
           }`}
         >
           Scan a URL
@@ -345,7 +346,7 @@ export function CookieAnalyzerTool() {
         <button
           onClick={() => { setMode('browser'); setScanned(false); setUrlResult(null); }}
           className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            mode === 'browser' ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+            mode === 'browser' ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
           }`}
         >
           This Page
@@ -353,7 +354,7 @@ export function CookieAnalyzerTool() {
         <button
           onClick={() => { setMode('paste'); setScanned(false); setUrlResult(null); }}
           className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            mode === 'paste' ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+            mode === 'paste' ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
           }`}
         >
           Paste
@@ -361,10 +362,10 @@ export function CookieAnalyzerTool() {
       </div>
 
       {/* Input area */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+      <div className="bg-s0 border border-b1 rounded-lg p-6">
         {mode === 'url' ? (
           <div>
-            <label className="block text-sm font-medium text-[#B8B8D4] mb-2">
+            <label className="block text-sm font-medium text-t2 mb-2">
               Enter a website URL to scan for cookies &amp; trackers
             </label>
             <div className="flex gap-2">
@@ -379,7 +380,7 @@ export function CookieAnalyzerTool() {
                 onChange={(e) => setUrlInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && !urlScanning && scanURL()}
                 placeholder="https://example.com"
-                className="flex-1 px-4 py-3 bg-[#191b1c] border border-white/10 rounded-md text-white placeholder-white/20 font-mono text-sm"
+                className="flex-1 px-4 py-3 bg-s0 border border-b1 rounded-md text-white placeholder-white/20 font-mono text-sm"
               />
               <button
                 onClick={scanURL}
@@ -400,20 +401,20 @@ export function CookieAnalyzerTool() {
             {/* Per-phase status line: tells the user why a click costs 2–4s.
                 Removes the "is it broken?" anxiety during the PoW step. */}
             {urlScanning && scanStatus && (
-              <div className="mt-2 flex items-center gap-2 text-xs text-[#B8B8D4]/80">
-                <span className="inline-block w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse" />
+              <div className="mt-2 flex items-center gap-2 text-xs text-t2/80">
+                <span className="inline-block w-1.5 h-1.5 bg-info rounded-full animate-pulse" />
                 {scanStatus === 'verifying' && 'Requesting verification token from the server…'}
                 {scanStatus === 'solving' && 'Proving you’re a real browser (one-time CPU check, ~half a second)…'}
                 {scanStatus === 'scanning' && 'Fetching the site and analysing cookies, trackers, and scripts…'}
               </div>
             )}
-            <p className="mt-2 text-xs text-[#B8B8D4]/60">
+            <p className="mt-2 text-xs text-t3">
               We fetch the URL server-side to read Set-Cookie headers and detect tracking scripts in the HTML. The target site will see a request from our server, not your browser.
             </p>
           </div>
         ) : mode === 'browser' ? (
           <div className="text-center">
-            <p className="text-[#B8B8D4] mb-4">
+            <p className="text-t2 mb-4">
               Scan cookies set by this page to see what&apos;s tracking you.
             </p>
             <button onClick={scanBrowserCookies} className="btn-primary px-8 py-3">
@@ -422,7 +423,7 @@ export function CookieAnalyzerTool() {
           </div>
         ) : (
           <div>
-            <label className="block text-sm font-medium text-[#B8B8D4] mb-2">
+            <label className="block text-sm font-medium text-t2 mb-2">
               Paste cookie string (from DevTools &gt; Application &gt; Cookies)
             </label>
             <textarea
@@ -430,7 +431,7 @@ export function CookieAnalyzerTool() {
               onChange={(e) => setCustomInput(e.target.value)}
               placeholder="_ga=GA1.2.123; _fbp=fb.1.123; session=abc123"
               rows={4}
-              className="w-full px-4 py-3 bg-[#191b1c] border border-white/10 rounded-md text-white placeholder-white/20 font-mono text-sm mb-3"
+              className="w-full px-4 py-3 bg-s0 border border-b1 rounded-md text-white placeholder-white/20 font-mono text-sm mb-3"
             />
             <button onClick={analyzePastedCookies} className="btn-primary w-full py-3">
               Analyze Cookies
@@ -441,7 +442,7 @@ export function CookieAnalyzerTool() {
 
       {/* URL scan error */}
       {urlError && (
-        <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-sm text-red-400">
+        <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger">
           {urlError}
         </div>
       )}
@@ -453,27 +454,27 @@ export function CookieAnalyzerTool() {
           {(() => {
             const grade = getPrivacyGrade(urlResult);
             return (
-              <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+              <div className="bg-s0 border border-b1 rounded-lg p-6">
                 <div className="flex items-center gap-6">
                   <div className="text-center">
                     <div className="text-5xl font-bold" style={{ color: grade.color }}>{grade.letter}</div>
-                    <div className="text-xs text-[#B8B8D4] mt-1">{grade.label}</div>
+                    <div className="text-xs text-t2 mt-1">{grade.label}</div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm text-white font-medium mb-1 truncate">{urlResult.url}</div>
-                    <div className="text-xs text-[#B8B8D4] mb-3">HTTP {urlResult.status}</div>
+                    <div className="text-xs text-t2 mb-3">HTTP {urlResult.status}</div>
                     <div className="grid grid-cols-3 gap-3">
                       <div>
                         <div className="text-lg font-bold text-white">{urlResult.summary.totalCookies}</div>
-                        <div className="text-xs text-[#B8B8D4]">Cookies</div>
+                        <div className="text-xs text-t2">Cookies</div>
                       </div>
                       <div>
                         <div className="text-lg font-bold text-white">{urlResult.summary.totalTrackers}</div>
-                        <div className="text-xs text-[#B8B8D4]">Trackers</div>
+                        <div className="text-xs text-t2">Trackers</div>
                       </div>
                       <div>
                         <div className="text-lg font-bold text-white">{urlResult.summary.thirdPartyScripts}</div>
-                        <div className="text-xs text-[#B8B8D4]">3rd Party Scripts</div>
+                        <div className="text-xs text-t2">3rd Party Scripts</div>
                       </div>
                     </div>
                   </div>
@@ -484,69 +485,69 @@ export function CookieAnalyzerTool() {
 
           {/* Cookie breakdown */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-center">
+            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-white">{urlResult.summary.totalCookies}</div>
-              <div className="text-xs text-[#B8B8D4]">Total Cookies</div>
+              <div className="text-xs text-t2">Total Cookies</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-red-400">{urlResult.summary.trackingCookies}</div>
-              <div className="text-xs text-[#B8B8D4]">Tracking</div>
+            <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-danger">{urlResult.summary.trackingCookies}</div>
+              <div className="text-xs text-t2">Tracking</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-yellow-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-yellow-400">{urlResult.summary.analyticsCookies}</div>
-              <div className="text-xs text-[#B8B8D4]">Analytics</div>
+            <div className="bg-s0 border border-warn/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-warn">{urlResult.summary.analyticsCookies}</div>
+              <div className="text-xs text-t2">Analytics</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-green-400">{urlResult.summary.functionalCookies}</div>
-              <div className="text-xs text-[#B8B8D4]">Functional</div>
+            <div className="bg-s0 border border-ok/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-ok">{urlResult.summary.functionalCookies}</div>
+              <div className="text-xs text-t2">Functional</div>
             </div>
           </div>
 
           {/* Security headers */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">Security Headers</h3>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex items-center gap-2">
                 <span className={getSecurityColor(urlResult.security.isHTTPS)}>{getSecurityIcon(urlResult.security.isHTTPS)}</span>
-                <span className="text-sm text-[#B8B8D4]">HTTPS</span>
+                <span className="text-sm text-t2">HTTPS</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className={getSecurityColor(urlResult.security.hasHSTS)}>{getSecurityIcon(urlResult.security.hasHSTS)}</span>
-                <span className="text-sm text-[#B8B8D4]">HSTS</span>
+                <span className="text-sm text-t2">HSTS</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className={getSecurityColor(urlResult.security.hasCSP)}>{getSecurityIcon(urlResult.security.hasCSP)}</span>
-                <span className="text-sm text-[#B8B8D4]">Content Security Policy</span>
+                <span className="text-sm text-t2">Content Security Policy</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className={getSecurityColor(urlResult.security.hasPermPolicy)}>{getSecurityIcon(urlResult.security.hasPermPolicy)}</span>
-                <span className="text-sm text-[#B8B8D4]">Permissions Policy</span>
+                <span className="text-sm text-t2">Permissions Policy</span>
               </div>
             </div>
           </div>
 
           {/* Tracking scripts detected */}
           {(urlResult.trackers.length > 0 || urlResult.inlineTrackers.length > 0) && (
-            <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-red-400 mb-3">
+            <div className="bg-s0 border border-danger/30 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-danger mb-3">
                 Tracking Scripts Detected ({urlResult.trackers.length + urlResult.inlineTrackers.length})
               </h3>
               <div className="space-y-2">
                 {urlResult.trackers.map((t, i) => (
-                  <div key={i} className="flex items-start gap-3 p-3 bg-red-500/5 rounded-md">
+                  <div key={i} className="flex items-start gap-3 p-3 bg-danger-dim rounded-md">
                     <span className={`text-xs px-2 py-0.5 rounded shrink-0 ${getCategoryColor(t.category)}`}>
                       {t.category}
                     </span>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium text-white">{t.name}</div>
-                      <p className="text-xs text-[#B8B8D4]/80">{t.description}</p>
+                      <p className="text-xs text-t2/80">{t.description}</p>
                     </div>
                     <span className={`text-xs shrink-0 ${getRiskColor(t.risk)}`}>{t.risk}</span>
                   </div>
                 ))}
                 {urlResult.inlineTrackers.map((t, i) => (
-                  <div key={`inline-${i}`} className="flex items-center gap-3 p-3 bg-red-500/5 rounded-md">
-                    <span className="text-xs px-2 py-0.5 rounded text-red-400 bg-red-500/10">inline</span>
+                  <div key={`inline-${i}`} className="flex items-center gap-3 p-3 bg-danger-dim rounded-md">
+                    <span className="text-xs px-2 py-0.5 rounded text-danger bg-danger-dim">inline</span>
                     <span className="text-sm text-white">{t}</span>
                   </div>
                 ))}
@@ -555,16 +556,16 @@ export function CookieAnalyzerTool() {
           )}
 
           {/* Export */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 flex items-center justify-between gap-3">
+          <div className="bg-s0 border border-b1 rounded-lg p-4 flex items-center justify-between gap-3">
             <div>
               <p className="text-sm text-white font-medium">Compliance report</p>
-              <p className="text-xs text-[#B8B8D4]">
+              <p className="text-xs text-t2">
                 Export cookies, trackers, and third-party scripts to CSV for GDPR/CCPA audits.
               </p>
             </div>
             <button
               onClick={() => downloadCsv(urlResult)}
-              className="text-sm px-4 py-2 border border-white/10 rounded text-white hover:bg-white/5 shrink-0"
+              className="text-sm px-4 py-2 border border-b1 rounded text-white hover:bg-white/5 shrink-0"
             >
               Export CSV
             </button>
@@ -572,11 +573,11 @@ export function CookieAnalyzerTool() {
 
           {/* Cookies detail */}
           {urlResult.cookies.length > 0 && (
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+            <div className="bg-s0 border border-b1 rounded-lg p-6">
               <h3 className="text-sm font-semibold text-white mb-3">Cookies ({urlResult.cookies.length})</h3>
               <div className="space-y-3">
                 {urlResult.cookies.map((c, i) => (
-                  <div key={i} className="border border-white/5 rounded-lg p-4">
+                  <div key={i} className="border border-hair rounded-lg p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                       <code className="text-sm font-mono text-white min-w-0 break-all">{c.cookieName}</code>
                       <div className="flex gap-2 shrink-0">
@@ -588,29 +589,29 @@ export function CookieAnalyzerTool() {
                         </span>
                       </div>
                     </div>
-                    <p className="text-xs text-[#B8B8D4]/80 mb-2">{c.description}</p>
+                    <p className="text-xs text-t2/80 mb-2">{c.description}</p>
                     <div className="flex flex-wrap gap-2 text-xs">
-                      <span className={`px-2 py-0.5 rounded ${c.secure ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                      <span className={`px-2 py-0.5 rounded ${c.secure ? 'bg-ok-dim text-ok' : 'bg-danger-dim text-danger'}`}>
                         {c.secure ? 'Secure' : 'Not Secure'}
                       </span>
-                      <span className={`px-2 py-0.5 rounded ${c.httpOnly ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'}`}>
+                      <span className={`px-2 py-0.5 rounded ${c.httpOnly ? 'bg-ok-dim text-ok' : 'bg-warn-dim text-warn'}`}>
                         {c.httpOnly ? 'HttpOnly' : 'JS Accessible'}
                       </span>
                       <span className={`px-2 py-0.5 rounded ${
-                        c.sameSite.toLowerCase() === 'strict' ? 'bg-green-500/10 text-green-400' :
-                        c.sameSite.toLowerCase() === 'lax' ? 'bg-yellow-500/10 text-yellow-400' :
-                        c.sameSite.toLowerCase() === 'none' ? 'bg-red-500/10 text-red-400' :
-                        'bg-white/5 text-[#B8B8D4]'
+                        c.sameSite.toLowerCase() === 'strict' ? 'bg-ok-dim text-ok' :
+                        c.sameSite.toLowerCase() === 'lax' ? 'bg-warn-dim text-warn' :
+                        c.sameSite.toLowerCase() === 'none' ? 'bg-danger-dim text-danger' :
+                        'bg-white/5 text-t2'
                       }`}>
                         SameSite: {c.sameSite}
                       </span>
                       {c.domain && (
-                        <span className="px-2 py-0.5 rounded bg-white/5 text-[#B8B8D4]">
+                        <span className="px-2 py-0.5 rounded bg-white/5 text-t2">
                           {c.domain}
                         </span>
                       )}
                       {isThirdParty(c.domain, urlResult.url) && (
-                        <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-400" title="Cookie's domain differs from the site's domain">
+                        <span className="px-2 py-0.5 rounded bg-danger/20 text-danger" title="Cookie's domain differs from the site's domain">
                           3rd-party
                         </span>
                       )}
@@ -623,18 +624,18 @@ export function CookieAnalyzerTool() {
 
           {/* Third-party domains */}
           {urlResult.thirdPartyDomains.length > 0 && (
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+            <div className="bg-s0 border border-b1 rounded-lg p-6">
               <h3 className="text-sm font-semibold text-white mb-3">
                 Third-Party Script Domains ({urlResult.thirdPartyDomains.length})
               </h3>
               <div className="flex flex-wrap gap-2">
                 {urlResult.thirdPartyDomains.map((domain, i) => (
-                  <span key={i} className="text-xs px-2 py-1 bg-white/5 rounded font-mono text-[#B8B8D4]">
+                  <span key={i} className="text-xs px-2 py-1 bg-white/5 rounded font-mono text-t2">
                     {domain}
                   </span>
                 ))}
               </div>
-              <p className="mt-3 text-xs text-[#B8B8D4]/60">
+              <p className="mt-3 text-xs text-t3">
                 Each third-party domain can potentially track your activity across websites.
               </p>
             </div>
@@ -642,9 +643,9 @@ export function CookieAnalyzerTool() {
 
           {/* Clean site message */}
           {urlResult.summary.totalCookies === 0 && urlResult.trackers.length === 0 && (
-            <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-6 text-center">
-              <div className="text-green-400 text-lg font-semibold mb-2">Clean Site</div>
-              <p className="text-sm text-[#B8B8D4]">
+            <div className="bg-s0 border border-ok/30 rounded-lg p-6 text-center">
+              <div className="text-ok text-lg font-semibold mb-2">Clean Site</div>
+              <p className="text-sm text-t2">
                 No cookies or tracking scripts detected on the initial page load. This site appears to respect visitor privacy.
               </p>
             </div>
@@ -656,28 +657,28 @@ export function CookieAnalyzerTool() {
       {scanned && mode !== 'url' && (
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-center">
+            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-white">{cookies.length}</div>
-              <div className="text-xs text-[#B8B8D4]">Total Cookies</div>
+              <div className="text-xs text-t2">Total Cookies</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-red-400">{tracking.length}</div>
-              <div className="text-xs text-[#B8B8D4]">Tracking</div>
+            <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-danger">{tracking.length}</div>
+              <div className="text-xs text-t2">Tracking</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-yellow-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-yellow-400">{analytics.length}</div>
-              <div className="text-xs text-[#B8B8D4]">Analytics</div>
+            <div className="bg-s0 border border-warn/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-warn">{analytics.length}</div>
+              <div className="text-xs text-t2">Analytics</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-green-400">{functional.length}</div>
-              <div className="text-xs text-[#B8B8D4]">Functional</div>
+            <div className="bg-s0 border border-ok/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-ok">{functional.length}</div>
+              <div className="text-xs text-t2">Functional</div>
             </div>
           </div>
 
           {cookies.length === 0 ? (
-            <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-6 text-center">
-              <div className="text-green-400 text-lg font-semibold mb-2">No cookies detected</div>
-              <p className="text-sm text-[#B8B8D4]">
+            <div className="bg-s0 border border-ok/30 rounded-lg p-6 text-center">
+              <div className="text-ok text-lg font-semibold mb-2">No cookies detected</div>
+              <p className="text-sm text-t2">
                 {mode === 'browser'
                   ? 'This page has no accessible cookies. This is good for privacy.'
                   : 'No valid cookies found in the input.'}
@@ -686,7 +687,7 @@ export function CookieAnalyzerTool() {
           ) : (
             <div className="space-y-2">
               {cookies.map((c, i) => (
-                <div key={i} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+                <div key={i} className="bg-s0 border border-b1 rounded-lg p-4">
                   <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                     <code className="text-sm font-mono text-white min-w-0 break-all">{c.name}</code>
                     <div className="flex gap-2 shrink-0">
@@ -698,8 +699,8 @@ export function CookieAnalyzerTool() {
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-[#B8B8D4]/80 mb-1">{c.description}</p>
-                  <div className="bg-[#191b1c] p-2 rounded text-xs font-mono text-[#B8B8D4]/60 truncate">
+                  <p className="text-xs text-t2/80 mb-1">{c.description}</p>
+                  <div className="bg-s0 p-2 rounded text-xs font-mono text-t3 truncate">
                     {c.value || '(empty)'}
                   </div>
                 </div>

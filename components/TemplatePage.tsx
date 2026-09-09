@@ -134,23 +134,23 @@ export function TemplatePage({ data, nicheName, proofRoute }: { data: TemplateDa
         <div className="flex flex-wrap gap-2 mb-4">
           <Badge label={data.templateType} />
         </div>
-        <p className="text-[#B8B8D4]">{data.description}</p>
+        <p className="text-t2">{data.description}</p>
       </header>
       {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {uniquePlaceholders.length > 0 && (
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-5 mb-8">
+        <div className="bg-s0 border border-b1 rounded-lg p-5 mb-8">
           <h2 className="font-semibold text-white mb-3">Customize Your Template</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {uniquePlaceholders.map(p => (
               <div key={p.key}>
-                <label className="block text-sm font-medium text-[#B8B8D4] mb-1">{p.label}</label>
+                <label className="block text-sm font-medium text-t2 mb-1">{p.label}</label>
                 <input
                   type="text"
                   value={values[p.key] || ''}
                   onChange={(e) => setValues({ ...values, [p.key]: e.target.value })}
                   placeholder={p.defaultValue}
-                  className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white"
+                  className="w-full px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white"
                 />
               </div>
             ))}
@@ -165,11 +165,11 @@ export function TemplatePage({ data, nicheName, proofRoute }: { data: TemplateDa
             {copied ? 'Copied!' : 'Copy to Clipboard'}
           </button>
         </div>
-        <div className="border border-white/10 rounded-lg divide-y divide-white/10 bg-[#0a0a0a]">
+        <div className="border border-b1 rounded-lg divide-y divide-white/10 bg-s0">
           {data.sections.map((section, i) => (
             <div key={i} className="p-5">
               <h3 className="font-semibold text-white mb-2">{section.heading}</h3>
-              <div className="text-[#B8B8D4] whitespace-pre-wrap text-sm leading-relaxed">
+              <div className="text-t2 whitespace-pre-wrap text-sm leading-relaxed">
                 {fillTemplate(section.content)}
               </div>
             </div>
@@ -178,11 +178,11 @@ export function TemplatePage({ data, nicheName, proofRoute }: { data: TemplateDa
       </div>
 
       {data.useCases.length > 0 && (
-        <section className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-5">
-          <h2 className="font-semibold text-blue-400 mb-3">When to Use This Template</h2>
+        <section className="bg-info-dim border border-info/30 rounded-lg p-5">
+          <h2 className="font-semibold text-info mb-3">When to Use This Template</h2>
           <ul className="space-y-2">
             {data.useCases.map((uc, i) => (
-              <li key={i} className="flex items-start text-sm text-blue-300">
+              <li key={i} className="flex items-start text-sm text-info">
                 <span className="mr-2">&#8226;</span>
                 {uc}
               </li>

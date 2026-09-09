@@ -5,6 +5,8 @@ import { getAllNiches, getNicheBySlug, getRelatedNiches } from '@/lib/taxonomy';
 import { getContentFiles, getContentItemTitle, isToolListed } from '@/lib/content';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { IconTile } from '@/components/ui/Icon';
+import { TYPE_ICON } from '@/lib/visuals';
 import type { Metadata } from 'next';
 
 export const dynamicParams = false;
@@ -14,12 +16,12 @@ interface PageProps {
 }
 
 const CONTENT_TYPES = [
-  { slug: 'guides', name: 'Guides', icon: '\u{1F4D6}', description: 'Step-by-step tutorials' },
-  { slug: 'checklists', name: 'Checklists', icon: '\u2611', description: 'Actionable task lists' },
-  { slug: 'comparisons', name: 'Comparisons', icon: '\u2194', description: 'Product & tool reviews' },
-  { slug: 'tools', name: 'Tools', icon: '\u2699', description: 'Interactive privacy tools' },
-  { slug: 'templates', name: 'Templates', icon: '\u{1F4C4}', description: 'Ready-to-use documents' },
-  { slug: 'calculators', name: 'Calculators', icon: '\u{1F522}', description: 'Privacy assessments' },
+  { slug: 'guides', name: 'Guides', description: 'Step-by-step tutorials' },
+  { slug: 'checklists', name: 'Checklists', description: 'Actionable task lists' },
+  { slug: 'comparisons', name: 'Comparisons', description: 'Product & tool reviews' },
+  { slug: 'tools', name: 'Tools', description: 'Interactive privacy tools' },
+  { slug: 'templates', name: 'Templates', description: 'Ready-to-use documents' },
+  { slug: 'calculators', name: 'Calculators', description: 'Privacy assessments' },
 ];
 
 export async function generateStaticParams() {
@@ -82,18 +84,18 @@ export default async function NicheHubPage({ params }: PageProps) {
 
       {/* Hero */}
       <section className="py-12 mb-10" style={{ background: 'linear-gradient(-41deg, rgba(61,61,82,0) 10%, rgba(61,61,82,0.75) 40%)' }}>
-        <nav className="text-sm text-[#B8B8D4]/60 mb-4">
+        <nav className="text-sm text-t3 mb-4">
           <Link href="/" className="hover:text-white">Resources</Link>
           <span className="mx-2">/</span>
-          <span className="text-[#B8B8D4]">{nicheData.name}</span>
+          <span className="text-t2">{nicheData.name}</span>
         </nav>
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
           {nicheData.name}
         </h1>
-        <p className="text-lg text-[#B8B8D4] max-w-3xl mb-4">
+        <p className="text-lg text-t2 max-w-3xl mb-4">
           {nicheData.description}
         </p>
-        <p className="text-sm text-[#B8B8D4]/60">
+        <p className="text-sm text-t3">
           {totalItems} resources across {sections.length} categories
         </p>
       </section>
@@ -102,10 +104,10 @@ export default async function NicheHubPage({ params }: PageProps) {
       {sections.map(section => (
         <section key={section.slug} className="mb-12">
           <div className="flex items-center gap-3 mb-4">
-            <span className="text-2xl">{section.icon}</span>
+            <IconTile name={TYPE_ICON[section.slug] ?? 'arrow'} />
             <div>
               <h2 className="text-xl font-bold text-white">{section.name}</h2>
-              <p className="text-sm text-[#B8B8D4]/60">{section.description}</p>
+              <p className="text-sm text-t3">{section.description}</p>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -113,12 +115,12 @@ export default async function NicheHubPage({ params }: PageProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="group border border-white/10 rounded-lg p-4 hover:border-white/30 bg-[#0a0a0a] transition-all"
+                className="group border border-b1 rounded-lg p-4 hover:border-b2 bg-s0 transition-all"
               >
-                <span className="text-sm font-medium text-white group-hover:text-[#cfcfcf]">
+                <span className="text-sm font-medium text-white group-hover:text-t2">
                   {item.title}
                 </span>
-                <span className="block text-xs text-[#B8B8D4]/50 mt-1 capitalize">{section.slug.slice(0, -1)}</span>
+                <span className="block text-xs text-t3 mt-1 capitalize">{section.slug.slice(0, -1)}</span>
               </Link>
             ))}
           </div>
@@ -127,14 +129,14 @@ export default async function NicheHubPage({ params }: PageProps) {
 
       {/* Related topics */}
       {relatedNiches.length > 0 && (
-        <section className="mt-16 pt-8 border-t border-white/10">
+        <section className="mt-16 pt-8 border-t border-b1">
           <h2 className="text-xl font-bold text-white mb-4">Related Topics</h2>
           <div className="flex flex-wrap gap-2">
             {relatedNiches.map(rn => (
               <Link
                 key={rn.slug}
                 href={`/topics/${rn.slug}`}
-                className="px-4 py-2 border border-white/10 text-[#B8B8D4] rounded-full text-sm hover:border-white/40 hover:text-white transition-colors"
+                className="px-3 py-1.5 border border-b1 bg-s1 text-t2 rounded-[4px] text-sm hover:border-b2 hover:text-white transition-colors"
               >
                 {rn.name}
               </Link>
@@ -146,10 +148,10 @@ export default async function NicheHubPage({ params }: PageProps) {
       {/* Keywords for SEO */}
       {nicheData.keywords.length > 0 && (
         <section className="mt-8 mb-4">
-          <h3 className="text-sm font-medium text-[#B8B8D4]/40 mb-2">Related searches</h3>
+          <h3 className="text-sm font-medium text-t2/40 mb-2">Related searches</h3>
           <div className="flex flex-wrap gap-1">
             {nicheData.keywords.map((kw, i) => (
-              <span key={i} className="text-xs bg-white/5 text-[#B8B8D4]/50 px-2 py-0.5 rounded border border-white/5">
+              <span key={i} className="text-xs bg-white/5 text-t3 px-2 py-0.5 rounded border border-hair">
                 {kw}
               </span>
             ))}

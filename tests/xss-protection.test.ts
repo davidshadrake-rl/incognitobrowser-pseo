@@ -83,25 +83,28 @@ describe('XSS - No eval() or innerHTML in Tool Components', () => {
   }
 });
 
-describe('XSS - Icon Rendering Uses Safe Unicode', () => {
-  it('homepage icons use unicode escapes, not HTML entities', () => {
-    const content = readFile('app/page.tsx');
-    // Should NOT contain HTML entity patterns like &#1234;
-    expect(content).not.toMatch(/&#\d+;/);
-    // Should use \\u{} or \\u escapes
-    expect(content).toMatch(/\\u/);
-  });
+describe('XSS - Icon Rendering Uses Static SVG (components/ui/Icon)', () => {
+  // Icons used to be emoji / unicode escapes; since PR1 of the design spec they
+  // are inline SVG drawn from the static ICON_PATHS literals. The pages must
+  // not fall back to HTML entities, and must route through TYPE_ICON.
+  for (const file of ['app/page.tsx', 'app/topics/[niche]/page.tsx', 'components/seo/RelatedContent.tsx']) {
+    it(`${file} draws icons via Icon/TYPE_ICON, not HTML entities`, () => {
+      const content = readFile(file);
+      expect(content).not.toMatch(/&#\d+;/);
+      expect(content).toMatch(/from '@\/components\/ui\/Icon'/);
+      expect(content).toMatch(/TYPE_ICON\[/);
+    });
+  }
 
-  it('topics page icons use unicode escapes', () => {
-    const content = readFile('app/topics/[niche]/page.tsx');
-    expect(content).not.toMatch(/&#\d+;/);
-    expect(content).toMatch(/\\u/);
-  });
-
-  it('RelatedContent icons use unicode escapes', () => {
-    const content = readFile('components/seo/RelatedContent.tsx');
-    expect(content).not.toMatch(/&#\d+;/);
-    expect(content).toMatch(/\\u/);
+  it('ICON_PATHS values are static literals of safe characters (the only innerHTML source)', () => {
+    const content = readFile('components/ui/Icon.tsx');
+    // Extract every quoted value in the ICON_PATHS map and check the safe-character regex.
+    const block = content.slice(content.indexOf('export const ICON_PATHS'), content.indexOf('} as const;'));
+    const values = [...block.matchAll(/:\s+'([^']*)',/g)].map(m => m[1]);
+    expect(values.length).toBeGreaterThan(30);
+    for (const v of values) expect(v).toMatch(/^[<>a-zA-Z0-9 ="'./,-]+$/);
+    // dangerouslySetInnerHTML receives ICON_PATHS[name] (a keyed static literal) and an optional <title>, never props data.
+    expect(content).toMatch(/dangerouslySetInnerHTML=\{\{ __html: \(title \? `<title>\$\{title\}<\/title>` : ''\) \+ ICON_PATHS\[name\] \}\}/);
   });
 });
 

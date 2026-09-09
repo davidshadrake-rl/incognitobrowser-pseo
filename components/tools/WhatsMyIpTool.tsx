@@ -4,6 +4,7 @@ import { maskIp } from '@/lib/privacy-mask';
 
 import { useEffect, useState } from 'react';
 import { useReportResult } from './ResultContext';
+import { Icon } from '@/components/ui/Icon';
 
 interface IpInfo {
   ipv4?: string;
@@ -193,94 +194,94 @@ export function WhatsMyIpTool() {
     <div className="space-y-6">
       {/* Refresh button */}
       <div className="flex items-center justify-between">
-        <div className="text-sm text-[#B8B8D4]">
+        <div className="text-sm text-t2">
           Your public IP, location, and WebRTC leak status. The IP is read from the request our own server sees — nothing is sent to third-party lookup services.
         </div>
         <button
           onClick={() => setRefreshTick((t) => t + 1)}
           disabled={loading}
-          className="text-xs px-3 py-1.5 border border-white/10 text-[#B8B8D4] hover:text-white hover:border-white/30 rounded transition-colors disabled:opacity-50"
+          className="text-xs px-3 py-1.5 border border-b1 text-t2 hover:text-white hover:border-b2 rounded transition-colors disabled:opacity-50"
         >
           {loading ? 'Loading…' : 'Refresh'}
         </button>
       </div>
 
       {loading && (
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-8 text-center text-[#B8B8D4]">
+        <div className="bg-s0 border border-b1 rounded-lg p-8 text-center text-t2">
           Looking up your IP and probing for leaks…
         </div>
       )}
 
       {error && !loading && (
-        <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-sm text-red-400">{error}</div>
+        <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger">{error}</div>
       )}
 
       {!loading && !error && ipInfo && (
         <>
           {/* Hero — your public IP */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
-            <div className="text-xs uppercase tracking-wider text-[#B8B8D4]/60 mb-2">Your Public IP</div>
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
+            <div className="text-xs uppercase tracking-wider text-t3 mb-2">Your Public IP</div>
             <div className="space-y-2">
               {ipInfo.ipv4 && (
                 <div className="flex items-baseline justify-between gap-3 flex-wrap">
                   <code className="text-2xl text-white font-mono break-all select-all">{ipInfo.ipv4}</code>
-                  <span className="text-xs text-[#B8B8D4]">IPv4</span>
+                  <span className="text-xs text-t2">IPv4</span>
                 </div>
               )}
               {ipInfo.ipv6 && (
                 <div className="flex items-baseline justify-between gap-3 flex-wrap">
                   <code className="text-base text-white/80 font-mono break-all select-all">{ipInfo.ipv6}</code>
-                  <span className="text-xs text-[#B8B8D4]">IPv6</span>
+                  <span className="text-xs text-t2">IPv6</span>
                 </div>
               )}
               {ipInfo.isLocal && (
-                <p className="text-xs text-yellow-400/80">Running locally — no public IP is visible to this server, so a loopback address is shown.</p>
+                <p className="text-xs text-warn/80">Running locally — no public IP is visible to this server, so a loopback address is shown.</p>
               )}
               {!ipInfo.ipv4 && !ipInfo.ipv6 && (
-                <p className="text-sm text-yellow-400">Could not detect your public IP. Refresh, or check that this page is allowed to reach the IP service.</p>
+                <p className="text-sm text-warn">Could not detect your public IP. Refresh, or check that this page is allowed to reach the IP service.</p>
               )}
             </div>
           </div>
 
           {/* Geolocation + ISP */}
           {(ipInfo.city || ipInfo.country || ipInfo.org) && (
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+            <div className="bg-s0 border border-b1 rounded-lg p-6">
               <h3 className="text-sm font-semibold text-white mb-3">Network &amp; Location</h3>
               <div className="grid grid-cols-2 gap-3 text-sm [&>div]:min-w-0 [&>div]:break-all">
                 {ipInfo.city && (
                   <>
-                    <div className="text-[#B8B8D4]">City</div>
+                    <div className="text-t2">City</div>
                     <div className="text-white">{ipInfo.city}{ipInfo.region ? `, ${ipInfo.region}` : ''}</div>
                   </>
                 )}
                 {ipInfo.country && (
                   <>
-                    <div className="text-[#B8B8D4]">Country</div>
+                    <div className="text-t2">Country</div>
                     <div className="text-white">{ipInfo.country}</div>
                   </>
                 )}
                 {ipInfo.timezone && (
                   <>
-                    <div className="text-[#B8B8D4]">Timezone</div>
+                    <div className="text-t2">Timezone</div>
                     <div className="text-white">{ipInfo.timezone}</div>
                   </>
                 )}
                 {ipInfo.org && (
                   <>
-                    <div className="text-[#B8B8D4]">ISP / Org</div>
+                    <div className="text-t2">ISP / Org</div>
                     <div className="text-white font-mono text-xs break-all">{ipInfo.org}</div>
                   </>
                 )}
                 {ipInfo.asn && (
                   <>
-                    <div className="text-[#B8B8D4]">ASN</div>
+                    <div className="text-t2">ASN</div>
                     <div className="text-white font-mono text-xs">{ipInfo.asn}</div>
                   </>
                 )}
               </div>
               {ipInfo.isHosting && (
-                <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded text-xs text-blue-400">
-                  📡 You appear to be connecting through a hosting/cloud provider — this typically means you&apos;re using a VPN, proxy, or are on a server. Your real ISP IP is hidden from sites you visit.
+                <div className="mt-4 p-3 bg-info-dim border border-info/30 rounded text-xs text-info flex items-start gap-2">
+                  <Icon name="globe" size={14} className="mt-0.5" /> You appear to be connecting through a hosting/cloud provider — this typically means you&apos;re using a VPN, proxy, or are on a server. Your real ISP IP is hidden from sites you visit.
                 </div>
               )}
             </div>
@@ -288,43 +289,43 @@ export function WhatsMyIpTool() {
 
           {/* WebRTC leak check */}
           {webrtc && (
-            <div className={`bg-[#0a0a0a] border ${
+            <div className={`bg-s0 border ${
               publicIpLeak || realIpLeakedViaWebrtc
-                ? 'border-red-500/30'
+                ? 'border-danger/30'
                 : webrtc.privateIPs.length > 0
-                  ? 'border-yellow-500/30'
-                  : 'border-green-500/20'
+                  ? 'border-warn/30'
+                  : 'border-ok/30'
             } rounded-lg p-6`}>
               <h3 className="text-sm font-semibold text-white mb-2">WebRTC Leak Test</h3>
               {webrtc.error ? (
-                <p className="text-sm text-[#B8B8D4]">
-                  WebRTC is unavailable or blocked. <span className="text-green-400">Good — sites can&apos;t use it to leak your IP.</span>
+                <p className="text-sm text-t2">
+                  WebRTC is unavailable or blocked. <span className="text-ok">Good — sites can&apos;t use it to leak your IP.</span>
                 </p>
               ) : (
                 <>
                   {realIpLeakedViaWebrtc && (
-                    <div className="text-sm text-red-400 mb-3">
-                      ⚠️ <strong>WebRTC is leaking public IPs:</strong> {webrtc.publicIPs.join(', ')}
-                      <p className="mt-1 text-[#B8B8D4]">
+                    <div className="text-sm text-danger mb-3">
+                      <Icon name="warn" size={14} className="inline-block align-[-2px] mr-1" /> <strong>WebRTC is leaking public IPs:</strong> {webrtc.publicIPs.join(', ')}
+                      <p className="mt-1 text-t2">
                         Even when using a VPN, sites can read these via WebRTC unless your VPN patches the API. Use a browser that patches WebRTC, or a VPN that specifically blocks this.
                       </p>
                     </div>
                   )}
                   {webrtc.privateIPs.length > 0 && (
-                    <div className="text-sm text-yellow-400 mb-3">
+                    <div className="text-sm text-warn mb-3">
                       Private/LAN IPs exposed: <code className="text-xs">{webrtc.privateIPs.slice(0, 3).join(', ')}{webrtc.privateIPs.length > 3 ? '…' : ''}</code>
-                      <p className="mt-1 text-[#B8B8D4]">
+                      <p className="mt-1 text-t2">
                         These are RFC1918 addresses from your local network. Less severe than public-IP leaks, but they still help fingerprint you.
                       </p>
                     </div>
                   )}
                   {webrtc.mdnsCount > 0 && (
-                    <p className="text-xs text-green-400/80 mb-2">
-                      ✓ Browser is masking {webrtc.mdnsCount} local IP{webrtc.mdnsCount === 1 ? '' : 's'} as mDNS (.local) — good privacy posture.
+                    <p className="text-xs text-ok/80 mb-2">
+                      <Icon name="check" size={12} className="inline-block align-[-2px] mr-1" /> Browser is masking {webrtc.mdnsCount} local IP{webrtc.mdnsCount === 1 ? '' : 's'} as mDNS (.local) — good privacy posture.
                     </p>
                   )}
                   {!realIpLeakedViaWebrtc && webrtc.privateIPs.length === 0 && (
-                    <p className="text-sm text-green-400">✓ No WebRTC leak detected. Sites cannot use this vector to discover your IPs.</p>
+                    <p className="text-sm text-ok"><Icon name="check" size={14} className="inline-block align-[-2px] mr-1" /> No WebRTC leak detected. Sites cannot use this vector to discover your IPs.</p>
                   )}
                 </>
               )}
@@ -332,16 +333,16 @@ export function WhatsMyIpTool() {
           )}
 
           {/* Info */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-2">What can sites do with this?</h3>
-            <ul className="space-y-2 text-sm text-[#B8B8D4]">
+            <ul className="space-y-2 text-sm text-t2">
               <li>• <strong className="text-white">Approximate your location</strong> (city-level accuracy from IP geolocation).</li>
               <li>• <strong className="text-white">Identify your ISP</strong> and infer whether you&apos;re on residential, mobile, or business connection.</li>
               <li>• <strong className="text-white">Block or restrict you</strong> based on country (geo-fencing).</li>
               <li>• <strong className="text-white">Track you across sessions</strong> when combined with browser fingerprinting.</li>
               <li>• <strong className="text-white">Defeat your VPN</strong> if WebRTC leaks your real IP.</li>
             </ul>
-            <p className="mt-3 text-xs text-[#B8B8D4]/60">
+            <p className="mt-3 text-xs text-t3">
               To hide your IP from sites: use a reputable VPN or Tor browser. Verify your VPN doesn&apos;t leak by re-running this tool while connected.
             </p>
           </div>

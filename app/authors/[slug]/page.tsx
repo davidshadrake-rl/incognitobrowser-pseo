@@ -55,12 +55,12 @@ export default async function AuthorPage({ params }: PageProps) {
       <JsonLd data={personSchema} />
       <main className="max-w-3xl mx-auto px-4 py-12">
         <header className="mb-8">
-          <p className="text-sm uppercase tracking-wide text-[#B8B8D4]">
+          <p className="text-sm uppercase tracking-wide text-t2">
             {isEditor ? 'Editor' : 'Author'}
           </p>
           <h1 className="text-4xl font-bold text-white mt-2">{author.name}</h1>
           {author.tagline && (
-            <p className="mt-2 text-lg text-[#B8B8D4]">{author.tagline}</p>
+            <p className="mt-2 text-lg text-t2">{author.tagline}</p>
           )}
         </header>
 

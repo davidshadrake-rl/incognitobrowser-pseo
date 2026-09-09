@@ -57,14 +57,14 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
           <Badge label={data.estimatedTime} />
           <Badge label={`${data.steps.length} steps`} />
         </div>
-        {data.intro && <p className="text-[#B8B8D4]">{data.intro}</p>}
+        {data.intro && <p className="text-t2">{data.intro}</p>}
       </header>
       {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {data.prerequisites.length > 0 && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-8">
-          <h2 className="font-semibold text-yellow-400 mb-2">Prerequisites</h2>
-          <ul className="list-disc list-inside text-sm text-yellow-300 space-y-1">
+        <div className="bg-warn-dim border border-warn/30 rounded-lg p-4 mb-8">
+          <h2 className="font-semibold text-warn mb-2">Prerequisites</h2>
+          <ul className="list-disc list-inside text-sm text-warn space-y-1">
             {data.prerequisites.map((p, i) => <li key={i}>{p}</li>)}
           </ul>
         </div>
@@ -75,10 +75,10 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
           <button
             key={i}
             onClick={() => setActiveStep(i)}
-            className={`flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`flex-shrink-0 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               activeStep === i
                 ? 'bg-white text-black'
-                : 'border border-white/10 text-[#B8B8D4] hover:border-white/30'
+                : 'border border-b1 text-t2 hover:border-b2'
             }`}
           >
             Step {step.stepNumber}
@@ -92,37 +92,37 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
             key={i}
             id={`step-${step.stepNumber}`}
             className={`border rounded-lg p-6 transition-all ${
-              activeStep === i ? 'border-white/30 bg-[#0a0a0a]' : 'border-white/10 bg-[#0a0a0a]'
+              activeStep === i ? 'border-b2 bg-s0' : 'border-b1 bg-s0'
             }`}
           >
             <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-10 h-10 rounded-full border-2 border-white/30 text-white flex items-center justify-center font-bold">
+              <div className="flex-shrink-0 w-10 h-10 rounded-full border-2 border-b2 text-white flex items-center justify-center font-bold">
                 {step.stepNumber}
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
-                <p className="text-[#B8B8D4] mb-4">{step.description}</p>
+                <p className="text-t2 mb-4">{step.description}</p>
 
                 {step.actions.length > 0 && (
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-4 mb-3">
+                  <div className="bg-white/5 border border-b1 rounded-lg p-4 mb-3">
                     <h4 className="text-sm font-medium text-white/70 mb-2">Actions:</h4>
-                    <ol className="list-decimal list-inside text-sm text-[#B8B8D4] space-y-1">
+                    <ol className="list-decimal list-inside text-sm text-t2 space-y-1">
                       {step.actions.map((action, ai) => <li key={ai}>{action}</li>)}
                     </ol>
                   </div>
                 )}
 
                 {step.proTip && (
-                  <div className="bg-green-500/10 border-l-4 border-green-500 p-3 text-sm">
-                    <strong className="text-green-400">Pro Tip:</strong>
-                    <span className="text-green-300 ml-1">{step.proTip}</span>
+                  <div className="bg-ok-dim border-l-4 border-ok p-3 text-sm">
+                    <strong className="text-ok">Pro Tip:</strong>
+                    <span className="text-ok ml-1">{step.proTip}</span>
                   </div>
                 )}
 
                 {step.warning && (
-                  <div className="bg-red-500/10 border-l-4 border-red-500 p-3 text-sm mt-2">
-                    <strong className="text-red-400">Warning:</strong>
-                    <span className="text-red-300 ml-1">{step.warning}</span>
+                  <div className="bg-danger-dim border-l-4 border-danger p-3 text-sm mt-2">
+                    <strong className="text-danger">Warning:</strong>
+                    <span className="text-danger ml-1">{step.warning}</span>
                   </div>
                 )}
               </div>
@@ -136,11 +136,11 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
           <h2 className="text-2xl font-bold text-white mb-6">Frequently Asked Questions</h2>
           <div className="space-y-4">
             {data.faqs.map((faq, i) => (
-              <details key={i} className="border border-white/10 rounded-lg bg-[#0a0a0a]">
-                <summary className="p-4 font-medium text-white cursor-pointer hover:text-[#cfcfcf]">
+              <details key={i} className="border border-b1 rounded-lg bg-s0">
+                <summary className="p-4 font-medium text-white cursor-pointer hover:text-t2">
                   {faq.question}
                 </summary>
-                <div className="px-4 pb-4 text-[#B8B8D4]">{faq.answer}</div>
+                <div className="px-4 pb-4 text-t2">{faq.answer}</div>
               </details>
             ))}
           </div>

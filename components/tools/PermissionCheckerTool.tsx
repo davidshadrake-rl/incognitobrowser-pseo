@@ -82,19 +82,19 @@ const PERMISSIONS_TO_CHECK: { name: string; displayName: string; risk: string; r
 
 function getStateColor(state: string) {
   switch (state) {
-    case 'granted': return 'text-red-400';
-    case 'denied': return 'text-green-400';
-    case 'prompt': return 'text-yellow-400';
-    default: return 'text-[#B8B8D4]/40';
+    case 'granted': return 'text-danger';
+    case 'denied': return 'text-ok';
+    case 'prompt': return 'text-warn';
+    default: return 'text-t2/40';
   }
 }
 
 function getStateBg(state: string) {
   switch (state) {
-    case 'granted': return 'border-red-500/20';
-    case 'denied': return 'border-green-500/20';
-    case 'prompt': return 'border-yellow-500/20';
-    default: return 'border-white/5';
+    case 'granted': return 'border-danger/30';
+    case 'denied': return 'border-ok/30';
+    case 'prompt': return 'border-warn/30';
+    default: return 'border-hair';
   }
 }
 
@@ -167,8 +167,8 @@ export function PermissionCheckerTool() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6 text-center">
-        <p className="text-[#B8B8D4] mb-4">
+      <div className="bg-s0 border border-b1 rounded-lg p-6 text-center">
+        <p className="text-t2 mb-4">
           Check which browser permissions websites can access on your device.
         </p>
         <button
@@ -178,7 +178,7 @@ export function PermissionCheckerTool() {
         >
           {scanning ? 'Checking...' : scanned ? 'Re-check Permissions' : 'Check Permissions'}
         </button>
-        <p className="mt-3 text-xs text-[#B8B8D4]/60">
+        <p className="mt-3 text-xs text-t3">
           This reads your browser&apos;s permission states. Nothing is changed or sent anywhere.
         </p>
       </div>
@@ -187,28 +187,28 @@ export function PermissionCheckerTool() {
         <>
           {/* Summary */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-center">
+            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold text-white">{supported}</div>
-              <div className="text-xs text-[#B8B8D4]">Checked</div>
+              <div className="text-xs text-t2">Checked</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-red-400">{granted}</div>
-              <div className="text-xs text-[#B8B8D4]">Granted</div>
+            <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-danger">{granted}</div>
+              <div className="text-xs text-t2">Granted</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-green-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-green-400">{denied}</div>
-              <div className="text-xs text-[#B8B8D4]">Blocked</div>
+            <div className="bg-s0 border border-ok/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-ok">{denied}</div>
+              <div className="text-xs text-t2">Blocked</div>
             </div>
-            <div className="bg-[#0a0a0a] border border-yellow-500/20 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-yellow-400">{prompt}</div>
-              <div className="text-xs text-[#B8B8D4]">Will Ask</div>
+            <div className="bg-s0 border border-warn/30 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-warn">{prompt}</div>
+              <div className="text-xs text-t2">Will Ask</div>
             </div>
           </div>
 
           {/* Settings deep-link info */}
-          <div className="bg-[#0a0a0a] border border-blue-500/20 rounded-lg p-4">
-            <p className="text-sm text-blue-400 font-medium mb-2">How to revoke a permission</p>
-            <p className="text-xs text-[#B8B8D4] mb-2">
+          <div className="bg-s0 border border-info/30 rounded-lg p-4">
+            <p className="text-sm text-info font-medium mb-2">How to revoke a permission</p>
+            <p className="text-xs text-t2 mb-2">
               Browsers intentionally don&apos;t expose a programmatic way to revoke permissions (it would be abused).
               Open your site settings via the browser address bar or the shortcut below:
             </p>
@@ -218,12 +218,12 @@ export function PermissionCheckerTool() {
                 { label: 'Firefox', url: 'about:preferences#privacy' },
                 { label: 'Safari', url: 'Settings → Websites' },
               ].map((link) => (
-                <span key={link.label} className="px-2 py-1 bg-white/5 rounded font-mono text-[#B8B8D4]">
+                <span key={link.label} className="px-2 py-1 bg-white/5 rounded font-mono text-t2">
                   <span className="text-white">{link.label}:</span> {link.url}
                 </span>
               ))}
             </div>
-            <p className="mt-2 text-xs text-[#B8B8D4]/60">
+            <p className="mt-2 text-xs text-t3">
               Tip: in Chromium-based browsers, click the padlock icon in the address bar for per-site controls.
             </p>
           </div>
@@ -231,28 +231,28 @@ export function PermissionCheckerTool() {
           {/* Detail list */}
           <div className="space-y-2">
             {results.filter(r => r.state !== 'unsupported').map((r, i) => (
-              <div key={i} className={`bg-[#0a0a0a] border ${getStateBg(r.state)} rounded-lg p-4`}>
+              <div key={i} className={`bg-s0 border ${getStateBg(r.state)} rounded-lg p-4`}>
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-white">{r.displayName}</span>
                   <span className={`text-xs font-mono px-2 py-0.5 rounded ${getStateColor(r.state)} ${
-                    r.state === 'granted' ? 'bg-red-500/10' :
-                    r.state === 'denied' ? 'bg-green-500/10' : 'bg-yellow-500/10'
+                    r.state === 'granted' ? 'bg-danger-dim' :
+                    r.state === 'denied' ? 'bg-ok-dim' : 'bg-warn-dim'
                   }`}>
                     {getStateLabel(r.state)}
                   </span>
                 </div>
-                <p className="text-xs text-[#B8B8D4]/80 mb-1">{r.risk}</p>
-                <p className="text-xs text-blue-400/80">{r.recommendation}</p>
+                <p className="text-xs text-t2/80 mb-1">{r.risk}</p>
+                <p className="text-xs text-info/80">{r.recommendation}</p>
               </div>
             ))}
           </div>
 
           {results.some(r => r.state === 'unsupported') && (
-            <div className="bg-[#0a0a0a] border border-white/5 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-[#B8B8D4]/60 mb-2">Not Supported in This Browser</h3>
+            <div className="bg-s0 border border-hair rounded-lg p-4">
+              <h3 className="text-sm font-semibold text-t3 mb-2">Not Supported in This Browser</h3>
               <div className="flex flex-wrap gap-2">
                 {results.filter(r => r.state === 'unsupported').map((r, i) => (
-                  <span key={i} className="text-xs text-[#B8B8D4]/40 px-2 py-1 bg-white/5 rounded">
+                  <span key={i} className="text-xs text-t2/40 px-2 py-1 bg-white/5 rounded">
                     {r.displayName}
                   </span>
                 ))}

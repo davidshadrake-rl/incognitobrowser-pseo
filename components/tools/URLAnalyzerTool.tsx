@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { scanUrl } from '@/lib/scan-client';
 import { useReportResult, severityFromScore } from './ResultContext';
+import { Icon } from '@/components/ui/Icon';
 
 interface URLAnalysis {
   url: string;
@@ -293,8 +294,8 @@ export function URLAnalyzerTool() {
 
   return (
     <div className="space-y-6">
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
-        <label className="block text-sm font-medium text-[#B8B8D4] mb-2">Enter a URL to analyze</label>
+      <div className="bg-s0 border border-b1 rounded-lg p-6">
+        <label className="block text-sm font-medium text-t2 mb-2">Enter a URL to analyze</label>
         <div className="flex gap-2">
           <input
             type="url"
@@ -307,11 +308,11 @@ export function URLAnalyzerTool() {
             onChange={(e) => setUrl(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAnalyze()}
             placeholder="https://example.com/page"
-            className="flex-1 px-4 py-3 bg-[#191b1c] border border-white/10 rounded-md text-white placeholder-white/20 font-mono text-sm"
+            className="flex-1 px-4 py-3 bg-s0 border border-b1 rounded-md text-white placeholder-white/20 font-mono text-sm"
           />
           <button onClick={handleAnalyze} className="btn-primary px-6">Analyze</button>
         </div>
-        <p className="mt-2 text-xs text-[#B8B8D4]/60">
+        <p className="mt-2 text-xs text-t3">
           Structural analysis only — no request is made to the URL itself.
         </p>
       </div>
@@ -319,14 +320,14 @@ export function URLAnalyzerTool() {
       {analysis && (
         <div className="space-y-4">
           {/* Score */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <div className="flex items-center justify-between mb-3">
               <span className="text-lg font-bold text-white">Safety Score</span>
               <span className="text-3xl font-bold" style={{
                 color: analysis.score >= 70 ? '#22c55e' : analysis.score >= 40 ? '#eab308' : '#ef4444'
               }}>{analysis.score}/100</span>
             </div>
-            <div className="h-3 bg-[#191b1c] rounded-full overflow-hidden">
+            <div className="h-3 bg-s0 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-300"
                 style={{
@@ -338,89 +339,89 @@ export function URLAnalyzerTool() {
           </div>
 
           {/* Visual URL breakdown */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">URL Breakdown</h3>
             <div className="font-mono text-sm break-all">
-              <span className="text-blue-400">{analysis.parts.protocol}://</span>
+              <span className="text-info">{analysis.parts.protocol}://</span>
               {analysis.parts.subdomain && (
-                <span className="text-[#B8B8D4]" title="Subdomain">{analysis.parts.subdomain}.</span>
+                <span className="text-t2" title="Subdomain">{analysis.parts.subdomain}.</span>
               )}
               <span
-                className={analysis.suspectedImpersonation ? 'text-red-400 font-bold underline decoration-wavy' : 'text-white font-bold'}
+                className={analysis.suspectedImpersonation ? 'text-danger font-bold underline decoration-wavy' : 'text-white font-bold'}
                 title={analysis.suspectedImpersonation ? `Looks like ${analysis.suspectedImpersonation.brand}` : 'Registered domain'}
               >
                 {analysis.parts.domain}
               </span>
               <span
-                className={SUSPICIOUS_TLDS.has(analysis.parts.tld) ? 'text-yellow-400' : 'text-white'}
+                className={SUSPICIOUS_TLDS.has(analysis.parts.tld) ? 'text-warn' : 'text-white'}
                 title={SUSPICIOUS_TLDS.has(analysis.parts.tld) ? 'Suspicious TLD' : 'TLD'}
               >
                 {analysis.parts.tld}
               </span>
-              {analysis.parts.port && <span className="text-yellow-400" title="Non-standard port">:{analysis.parts.port}</span>}
-              <span className="text-[#B8B8D4]" title="Path">{analysis.parts.path}</span>
-              <span className="text-[#B8B8D4]/60" title="Query string">{analysis.parts.search}</span>
+              {analysis.parts.port && <span className="text-warn" title="Non-standard port">:{analysis.parts.port}</span>}
+              <span className="text-t2" title="Path">{analysis.parts.path}</span>
+              <span className="text-t3" title="Query string">{analysis.parts.search}</span>
             </div>
-            <div className="mt-3 flex flex-wrap gap-3 text-xs text-[#B8B8D4]/60">
-              <span><span className="inline-block w-2 h-2 bg-blue-400 rounded-full mr-1"></span>Protocol</span>
+            <div className="mt-3 flex flex-wrap gap-3 text-xs text-t3">
+              <span><span className="inline-block w-2 h-2 bg-info rounded-full mr-1"></span>Protocol</span>
               <span><span className="inline-block w-2 h-2 bg-white rounded-full mr-1"></span>Registered domain</span>
-              <span><span className="inline-block w-2 h-2 bg-yellow-400 rounded-full mr-1"></span>Flagged as suspicious</span>
-              <span><span className="inline-block w-2 h-2 bg-red-400 rounded-full mr-1"></span>Likely malicious</span>
+              <span><span className="inline-block w-2 h-2 bg-warn rounded-full mr-1"></span>Flagged as suspicious</span>
+              <span><span className="inline-block w-2 h-2 bg-danger rounded-full mr-1"></span>Likely malicious</span>
             </div>
           </div>
 
           {/* Shortener unfurl */}
           {analysis.isShortener && (
-            <div className="bg-[#0a0a0a] border border-yellow-500/20 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-yellow-400 mb-2">URL Shortener Detected</h3>
-              <p className="text-xs text-[#B8B8D4] mb-3">
+            <div className="bg-s0 border border-warn/30 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-warn mb-2">URL Shortener Detected</h3>
+              <p className="text-xs text-t2 mb-3">
                 Fetch the redirect destination through our server (your IP stays private):
               </p>
               <button onClick={unfurlShortener} disabled={unfurling} className="btn-primary text-xs px-3 py-2">
                 {unfurling ? 'Unfurling...' : 'Unfurl'}
               </button>
               {unfurled && (
-                <div className="mt-3 p-3 bg-[#191b1c] rounded text-xs text-green-400 font-mono break-all">
+                <div className="mt-3 p-3 bg-s0 rounded text-xs text-ok font-mono break-all">
                   → {unfurled}
                 </div>
               )}
-              {unfurlError && <p className="mt-3 text-xs text-red-400">{unfurlError}</p>}
+              {unfurlError && <p className="mt-3 text-xs text-danger">{unfurlError}</p>}
             </div>
           )}
 
           {/* Details */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">URL Details</h3>
             <div className="space-y-2">
               {analysis.details.map((d, i) => (
                 <div key={i} className="flex items-start justify-between gap-3">
-                  <span className="text-sm text-[#B8B8D4] shrink-0">{d.label}</span>
+                  <span className="text-sm text-t2 shrink-0">{d.label}</span>
                   {/* Phishing URLs are exactly the long ones: let the path wrap instead of overflowing the card. */}
-                  <span className={`text-sm font-mono min-w-0 break-all text-right ${d.safe ? 'text-green-400' : 'text-yellow-400'}`}>{d.value}</span>
+                  <span className={`text-sm font-mono min-w-0 break-all text-right ${d.safe ? 'text-ok' : 'text-warn'}`}>{d.value}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Findings */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+          <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">Findings</h3>
             <div className="space-y-2">
               {analysis.risks.map((r, i) => (
                 <div key={i} className={`flex items-start gap-2 p-3 rounded-md ${
-                  r.severity === 'high' ? 'bg-red-500/10' :
-                  r.severity === 'medium' ? 'bg-yellow-500/10' : 'bg-blue-500/10'
+                  r.severity === 'high' ? 'bg-danger-dim' :
+                  r.severity === 'medium' ? 'bg-warn-dim' : 'bg-info-dim'
                 }`}>
                   <span className={`text-sm shrink-0 ${
-                    r.severity === 'high' ? 'text-red-400' :
-                    r.severity === 'medium' ? 'text-yellow-400' : 'text-blue-400'
+                    r.severity === 'high' ? 'text-danger' :
+                    r.severity === 'medium' ? 'text-warn' : 'text-info'
                   }`}>
-                    {r.severity === 'high' ? '✗' : r.severity === 'medium' ? '⚠' : 'ℹ'}
+                    <Icon name={r.severity === 'high' ? 'x' : r.severity === 'medium' ? 'warn' : 'info'} size={14} className="mt-0.5" />
                   </span>
-                  <span className="text-sm text-[#B8B8D4]">{r.message}</span>
+                  <span className="text-sm text-t2">{r.message}</span>
                   <span className={`text-xs ml-auto shrink-0 px-2 py-0.5 rounded ${
-                    r.severity === 'high' ? 'bg-red-500/20 text-red-400' :
-                    r.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-blue-500/20 text-blue-400'
+                    r.severity === 'high' ? 'bg-danger/20 text-danger' :
+                    r.severity === 'medium' ? 'bg-warn/20 text-warn' : 'bg-info/20 text-info'
                   }`}>{r.severity}</span>
                 </div>
               ))}

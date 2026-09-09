@@ -46,7 +46,7 @@ export default async function ChecklistsByNiche({ params }: PageProps) {
 
   return (
     <div>
-      <nav className="mb-6 text-sm text-[#B8B8D4]">
+      <nav className="mb-6 text-sm text-t2">
         <Link href="/" className="hover:text-white">Home</Link>
         <span className="mx-2">/</span>
         <Link href="/checklists" className="hover:text-white">Checklists</Link>
@@ -57,7 +57,7 @@ export default async function ChecklistsByNiche({ params }: PageProps) {
       <h1 className="text-3xl font-bold text-white mb-2">
         {nicheData?.name ?? niche} Privacy Checklists
       </h1>
-      <p className="text-[#B8B8D4] mb-8">
+      <p className="text-t2 mb-8">
         {nicheData?.description ?? `Privacy and security checklists for ${nicheData?.name ?? niche}.`}
       </p>
 
@@ -73,8 +73,8 @@ export default async function ChecklistsByNiche({ params }: PageProps) {
         ))}
       </div>
 
-      <div className="mt-10 pt-8 border-t border-white/10">
-        <p className="text-sm text-[#B8B8D4]">
+      <div className="mt-10 pt-8 border-t border-b1">
+        <p className="text-sm text-t2">
           Looking for more on this topic?{' '}
           <Link href={`/topics/${niche}`} className="text-white underline hover:no-underline">
             View the full {nicheData?.name ?? niche} hub

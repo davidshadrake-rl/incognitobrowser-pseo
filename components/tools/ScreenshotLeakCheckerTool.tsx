@@ -85,22 +85,22 @@ function toResult(a: ScreenshotAnalysis): ToolResult {
 function verdictClasses(v: Verdict): { box: string; text: string; label: string } {
   switch (v) {
     case 'red':
-      return { box: 'border-red-500/30 bg-red-500/10', text: 'text-red-400', label: 'Exposed' };
+      return { box: 'border-danger/30 bg-danger-dim', text: 'text-danger', label: 'Exposed' };
     case 'amber':
-      return { box: 'border-yellow-500/30 bg-yellow-500/10', text: 'text-yellow-400', label: 'Partially exposed' };
+      return { box: 'border-warn/30 bg-warn-dim', text: 'text-warn', label: 'Partially exposed' };
     default:
-      return { box: 'border-green-500/30 bg-green-500/10', text: 'text-green-400', label: 'Clean' };
+      return { box: 'border-ok/30 bg-ok-dim', text: 'text-ok', label: 'Clean' };
   }
 }
 
 function severityClasses(s: LeakSeverity): { border: string; text: string } {
   switch (s) {
     case 'high':
-      return { border: 'border-red-500/20', text: 'text-red-400' };
+      return { border: 'border-danger/30', text: 'text-danger' };
     case 'medium':
-      return { border: 'border-yellow-500/20', text: 'text-yellow-400' };
+      return { border: 'border-warn/30', text: 'text-warn' };
     default:
-      return { border: 'border-white/10', text: 'text-[#B8B8D4]/70' };
+      return { border: 'border-b1', text: 'text-t3' };
   }
 }
 
@@ -249,9 +249,9 @@ export function ScreenshotLeakCheckerTool() {
         onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onDrop={onDrop}
-        className={`bg-[#0a0a0a] border rounded-lg p-6 transition-colors ${dragging ? 'border-white/40 bg-white/5' : 'border-white/10'}`}
+        className={`bg-s0 border rounded-lg p-6 transition-colors ${dragging ? 'border-b2 bg-white/5' : 'border-b1'}`}
       >
-        <label htmlFor="screenshot-leak-file" className="block text-sm font-medium text-[#B8B8D4] mb-3">
+        <label htmlFor="screenshot-leak-file" className="block text-sm font-medium text-t2 mb-3">
           Drop a screenshot here, or choose a file (PNG, JPEG or WebP, up to 25 MB)
         </label>
         <input
@@ -260,21 +260,21 @@ export function ScreenshotLeakCheckerTool() {
           type="file"
           accept={ACCEPT}
           onChange={onInput}
-          className="w-full text-sm text-[#B8B8D4] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
+          className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
         />
-        <p className="mt-2 text-xs text-[#B8B8D4]/60">
+        <p className="mt-2 text-xs text-t3">
           Everything runs in your browser. The file never leaves your device — no upload, no network request, nothing stored.
         </p>
       </div>
 
       {error && (
-        <div className="bg-[#0a0a0a] border border-red-500/30 rounded-lg p-4 text-sm text-red-400" role="alert">
+        <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger" role="alert">
           {error}
         </div>
       )}
 
       {busy && (
-        <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4 text-sm text-[#B8B8D4]">Reading the file…</div>
+        <div className="bg-s0 border border-b1 rounded-lg p-4 text-sm text-t2">Reading the file…</div>
       )}
 
       {analysis && v && (
@@ -284,7 +284,7 @@ export function ScreenshotLeakCheckerTool() {
             <div className={`text-xs font-semibold uppercase tracking-wide ${v.text}`}>{v.label}</div>
             <h3 className="mt-1 text-lg font-semibold text-white">{analysis.headline}</h3>
             {fileMeta && (
-              <p className="mt-1 text-xs text-[#B8B8D4]/70 font-mono break-all">
+              <p className="mt-1 text-xs text-t3 font-mono break-all">
                 {fileMeta.name} · {formatBytes(fileMeta.size)} · {analysis.format.toUpperCase()}
                 {analysis.info.map((i) => ` · ${i.value}`).join('')}
               </p>
@@ -296,9 +296,9 @@ export function ScreenshotLeakCheckerTool() {
                 { label: 'Thumbnail', value: analysis.counts.thumbnail ? 'Yes' : 'No', hot: analysis.counts.thumbnail },
                 { label: 'PII items', value: String(analysis.counts.pii), hot: analysis.counts.pii > 0 },
               ].map((s) => (
-                <div key={s.label} className="bg-[#0a0a0a] border border-white/10 rounded p-3">
-                  <div className="text-xs text-[#B8B8D4]/70">{s.label}</div>
-                  <div className={`text-lg font-bold ${s.hot ? 'text-red-400' : 'text-green-400'}`}>{s.value}</div>
+                <div key={s.label} className="bg-s0 border border-b1 rounded p-3">
+                  <div className="text-xs text-t3">{s.label}</div>
+                  <div className={`text-lg font-bold ${s.hot ? 'text-danger' : 'text-ok'}`}>{s.value}</div>
                 </div>
               ))}
             </div>
@@ -307,24 +307,24 @@ export function ScreenshotLeakCheckerTool() {
           {/* Preview + embedded thumbnail side by side */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {preview && (
-              <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+              <div className="bg-s0 border border-b1 rounded-lg p-4">
                 <div className="text-xs font-semibold text-white mb-2">What you see</div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={preview} alt="Preview of the screenshot you selected" className="w-full h-48 object-contain rounded bg-black/40" />
               </div>
             )}
             {analysis.thumbnail && (
-              <div className="bg-[#0a0a0a] border border-red-500/30 rounded-lg p-4">
-                <div className="text-xs font-semibold text-red-400 mb-2">This is what the file also contains</div>
+              <div className="bg-s0 border border-danger/30 rounded-lg p-4">
+                <div className="text-xs font-semibold text-danger mb-2">This is what the file also contains</div>
                 {thumbUrl ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
                   <img src={thumbUrl} alt="Thumbnail embedded inside the file's metadata" className="w-full h-48 object-contain rounded bg-black/40" />
                 ) : (
-                  <div className="h-48 flex items-center justify-center text-xs text-[#B8B8D4]/70 text-center px-4">
+                  <div className="h-48 flex items-center justify-center text-xs text-t3 text-center px-4">
                     A thumbnail block is present ({formatBytes(analysis.thumbnail.bytes.length)}) but it is not in a format the browser can display.
                   </div>
                 )}
-                <p className="mt-2 text-xs text-[#B8B8D4]/70">
+                <p className="mt-2 text-xs text-t3">
                   Embedded thumbnail, {formatBytes(analysis.thumbnail.bytes.length)}, from {analysis.thumbnail.source}. If you cropped or blurred this image, compare the two — the thumbnail may still show the original.
                 </p>
               </div>
@@ -332,10 +332,10 @@ export function ScreenshotLeakCheckerTool() {
           </div>
 
           {/* Leaks */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+          <div className="bg-s0 border border-b1 rounded-lg p-4">
             <h3 className="text-sm font-semibold text-white mb-3">Leaks found ({analysis.leaks.length})</h3>
             {analysis.leaks.length === 0 ? (
-              <p className="text-sm text-green-400">Nothing hidden in the container or the file name. The visible content is still on you.</p>
+              <p className="text-sm text-ok">Nothing hidden in the container or the file name. The visible content is still on you.</p>
             ) : (
               <div className="space-y-2">
                 {analysis.leaks.map((l: Leak, i: number) => {
@@ -346,8 +346,8 @@ export function ScreenshotLeakCheckerTool() {
                         <code className="text-sm text-white font-mono break-all">{l.what}</code>
                         <span className={`shrink-0 text-xs ${c.text}`}>{l.severity}</span>
                       </div>
-                      <div className="mt-1 text-xs text-[#B8B8D4]/60">From: {l.source}</div>
-                      <p className="mt-1 text-xs text-yellow-400/80">{l.why}</p>
+                      <div className="mt-1 text-xs text-t3">From: {l.source}</div>
+                      <p className="mt-1 text-xs text-warn/80">{l.why}</p>
                     </div>
                   );
                 })}
@@ -357,32 +357,32 @@ export function ScreenshotLeakCheckerTool() {
 
           {/* GPS */}
           {analysis.gps && (
-            <div className="bg-[#0a0a0a] border border-red-500/30 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-red-400 mb-2">GPS location embedded</h3>
+            <div className="bg-s0 border border-danger/30 rounded-lg p-4">
+              <h3 className="text-sm font-semibold text-danger mb-2">GPS location embedded</h3>
               <code className="block text-lg text-white font-mono">
                 {analysis.gps.latitude.toFixed(6)}, {analysis.gps.longitude.toFixed(6)}
               </code>
               {analysis.gps.altitude !== undefined && (
-                <div className="mt-1 text-xs text-[#B8B8D4]">Altitude: {analysis.gps.altitude.toFixed(1)} m</div>
+                <div className="mt-1 text-xs text-t2">Altitude: {analysis.gps.altitude.toFixed(1)} m</div>
               )}
-              <div className="mt-1 text-xs text-[#B8B8D4]/60">From: {analysis.gps.source}</div>
-              <p className="mt-2 text-xs text-[#B8B8D4]/70">
+              <div className="mt-1 text-xs text-t3">From: {analysis.gps.source}</div>
+              <p className="mt-2 text-xs text-t3">
                 Shown as numbers only. We do not load a map or contact any service — paste the pair into a map yourself if you want to see where it points.
               </p>
             </div>
           )}
 
           {/* Device / software / timestamps */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+          <div className="bg-s0 border border-b1 rounded-lg p-4">
             <h3 className="text-sm font-semibold text-white mb-3">Device, software and timestamps</h3>
             {context.length === 0 ? (
-              <p className="text-sm text-[#B8B8D4]/70">No device, software, identifier or timestamp fields.</p>
+              <p className="text-sm text-t3">No device, software, identifier or timestamp fields.</p>
             ) : (
               <div className="space-y-2">
                 {context.map((l, i) => (
-                  <div key={i} className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 border-b border-white/5 pb-2 last:border-0 last:pb-0">
-                    <code className="text-sm text-[#B8B8D4] font-mono break-all">{l.what}</code>
-                    <span className="text-xs text-[#B8B8D4]/50 shrink-0">{l.category} · {l.source}</span>
+                  <div key={i} className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 border-b border-hair pb-2 last:border-0 last:pb-0">
+                    <code className="text-sm text-t2 font-mono break-all">{l.what}</code>
+                    <span className="text-xs text-t3 shrink-0">{l.category} · {l.source}</span>
                   </div>
                 ))}
               </div>
@@ -390,20 +390,20 @@ export function ScreenshotLeakCheckerTool() {
           </div>
 
           {/* PII */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+          <div className="bg-s0 border border-b1 rounded-lg p-4">
             <h3 className="text-sm font-semibold text-white mb-3">Personal data ({analysis.pii.length})</h3>
             {analysis.pii.length === 0 ? (
-              <p className="text-sm text-[#B8B8D4]/70">No personal-data patterns in the metadata or the file name.</p>
+              <p className="text-sm text-t3">No personal-data patterns in the metadata or the file name.</p>
             ) : (
               <div className="space-y-2">
                 {[...realPii, ...usernames].map((p, i) => (
-                  <div key={i} className={`border rounded-lg p-3 ${p.kind === 'username' ? 'border-yellow-500/20' : 'border-red-500/20'}`}>
+                  <div key={i} className={`border rounded-lg p-3 ${p.kind === 'username' ? 'border-warn/30' : 'border-danger/30'}`}>
                     <div className="flex items-start justify-between gap-3">
-                      <span className="text-xs text-[#B8B8D4]">{PII_KIND_LABEL[p.kind]}</span>
-                      <span className={`text-xs shrink-0 ${p.kind === 'username' ? 'text-yellow-400' : 'text-red-400'}`}>{p.kind === 'username' ? 'medium' : 'high'}</span>
+                      <span className="text-xs text-t2">{PII_KIND_LABEL[p.kind]}</span>
+                      <span className={`text-xs shrink-0 ${p.kind === 'username' ? 'text-warn' : 'text-danger'}`}>{p.kind === 'username' ? 'medium' : 'high'}</span>
                     </div>
                     <code className="block mt-1 text-sm text-white font-mono break-all">{p.value}</code>
-                    <div className="mt-1 text-xs text-[#B8B8D4]/60">From: {p.source}</div>
+                    <div className="mt-1 text-xs text-t3">From: {p.source}</div>
                   </div>
                 ))}
               </div>
@@ -412,27 +412,27 @@ export function ScreenshotLeakCheckerTool() {
 
           {/* Every extracted field */}
           {(analysis.fields.length > 0 || analysis.compressed.length > 0) && (
-            <details className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+            <details className="bg-s0 border border-b1 rounded-lg p-4">
               <summary className="text-sm font-semibold text-white cursor-pointer">
                 All extracted metadata ({analysis.fields.length + analysis.compressed.length})
               </summary>
               <div className="mt-3 space-y-2">
                 {analysis.fields.map((f, i) => (
-                  <div key={i} className="border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                  <div key={i} className="border-b border-hair pb-2 last:border-0 last:pb-0">
                     <div className="flex items-baseline justify-between gap-3">
                       <span className="text-sm text-white">{f.key}</span>
-                      <span className="text-xs text-[#B8B8D4]/50 shrink-0">{f.source}</span>
+                      <span className="text-xs text-t3 shrink-0">{f.source}</span>
                     </div>
-                    <code className="block text-sm text-[#B8B8D4] font-mono break-all whitespace-pre-wrap">{f.value}</code>
+                    <code className="block text-sm text-t2 font-mono break-all whitespace-pre-wrap">{f.value}</code>
                   </div>
                 ))}
                 {analysis.compressed.map((c, i) => (
-                  <div key={`c${i}`} className="border-b border-white/5 pb-2 last:border-0 last:pb-0">
+                  <div key={`c${i}`} className="border-b border-hair pb-2 last:border-0 last:pb-0">
                     <div className="flex items-baseline justify-between gap-3">
                       <span className="text-sm text-white">{c.key}</span>
-                      <span className="text-xs text-[#B8B8D4]/50 shrink-0">{c.source}</span>
+                      <span className="text-xs text-t3 shrink-0">{c.source}</span>
                     </div>
-                    <code className="block text-sm text-yellow-400/80 font-mono">compressed text present ({c.data.length} bytes), not decoded by this browser</code>
+                    <code className="block text-sm text-warn/80 font-mono">compressed text present ({c.data.length} bytes), not decoded by this browser</code>
                   </div>
                 ))}
               </div>
@@ -440,24 +440,24 @@ export function ScreenshotLeakCheckerTool() {
           )}
 
           {/* Actions */}
-          <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+          <div className="bg-s0 border border-b1 rounded-lg p-4">
             <div className="flex flex-wrap gap-3 items-center">
               <button onClick={downloadClean} disabled={cleaning} className="btn-primary text-sm px-4 py-2">
                 {cleaning ? 'Re-encoding…' : 'Download clean copy'}
               </button>
               {cleanUrl && (
-                <a href={cleanUrl} download={cleanName} className="text-sm px-4 py-2 border border-green-500/20 rounded text-green-400 hover:bg-green-500/10">
+                <a href={cleanUrl} download={cleanName} className="text-sm px-4 py-2 border border-ok/30 rounded text-ok hover:bg-ok-dim">
                   Save {cleanName}
                 </a>
               )}
               <button
                 onClick={reset}
-                className="text-sm px-4 py-2 border border-white/10 rounded text-[#B8B8D4] hover:text-white hover:border-white/30"
+                className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
               >
                 Check another file
               </button>
             </div>
-            <p className="mt-3 text-xs text-[#B8B8D4]/60">
+            <p className="mt-3 text-xs text-t3">
               The clean copy is made by drawing the decoded pixels onto a canvas and re-encoding, which drops every metadata block — Exif, XMP, IPTC, PNG text, the embedded thumbnail. PNG stays PNG and lossless. JPEG and WebP are saved as JPEG at quality 92, so they recompress slightly. The file name is reset too; pick a neutral one.
             </p>
           </div>

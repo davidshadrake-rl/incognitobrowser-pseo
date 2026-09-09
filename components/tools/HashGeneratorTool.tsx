@@ -152,11 +152,11 @@ export function HashGeneratorTool() {
       <SecureContextRequired toolName="Hash Generator" />
 
       {/* Mode toggle */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-2 flex">
+      <div className="bg-s0 border border-b1 rounded-lg p-2 flex">
         <button
           onClick={() => setInputMode('text')}
           className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            inputMode === 'text' ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+            inputMode === 'text' ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
           }`}
         >
           Text Input
@@ -164,7 +164,7 @@ export function HashGeneratorTool() {
         <button
           onClick={() => setInputMode('file')}
           className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            inputMode === 'file' ? 'bg-white/10 text-white' : 'text-[#B8B8D4] hover:text-white'
+            inputMode === 'file' ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
           }`}
         >
           File Input
@@ -172,7 +172,7 @@ export function HashGeneratorTool() {
       </div>
 
       {/* HMAC toggle */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+      <div className="bg-s0 border border-b1 rounded-lg p-4">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             type="checkbox"
@@ -181,56 +181,56 @@ export function HashGeneratorTool() {
             className="accent-white"
           />
           <span className="text-sm text-white font-medium">HMAC mode</span>
-          <span className="text-xs text-[#B8B8D4]">(keyed hash for signing — webhooks, API auth)</span>
+          <span className="text-xs text-t2">(keyed hash for signing — webhooks, API auth)</span>
         </label>
         {hmacMode && (
           <div className="mt-3">
-            <label className="block text-xs font-medium text-[#B8B8D4] mb-1">HMAC key (secret)</label>
+            <label className="block text-xs font-medium text-t2 mb-1">HMAC key (secret)</label>
             <input
               type="text"
               value={hmacKey}
               onChange={(e) => { setHmacKey(e.target.value); setTimeout(rehash, 0); }}
               placeholder="Enter the shared secret..."
-              className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20 font-mono"
+              className="w-full px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white placeholder-white/20 font-mono"
             />
           </div>
         )}
       </div>
 
       {/* Input */}
-      <div className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6">
+      <div className="bg-s0 border border-b1 rounded-lg p-6">
         {inputMode === 'text' ? (
           <div>
-            <label className="block text-sm font-medium text-[#B8B8D4] mb-2">Text to Hash</label>
+            <label className="block text-sm font-medium text-t2 mb-2">Text to Hash</label>
             <textarea
               value={inputText}
               onChange={(e) => onTextChange(e.target.value)}
               placeholder="Enter text to generate hashes..."
               rows={4}
-              className="w-full px-4 py-3 bg-[#191b1c] border border-white/10 rounded-md text-white placeholder-white/20 font-mono text-sm"
+              className="w-full px-4 py-3 bg-s0 border border-b1 rounded-md text-white placeholder-white/20 font-mono text-sm"
             />
           </div>
         ) : (
           <div>
-            <label className="block text-sm font-medium text-[#B8B8D4] mb-2">Upload or Drop File</label>
+            <label className="block text-sm font-medium text-t2 mb-2">Upload or Drop File</label>
             <div
               onDrop={onDrop}
               onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
               onDragLeave={() => setDragging(false)}
               className={`border-2 border-dashed rounded-md p-6 text-center transition-colors ${
-                dragging ? 'border-white/40 bg-white/5' : 'border-white/10'
+                dragging ? 'border-b2 bg-white/5' : 'border-b1'
               }`}
             >
-              <p className="text-sm text-[#B8B8D4] mb-3">
+              <p className="text-sm text-t2 mb-3">
                 {dragging ? 'Drop to hash' : 'Drop a file here, or click to browse'}
               </p>
               <input
                 type="file"
                 onChange={onFileInput}
-                className="w-full text-sm text-[#B8B8D4] file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
+                className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
               />
               {fileInfo && (
-                <p className="mt-3 text-xs text-[#B8B8D4]">
+                <p className="mt-3 text-xs text-t2">
                   {fileInfo.name} ({(fileInfo.size / 1024).toLocaleString()} KB) — hashed as raw bytes
                 </p>
               )}
@@ -238,43 +238,43 @@ export function HashGeneratorTool() {
           </div>
         )}
         {inputText && inputMode === 'text' && (
-          <p className="mt-2 text-xs text-[#B8B8D4]/60">
+          <p className="mt-2 text-xs text-t3">
             Input size: {new Blob([inputText]).size.toLocaleString()} bytes
           </p>
         )}
       </div>
 
       {error && (
-        <div className="bg-[#0a0a0a] border border-red-500/20 rounded-lg p-4 text-sm text-red-400">{error}</div>
+        <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger">{error}</div>
       )}
 
       {/* Results */}
       {Object.keys(results).length > 0 && (
         <div className="space-y-3">
-          {computing && <p className="text-xs text-[#B8B8D4]">Computing...</p>}
+          {computing && <p className="text-xs text-t2">Computing...</p>}
           {algorithms.map(algo => (
-            <div key={algo} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-4">
+            <div key={algo} className="bg-s0 border border-b1 rounded-lg p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-semibold text-white">{hmacMode ? `HMAC-${algo}` : algo}</span>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleVerify(algo)}
-                    className="text-xs text-[#B8B8D4] hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-white/10 rounded min-h-[36px] min-w-[64px]"
+                    className="text-xs text-t2 hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-b1 rounded min-h-[36px] min-w-[64px]"
                   >
                     Verify
                   </button>
                   <button
                     onClick={() => handleCopy(algo, results[algo])}
-                    className="text-xs text-[#B8B8D4] hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-white/10 rounded min-h-[36px] min-w-[64px]"
+                    className="text-xs text-t2 hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-b1 rounded min-h-[36px] min-w-[64px]"
                   >
                     {copied === algo ? 'Copied!' : 'Copy'}
                   </button>
                 </div>
               </div>
-              <code className="block bg-[#191b1c] p-3 rounded text-xs text-green-400 font-mono break-all select-all">
+              <code className="block bg-s0 p-3 rounded text-xs text-ok font-mono break-all select-all">
                 {results[algo]}
               </code>
-              <div className="mt-1 text-xs text-[#B8B8D4]/40">
+              <div className="mt-1 text-xs text-t2/40">
                 {results[algo].length * 4} bits ({results[algo].length} hex chars)
               </div>
             </div>
@@ -282,7 +282,7 @@ export function HashGeneratorTool() {
         </div>
       )}
 
-      <p className="text-xs text-[#B8B8D4]/60 text-center">
+      <p className="text-xs text-t3 text-center">
         Uses the Web Crypto API. Files are hashed as raw bytes — binary safe. All processing is local.
       </p>
     </div>

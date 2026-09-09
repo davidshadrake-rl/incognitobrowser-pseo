@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { Badge } from './ui/Badge';
+import { Icon } from './ui/Icon';
 import { ArticleByline } from './ArticleByline';
 
 interface ToolInput {
@@ -61,14 +62,14 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
           editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
           reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
         />
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap items-center gap-1.5 mb-4">
           <Badge label={data.toolType} />
-          <Badge label="Free" variant="yes" />
+          <Badge variant="free" />
         </div>
-        <p className="text-[#B8B8D4]">{data.description}</p>
+        <p className="text-t2">{data.description}</p>
       </header>
 
-      <form onSubmit={handleSubmit} className="bg-[#0a0a0a] border border-white/10 rounded-lg p-6 mb-8">
+      <form onSubmit={handleSubmit} className="bg-s0 border border-b1 rounded-lg p-6 mb-8">
         <div className="space-y-4">
           {data.inputs.map(input => {
             // Tighten mobile keyboard + autofill behavior based on input type.
@@ -80,7 +81,7 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
                 : {};
             return (
               <div key={input.id}>
-                <label htmlFor={input.id} className="block text-sm font-medium text-[#B8B8D4] mb-1">
+                <label htmlFor={input.id} className="block text-sm font-medium text-t2 mb-1">
                   {input.label}
                 </label>
                 {input.type === 'textarea' ? (
@@ -91,7 +92,7 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
                     onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
                     placeholder={input.placeholder}
                     rows={4}
-                    className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20"
+                    className="w-full px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white placeholder-white/20"
                   />
                 ) : input.type === 'select' && input.options ? (
                   <select
@@ -99,7 +100,7 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
                     name={input.id}
                     value={inputValues[input.id]}
                     onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
-                    className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white"
+                    className="w-full px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white"
                   >
                     <option value="">Select...</option>
                     {input.options.map(opt => (
@@ -114,7 +115,7 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
                     value={inputValues[input.id]}
                     onChange={e => setInputValues({ ...inputValues, [input.id]: e.target.value })}
                     placeholder={input.placeholder}
-                    className="w-full px-3 py-2 bg-[#191b1c] border border-white/10 rounded-md text-sm text-white placeholder-white/20"
+                    className="w-full px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white placeholder-white/20"
                     {...extraProps}
                   />
                 )}
@@ -133,7 +134,7 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
         {data.educational.howItWorks && (
           <section>
             <h2 className="text-xl font-semibold text-white mb-3">How This Tool Works</h2>
-            <p className="text-[#B8B8D4]">{data.educational.howItWorks}</p>
+            <p className="text-t2">{data.educational.howItWorks}</p>
           </section>
         )}
 
@@ -142,8 +143,8 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
             <h2 className="text-xl font-semibold text-white mb-3">Tips</h2>
             <ul className="space-y-2">
               {data.educational.tips.map((tip, i) => (
-                <li key={i} className="flex items-start text-sm text-[#B8B8D4]">
-                  <span className="text-green-400 mr-2">&#10003;</span>
+                <li key={i} className="flex items-start text-sm text-t2">
+                  <Icon name="check" size={16} className="text-ok mr-2 mt-0.5" />
                   {tip}
                 </li>
               ))}
@@ -156,8 +157,8 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
             <h2 className="text-xl font-semibold text-white mb-3">Common Mistakes to Avoid</h2>
             <ul className="space-y-2">
               {data.educational.commonMistakes.map((mistake, i) => (
-                <li key={i} className="flex items-start text-sm text-[#B8B8D4]">
-                  <span className="text-red-400 mr-2">&#10007;</span>
+                <li key={i} className="flex items-start text-sm text-t2">
+                  <Icon name="x" size={16} className="text-danger mr-2 mt-0.5" />
                   {mistake}
                 </li>
               ))}

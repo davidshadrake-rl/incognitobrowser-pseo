@@ -30,7 +30,7 @@ export default function GuidesIndex() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-white mb-2">Privacy Guides</h1>
-      <p className="text-[#B8B8D4] mb-8">
+      <p className="text-t2 mb-8">
         Step-by-step guides to help you protect your privacy online. From beginner basics to advanced techniques.
       </p>
 
@@ -48,7 +48,7 @@ export default function GuidesIndex() {
       />
 
       {items.length === 0 && (
-        <div className="text-center py-12 text-[#B8B8D4]/60">
+        <div className="text-center py-12 text-t3">
           <p className="text-lg">Guides are being generated. Check back soon!</p>
         </div>
       )}

@@ -11,7 +11,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
       {/* flex-wrap + break-all: a 26-char report-card domain otherwise forces the
           whole page to scroll sideways at 375px. The root "Resources" crumb is
           rendered here, so callers must not pass it again. */}
-      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[#B8B8D4]/60">
+      <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-t3">
         <li>
           <Link href="/" className="hover:text-white transition-colors">Resources</Link>
         </li>
@@ -23,7 +23,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
             {item.href ? (
               <Link href={item.href} className="hover:text-white transition-colors">{item.label}</Link>
             ) : (
-              <span className="text-[#B8B8D4] break-all">{item.label}</span>
+              <span className="text-t2 break-all">{item.label}</span>
             )}
           </li>
         ))}

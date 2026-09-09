@@ -30,7 +30,7 @@ export default function ChecklistsIndex() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-white mb-2">Privacy Checklists</h1>
-      <p className="text-[#B8B8D4] mb-8">
+      <p className="text-t2 mb-8">
         Interactive checklists to help you secure your digital life. Check off items as you go — your progress is saved.
       </p>
 
@@ -48,7 +48,7 @@ export default function ChecklistsIndex() {
       />
 
       {items.length === 0 && (
-        <div className="text-center py-12 text-[#B8B8D4]/60">
+        <div className="text-center py-12 text-t3">
           <p className="text-lg">Checklists are being generated. Check back soon!</p>
         </div>
       )}

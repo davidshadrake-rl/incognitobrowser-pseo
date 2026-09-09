@@ -55,10 +55,10 @@ export function ArticleByline({ author, editor, reviewedAt }: ArticleBylineProps
 
   return (
     <div
-      className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/90 mb-6 pb-4 border-b border-white/10"
+      className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/90 mb-6 pb-4 border-b border-b1"
       data-testid="article-byline"
     >
-      <span className="text-[#B8B8D4]">By</span>
+      <span className="text-t2">By</span>
       <a
         href={profileHref(author.profileUrl, author.name)}
         rel="author"
@@ -69,7 +69,7 @@ export function ArticleByline({ author, editor, reviewedAt }: ArticleBylineProps
       {editor && editor.name && (
         <>
           <span aria-hidden="true" className="text-white/30">·</span>
-          <span className="text-[#B8B8D4]">Edited by</span>
+          <span className="text-t2">Edited by</span>
           <a
             href={profileHref(editor.profileUrl, editor.name)}
             className="text-white hover:underline font-semibold"
@@ -81,7 +81,7 @@ export function ArticleByline({ author, editor, reviewedAt }: ArticleBylineProps
       {dateStr && (
         <>
           <span aria-hidden="true" className="text-white/30">·</span>
-          <span className="text-[#B8B8D4]">
+          <span className="text-t2">
             Reviewed{' '}
             <time dateTime={reviewedAt || undefined} className="text-white">
               {dateStr}
