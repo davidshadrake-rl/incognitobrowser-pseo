@@ -1,6 +1,8 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getGlossaryItem, getGlossaryFiles, isPublished } from '@/lib/content';
+import { getGlossaryItem, getGlossaryFiles, isPublished, getCrossNicheLinks, nicheForGlossaryTerm } from '@/lib/content';
+import { RelatedContent } from '@/components/seo/RelatedContent';
+import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { GlossaryTermPage } from '@/components/GlossaryPage';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -75,11 +77,23 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
   });
 
 
+  const glossaryNiche = nicheForGlossaryTerm(term);
+  const nicheName = glossaryNiche ? getNicheById(glossaryNiche)?.name : undefined;
+
   return (
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       <GlossaryTermPage data={data} validTermSlugs={validTermSlugs} />
+      {/* Glossary terms previously linked only to sibling terms, never into the
+          guides/checklists/tools that explain them. The niche comes from a
+          hand-authored map (see nicheForGlossaryTerm). */}
+      {glossaryNiche && (
+        <RelatedContent
+          links={getCrossNicheLinks(glossaryNiche, 'glossary', term, 12, 0.75)}
+          nicheHub={nicheName ? { name: nicheName, href: `/topics/${glossaryNiche}` } : undefined}
+        />
+      )}
     </>
   );
 }

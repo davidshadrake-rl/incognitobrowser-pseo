@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { engineVisibleInThisTier, IS_PRO_DEPLOYMENT, FREE_BASE_URL } from './tiers';
 import { getRelatedNiches } from './taxonomy';
+import glossaryNicheMap from '@/data/glossary-niche-map.json';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 
@@ -221,4 +222,16 @@ export function getGlossaryItem<T>(slug: string): T | null {
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, 'utf-8');
   return JSON.parse(raw) as T;
+}
+
+/**
+ * Niche a glossary term belongs to, for its related-content block.
+ *
+ * Hand-authored in data/glossary-niche-map.json rather than derived: keyword
+ * matching against niche keywords was ~40% wrong even on high-confidence
+ * matches, and a wrong related link costs more than a missing one. A term
+ * absent from the map renders no content links.
+ */
+export function nicheForGlossaryTerm(slug: string): string | undefined {
+  return (glossaryNicheMap as { terms: Record<string, string> }).terms[slug];
 }
