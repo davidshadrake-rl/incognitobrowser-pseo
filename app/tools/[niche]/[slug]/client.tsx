@@ -10,6 +10,7 @@ import { Diagram } from '@/components/ui/Diagram';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ResultProvider } from '@/components/tools/ResultContext';
 import { FunnelSurfaces } from '@/components/FunnelSurfaces';
+import { EditorialNote } from '@/components/EditorialNote';
 import { ENGINE_ICON, type Diagram as DiagramId, type Family } from '@/lib/visuals';
 import type { NextStepsData } from '@/components/NextSteps';
 
@@ -195,6 +196,8 @@ export function ToolPageClient({
               </details>
             )}
           </div>
+
+          <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
         </article>
         </ResultProvider>
       );

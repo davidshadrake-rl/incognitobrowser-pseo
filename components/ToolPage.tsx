@@ -5,7 +5,7 @@ import { Breadcrumbs } from './ui/Breadcrumbs';
 import { Badge } from './ui/Badge';
 import { Icon } from './ui/Icon';
 import { PageHero } from './ui/PageHero';
-import { ArticleByline } from './ArticleByline';
+import { EditorialNote } from './EditorialNote';
 
 interface ToolInput {
   id: string;
@@ -66,13 +66,6 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
             <Badge label={data.toolType} />
             <Badge variant="free" />
           </>
-        }
-        action={
-          <ArticleByline
-            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-            reviewed={!!(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
-            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-          />
         }
       />
 
@@ -173,6 +166,8 @@ export function ToolPage({ data, nicheName, renderTool }: ToolPageProps) {
           </details>
         )}
       </div>
+
+      <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
     </article>
   );
 }

@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
 import { Badge } from './ui/Badge';
-import { ArticleByline } from './ArticleByline';
+import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
 import { Icon } from './ui/Icon';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
@@ -101,13 +101,6 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
             <Badge label={`${data.inputs.length} inputs`} />
             <Badge label={`${data.outputFields.length} results`} />
           </>
-        }
-        action={
-          <ArticleByline
-            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-            reviewed={(data as unknown as { reviewed?: boolean }).reviewed}
-            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-          />
         }
         diagram={diagramForNiche(data.niche)}
       />
@@ -231,6 +224,8 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
           <p className="prose-ib text-row">{data.educational.methodology}</p>
         </section>
       )}
+
+      <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
     </article>
   );
 }

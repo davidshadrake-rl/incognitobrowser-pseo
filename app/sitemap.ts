@@ -96,6 +96,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Website Privacy Report Cards
   entries.push({ url: `${SITE_URL}/site`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 });
   entries.push({ url: `${SITE_URL}/site/methodology`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 });
+  entries.push({ url: `${SITE_URL}/editorial-standards`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 });
   for (const s of getAllSites()) {
     if (!isSitePublished(s)) continue;
     entries.push({ url: `${SITE_URL}/site/${s.domain}`, lastModified: new Date(s.scannedAt), changeFrequency: 'monthly', priority: 0.6 });

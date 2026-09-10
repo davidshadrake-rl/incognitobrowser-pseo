@@ -16,7 +16,8 @@
  *
  * This suite catches the class of bugs that slipped past the editorial
  * gate + audit work:
- *   - byline not rendering despite the JSON file having the author block
+ *   - a person's name shipping in the page (visibly, in JSON-LD, or in the
+ *     RSC payload) after the byline was removed
  *   - JSX whitespace eating spaces ("Targeted Advertisingresources")
  *   - footer links pointing to the wrong URL
  *   - demoted pages forgetting to emit noindex
@@ -166,30 +167,27 @@ describe.skipIf(!HAS_TARGET)('published article page (checklist)', () => {
     expect(html).not.toMatch(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/);
   });
 
-  it('emits Article JSON-LD crediting the writer, with editorial review not personally attributed', () => {
+  it('emits Article JSON-LD credited to the editorial masthead, naming no person', () => {
     // The Article LD is embedded as one of the <script type="application/ld+json"> blobs.
     const articleLdMatches = html.match(/application\/ld\+json"[^>]*>(\{[^<]+"@type":"Article"[^<]+)</);
     expect(articleLdMatches, 'No Article JSON-LD found in HTML').toBeTruthy();
     const ld = articleLdMatches![1];
-    expect(ld).toContain('"name":"Darkpool David"');
-    // Writer must include WP author archive URL.
-    expect(ld).toMatch(/"author":\{[^}]*"url":"https:\/\/incognitobrowser\.io\/author\/david\//);
-    // The reviewing editor is a real person. Crediting them by name here put
-    // their name and personal LinkedIn into the structured data of 1,000+
-    // pages, which is not a trade the review signal is worth. The review is
-    // still asserted — as the masthead, not the individual.
-    expect(ld).toMatch(/"editor":\{[^}]*"@type":"Organization"/);
-    expect(ld).not.toContain('linkedin.com/in/');
+    // Pages show no byline, and structured data must not describe what readers
+    // cannot see — so the author is the masthead, whose URL explains the review.
+    expect(ld).toMatch(/"author":\{"@type":"Organization","name":"Incognito Browser Editorial","url":"https:\/\/incognitobrowser\.io\/resources\/editorial-standards"\}/);
+    expect(ld).not.toContain('"@type":"Person"');
+    // schema.org types `editor` as a Person; there is no person to name.
+    expect(ld).not.toContain('"editor"');
   });
 
-  it('renders a visible byline near the H1', () => {
-    expect(html).toContain('data-testid="article-byline"');
-    // Writer name appears as text content inside the byline anchor.
-    expect(html).toMatch(/href="https:\/\/incognitobrowser\.io\/author\/david\/"[^>]*rel="author"[^>]*>Darkpool David</);
-    // The byline still shows the page was reviewed, but names nobody and links
-    // to the standards page rather than a personal profile.
-    expect(html).toContain('Editorially reviewed');
+  it('names no person anywhere in the HTML, and shows the review as fine print', () => {
+    // The whole document, not just visible text: Next embeds client-component
+    // props in the RSC payload, which is how names survived the first byline fix.
+    expect(html).not.toContain('Darkpool');
+    expect(html).not.toContain('Shadrake');
     expect(html).not.toContain('linkedin.com/in/');
+    expect(html).not.toContain('data-testid="article-byline"');
+    expect(html).toMatch(/data-testid="editorial-note"[^]*?<a[^>]*href="[^"]*\/editorial-standards\/?"[^>]*>Editorially reviewed<\/a>/);
   });
 
   it('emits article:published_time + article:modified_time OG tags', () => {
@@ -336,19 +334,22 @@ describe.skipIf(!HAS_TARGET)('no missing-space concatenations in visible text', 
   }
 });
 
-describe.skipIf(!HAS_TARGET)('every published article from a sample list has the byline', () => {
+describe.skipIf(!HAS_TARGET)('every published article from a sample list has the editorial note', () => {
   // Spot-check 5 published article URLs across content types. If any of
-  // these regresses, the patcher script didn't reach a page template.
+  // these regresses, a page template lost its EditorialNote.
   const SAMPLE = [
     '/checklists/browser-privacy/browser-privacy-security-checklist/',
     '/guides/browser-privacy/complete-guide-to-browser-privacy/',
     '/comparisons/browser-privacy/best-browser-privacy-tools-compared/',
     '/calculators/browser-privacy/browser-privacy-risk-calculator/',
     '/templates/gdpr/gdpr-compliance-policy-template/',
+    // Engine tool pages render their own layout (app/tools/[niche]/[slug]/client.tsx),
+    // not ToolPage — the note was missing from all 51 until this sample existed.
+    '/tools/vpn-privacy/whats-my-ip/',
   ];
 
   for (const route of SAMPLE) {
-    it(`${route} renders byline + Article schema`, async () => {
+    it(`${route} renders the editorial note + Article schema, and names no person`, async () => {
       const r = await fetchText(route);
       // A missing sample page is a failure, not a skip. With the build marker
       // this suite only ever grades a complete free export (or a live site),
@@ -357,10 +358,49 @@ describe.skipIf(!HAS_TARGET)('every published article from a sample list has the
       // (audit 2026-09-08). Rename the sample entry if a page moves.
       expect(r.status, `${route} must exist — update SAMPLE if the page was renamed`).not.toBe(404);
       expect(r.ok).toBe(true);
-      expect(r.body).toContain('data-testid="article-byline"');
+      expect(r.body).toContain('data-testid="editorial-note"');
       expect(r.body).toMatch(/"@type":"Article"/);
+      expect(r.body).not.toContain('Darkpool');
+      expect(r.body).not.toContain('Shadrake');
     });
   }
+});
+
+describe.skipIf(!HAS_TARGET)('editorial standards page', () => {
+  it('exists, is indexable, and names no person', async () => {
+    const r = await fetchText('/editorial-standards/');
+    expect(r.ok, 'every EditorialNote links here').toBe(true);
+    expect(r.body).not.toMatch(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/);
+    expect(r.body).not.toContain('Darkpool');
+    expect(r.body).not.toContain('Shadrake');
+  });
+});
+
+/**
+ * Whole-export sweep. Spot checks missed the RSC-payload leak once: the byline
+ * stopped rendering a name while every client component's props still carried
+ * it, on 1,600+ pages. Only the two author profile pages may name a person.
+ * Local out/ only — a live run would mean fetching every URL.
+ */
+describe.skipIf(!HAS_TARGET || IS_LIVE)('no page names a person except the author profiles', () => {
+  it('Darkpool / Shadrake / a personal LinkedIn appear only under /authors/', () => {
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        const p = path.join(dir, e.name);
+        if (e.isDirectory()) {
+          if (path.relative(OUT_DIR, p) === 'authors') continue;
+          walk(p);
+        } else if (/\.(html|txt|js|json|xml)$/.test(e.name)) {
+          // .js too: a name bundled into client code would ship on every page.
+          const body = fs.readFileSync(p, 'utf-8');
+          if (/Darkpool|Shadrake|linkedin\.com\/in\//.test(body)) offenders.push(path.relative(OUT_DIR, p));
+        }
+      }
+    };
+    walk(OUT_DIR);
+    expect(offenders.slice(0, 20), `${offenders.length} files name a person`).toEqual([]);
+  });
 });
 
 describe.skipIf(!HAS_TARGET)('tool pages are indexable (regression guard)', () => {

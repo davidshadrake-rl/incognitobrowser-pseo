@@ -8,7 +8,7 @@ import { Badge } from './ui/Badge';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
 import { Icon } from './ui/Icon';
-import { ArticleByline } from './ArticleByline';
+import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import { weaveLinks, unmatchedLinkSentence, isSafeHref, type InlineLink, type WeaveSegment } from '@/lib/inline-links';
@@ -110,9 +110,7 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
   const links = (data.relatedLinks ?? []).filter((l) => l && l.title && l.url && isSafeHref(l.url));
   const { introSegments, stepSegments } = weaveGuideContent(cappedIntro, data.steps, links);
 
-  const author = (data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author;
-  const editor = (data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor;
-  const reviewedAt = (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt;
+  const reviewed = !!(data as unknown as { editor?: unknown }).editor;
 
   return (
     <article className="max-w-3xl mx-auto">
@@ -133,7 +131,6 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
             <Badge label={`${data.steps.length} steps`} />
           </>
         }
-        action={<ArticleByline author={author} reviewed={!!editor} reviewedAt={reviewedAt} />}
         figure={{ value: data.steps.length, label: 'steps' }}
         diagram={diagramForNiche(data.niche)}
       />
@@ -214,6 +211,8 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
           ))}
         </section>
       )}
+
+      <EditorialNote reviewed={reviewed} />
     </article>
   );
 }

@@ -13,7 +13,7 @@ import { Icon } from '@/components/ui/Icon';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { GradeBadge } from '@/components/GradeBadge';
-import { ArticleByline } from '@/components/ArticleByline';
+import { EditorialNote } from '@/components/EditorialNote';
 
 export const dynamicParams = false;
 
@@ -81,7 +81,6 @@ export default async function SiteReportPage({ params }: PageProps) {
       <header className="mb-8">
         <p className="text-xs uppercase tracking-wider text-t2 mb-2">Website Privacy Report Card · {category.label}</p>
         <h1 className="text-3xl font-bold text-white mb-3">Does {domain} track you?</h1>
-        <ArticleByline author={site.author ?? undefined} reviewed={!!site.editor} reviewedAt={site.scannedAt} />
         <div className="flex items-center gap-5 bg-s0 border border-b1 rounded-lg p-5">
           <GradeBadge grade={grade.grade} size="xl" />
           <div>
@@ -246,6 +245,8 @@ export default async function SiteReportPage({ params }: PageProps) {
         <Link href="/guides" className="hover:text-white">Guides</Link>
         <Link href="/comparisons" className="hover:text-white">Comparisons</Link>
       </nav>
+
+      <EditorialNote reviewed={!!site.editor} />
     </article>
   );
 }

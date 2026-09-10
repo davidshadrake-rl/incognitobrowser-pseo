@@ -5,7 +5,7 @@ import { Badge } from './ui/Badge';
 import { Icon } from './ui/Icon';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
-import { ArticleByline } from './ArticleByline';
+import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
@@ -71,13 +71,6 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
             <Badge label={data.estimatedTime} />
             <Badge label={`${completedItems}/${totalItems} completed`} />
           </>
-        }
-        action={
-          <ArticleByline
-            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-            reviewed={(data as unknown as { reviewed?: boolean }).reviewed}
-            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-          />
         }
         figure={{ value: totalItems, label: 'items' }}
         diagram={diagramForNiche(data.niche)}
@@ -159,6 +152,8 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
           <p className="text-ok mt-1">You&apos;ve completed every item on this checklist.</p>
         </div>
       )}
+
+      <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
     </article>
   );
 }

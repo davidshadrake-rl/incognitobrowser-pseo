@@ -63,14 +63,27 @@ export function generateMetadata({ title, description, path, type = 'article', n
 }
 
 /**
- * Article JSON-LD with author attribution.
+ * Who content pages are credited to, in structured data. An organisation,
+ * never a person: pages no longer show a byline, and Google's structured-data
+ * guidelines say markup must not describe things readers cannot see on the
+ * page. Its URL is the page that explains what "Editorially reviewed" means.
+ */
+const EDITORIAL_MASTHEAD = {
+  '@type': 'Organization',
+  name: 'Incognito Browser Editorial',
+  url: `${SITE_URL}${BASE_PATH}/editorial-standards`,
+} as const;
+
+/**
+ * Article JSON-LD, credited to the editorial masthead.
  *
- * Emit this on every editorially-promoted content page so Google can
- * resolve the byline to a Person entity (the author profile page at
- * /authors/<slug>) — that's the link Google's quality classifiers
- * follow to verify authorship.
+ * Takes booleans rather than author/editor objects on purpose. It used to
+ * take the objects and emitted the writer's pen name, the editor's real name
+ * and their personal LinkedIn on 1,000+ pages; a signature that never sees a
+ * name cannot put one back.
  *
- * Returns null if the page has no author block (draft / unattributed).
+ * Returns null for a page nobody has put their name to (draft / unattributed),
+ * which the editorial gate already noindexes.
  */
 export function generateArticleSchema(opts: {
   headline: string;
@@ -78,20 +91,10 @@ export function generateArticleSchema(opts: {
   url: string;
   datePublished?: string;
   dateModified?: string;
-  author: {
-    name: string;
-    profileUrl?: string;
-    bio?: string;
-    credentials?: string;
-    sameAs?: string[];
-  } | null | undefined;
-  editor?: {
-    name: string;
-    profileUrl?: string;
-    sameAs?: string[];
-  } | null;
+  /** The page has an author block — i.e. it went through the promote pipeline. */
+  attributed: boolean;
 }) {
-  if (!opts.author || !opts.author.name) return null;
+  if (!opts.attributed) return null;
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -101,27 +104,9 @@ export function generateArticleSchema(opts: {
     url: opts.url,
     ...(opts.datePublished ? { datePublished: opts.datePublished } : {}),
     ...(opts.dateModified ? { dateModified: opts.dateModified } : {}),
-    author: {
-      '@type': 'Person',
-      name: opts.author.name,
-      ...(opts.author.profileUrl ? { url: opts.author.profileUrl } : {}),
-      ...(opts.author.bio ? { description: opts.author.bio } : {}),
-      ...(opts.author.credentials ? { jobTitle: opts.author.credentials } : {}),
-      ...(opts.author.sameAs && opts.author.sameAs.length > 0 ? { sameAs: opts.author.sameAs } : {}),
-    },
-    // The reviewing editor is a named individual, so this emitted their real
-    // name and a link to their personal LinkedIn on 1,000+ pages. The review
-    // relationship is worth asserting; broadcasting the person is not. It is
-    // now credited to the masthead, whose page names them once.
-    ...(opts.editor
-      ? {
-          editor: {
-            '@type': 'Organization',
-            name: 'Incognito Browser Editorial',
-            url: 'https://incognitobrowser.io/resources/site/methodology',
-          },
-        }
-      : {}),
+    // No `editor`: schema.org types it as a Person, and there is no person to
+    // name. The masthead covers both roles.
+    author: EDITORIAL_MASTHEAD,
     publisher: {
       '@type': 'Organization',
       name: 'Incognito Browser',

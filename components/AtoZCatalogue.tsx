@@ -8,12 +8,12 @@
  * visitors get every link; the search box filters it client-side.
  * No external dependencies.
  */
-import { useId, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { LETTERS, filterEntries, groupByLetter, letterOf, type CatalogueEntry } from '@/lib/catalogue';
 import { GradeBadge } from '@/components/GradeBadge';
 import { ToolCard } from '@/components/ToolCard';
-import { IconTile, type IconName } from '@/components/ui/Icon';
+import { Icon, IconTile, type IconName } from '@/components/ui/Icon';
 import { ENGINE_ICON, familyOfNiche, type Family } from '@/lib/visuals';
 
 export interface CatalogueTopic {
@@ -56,6 +56,113 @@ function entryGridClass(noun: string): string {
   return noun === 'tools'
     ? 'grid grid-cols-1 md:grid-cols-2 gap-3'
     : 'grid sm:grid-cols-2 lg:grid-cols-3 gap-3';
+}
+
+const TOPIC_FADE = 'linear-gradient(to right, black calc(100% - 3rem), transparent)';
+
+/**
+ * "Browse by topic": one line of chips fading out at the edge, and a toggle
+ * that shows the rest. All 44 topics wrapped to nine rows, which pushed the
+ * page's own content off the first screen.
+ *
+ * Collapsing is visual only. Every chip stays in the DOM, so all the topic-hub
+ * links are still in the server HTML for crawlers, and the <noscript> rule
+ * shows the full list to readers without JavaScript (who could not press the
+ * toggle). A keyboard user tabbing onto a clipped chip opens the list, so
+ * focus never lands on something they cannot see.
+ */
+function TopicChips({ topics, query, setQuery }: { topics: CatalogueTopic[]; query: string; setQuery: (q: string) => void }) {
+  const [open, setOpen] = useState(false);
+  // The collapsed line, measured: does anything run past the edge, and how
+  // many chips are out of sight. null until the first measurement.
+  const [fit, setFit] = useState<{ overflows: boolean; hidden: number } | null>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const rowId = useId();
+
+  useEffect(() => {
+    const row = rowRef.current;
+    if (!row || open) return;
+    // A chip counts as hidden only if it starts inside the fade (the last
+    // 3rem). One that starts before it is partly readable, and counting it
+    // made a phone say "+44 more" with just the first chip half on screen.
+    const fadePx = 3 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const inFade = (el: HTMLElement) => el.offsetLeft >= row.clientWidth - fadePx;
+    // Observing the chips as well as the row re-counts when the web font
+    // swaps in and every chip changes width while the row does not. The
+    // observer also fires once on observe(), which does the first count.
+    const ro = new ResizeObserver(() => {
+      setFit({
+        overflows: row.scrollWidth > row.clientWidth + 1,
+        hidden: (Array.from(row.children) as HTMLElement[]).filter(inFade).length,
+      });
+    });
+    ro.observe(row);
+    for (const el of Array.from(row.children)) ro.observe(el);
+    return () => ro.disconnect();
+  }, [open, topics]);
+
+  const fits = fit !== null && !fit.overflows;
+  const chipLayout = open ? '' : 'shrink-0 whitespace-nowrap';
+  const toggleLabel = open
+    ? 'Show fewer'
+    : fit === null
+      ? `All ${topics.length}`
+      : fit.hidden > 0
+        ? `+${fit.hidden} more`
+        : 'Show all';
+
+  return (
+    <div className="mb-8" data-topics={topics.length}>
+      <noscript>
+        <style>{'[data-topic-row]{flex-wrap:wrap!important;overflow:visible!important;mask-image:none!important;-webkit-mask-image:none!important}[data-topic-toggle]{display:none!important}'}</style>
+      </noscript>
+      <h3 className="text-xs uppercase tracking-wider text-t3 mb-2">Browse by topic</h3>
+      <div className="flex items-start gap-2">
+        <div
+          id={rowId}
+          ref={rowRef}
+          data-topic-row=""
+          className={`relative min-w-0 flex-1 flex gap-2 ${open ? 'flex-wrap' : 'flex-nowrap overflow-hidden'}`}
+          style={!open && !fits ? { maskImage: TOPIC_FADE, WebkitMaskImage: TOPIC_FADE } : undefined}
+          onFocus={(e) => {
+            const el = e.target as HTMLElement;
+            if (!open && el !== e.currentTarget && el.matches(':focus-visible') && el.offsetLeft + el.offsetWidth > e.currentTarget.clientWidth) setOpen(true);
+          }}
+        >
+          {topics.map((t) =>
+            t.href ? (
+              <Link key={t.label} href={t.href} className={`text-row px-2.5 py-1 rounded-[4px] border border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white transition-colors topic-chip ${chipLayout}`}>
+                {t.label}
+              </Link>
+            ) : (
+              <button
+                key={t.label}
+                type="button"
+                onClick={() => setQuery(query.trim() === (t.query ?? t.label) ? '' : (t.query ?? t.label))}
+                aria-pressed={query.trim() === (t.query ?? t.label)}
+                className={`text-row px-2.5 py-1 rounded-[4px] border transition-colors topic-chip ${chipLayout} ${query.trim() === (t.query ?? t.label) ? 'border-b2 bg-s2 text-white' : 'border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white'}`}
+              >
+                {t.label}
+              </button>
+            ),
+          )}
+        </div>
+        {!fits && (
+          <button
+            type="button"
+            data-topic-toggle=""
+            aria-expanded={open}
+            aria-controls={rowId}
+            onClick={() => setOpen((o) => !o)}
+            className="shrink-0 inline-flex items-center gap-1 text-row px-2.5 py-1 rounded-[4px] border border-b2 bg-s2 text-t1 hover:text-white transition-colors whitespace-nowrap"
+          >
+            {toggleLabel}
+            <Icon name="chevron" size={14} className={`transition-transform ${open ? '-rotate-90' : 'rotate-90'}`} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 /**
@@ -114,30 +221,7 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
       </nav>
 
       {/* Browse by topic — chips, not a second full listing */}
-      {topics && topics.length > 0 && (
-        <div className="mb-8" data-topics={topics.length}>
-          <h3 className="text-xs uppercase tracking-wider text-t3 mb-2">Browse by topic</h3>
-          <div className="flex flex-wrap gap-2">
-            {topics.map((t) =>
-              t.href ? (
-                <Link key={t.label} href={t.href} className="text-row px-2.5 py-1 rounded-[4px] border border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white transition-colors topic-chip">
-                  {t.label}
-                </Link>
-              ) : (
-                <button
-                  key={t.label}
-                  type="button"
-                  onClick={() => setQuery(query.trim() === (t.query ?? t.label) ? '' : (t.query ?? t.label))}
-                  aria-pressed={query.trim() === (t.query ?? t.label)}
-                  className={`text-row px-2.5 py-1 rounded-[4px] border transition-colors topic-chip ${query.trim() === (t.query ?? t.label) ? 'border-b2 bg-s2 text-white' : 'border-b1 bg-s1 text-t2 hover:border-b2 hover:text-white'}`}
-                >
-                  {t.label}
-                </button>
-              ),
-            )}
-          </div>
-        </div>
-      )}
+      {topics && topics.length > 0 && <TopicChips topics={topics} query={query} setQuery={setQuery} />}
 
       {/* Search results — directly under the box, so typing never sends you off-screen */}
       {q && (

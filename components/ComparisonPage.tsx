@@ -5,7 +5,7 @@ import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
 import { Icon } from './ui/Icon';
 import { Badge, resolveBadgeVariant } from './ui/Badge';
-import { ArticleByline } from './ArticleByline';
+import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
@@ -86,13 +86,6 @@ export function ComparisonPage({ data, nicheName, proofRoute }: { data: Comparis
             <Badge label={`${data.products.length} compared`} />
             <Badge label={`${data.features.length} criteria`} />
           </>
-        }
-        action={
-          <ArticleByline
-            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-            reviewed={(data as unknown as { reviewed?: boolean }).reviewed}
-            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-          />
         }
         figure={{ value: data.features.length, label: 'criteria' }}
         diagram={diagramForNiche(data.niche)}
@@ -203,6 +196,8 @@ export function ComparisonPage({ data, nicheName, proofRoute }: { data: Comparis
           </div>
         </section>
       )}
+
+      <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
     </article>
   );
 }

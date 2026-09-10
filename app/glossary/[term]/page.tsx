@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getGlossaryItem, getGlossaryFiles, isPublished, getCrossNicheLinks, nicheForGlossaryTerm, redactEditor } from '@/lib/content';
+import { getGlossaryItem, getGlossaryFiles, isPublished, getCrossNicheLinks, nicheForGlossaryTerm, redactPeople } from '@/lib/content';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
@@ -72,8 +72,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
     url: 'https://incognitobrowser.io/resources' + `/glossary/${term}`,
     datePublished: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
     dateModified: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    author: (data as unknown as { author?: { name: string; bio?: string; credentials?: string; profileUrl?: string; sameAs?: string[] } | null }).author,
-    editor: (data as unknown as { editor?: { name: string; profileUrl?: string; sameAs?: string[] } | null }).editor || null,
+    attributed: !!(data as unknown as { author?: { name?: string } | null }).author?.name,
   });
 
 
@@ -84,7 +83,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <GlossaryTermPage data={redactEditor(data)} validTermSlugs={validTermSlugs} niche={glossaryNiche} nicheName={nicheName} />
+      <GlossaryTermPage data={redactPeople(data)} validTermSlugs={validTermSlugs} niche={glossaryNiche} nicheName={nicheName} />
       {/* Glossary terms previously linked only to sibling terms, never into the
           guides/checklists/tools that explain them. The niche comes from a
           hand-authored map (see nicheForGlossaryTerm). */}

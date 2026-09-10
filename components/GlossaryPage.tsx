@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Badge } from './ui/Badge';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
-import { ArticleByline } from './ArticleByline';
+import { EditorialNote } from './EditorialNote';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 
 interface GlossaryExample {
@@ -52,13 +52,6 @@ export function GlossaryTermPage({ data, validTermSlugs, niche, nicheName }: Glo
         kicker={nicheName ? `${nicheName} · glossary` : 'Glossary'}
         title={data.term}
         badges={<Badge label={data.category} />}
-        action={
-          <ArticleByline
-            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-            reviewed={(data as unknown as { reviewed?: boolean }).reviewed}
-            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-          />
-        }
         diagram={resolvedNiche ? diagramForNiche(resolvedNiche) : undefined}
       />
 
@@ -116,6 +109,8 @@ export function GlossaryTermPage({ data, validTermSlugs, niche, nicheName }: Glo
           </div>
         </section>
       )}
+
+      <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
     </article>
   );
 }

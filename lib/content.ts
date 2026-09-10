@@ -237,23 +237,26 @@ export function nicheForGlossaryTerm(slug: string): string | undefined {
 }
 
 /**
- * Strip the reviewing editor's identity before content crosses into a client
- * component.
+ * Strip every person's identity — writer and editor — before content crosses
+ * into a client component.
  *
  * Next serialises every prop into the RSC payload embedded in the page, so
- * passing the whole content object shipped the editor's real name and personal
- * profile URL in the HTML of 1,000+ pages — invisible on screen, but present
- * in view-source and to any scraper. The byline only ever needed to know
- * *whether* a page was reviewed, so that is all that crosses: `reviewed`.
+ * passing the whole content object shipped the writer's pen name, the editor's
+ * real name and their personal profile URL in the HTML of 1,000+ pages —
+ * invisible on screen, but present in view-source and to any scraper. No page
+ * names a person any more; the editorial note only needs to know *whether* a
+ * page was reviewed, so that is all that crosses: `reviewed`.
  *
  * Call this in the server component, after generateArticleSchema (which runs
  * server-side and may still read the full object).
  */
-export function redactEditor<T extends object>(data: T): T & { reviewed: boolean } {
+export function redactPeople<T extends object>(data: T): T & { reviewed: boolean } {
   const { editor, editorial, ...rest } = data as T & {
     editor?: unknown;
     editorial?: { reviewedBy?: string | null } & Record<string, unknown>;
   };
+  // `rest` is a fresh object, so this does not touch the caller's data.
+  delete (rest as { author?: unknown }).author;
   // `editorial.reviewedBy` names the same person as `editor` and rides along
   // in the same payload, so both have to go — stripping one and not the other
   // leaves the name in the HTML while looking fixed.

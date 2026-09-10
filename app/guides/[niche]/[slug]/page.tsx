@@ -140,9 +140,8 @@ export default async function GuideDetailPage({ params }: PageProps) {
     ...crossLinks.filter(c => !ownRelatedLinks.some(o => o.url === c.url)),
   ].slice(0, 4);
 
-  // Per-article Article + Person JSON-LD. Surfaces the byline (Darkpool
-  // David, pseudonymous writer) and editor (David Shadrake, LinkedIn-
-  // verified) so Google can attribute the page to real entities.
+  // Per-article Article JSON-LD, credited to the editorial masthead (see
+  // generateArticleSchema for why no person is named).
   const articleSchema = generateArticleSchema({
     headline: (data as unknown as { title: string }).title,
     description: (data as unknown as { metaDescription?: string; definition?: string }).metaDescription
@@ -151,8 +150,7 @@ export default async function GuideDetailPage({ params }: PageProps) {
     url: 'https://incognitobrowser.io/resources' + `/guides/${niche}/${slug}`,
     datePublished: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
     dateModified: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    author: (data as unknown as { author?: { name: string; bio?: string; credentials?: string; profileUrl?: string; sameAs?: string[] } | null }).author,
-    editor: (data as unknown as { editor?: { name: string; profileUrl?: string; sameAs?: string[] } | null }).editor || null,
+    attributed: !!(data as unknown as { author?: { name?: string } | null }).author?.name,
   });
 
 

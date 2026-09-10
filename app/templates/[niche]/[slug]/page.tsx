@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactEditor } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactPeople } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { TemplatePage } from '@/components/TemplatePage';
@@ -81,8 +81,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
     url: 'https://incognitobrowser.io/resources' + `/templates/${niche}/${slug}`,
     datePublished: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
     dateModified: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    author: (data as unknown as { author?: { name: string; bio?: string; credentials?: string; profileUrl?: string; sameAs?: string[] } | null }).author,
-    editor: (data as unknown as { editor?: { name: string; profileUrl?: string; sameAs?: string[] } | null }).editor || null,
+    attributed: !!(data as unknown as { author?: { name?: string } | null }).author?.name,
   });
 
 
@@ -90,7 +89,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <TemplatePage data={redactEditor(data)} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
+      <TemplatePage data={redactPeople(data)} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

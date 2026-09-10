@@ -5,7 +5,7 @@ import { Badge } from './ui/Badge';
 import { Icon } from './ui/Icon';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
-import { ArticleByline } from './ArticleByline';
+import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
@@ -137,13 +137,6 @@ export function TemplatePage({ data, nicheName, proofRoute }: { data: TemplateDa
             <Badge label={`${data.sections.length} sections`} />
           </>
         }
-        action={
-          <ArticleByline
-            author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-            reviewed={(data as unknown as { reviewed?: boolean }).reviewed}
-            reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
-          />
-        }
         diagram={diagramForNiche(data.niche)}
       />
 
@@ -203,6 +196,8 @@ export function TemplatePage({ data, nicheName, proofRoute }: { data: TemplateDa
           </ul>
         </section>
       )}
+
+      <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
     </article>
   );
 }
