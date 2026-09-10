@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, type ClipboardEvent } from 'react';
 import { useReportResult, type ToolResult } from '@/components/tools/ResultContext';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import {
   MAX_HOPS,
   MAX_INPUT_LENGTH,
@@ -163,30 +164,18 @@ export function LinkUnwrapperTool() {
       )}
 
       {analysis && sev && (
+        <ConsoleFrame
+          engine="link-unwrapper"
+          status={statusFromSeverity(analysis.severity)}
+          processing="client"
+          statTiles={analysis.stats}
+        >
         <div className="space-y-4">
           {/* Verdict */}
-          <div className={`bg-s0 border ${sev.border} rounded-lg p-6`}>
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div>
-                <div className={`text-xs uppercase tracking-wide font-semibold ${sev.text} mb-1`}>{sev.label}</div>
-                <h3 className="text-lg font-bold text-white">{analysis.headline}</h3>
-                <p className="mt-1 text-sm text-t2">{analysis.detail}</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {analysis.stats.map((s) => (
-                <div key={s.label} className="bg-s0 border border-b1 rounded-md p-3">
-                  <div className="text-xs text-t2 mb-1">{s.label}</div>
-                  <div
-                    className={`text-2xl font-bold ${
-                      s.label === 'Identity IDs' && analysis.identityCount > 0 ? 'text-danger' : 'text-white'
-                    }`}
-                  >
-                    {s.value}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div>
+            <div className={`text-xs uppercase tracking-wide font-semibold ${sev.text} mb-1`}>{sev.label}</div>
+            <h3 className="text-lg font-bold text-white">{analysis.headline}</h3>
+            <p className="mt-1 text-sm text-t2">{analysis.detail}</p>
           </div>
 
           {/* Redirect chain */}
@@ -340,6 +329,7 @@ export function LinkUnwrapperTool() {
             </p>
           </div>
         </div>
+        </ConsoleFrame>
       )}
     </div>
   );

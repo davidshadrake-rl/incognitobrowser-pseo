@@ -13,6 +13,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReportResult, type ToolResult } from '@/components/tools/ResultContext';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import {
   assess,
   contextLeaks,
@@ -278,9 +279,20 @@ export function ScreenshotLeakCheckerTool() {
       )}
 
       {analysis && v && (
-        <>
+        <ConsoleFrame
+          engine="screenshot-leak-checker"
+          status={statusFromSeverity(analysis.verdict)}
+          processing="client"
+          statTiles={[
+            { label: 'Leaks', value: String(analysis.counts.leaks) },
+            { label: 'GPS', value: analysis.counts.gps ? 'Yes' : 'No' },
+            { label: 'Thumbnail', value: analysis.counts.thumbnail ? 'Yes' : 'No' },
+            { label: 'PII items', value: String(analysis.counts.pii) },
+          ]}
+        >
+        <div className="space-y-4">
           {/* Verdict */}
-          <div className={`border rounded-lg p-5 ${v.box}`}>
+          <div>
             <div className={`text-xs font-semibold uppercase tracking-wide ${v.text}`}>{v.label}</div>
             <h3 className="mt-1 text-lg font-semibold text-white">{analysis.headline}</h3>
             {fileMeta && (
@@ -289,19 +301,6 @@ export function ScreenshotLeakCheckerTool() {
                 {analysis.info.map((i) => ` · ${i.value}`).join('')}
               </p>
             )}
-            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                { label: 'Leaks', value: String(analysis.counts.leaks), hot: analysis.counts.leaks > 0 },
-                { label: 'GPS', value: analysis.counts.gps ? 'Yes' : 'No', hot: analysis.counts.gps },
-                { label: 'Thumbnail', value: analysis.counts.thumbnail ? 'Yes' : 'No', hot: analysis.counts.thumbnail },
-                { label: 'PII items', value: String(analysis.counts.pii), hot: analysis.counts.pii > 0 },
-              ].map((s) => (
-                <div key={s.label} className="bg-s0 border border-b1 rounded p-3">
-                  <div className="text-xs text-t3">{s.label}</div>
-                  <div className={`text-lg font-bold ${s.hot ? 'text-danger' : 'text-ok'}`}>{s.value}</div>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Preview + embedded thumbnail side by side */}
@@ -461,7 +460,8 @@ export function ScreenshotLeakCheckerTool() {
               The clean copy is made by drawing the decoded pixels onto a canvas and re-encoding, which drops every metadata block — Exif, XMP, IPTC, PNG text, the embedded thumbnail. PNG stays PNG and lossless. JPEG and WebP are saved as JPEG at quality 92, so they recompress slightly. The file name is reset too; pick a neutral one.
             </p>
           </div>
-        </>
+        </div>
+        </ConsoleFrame>
       )}
     </div>
   );

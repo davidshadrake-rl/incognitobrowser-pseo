@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactEditor } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { TemplatePage } from '@/components/TemplatePage';
@@ -90,7 +90,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <TemplatePage data={data} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
+      <TemplatePage data={redactEditor(data)} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

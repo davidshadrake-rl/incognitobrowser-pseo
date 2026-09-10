@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getGlossaryItem, getGlossaryFiles, isPublished, getCrossNicheLinks, nicheForGlossaryTerm } from '@/lib/content';
+import { getGlossaryItem, getGlossaryFiles, isPublished, getCrossNicheLinks, nicheForGlossaryTerm, redactEditor } from '@/lib/content';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
@@ -84,7 +84,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <GlossaryTermPage data={data} validTermSlugs={validTermSlugs} niche={glossaryNiche} nicheName={nicheName} />
+      <GlossaryTermPage data={redactEditor(data)} validTermSlugs={validTermSlugs} niche={glossaryNiche} nicheName={nicheName} />
       {/* Glossary terms previously linked only to sibling terms, never into the
           guides/checklists/tools that explain them. The niche comes from a
           hand-authored map (see nicheForGlossaryTerm). */}

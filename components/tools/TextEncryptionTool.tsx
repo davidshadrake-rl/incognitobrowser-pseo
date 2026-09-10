@@ -5,6 +5,7 @@ import { copyText } from '@/lib/clipboard';
 import { useEffect, useState } from 'react';
 import { SecureContextRequired } from './SecureContextRequired';
 import { useReportResult } from './ResultContext';
+import { ValueCard } from './ValueCard';
 
 // OWASP 2023+ recommends ≥600,000 iterations for PBKDF2-SHA256.
 // We bump this explicitly so the tool doesn't look dated.
@@ -304,30 +305,36 @@ export function TextEncryptionTool() {
 
       {/* Text output */}
       {output && source === 'text' && (
-        <div className="bg-s0 border border-ok/30 rounded-lg p-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-ok">
-              {mode === 'encrypt' ? 'Encrypted Output' : 'Decrypted Text'}
-            </h3>
+        <ValueCard
+          label={mode === 'encrypt' ? 'Encrypted Output' : 'Decrypted Text'}
+          value={output}
+          as="pre"
+          valueClassName="text-sm"
+          actions={
             <button onClick={handleCopy} className="text-xs text-t2 hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-b1 rounded min-h-[36px] min-w-[64px]">
               {copied ? 'Copied!' : 'Copy'}
             </button>
-          </div>
-          <pre className="bg-s0 p-4 rounded-md text-sm text-white font-mono break-all whitespace-pre-wrap">{output}</pre>
-          <p className="mt-3 text-xs text-t3">
+          }
+          statTiles={[
+            { label: 'Iterations', value: PBKDF2_ITERATIONS.toLocaleString() },
+            { label: 'Output', value: `${output.length} chars` },
+          ]}
+        >
+          <p className="text-row text-t3">
             {mode === 'encrypt'
               ? 'Share this text safely. The recipient needs the same passphrase to decrypt.'
               : 'Decrypted entirely in your browser. No data was sent to any server.'}
           </p>
-        </div>
+        </ValueCard>
       )}
 
       {/* File output */}
       {downloadUrl && source === 'file' && (
-        <div className="bg-s0 border border-ok/30 rounded-lg p-6">
-          <h3 className="text-sm font-semibold text-ok mb-3">
-            {mode === 'encrypt' ? 'Encrypted File Ready' : 'Decrypted File Ready'}
-          </h3>
+        <ValueCard
+          label={mode === 'encrypt' ? 'Encrypted File Ready' : 'Decrypted File Ready'}
+          value={downloadName}
+          statTiles={[{ label: 'Iterations', value: PBKDF2_ITERATIONS.toLocaleString() }]}
+        >
           <a
             href={downloadUrl}
             download={downloadName}
@@ -335,12 +342,12 @@ export function TextEncryptionTool() {
           >
             Download {downloadName}
           </a>
-          <p className="mt-3 text-xs text-t3">
+          <p className="mt-3 text-row text-t3">
             {mode === 'encrypt'
               ? 'Encrypted as AES-256-GCM. Share the file + passphrase through separate channels.'
               : 'Decrypted entirely in your browser. Nothing was uploaded.'}
           </p>
-        </div>
+        </ValueCard>
       )}
 
       {/* Info */}

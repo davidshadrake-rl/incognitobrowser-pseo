@@ -81,7 +81,7 @@ export default async function SiteReportPage({ params }: PageProps) {
       <header className="mb-8">
         <p className="text-xs uppercase tracking-wider text-t2 mb-2">Website Privacy Report Card · {category.label}</p>
         <h1 className="text-3xl font-bold text-white mb-3">Does {domain} track you?</h1>
-        <ArticleByline author={site.author ?? undefined} editor={site.editor ?? undefined} reviewedAt={site.scannedAt} />
+        <ArticleByline author={site.author ?? undefined} reviewed={!!site.editor} reviewedAt={site.scannedAt} />
         <div className="flex items-center gap-5 bg-s0 border border-b1 rounded-lg p-5">
           <GradeBadge grade={grade.grade} size="xl" />
           <div>

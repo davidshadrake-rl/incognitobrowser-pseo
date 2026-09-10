@@ -133,7 +133,7 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
             <Badge label={`${data.steps.length} steps`} />
           </>
         }
-        action={<ArticleByline author={author} editor={editor} reviewedAt={reviewedAt} />}
+        action={<ArticleByline author={author} reviewed={!!editor} reviewedAt={reviewedAt} />}
         figure={{ value: data.steps.length, label: 'steps' }}
         diagram={diagramForNiche(data.niche)}
       />

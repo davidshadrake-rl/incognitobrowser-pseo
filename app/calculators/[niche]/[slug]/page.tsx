@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactEditor } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateWebApplicationSchema, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { CalculatorPage } from '@/components/CalculatorPage';
@@ -117,7 +117,7 @@ export default async function CalculatorDetailPage({ params }: PageProps) {
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       <JsonLd data={appSchema} />
-      <CalculatorPage data={data} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
+      <CalculatorPage data={redactEditor(data)} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

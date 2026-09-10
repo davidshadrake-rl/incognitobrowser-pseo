@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { analyzeEmail, EXAMPLE_EMAIL, type EmailAnalysis, type TrackedLink, type TrackingPixel } from '@/lib/email-pixel';
 import { useReportResult, type ToolResult } from '@/components/tools/ResultContext';
 import { Icon } from '@/components/ui/Icon';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
 const MAX_BYTES = 2 * 1024 * 1024;
 
@@ -236,23 +237,21 @@ export function EmailPixelDetectorTool() {
       </div>
 
       {analysis && sev && (
+        <ConsoleFrame
+          engine="email-pixel-detector"
+          status={statusFromSeverity(analysis.severity)}
+          processing="client"
+          statTiles={analysis.stats}
+        >
         <div className="space-y-4">
           {/* Verdict */}
-          <div className={`bg-s0 border ${sev.border} rounded-lg p-6`}>
-            <div className="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <div className="flex items-start justify-between gap-4">
               <div>
                 <div className={`text-xs uppercase tracking-wide mb-1 ${sev.text}`}>Verdict · {sev.label}</div>
                 <h3 className="text-lg font-bold text-white">{analysis.headline}</h3>
               </div>
               <Icon name={analysis.severity === 'red' ? 'x' : analysis.severity === 'amber' ? 'warn' : 'check'} size={28} className={sev.text} title={sev.label} />
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {analysis.stats.map((s) => (
-                <div key={s.label} className="p-3 rounded-md bg-s0">
-                  <div className="text-xs text-t3">{s.label}</div>
-                  <div className="text-sm font-bold text-white break-words">{s.value}</div>
-                </div>
-              ))}
             </div>
             <p className="mt-3 text-xs text-t3">
               {analysis.hasHeaders
@@ -381,6 +380,7 @@ export function EmailPixelDetectorTool() {
             </p>
           </div>
         </div>
+        </ConsoleFrame>
       )}
     </div>
   );

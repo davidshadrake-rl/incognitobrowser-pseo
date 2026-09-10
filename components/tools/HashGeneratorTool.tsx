@@ -5,6 +5,7 @@ import { copyText } from '@/lib/clipboard';
 import { useState, useEffect } from 'react';
 import { SecureContextRequired } from './SecureContextRequired';
 import { useReportResult } from './ResultContext';
+import { ValueCard } from './ValueCard';
 
 type Algorithm = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 
@@ -252,11 +253,15 @@ export function HashGeneratorTool() {
       {Object.keys(results).length > 0 && (
         <div className="space-y-3">
           {computing && <p className="text-xs text-t2">Computing...</p>}
-          {algorithms.map(algo => (
-            <div key={algo} className="bg-s0 border border-b1 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-white">{hmacMode ? `HMAC-${algo}` : algo}</span>
-                <div className="flex gap-2">
+          {algorithms.map((algo, i) => (
+            <ValueCard
+              key={algo}
+              label={hmacMode ? `HMAC-${algo}` : algo}
+              value={results[algo]}
+              as="code"
+              valueClassName="text-xs text-ok"
+              actions={
+                <>
                   <button
                     onClick={() => handleVerify(algo)}
                     className="text-xs text-t2 hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-b1 rounded min-h-[36px] min-w-[64px]"
@@ -269,15 +274,14 @@ export function HashGeneratorTool() {
                   >
                     {copied === algo ? 'Copied!' : 'Copy'}
                   </button>
-                </div>
-              </div>
-              <code className="block bg-s0 p-3 rounded text-xs text-ok font-mono break-all select-all">
-                {results[algo]}
-              </code>
-              <div className="mt-1 text-xs text-t2/40">
-                {results[algo].length * 4} bits ({results[algo].length} hex chars)
-              </div>
-            </div>
+                </>
+              }
+              statTiles={i === 0 ? [
+                { label: 'Algorithms', value: algorithms.length },
+                ...(hmacMode ? [{ label: 'Mode', value: 'HMAC' }] : []),
+              ] : undefined}
+              meta={<span>{results[algo].length * 4} bits ({results[algo].length} hex chars)</span>}
+            />
           ))}
         </div>
       )}

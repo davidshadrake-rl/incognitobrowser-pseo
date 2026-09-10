@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useReportResult } from './ResultContext';
+import { ConsoleFrame, statusFromSeverity, type ConsoleRow, type Status } from './ConsoleFrame';
 
 interface PermissionResult {
   name: string;
@@ -80,24 +81,6 @@ const PERMISSIONS_TO_CHECK: { name: string; displayName: string; risk: string; r
   },
 ];
 
-function getStateColor(state: string) {
-  switch (state) {
-    case 'granted': return 'text-danger';
-    case 'denied': return 'text-ok';
-    case 'prompt': return 'text-warn';
-    default: return 'text-t2/40';
-  }
-}
-
-function getStateBg(state: string) {
-  switch (state) {
-    case 'granted': return 'border-danger/30';
-    case 'denied': return 'border-ok/30';
-    case 'prompt': return 'border-warn/30';
-    default: return 'border-hair';
-  }
-}
-
 function getStateLabel(state: string) {
   switch (state) {
     case 'granted': return 'GRANTED';
@@ -106,6 +89,14 @@ function getStateLabel(state: string) {
     default: return 'N/A';
   }
 }
+
+/** granted is the BAD state for a permission (a site already holds access), not a pass. */
+const ROW_STATUS: Record<PermissionResult['state'], Status> = {
+  granted: 'danger',
+  denied: 'ok',
+  prompt: 'warn',
+  unsupported: 'info',
+};
 
 export function PermissionCheckerTool() {
   const [results, setResults] = useState<PermissionResult[]>([]);
@@ -184,27 +175,34 @@ export function PermissionCheckerTool() {
       </div>
 
       {scanned && (
+        <ConsoleFrame
+          engine="permission-checker"
+          status={statusFromSeverity(supported === 0 ? 'info' : granted > 0 ? 'amber' : 'green')}
+          checks={results.length}
+          processing="client"
+          statTiles={
+            supported === 0
+              ? [{ label: 'Checked', value: '0' }, { label: 'Unsupported', value: String(results.length) }]
+              : [
+                  { label: 'Granted', value: String(granted) },
+                  { label: 'Denied', value: String(denied) },
+                  { label: 'Would prompt', value: String(prompt) },
+                  { label: 'Checked', value: String(supported) },
+                ]
+          }
+          groups={[
+            {
+              name: 'Permissions',
+              rows: results.map((r): ConsoleRow => ({
+                status: ROW_STATUS[r.state],
+                name: r.displayName,
+                value: getStateLabel(r.state),
+                detail: `${r.risk} ${r.recommendation}`,
+              })),
+            },
+          ]}
+        >
         <>
-          {/* Summary */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="bg-s0 border border-b1 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-white">{supported}</div>
-              <div className="text-xs text-t2">Checked</div>
-            </div>
-            <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-danger">{granted}</div>
-              <div className="text-xs text-t2">Granted</div>
-            </div>
-            <div className="bg-s0 border border-ok/30 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-ok">{denied}</div>
-              <div className="text-xs text-t2">Blocked</div>
-            </div>
-            <div className="bg-s0 border border-warn/30 rounded-lg p-4 text-center">
-              <div className="text-2xl font-bold text-warn">{prompt}</div>
-              <div className="text-xs text-t2">Will Ask</div>
-            </div>
-          </div>
-
           {/* Settings deep-link info */}
           <div className="bg-s0 border border-info/30 rounded-lg p-4">
             <p className="text-sm text-info font-medium mb-2">How to revoke a permission</p>
@@ -227,39 +225,8 @@ export function PermissionCheckerTool() {
               Tip: in Chromium-based browsers, click the padlock icon in the address bar for per-site controls.
             </p>
           </div>
-
-          {/* Detail list */}
-          <div className="space-y-2">
-            {results.filter(r => r.state !== 'unsupported').map((r, i) => (
-              <div key={i} className={`bg-s0 border ${getStateBg(r.state)} rounded-lg p-4`}>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-white">{r.displayName}</span>
-                  <span className={`text-xs font-mono px-2 py-0.5 rounded ${getStateColor(r.state)} ${
-                    r.state === 'granted' ? 'bg-danger-dim' :
-                    r.state === 'denied' ? 'bg-ok-dim' : 'bg-warn-dim'
-                  }`}>
-                    {getStateLabel(r.state)}
-                  </span>
-                </div>
-                <p className="text-xs text-t2/80 mb-1">{r.risk}</p>
-                <p className="text-xs text-info/80">{r.recommendation}</p>
-              </div>
-            ))}
-          </div>
-
-          {results.some(r => r.state === 'unsupported') && (
-            <div className="bg-s0 border border-hair rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-t3 mb-2">Not Supported in This Browser</h3>
-              <div className="flex flex-wrap gap-2">
-                {results.filter(r => r.state === 'unsupported').map((r, i) => (
-                  <span key={i} className="text-xs text-t2/40 px-2 py-1 bg-white/5 rounded">
-                    {r.displayName}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
         </>
+        </ConsoleFrame>
       )}
     </div>
   );

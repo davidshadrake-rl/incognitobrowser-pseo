@@ -28,7 +28,13 @@ type AuthorLike = {
 
 export interface ArticleBylineProps {
   author?: AuthorLike | null;
-  editor?: AuthorLike | null;
+  /**
+   * Whether an editor reviewed this page — deliberately a boolean, not the
+   * editor object. Passing the object put their real name and personal
+   * profile URL into the RSC payload of every page, so the data shipped in
+   * the HTML even after the byline stopped rendering it.
+   */
+  reviewed?: boolean;
   reviewedAt?: string | null;
 }
 
@@ -53,7 +59,7 @@ function profileHref(profileUrl: string | undefined, fallbackName: string): stri
   return `/authors/${fallbackName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 }
 
-export function ArticleByline({ author, editor, reviewedAt }: ArticleBylineProps) {
+export function ArticleByline({ author, reviewed, reviewedAt }: ArticleBylineProps) {
   if (!author || !author.name) return null;
   const dateStr = formatDate(reviewedAt);
 
@@ -75,7 +81,7 @@ export function ArticleByline({ author, editor, reviewedAt }: ArticleBylineProps
           a scale the owner did not ask for. The editorial relationship is kept
           — it just points at the standards page instead of the person, and the
           named editor appears only on the few pages listed there. */}
-      {editor && editor.name && (
+      {reviewed && (
         <>
           <span aria-hidden="true" className="text-white/30">·</span>
           <Link href="/site/methodology" className="text-t2 hover:text-white hover:underline">

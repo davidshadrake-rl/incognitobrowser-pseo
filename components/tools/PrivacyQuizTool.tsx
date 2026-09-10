@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useReportResult, severityFromScore } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
 interface Question {
   id: string;
@@ -225,6 +226,13 @@ export function PrivacyQuizTool() {
     return { category: cat, score: Math.round((catTotal / catMax) * 100) };
   });
 
+  // Same stats object feeds both the result bus (funnel CTA/scorecard) and
+  // the console's glance StatTile row below — computed once, never twice.
+  const resultStats = [
+    { label: 'Score', value: `${totalScore}/100` },
+    ...categoryScores.slice(0, 3).map((c) => ({ label: c.category, value: `${c.score}%` })),
+  ];
+
   const report = useReportResult();
   useEffect(() => {
     if (!finished) { report(null); return; }
@@ -236,87 +244,85 @@ export function PrivacyQuizTool() {
       grade: letter,
       headline: `Privacy habits: ${g.letter}, ${g.label}`,
       shareText: `My privacy habits scored ${g.letter} (${totalScore}/100). Take the quiz:`,
-      stats: [{ label: 'Score', value: `${totalScore}/100` }, ...categoryScores.slice(0, 3).map((c) => ({ label: c.category, value: `${c.score}%` }))],
+      stats: resultStats,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finished, totalScore, report]);
 
   if (finished) {
-    const grade = getGrade(totalScore);
     return (
       <div className="space-y-6">
-        {/* Overall score */}
-        <div className="bg-s0 border border-b1 rounded-lg p-8 text-center">
-          <div className="text-6xl font-bold mb-2" style={{ color: grade.color }}>{grade.letter}</div>
-          <div className="text-lg text-white mb-1">{grade.label}</div>
-          <div className="text-3xl font-bold text-white mb-4">{totalScore}/100</div>
-          <div className="h-3 bg-s0 rounded-full overflow-hidden max-w-xs mx-auto">
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${totalScore}%`, backgroundColor: grade.color }}
-            />
-          </div>
-        </div>
+        <ConsoleFrame
+          engine="privacy-quiz"
+          status={statusFromSeverity(severityFromScore(totalScore))}
+          checks={QUESTIONS.length}
+          processing="client"
+          score={totalScore}
+          gaugeLabel="privacy score"
+          statTiles={resultStats}
+        >
+          <>
+            {/* Category breakdown */}
+            <div className="bg-s0 border border-b1 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-white mb-4">Category Breakdown</h3>
+              <div className="space-y-3">
+                {categoryScores.map(({ category, score }) => {
+                  const catGrade = getGrade(score);
+                  return (
+                    <div key={category}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-sm text-t2">{category}</span>
+                        <span className="text-sm font-bold" style={{ color: catGrade.color }}>
+                          {score}%
+                        </span>
+                      </div>
+                      <div className="h-2 bg-s0 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-500"
+                          style={{ width: `${score}%`, backgroundColor: catGrade.color }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
-        {/* Category breakdown */}
-        <div className="bg-s0 border border-b1 rounded-lg p-6">
-          <h3 className="text-sm font-semibold text-white mb-4">Category Breakdown</h3>
-          <div className="space-y-3">
-            {categoryScores.map(({ category, score }) => {
-              const catGrade = getGrade(score);
-              return (
-                <div key={category}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-t2">{category}</span>
-                    <span className="text-sm font-bold" style={{ color: catGrade.color }}>
-                      {score}%
-                    </span>
-                  </div>
-                  <div className="h-2 bg-s0 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${score}%`, backgroundColor: catGrade.color }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+            {/* Improvement tips — ranked by impact × (how far the user is from the ideal) */}
+            <div className="bg-s0 border border-info/30 rounded-lg p-6">
+              <h3 className="text-sm font-semibold text-info mb-3">Top Recommendations</h3>
+              <ul className="space-y-2">
+                {QUESTIONS
+                  .filter((q) => (answers[q.id] || 0) < 6)
+                  .map((q) => ({ q, priority: q.impact * (10 - (answers[q.id] || 0)) }))
+                  .sort((a, b) => b.priority - a.priority)
+                  .slice(0, 5)
+                  .map(({ q }) => (
+                    <li key={q.id} className="flex items-start text-sm text-t2">
+                      <Icon name="arrow" size={14} className="mr-2 mt-0.5 text-info" />
+                      <span>
+                        <strong className="text-white">{q.category}:</strong>{' '}
+                        {q.options[0].label} (you answered: {q.options.find((o) => o.score === answers[q.id])?.label})
+                      </span>
+                    </li>
+                  ))}
+                {QUESTIONS.filter((q) => (answers[q.id] || 0) < 6).length === 0 && (
+                  <li className="text-sm text-ok">You&apos;re already doing great across all areas!</li>
+                )}
+              </ul>
+            </div>
 
-        {/* Improvement tips — ranked by impact × (how far the user is from the ideal) */}
-        <div className="bg-s0 border border-info/30 rounded-lg p-6">
-          <h3 className="text-sm font-semibold text-info mb-3">Top Recommendations</h3>
-          <ul className="space-y-2">
-            {QUESTIONS
-              .filter((q) => (answers[q.id] || 0) < 6)
-              .map((q) => ({ q, priority: q.impact * (10 - (answers[q.id] || 0)) }))
-              .sort((a, b) => b.priority - a.priority)
-              .slice(0, 5)
-              .map(({ q }) => (
-                <li key={q.id} className="flex items-start text-sm text-t2">
-                  <Icon name="arrow" size={14} className="mr-2 mt-0.5 text-info" />
-                  <span>
-                    <strong className="text-white">{q.category}:</strong>{' '}
-                    {q.options[0].label} (you answered: {q.options.find((o) => o.score === answers[q.id])?.label})
-                  </span>
-                </li>
-              ))}
-            {QUESTIONS.filter((q) => (answers[q.id] || 0) < 6).length === 0 && (
-              <li className="text-sm text-ok">You&apos;re already doing great across all areas!</li>
-            )}
-          </ul>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <button onClick={reset} className="btn-primary py-3">Retake Quiz</button>
-          <button
-            onClick={shareLink}
-            className="py-3 border border-b1 rounded text-white hover:bg-white/5"
-          >
-            {shared ? 'Link copied!' : 'Copy shareable link'}
-          </button>
-        </div>
+            <div className="grid grid-cols-2 gap-3">
+              <button onClick={reset} className="btn-primary py-3">Retake Quiz</button>
+              <button
+                onClick={shareLink}
+                className="py-3 border border-b1 rounded text-white hover:bg-white/5"
+              >
+                {shared ? 'Link copied!' : 'Copy shareable link'}
+              </button>
+            </div>
+          </>
+        </ConsoleFrame>
       </div>
     );
   }

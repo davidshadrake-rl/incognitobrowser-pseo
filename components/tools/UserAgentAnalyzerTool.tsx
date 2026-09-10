@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useReportResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
+import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
 interface UADetails {
   raw: string;
@@ -211,18 +212,20 @@ export function UserAgentAnalyzerTool() {
       </div>
 
       {details && (
+        <ConsoleFrame
+          engine="useragent-analyzer"
+          status={statusFromSeverity(details.privacyConcerns.length >= 3 ? 'amber' : 'info')}
+          processing="client"
+          statTiles={[
+            { label: 'Browser', value: details.browser.name },
+            { label: 'Version', value: details.browser.version },
+            { label: 'OS', value: details.os.name },
+            { label: 'Uniqueness factors', value: details.uniquenessFactors.length },
+          ]}
+        >
         <>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div className="bg-s0 border border-b1 rounded-lg p-4">
-              <div className="text-xs text-t2 mb-1">Browser</div>
-              <div className="text-lg font-bold text-white">{details.browser.name}</div>
-              <div className="text-xs text-t2">v{details.browser.version}</div>
-            </div>
-            <div className="bg-s0 border border-b1 rounded-lg p-4">
-              <div className="text-xs text-t2 mb-1">Operating System</div>
-              <div className="text-lg font-bold text-white">{details.os.name}</div>
-              <div className="text-xs text-t2">{details.os.version}</div>
-            </div>
+          {/* Extra parsed detail beyond the glance stats above */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="bg-s0 border border-b1 rounded-lg p-4">
               <div className="text-xs text-t2 mb-1">Device</div>
               <div className="text-lg font-bold text-white">{details.device}</div>
@@ -300,6 +303,7 @@ export function UserAgentAnalyzerTool() {
             </p>
           </div>
         </>
+        </ConsoleFrame>
       )}
     </div>
   );

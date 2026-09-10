@@ -166,25 +166,30 @@ describe.skipIf(!HAS_TARGET)('published article page (checklist)', () => {
     expect(html).not.toMatch(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/);
   });
 
-  it('emits Article JSON-LD with author + editor', () => {
+  it('emits Article JSON-LD crediting the writer, with editorial review not personally attributed', () => {
     // The Article LD is embedded as one of the <script type="application/ld+json"> blobs.
     const articleLdMatches = html.match(/application\/ld\+json"[^>]*>(\{[^<]+"@type":"Article"[^<]+)</);
     expect(articleLdMatches, 'No Article JSON-LD found in HTML').toBeTruthy();
     const ld = articleLdMatches![1];
     expect(ld).toContain('"name":"Darkpool David"');
-    expect(ld).toContain('"name":"David Shadrake"');
-    // Editor must include LinkedIn URL.
-    expect(ld).toMatch(/"editor":\{[^}]*"url":"https:\/\/www\.linkedin\.com\/in\/davidshadrake/);
     // Writer must include WP author archive URL.
     expect(ld).toMatch(/"author":\{[^}]*"url":"https:\/\/incognitobrowser\.io\/author\/david\//);
+    // The reviewing editor is a real person. Crediting them by name here put
+    // their name and personal LinkedIn into the structured data of 1,000+
+    // pages, which is not a trade the review signal is worth. The review is
+    // still asserted — as the masthead, not the individual.
+    expect(ld).toMatch(/"editor":\{[^}]*"@type":"Organization"/);
+    expect(ld).not.toContain('linkedin.com/in/');
   });
 
   it('renders a visible byline near the H1', () => {
     expect(html).toContain('data-testid="article-byline"');
     // Writer name appears as text content inside the byline anchor.
     expect(html).toMatch(/href="https:\/\/incognitobrowser\.io\/author\/david\/"[^>]*rel="author"[^>]*>Darkpool David</);
-    // Editor's "Edited by" anchor points to LinkedIn.
-    expect(html).toMatch(/href="https:\/\/www\.linkedin\.com\/in\/davidshadrake\/"[^>]*>David Shadrake</);
+    // The byline still shows the page was reviewed, but names nobody and links
+    // to the standards page rather than a personal profile.
+    expect(html).toContain('Editorially reviewed');
+    expect(html).not.toContain('linkedin.com/in/');
   });
 
   it('emits article:published_time + article:modified_time OG tags', () => {

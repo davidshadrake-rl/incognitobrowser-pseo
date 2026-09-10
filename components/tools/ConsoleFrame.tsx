@@ -94,6 +94,7 @@ export function ConsoleFrame({
   // Fixed once per mount (the console appears only after a result exists, so
   // there's nothing to hydrate against on the server render).
   const time = useMemo(() => new Date().toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }), []);
+  const hasLeftColumn = left !== undefined || typeof score === 'number' || tally !== undefined;
 
   return (
     <section className="console bg-s0 border border-b1 rounded-[16px] overflow-hidden font-mono" data-console={engine}>
@@ -104,19 +105,25 @@ export function ConsoleFrame({
         <span>&middot; {processing === 'server' ? 'via our server' : 'local only'}</span>
         <time className="ml-auto tnum text-t3">{time}</time>
       </header>
-      <div className="grid md:grid-cols-[200px_1fr] gap-6 p-5">
-        <div>
-          {left ?? (
-            <>
-              {typeof score === 'number' && <Gauge score={score} label={gaugeLabel} />}
-              {tally && (
-                <p className="text-row tnum mt-2">
-                  <b className="text-danger">Fails {tally.fails}</b> &middot; <b className="text-warn">Warns {tally.warns}</b> &middot; <b className="text-ok">Passes {tally.passes}</b>
-                </p>
-              )}
-            </>
-          )}
-        </div>
+      <div className={`grid ${hasLeftColumn ? 'md:grid-cols-[200px_1fr]' : 'grid-cols-1'} gap-6 p-5`}>
+        {/* Several engines have no single score and no pass/fail tally — a
+            generated value or a parsed breakdown is the whole result. Rendering
+            the column regardless left them with 200px of empty gutter, so it
+            only exists when something fills it. */}
+        {hasLeftColumn && (
+          <div>
+            {left ?? (
+              <>
+                {typeof score === 'number' && <Gauge score={score} label={gaugeLabel} />}
+                {tally && (
+                  <p className="text-row tnum mt-2">
+                    <b className="text-danger">Fails {tally.fails}</b> &middot; <b className="text-warn">Warns {tally.warns}</b> &middot; <b className="text-ok">Passes {tally.passes}</b>
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        )}
         <div className="min-w-0">
           {statTiles && statTiles.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">

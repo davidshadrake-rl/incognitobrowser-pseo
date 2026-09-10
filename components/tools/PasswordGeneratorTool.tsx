@@ -5,6 +5,7 @@ import { copyText } from '@/lib/clipboard';
 import { useCallback, useState, useEffect } from 'react';
 import { useReportResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
+import { ValueCard } from './ValueCard';
 
 type Mode = 'password' | 'passphrase' | 'pin';
 
@@ -324,26 +325,23 @@ export function PasswordGeneratorTool() {
 
       {/* Generated output */}
       {password && (
-        <div className="bg-s0 border border-ok/30 rounded-lg p-6">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-ok">
-              Generated {mode === 'password' ? 'Password' : mode === 'passphrase' ? 'Passphrase' : 'PIN'}
-            </h3>
+        <ValueCard
+          label={`Generated ${mode === 'password' ? 'Password' : mode === 'passphrase' ? 'Passphrase' : 'PIN'}`}
+          value={password}
+          valueClassName="text-lg"
+          actions={
             <button
               onClick={() => handleCopy(password)}
               className="text-xs text-t2 hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-b1 rounded min-h-[36px] min-w-[64px]"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>
-          </div>
-          <div className="bg-s0 p-4 rounded-md font-mono text-lg text-white break-all select-all">
-            {password}
-          </div>
-          <div className="mt-3 flex gap-4 text-xs text-t2">
-            <span>{password.length} characters</span>
-            <span>{entropy} bits entropy</span>
-          </div>
-        </div>
+          }
+          statTiles={[
+            { label: 'Length', value: password.length },
+            { label: 'Entropy', value: `${entropy} bits` },
+          ]}
+        />
       )}
 
       {history.length > 1 && (

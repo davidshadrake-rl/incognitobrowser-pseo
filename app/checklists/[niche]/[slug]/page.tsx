@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactEditor } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateArticleSchema } from '@/lib/seo';
 import { ChecklistPage } from '@/components/ChecklistPage';
@@ -97,7 +97,7 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <ChecklistPage data={data} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
+      <ChecklistPage data={redactEditor(data)} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

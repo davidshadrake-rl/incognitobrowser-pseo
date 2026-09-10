@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, freeSitePrefix } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, freeSitePrefix, redactEditor } from '@/lib/content';
 import { IS_PRO_DEPLOYMENT, tierOfEngine, proUrlFor } from '@/lib/tiers';
 import type { NextStepsData } from '@/components/NextSteps';
 import { getNicheById } from '@/lib/taxonomy';
@@ -153,7 +153,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
       {articleSchema && <JsonLd data={articleSchema} />}
       <JsonLd data={appSchema} />
       <ToolPageClient
-        data={data}
+        data={redactEditor(data)}
         nicheName={nicheName}
         niche={niche}
         nextSteps={nextStepsFor(niche, nicheName, data.educational?.tips)}

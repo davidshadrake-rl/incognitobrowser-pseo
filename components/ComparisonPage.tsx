@@ -90,7 +90,7 @@ export function ComparisonPage({ data, nicheName, proofRoute }: { data: Comparis
         action={
           <ArticleByline
             author={(data as unknown as { author?: { name: string; profileUrl?: string; credentials?: string } | null }).author}
-            editor={(data as unknown as { editor?: { name: string; profileUrl?: string } | null }).editor}
+            reviewed={(data as unknown as { reviewed?: boolean }).reviewed}
             reviewedAt={(data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt}
           />
         }
