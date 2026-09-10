@@ -6,7 +6,7 @@ import { getAllContentItems, getGlossaryFiles, isPublished, type EditableContent
 import { Icon, IconTile } from '@/components/ui/Icon';
 import { Rings } from '@/components/ui/Rings';
 import { Diagram } from '@/components/ui/Diagram';
-import { TYPE_ICON } from '@/lib/visuals';
+import { TYPE_ICON, familyOfNiche, type Family } from '@/lib/visuals';
 import { playUrl } from '@/lib/play';
 
 /** Glossary items are "terms" everywhere else in the site (AtoZCatalogue noun="terms"); every other slug already reads as a plural noun. */
@@ -18,6 +18,13 @@ function countForType(slug: string): number {
   const items = getAllContentItems<{ toolEngine?: string } & EditableContent>(slug);
   return items.filter(i => (slug !== 'tools' || engineVisibleInThisTier(i.toolEngine)) && isPublished(i)).length;
 }
+
+const TOPIC_RAIL: Record<Family, string> = {
+  net: 'before:bg-fam-net',
+  trace: 'before:bg-fam-trace',
+  identity: 'before:bg-fam-identity',
+  cipher: 'before:bg-fam-cipher',
+};
 
 export default function HomePage() {
   // The Pro deployment has no pSEO home — it IS the tools section.
@@ -98,14 +105,22 @@ export default function HomePage() {
       <section>
         <h2 className="text-2xl font-bold text-white mb-6">All Privacy Topics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Same card anatomy as the tools index: icon tile, family-hued
+              rail, clamped blurb. 44 identical bordered boxes with no icon
+              and no colour was the flattest surface on the site. */}
           {niches.map(niche => (
-            <Link key={niche.slug} href={`/topics/${niche.slug}`} className="group">
-              <div className="border border-b1 rounded-lg p-4 bg-s0 hover:border-b2 transition-all">
-                <h3 className="font-semibold text-white group-hover:text-t2 mb-1">{niche.name}</h3>
-                <p className="text-sm text-t2 mb-3">{niche.description}</p>
-                <div className="flex flex-wrap gap-1">
-                  {niche.keywords.slice(0, 3).map((kw, i) => (
-                    <span key={i} className="text-xs bg-white/5 text-t3 px-2 py-0.5 rounded border border-hair">
+            <Link
+              key={niche.slug}
+              href={`/topics/${niche.slug}`}
+              className={`group relative overflow-hidden grid grid-cols-[40px_1fr] gap-3.5 bg-s0 border border-b1 rounded-[12px] p-4 hover:border-b2 transition-colors before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 ${TOPIC_RAIL[familyOfNiche(niche.id)]}`}
+            >
+              <IconTile name={TYPE_ICON.topics} size={40} family={familyOfNiche(niche.id)} />
+              <div className="min-w-0">
+                <h3 className="font-mono text-[15px] font-semibold text-t1">{niche.name}</h3>
+                <p className="prose-ib text-row line-clamp-2 mt-1">{niche.description}</p>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {niche.keywords.slice(0, 2).map((kw, i) => (
+                    <span key={i} className="text-meta text-t3 px-2 py-0.5 rounded-[4px] bg-s1 border border-hair">
                       {kw}
                     </span>
                   ))}

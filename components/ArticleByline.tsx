@@ -2,9 +2,11 @@
  * Visible article byline.
  *
  * Renders near the H1 of every editorially-promoted content page. Shows
- * the pseudonymous writer ("By Darkpool David") and the LinkedIn-verified
- * editor ("Edited by David Shadrake"), each linking to their /authors/<slug>
- * profile page. Includes a reviewed-on date when present.
+ * the pseudonymous writer and a link to the editorial standards page, plus a
+ * reviewed-on date when present. The reviewing editor is a named individual
+ * and is deliberately NOT named here: this component renders on 1,000+ pages,
+ * and naming them on every one publishes a real person at a scale nobody
+ * asked for. They are named on the standards page and their profile page.
  *
  * Why this is the highest-leverage E-A-T element on the site: Google's
  * quality raters and AI Overview retrieval both look for a visible byline
@@ -15,6 +17,8 @@
  * pages). The editorial gate already noindexes those, so an absent byline
  * is not an E-A-T problem.
  */
+
+import Link from 'next/link';
 
 type AuthorLike = {
   name: string;
@@ -66,16 +70,17 @@ export function ArticleByline({ author, editor, reviewedAt }: ArticleBylineProps
       >
         {author.name}
       </a>
+      {/* The editor is a named individual. Naming them on 1,000+ pages, each
+          linking their personal profile, publishes a real person's identity at
+          a scale the owner did not ask for. The editorial relationship is kept
+          — it just points at the standards page instead of the person, and the
+          named editor appears only on the few pages listed there. */}
       {editor && editor.name && (
         <>
           <span aria-hidden="true" className="text-white/30">·</span>
-          <span className="text-t2">Edited by</span>
-          <a
-            href={profileHref(editor.profileUrl, editor.name)}
-            className="text-white hover:underline font-semibold"
-          >
-            {editor.name}
-          </a>
+          <Link href="/site/methodology" className="text-t2 hover:text-white hover:underline">
+            Editorially reviewed
+          </Link>
         </>
       )}
       {dateStr && (

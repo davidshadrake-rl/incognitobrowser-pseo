@@ -14,7 +14,7 @@ import { LETTERS, filterEntries, groupByLetter, letterOf, type CatalogueEntry } 
 import { GradeBadge } from '@/components/GradeBadge';
 import { ToolCard } from '@/components/ToolCard';
 import { IconTile, type IconName } from '@/components/ui/Icon';
-import { ENGINE_ICON } from '@/lib/visuals';
+import { ENGINE_ICON, familyOfNiche, type Family } from '@/lib/visuals';
 
 export interface CatalogueTopic {
   label: string;
@@ -55,7 +55,7 @@ interface Props {
 function entryGridClass(noun: string): string {
   return noun === 'tools'
     ? 'grid grid-cols-1 md:grid-cols-2 gap-3'
-    : 'grid sm:grid-cols-2 lg:grid-cols-3 gap-px rounded-[12px] overflow-hidden';
+    : 'grid sm:grid-cols-2 lg:grid-cols-3 gap-3';
 }
 
 /**
@@ -185,6 +185,26 @@ function engineFromKeywords(keywords?: string): string | undefined {
   return keywords.split(/\s+/).find((w) => w in ENGINE_ICON);
 }
 
+// Literal class strings per family — never interpolated — so Tailwind's
+// content scanner sees them (same rule as ToolCard's RAIL map).
+/**
+ * The entry's niche, taken from its own href (`/<type>/<niche>/<slug>`).
+ * CatalogueEntry carries no niche field and the report-card and glossary
+ * catalogues are two segments deep, so this returns '' for them and
+ * familyOfNiche falls back to its default hue.
+ */
+function nicheFromHref(href: string): string {
+  const seg = href.split('?')[0].split('#')[0].split('/').filter(Boolean);
+  return seg.length >= 3 ? seg[1] : '';
+}
+
+const ENTRY_RAIL: Record<Family, string> = {
+  net: 'before:bg-fam-net',
+  trace: 'before:bg-fam-trace',
+  identity: 'before:bg-fam-identity',
+  cipher: 'before:bg-fam-cipher',
+};
+
 function Entry({ e, noun, icon }: { e: CatalogueEntry; noun: string; icon: IconName }) {
   const engine = noun === 'tools' ? engineFromKeywords(e.keywords) : undefined;
   if (engine) {
@@ -202,14 +222,19 @@ function Entry({ e, noun, icon }: { e: CatalogueEntry; noun: string; icon: IconN
       </div>
     );
   }
-  // DESIGN-SPEC 5.5 entry anatomy: 32px IconTile (GradeBadge instead, on the
-  // report-card index — the only catalogue whose entries carry a grade),
-  // font-mono title, text-meta/t3 meta line, prose-ib description clamped to
-  // 2 lines. No badge here — the tier chip is a tool-only affordance and
-  // renders through the ToolCard branch above (DESIGN-SPEC 5.9).
+  // Entry anatomy follows ToolCard rather than 5.5's hairline rules grid.
+  // The spec chose a dense grid so 1,300 entries would not become 1,300
+  // rounded boxes, but in practice it read as a wall: no icon colour, no
+  // separation, every row identical. The tools index was the one catalogue
+  // that scanned well, and cards are why. Same anatomy here, with the rail
+  // hue keyed off the entry's niche instead of a tool engine.
   return (
-    <Link href={e.href} className="relative flex items-start gap-3 p-4 bg-base ring-1 ring-b1 hover:bg-s0 transition-colors catalogue-entry" data-letter={letterOf(e.title)}>
-      {e.grade ? <GradeBadge grade={e.grade} size="sm" /> : <IconTile name={icon} size={32} />}
+    <Link
+      href={e.href}
+      className={`group relative overflow-hidden grid grid-cols-[32px_1fr] gap-3.5 bg-s0 border border-b1 rounded-[12px] p-4 hover:border-b2 transition-colors catalogue-entry before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 ${ENTRY_RAIL[familyOfNiche(nicheFromHref(e.href))]}`}
+      data-letter={letterOf(e.title)}
+    >
+      {e.grade ? <GradeBadge grade={e.grade} size="sm" /> : <IconTile name={icon} size={32} family={familyOfNiche(nicheFromHref(e.href))} />}
       <div className="min-w-0">
         <h4 className="font-mono text-[15px] font-semibold text-t1">{e.title}</h4>
         {e.meta && <p className="text-meta text-t3 mt-0.5">{e.meta}</p>}

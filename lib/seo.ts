@@ -109,15 +109,16 @@ export function generateArticleSchema(opts: {
       ...(opts.author.credentials ? { jobTitle: opts.author.credentials } : {}),
       ...(opts.author.sameAs && opts.author.sameAs.length > 0 ? { sameAs: opts.author.sameAs } : {}),
     },
+    // The reviewing editor is a named individual, so this emitted their real
+    // name and a link to their personal LinkedIn on 1,000+ pages. The review
+    // relationship is worth asserting; broadcasting the person is not. It is
+    // now credited to the masthead, whose page names them once.
     ...(opts.editor
       ? {
           editor: {
-            '@type': 'Person',
-            name: opts.editor.name,
-            ...(opts.editor.profileUrl ? { url: opts.editor.profileUrl } : {}),
-            ...(opts.editor.sameAs && opts.editor.sameAs.length > 0
-              ? { sameAs: opts.editor.sameAs }
-              : {}),
+            '@type': 'Organization',
+            name: 'Incognito Browser Editorial',
+            url: 'https://incognitobrowser.io/resources/site/methodology',
           },
         }
       : {}),

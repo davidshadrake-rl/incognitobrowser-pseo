@@ -185,17 +185,23 @@ describe('(g) Amendment A: the four family hues stay confined to their five surf
     }
   });
 
-  it('"fam-" appears only in Icon.tsx, Diagram.tsx, ToolCard.tsx, PageHero.tsx and globals.css', () => {
-    // ToolCard.tsx does not exist until PR2 (DESIGN-SPEC 5.3); it stays on
-    // the allow-list so this guard does not need editing when it lands.
-    // DESIGN-SPEC 5.3 places it at components/ToolCard.tsx (not components/ui/) —
-    // corrected here to match where it actually landed.
+  it('the family hues stay on card rails and icon tiles, nowhere else', () => {
+    // Amendment A originally confined the four hues to five surfaces. The
+    // owner then asked for the tools-index card treatment on the A-Z
+    // catalogue and the landing page's topic grid, because the hairline
+    // rules grid and the flat topic boxes read as a wall of identical rows.
+    // Those two files are on the list for that reason — a deliberate scope
+    // change, not a leak. The rule the guard actually protects is unchanged:
+    // hues appear only on a card rail or an icon tile, never on text, links,
+    // buttons, badges, backgrounds, the header or a status row.
     const ALLOWED = new Set([
       'app/globals.css',
       'components/ui/Icon.tsx',
       'components/ui/Diagram.tsx',
       'components/ToolCard.tsx',
       'components/ui/PageHero.tsx',
+      'components/AtoZCatalogue.tsx',
+      'app/page.tsx',
     ]);
     const files = SOURCE_DIRS.flatMap((d) => walk(d, ['.tsx', '.ts', '.css']));
     const offenders = files.filter((f) => /fam-/.test(read(f)) && !ALLOWED.has(f));
