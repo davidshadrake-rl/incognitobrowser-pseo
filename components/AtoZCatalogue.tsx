@@ -42,14 +42,20 @@ interface Props {
   children?: ReactNode;
 }
 
-// DESIGN-SPEC 5.5: the A–Z list uses a "rules grid" — 1px hairline gaps from
-// a shared bg-b1 ground, not 1,300 individually-rounded boxes — everywhere
-// except the tools catalogue, whose entries are full ToolCards (kept as PR2
-// styled them; a hairline grid would clip the tier rail and schematic).
+// DESIGN-SPEC 5.5: the A–Z list uses a "rules grid" — 1px hairlines rather
+// than 1,300 individually-rounded boxes — everywhere except the tools
+// catalogue, whose entries are full ToolCards (kept as PR2 styled them; a
+// hairline grid would clip the tier rail and schematic).
+//
+// The hairline is a ring on each CELL, not a coloured container showing
+// through 1px gaps. The container trick only works when every row is full:
+// a letter group of 2 in a 3-column grid left the third cell empty, and the
+// container colour showed through as a solid block. Rows here are ragged by
+// nature (one group per letter), so the rule has to belong to the cell.
 function entryGridClass(noun: string): string {
   return noun === 'tools'
     ? 'grid grid-cols-1 md:grid-cols-2 gap-3'
-    : 'grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-b1 rounded-[12px] overflow-hidden';
+    : 'grid sm:grid-cols-2 lg:grid-cols-3 gap-px rounded-[12px] overflow-hidden';
 }
 
 /**
@@ -202,7 +208,7 @@ function Entry({ e, noun, icon }: { e: CatalogueEntry; noun: string; icon: IconN
   // 2 lines. No badge here — the tier chip is a tool-only affordance and
   // renders through the ToolCard branch above (DESIGN-SPEC 5.9).
   return (
-    <Link href={e.href} className="relative flex items-start gap-3 p-4 bg-base hover:bg-s0 transition-colors catalogue-entry" data-letter={letterOf(e.title)}>
+    <Link href={e.href} className="relative flex items-start gap-3 p-4 bg-base ring-1 ring-b1 hover:bg-s0 transition-colors catalogue-entry" data-letter={letterOf(e.title)}>
       {e.grade ? <GradeBadge grade={e.grade} size="sm" /> : <IconTile name={icon} size={32} />}
       <div className="min-w-0">
         <h4 className="font-mono text-[15px] font-semibold text-t1">{e.title}</h4>
