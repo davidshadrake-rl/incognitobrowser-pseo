@@ -14,45 +14,29 @@
   "description": "Assess your cloud storage privacy risks with our comprehensive calculator. Evaluate your provider's security practices, encryption methods, and data protection features to understand how well your files are protected from unauthorized access.",
   "inputs": [
     {
-      "id": "provider",
-      "label": "Cloud Storage Provider",
+      "id": "providerAccess",
+      "label": "Can Your Provider Open Your Files?",
       "type": "select",
-      "defaultValue": "google-drive",
+      "defaultValue": "can-read",
       "options": [
         {
-          "value": "google-drive",
-          "label": "Google Drive"
+          "value": "can-read",
+          "label": "Yes, it holds the keys (standard cloud storage)"
         },
         {
-          "value": "dropbox",
-          "label": "Dropbox"
+          "value": "partly",
+          "label": "Only some: my sensitive files are in an end-to-end encrypted folder"
         },
         {
-          "value": "onedrive",
-          "label": "Microsoft OneDrive"
+          "value": "cannot",
+          "label": "No, everything is end-to-end encrypted"
         },
         {
-          "value": "icloud",
-          "label": "Apple iCloud"
-        },
-        {
-          "value": "proton-drive",
-          "label": "Proton Drive"
-        },
-        {
-          "value": "tresorit",
-          "label": "Tresorit"
-        },
-        {
-          "value": "pcloud-crypto",
-          "label": "pCloud Crypto"
-        },
-        {
-          "value": "other",
-          "label": "Other/Unknown"
+          "value": "unsure",
+          "label": "Not sure"
         }
       ],
-      "helpText": "Select your primary cloud storage provider"
+      "helpText": "End-to-end (zero-knowledge) encrypted storage locks files on your device, so the provider can't open them"
     },
     {
       "id": "dataTypes",
@@ -179,15 +163,15 @@
       "description": "Most important step to improve your privacy"
     }
   ],
-  "formula": "const providerScores = { 'google-drive': 60, 'dropbox': 55, 'onedrive': 65, 'icloud': 70, 'proton-drive': 15, 'tresorit': 10, 'pcloud-crypto': 20, 'other': 80 }; const dataTypeScores = { 'personal': 10, 'business': 25, 'financial': 40, 'medical': 45, 'legal': 35, 'creative': 20 }; const encryptionReduction = { 'none': 0, 'manual': -25, 'zero-knowledge': -30, 'third-party': -20 }; const sharingScores = { 'never': 0, 'rare': 5, 'occasional': 10, 'frequent': 20, 'daily': 30 }; let baseScore = providerScores[provider] ?? 80; baseScore += dataTypeScores[dataTypes] ?? 10; baseScore += encryptionReduction[encryptionUsed] ?? 0; baseScore += sharingScores[sharingFrequency] ?? 10; if (!twoFactor) baseScore += 15; if (dataAmount > 100) baseScore += 5; if (dataAmount > 500) baseScore += 10; const riskScore = Math.max(0, Math.min(100, baseScore)); let riskLevel, recommendation; if (riskScore <= 25) { riskLevel = 'Low Risk'; recommendation = 'Great privacy practices! Consider using a privacy-focused browser for additional web privacy.'; } else if (riskScore <= 50) { riskLevel = 'Moderate Risk'; recommendation = 'Enable 2FA and consider encrypted providers like Proton Drive or Tresorit.'; } else if (riskScore <= 75) { riskLevel = 'High Risk'; recommendation = 'Switch to zero-knowledge providers and encrypt sensitive files before upload.'; } else { riskLevel = 'Critical Risk'; recommendation = 'Immediately migrate to encrypted storage like Tresorit and enable all security features.'; } return { riskScore, riskLevel, recommendation };",
+  "formula": "const accessScores = { 'can-read': 60, 'partly': 35, 'cannot': 15, 'unsure': 65 }; const dataTypeScores = { 'personal': 10, 'business': 25, 'financial': 40, 'medical': 45, 'legal': 35, 'creative': 20 }; const encryptionReduction = { 'none': 0, 'manual': -25, 'zero-knowledge': -30, 'third-party': -20 }; const sharingScores = { 'never': 0, 'rare': 5, 'occasional': 10, 'frequent': 20, 'daily': 30 }; let baseScore = accessScores[providerAccess] ?? 65; baseScore += dataTypeScores[dataTypes] ?? 10; baseScore += encryptionReduction[encryptionUsed] ?? 0; baseScore += sharingScores[sharingFrequency] ?? 10; if (!twoFactor) baseScore += 15; if (dataAmount > 100) baseScore += 5; if (dataAmount > 500) baseScore += 10; const riskScore = Math.max(0, Math.min(100, baseScore)); let riskLevel, recommendation; if (riskScore <= 25) { riskLevel = 'Low Risk'; recommendation = 'Keep 2FA on and review your shared links from time to time.'; } else if (riskScore <= 50) { riskLevel = 'Moderate Risk'; recommendation = 'Turn on 2FA if it is off, and move sensitive files to end-to-end encrypted storage.'; } else if (riskScore <= 75) { riskLevel = 'High Risk'; recommendation = 'Switch to zero-knowledge providers and encrypt sensitive files before upload.'; } else { riskLevel = 'Critical Risk'; recommendation = 'Move sensitive files to end-to-end encrypted storage now and turn on every security feature your account offers.'; } return { riskScore, riskLevel, recommendation };",
   "educational": {
-    "methodology": "This calculator evaluates your cloud storage privacy risk based on provider security practices, data sensitivity, encryption usage, account security, and sharing habits. Scores range from 0-100, with lower scores indicating better privacy protection.",
+    "methodology": "This calculator evaluates your cloud storage privacy risk based on whether your provider can open your files, data sensitivity, encryption usage, account security, and sharing habits. Scores range from 0-100, with lower scores indicating better privacy protection.",
     "tips": [
       "Use zero-knowledge encrypted providers like Proton Drive or Tresorit for sensitive data",
       "Always enable two-factor authentication on your cloud storage accounts",
       "Encrypt sensitive files locally before uploading to any cloud service",
       "Regularly review and revoke sharing permissions for old files and folders",
-      "Use a privacy-focused browser when accessing cloud storage to prevent tracking"
+      "Review which apps and devices can access your cloud account, and remove the ones you no longer use"
     ],
     "interpretation": [
       {

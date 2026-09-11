@@ -14,41 +14,33 @@
   "description": "Assess your email privacy and security risks with our comprehensive calculator. Evaluate your current email provider, encryption usage, and privacy practices to get a personalized risk score and actionable recommendations.",
   "inputs": [
     {
-      "id": "emailProvider",
-      "label": "Primary Email Provider",
+      "id": "providerAccess",
+      "label": "Can Your Provider Read Your Mail?",
       "type": "select",
-      "defaultValue": "gmail",
+      "defaultValue": "can-read",
       "options": [
         {
-          "value": "gmail",
-          "label": "Gmail"
+          "value": "ads",
+          "label": "Yes, and it uses email content for ads"
         },
         {
-          "value": "outlook",
-          "label": "Outlook/Hotmail"
+          "value": "can-read",
+          "label": "Yes, but it says it doesn't use it for ads"
         },
         {
-          "value": "yahoo",
-          "label": "Yahoo Mail"
+          "value": "work",
+          "label": "It is a work account my employer controls"
         },
         {
-          "value": "protonmail",
-          "label": "ProtonMail"
+          "value": "zero-access",
+          "label": "No, it uses zero-access encryption"
         },
         {
-          "value": "tutanota",
-          "label": "Tutanota"
-        },
-        {
-          "value": "other-secure",
-          "label": "Other Secure Provider"
-        },
-        {
-          "value": "work-email",
-          "label": "Work/Corporate Email"
+          "value": "unsure",
+          "label": "Not sure"
         }
       ],
-      "helpText": "Your main email service provider"
+      "helpText": "Most providers hold the keys to your mailbox and can scan it. Zero-access providers store mail encrypted with a key only you hold."
     },
     {
       "id": "twoFactorAuth",
@@ -182,13 +174,13 @@
       "description": "Overall assessment of your email privacy risks"
     }
   ],
-  "formula": "let providerRisk = {gmail: 70, outlook: 65, yahoo: 75, protonmail: 15, tutanota: 20, 'other-secure': 30, 'work-email': 50}[emailProvider] ?? 50; let volumeMultiplier = {'1-10': 0.8, '10-50': 1.0, '50-100': 1.2, '100+': 1.4}[emailsPerDay] ?? 1.0; let sensitivityRisk = {never: 0, rarely: 10, sometimes: 20, often: 35, always: 50}[sensitiveContent] ?? 20; let encryptionReduction = {none: 0, sometimes: -15, 'secure-provider': -35, always: -45}[encryptionUsage] ?? 0; let trackingReduction = {none: 0, basic: -5, advanced: -15, full: -25}[trackingProtection] ?? 0; let twoFactorReduction = twoFactorAuth ? -10: 0; let baseRisk = (providerRisk + sensitivityRisk) * volumeMultiplier; let totalRisk = Math.round(Math.max(5, Math.min(95, baseRisk + encryptionReduction + trackingReduction + twoFactorReduction))); let grade = totalRisk <= 25 ? 'A': totalRisk <= 50 ? 'B': totalRisk <= 75 ? 'C': 'D'; let level = totalRisk <= 25 ? 'Low Risk': totalRisk <= 50 ? 'Moderate Risk': totalRisk <= 75 ? 'High Risk': 'Very High Risk'; return {riskScore: totalRisk, securityGrade: grade, riskLevel: level};",
+  "formula": "let providerRisk = {ads: 75, 'can-read': 65, work: 50, 'zero-access': 15, unsure: 70}[providerAccess] ?? 70; let volumeMultiplier = {'1-10': 0.8, '10-50': 1.0, '50-100': 1.2, '100+': 1.4}[emailsPerDay] ?? 1.0; let sensitivityRisk = {never: 0, rarely: 10, sometimes: 20, often: 35, always: 50}[sensitiveContent] ?? 20; let encryptionReduction = {none: 0, sometimes: -15, 'secure-provider': -35, always: -45}[encryptionUsage] ?? 0; let trackingReduction = {none: 0, basic: -5, advanced: -15, full: -25}[trackingProtection] ?? 0; let twoFactorReduction = twoFactorAuth ? -10: 0; let baseRisk = (providerRisk + sensitivityRisk) * volumeMultiplier; let totalRisk = Math.round(Math.max(5, Math.min(95, baseRisk + encryptionReduction + trackingReduction + twoFactorReduction))); let grade = totalRisk <= 25 ? 'A': totalRisk <= 50 ? 'B': totalRisk <= 75 ? 'C': 'D'; let level = totalRisk <= 25 ? 'Low Risk': totalRisk <= 50 ? 'Moderate Risk': totalRisk <= 75 ? 'High Risk': 'Very High Risk'; return {riskScore: totalRisk, securityGrade: grade, riskLevel: level};",
   "educational": {
-    "methodology": "This calculator evaluates your email privacy risk based on your provider's data practices, encryption usage, authentication methods, and privacy protections. Major providers like Gmail scan emails for advertising, while encrypted providers like ProtonMail offer zero-access encryption.",
+    "methodology": "This calculator evaluates your email privacy risk based on whether your provider can read your stored mail, how much sensitive mail you send, encryption, sign-in security and tracking protection. Most providers can read and scan the mail they store; zero-access providers encrypt it with a key only you hold, so they can't.",
     "tips": [
-      "Switch to encrypted email providers like ProtonMail or Tutanota for automatic end-to-end encryption",
+      "For sensitive mail, use a provider with zero-access encryption, such as Proton Mail or Tuta; mail between its own users is end-to-end encrypted, mail to other providers usually isn't",
       "Enable two-factor authentication on all email accounts to prevent unauthorized access",
-      "Use email tracking blockers or privacy-focused browsers like a privacy-focused browser to prevent pixel tracking",
+      "Block remote images in your mail app, or use a tracking-pixel blocker, so senders can't see when and where you open their mail",
       "Create email aliases for online accounts to protect your main email from data breaches",
       "Avoid sending sensitive information through unencrypted email providers"
     ],

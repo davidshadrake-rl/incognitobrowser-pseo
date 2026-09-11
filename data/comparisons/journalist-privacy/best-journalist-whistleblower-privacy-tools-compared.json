@@ -1,7 +1,7 @@
 {
   "niche": "journalist-privacy",
   "slug": "best-journalist-whistleblower-privacy-tools-compared",
-  "title": "Best Journalist & Whistleblower Privacy Tools Compared 2024",
+  "title": "Best Journalist & Whistleblower Privacy Tools Compared",
   "metaDescription": "Compare top privacy tools for journalists and whistleblowers. Secure communication, source protection, and operational security features analyzed.",
   "keywords": [
     "journalist privacy tools",
@@ -10,7 +10,7 @@
     "SecureDrop",
     "press freedom security"
   ],
-  "intro": "Protecting sources and maintaining operational security is critical for journalists and whistleblowers. This comparison examines the best privacy tools designed specifically for secure communication, document sharing, and maintaining anonymity in high-risk situations.",
+  "intro": "Protecting sources and maintaining operational security is critical for journalists and whistleblowers. This comparison examines four widely used tools for secure communication, document sharing, and maintaining anonymity in high-risk situations.",
   "products": [
     {
       "name": "SecureDrop",
@@ -18,6 +18,10 @@
       "tagline": "Open-source whistleblower submission system for news organizations",
       "website": "https://securedrop.org",
       "pricing": "Free (setup and maintenance costs apply)",
+      "platforms": [
+        "Web",
+        "Linux"
+      ],
       "pros": [
         "Designed specifically for journalist-source communication",
         "Air-gapped system architecture",
@@ -27,8 +31,7 @@
       "cons": [
         "Requires technical expertise to set up",
         "High operational overhead"
-      ],
-      "rating": 9.5
+      ]
     },
     {
       "name": "Signal",
@@ -36,69 +39,71 @@
       "tagline": "End-to-end encrypted messaging with disappearing messages",
       "website": "https://signal.org",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Easy to use for sources",
-        "Disappearing messages feature",
-        "Open source and audited",
-        "Voice and video calling"
+        "Disappearing messages",
+        "Open source; its encryption protocol has been independently analysed",
+        "Encrypted voice and video calls"
       ],
       "cons": [
-        "Requires phone number registration",
-        "Metadata still collected"
-      ],
-      "rating": 8.5
+        "Requires a phone number to register; a username can hide it from others",
+        "Messages stay on each phone unless disappearing messages are on"
+      ]
     },
     {
       "name": "Tor Browser",
       "slug": "tor-browser",
-      "tagline": "Anonymous web browsing and communication",
+      "tagline": "Browser that routes your traffic through the Tor network",
       "website": "https://torproject.org",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
       "pros": [
-        "Complete anonymity for web browsing",
-        "Access to.onion sites",
+        "Strong anonymity for web browsing through onion routing",
+        "Access to .onion sites",
         "No registration required",
         "Built-in privacy protections"
       ],
       "cons": [
-        "Slower browsing speeds",
-        "Some sites block Tor traffic"
-      ],
-      "rating": 9
+        "Slower than a regular browser, because traffic passes through three relays",
+        "Some websites block Tor traffic"
+      ]
     },
     {
-      "name": "ProtonMail",
+      "name": "Proton Mail",
       "slug": "protonmail",
       "tagline": "Encrypted email with zero-access encryption",
-      "website": "https://protonmail.com",
-      "pricing": "Free tier, paid plans from $4/month",
+      "website": "https://proton.me/mail",
+      "pricing": "Free plan; Mail Plus from about $4/month billed yearly",
+      "platforms": [
+        "Web",
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "End-to-end encrypted email",
-        "Anonymous account creation",
-        "Self-destructing messages",
-        "Based in privacy-friendly Switzerland"
+        "No personal information required to sign up",
+        "Messages can be set to expire",
+        "Based in Switzerland"
       ],
       "cons": [
         "Limited free storage",
-        "Requires trusted contacts for full protection"
-      ],
-      "rating": 8
-    },
-    {
-      "name": "Incognito Browser",
-      "slug": "incognito-browser",
-      "tagline": "Android browser that stays private by default and wipes everything on exit",
-      "website": "https://incognitobrowser.io/",
-      "pricing": "Free with premium features",
-      "pros": [
-        "Advanced ad and tracker blocking",
-        "No browsing history stored",
-        "Easy setup for non-technical users"
-      ],
-      "cons": [
-        "Premium features require subscription"
-      ],
-      "rating": 7.5
+        "End-to-end encryption to non-Proton addresses needs a password-protected message or PGP"
+      ]
     }
   ],
   "features": [
@@ -106,25 +111,21 @@
       "name": "End-to-End Encryption",
       "description": "Messages and files are encrypted so only sender and recipient can read them",
       "scores": {
-        "SecureDrop": {
+        "securedrop": {
           "value": "excellent",
           "note": "GPG encryption with air-gapped system"
         },
-        "Signal": {
+        "signal": {
           "value": "excellent",
-          "note": "Signal Protocol encryption"
+          "note": "Always on, uses Signal Protocol"
         },
-        "Tor Browser": {
+        "tor-browser": {
           "value": "partial",
           "note": "Depends on site being accessed"
         },
-        "ProtonMail": {
+        "protonmail": {
           "value": "excellent",
-          "note": "Zero-access encryption"
-        },
-        "Incognito Browser": {
-          "value": "partial",
-          "note": "VPN encryption for browsing"
+          "note": "Automatic between Proton Mail users; password-protected messages to others"
         }
       }
     },
@@ -132,25 +133,21 @@
       "name": "Anonymous Communication",
       "description": "Ability to communicate without revealing identity or location",
       "scores": {
-        "SecureDrop": {
+        "securedrop": {
           "value": "excellent",
           "note": "Tor-based with no user accounts"
         },
-        "Signal": {
+        "signal": {
           "value": "good",
-          "note": "Requires phone number but protects metadata"
+          "note": "Phone number required; a username can hide it from others"
         },
-        "Tor Browser": {
+        "tor-browser": {
           "value": "excellent",
           "note": "Routes traffic through multiple servers"
         },
-        "ProtonMail": {
+        "protonmail": {
           "value": "good",
           "note": "Anonymous signup available"
-        },
-        "Incognito Browser": {
-          "value": "good",
-          "note": "VPN masks IP address"
         }
       }
     },
@@ -158,25 +155,21 @@
       "name": "File Sharing Capability",
       "description": "Secure transmission of documents and media files",
       "scores": {
-        "SecureDrop": {
+        "securedrop": {
           "value": "excellent",
           "note": "Designed for large document leaks"
         },
-        "Signal": {
+        "signal": {
           "value": "good",
           "note": "File attachments up to 100MB"
         },
-        "Tor Browser": {
+        "tor-browser": {
           "value": "partial",
           "note": "Via secure file sharing services"
         },
-        "ProtonMail": {
+        "protonmail": {
           "value": "good",
           "note": "Encrypted email attachments"
-        },
-        "Incognito Browser": {
-          "value": "partial",
-          "note": "Anonymous access to file sharing sites"
         }
       }
     },
@@ -184,25 +177,21 @@
       "name": "Ease of Use",
       "description": "How simple it is for non-technical sources to use the tool",
       "scores": {
-        "SecureDrop": {
+        "securedrop": {
           "value": "fair",
           "note": "Requires Tor Browser knowledge"
         },
-        "Signal": {
+        "signal": {
           "value": "excellent",
           "note": "Works like regular messaging app"
         },
-        "Tor Browser": {
+        "tor-browser": {
           "value": "good",
-          "note": "Similar to regular browser"
+          "note": "Simple download and install"
         },
-        "ProtonMail": {
-          "value": "excellent",
-          "note": "Familiar email interface"
-        },
-        "Incognito Browser": {
-          "value": "excellent",
-          "note": "One-click privacy features"
+        "protonmail": {
+          "value": "good",
+          "note": "Familiar email interface; encrypting to non-Proton addresses takes extra steps"
         }
       }
     },
@@ -210,25 +199,21 @@
       "name": "Message Destruction",
       "description": "Automatic deletion of messages after specified time",
       "scores": {
-        "SecureDrop": {
+        "securedrop": {
           "value": "partial",
           "note": "Journalist controls message deletion"
         },
-        "Signal": {
+        "signal": {
           "value": "excellent",
-          "note": "Disappearing messages feature"
+          "note": "Customizable timer for all chats"
         },
-        "Tor Browser": {
+        "tor-browser": {
           "value": "no",
           "note": "Depends on service used"
         },
-        "ProtonMail": {
+        "protonmail": {
           "value": "good",
-          "note": "Self-destructing messages available"
-        },
-        "Incognito Browser": {
-          "value": "partial",
-          "note": "No browsing history saved"
+          "note": "Messages can be set to expire"
         }
       }
     },
@@ -236,62 +221,53 @@
       "name": "Metadata Protection",
       "description": "Prevents collection of communication patterns and timing data",
       "scores": {
-        "SecureDrop": {
+        "securedrop": {
           "value": "excellent",
           "note": "Air-gapped system prevents metadata collection"
         },
-        "Signal": {
-          "value": "good",
-          "note": "Sealed sender and minimal metadata"
+        "signal": {
+          "value": "excellent",
+          "note": "Minimal metadata, sealed sender technology"
         },
-        "Tor Browser": {
+        "tor-browser": {
           "value": "excellent",
           "note": "Onion routing hides traffic patterns"
         },
-        "ProtonMail": {
+        "protonmail": {
           "value": "good",
           "note": "Limited metadata logging"
-        },
-        "Incognito Browser": {
-          "value": "good",
-          "note": "VPN hides browsing patterns"
         }
       }
     }
   ],
   "verdict": {
-    "summary": "For maximum security, SecureDrop remains the gold standard for whistleblower submissions, while Signal offers the best balance of security and usability for ongoing journalist-source communication. Tor Browser is essential for anonymous research and accessing SecureDrop systems. ProtonMail provides secure email communication, and Incognito Browser offers an accessible privacy solution for general browsing needs.",
+    "summary": "Signal scores highest on this page's six criteria: strong encryption, disappearing messages and an app sources already know how to use, with a phone number as the main trade-off. SecureDrop is second and remains the purpose-built choice for first contact and document submissions, though newsrooms need technical staff to run it. Proton Mail comes third for encrypted email, which is end-to-end when both sides use Proton. Tor Browser scores lowest here because it is a browser rather than a messaging tool, but it is how sources reach SecureDrop and research anonymously.",
     "bestFor": [
-      {
-        "useCase": "Large document leaks and sensitive submissions",
-        "product": "SecureDrop",
-        "reason": "Purpose-built for journalist-source communication with maximum anonymity"
-      },
       {
         "useCase": "Ongoing secure messaging with sources",
         "product": "Signal",
-        "reason": "Easy to use with strong encryption and disappearing messages"
+        "reason": "Highest score here; easy to use with strong encryption and disappearing messages"
+      },
+      {
+        "useCase": "Large document leaks and sensitive submissions",
+        "product": "SecureDrop",
+        "reason": "Purpose-built for journalist-source communication, with no source accounts and Tor-only access"
+      },
+      {
+        "useCase": "Secure email communication",
+        "product": "Proton Mail",
+        "reason": "End-to-end encrypted email between Proton users, with anonymous signup options"
       },
       {
         "useCase": "Anonymous research and investigation",
         "product": "Tor Browser",
-        "reason": "Complete anonymity and access to.onion services"
-      },
-      {
-        "useCase": "Secure email communication",
-        "product": "ProtonMail",
-        "reason": "End-to-end encrypted email with anonymous signup options"
-      },
-      {
-        "useCase": "General privacy browsing",
-        "product": "Incognito Browser",
-        "reason": "User-friendly privacy features"
+        "reason": "Onion routing hides your location, and it opens .onion services such as SecureDrop"
       }
     ]
   },
   "pro_tips": [
     "Use multiple tools in combination - Signal for messaging, Tor Browser for research, and SecureDrop for document submission creates layered security.",
-    "Never use these tools on devices that could be seized - consider using a dedicated laptop with TAILS operating system for sensitive communications.",
+    "Never use these tools on devices that could be seized - consider a dedicated laptop running Tails for sensitive communications.",
     "Train sources on proper operational security before first contact - their mistakes can compromise both of you regardless of the tools used.",
     "Verify tool authenticity by downloading only from official sources and checking cryptographic signatures when available.",
     "Create detailed communication protocols with sources about which tools to use when, and have backup methods if primary channels are compromised."
@@ -299,7 +275,7 @@
   "faqs": [
     {
       "question": "Which tool is safest for first contact with a potential source?",
-      "answer": "SecureDrop is safest for initial contact as it requires no account creation and provides maximum anonymity. Sources can submit information without any identifying information being collected."
+      "answer": "SecureDrop is built for first contact: sources need no account, reach it only through Tor, and can submit documents without giving any identifying information."
     },
     {
       "question": "Can I use regular browsers with VPNs instead of Tor?",

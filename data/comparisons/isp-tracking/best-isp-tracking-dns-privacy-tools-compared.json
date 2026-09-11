@@ -1,8 +1,8 @@
 {
   "niche": "isp-tracking",
   "slug": "best-isp-tracking-dns-privacy-tools-compared",
-  "title": "Best ISP Tracking & DNS Privacy Tools Compared 2024",
-  "metaDescription": "Compare the top tools to stop ISP tracking and protect DNS privacy. Reviews of VPNs, encrypted DNS services, and browsers for ultimate protection.",
+  "title": "Best ISP Tracking & DNS Privacy Tools Compared",
+  "metaDescription": "Compare VPNs and encrypted DNS services that limit what your internet provider can see, scored on one published rubric.",
   "keywords": [
     "ISP tracking protection",
     "DNS privacy tools",
@@ -16,56 +16,50 @@
     {
       "name": "NordVPN",
       "slug": "nordvpn",
-      "tagline": "Complete ISP protection with threat protection features",
+      "tagline": "Full-traffic VPN with Threat Protection features",
       "website": "nordvpn.com",
-      "pricing": "$3.71/month (2-year plan)",
+      "pricing": "From about $3-$3.50/month (Basic, 2-year plan); renews at a higher price",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
-        "Blocks all ISP tracking and DNS monitoring",
+        "Hides the sites you visit and your DNS lookups from your ISP",
         "Built-in malware and ad blocking",
-        "Custom DNS servers with DoH support",
+        "Uses its own DNS servers inside the encrypted tunnel",
         "Kill switch prevents data leaks"
       ],
       "cons": [
         "Subscription required for full protection",
-        "Slightly reduces internet speed"
-      ],
-      "rating": 9.2
+        "Like any VPN, adds some slowdown"
+      ]
     },
     {
       "name": "Cloudflare DNS",
       "slug": "cloudflare-dns",
-      "tagline": "Fast, free DNS privacy with 1.1.1.1",
+      "tagline": "Free encrypted DNS resolver at 1.1.1.1",
       "website": "1.1.1.1",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Completely free DNS privacy protection",
-        "Fastest DNS resolution speeds",
-        "Strong no-logging privacy policy",
-        "Easy setup on any device"
+        "Separate free 1.1.1.2 resolver also blocks malware",
+        "Says it never writes your IP address to disk and deletes query logs within 25 hours",
+        "Setup instructions for phones, computers and routers"
       ],
       "cons": [
         "Only protects DNS queries, not all traffic",
         "ISP can still see encrypted traffic volume"
-      ],
-      "rating": 8.5
-    },
-    {
-      "name": "Incognito Browser",
-      "slug": "incognito-browser",
-      "tagline": "Privacy-first browser with built-in DNS protection",
-      "website": "https://incognitobrowser.io/",
-      "pricing": "Free",
-      "pros": [
-        "Built-in encrypted DNS over HTTPS",
-        "Blocks ISP tracking at browser level",
-        "No configuration required",
-        "Includes ad and tracker blocking"
-      ],
-      "cons": [
-        "Only protects browser traffic",
-        "Limited to browsing activities"
-      ],
-      "rating": 8
+      ]
     },
     {
       "name": "Quad9 DNS",
@@ -73,6 +67,13 @@
       "tagline": "Security-focused DNS with malware protection",
       "website": "quad9.net",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Free DNS privacy protection",
         "Blocks malicious websites automatically",
@@ -80,28 +81,31 @@
         "Easy setup instructions provided"
       ],
       "cons": [
-        "Slightly slower than Cloudflare",
         "Only DNS protection, not full traffic"
-      ],
-      "rating": 8
+      ]
     },
     {
       "name": "ExpressVPN",
       "slug": "expressvpn",
-      "tagline": "Premium VPN with Lightway protocol for speed",
+      "tagline": "Full-traffic VPN with private DNS on every server",
       "website": "expressvpn.com",
-      "pricing": "$8.32/month (annual plan)",
+      "pricing": "Subscription (Basic, Advanced and Pro plans); cheaper per month on longer terms",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
-        "Fastest VPN speeds available",
+        "One-click connection in its apps",
         "Private DNS servers on all servers",
         "TrustedServer technology",
         "24/7 customer support"
       ],
       "cons": [
-        "Higher price than competitors",
-        "Fewer simultaneous connections"
-      ],
-      "rating": 8.8
+        "Tracker blocker only on the Advanced and Pro plans"
+      ]
     }
   ],
   "features": [
@@ -111,15 +115,11 @@
       "scores": {
         "nordvpn": {
           "value": "excellent",
-          "note": "DoH and DoT support"
+          "note": "DNS lookups go through the encrypted tunnel to NordVPN's own servers"
         },
         "cloudflare-dns": {
           "value": "excellent",
           "note": "Full DoH/DoT encryption"
-        },
-        "incognito-browser": {
-          "value": "good",
-          "note": "DoH in browser only"
         },
         "quad9-dns": {
           "value": "excellent",
@@ -143,10 +143,6 @@
           "value": "poor",
           "note": "DNS only"
         },
-        "incognito-browser": {
-          "value": "partial",
-          "note": "Browser traffic only"
-        },
         "quad9-dns": {
           "value": "poor",
           "note": "DNS queries only"
@@ -154,32 +150,6 @@
         "expressvpn": {
           "value": "excellent",
           "note": "Complete traffic encryption"
-        }
-      }
-    },
-    {
-      "name": "Speed Performance",
-      "description": "Impact on internet speed and browsing performance",
-      "scores": {
-        "nordvpn": {
-          "value": "good",
-          "note": "10-20% speed reduction"
-        },
-        "cloudflare-dns": {
-          "value": "excellent",
-          "note": "Often faster than ISP DNS"
-        },
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "No speed impact"
-        },
-        "quad9-dns": {
-          "value": "good",
-          "note": "Minimal impact"
-        },
-        "expressvpn": {
-          "value": "excellent",
-          "note": "Fastest VPN speeds"
         }
       }
     },
@@ -194,10 +164,6 @@
         "cloudflare-dns": {
           "value": "fair",
           "note": "Manual DNS settings"
-        },
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "Works immediately"
         },
         "quad9-dns": {
           "value": "fair",
@@ -215,23 +181,19 @@
       "scores": {
         "nordvpn": {
           "value": "good",
-          "note": "$3.71/month"
+          "note": "Paid subscription"
         },
         "cloudflare-dns": {
           "value": "excellent",
           "note": "Completely free"
-        },
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "Free to use"
         },
         "quad9-dns": {
           "value": "excellent",
           "note": "Free service"
         },
         "expressvpn": {
-          "value": "fair",
-          "note": "$8.32/month"
+          "value": "good",
+          "note": "Paid subscription"
         }
       }
     },
@@ -241,49 +203,45 @@
       "scores": {
         "nordvpn": {
           "value": "excellent",
-          "note": "CyberSec feature included"
+          "note": "Threat Protection blocks known malicious sites"
         },
         "cloudflare-dns": {
           "value": "partial",
-          "note": "Family plan blocks malware"
-        },
-        "incognito-browser": {
-          "value": "good",
-          "note": "Basic malware blocking"
+          "note": "Free 1.1.1.2 resolver (1.1.1.1 for Families) blocks malware"
         },
         "quad9-dns": {
           "value": "excellent",
           "note": "Built-in threat blocking"
         },
         "expressvpn": {
-          "value": "partial",
-          "note": "Basic DNS filtering"
+          "value": "good",
+          "note": "Blocks known malicious sites on all plans"
         }
       }
     }
   ],
   "verdict": {
-    "summary": "For complete ISP privacy protection, VPNs like NordVPN and ExpressVPN offer the most comprehensive solution. For DNS-only protection, Cloudflare provides the best free option with excellent speed. Incognito Browser is perfect for users who want instant privacy without configuration.",
+    "summary": "A VPN hides the most from your ISP because it encrypts all your traffic, not just DNS lookups. On these five criteria ExpressVPN and NordVPN tie for the top score; ExpressVPN is listed first only because ties are ordered alphabetically. NordVPN is rated higher for malware blocking, and ExpressVPN for ease of setup. If you only want to hide your DNS lookups, Quad9 and Cloudflare are free; Quad9 scores higher because it blocks malicious domains by default, while Cloudflare blocks malware only on its separate 1.1.1.2 resolver. Encrypted DNS alone still leaves the IP addresses you connect to and your traffic volume visible to your ISP. Speed isn't scored, because we haven't measured it.",
     "bestFor": [
       {
-        "useCase": "Complete ISP blocking on budget",
-        "product": "NordVPN",
-        "reason": "Best value for full traffic encryption and DNS protection with threat blocking features"
-      },
-      {
-        "useCase": "Free DNS privacy protection",
-        "product": "Cloudflare DNS",
-        "reason": "Fastest free DNS service with strong privacy policy and easy setup"
-      },
-      {
-        "useCase": "Instant browser privacy",
-        "product": "Incognito Browser",
-        "reason": "Zero-configuration privacy browser with built-in DNS encryption and tracking protection"
-      },
-      {
-        "useCase": "Premium performance",
+        "useCase": "Easy setup",
         "product": "ExpressVPN",
-        "reason": "Fastest VPN speeds with reliable ISP blocking for users who prioritize performance"
+        "reason": "Joint top score here: rated excellent for ease of setup, with private DNS on every server"
+      },
+      {
+        "useCase": "Full-traffic protection with malware blocking",
+        "product": "NordVPN",
+        "reason": "Joint top score here: encrypts all traffic and DNS, and Threat Protection blocks malicious sites on every plan"
+      },
+      {
+        "useCase": "Free DNS with malware blocking",
+        "product": "Quad9 DNS",
+        "reason": "Free encrypted DNS that blocks known malicious domains by default"
+      },
+      {
+        "useCase": "Free DNS with published privacy commitments",
+        "product": "Cloudflare DNS",
+        "reason": "Free encrypted DNS; Cloudflare says it never writes your IP address to disk and deletes query logs within 25 hours"
       }
     ]
   },
@@ -291,7 +249,7 @@
     "Combine a VPN with encrypted DNS for maximum ISP protection - use your VPN's DNS servers when connected and a service like Cloudflare when not",
     "Test your DNS privacy at dnsleaktest.com to ensure your ISP can't see your DNS queries",
     "Enable DNS over HTTPS in your browser settings (Chrome, Firefox) for an extra layer of DNS encryption",
-    "Use a privacy-focused browser for sensitive browsing as it includes built-in DNS protection without VPN costs",
+    "On Android 9 or later, set Private DNS to a provider hostname such as one.one.one.one or dns.quad9.net to encrypt DNS lookups for every app on the phone",
     "Check if your ISP offers opt-out options for data collection, though technical solutions are more reliable than policy promises"
   ],
   "faqs": [
@@ -305,15 +263,15 @@
     },
     {
       "question": "Do free DNS services like Cloudflare really protect my privacy?",
-      "answer": "Yes, reputable services like Cloudflare and Quad9 have strong privacy policies and don't log user data. However, they only protect DNS queries - your ISP can still monitor other aspects of your internet activity."
+      "answer": "They protect your DNS lookups from your ISP, and reputable services publish privacy commitments: Cloudflare says it never writes your IP address to disk and deletes query logs within 25 hours, and Quad9 says it doesn't record IP addresses. They only protect DNS queries, though; your ISP can still see the IP addresses you connect to and how much data you use."
     },
     {
       "question": "Will using a VPN slow down my internet significantly?",
-      "answer": "Quality VPNs typically reduce speeds by 10-20%. ExpressVPN and NordVPN minimize this impact with optimized servers. The privacy protection usually outweighs the minor speed reduction for most users."
+      "answer": "A VPN adds some slowdown because your traffic takes an extra hop and is encrypted. How much depends on the server's distance and load; choosing a nearby server and a modern protocol such as WireGuard, NordLynx or Lightway keeps it small for most uses."
     },
     {
       "question": "Can I use multiple privacy tools together?",
-      "answer": "Yes, combining tools often increases protection. For example, Use a privacy-focused browser for daily browsing and activate a VPN for sensitive activities. Just ensure your DNS settings don't conflict between services."
+      "answer": "Yes, combining tools often increases protection. For example, use encrypted DNS all the time and turn on a VPN for sensitive activities. When the VPN is on, let it handle DNS so the two settings don't conflict."
     }
   ],
   "editorial": {

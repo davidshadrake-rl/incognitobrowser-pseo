@@ -10,95 +10,70 @@
     "webcam security",
     "privacy tools"
   ],
-  "intro": "Webcam hacking affects millions of users yearly, with unauthorized access to cameras and microphones becoming increasingly common. Whether you're a remote worker, parent, or streamer, protecting your privacy requires the right combination of physical barriers and software controls.",
+  "intro": "Malware that switches on cameras and microphones without the owner's knowledge is a real threat. Whether you're a remote worker, parent, or streamer, protecting your privacy requires the right combination of physical barriers and software controls.",
   "products": [
     {
-      "name": "CloudCover Webcam Cover",
-      "slug": "cloudcover-webcam-cover",
-      "tagline": "Ultra-thin sliding webcam cover for laptops and desktops",
-      "website": "cloudcover.com",
-      "pricing": "$8.99 (3-pack)",
+      "name": "Sliding webcam cover",
+      "slug": "sliding-webcam-cover",
+      "tagline": "Thin stick-on slider that physically covers a laptop, desktop, tablet or phone camera",
+      "pricing": "A few dollars, often sold in multi-packs by many brands",
+      "platforms": [
+        "Laptops",
+        "Desktop webcams",
+        "Tablets",
+        "Phones"
+      ],
       "pros": [
-        "0.7mm thin design won't interfere with laptop closing",
-        "Strong 3M adhesive works on all devices",
-        "Smooth sliding mechanism for easy operation",
-        "Works with external webcams and built-in cameras"
+        "Blocks the camera physically, so software can't bypass it",
+        "Slides open for calls and closed afterwards",
+        "Works on almost any device with a camera",
+        "No software, batteries or setup"
       ],
       "cons": [
-        "May leave residue when removed",
-        "Limited color options"
-      ],
-      "rating": 8.5
+        "Doesn't block the microphone",
+        "Apple warns that covers thicker than 0.1 mm can damage a MacBook display when the lid closes",
+        "Adhesive may leave residue when removed"
+      ]
     },
     {
       "name": "Micro Snitch",
       "slug": "micro-snitch",
       "tagline": "Real-time camera and microphone activity monitor for Mac",
       "website": "obdev.at",
-      "pricing": "$4.99",
+      "pricing": "One-time purchase of a few dollars; free demo",
+      "platforms": [
+        "macOS"
+      ],
       "pros": [
         "Instant notifications when camera or mic activates",
-        "Shows which app is accessing your devices",
-        "Lightweight system resource usage",
+        "On-screen overlay while the camera or microphone is on",
         "Detailed activity logging"
       ],
       "cons": [
         "Mac-only compatibility",
         "No blocking features, only monitoring"
-      ],
-      "rating": 9
-    },
-    {
-      "name": "Incognito Browser",
-      "slug": "incognito-browser",
-      "tagline": "Privacy-focused browser with advanced permission controls",
-      "website": "https://incognitobrowser.io/",
-      "pricing": "Free",
-      "pros": [
-        "Granular camera and microphone permission management",
-        "Built-in privacy dashboard shows permission usage"
-      ],
-      "cons": [
-        "Limited to web-based camera/mic access only"
-      ],
-      "rating": 8
+      ]
     },
     {
       "name": "Webcam On-Off",
       "slug": "webcam-on-off",
-      "tagline": "Simple Windows utility to disable webcam and microphone",
-      "website": "webcamonoff.com",
+      "tagline": "Free Windows utility that switches the webcam off and can block the microphone",
+      "website": "https://www.sordum.org",
       "pricing": "Free",
+      "platforms": [
+        "Windows"
+      ],
       "pros": [
-        "One-click disable for all camera and mic devices",
-        "System tray integration for quick access",
-        "Completely free with no ads",
-        "Small file size and minimal system impact"
+        "One-click webcam disable, with a Block microphone option on Windows 10",
+        "Portable: runs without installing",
+        "Completely free"
       ],
       "cons": [
         "Windows-only compatibility",
         "Basic interface with limited features",
-        "No activity monitoring capabilities"
-      ],
-      "rating": 7
-    },
-    {
-      "name": "Privacy Pop Webcam Cover",
-      "slug": "privacy-pop-webcam-cover",
-      "tagline": "Premium metal webcam cover with magnetic mechanism",
-      "website": "privacypop.com",
-      "pricing": "$12.95",
-      "pros": [
-        "Durable metal construction",
-        "Magnetic sliding mechanism",
-        "Premium aesthetic design",
-        "Includes cleaning cloth and spare adhesive"
-      ],
-      "cons": [
-        "More expensive than plastic alternatives",
-        "Thicker profile may interfere with some laptop cases"
-      ],
-      "rating": 7.5
+        "No activity monitoring capabilities",
+        "Last updated in 2020 (version 1.4)"
+      ]
     }
   ],
   "features": [
@@ -106,25 +81,17 @@
       "name": "Physical Camera Blocking",
       "description": "Ability to physically block webcam access with a cover or shutter",
       "scores": {
-        "cloudcover-webcam-cover": {
+        "sliding-webcam-cover": {
           "value": "excellent",
-          "note": "Ultra-thin sliding cover provides complete physical blocking"
+          "note": "A sliding cover physically blocks the lens"
         },
         "micro-snitch": {
           "value": "no",
           "note": "Software-only solution with no physical blocking"
         },
-        "incognito-browser": {
-          "value": "no",
-          "note": "Browser-level permissions only"
-        },
         "webcam-on-off": {
           "value": "partial",
           "note": "Disables camera in software but no physical barrier"
-        },
-        "privacy-pop-webcam-cover": {
-          "value": "excellent",
-          "note": "Premium metal cover with magnetic operation"
         }
       }
     },
@@ -132,25 +99,17 @@
       "name": "Real-time Activity Monitoring",
       "description": "Alerts when camera or microphone is being accessed by applications",
       "scores": {
-        "cloudcover-webcam-cover": {
+        "sliding-webcam-cover": {
           "value": "no",
           "note": "Physical cover only, no software monitoring"
         },
         "micro-snitch": {
           "value": "excellent",
-          "note": "Instant notifications with app identification"
-        },
-        "incognito-browser": {
-          "value": "good",
-          "note": "Shows permission requests in browser only"
+          "note": "Menu-bar indicator and on-screen overlay whenever the camera or microphone is on; every change is logged"
         },
         "webcam-on-off": {
           "value": "no",
           "note": "No monitoring capabilities"
-        },
-        "privacy-pop-webcam-cover": {
-          "value": "no",
-          "note": "Physical cover without software features"
         }
       }
     },
@@ -158,25 +117,17 @@
       "name": "Microphone Protection",
       "description": "Controls or blocks unauthorized microphone access",
       "scores": {
-        "cloudcover-webcam-cover": {
+        "sliding-webcam-cover": {
           "value": "no",
           "note": "Camera cover only, no microphone protection"
         },
         "micro-snitch": {
-          "value": "excellent",
-          "note": "Monitors both camera and microphone activity"
-        },
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "Granular microphone permission controls"
+          "value": "partial",
+          "note": "Alerts you when the microphone turns on; can't block it"
         },
         "webcam-on-off": {
-          "value": "good",
-          "note": "Can disable microphone devices system-wide"
-        },
-        "privacy-pop-webcam-cover": {
-          "value": "no",
-          "note": "Physical camera cover only"
+          "value": "partial",
+          "note": "Block microphone option, documented for Windows 10 only"
         }
       }
     },
@@ -184,25 +135,17 @@
       "name": "Cross-Platform Support",
       "description": "Works on multiple operating systems (Windows, Mac, Linux)",
       "scores": {
-        "cloudcover-webcam-cover": {
+        "sliding-webcam-cover": {
           "value": "excellent",
-          "note": "Universal physical cover works on all devices"
+          "note": "Fits almost any device; see the MacBook caveat in the FAQ"
         },
         "micro-snitch": {
           "value": "poor",
           "note": "Mac-only compatibility"
         },
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "Available for all major operating systems"
-        },
         "webcam-on-off": {
           "value": "poor",
           "note": "Windows-only application"
-        },
-        "privacy-pop-webcam-cover": {
-          "value": "excellent",
-          "note": "Physical cover compatible with all devices"
         }
       }
     },
@@ -210,7 +153,7 @@
       "name": "Ease of Use",
       "description": "Simple setup and daily operation for average users",
       "scores": {
-        "cloudcover-webcam-cover": {
+        "sliding-webcam-cover": {
           "value": "excellent",
           "note": "Stick-on cover with simple sliding mechanism"
         },
@@ -218,17 +161,9 @@
           "value": "good",
           "note": "Easy installation but requires understanding notifications"
         },
-        "incognito-browser": {
-          "value": "good",
-          "note": "Browser interface familiar to most users"
-        },
         "webcam-on-off": {
           "value": "excellent",
-          "note": "One-click operation from system tray"
-        },
-        "privacy-pop-webcam-cover": {
-          "value": "good",
-          "note": "Premium feel but slightly more complex magnetic mechanism"
+          "note": "One-click disable and enable"
         }
       }
     },
@@ -236,51 +171,38 @@
       "name": "Cost Effectiveness",
       "description": "Value for money considering features and durability",
       "scores": {
-        "cloudcover-webcam-cover": {
+        "sliding-webcam-cover": {
           "value": "excellent",
-          "note": "Low cost with reliable long-term protection"
+          "note": "A few dollars for reliable physical protection"
         },
         "micro-snitch": {
           "value": "good",
           "note": "Affordable with valuable monitoring features"
         },
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "Free browser with premium privacy features"
-        },
         "webcam-on-off": {
           "value": "excellent",
           "note": "Completely free utility"
-        },
-        "privacy-pop-webcam-cover": {
-          "value": "fair",
-          "note": "Higher cost for premium materials"
         }
       }
     }
   ],
   "verdict": {
-    "summary": "For comprehensive webcam and microphone privacy, combine physical barriers with software monitoring. CloudCover provides excellent physical protection at low cost, while Micro Snitch offers superior activity monitoring. Incognito Browser excels for web-based privacy controls across all platforms.",
+    "summary": "A sliding webcam cover scores highest on these six criteria: it blocks the camera physically, costs little and fits almost any device, but it does nothing for the microphone, and Apple warns against closing a MacBook with a cover thicker than 0.1 mm. Micro Snitch and Webcam On-Off tie behind it. Micro Snitch, for Macs, can't block anything but tells you whenever the camera or microphone turns on and logs it. Webcam On-Off, for Windows, switches the camera off in software and can block the microphone on Windows 10, but it hasn't been updated since 2020.",
     "bestFor": [
       {
-        "useCase": "Budget-conscious users seeking basic protection",
-        "product": "CloudCover Webcam Cover + Webcam On-Off",
-        "reason": "Affordable combination of physical blocking and software control"
+        "useCase": "Blocking the camera on almost any device",
+        "product": "Sliding webcam cover",
+        "reason": "Highest score here: a physical barrier software can't bypass, for a few dollars"
       },
       {
-        "useCase": "Mac users wanting comprehensive monitoring",
-        "product": "Micro Snitch + Privacy Pop Cover",
-        "reason": "Premium monitoring software with durable physical protection"
+        "useCase": "Mac users who want to know when the camera or mic turns on",
+        "product": "Micro Snitch",
+        "reason": "Alerts you and logs every time the camera or microphone switches on; it can't block them"
       },
       {
-        "useCase": "Privacy-focused browsing across all platforms",
-        "product": "Incognito Browser",
-        "reason": "Free solution with advanced permission controls for web activities"
-      },
-      {
-        "useCase": "Remote workers on video calls",
-        "product": "CloudCover Webcam Cover",
-        "reason": "Quick slide access for frequent camera use with reliable blocking"
+        "useCase": "Switching the webcam off on Windows",
+        "product": "Webcam On-Off",
+        "reason": "Free, portable one-click switch that can also block the microphone on Windows 10"
       }
     ]
   },
@@ -288,7 +210,7 @@
     "Always use physical webcam covers as your first line of defense - software can be bypassed, but physical barriers cannot.",
     "Regularly audit app permissions in your operating system settings to revoke camera and microphone access from unused applications.",
     "Check your webcam's LED indicator light, but don't rely on it entirely - some malware can bypass this safety feature.",
-    "Use a privacy-focused browser for video calls and web conferencing to ensure granular control over camera and microphone permissions.",
+    "In your browser's site settings, allow camera and microphone access only for the video-call sites you use, and set every other site to ask or block.",
     "Place tape over your microphone hole as a backup - even a small piece can significantly reduce audio quality for potential eavesdroppers."
   ],
   "faqs": [
@@ -298,11 +220,11 @@
     },
     {
       "question": "Do webcam covers damage laptop screens when closing?",
-      "answer": "Quality ultra-thin covers like CloudCover (0.7mm) are specifically designed to avoid screen damage. Avoid thick covers or coins that can crack screens when laptops are closed."
+      "answer": "They can. Apple says a cover thicker than 0.1 mm (about a sheet of printer paper) can damage a MacBook display when you close the lid, and many covers sold as ultra-thin are around 0.6-0.7 mm. On a laptop with tight clearance, remove the cover before closing, or rely on the camera indicator light and your system's camera permissions instead."
     },
     {
       "question": "How can I tell if my webcam has been hacked?",
-      "answer": "Signs include unexpected LED activation, slow computer performance, unknown network activity, or files appearing in your camera folder. Software like Micro Snitch can alert you to unauthorized access attempts."
+      "answer": "Signs include unexpected LED activation, slow computer performance, unknown network activity, or files appearing in your camera folder. On a Mac, Micro Snitch alerts you whenever the camera or microphone turns on and logs it."
     },
     {
       "question": "Should I disable my webcam entirely in Device Manager?",

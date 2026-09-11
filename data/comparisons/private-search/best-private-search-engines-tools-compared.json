@@ -1,7 +1,7 @@
 {
   "niche": "private-search",
   "slug": "best-private-search-engines-compared",
-  "title": "Best Private Search Engines Compared 2024",
+  "title": "Best Private Search Engines Compared",
   "metaDescription": "Compare top private search engines like DuckDuckGo, Startpage, and Brave Search. Find the best anonymous search option for your privacy needs.",
   "keywords": [
     "private search engine",
@@ -10,25 +10,31 @@
     "Startpage",
     "search privacy"
   ],
-  "intro": "Tired of Google tracking your every search? Private search engines offer the same results without building profiles on you. We've tested the top options to help you break free from search tracking while maintaining quality results.",
+  "intro": "Tired of Google tracking your every search? Private search engines give you good results without building profiles on you. This page compares four of them on privacy, result quality, ease of use and mobile support, and each rating is worked out from the table.",
   "products": [
     {
       "name": "DuckDuckGo",
       "slug": "duckduckgo",
-      "tagline": "The privacy search engine that doesn't track you",
+      "tagline": "Private search engine that doesn't track you",
       "website": "https://duckduckgo.com",
       "pricing": "Free",
+      "platforms": [
+        "Web",
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS"
+      ],
       "pros": [
         "Zero tracking or profiling",
         "Clean, familiar interface",
         "Instant answers and calculator",
-        "Built-in VPN and email protection"
+        "Free Email Protection service"
       ],
       "cons": [
         "Search results can be less personalized",
         "Some advanced search features missing"
-      ],
-      "rating": 9
+      ]
     },
     {
       "name": "Startpage",
@@ -36,6 +42,11 @@
       "tagline": "Google results without the tracking",
       "website": "https://startpage.com",
       "pricing": "Free",
+      "platforms": [
+        "Web",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Uses Google's results anonymously",
         "Anonymous View feature for websites",
@@ -43,35 +54,37 @@
         "European privacy protection"
       ],
       "cons": [
-        "Slower than direct Google searches",
         "Limited customization options"
-      ],
-      "rating": 8.5
+      ]
     },
     {
       "name": "Brave Search",
       "slug": "brave-search",
-      "tagline": "Independent search with privacy first",
+      "tagline": "Search engine with its own independent index",
       "website": "https://search.brave.com",
       "pricing": "Free",
+      "platforms": [
+        "Web"
+      ],
       "pros": [
         "Fully independent search index",
         "No tracking or profiling",
-        "Fast and accurate results",
         "Integrated with Brave browser"
       ],
       "cons": [
         "Newer with smaller result database",
         "Some niche queries less comprehensive"
-      ],
-      "rating": 8
+      ]
     },
     {
-      "name": "Searx",
-      "slug": "searx",
-      "tagline": "Open source metasearch engine",
-      "website": "https://searx.org",
+      "name": "SearXNG",
+      "slug": "searxng",
+      "tagline": "Open-source metasearch engine (the maintained fork of Searx)",
+      "website": "https://docs.searxng.org",
       "pricing": "Free",
+      "platforms": [
+        "Web (self-hosted or public instances)"
+      ],
       "pros": [
         "Completely open source",
         "Aggregates from multiple engines",
@@ -81,8 +94,7 @@
       "cons": [
         "Requires technical setup for self-hosting",
         "Public instances can be unreliable"
-      ],
-      "rating": 7
+      ]
     }
   ],
   "features": [
@@ -90,19 +102,19 @@
       "name": "Privacy Protection",
       "description": "How well the search engine protects your privacy and prevents tracking",
       "scores": {
-        "DuckDuckGo": {
+        "duckduckgo": {
           "value": "excellent",
           "note": "No tracking, no data collection, no user profiling"
         },
-        "Startpage": {
+        "startpage": {
           "value": "excellent",
           "note": "Zero data retention, anonymous proxy browsing"
         },
-        "Brave Search": {
+        "brave-search": {
           "value": "excellent",
           "note": "No tracking, independent infrastructure"
         },
-        "Searx": {
+        "searxng": {
           "value": "excellent",
           "note": "Open source, no data collection"
         }
@@ -112,43 +124,21 @@
       "name": "Search Quality",
       "description": "Relevance and comprehensiveness of search results",
       "scores": {
-        "DuckDuckGo": {
+        "duckduckgo": {
           "value": "good",
           "note": "Solid results from Bing and other sources"
         },
-        "Startpage": {
+        "startpage": {
           "value": "excellent",
           "note": "Google results without personalization"
         },
-        "Brave Search": {
+        "brave-search": {
           "value": "good",
           "note": "Independent index improving rapidly"
         },
-        "Searx": {
+        "searxng": {
           "value": "fair",
           "note": "Quality varies by configured sources"
-        }
-      }
-    },
-    {
-      "name": "Speed",
-      "description": "How quickly search results load",
-      "scores": {
-        "DuckDuckGo": {
-          "value": "excellent",
-          "note": "Very fast response times"
-        },
-        "Startpage": {
-          "value": "good",
-          "note": "Slightly slower due to proxy system"
-        },
-        "Brave Search": {
-          "value": "excellent",
-          "note": "Fast independent infrastructure"
-        },
-        "Searx": {
-          "value": "fair",
-          "note": "Speed depends on instance and sources"
         }
       }
     },
@@ -156,19 +146,19 @@
       "name": "User Experience",
       "description": "Interface design, ease of use, and additional features",
       "scores": {
-        "DuckDuckGo": {
+        "duckduckgo": {
           "value": "excellent",
           "note": "Clean interface, instant answers, themes"
         },
-        "Startpage": {
+        "startpage": {
           "value": "good",
           "note": "Simple design, anonymous view feature"
         },
-        "Brave Search": {
+        "brave-search": {
           "value": "good",
           "note": "Clean modern interface"
         },
-        "Searx": {
+        "searxng": {
           "value": "fair",
           "note": "Basic interface, highly customizable"
         }
@@ -178,19 +168,19 @@
       "name": "Mobile Support",
       "description": "Quality of mobile web experience and dedicated apps",
       "scores": {
-        "DuckDuckGo": {
+        "duckduckgo": {
           "value": "excellent",
-          "note": "Great mobile site and privacy browser app"
+          "note": "Mobile website and its own browser app for Android and iOS"
         },
-        "Startpage": {
+        "startpage": {
           "value": "good",
           "note": "Responsive mobile site"
         },
-        "Brave Search": {
+        "brave-search": {
           "value": "good",
           "note": "Mobile optimized, works in Brave browser"
         },
-        "Searx": {
+        "searxng": {
           "value": "fair",
           "note": "Basic mobile compatibility"
         }
@@ -198,32 +188,32 @@
     }
   ],
   "verdict": {
-    "summary": "DuckDuckGo offers the best balance of privacy, usability, and search quality for most users. Startpage is ideal if you want Google-quality results without tracking, while Brave Search provides truly independent results. For maximum control, tech-savvy users should consider self-hosting Searx.",
+    "summary": "On these four criteria DuckDuckGo scores highest, with a clean interface, instant answers and its own mobile browser app. Startpage is second: it shows Google-sourced results without passing your identity to Google. Brave Search comes third and runs its own independent index. SearXNG scores lowest here because result quality depends on the instance you use and the sources it draws on, but it's the only one you can host yourself.",
     "bestFor": [
+      {
+        "useCase": "Daily private searching",
+        "product": "DuckDuckGo",
+        "reason": "Highest score here: easy to use, with its own mobile browser app"
+      },
       {
         "useCase": "Google refugees wanting familiar results",
         "product": "Startpage",
         "reason": "Provides Google results through an anonymous proxy"
       },
       {
-        "useCase": "Daily private searching",
-        "product": "DuckDuckGo",
-        "reason": "Best combination of privacy, speed, and user experience"
-      },
-      {
         "useCase": "Supporting search independence",
         "product": "Brave Search",
-        "reason": "Building their own search index away from Big Tech"
+        "reason": "Runs its own independent search index"
       },
       {
         "useCase": "Maximum technical control",
-        "product": "Searx",
-        "reason": "Open source and self-hostable for complete privacy"
+        "product": "SearXNG",
+        "reason": "Open source and self-hostable, so you control the instance"
       }
     ]
   },
   "pro_tips": [
-    "Use a privacy-focused browser with your private search engine for complete browsing privacy - it blocks trackers and doesn't store history locally.",
+    "Pair your private search engine with a browser that blocks trackers and clears its history: the search engine protects your searches, not the sites you visit afterwards.",
     "Set your private search engine as the default in all browsers to avoid accidentally using Google out of habit.",
     "Try different private search engines for different types of queries - use Startpage for news, DuckDuckGo for general searches.",
     "Use search operators like site: and intitle: to improve results quality on private search engines.",
@@ -232,7 +222,7 @@
   "faqs": [
     {
       "question": "Are private search engines as good as Google?",
-      "answer": "Private search engines provide excellent results for most searches. While they may lack some personalization features, many users prefer the unbiased, unfiltered results. Startpage actually uses Google's results anonymously."
+      "answer": "For most everyday searches they work well, though they lack Google's personalization. Startpage shows Google's own results without passing your identity to Google."
     },
     {
       "question": "Do private search engines make money without ads?",

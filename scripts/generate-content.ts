@@ -167,7 +167,8 @@ IMPORTANT RULES:
 8. Make the slug URL-friendly (lowercase, hyphens, no special chars)
 9. Set niche to "${niche.id}"
 10. Set editorial.status to "draft" — content cannot be indexed until a human reviewer promotes it.
-11. Leave author as null — a real person must claim authorship before publish.
+11. Leave author as null — a real person must claim authorship before publish.${contentType === 'comparisons' ? `
+12. Do NOT give any product a "rating" or score of its own. Every rating is worked out from the feature table by lib/comparison-score.ts; key each cell by product slug and use only the schema's cell values.` : ''}
 
 JSON Schema to follow:
 ${JSON.stringify(schema, null, 2)}`;
@@ -186,7 +187,16 @@ ${JSON.stringify(schema, null, 2)}`;
     jsonStr = jsonStr.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
   }
 
-  return JSON.parse(jsonStr);
+  const data = JSON.parse(jsonStr);
+  // Ratings come only from the feature table (lib/comparison-score.ts). A typed
+  // products[].rating is never read, and tests/comparison-score.test.ts fails
+  // on one, so drop any the model adds anyway.
+  if (contentType === 'comparisons' && Array.isArray(data?.products)) {
+    for (const product of data.products) {
+      if (product && typeof product === 'object') delete product.rating;
+    }
+  }
+  return data;
 }
 
 async function generateGlossaryTerm(term: string, schema: object): Promise<any> {

@@ -13,37 +13,29 @@
   "description": "Assess your current cookie and tracking exposure risk based on your browsing habits, browser settings, and privacy tools. Get actionable recommendations to improve your online privacy and reduce unwanted tracking.",
   "inputs": [
     {
-      "id": "browserType",
-      "label": "Primary Browser",
+      "id": "trackerBlocking",
+      "label": "Does your browser block trackers?",
       "type": "select",
-      "defaultValue": "chrome",
+      "defaultValue": "none",
       "options": [
         {
-          "value": "chrome",
-          "label": "Google Chrome"
+          "value": "strict",
+          "label": "Yes, strict blocking"
         },
         {
-          "value": "firefox",
-          "label": "Mozilla Firefox"
+          "value": "standard",
+          "label": "Some, on its standard setting"
         },
         {
-          "value": "safari",
-          "label": "Safari"
+          "value": "none",
+          "label": "No"
         },
         {
-          "value": "edge",
-          "label": "Microsoft Edge"
-        },
-        {
-          "value": "incognito",
-          "label": "a privacy-focused browser"
-        },
-        {
-          "value": "other",
-          "label": "Other"
+          "value": "unsure",
+          "label": "Not sure"
         }
       ],
-      "helpText": "Which browser do you use most often?"
+      "helpText": "Built-in tracking protection, not counting extensions"
     },
     {
       "id": "cookieSettings",
@@ -177,11 +169,11 @@
       "description": "Percentage of your browsing likely being tracked"
     }
   ],
-  "formula": "const browserScores = {chrome: 7, firefox: 4, safari: 5, edge: 6, incognito: 2, other: 5}; const cookieScores = {'allow-all': 10, default: 7, 'block-third-party': 4, 'block-all': 2}; const clearScores = {daily: 1, weekly: 3, monthly: 5, rarely: 8}; const toolScores = {none: 8, adblocker: 5, 'privacy-extensions': 3, comprehensive: 1}; const socialScores = {none: 0, light: 2, moderate: 4, heavy: 6}; const browserRisk = browserScores[inputs.browserType] ?? 5; const cookieRisk = cookieScores[inputs.cookieSettings] ?? 7; const clearRisk = clearScores[inputs.clearFrequency] ?? 8; const toolRisk = toolScores[inputs.privacyTools] ?? 8; const browsingRisk = inputs.browsingHabits * 0.8; const socialRisk = socialScores[inputs.socialMediaUse] ?? 4; const riskScore = Math.min(100, Math.round((browserRisk + cookieRisk + clearRisk + toolRisk + browsingRisk + socialRisk) / 6 * 10)); const riskLevel = riskScore >= 71 ? 'High Risk': riskScore >= 51 ? 'Moderate Risk': riskScore >= 31 ? 'Low-Moderate Risk': 'Low Risk'; const trackingExposure = Math.min(95, riskScore * 0.9 + (inputs.browsingHabits * 2)); return {riskScore, riskLevel, trackingExposure};",
+  "formula": "const blockingScores = {strict: 2, standard: 4, none: 7, unsure: 6}; const cookieScores = {'allow-all': 10, default: 7, 'block-third-party': 4, 'block-all': 2}; const clearScores = {daily: 1, weekly: 3, monthly: 5, rarely: 8}; const toolScores = {none: 8, adblocker: 5, 'privacy-extensions': 3, comprehensive: 1}; const socialScores = {none: 0, light: 2, moderate: 4, heavy: 6}; const blockingRisk = blockingScores[inputs.trackerBlocking] ?? 6; const cookieRisk = cookieScores[inputs.cookieSettings] ?? 7; const clearRisk = clearScores[inputs.clearFrequency] ?? 8; const toolRisk = toolScores[inputs.privacyTools] ?? 8; const browsingRisk = inputs.browsingHabits * 0.8; const socialRisk = socialScores[inputs.socialMediaUse] ?? 4; const riskScore = Math.min(100, Math.round((blockingRisk + cookieRisk + clearRisk + toolRisk + browsingRisk + socialRisk) / 6 * 10)); const riskLevel = riskScore >= 71 ? 'High Risk': riskScore >= 51 ? 'Moderate Risk': riskScore >= 31 ? 'Low-Moderate Risk': 'Low Risk'; const trackingExposure = Math.min(95, riskScore * 0.9 + (inputs.browsingHabits * 2)); return {riskScore, riskLevel, trackingExposure};",
   "educational": {
-    "methodology": "This calculator evaluates your cookie and tracking risk based on browser choice, privacy settings, clearing habits, and browsing patterns. Browsers like a privacy-focused browser and Firefox offer better default privacy, while regular data clearing and privacy tools significantly reduce tracking exposure.",
+    "methodology": "This calculator evaluates your cookie and tracking risk based on your browser's tracker blocking, cookie settings, clearing habits, and browsing patterns. Built-in tracker blocking, regular data clearing and privacy tools all significantly reduce tracking exposure.",
     "tips": [
-      "Switch to privacy-focused browsers like a privacy-focused browser for better default protection",
+      "Turn on your browser's strict tracking protection, or use a browser that blocks trackers by default",
       "Clear cookies and browsing data at least weekly to reset tracking profiles",
       "Block third-party cookies in your browser settings - they're mainly used for tracking",
       "Install privacy extensions or ad blockers to prevent tracking scripts",

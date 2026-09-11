@@ -13,37 +13,29 @@
   "description": "Evaluate your messaging privacy risks and discover vulnerabilities in your communication habits. Get a personalized risk score and actionable recommendations to improve your encrypted messaging security across Signal, WhatsApp, Telegram, and other platforms.",
   "inputs": [
     {
-      "id": "primaryApp",
-      "label": "Primary messaging app",
+      "id": "chatEncryption",
+      "label": "Does your main messaging app encrypt chats end to end?",
       "type": "select",
-      "defaultValue": "whatsapp",
+      "defaultValue": "default",
       "options": [
         {
-          "value": "signal",
-          "label": "Signal"
+          "value": "default",
+          "label": "Yes, every chat, by default"
         },
         {
-          "value": "whatsapp",
-          "label": "WhatsApp"
+          "value": "opt-in",
+          "label": "Only chats I set up as secret"
         },
         {
-          "value": "telegram",
-          "label": "Telegram"
+          "value": "none",
+          "label": "No (for example, SMS text messages)"
         },
         {
-          "value": "imessage",
-          "label": "iMessage"
-        },
-        {
-          "value": "sms",
-          "label": "SMS/Text"
-        },
-        {
-          "value": "other",
-          "label": "Other (Facebook Messenger, etc.)"
+          "value": "unsure",
+          "label": "Not sure"
         }
       ],
-      "helpText": "Which app do you use most for private conversations?"
+      "helpText": "End-to-end encryption means only the people in the chat can read it, not the company. Some apps only do it for chats you set up as secret."
     },
     {
       "id": "backupEnabled",
@@ -157,14 +149,14 @@
       "description": "The biggest threat to your messaging privacy"
     }
   ],
-  "formula": "let appRisk = 0; switch(primaryApp) { case 'signal': appRisk = 5; break; case 'whatsapp': appRisk = 25; break; case 'imessage': appRisk = 30; break; case 'telegram': appRisk = 35; break; case 'sms': appRisk = 80; break; default: appRisk = 70; } let backupRisk = backupEnabled === 'yes' ? 30: (backupEnabled === 'unsure' ? 20: 0); let groupRisk = Math.min(groupChats * 1.5, 30); let contentRisk = {'never': 0, 'rarely': 10, 'sometimes': 25, 'often': 40}[sensitiveContent] ?? 25; let disappearingRisk = {'always': 0, 'sometimes': 10, 'no': 20, 'unavailable': 15}[disappearingMessages] ?? 20; let contactRisk = contactsOnInsecure * 0.3; let totalRisk = Math.round(Math.min(appRisk + backupRisk + groupRisk + contentRisk + disappearingRisk + contactRisk, 100)); let grade = totalRisk <= 20 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': totalRisk <= 80 ? 'D': 'F'; let concerns = []; if(appRisk >= 30) concerns.push('Insecure messaging app'); if(backupRisk >= 20) concerns.push('Cloud backup exposure'); if(contentRisk >= 25) concerns.push('Sensitive content sharing'); if(contactRisk >= 25) concerns.push('Insecure contacts'); let primaryConcern = concerns[0] ?? 'Metadata collection'; return { riskScore: totalRisk, riskGrade: grade, primaryConcern: primaryConcern };",
+  "formula": "let appRisk = {'default': 10, 'opt-in': 35, 'none': 80, 'unsure': 70}[chatEncryption] ?? 70; let backupRisk = backupEnabled === 'yes' ? 30: (backupEnabled === 'unsure' ? 20: 0); let groupRisk = Math.min(groupChats * 1.5, 30); let contentRisk = {'never': 0, 'rarely': 10, 'sometimes': 25, 'often': 40}[sensitiveContent] ?? 25; let disappearingRisk = {'always': 0, 'sometimes': 10, 'no': 20, 'unavailable': 15}[disappearingMessages] ?? 20; let contactRisk = contactsOnInsecure * 0.3; let totalRisk = Math.round(Math.min(appRisk + backupRisk + groupRisk + contentRisk + disappearingRisk + contactRisk, 100)); let grade = totalRisk <= 20 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': totalRisk <= 80 ? 'D': 'F'; let concerns = []; if(appRisk >= 30) concerns.push('Insecure messaging app'); if(backupRisk >= 20) concerns.push('Cloud backup exposure'); if(contentRisk >= 25) concerns.push('Sensitive content sharing'); if(contactRisk >= 25) concerns.push('Insecure contacts'); let primaryConcern = concerns[0] ?? 'Metadata collection'; return { riskScore: totalRisk, riskGrade: grade, primaryConcern: primaryConcern };",
   "educational": {
-    "methodology": "This calculator evaluates messaging privacy risks based on app security, backup practices, group chat exposure, content sensitivity, disappearing message usage, and contact security habits. Scores range from 0 (most secure) to 100 (highest risk).",
+    "methodology": "This calculator evaluates messaging privacy risks based on whether your app encrypts chats end to end by default, backup practices, group chat exposure, content sensitivity, disappearing message usage, and contact security habits. Scores range from 0 (most secure) to 100 (highest risk).",
     "tips": [
-      "Switch to Signal for maximum privacy - it's the gold standard for encrypted messaging",
-      "Disable cloud backups for messaging apps to prevent government and hacker access",
+      "Use an app that encrypts every chat end to end by default and keeps little metadata about who you talk to, such as Signal",
+      "Turn off cloud backups of your chats, or turn on end-to-end encrypted backups if your app offers them",
       "Enable disappearing messages for sensitive conversations to limit data retention",
-      "Use a privacy-focused browser when accessing web versions of messaging apps for added privacy",
+      "Check which computers and browsers are linked to your account, and unlink any you don't recognize",
       "Regularly audit your group chats and leave unnecessary ones to reduce exposure"
     ],
     "interpretation": [

@@ -49,27 +49,15 @@
       "options": [
         {
           "value": "isp-default",
-          "label": "ISP Default DNS (Automatic)"
+          "label": "My ISP's DNS (the automatic default)"
         },
         {
-          "value": "google",
-          "label": "Google DNS (8.8.8.8)"
-        },
-        {
-          "value": "cloudflare",
-          "label": "Cloudflare DNS (1.1.1.1)"
-        },
-        {
-          "value": "quad9",
-          "label": "Quad9 DNS (9.9.9.9)"
-        },
-        {
-          "value": "opendns",
-          "label": "OpenDNS/Cisco Umbrella"
+          "value": "public",
+          "label": "A public DNS resolver I chose"
         },
         {
           "value": "custom",
-          "label": "Custom/Other DNS Provider"
+          "label": "My own resolver or another custom setup"
         }
       ],
       "helpText": "Your DNS provider can see all websites you visit"
@@ -144,7 +132,7 @@
         },
         {
           "value": "strict",
-          "label": "Strict privacy browser (Tor, a privacy-focused browser)"
+          "label": "Browser that routes traffic through the Tor network"
         }
       ],
       "helpText": "Browser privacy settings affect ISP visibility"
@@ -235,10 +223,10 @@
     "methodology": "This calculator evaluates your ISP tracking risk based on DNS configuration, VPN usage, browser privacy settings, and data usage patterns. It considers how ISPs monitor unencrypted DNS queries, analyze traffic patterns, and collect browsing metadata even when using HTTPS.",
     "tips": [
       "Switch to encrypted DNS (DNS over HTTPS) in your browser settings to hide DNS queries from your ISP",
-      "Use a privacy-focused browser or a reputable VPN service to encrypt all traffic and hide your browsing from ISP monitoring",
+      "Use a reputable VPN or Tor to hide which sites you visit from your ISP; private browsing modes and tracker blockers don't",
       "Change your DNS provider from ISP default to privacy-focused options like Cloudflare (1.1.1.1) or Quad9",
       "Check your ISP's privacy policy and opt-out of data sharing programs if available",
-      "Consider using Tor browser or other privacy-focused browsers for sensitive browsing activities"
+      "For sensitive browsing, Tor Browser hides the sites you visit from your ISP, which sees only that you're using Tor"
     ],
     "interpretation": [
       {
@@ -277,11 +265,6 @@
       "title": "Best VPN Services for ISP Privacy",
       "url": "/reviews/best-vpns-isp-blocking",
       "type": "review"
-    },
-    {
-      "title": "Use a privacy-focused browser ",
-      "url": "/tools/incognito-browser",
-      "type": "tool"
     }
   ],
   "editorial": {

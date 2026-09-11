@@ -1,45 +1,66 @@
 {
   "niche": "browser-privacy",
   "slug": "best-privacy-browsers-compared",
-  "title": "Best Privacy Browsers Compared (2025)",
-  "metaDescription": "Compare the top privacy browsers: a privacy-focused browser, Brave, and Firefox. Features, pros, cons, and ratings.",
+  "title": "Best Privacy Browsers Compared",
+  "metaDescription": "Brave, Firefox and Incognito Browser (which we make) compared on ad blocking, tracker and fingerprint protection, and open source code, on one rubric.",
   "intro": "Choosing the right privacy browser is one of the most impactful steps for online privacy.",
   "products": [
     {
       "name": "Incognito Browser",
       "slug": "incognito-browser",
-      "tagline": "Purpose-built for maximum privacy",
-      "pricing": "Free",
+      "tagline": "Android browser that stays in private mode and wipes history, cookies and sessions when you exit",
+      "website": "https://incognitobrowser.io/",
+      "pricing": "Free; optional Incognito Pro subscription",
+      "platforms": [
+        "Android"
+      ],
       "pros": [
-        "Built-in ad and tracker blocking",
-        "Lightweight and fast"
+        "Runs in private mode all the time; history, cookies and sessions are wiped when you exit",
+        "Built-in ad blocker, with a High Security Blocking option",
+        "Agent Cloaking changes the browser and device a site sees, and can load desktop sites",
+        "Settings to turn images, JavaScript and cookies on or off"
       ],
       "cons": [
-        "Smaller extension ecosystem"
-      ],
-      "rating": 9
+        "Android only: no iOS, desktop or web version",
+        "Not open source",
+        "Does not claim tracker or fingerprint protection",
+        "Google Play's Data safety section says it may collect crash logs and diagnostics"
+      ]
     },
     {
       "name": "Brave",
       "slug": "brave",
       "tagline": "Chromium-based privacy browser",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Built-in ad blocking",
         "Chromium compatibility",
-        "Large extension support"
+        "Installs Chrome Web Store extensions on desktop"
       ],
       "cons": [
         "Crypto features may be unwanted",
         "Some telemetry concerns"
-      ],
-      "rating": 8
+      ]
     },
     {
       "name": "Firefox",
       "slug": "firefox",
-      "tagline": "Open-source privacy champion",
+      "tagline": "Open-source browser with Enhanced Tracking Protection",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Huge extension library",
         "Open source",
@@ -47,9 +68,8 @@
       ],
       "cons": [
         "Requires manual configuration",
-        "Heavier resource usage"
-      ],
-      "rating": 7
+        "Strict tracking protection can break some sites"
+      ]
     }
   ],
   "features": [
@@ -58,13 +78,15 @@
       "description": "Native ad blocking without extensions",
       "scores": {
         "incognito-browser": {
-          "value": "excellent"
+          "value": "good",
+          "note": "Built-in ad blocker with a High Security Blocking option"
         },
         "brave": {
           "value": "excellent"
         },
         "firefox": {
-          "value": "partial"
+          "value": "partial",
+          "note": "Tracking protection blocks some ad trackers; full ad blocking needs an extension"
         }
       }
     },
@@ -73,7 +95,8 @@
       "description": "Blocks third-party trackers automatically",
       "scores": {
         "incognito-browser": {
-          "value": "excellent"
+          "value": "no",
+          "note": "Automatic tracker blocking is not in the app's verified feature list; cookies are wiped when you exit"
         },
         "brave": {
           "value": "good"
@@ -88,13 +111,15 @@
       "description": "Prevents browser fingerprinting",
       "scores": {
         "incognito-browser": {
-          "value": "excellent"
+          "value": "no",
+          "note": "Not claimed. Agent Cloaking changes the browser and device a site sees, which is not fingerprint protection"
         },
         "brave": {
           "value": "excellent"
         },
         "firefox": {
-          "value": "fair"
+          "value": "fair",
+          "note": "Blocks known fingerprinting scripts by default; Mozilla's stronger protections are on only in private windows and Strict mode"
         }
       }
     },
@@ -103,7 +128,8 @@
       "description": "Source code publicly available",
       "scores": {
         "incognito-browser": {
-          "value": "partial"
+          "value": "no",
+          "note": "Not open source"
         },
         "brave": {
           "value": "yes"
@@ -115,33 +141,33 @@
     }
   ],
   "verdict": {
-    "summary": "For maximum privacy with minimal configuration, Incognito Browser leads. Brave is excellent for Chrome compatibility, while Firefox offers the most customization.",
+    "summary": "On these four criteria Brave scores highest: it blocks ads, trackers and fingerprinting by default and is open source. Firefox is second: it is open source and blocks known trackers by default, but full ad blocking needs an extension. Incognito Browser, which we make, scores lowest here: it has a built-in ad blocker and wipes history, cookies and sessions when you exit, but it is not open source, does not claim tracker or fingerprint protection, and runs only on Android.",
     "bestFor": [
       {
-        "useCase": "Maximum out-of-box privacy",
-        "product": "Incognito Browser",
-        "reason": "No configuration needed for strong privacy"
+        "useCase": "Strongest protection by default",
+        "product": "Brave",
+        "reason": "Highest score here: ad, tracker and fingerprint blocking are on by default, and its code is open source"
       },
       {
         "useCase": "Chrome extension compatibility",
         "product": "Brave",
-        "reason": "Supports all Chrome extensions while adding privacy"
+        "reason": "The desktop version installs extensions from the Chrome Web Store; Brave on Android does not support extensions"
       },
       {
         "useCase": "Power users",
         "product": "Firefox",
-        "reason": "Unmatched extension ecosystem and about:config options"
+        "reason": "Open source, with add-ons on desktop and Android and advanced settings in about:config on desktop"
       }
     ]
   },
   "faqs": [
     {
       "question": "Can I use Chrome extensions in a privacy browser?",
-      "answer": "Brave supports Chrome extensions natively. Firefox has its own extensive extension store."
+      "answer": "On desktop, Brave installs extensions from the Chrome Web Store. Firefox has its own add-on store on desktop and Android. Brave on Android does not support extensions, and extensions are not among Incognito Browser's listed features."
     },
     {
       "question": "Will switching browsers affect my saved passwords?",
-      "answer": "Most privacy browsers can import bookmarks, history, and passwords from Chrome."
+      "answer": "On desktop, Brave and Firefox can import bookmarks and saved passwords from Chrome. Incognito Browser keeps no browsing history and does not list a password manager among its features, so if you switch to it, keep your passwords in a separate password manager."
     }
   ],
   "editorial": {

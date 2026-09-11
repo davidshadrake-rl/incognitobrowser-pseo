@@ -13,41 +13,29 @@
   "description": "Evaluate your cryptocurrency privacy risks with our comprehensive calculator. Assess threats from blockchain analysis, exchange tracking, wallet types, and transaction patterns to understand your anonymity level and get personalized recommendations.",
   "inputs": [
     {
-      "id": "primaryCrypto",
-      "label": "Primary Cryptocurrency Used",
+      "id": "ledgerPrivacy",
+      "label": "How Private Is Your Coin's Ledger?",
       "type": "select",
-      "defaultValue": "bitcoin",
+      "defaultValue": "public",
       "options": [
         {
-          "value": "bitcoin",
-          "label": "Bitcoin (BTC)"
+          "value": "public",
+          "label": "Public: anyone can see addresses and amounts"
         },
         {
-          "value": "ethereum",
-          "label": "Ethereum (ETH)"
+          "value": "optional-rare",
+          "label": "Private payments are optional and I rarely use them"
         },
         {
-          "value": "monero",
-          "label": "Monero (XMR)"
+          "value": "optional-most",
+          "label": "Private payments are optional and I use them for most payments"
         },
         {
-          "value": "zcash",
-          "label": "Zcash (ZEC)"
-        },
-        {
-          "value": "litecoin",
-          "label": "Litecoin (LTC)"
-        },
-        {
-          "value": "other-transparent",
-          "label": "Other transparent blockchain"
-        },
-        {
-          "value": "other-private",
-          "label": "Other privacy coin"
+          "value": "private",
+          "label": "Private by default: addresses and amounts are hidden"
         }
       ],
-      "helpText": "Different cryptocurrencies offer varying levels of privacy"
+      "helpText": "On most blockchains every address, amount and payment stays public for good. A few coins hide them by default; some offer private payments as an option."
     },
     {
       "id": "walletType",
@@ -69,7 +57,7 @@
         },
         {
           "value": "privacy-focused",
-          "label": "Privacy-focused wallet (Samourai, Wasabi)"
+          "label": "Privacy-focused wallet (coin control, CoinJoin)"
         },
         {
           "value": "multisig",
@@ -195,13 +183,13 @@
       "description": "Likelihood of successful transaction tracking"
     }
   ],
-  "formula": "const cryptoRisk = {bitcoin: 60, ethereum: 70, monero: 5, zcash: 15, litecoin: 65, 'other-transparent': 65, 'other-private': 20}[primaryCrypto]; const walletRisk = {'exchange-custodial': 40, 'software-hot': 25, hardware: 15, 'privacy-focused': 5, multisig: 10}[walletType]; const kycRisk = {never: 0, minimal: 10, regular: 30, exclusive: 50}[exchangeKyc]; const freqRisk = Math.min(transactionFrequency * 0.5, 20); const privacyBonus = {none: 0, basic: -5, intermediate: -15, advanced: -25, expert: -35}[privacyTechniques]; const addressRisk = {always: 25, sometimes: 15, rarely: 5, never: 0}[addressReuse]; const publicRisk = publicActivity ? 15: 0; const baseScore = cryptoRisk + walletRisk + kycRisk + freqRisk + privacyBonus + addressRisk + publicRisk; const privacyScore = Math.max(0, Math.min(100, baseScore)); const trackingVulnerability = privacyScore; const riskLevel = privacyScore <= 20 ? 'A': privacyScore <= 40 ? 'B': privacyScore <= 60 ? 'C': privacyScore <= 80 ? 'D': 'F'; return {privacyScore, riskLevel, trackingVulnerability};",
+  "formula": "const cryptoRisk = {'public': 65, 'optional-rare': 50, 'optional-most': 15, 'private': 5}[ledgerPrivacy] ?? 65; const walletRisk = {'exchange-custodial': 40, 'software-hot': 25, hardware: 15, 'privacy-focused': 5, multisig: 10}[walletType]; const kycRisk = {never: 0, minimal: 10, regular: 30, exclusive: 50}[exchangeKyc]; const freqRisk = Math.min(transactionFrequency * 0.5, 20); const privacyBonus = {none: 0, basic: -5, intermediate: -15, advanced: -25, expert: -35}[privacyTechniques]; const addressRisk = {always: 25, sometimes: 15, rarely: 5, never: 0}[addressReuse]; const publicRisk = publicActivity ? 15: 0; const baseScore = cryptoRisk + walletRisk + kycRisk + freqRisk + privacyBonus + addressRisk + publicRisk; const privacyScore = Math.max(0, Math.min(100, baseScore)); const trackingVulnerability = privacyScore; const riskLevel = privacyScore <= 20 ? 'A': privacyScore <= 40 ? 'B': privacyScore <= 60 ? 'C': privacyScore <= 80 ? 'D': 'F'; return {privacyScore, riskLevel, trackingVulnerability};",
   "educational": {
-    "methodology": "This calculator evaluates cryptocurrency privacy risks by analyzing blockchain transparency, wallet security, exchange usage patterns, and privacy techniques. The scoring system weighs factors like cryptocurrency type (privacy coins score lower), wallet types (hardware and privacy wallets reduce risk), KYC exchange usage (increases traceability), transaction frequency (more transactions create larger patterns), privacy techniques used (mixing and Tor reduce scores), and address reuse patterns (reuse increases linkability).",
+    "methodology": "This calculator evaluates cryptocurrency privacy risks by analyzing blockchain transparency, wallet security, exchange usage patterns, and privacy techniques. The scoring system weighs factors like how private your coin's ledger is (coins that hide payments by default score lower), wallet types (hardware and privacy wallets reduce risk), KYC exchange usage (increases traceability), transaction frequency (more transactions create larger patterns), privacy techniques used (mixing and Tor reduce scores), and address reuse patterns (reuse increases linkability).",
     "tips": [
-      "Use privacy coins like Monero or Zcash for enhanced transaction anonymity",
+      "Coins that hide addresses and amounts by default, such as Monero, leave far less on the public ledger than coins where privacy is optional",
       "Avoid reusing wallet addresses - generate new ones for each transaction",
-      "Consider using privacy-focused wallets like Samourai or Wasabi for Bitcoin",
+      "Use a wallet with coin control, so you choose which coins go into each payment and don't merge unrelated ones",
       "Use Tor browser or VPN when accessing crypto services to hide your IP",
       "Minimize KYC exchange usage and consider decentralized exchanges when possible"
     ],

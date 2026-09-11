@@ -1,8 +1,8 @@
 {
   "niche": "privacy-policies",
   "slug": "best-privacy-policy-terms-service-tools-compared",
-  "title": "Best Privacy Policy & Terms of Service Tools Compared 2024",
-  "metaDescription": "Compare top tools for analyzing privacy policies and terms of service. Find dark patterns, decode legal language, and protect your privacy.",
+  "title": "Best Privacy Policy & Terms of Service Tools Compared",
+  "metaDescription": "ToS;DR, PrivacySpy and Polisis compared on how they decode privacy policies and terms of service: red flags, coverage, ease of use, updates and extensions.",
   "keywords": [
     "privacy policy analyzer",
     "terms of service checker",
@@ -15,118 +15,90 @@
     {
       "name": "ToS;DR",
       "slug": "tosdr",
-      "tagline": "Terms of Service; Didn't Read - Crowd-sourced policy analysis",
-      "website": "tosdr.org",
+      "tagline": "Terms of Service; Didn't Read: volunteer-written grades for terms and privacy policies",
+      "website": "https://tosdr.org",
       "pricing": "Free",
+      "platforms": [
+        "Web",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
-        "Crowd-sourced analysis from privacy experts",
-        "Simple A-F grading system",
+        "Reviews written by volunteer contributors",
+        "Simple A-to-E grades",
         "Covers major platforms",
         "Highlights key concerns"
       ],
       "cons": [
         "Limited coverage of smaller sites",
         "Updates can be slow"
-      ],
-      "rating": 8.5
-    },
-    {
-      "name": "PrivacyBot",
-      "slug": "privacybot",
-      "tagline": "AI-powered privacy policy analyzer for instant insights",
-      "website": "privacybot.io",
-      "pricing": "Free with premium features",
-      "pros": [
-        "AI analysis for quick results",
-        "Identifies dark patterns",
-        "Risk scoring system",
-        "Browser extension available"
-      ],
-      "cons": [
-        "Premium features cost extra",
-        "AI may miss nuanced issues"
-      ],
-      "rating": 7.5
+      ]
     },
     {
       "name": "Polisis",
       "slug": "polisis",
       "tagline": "Automated privacy policy analysis using machine learning",
-      "website": "pribot.org/polisis",
+      "website": "https://pribot.org/polisis",
       "pricing": "Free",
+      "platforms": [
+        "Web",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Academic research backing",
         "Detailed data practice breakdown",
         "Visual policy summaries",
-        "Large database of policies"
+        "Model trained on about 130,000 privacy policies"
       ],
       "cons": [
         "Interface can be technical",
-        "Not updated frequently"
-      ],
-      "rating": 7
+        "A 2018 research project with little development since",
+        "We couldn't confirm its web service still works"
+      ]
     },
     {
-      "name": "Privacy Grade",
-      "slug": "privacy-grade",
-      "tagline": "Simple privacy scoring for websites and apps",
-      "website": "privacygrade.org",
+      "name": "PrivacySpy",
+      "slug": "privacyspy",
+      "tagline": "Open-source project that scores privacy policies from 0 to 10",
+      "website": "https://privacyspy.org",
       "pricing": "Free",
+      "platforms": [
+        "Web",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
-        "Easy-to-understand grades",
-        "Mobile app support",
-        "Quick assessments",
-        "Educational resources"
+        "Scores 269 products' privacy policies on a public 12-question rubric",
+        "Quotes the policy passages behind each answer",
+        "Open source, with a free API",
+        "Free Firefox add-on"
       ],
       "cons": [
-        "Limited detailed analysis",
-        "Smaller database"
-      ],
-      "rating": 6.5
+        "Most ratings were last updated in 2020 or 2021",
+        "Rates far fewer services than ToS;DR"
+      ]
     }
   ],
   "features": [
-    {
-      "name": "Policy Analysis Speed",
-      "description": "How quickly the tool can analyze and provide insights on privacy policies",
-      "scores": {
-        "tosdr": {
-          "value": "fair",
-          "note": "Relies on community contributions"
-        },
-        "privacybot": {
-          "value": "excellent",
-          "note": "AI provides instant analysis"
-        },
-        "polisis": {
-          "value": "good",
-          "note": "Automated but thorough"
-        },
-        "privacy-grade": {
-          "value": "excellent",
-          "note": "Quick scoring system"
-        }
-      }
-    },
     {
       "name": "Dark Pattern Detection",
       "description": "Ability to identify deceptive design patterns in consent flows and policies",
       "scores": {
         "tosdr": {
-          "value": "good",
-          "note": "Community flags dark patterns"
-        },
-        "privacybot": {
-          "value": "excellent",
-          "note": "AI specifically trained for this"
+          "value": "partial",
+          "note": "Flags unfair terms in the policy text; doesn't examine consent screens"
         },
         "polisis": {
           "value": "partial",
-          "note": "Limited dark pattern focus"
+          "note": "Labels data practices in the policy text; doesn't examine consent screens"
         },
-        "privacy-grade": {
-          "value": "fair",
-          "note": "Basic pattern recognition"
+        "privacyspy": {
+          "value": "partial",
+          "note": "Grades the policy text against a 12-question rubric; doesn't examine consent screens"
         }
       }
     },
@@ -136,19 +108,15 @@
       "scores": {
         "tosdr": {
           "value": "good",
-          "note": "300+ major services covered"
-        },
-        "privacybot": {
-          "value": "excellent",
-          "note": "Can analyze any policy on demand"
+          "note": "Grades major services; many smaller sites have no grade yet"
         },
         "polisis": {
-          "value": "excellent",
-          "note": "130,000+ policies analyzed"
+          "value": "—",
+          "note": "Not assessed: its model was trained on about 130,000 policies, but we couldn't confirm the web service that analyzes sites still works"
         },
-        "privacy-grade": {
+        "privacyspy": {
           "value": "fair",
-          "note": "Focused on popular apps"
+          "note": "269 products rated"
         }
       }
     },
@@ -160,17 +128,13 @@
           "value": "excellent",
           "note": "Simple letter grades"
         },
-        "privacybot": {
-          "value": "good",
-          "note": "Clean interface with explanations"
-        },
         "polisis": {
           "value": "fair",
           "note": "Academic interface"
         },
-        "privacy-grade": {
-          "value": "excellent",
-          "note": "Very intuitive design"
+        "privacyspy": {
+          "value": "good",
+          "note": "A 0-10 score, with the policy passage behind each answer quoted"
         }
       }
     },
@@ -182,17 +146,13 @@
           "value": "fair",
           "note": "Community-dependent updates"
         },
-        "privacybot": {
-          "value": "good",
-          "note": "AI can re-analyze on demand"
-        },
         "polisis": {
           "value": "poor",
-          "note": "Infrequent updates"
+          "note": "Research project with little development since 2018"
         },
-        "privacy-grade": {
-          "value": "fair",
-          "note": "Periodic refresh cycles"
+        "privacyspy": {
+          "value": "poor",
+          "note": "Most ratings were last updated in 2020 or 2021; the newest in January 2025"
         }
       }
     },
@@ -202,53 +162,39 @@
       "scores": {
         "tosdr": {
           "value": "yes",
-          "note": "Browser extension available"
-        },
-        "privacybot": {
-          "value": "yes",
-          "note": "Chrome and Firefox extensions"
+          "note": "Extensions for Chrome, Edge, Firefox, Safari and Opera"
         },
         "polisis": {
-          "value": "no",
-          "note": "Web-only interface"
+          "value": "—",
+          "note": "Not assessed: a Firefox add-on is still listed, but we couldn't confirm the service behind it still works"
         },
-        "privacy-grade": {
+        "privacyspy": {
           "value": "partial",
-          "note": "Mobile app only"
+          "note": "Firefox add-on only, last updated in 2020"
         }
       }
     }
   ],
   "verdict": {
-    "summary": "For most users, ToS;DR offers the best balance of accuracy and simplicity with its crowd-sourced analysis and clear grading system. Privacy-conscious users should also Use a privacy-focused browser to prevent tracking while researching policies. PrivacyBot excels at detecting dark patterns and provides instant analysis, making it ideal for on-demand policy checking.",
+    "summary": "ToS;DR scores highest on these five criteria: volunteer reviewers turn terms and policies into simple A-to-E grades, and its extensions show a site's grade as you browse, though many smaller sites aren't graded yet. PrivacySpy is second: it scores 269 products' privacy policies from 0 to 10 on a public 12-question rubric and quotes the passages behind each answer, but most of its ratings date from 2020 or 2021. Polisis, a 2018 university research project, breaks a policy down into what it says is collected and shared; we couldn't confirm its web service still works, so two of its rows aren't scored.",
     "bestFor": [
       {
         "useCase": "General users wanting simple policy summaries",
         "product": "ToS;DR",
-        "reason": "Clear grades and expert community analysis"
+        "reason": "Plain A-to-E grades from volunteer reviewers, shown in your browser"
       },
       {
-        "useCase": "Detecting deceptive consent practices",
-        "product": "PrivacyBot",
-        "reason": "AI specifically trained to identify dark patterns"
-      },
-      {
-        "useCase": "Academic research and detailed analysis",
-        "product": "Polisis",
-        "reason": "Comprehensive database and research backing"
-      },
-      {
-        "useCase": "Quick mobile app privacy checks",
-        "product": "Privacy Grade",
-        "reason": "Simple scoring with mobile app support"
+        "useCase": "Policy scores with the evidence quoted",
+        "product": "PrivacySpy",
+        "reason": "Scores 269 products' privacy policies on a public 12-question rubric, quoting the passages behind each answer"
       }
     ]
   },
   "pro_tips": [
-    "Use multiple tools together - ToS;DR for overview grades and PrivacyBot for dark pattern detection gives comprehensive coverage of policy risks.",
+    "Use the tools together - ToS;DR for at-a-glance grades and PrivacySpy for a scored breakdown that quotes the policy.",
     "Always check policy analysis dates - privacy policies change frequently, and outdated analysis may miss recent changes to data practices.",
     "Look beyond the grade - even 'good' privacy policies may have concerning practices that don't affect the overall score but matter for your use case.",
-    "Use a privacy-focused browser when researching companies' privacy practices to prevent them from tracking your interest and potentially changing their messaging.",
+    "Keep a copy of the policy version you agreed to (a PDF or a web archive snapshot), so you can compare it when the terms change.",
     "Set up Google Alerts for 'privacy policy updated' plus the company name to get notified when services change their terms without prominent announcements."
   ],
   "faqs": [
@@ -258,7 +204,7 @@
     },
     {
       "question": "How accurate are AI-powered privacy policy analyzers?",
-      "answer": "AI tools like PrivacyBot are good at identifying common patterns and dark designs, but they may miss subtle legal implications or new deceptive practices. Human-reviewed analysis from ToS;DR tends to be more nuanced and accurate."
+      "answer": "Automated tools like Polisis are good at labelling common data practices, but they can miss subtle legal implications or unusual wording. Human-reviewed analysis such as ToS;DR's and PrivacySpy's tends to be more nuanced, but it covers fewer services and can lag behind policy changes."
     },
     {
       "question": "Can these tools help small businesses write better privacy policies?",

@@ -17,6 +17,13 @@
  *
  * These tests call the component's own runCalculator, so they exercise the
  * code the page runs, not a copy of it.
+ *
+ * The site is published by the maker of Incognito Browser, and three
+ * calculators once scored a list of browser brands with ours as the safest
+ * (browser-privacy +25, online-shopping lowest risk, incognito-mode a 0.7
+ * multiplier); two more kept the same scores under a scrubbed stand-in label.
+ * No calculator now asks which product you use: it asks what your browser,
+ * app or provider does, so a visitor's own answers decide the result.
  */
 import { describe, expect, it } from 'vitest';
 import fs from 'fs';
@@ -327,7 +334,7 @@ describe('answers and verdicts the review caught', () => {
     // `sharingScores[x] || 10` with never: 0 made "Never share files" worse than "Rarely".
     const cloud = calc('cloud-privacy/');
     const cloudRisk = (sharingFrequency: string) =>
-      Number(score(cloud, { provider: 'proton-drive', encryptionUsed: 'zero-knowledge', sharingFrequency }).riskScore);
+      Number(score(cloud, { providerAccess: 'cannot', encryptionUsed: 'zero-knowledge', sharingFrequency }).riskScore);
     expect(cloudRisk('never')).toBeLessThan(cloudRisk('rare'));
     expect(cloudRisk('rare')).toBeLessThan(cloudRisk('occasional'));
     // `socialScores[x] || 4` with none: 0 made "Don't use social media" worse than "Light".
@@ -352,7 +359,7 @@ describe('answers and verdicts the review caught', () => {
     expect(typed).toBe(3);
     // As typed, 2.5 scored 79.5: "Medium Risk" by the formula, printed 80 on the "80-100 Low Risk" row.
     const result = score(c, {
-      browserType: 'incognito-browser', trackingProtection: 'strict', thirdPartyCookies: 'blocked',
+      clearOnClose: 'on-close', signedInAccounts: 'no', trackingProtection: 'strict', thirdPartyCookies: 'blocked',
       extensionsInstalled: typed, incognitoUsage: 'rarely', syncEnabled: true, locationSharing: 'allowed',
     });
     expect(result.privacyScore).toBe(81);
@@ -368,6 +375,91 @@ describe('answers and verdicts the review caught', () => {
       const first = runCalculator(data.formula, answers, data.outputFields);
       for (let n = 0; n < 10; n++) expect(runCalculator(data.formula, answers, data.outputFields), file).toEqual(first);
     }
+  });
+});
+
+describe('no calculator scores a product', () => {
+  // Browser brands, ours among them. Matched in every option label, bracketed
+  // examples included: the maker of a browser does not grade other browsers.
+  const BROWSER_NAMES = /\b(?:chrome|chromium|firefox|safari|edge|brave|opera|vivaldi|tor browser|duckduckgo|samsung internet|incognito[ -]?browser|librewolf|waterfox|mullvad browser|yandex browser|uc browser|arc browser)\b/i;
+  const BROWSER_IDS = new Set(['chrome', 'chromium', 'firefox', 'safari', 'edge', 'brave', 'opera', 'vivaldi', 'tor', 'duckduckgo', 'samsung', 'incognito', 'incognito-browser', 'librewolf', 'waterfox', 'mullvad', 'yandex']);
+  // What the brand scrub left where our app's name had been: a scored option
+  // labelled "a privacy-focused browser", "Privacy-focused browser like Incognito".
+  const STAND_INS = /\ban? privacy-focused browser\b|\blike incognito\b/i;
+  // Other products an option once was. A category may still give examples in
+  // brackets ("Encrypted email (ProtonMail, etc.)"); the option itself can't be a product.
+  const PRODUCT_NAMES = /\b(?:gmail|outlook|hotmail|yahoo|proton ?mail|proton drive|tutanota|tuta|signal|whatsapp|telegram|imessage|messenger|google|bing|startpage|cloudflare|quad9|opendns|dropbox|onedrive|icloud|tresorit|pcloud|tinder|bumble|grindr|hinge|okcupid|ublock|adblock|bitcoin|ethereum|monero|zcash|litecoin|paypal|apple pay|tails)\b/i;
+  // Copy the scrub mangled, and our app's name, which calculator copy never uses.
+  const SCRUB_LEFTOVERS = [
+    /incognito[ -]?browser/i,
+    /\bprivacy[- ]privacy\b/i,
+    /like an? privacy-focused browser/i,
+    /\ban? privacy-focused browser (?:mode|or similar)\b/i,
+    /\blike incognito\b/i,
+  ];
+
+  /** Every string a calculator page can show or link, with where it sits; the byline blocks are left out. */
+  function copyOf(value: unknown, where: string, out: Array<[string, string]> = []): Array<[string, string]> {
+    if (typeof value === 'string') out.push([where, value]);
+    else if (Array.isArray(value)) value.forEach((v, i) => copyOf(v, `${where}[${i}]`, out));
+    else if (value && typeof value === 'object') {
+      for (const [k, v] of Object.entries(value)) if (!['author', 'editor', 'editorial'].includes(k)) copyOf(v, `${where}.${k}`, out);
+    }
+    return out;
+  }
+
+  for (const { file, data } of calculators) {
+    describe(file, () => {
+      const options = data.inputs.flatMap((input) => (input.options ?? []).map((o) => ({ input: input.id, value: String(o.value), label: o.label })));
+
+      it('offers no browser, ours included, as an answer', () => {
+        for (const o of options) {
+          const context = `${file} ${o.input}=${o.value} "${o.label}"`;
+          expect(BROWSER_IDS.has(o.value.toLowerCase()), context).toBe(false);
+          expect(o.label, context).not.toMatch(BROWSER_NAMES);
+          expect(o.label, context).not.toMatch(STAND_INS);
+        }
+      });
+
+      it('asks what a product does, never which product it is', () => {
+        for (const o of options) {
+          expect(o.label.replace(/\([^)]*\)/g, ''), `${file} ${o.input}=${o.value} "${o.label}"`).not.toMatch(PRODUCT_NAMES);
+        }
+      });
+
+      it('carries no brand-scrub leftovers and never names our app', () => {
+        const copy = copyOf(data, '');
+        for (const [where, text] of copy) {
+          for (const pattern of SCRUB_LEFTOVERS) expect(text, `${file}${where}`).not.toMatch(pattern);
+          // "privacy privacy-focused browsers": a word printed twice where a name was cut out.
+          if (where !== '.formula') expect(text, `${file}${where}`).not.toMatch(/\b(\w+)\s+\1\b/i);
+        }
+      });
+    });
+  }
+
+  it('scores the features a visitor can check, each moving the result the right way', () => {
+    const calc = (prefix: string) => calculators.find((c) => c.file.startsWith(prefix))!.data;
+    const score = (c: Calculator, answers: Record<string, number | string | boolean>) =>
+      runCalculator(c.formula, { ...defaultsOf(c), ...answers }, c.outputFields)!;
+
+    // browser-privacy: higher is safer.
+    const privacy = calc('browser-privacy/');
+    const privacyScore = (answers: Record<string, string>) => Number(score(privacy, answers).privacyScore);
+    expect(privacyScore({ clearOnClose: 'on-close' })).toBeGreaterThan(privacyScore({ clearOnClose: 'manual' }));
+    expect(privacyScore({ clearOnClose: 'manual' })).toBeGreaterThan(privacyScore({ clearOnClose: 'never' }));
+    expect(privacyScore({ signedInAccounts: 'no' })).toBeGreaterThan(privacyScore({ signedInAccounts: 'sometimes' }));
+    expect(privacyScore({ signedInAccounts: 'sometimes' })).toBeGreaterThan(privacyScore({ signedInAccounts: 'yes' }));
+
+    // online-shopping and incognito-mode: higher is riskier.
+    const shopping = calc('online-shopping/');
+    const shoppingRisk = (trackerBlocking: string) => Number(score(shopping, { trackerBlocking }).privacyRisk);
+    expect(shoppingRisk('strict')).toBeLessThan(shoppingRisk('standard'));
+    expect(shoppingRisk('standard')).toBeLessThan(shoppingRisk('none'));
+    const incognito = calc('incognito-mode/');
+    const incognitoRisk = (privateModeBlocking: string) => Number(score(incognito, { privateModeBlocking }).riskScore);
+    expect(incognitoRisk('trackers')).toBeLessThan(incognitoRisk('cookies'));
+    expect(incognitoRisk('cookies')).toBeLessThan(incognitoRisk('none'));
   });
 });
 

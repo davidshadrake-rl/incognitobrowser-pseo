@@ -2,7 +2,7 @@
   "niche": "drone-surveillance",
   "slug": "best-drone-detection-tools-compared",
   "title": "Best Drone Detection Tools Compared - Privacy Protection Guide",
-  "metaDescription": "Compare top drone detection tools to protect your privacy. Reviews of RF detectors, acoustic sensors, and radar systems for spotting surveillance drones.",
+  "metaDescription": "Compare drone detection options for privacy: Remote ID phone apps, fixed RF sensors and handheld jammers, and what each can and can't legally do.",
   "keywords": [
     "drone detection tools",
     "drone privacy",
@@ -11,83 +11,73 @@
     "spy drone detection",
     "drone detection device"
   ],
-  "intro": "Protecting yourself from unauthorized drone surveillance requires the right detection tools. We've tested the top drone detection devices to help you identify when drones are monitoring your property or events, giving you the awareness needed to protect your privacy.",
+  "intro": "Protecting yourself from unauthorized drone surveillance starts with knowing when a drone is nearby. This page compares three approaches (a phone app, a fixed RF sensor and a handheld jammer) on range, alerts, disruption, ease of use and frequency coverage.",
   "products": [
     {
       "name": "DroneShield DroneGun MKIII",
       "slug": "droneshield-dronegun-mkiii",
-      "tagline": "Professional-grade drone detection and disruption system",
-      "website": "droneshield.com",
-      "pricing": "$15,000+",
+      "tagline": "Handheld drone jammer (a countermeasure, not a detector) for government and security agencies",
+      "website": "https://www.droneshield.com",
+      "pricing": "Not publicly listed; sold to government and security agencies",
+      "platforms": [
+        "Handheld device"
+      ],
       "pros": [
-        "Detects and disrupts drones up to 1km away",
+        "Disrupts drone control and video links at up to about 500 m (manufacturer figure)",
         "Works on multiple frequency bands",
         "Portable handheld design for mobile use",
         "Used by law enforcement and security professionals"
       ],
       "cons": [
-        "Extremely expensive for personal use",
-        "Requires special licensing in many jurisdictions",
+        "Detects nothing on its own: it has to be paired with a separate detector",
+        "In the US it can only be sold to government agencies, and jamming is illegal for private individuals in the US and many other countries",
         "May interfere with other wireless devices"
-      ],
-      "rating": 9.2
+      ]
     },
     {
       "name": "Drone Detector App",
       "slug": "drone-detector-app",
-      "tagline": "Smartphone-based drone detection using WiFi scanning",
+      "tagline": "Phone apps that pick up drones broadcasting Remote ID or Wi-Fi signals",
       "website": "various app stores",
       "pricing": "Free - $9.99",
+      "platforms": [
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Very affordable and accessible",
         "Uses existing smartphone hardware",
-        "Detects common drone WiFi signatures",
+        "Can read the Remote ID broadcasts that most registered drones in the US must send",
         "Good for basic awareness of nearby drones"
       ],
       "cons": [
         "Limited range and accuracy",
-        "Only detects drones broadcasting WiFi",
-        "High false positive rate"
-      ],
-      "rating": 6.5
+        "Only sees drones that broadcast Remote ID or Wi-Fi",
+        "Misses drones that don't broadcast, including many small or modified ones"
+      ]
     },
     {
       "name": "Dedrone RF-300 Sensor",
       "slug": "dedrone-rf-300",
       "tagline": "Enterprise RF detection system for continuous monitoring",
-      "website": "dedrone.com",
-      "pricing": "$5,000-$10,000",
+      "website": "https://www.dedrone.com",
+      "pricing": "Quote-based",
+      "platforms": [
+        "Fixed sensor",
+        "Web"
+      ],
       "pros": [
         "24/7 continuous monitoring capability",
         "Covers wide frequency spectrum",
         "Integrates with security systems",
-        "Low false alarm rate"
+        "About 1 km detection range, up to 1.5 km in ideal conditions (manufacturer datasheet)"
       ],
       "cons": [
         "Requires professional installation",
         "High upfront cost",
-        "Monthly subscription fees"
-      ],
-      "rating": 8.7
-    },
-    {
-      "name": "Wolfhound-PRO Drone Detector",
-      "slug": "wolfhound-pro",
-      "tagline": "Portable RF scanner optimized for drone frequencies",
-      "website": "berkshirehathaway.com",
-      "pricing": "$3,500-$4,500",
-      "pros": [
-        "Handheld and battery powered",
-        "Specifically tuned for drone RF signatures",
-        "Good range for personal protection",
-        "No ongoing subscription costs"
-      ],
-      "cons": [
-        "Still expensive for most individuals",
-        "Requires some technical knowledge to operate",
-        "Limited to RF detection only"
-      ],
-      "rating": 7.8
+        "Monthly subscription fees",
+        "Older model: Dedrone, now part of Axon, currently lists the RF-360 on its site"
+      ]
     }
   ],
   "features": [
@@ -95,21 +85,17 @@
       "name": "Detection Range",
       "description": "Maximum distance at which the system can reliably detect incoming drones",
       "scores": {
-        "DroneShield DroneGun MKIII": {
+        "droneshield-dronegun-mkiii": {
+          "value": "no",
+          "note": "A jammer, not a detector; its jamming range is about 500 m"
+        },
+        "drone-detector-app": {
+          "value": "—",
+          "note": "Not assessed: depends on the app, the phone and the drone's broadcast"
+        },
+        "dedrone-rf-300": {
           "value": "excellent",
-          "note": "Up to 1km range"
-        },
-        "Drone Detector App": {
-          "value": "poor",
-          "note": "30-100m typical range"
-        },
-        "Dedrone RF-300 Sensor": {
-          "value": "excellent",
-          "note": "500m+ coverage area"
-        },
-        "Wolfhound-PRO Drone Detector": {
-          "value": "good",
-          "note": "300-500m range"
+          "note": "About 1 km, up to 1.5 km in ideal conditions (manufacturer datasheet)"
         }
       }
     },
@@ -117,21 +103,17 @@
       "name": "Real-time Alerts",
       "description": "Ability to provide immediate notifications when drones are detected",
       "scores": {
-        "DroneShield DroneGun MKIII": {
-          "value": "yes",
-          "note": "Instant visual and audio alerts"
+        "droneshield-dronegun-mkiii": {
+          "value": "no",
+          "note": "No detection, so no alerts"
         },
-        "Drone Detector App": {
-          "value": "yes",
-          "note": "Push notifications available"
+        "drone-detector-app": {
+          "value": "—",
+          "note": "Not assessed: varies by app"
         },
-        "Dedrone RF-300 Sensor": {
+        "dedrone-rf-300": {
           "value": "yes",
           "note": "Integrates with security systems"
-        },
-        "Wolfhound-PRO Drone Detector": {
-          "value": "yes",
-          "note": "Audio and visual indicators"
         }
       }
     },
@@ -139,43 +121,17 @@
       "name": "Drone Disruption Capability",
       "description": "Ability to disable or redirect detected drones",
       "scores": {
-        "DroneShield DroneGun MKIII": {
+        "droneshield-dronegun-mkiii": {
           "value": "yes",
-          "note": "Can jam drone communications"
+          "note": "Jams drone control and video links (government and authorized users only)"
         },
-        "Drone Detector App": {
+        "drone-detector-app": {
           "value": "no",
           "note": "Detection only"
         },
-        "Dedrone RF-300 Sensor": {
+        "dedrone-rf-300": {
           "value": "no",
           "note": "Detection and tracking only"
-        },
-        "Wolfhound-PRO Drone Detector": {
-          "value": "no",
-          "note": "Detection only"
-        }
-      }
-    },
-    {
-      "name": "Battery Life",
-      "description": "How long the device operates on battery power for portable units",
-      "scores": {
-        "DroneShield DroneGun MKIII": {
-          "value": "fair",
-          "note": "1-2 hours continuous use"
-        },
-        "Drone Detector App": {
-          "value": "good",
-          "note": "Uses phone battery"
-        },
-        "Dedrone RF-300 Sensor": {
-          "value": "excellent",
-          "note": "Hardwired power supply"
-        },
-        "Wolfhound-PRO Drone Detector": {
-          "value": "good",
-          "note": "4-6 hours typical use"
         }
       }
     },
@@ -183,21 +139,17 @@
       "name": "Ease of Use",
       "description": "How simple the device is to set up and operate for non-technical users",
       "scores": {
-        "DroneShield DroneGun MKIII": {
-          "value": "fair",
-          "note": "Requires training"
+        "droneshield-dronegun-mkiii": {
+          "value": "—",
+          "note": "Not assessed: not available to the public to try"
         },
-        "Drone Detector App": {
+        "drone-detector-app": {
           "value": "excellent",
           "note": "Simple smartphone app"
         },
-        "Dedrone RF-300 Sensor": {
+        "dedrone-rf-300": {
           "value": "poor",
           "note": "Professional installation required"
-        },
-        "Wolfhound-PRO Drone Detector": {
-          "value": "good",
-          "note": "Straightforward operation"
         }
       }
     },
@@ -205,61 +157,52 @@
       "name": "Multi-Frequency Detection",
       "description": "Ability to detect drones operating on various radio frequencies",
       "scores": {
-        "DroneShield DroneGun MKIII": {
-          "value": "excellent",
-          "note": "Covers all major drone frequencies"
+        "droneshield-dronegun-mkiii": {
+          "value": "no",
+          "note": "Doesn't detect; it jams several bands"
         },
-        "Drone Detector App": {
+        "drone-detector-app": {
           "value": "poor",
-          "note": "Limited to WiFi detection"
+          "note": "Only picks up Remote ID or Wi-Fi broadcasts"
         },
-        "Dedrone RF-300 Sensor": {
+        "dedrone-rf-300": {
           "value": "excellent",
-          "note": "Full spectrum coverage"
-        },
-        "Wolfhound-PRO Drone Detector": {
-          "value": "good",
-          "note": "Major drone frequencies covered"
+          "note": "Wide frequency range through multiple software-defined radios (manufacturer datasheet)"
         }
       }
     }
   ],
   "verdict": {
-    "summary": "For most privacy-conscious individuals, the Wolfhound-PRO offers the best balance of effectiveness and accessibility. Professional users should consider the DroneShield DroneGun MKIII, while those on a budget can start with drone detector apps to gain basic awareness. The Dedrone RF-300 is ideal for permanent installations requiring 24/7 monitoring.",
+    "summary": "The Dedrone RF-300 scores highest on this page's criteria: a fixed sensor that detects drones about 1 km away and feeds alerts into security systems, priced by quote for facilities rather than households. For individuals, a phone app that reads drone Remote ID broadcasts is the practical starting point, though it only sees drones that broadcast. The DroneShield DroneGun MKIII scores lowest because it is a jammer, not a detector; in the US it can only be sold to government agencies, and jamming is illegal for private individuals in the US and many other countries.",
     "bestFor": [
       {
-        "useCase": "Personal property protection",
-        "product": "Wolfhound-PRO Drone Detector",
-        "reason": "Good detection range with reasonable cost for individuals"
-      },
-      {
-        "useCase": "Professional security operations",
-        "product": "DroneShield DroneGun MKIII",
-        "reason": "Maximum range and disruption capabilities"
+        "useCase": "Permanent facility monitoring",
+        "product": "Dedrone RF-300 Sensor",
+        "reason": "Highest score here, with continuous detection, alerts and security-system integration"
       },
       {
         "useCase": "Budget-conscious users",
         "product": "Drone Detector App",
-        "reason": "Low cost entry point for basic drone awareness"
+        "reason": "Free or low-cost way to spot nearby drones that broadcast Remote ID"
       },
       {
-        "useCase": "Permanent facility monitoring",
-        "product": "Dedrone RF-300 Sensor",
-        "reason": "Continuous monitoring with system integration"
+        "useCase": "Authorized government and security teams",
+        "product": "DroneShield DroneGun MKIII",
+        "reason": "The only tool here that can disrupt a drone, for agencies legally allowed to use it; pair it with a separate detector"
       }
     ]
   },
   "pro_tips": [
     "Combine multiple detection methods (RF, acoustic, visual) for best results since no single technology catches all drone types.",
-    "Check local laws before using any drone detection or disruption equipment, as some devices require special licenses or may be restricted.",
+    "Check local laws before buying any drone equipment: detection is generally allowed, but jamming or otherwise disrupting a drone is illegal for private individuals in the US and many other countries.",
     "Position RF detectors away from WiFi routers and other wireless devices to reduce false positives and improve detection accuracy.",
-    "Use a privacy-focused browser when researching drone laws in your area to avoid tracking by surveillance companies or data brokers.",
+    "Look up the drone rules for your area (in the US, from the FAA and your state or city) so you know what an operator may and may not do before you report a drone.",
     "Consider joining local privacy advocacy groups to stay informed about drone surveillance policies and coordinate community protection efforts."
   ],
   "faqs": [
     {
       "question": "Are drone detection devices legal to use?",
-      "answer": "Drone detection devices are generally legal to own and use on your property in most jurisdictions. However, drone jamming or disruption devices often require special licenses or may be restricted. Always check local laws before purchasing active countermeasures."
+      "answer": "Passive detection devices, which only listen for radio signals or Remote ID broadcasts, are generally legal to own and use on your property. Jammers and other disruption devices are different: in the US, federal law bars private individuals from operating or selling jammers, and interfering with an aircraft can break other laws too. Many other countries restrict them in the same way, so always check local laws before buying active countermeasures."
     },
     {
       "question": "Can these devices detect all types of surveillance drones?",
@@ -275,7 +218,7 @@
     },
     {
       "question": "How much should I expect to spend on effective drone detection?",
-      "answer": "Basic smartphone apps cost under $10 but have limited effectiveness. Serious personal protection requires devices in the $1,000-$5,000 range. Professional-grade systems can cost $10,000+. Consider your specific needs and threat level when choosing."
+      "answer": "Phone apps that read Remote ID broadcasts are free or cost a few dollars, but they only see drones that broadcast. Fixed RF sensor systems such as Dedrone's are priced by quote and aimed at facilities, usually with an ongoing software subscription. Handheld jammers aren't an option for private buyers in the US. Consider your specific needs and threat level when choosing."
     }
   ],
   "editorial": {

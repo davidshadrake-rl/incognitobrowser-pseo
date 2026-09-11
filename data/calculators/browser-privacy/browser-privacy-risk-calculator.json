@@ -2,7 +2,7 @@
   "niche": "browser-privacy",
   "slug": "browser-privacy-risk-calculator",
   "title": "Browser Privacy Risk Calculator - Check Your Privacy Score",
-  "metaDescription": "Calculate your browser's privacy risk score. Assess tracking protection, data collection, and security settings across Chrome, Firefox, Safari, and more.",
+  "metaDescription": "Calculate your browser's privacy risk score from the settings you use, in Chrome, Firefox, Safari or any other browser. It scores features, not brands.",
   "keywords": [
     "browser privacy calculator",
     "privacy risk assessment",
@@ -13,41 +13,25 @@
   "description": "Evaluate your browser's privacy protection level with our comprehensive risk calculator. Get personalized recommendations to improve your online privacy and security based on your current browser setup and settings.",
   "inputs": [
     {
-      "id": "browserType",
-      "label": "Your Primary Browser",
+      "id": "clearOnClose",
+      "label": "Clears Cookies and History on Close",
       "type": "select",
-      "defaultValue": "chrome",
+      "defaultValue": "never",
       "options": [
         {
-          "value": "chrome",
-          "label": "Google Chrome"
+          "value": "on-close",
+          "label": "Yes, automatically every time"
         },
         {
-          "value": "firefox",
-          "label": "Mozilla Firefox"
+          "value": "manual",
+          "label": "No, but I clear them myself regularly"
         },
         {
-          "value": "safari",
-          "label": "Safari"
-        },
-        {
-          "value": "brave",
-          "label": "Brave"
-        },
-        {
-          "value": "edge",
-          "label": "Microsoft Edge"
-        },
-        {
-          "value": "incognito-browser",
-          "label": "Incognito Browser"
-        },
-        {
-          "value": "other",
-          "label": "Other"
+          "value": "never",
+          "label": "No, they stay until they expire"
         }
       ],
-      "helpText": "Select your main browser for daily browsing"
+      "helpText": "Does your browser clear cookies and history when you close it?"
     },
     {
       "id": "trackingProtection",
@@ -141,6 +125,27 @@
       "helpText": "Do you sync bookmarks, passwords, and history across devices?"
     },
     {
+      "id": "signedInAccounts",
+      "label": "Signed-In Accounts",
+      "type": "select",
+      "defaultValue": "yes",
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes, I stay signed in"
+        },
+        {
+          "value": "sometimes",
+          "label": "Only while I use them, then I sign out"
+        },
+        {
+          "value": "no",
+          "label": "No, I don't sign in to accounts in this browser"
+        }
+      ],
+      "helpText": "Do you stay signed in to accounts such as email or social media while you browse other sites?"
+    },
+    {
       "id": "locationSharing",
       "label": "Location Sharing",
       "type": "select",
@@ -182,11 +187,11 @@
       "description": "How much you could improve with recommended changes"
     }
   ],
-  "formula": "let baseScore = 0; const browserScores = { 'incognito-browser': 25, 'brave': 20, 'firefox': 15, 'safari': 12, 'edge': 8, 'chrome': 5, 'other': 10 }; baseScore += browserScores[browserType] ?? 10; const trackingScores = { 'strict': 25, 'custom': 20, 'standard': 10, 'none': 0 }; baseScore += trackingScores[trackingProtection]; const cookieScores = { 'blocked': 20, 'limited': 12, 'allowed': 0 }; baseScore += cookieScores[thirdPartyCookies]; baseScore += Math.min(extensionsInstalled * 3, 15); const incognitoScores = { 'always': 10, 'frequently': 8, 'sometimes': 5, 'rarely': 2, 'never': 0 }; baseScore += incognitoScores[incognitoUsage]; baseScore += syncEnabled ? 0: 5; const locationScores = { 'blocked': 5, 'ask': 3, 'allowed': 0 }; baseScore += locationScores[locationSharing]; const privacyScore = Math.min(baseScore, 100); let riskLevel = 'High Risk'; if (privacyScore >= 80) riskLevel = 'Low Risk'; else if (privacyScore >= 60) riskLevel = 'Medium Risk'; else if (privacyScore >= 40) riskLevel = 'High Risk'; else riskLevel = 'Very High Risk'; const maxPossible = 100; const improvementPotential = Math.round(((maxPossible - privacyScore) / maxPossible) * 100); return { privacyScore, riskLevel, improvementPotential };",
+  "formula": "let baseScore = 0; const clearScores = { 'on-close': 15, 'manual': 8, 'never': 0 }; baseScore += clearScores[clearOnClose] ?? 0; const trackingScores = { 'strict': 25, 'custom': 20, 'standard': 10, 'none': 0 }; baseScore += trackingScores[trackingProtection]; const cookieScores = { 'blocked': 20, 'limited': 12, 'allowed': 0 }; baseScore += cookieScores[thirdPartyCookies]; baseScore += Math.min(extensionsInstalled * 3, 15); const incognitoScores = { 'always': 10, 'frequently': 8, 'sometimes': 5, 'rarely': 2, 'never': 0 }; baseScore += incognitoScores[incognitoUsage]; baseScore += syncEnabled ? 0: 5; const signInScores = { 'no': 10, 'sometimes': 5, 'yes': 0 }; baseScore += signInScores[signedInAccounts] ?? 0; const locationScores = { 'blocked': 5, 'ask': 3, 'allowed': 0 }; baseScore += locationScores[locationSharing]; const privacyScore = Math.min(baseScore, 100); let riskLevel = 'High Risk'; if (privacyScore >= 80) riskLevel = 'Low Risk'; else if (privacyScore >= 60) riskLevel = 'Medium Risk'; else if (privacyScore >= 40) riskLevel = 'High Risk'; else riskLevel = 'Very High Risk'; const maxPossible = 100; const improvementPotential = Math.round(((maxPossible - privacyScore) / maxPossible) * 100); return { privacyScore, riskLevel, improvementPotential };",
   "educational": {
-    "methodology": "This calculator evaluates your browser privacy based on key factors: browser choice (inherent privacy features), tracking protection settings, cookie policies, privacy extensions, private browsing habits, sync features, and permission settings. Each factor is weighted based on its impact on your overall privacy protection.",
+    "methodology": "This calculator evaluates your browser privacy from the features and settings you use, not the brand of browser: whether it clears cookies and history when it closes, tracking protection settings, cookie policies, privacy extensions, private browsing habits, sync and signed-in accounts, and permission settings. Each factor is weighted based on its impact on your overall privacy protection.",
     "tips": [
-      "Switch to privacy-focused privacy-focused browsers like Brave, or hardened Firefox for better default protection",
+      "Set your browser to clear cookies and history when you close it; most browsers have this setting, and some do it by default",
       "Enable strict tracking protection and block third-party cookies in your browser settings",
       "Install essential privacy extensions like uBlock Origin and Privacy Badger",
       "Use private/incognito mode for sensitive browsing, especially on shared devices",

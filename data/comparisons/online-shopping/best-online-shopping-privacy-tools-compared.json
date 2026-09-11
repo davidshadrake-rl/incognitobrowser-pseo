@@ -1,8 +1,8 @@
 {
   "niche": "online-shopping",
   "slug": "best-online-shopping-privacy-tools-compared",
-  "title": "Best Online Shopping Privacy Tools Compared 2024",
-  "metaDescription": "Compare top privacy tools for secure online shopping. Protect against price tracking, dynamic pricing, and payment data exposure with our expert reviews.",
+  "title": "Best Online Shopping Privacy Tools Compared",
+  "metaDescription": "Compare a tracker blocker, a link cleaner, virtual card numbers and a coupon extension for online shopping privacy, scored on one published rubric.",
   "keywords": [
     "online shopping privacy",
     "secure shopping tools",
@@ -10,49 +10,44 @@
     "shopping incognito",
     "private online shopping"
   ],
-  "intro": "Online retailers track your behavior to manipulate prices and harvest personal data. This comprehensive comparison reviews the best privacy tools to protect your shopping habits, prevent dynamic pricing, and keep your financial information secure while hunting for deals.",
+  "intro": "Online retailers track your behavior to personalize prices and collect personal data. This page compares four tools for shopping privacy (a tracker blocker, a link cleaner, virtual card numbers and a coupon extension) on the same six criteria.",
   "products": [
-    {
-      "name": "Incognito Browser",
-      "slug": "incognito-browser",
-      "tagline": "Complete shopping privacy with built-in price tracking protection",
-      "website": "https://incognitobrowser.io/",
-      "pricing": "Free with premium features",
-      "pros": [
-        "Blocks shopping trackers automatically",
-        "Built-in price manipulation detection",
-        "Isolated shopping sessions",
-        "No browsing history stored"
-      ],
-      "cons": [
-        "Newer product with smaller user base"
-      ],
-      "rating": 9.2
-    },
     {
       "name": "Privacy Badger",
       "slug": "privacy-badger",
-      "tagline": "Automatic tracker blocking for safer shopping",
+      "tagline": "EFF's tracker blocker that stops third parties seen tracking people across sites",
       "website": "https://privacybadger.org",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
       "pros": [
-        "Learns and blocks trackers automatically",
-        "Created by Electronic Frontier Foundation",
+        "Blocks trackers from a list EFF keeps updated by crawling thousands of sites",
+        "Developed by Electronic Frontier Foundation",
         "Works across all shopping sites",
-        "Open source and transparent"
+        "Open source"
       ],
       "cons": [
         "May break some shopping site features",
         "No price manipulation protection"
-      ],
-      "rating": 7.8
+      ]
     },
     {
-      "name": "Honey (Privacy Mode)",
+      "name": "Honey",
       "slug": "honey-privacy",
-      "tagline": "Coupon finder with privacy-focused browsing",
+      "tagline": "PayPal's coupon-finding browser extension",
       "website": "https://joinhoney.com",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Finds discount codes automatically",
         "Price tracking across multiple sites",
@@ -61,9 +56,9 @@
       "cons": [
         "Owned by PayPal, raises privacy concerns",
         "Still collects significant user data",
-        "Primary focus on deals, not privacy"
-      ],
-      "rating": 6.5
+        "Primary focus on deals, not privacy",
+        "Faces lawsuits alleging it takes over creators' affiliate commissions"
+      ]
     },
     {
       "name": "Capital One Eno",
@@ -71,18 +66,25 @@
       "tagline": "Virtual card numbers for secure checkout",
       "website": "https://www.capitalone.com/digital/eno",
       "pricing": "Free for Capital One customers",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux",
+        "Web"
+      ],
       "pros": [
         "Generates unique virtual card numbers",
         "Protects real credit card details",
-        "Merchant-specific card limits",
+        "A virtual number can be limited to one merchant",
         "Easy to cancel compromised cards"
       ],
       "cons": [
-        "Requires Capital One account",
+        "Requires a Capital One credit card",
         "Limited to payment protection only",
         "No browsing privacy features"
-      ],
-      "rating": 8.1
+      ]
     },
     {
       "name": "ClearURLs",
@@ -90,18 +92,24 @@
       "tagline": "Removes tracking parameters from shopping links",
       "website": "https://docs.clearurls.xyz",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Strips tracking parameters from URLs",
         "Prevents referral tracking",
         "Works on all shopping sites",
-        "Lightweight and fast"
+        "Open source"
       ],
       "cons": [
         "Only addresses URL tracking",
         "No protection against other tracking methods",
-        "Limited shopping-specific features"
-      ],
-      "rating": 7.3
+        "Limited shopping-specific features",
+        "Chrome has disabled it until a Manifest V3 version ships; Firefox is unaffected"
+      ]
     }
   ],
   "features": [
@@ -109,17 +117,13 @@
       "name": "Tracker Blocking",
       "description": "Prevents retailers from tracking your browsing behavior across sites",
       "scores": {
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "Advanced shopping tracker detection"
-        },
         "privacy-badger": {
           "value": "excellent",
-          "note": "Learns and adapts to new trackers"
+          "note": "Blocks trackers that ignore its opt-out signals, using a tracker list EFF keeps updated"
         },
         "honey-privacy": {
-          "value": "poor",
-          "note": "Limited privacy protection"
+          "value": "no",
+          "note": "Does not block trackers; it collects shopping data itself"
         },
         "capital-one-eno": {
           "value": "no",
@@ -135,10 +139,6 @@
       "name": "Price Manipulation Protection",
       "description": "Prevents dynamic pricing based on browsing history and demographics",
       "scores": {
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "Detects and alerts on price changes"
-        },
         "privacy-badger": {
           "value": "partial",
           "note": "Reduces tracking but no price alerts"
@@ -161,25 +161,21 @@
       "name": "Payment Security",
       "description": "Protects credit card and financial information during checkout",
       "scores": {
-        "incognito-browser": {
-          "value": "good",
-          "note": "Secure browsing environment"
-        },
         "privacy-badger": {
-          "value": "fair",
-          "note": "Blocks some payment trackers"
+          "value": "poor",
+          "note": "Blocks third-party trackers on checkout pages; does not protect card details"
         },
         "honey-privacy": {
-          "value": "fair",
-          "note": "Basic secure browsing"
+          "value": "no",
+          "note": "Does not protect card details"
         },
         "capital-one-eno": {
           "value": "excellent",
-          "note": "Virtual card numbers for ultimate protection"
+          "note": "Virtual card numbers keep your real card number from merchants"
         },
         "clearurls": {
-          "value": "fair",
-          "note": "Removes financial tracking parameters"
+          "value": "poor",
+          "note": "Strips tracking parameters; does not protect card details"
         }
       }
     },
@@ -187,12 +183,8 @@
       "name": "Shopping Features",
       "description": "Additional tools like price tracking, coupons, and deal alerts",
       "scores": {
-        "incognito-browser": {
-          "value": "good",
-          "note": "Price tracking with privacy focus"
-        },
         "privacy-badger": {
-          "value": "poor",
+          "value": "no",
           "note": "Privacy-only, no shopping features"
         },
         "honey-privacy": {
@@ -204,7 +196,7 @@
           "note": "Basic purchase tracking"
         },
         "clearurls": {
-          "value": "poor",
+          "value": "no",
           "note": "No shopping-specific features"
         }
       }
@@ -213,13 +205,9 @@
       "name": "Ease of Use",
       "description": "Simple setup and user-friendly interface for everyday shopping",
       "scores": {
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "One-click privacy browsing"
-        },
         "privacy-badger": {
-          "value": "good",
-          "note": "Install and forget simplicity"
+          "value": "excellent",
+          "note": "Install and forget; works from a tracker list EFF keeps updated"
         },
         "honey-privacy": {
           "value": "excellent",
@@ -239,16 +227,12 @@
       "name": "Cross-Site Protection",
       "description": "Prevents tracking and data sharing between different shopping sites",
       "scores": {
-        "incognito-browser": {
-          "value": "excellent",
-          "note": "Isolated shopping sessions"
-        },
         "privacy-badger": {
           "value": "excellent",
           "note": "Blocks cross-site trackers"
         },
         "honey-privacy": {
-          "value": "poor",
+          "value": "no",
           "note": "Shares data across participating sites"
         },
         "capital-one-eno": {
@@ -263,32 +247,32 @@
     }
   ],
   "verdict": {
-    "summary": "For comprehensive online shopping privacy, Incognito Browser offers the best combination of tracker blocking, price manipulation protection, and shopping features. Privacy Badger excels at blocking trackers but lacks shopping-specific tools. Capital One Eno provides unmatched payment security through virtual cards, while Honey prioritizes deals over privacy. ClearURLs offers solid URL cleaning but limited overall protection.",
+    "summary": "Privacy Badger scores highest on these six criteria: it blocks cross-site trackers on every shopping site, though it has no shopping features and doesn't protect card details. ClearURLs is second; it strips tracking parameters from links, but Chrome has disabled its current version, so it is a Firefox tool for now. Capital One Eno is the only tool here that protects your card number, using virtual card numbers, but it needs a Capital One credit card and does nothing about tracking. Honey scores lowest: it finds coupons and tracks prices, but it blocks nothing and collects shopping data itself.",
     "bestFor": [
       {
-        "useCase": "Complete shopping privacy",
-        "product": "Incognito Browser",
-        "reason": "Best balance of privacy protection and shopping features with built-in price manipulation detection"
+        "useCase": "Tracker blocking",
+        "product": "Privacy Badger",
+        "reason": "Highest score here: open-source tracker blocking from the EFF that works across shopping sites"
       },
       {
         "useCase": "Payment security",
         "product": "Capital One Eno",
-        "reason": "Virtual card numbers provide ultimate protection for credit card information"
+        "reason": "The only tool here that keeps your real card number from merchants"
       },
       {
-        "useCase": "Basic tracker blocking",
-        "product": "Privacy Badger",
-        "reason": "Reliable, open-source tracker blocking that learns and adapts over time"
+        "useCase": "Cleaner links",
+        "product": "ClearURLs",
+        "reason": "Removes tracking parameters from shopping and referral links (in Firefox)"
       },
       {
         "useCase": "Deal hunting with minimal privacy",
         "product": "Honey",
-        "reason": "Excellent coupon finding and price tracking, despite privacy trade-offs"
+        "reason": "Rated excellent for coupons and price tracking, but it tracks your shopping and scores lowest here"
       }
     ]
   },
   "pro_tips": [
-    "Use incognito mode or a privacy browser when price shopping to avoid personalized pricing based on your browsing history",
+    "Compare prices in a private window, which starts without your cookies or signed-in session, to see whether a site is showing you a personalized price",
     "Clear cookies and browsing data between shopping sessions to prevent retailers from building detailed profiles",
     "Compare prices across multiple devices or browsers to detect dynamic pricing schemes targeting your specific profile",
     "Use virtual credit card numbers when available to protect your real financial information from data breaches",
@@ -301,7 +285,7 @@
     },
     {
       "question": "Can I get different prices if I shop in incognito mode?",
-      "answer": "Yes, shopping in incognito mode can help you avoid personalized pricing. Retailers often show different prices based on your browsing history, location, and device type, so private browsing can reveal better deals."
+      "answer": "Sometimes. Retailers can vary prices by location, device and account history. A private window starts without your cookies or signed-in session, so comparing prices in one can reveal personalized pricing, but it doesn't change your location or IP address."
     },
     {
       "question": "Are virtual credit cards safe for online shopping?",

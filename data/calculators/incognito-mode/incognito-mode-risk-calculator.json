@@ -10,36 +10,32 @@
     "browser privacy calculator",
     "incognito security assessment"
   ],
-  "description": "Evaluate how well incognito mode protects your privacy based on your browsing habits and activities. Get a personalized risk score and learn what additional privacy measures you need to stay truly anonymous online.",
+  "description": "Evaluate how well incognito mode protects your privacy based on your browsing habits and activities. Get a personalized risk score and see what private browsing leaves exposed, from your network to the sites you sign in to.",
   "inputs": [
     {
-      "id": "browser",
-      "label": "Primary Browser",
+      "id": "privateModeBlocking",
+      "label": "Tracker Blocking in Private Mode",
       "type": "select",
-      "defaultValue": "chrome",
+      "defaultValue": "none",
       "options": [
         {
-          "value": "chrome",
-          "label": "Chrome (Incognito)"
+          "value": "none",
+          "label": "Only skips saving history"
         },
         {
-          "value": "firefox",
-          "label": "Firefox (Private)"
+          "value": "cookies",
+          "label": "Blocks third-party cookies"
         },
         {
-          "value": "safari",
-          "label": "Safari (Private)"
+          "value": "trackers",
+          "label": "Blocks trackers and third-party cookies"
         },
         {
-          "value": "edge",
-          "label": "Edge (InPrivate)"
-        },
-        {
-          "value": "incognito-browser",
-          "label": "Incognito Browser"
+          "value": "unsure",
+          "label": "Not sure"
         }
       ],
-      "helpText": "Different browsers offer varying levels of private browsing protection"
+      "helpText": "Every private mode stops your device saving history and cookies. Does yours also block trackers while you browse?"
     },
     {
       "id": "activities",
@@ -142,15 +138,15 @@
       "description": "Estimated percentage of your data that remains trackable"
     }
   ],
-  "formula": "let baseRisk = 40; let browserMultipliers = {chrome: 1.0, firefox: 0.9, safari: 0.95, edge: 1.0, 'incognito-browser': 0.7}; let activityRisks = {shopping: 15, banking: 25, social: 20, research: 10, streaming: 12}; let networkRisks = {home: 5, work: 15, public: 30, mobile: 10}; let frequencyMultiplier = frequency * 0.1; let toolsReduction = additionalTools ? -15: 0; let sharedRisk = sharedDevice ? 20: 0; let totalRisk = Math.round(Math.max(0, Math.min(100, baseRisk * browserMultipliers[browser] + activityRisks[activities] + networkRisks[networkType] + (frequencyMultiplier * 10) + toolsReduction + sharedRisk))); let grade = totalRisk <= 25 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': 'D'; let exposurePercent = Math.round(totalRisk * 0.8); return {riskScore: totalRisk, protectionLevel: grade, exposurePercentage: exposurePercent};",
+  "formula": "let baseRisk = 40; let blockingMultipliers = {none: 1.0, cookies: 0.9, trackers: 0.8, unsure: 1.0}; let activityRisks = {shopping: 15, banking: 25, social: 20, research: 10, streaming: 12}; let networkRisks = {home: 5, work: 15, public: 30, mobile: 10}; let frequencyMultiplier = frequency * 0.1; let toolsReduction = additionalTools ? -15: 0; let sharedRisk = sharedDevice ? 20: 0; let totalRisk = Math.round(Math.max(0, Math.min(100, baseRisk * (blockingMultipliers[privateModeBlocking] ?? 1.0) + activityRisks[activities] + networkRisks[networkType] + (frequencyMultiplier * 10) + toolsReduction + sharedRisk))); let grade = totalRisk <= 25 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': 'D'; let exposurePercent = Math.round(totalRisk * 0.8); return {riskScore: totalRisk, protectionLevel: grade, exposurePercentage: exposurePercent};",
   "educational": {
-    "methodology": "This calculator evaluates your privacy risk by analyzing your browser choice, online activities, network environment, and additional security measures. It accounts for the fact that incognito mode only prevents local data storage, not network-level tracking or ISP monitoring.",
+    "methodology": "This calculator evaluates your privacy risk by analyzing whether your private mode blocks trackers, your online activities, network environment, and additional security measures. It accounts for the fact that incognito mode only prevents local data storage, not network-level tracking or ISP monitoring.",
     "tips": [
       "Combine incognito mode with a VPN for better network-level privacy protection",
-      "Use a privacy-focused browser for enhanced private browsing with built-in privacy features",
+      "Check whether your private mode blocks trackers; if it doesn't, turn on strict tracking protection or add a tracker blocker",
       "Avoid banking or sensitive activities on public WiFi, even in incognito mode",
       "Remember that incognito mode doesn't hide your activity from your ISP or network administrator",
-      "Consider using privacy-focused browsers like a privacy-focused browser for stronger default protections"
+      "Sign out of accounts before a private session; a site you're signed in to knows who you are in any mode"
     ],
     "interpretation": [
       {
@@ -180,11 +176,6 @@
     ]
   },
   "relatedLinks": [
-    {
-      "title": "Use a privacy-focused browser ",
-      "url": "/incognito-browser-download",
-      "type": "internal"
-    },
     {
       "title": "Incognito Mode vs VPN Comparison",
       "url": "/incognito-vs-vpn",

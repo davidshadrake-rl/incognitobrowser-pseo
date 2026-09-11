@@ -1,8 +1,8 @@
 {
   "niche": "cloud-privacy",
   "slug": "best-cloud-storage-privacy-tools-compared",
-  "title": "Best Cloud Storage Privacy Tools Compared 2024",
-  "metaDescription": "Compare the best encrypted cloud storage services for privacy. Tresorit vs Proton Drive vs pCloud Crypto - features, pricing & security analysis.",
+  "title": "Best Cloud Storage Privacy Tools Compared",
+  "metaDescription": "Tresorit, pCloud Crypto, Proton Drive and SpiderOak ONE compared on zero-knowledge encryption, free storage, platforms, sharing and business features.",
   "keywords": [
     "encrypted cloud storage",
     "cloud storage privacy",
@@ -15,82 +15,103 @@
     {
       "name": "Tresorit",
       "slug": "tresorit",
-      "tagline": "Swiss-based zero-knowledge cloud storage with military-grade encryption",
+      "tagline": "Swiss zero-knowledge cloud storage with end-to-end encryption",
       "website": "https://tresorit.com",
-      "pricing": "From $10.42/month for 500GB",
+      "pricing": "Free 3GB Basic plan; paid plans from $4.75/month billed yearly (Personal Lite, 50GB)",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS",
+        "Web"
+      ],
       "pros": [
         "End-to-end encryption with zero-knowledge architecture",
         "Based in Switzerland with strong privacy laws",
         "Advanced sharing controls and access permissions",
         "GDPR compliant with data residency options",
-        "Excellent mobile and desktop apps"
+        "Apps for Windows, macOS, Linux, Android, iOS and web"
       ],
       "cons": [
         "More expensive than mainstream alternatives",
-        "Limited free tier (3GB only)",
-        "Slower sync speeds compared to unencrypted services"
-      ],
-      "rating": 9.2
+        "Limited free tier (3GB only)"
+      ]
     },
     {
       "name": "Proton Drive",
       "slug": "proton-drive",
-      "tagline": "Privacy-first cloud storage from the makers of ProtonMail",
+      "tagline": "Encrypted cloud storage from the makers of Proton Mail",
       "website": "https://proton.me/drive",
-      "pricing": "Free 1GB, paid plans from $4.99/month",
+      "pricing": "Free up to 5GB; Drive Plus (200GB) $4.99/month billed monthly",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Android",
+        "iOS",
+        "Web"
+      ],
       "pros": [
-        "Strong reputation for privacy and security",
-        "Integrates with ProtonMail ecosystem",
-        "Competitive pricing with generous free tier",
+        "Integrates with the Proton Mail ecosystem",
+        "End-to-end encryption included on the free 5GB plan",
         "Open-source client applications",
-        "Based in privacy-friendly Switzerland"
+        "Based in Switzerland"
       ],
       "cons": [
         "Relatively new with limited features",
-        "Smaller storage limits on free plan",
+        "No Linux desktop app yet",
         "Web interface could be more polished"
-      ],
-      "rating": 8.5
+      ]
     },
     {
       "name": "pCloud Crypto",
       "slug": "pcloud-crypto",
       "tagline": "Affordable encrypted cloud storage with lifetime plans",
       "website": "https://pcloud.com",
-      "pricing": "From $3.99/month for encryption add-on",
+      "pricing": "Free up to 10GB; Crypto encryption add-on $49.99/year or $150 lifetime",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS",
+        "Web"
+      ],
       "pros": [
         "Client-side encryption with Crypto add-on",
         "Lifetime storage plans available",
         "Good value for money",
-        "Fast sync speeds",
         "Media streaming capabilities"
       ],
       "cons": [
         "Encryption is a paid add-on, not built-in",
-        "Based in Bulgaria with unclear privacy laws",
+        "Files in the encrypted Crypto folder can't be shared by link",
         "Less established privacy reputation"
-      ],
-      "rating": 7.8
+      ]
     },
     {
       "name": "SpiderOak ONE",
       "slug": "spideroak-one",
       "tagline": "No Knowledge privacy with continuous backup",
       "website": "https://spideroak.com",
-      "pricing": "From $6/month for 150GB",
+      "pricing": "From $6/month for 150GB (21-day free trial)",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Web"
+      ],
       "pros": [
-        "True zero-knowledge architecture",
+        "Zero-knowledge encryption when you use the desktop app",
         "Continuous backup functionality",
         "Strong encryption and security focus",
         "Version history and deleted file recovery"
       ],
       "cons": [
         "Complex interface for non-technical users",
-        "Slower performance compared to competitors",
-        "Limited collaboration features",
-        "Higher learning curve"
-      ],
-      "rating": 7.5
+        "No mobile apps: they were removed from the app stores",
+        "Signing in on the website gives up its zero-knowledge protection"
+      ]
     }
   ],
   "features": [
@@ -98,21 +119,21 @@
       "name": "Zero-Knowledge Encryption",
       "description": "Files are encrypted on your device before upload, ensuring the provider cannot access your data",
       "scores": {
-        "Tresorit": {
+        "tresorit": {
           "value": "excellent",
           "note": "True zero-knowledge with client-side encryption"
         },
-        "Proton Drive": {
+        "proton-drive": {
           "value": "excellent",
           "note": "Built-in zero-knowledge architecture"
         },
-        "pCloud Crypto": {
+        "pcloud-crypto": {
           "value": "good",
-          "note": "Available with paid Crypto add-on"
+          "note": "Only for files in the Crypto folder, a paid add-on"
         },
-        "SpiderOak ONE": {
-          "value": "excellent",
-          "note": "No Knowledge privacy model"
+        "spideroak-one": {
+          "value": "good",
+          "note": "Zero-knowledge with the desktop app; signing in on the website exposes your password to SpiderOak"
         }
       }
     },
@@ -120,21 +141,21 @@
       "name": "Free Storage Tier",
       "description": "Amount of storage available without payment",
       "scores": {
-        "Tresorit": {
+        "tresorit": {
           "value": "fair",
           "note": "3GB free storage"
         },
-        "Proton Drive": {
+        "proton-drive": {
           "value": "good",
-          "note": "1GB free, 15GB with paid email"
+          "note": "5GB free"
         },
-        "pCloud Crypto": {
+        "pcloud-crypto": {
           "value": "good",
           "note": "10GB free (encryption costs extra)"
         },
-        "SpiderOak ONE": {
-          "value": "poor",
-          "note": "No free tier available"
+        "spideroak-one": {
+          "value": "no",
+          "note": "No free plan; 21-day free trial"
         }
       }
     },
@@ -142,21 +163,21 @@
       "name": "Cross-Platform Support",
       "description": "Availability across different operating systems and devices",
       "scores": {
-        "Tresorit": {
+        "tresorit": {
           "value": "excellent",
-          "note": "All major platforms with native apps"
+          "note": "Windows, macOS, Linux, Android, iOS and web"
         },
-        "Proton Drive": {
+        "proton-drive": {
           "value": "good",
-          "note": "Web, mobile, and desktop apps"
+          "note": "Windows, macOS, Android, iOS and web; no Linux desktop app yet"
         },
-        "pCloud Crypto": {
+        "pcloud-crypto": {
           "value": "excellent",
-          "note": "Comprehensive platform support"
+          "note": "Windows, macOS, Linux, Android, iOS and web"
         },
-        "SpiderOak ONE": {
-          "value": "good",
-          "note": "Most platforms supported"
+        "spideroak-one": {
+          "value": "fair",
+          "note": "Windows, macOS and Linux apps plus web; the mobile apps were withdrawn"
         }
       }
     },
@@ -164,43 +185,21 @@
       "name": "File Sharing Controls",
       "description": "Ability to securely share files with others while maintaining privacy",
       "scores": {
-        "Tresorit": {
+        "tresorit": {
           "value": "excellent",
           "note": "Advanced sharing with permissions and expiry"
         },
-        "Proton Drive": {
+        "proton-drive": {
           "value": "good",
           "note": "Secure sharing with password protection"
         },
-        "pCloud Crypto": {
+        "pcloud-crypto": {
           "value": "fair",
-          "note": "Basic sharing, encrypted files stay encrypted"
+          "note": "Regular files can be shared by link; files in the encrypted Crypto folder can't"
         },
-        "SpiderOak ONE": {
+        "spideroak-one": {
           "value": "fair",
-          "note": "Limited sharing capabilities"
-        }
-      }
-    },
-    {
-      "name": "Sync Speed",
-      "description": "How quickly files sync across devices",
-      "scores": {
-        "Tresorit": {
-          "value": "good",
-          "note": "Good speed despite encryption overhead"
-        },
-        "Proton Drive": {
-          "value": "good",
-          "note": "Improving with recent updates"
-        },
-        "pCloud Crypto": {
-          "value": "excellent",
-          "note": "Fast sync with optimized infrastructure"
-        },
-        "SpiderOak ONE": {
-          "value": "fair",
-          "note": "Slower due to security focus"
+          "note": "ShareRooms and file links that expire after three days"
         }
       }
     },
@@ -208,52 +207,52 @@
       "name": "Business Features",
       "description": "Team management, admin controls, and compliance features",
       "scores": {
-        "Tresorit": {
+        "tresorit": {
           "value": "excellent",
           "note": "Full business suite with admin controls"
         },
-        "Proton Drive": {
+        "proton-drive": {
           "value": "fair",
           "note": "Basic business features, expanding"
         },
-        "pCloud Crypto": {
+        "pcloud-crypto": {
           "value": "good",
           "note": "Business plans with team management"
         },
-        "SpiderOak ONE": {
-          "value": "good",
-          "note": "Enterprise options available"
+        "spideroak-one": {
+          "value": "—",
+          "note": "SpiderOak sells business backup as a separate product; team features in ONE are not documented"
         }
       }
     }
   ],
   "verdict": {
-    "summary": "Tresorit leads for enterprise users needing robust security and compliance, while Proton Drive offers the best value for individual users seeking privacy. pCloud Crypto provides a good middle ground with competitive pricing, and SpiderOak ONE serves users prioritizing maximum security over ease of use.",
+    "summary": "Tresorit scores highest here: end-to-end encryption by default, the most complete sharing controls and business features on this table, and apps for every major platform, though its free plan is only 3GB. pCloud Crypto and Proton Drive tie for second; pCloud Crypto is listed first only because ties are ordered alphabetically. pCloud gives you 10GB free, but its client-side encryption is a paid add-on and encrypted files can't be shared by link. Proton Drive includes encryption even on its free 5GB plan, but its business features are basic and it has no Linux desktop app yet. SpiderOak ONE scores lowest: it has no free plan and no mobile apps, and its web login gives up zero-knowledge protection. Sync speed isn't scored, because we haven't measured it.",
     "bestFor": [
       {
         "useCase": "Business teams needing secure collaboration",
         "product": "Tresorit",
-        "reason": "Advanced sharing controls, compliance features, and enterprise-grade security"
+        "reason": "Highest score here: advanced sharing controls, admin tools and end-to-end encryption"
       },
       {
-        "useCase": "Privacy-conscious individuals on a budget",
+        "useCase": "Encrypted storage without paying",
         "product": "Proton Drive",
-        "reason": "Strong privacy reputation, reasonable pricing, and ecosystem integration"
+        "reason": "End-to-end encryption is included on the free 5GB plan; pCloud charges extra for its Crypto folder"
       },
       {
         "useCase": "Users wanting lifetime storage plans",
         "product": "pCloud Crypto",
-        "reason": "One-time payment options and good performance with encryption add-on"
+        "reason": "One-time payment options for storage and the Crypto add-on, and 10GB of free storage"
       },
       {
-        "useCase": "Maximum security for sensitive data",
+        "useCase": "Continuous desktop backup",
         "product": "SpiderOak ONE",
-        "reason": "True No Knowledge architecture and continuous backup capabilities"
+        "reason": "Continuous backup with version history and deleted-file recovery; use the desktop app, not the web login, to keep zero-knowledge protection"
       }
     ]
   },
   "pro_tips": [
-    "Use a privacy-focused browser when accessing cloud storage web interfaces to prevent tracking and ensure your browsing habits remain private.",
+    "Where you can, use a provider's desktop or mobile app rather than its website: with some services, SpiderOak ONE for example, signing in on the web weakens the encryption.",
     "Enable two-factor authentication on all cloud storage accounts, even encrypted ones, to add an extra layer of account protection.",
     "Regularly audit shared files and folders to ensure you're not accidentally sharing sensitive data with unintended recipients.",
     "Consider using different cloud providers for different types of data - one for regular files and another for highly sensitive documents.",
@@ -266,7 +265,7 @@
     },
     {
       "question": "Are encrypted cloud storage services slower than regular ones?",
-      "answer": "Encrypted services can be slightly slower due to the encryption/decryption process, but modern services like Tresorit and pCloud have optimized their systems to minimize performance impact. The security benefits typically outweigh the minor speed differences."
+      "answer": "Encryption adds work on your device: files are encrypted before upload and decrypted after download, so large transfers can take a little longer. How much depends on your device, your connection and the service. This page doesn't score sync speed, because we haven't measured it."
     },
     {
       "question": "Can I migrate from Google Drive or Dropbox to an encrypted service?",

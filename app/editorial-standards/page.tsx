@@ -10,8 +10,14 @@
  *     content page's generateMetadata, and the sitemap filter;
  *   - the brand-mention scrub: scripts/scrub-product-mentions.mjs, which
  *     scripts/promote-all.mjs refuses to run without. It covers guides,
- *     checklists, templates and glossary text; comparisons and three
- *     calculators still name the app, hence the disclosure below;
+ *     checklists, templates, calculators and glossary text. It leaves
+ *     calculator dropdown labels alone (PRESERVE_PATH), so listing
+ *     calculators with the articles below stays true only while no
+ *     calculator offers or scores the app, as fixed on 2026-09-10.
+ *     Comparisons still name it: each one that does carries a disclosure at
+ *     the top (components/ComparisonPage.tsx) and is rated by the published
+ *     rubric (lib/comparison-score.ts, /comparisons/methodology), hence the
+ *     paragraph below;
  *   - duplicate demotion: scripts/demote-overlap-duplicates.mjs.
  * It names no person, on purpose — see components/EditorialNote.tsx.
  */
@@ -71,13 +77,19 @@ export default function EditorialStandardsPage() {
       <Section title="What is checked before a page goes live">
         <p className="prose-ib">
           <strong className="text-t1">Articles don&apos;t advertise our app.</strong> Mentions of it are
-          rewritten out of guides, checklists, templates and glossary entries before they can be
-          published, so the advice stands on its own. Where we do suggest the app, it sits in a
+          rewritten out of guides, checklists, templates, calculators and glossary entries before they
+          can be published, so the advice stands on its own. Where we do suggest the app, it sits in a
           separate panel, not in the steps.
         </p>
         <p className="prose-ib">
           <strong className="text-t1">Comparisons can include Incognito Browser.</strong> Some
-          comparisons list it next to other products. We make it, so read its row with that in mind.
+          comparisons list it next to other products. Each of those says at the top that we make it,
+          and it is rated with the same published rubric as every other product, from the table on the
+          page.{' '}
+          <Link href="/comparisons/methodology" className="underline underline-offset-2 hover:text-t1">
+            How we score comparisons
+          </Link>
+          .
         </p>
         <p className="prose-ib">
           <strong className="text-t1">It isn&apos;t a copy of another page.</strong> Many topics share

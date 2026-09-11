@@ -42,33 +42,29 @@
       "helpText": "Longer histories create larger privacy risks"
     },
     {
-      "id": "searchEngine",
-      "label": "Primary search engine",
+      "id": "engineHistory",
+      "label": "Does your search engine keep your searches?",
       "type": "select",
-      "defaultValue": "google",
+      "defaultValue": "profile",
       "options": [
         {
-          "value": "google",
-          "label": "Google"
+          "value": "profile",
+          "label": "Yes, tied to my account and used for ads"
         },
         {
-          "value": "bing",
-          "label": "Microsoft Bing"
+          "value": "kept",
+          "label": "Yes, but not used for ads"
         },
         {
-          "value": "yahoo",
-          "label": "Yahoo"
+          "value": "not-kept",
+          "label": "No, it doesn't keep searches tied to me"
         },
         {
-          "value": "duckduckgo",
-          "label": "DuckDuckGo"
-        },
-        {
-          "value": "private-engine",
-          "label": "Other private search engine"
+          "value": "unsure",
+          "label": "Not sure"
         }
       ],
-      "helpText": "Different engines have varying data retention policies"
+      "helpText": "Check its privacy policy or your account's activity settings"
     },
     {
       "id": "deviceSharing",
@@ -207,12 +203,12 @@
       "description": "How long your searches are likely stored"
     }
   ],
-  "formula": "let score = 0; const years = inputs.yearsOfSearching; if(years === 'less-than-1') score += 5; else if(years === '1-2') score += 15; else if(years === '3-5') score += 30; else if(years === '6-10') score += 50; else score += 70; if(inputs.searchEngine === 'google') score += 25; else if(inputs.searchEngine === 'bing' || inputs.searchEngine === 'yahoo') score += 20; else if(inputs.searchEngine === 'duckduckgo' || inputs.searchEngine === 'private-engine') score += 5; const sharing = inputs.deviceSharing; if(sharing === 'never') score += 0; else if(sharing === 'sometimes') score += 10; else if(sharing === 'family-computer') score += 15; else if(sharing === 'work-device') score += 20; else score += 25; const autoDelete = inputs.autoDeleteEnabled; if(autoDelete === 'yes-3months') score -= 15; else if(autoDelete === 'yes-18months') score -= 10; else if(autoDelete === 'yes-36months') score -= 5; else if(autoDelete === 'no') score += 15; else score += 10; const incognito = inputs.incognitoUsage; if(incognito === 'always') score -= 20; else if(incognito === 'often') score -= 10; else if(incognito === 'sometimes') score -= 5; else if(incognito === 'rarely') score += 5; else score += 15; const sensitive = inputs.sensitiveSearches; if(sensitive === 'never') score += 0; else if(sensitive === 'rarely') score += 5; else if(sensitive === 'sometimes') score += 10; else if(sensitive === 'often') score += 20; else score += 30; score = Math.max(0, Math.min(100, score)); let grade, retention; if(score <= 25) { grade = 'Low Risk'; retention = 'Minimal data stored'; } else if(score <= 50) { grade = 'Moderate Risk'; retention = 'Some data retention'; } else if(score <= 75) { grade = 'High Risk'; retention = 'Extensive data retention'; } else { grade = 'Critical Risk'; retention = 'Years of detailed history stored'; } return { riskScore: Math.round(score), riskGrade: grade, dataRetention: retention };",
+  "formula": "let score = 0; const years = inputs.yearsOfSearching; if(years === 'less-than-1') score += 5; else if(years === '1-2') score += 15; else if(years === '3-5') score += 30; else if(years === '6-10') score += 50; else score += 70; const historyScores = { profile: 25, kept: 15, 'not-kept': 5, unsure: 20 }; score += historyScores[inputs.engineHistory] ?? 20; const sharing = inputs.deviceSharing; if(sharing === 'never') score += 0; else if(sharing === 'sometimes') score += 10; else if(sharing === 'family-computer') score += 15; else if(sharing === 'work-device') score += 20; else score += 25; const autoDelete = inputs.autoDeleteEnabled; if(autoDelete === 'yes-3months') score -= 15; else if(autoDelete === 'yes-18months') score -= 10; else if(autoDelete === 'yes-36months') score -= 5; else if(autoDelete === 'no') score += 15; else score += 10; const incognito = inputs.incognitoUsage; if(incognito === 'always') score -= 20; else if(incognito === 'often') score -= 10; else if(incognito === 'sometimes') score -= 5; else if(incognito === 'rarely') score += 5; else score += 15; const sensitive = inputs.sensitiveSearches; if(sensitive === 'never') score += 0; else if(sensitive === 'rarely') score += 5; else if(sensitive === 'sometimes') score += 10; else if(sensitive === 'often') score += 20; else score += 30; score = Math.max(0, Math.min(100, score)); let grade, retention; if(score <= 25) { grade = 'Low Risk'; retention = 'Minimal data stored'; } else if(score <= 50) { grade = 'Moderate Risk'; retention = 'Some data retention'; } else if(score <= 75) { grade = 'High Risk'; retention = 'Extensive data retention'; } else { grade = 'Critical Risk'; retention = 'Years of detailed history stored'; } return { riskScore: Math.round(score), riskGrade: grade, dataRetention: retention };",
   "educational": {
     "methodology": "This calculator evaluates your search history privacy risk based on data retention policies, sharing habits, privacy tool usage, and the sensitivity of your searches. Scores range from 0-100, with higher scores indicating greater privacy exposure.",
     "tips": [
       "Enable auto-delete in Google Activity Controls to automatically remove old search data",
-      "Use a privacy-focused browser or private browsing mode for sensitive searches",
+      "Use a private window for sensitive searches so they aren't saved on your device; if you're signed in, the search engine may still keep them",
       "Consider switching to privacy-focused search engines like DuckDuckGo",
       "Regularly clear your search history manually, especially on shared devices",
       "Review and adjust your ad personalization settings to limit data use"

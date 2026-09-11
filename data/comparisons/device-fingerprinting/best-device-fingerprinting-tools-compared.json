@@ -1,8 +1,8 @@
 {
   "niche": "device-fingerprinting",
   "slug": "best-device-fingerprinting-tools-compared",
-  "title": "Best Device Fingerprinting Tools Compared - 2024 Privacy Guide",
-  "metaDescription": "Compare the best tools to detect and prevent device fingerprinting. Protect yourself from browser tracking with our expert-tested solutions.",
+  "title": "Best Device Fingerprinting Tools Compared",
+  "metaDescription": "Tor Browser, Brave, CanvasBlocker, Firefox with uBlock Origin and Incognito Browser (which we make) scored on the same six fingerprinting defences.",
   "keywords": [
     "device fingerprinting tools",
     "browser fingerprinting protection",
@@ -10,32 +10,42 @@
     "anti-fingerprinting browser",
     "fingerprint detection tools"
   ],
-  "intro": "Device fingerprinting lets websites track you even after clearing cookies by collecting unique browser and device characteristics. Our comparison covers the best tools to detect, test, and protect against this invisible tracking method.",
+  "intro": "Device fingerprinting lets websites track you even after clearing cookies by collecting unique browser and device characteristics. This page scores five browsers and add-ons on six fingerprinting defences, and each rating is worked out from the table.",
   "products": [
     {
       "name": "Incognito Browser",
       "slug": "incognito-browser",
-      "tagline": "Android browser that stays private by default and wipes everything on exit",
+      "tagline": "Android browser that stays in private mode and wipes history, cookies and sessions when you exit",
       "website": "https://incognitobrowser.io/",
-      "pricing": "Free with premium features",
+      "pricing": "Free; optional Incognito Pro subscription",
+      "platforms": [
+        "Android"
+      ],
       "pros": [
-        "No configuration needed - works out of the box",
-        "Regular updates to counter new tracking methods"
+        "Every tab is private; history, cookies and sessions are wiped when you exit",
+        "Settings to switch JavaScript, images and cookies off",
+        "Agent Cloaking can mask the browser and device a site sees"
       ],
       "cons": [
-        "May break some websites that rely on fingerprinting",
-        "Premium features require subscription"
-      ],
-      "rating": 9.2
+        "No fingerprinting protection is documented",
+        "Android only: there is no iOS, desktop or web version",
+        "Google Play's Data safety section says it may collect crash logs and diagnostics"
+      ]
     },
     {
       "name": "Firefox with uBlock Origin",
       "slug": "firefox-ublock",
-      "tagline": "Open-source browser with powerful fingerprinting protection",
+      "tagline": "Open-source browser that blocks known fingerprinting scripts",
       "website": "https://firefox.com",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
       "pros": [
-        "Enhanced Tracking Protection blocks fingerprinting",
+        "Enhanced Tracking Protection blocks known fingerprinting scripts",
         "uBlock Origin adds extra fingerprinting filters",
         "Highly customizable privacy settings",
         "Regular security updates"
@@ -43,27 +53,31 @@
       "cons": [
         "Requires manual configuration for best protection",
         "Some fingerprinting techniques still work"
-      ],
-      "rating": 8.5
+      ]
     },
     {
       "name": "Tor Browser",
       "slug": "tor-browser",
-      "tagline": "Maximum anonymity browser with fingerprinting resistance",
+      "tagline": "Browser that routes traffic through Tor and makes users look alike to resist fingerprinting",
       "website": "https://torproject.org",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
       "pros": [
-        "Excellent fingerprinting resistance",
+        "Standardizes screen size, fonts and user agent across users",
         "Makes users look identical to trackers",
         "Blocks canvas and WebGL fingerprinting",
         "Routes traffic through Tor network"
       ],
       "cons": [
-        "Slower browsing speeds",
+        "Slower than a regular browser, because traffic passes through three relays",
         "Some websites block Tor users",
         "Limited functionality for daily use"
-      ],
-      "rating": 8.8
+      ]
     },
     {
       "name": "Brave Browser",
@@ -71,36 +85,47 @@
       "tagline": "Privacy-focused browser with fingerprinting shields",
       "website": "https://brave.com",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Built-in fingerprinting protection",
-        "Blocks canvas and device fingerprinting",
-        "Fast browsing with ad blocking",
+        "Randomizes canvas, WebGL and audio readouts by default",
+        "Blocks ads and trackers by default",
         "Easy privacy controls"
       ],
       "cons": [
         "Some fingerprinting methods still detectable",
         "Cryptocurrency features may not appeal to all users"
-      ],
-      "rating": 8.1
+      ]
     },
     {
-      "name": "Canvas Blocker Extension",
+      "name": "CanvasBlocker",
       "slug": "canvas-blocker",
-      "tagline": "Specialized extension for canvas fingerprinting protection",
-      "website": "https://canvasblocker.kkapsner.de",
+      "tagline": "Firefox add-on that fakes canvas and other fingerprinting readouts",
+      "website": "https://addons.mozilla.org/firefox/addon/canvasblocker/",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
       "pros": [
         "Specifically targets canvas fingerprinting",
-        "Works with any browser",
+        "Also fakes WebGL, audio, DOMRect and TextMetrics readouts",
         "Highly configurable settings",
         "Open source and transparent"
       ],
       "cons": [
-        "Only protects against canvas fingerprinting",
+        "Firefox only (desktop and Android)",
         "Complex configuration options",
         "May cause website compatibility issues"
-      ],
-      "rating": 7.3
+      ]
     }
   ],
   "features": [
@@ -109,8 +134,8 @@
       "description": "Blocks websites from reading unique canvas signatures that identify your device",
       "scores": {
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Complete canvas blocking with noise injection"
+          "value": "no",
+          "note": "Not documented"
         },
         "firefox-ublock": {
           "value": "good",
@@ -135,8 +160,8 @@
       "description": "Prevents websites from identifying your graphics card and driver information",
       "scores": {
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Spoofs WebGL parameters"
+          "value": "no",
+          "note": "Not documented"
         },
         "firefox-ublock": {
           "value": "fair",
@@ -144,15 +169,15 @@
         },
         "tor-browser": {
           "value": "excellent",
-          "note": "Disables WebGL by default"
+          "note": "Restricts WebGL and reports standard values"
         },
         "brave-browser": {
           "value": "good",
           "note": "Randomizes WebGL parameters"
         },
         "canvas-blocker": {
-          "value": "poor",
-          "note": "Doesn't protect against WebGL"
+          "value": "good",
+          "note": "Includes WebGL protection"
         }
       }
     },
@@ -161,8 +186,8 @@
       "description": "Blocks websites from using audio context to create unique device signatures",
       "scores": {
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Blocks audio fingerprinting attempts"
+          "value": "no",
+          "note": "Not documented"
         },
         "firefox-ublock": {
           "value": "fair",
@@ -177,8 +202,8 @@
           "note": "Randomizes audio signatures"
         },
         "canvas-blocker": {
-          "value": "poor",
-          "note": "No audio fingerprinting protection"
+          "value": "good",
+          "note": "Includes audio API protection"
         }
       }
     },
@@ -187,8 +212,8 @@
       "description": "Prevents websites from detecting your installed fonts to create a unique profile",
       "scores": {
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Limits font enumeration"
+          "value": "no",
+          "note": "Not documented"
         },
         "firefox-ublock": {
           "value": "good",
@@ -203,8 +228,8 @@
           "note": "Blocks font fingerprinting"
         },
         "canvas-blocker": {
-          "value": "poor",
-          "note": "No font protection"
+          "value": "partial",
+          "note": "Fakes TextMetrics and DOMRect readouts that font checks can use"
         }
       }
     },
@@ -213,8 +238,8 @@
       "description": "Hides or randomizes your actual screen resolution to prevent identification",
       "scores": {
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Spoofs screen dimensions"
+          "value": "no",
+          "note": "Not documented"
         },
         "firefox-ublock": {
           "value": "fair",
@@ -229,8 +254,8 @@
           "note": "Some screen dimension protection"
         },
         "canvas-blocker": {
-          "value": "poor",
-          "note": "No screen spoofing"
+          "value": "partial",
+          "note": "Includes screen API protection"
         }
       }
     },
@@ -239,8 +264,8 @@
       "description": "Changes browser identification strings to prevent consistent tracking",
       "scores": {
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Rotates user agents automatically"
+          "value": "no",
+          "note": "Not documented. Agent Cloaking changes the browser and device a site sees, which is not fingerprint protection"
         },
         "firefox-ublock": {
           "value": "fair",
@@ -255,40 +280,40 @@
           "note": "Limited user agent randomization"
         },
         "canvas-blocker": {
-          "value": "poor",
-          "note": "No user agent features"
+          "value": "partial",
+          "note": "Navigator protection can change what the browser reports; off by default"
         }
       }
     }
   ],
   "verdict": {
-    "summary": "For comprehensive fingerprinting protection, Incognito Browser leads with its built-in anti-fingerprinting features that require no configuration. Tor Browser offers the strongest protection for high-risk scenarios, while Firefox with uBlock Origin provides a good balance of protection and usability for daily browsing.",
+    "summary": "Tor Browser scores highest on these six criteria: rather than hiding each signal, it tries to make every user look the same. Brave and CanvasBlocker tie for second (Brave is listed first alphabetically). Brave randomizes canvas, WebGL and audio readouts by default in an everyday browser; CanvasBlocker adds similar faking to Firefox but takes some configuring. Firefox with uBlock Origin is next: Enhanced Tracking Protection blocks known fingerprinting scripts, but several signals are only partly covered. Incognito Browser, which we make, scores lowest: it documents no fingerprinting protection. Its Agent Cloaking changes the browser and device a site sees, which is not the same thing.",
     "bestFor": [
       {
-        "useCase": "Everyday browsing with strong protection",
-        "product": "Incognito Browser",
-        "reason": "Complete fingerprinting protection with no setup required and excellent website compatibility"
+        "useCase": "Blending in with other users",
+        "product": "Tor Browser",
+        "reason": "Scores highest here; aims to make all users appear identical to trackers"
       },
       {
-        "useCase": "Maximum anonymity and security",
-        "product": "Tor Browser",
-        "reason": "Best-in-class fingerprinting resistance that makes all users appear identical to trackers"
+        "useCase": "Everyday browsing with strong protection",
+        "product": "Brave Browser",
+        "reason": "Randomizes canvas, WebGL and audio readouts by default, with no setup"
+      },
+      {
+        "useCase": "Canvas fingerprinting in Firefox",
+        "product": "CanvasBlocker",
+        "reason": "Fakes canvas readouts, and WebGL and audio ones too, in Firefox on desktop and Android"
       },
       {
         "useCase": "Customizable privacy on a budget",
         "product": "Firefox with uBlock Origin",
-        "reason": "Free solution with extensive customization options for tech-savvy users"
-      },
-      {
-        "useCase": "Canvas fingerprinting only",
-        "product": "Canvas Blocker Extension",
-        "reason": "Specialized tool that works with any browser to block canvas-based tracking"
+        "reason": "Open source and highly configurable, with uBlock Origin's filter lists on top"
       }
     ]
   },
   "pro_tips": [
-    "Test your fingerprinting protection regularly using tools like AmIUnique.org or Panopticlick to see how unique your browser appears to websites.",
-    "Combine multiple protection methods - use a privacy browser with additional extensions for layered defense against different fingerprinting techniques.",
+    "Test your fingerprinting protection regularly using tools like AmIUnique.org or the EFF's Cover Your Tracks (formerly Panopticlick) to see how unique your browser appears to websites.",
+    "Don't stack several anti-fingerprinting add-ons: overlapping tools can make your browser more unusual, not less. Pick one approach, such as Tor Browser, Brave's defaults or CanvasBlocker in Firefox, and test it.",
     "Clear your browser data regularly and use private browsing modes, but remember that fingerprinting can still track you across sessions.",
     "Consider using different browsers for different activities - a hardened browser for sensitive tasks and a regular one for everyday browsing.",
     "Keep your anti-fingerprinting tools updated as new tracking methods emerge constantly and protection needs to evolve accordingly."
@@ -300,7 +325,7 @@
     },
     {
       "question": "How effective are anti-fingerprinting tools?",
-      "answer": "Good anti-fingerprinting tools can block 80-95% of fingerprinting attempts, but no solution is 100% effective. The best protection comes from using multiple layers - a privacy-focused browser, extensions, and good browsing habits together."
+      "answer": "No tool stops every technique. On this page Tor Browser scores highest because it makes its users look alike rather than hiding each signal separately; Brave and CanvasBlocker randomize or fake readouts instead. Stacking several anti-fingerprinting add-ons can make a browser more unusual and easier to single out, so pick one approach and check it with a test site such as the EFF's Cover Your Tracks."
     },
     {
       "question": "Will anti-fingerprinting protection break websites?",
@@ -308,11 +333,11 @@
     },
     {
       "question": "Can I use anti-fingerprinting tools on mobile devices?",
-      "answer": "Yes, browsers like Firefox and Brave offer mobile versions with fingerprinting protection. However, mobile browsers typically have fewer customization options than desktop versions, so protection may be more limited."
+      "answer": "Yes. Brave and Tor Browser have mobile versions with fingerprinting protection, and Firefox for Android can run uBlock Origin and CanvasBlocker. Mobile browsers typically have fewer settings than desktop versions, though, so protection may be more limited."
     },
     {
       "question": "Is fingerprinting protection legal?",
-      "answer": "Yes, protecting yourself from fingerprinting is completely legal. In fact, regulations like GDPR in Europe are starting to require websites to get consent before using fingerprinting techniques, making protection tools even more important for privacy."
+      "answer": "Yes, protecting yourself from fingerprinting is legal. In the EU, websites generally need your consent before fingerprinting your device under the ePrivacy rules, and the data a fingerprint produces counts as personal data under the GDPR."
     }
   ],
   "editorial": {

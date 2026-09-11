@@ -38,50 +38,50 @@
       "helpText": "Higher frequency increases tracking exposure"
     },
     {
-      "id": "browserType",
-      "label": "What browser do you primarily use for shopping?",
+      "id": "trackerBlocking",
+      "label": "Does the browser you shop in block trackers?",
       "type": "select",
-      "defaultValue": "chrome",
+      "defaultValue": "none",
       "options": [
         {
-          "value": "incognito-browser",
-          "label": "Incognito Browser"
+          "value": "strict",
+          "label": "Yes, strict blocking (built in or turned on)"
         },
         {
-          "value": "firefox",
-          "label": "Firefox with privacy settings"
+          "value": "standard",
+          "label": "Some, on its standard setting"
         },
         {
-          "value": "safari",
-          "label": "Safari"
+          "value": "none",
+          "label": "No tracker blocking"
         },
         {
-          "value": "chrome",
-          "label": "Chrome/Edge (default settings)"
+          "value": "unsure",
+          "label": "Not sure"
         }
       ],
-      "helpText": "Privacy-focused browsers offer better protection"
+      "helpText": "Tracker blocking stops ad networks following you from shop to shop"
     },
     {
       "id": "cookieManagement",
-      "label": "Do you manage cookies and tracking?",
+      "label": "Do you clear your cookies?",
       "type": "select",
       "defaultValue": "never",
       "options": [
         {
           "value": "always",
-          "label": "Always clear cookies and block trackers"
+          "label": "Always, after shopping or when the browser closes"
         },
         {
           "value": "sometimes",
-          "label": "Sometimes clear cookies"
+          "label": "Sometimes"
         },
         {
           "value": "never",
-          "label": "Never manage cookies"
+          "label": "Never"
         }
       ],
-      "helpText": "Cookie management prevents cross-site tracking"
+      "helpText": "Clearing cookies stops shops linking one visit to the next"
     },
     {
       "id": "incognitoUsage",
@@ -106,7 +106,7 @@
           "label": "Never"
         }
       ],
-      "helpText": "Incognito mode helps avoid dynamic pricing"
+      "helpText": "A private window starts without your cookies, so the shop can't use your earlier visits"
     },
     {
       "id": "paymentMethods",
@@ -120,7 +120,7 @@
         },
         {
           "value": "paypal-apple",
-          "label": "PayPal, Apple Pay, or similar services"
+          "label": "Payment service or wallet (e.g. PayPal, Apple Pay)"
         },
         {
           "value": "direct-card",
@@ -196,12 +196,12 @@
       "description": "How exposed you are to cross-site tracking (0-100)"
     }
   ],
-  "formula": "const weights = { shoppingFrequency: 15, browserType: 25, cookieManagement: 20, incognitoUsage: 15, paymentMethods: 15, accountCreation: 5, priceComparison: 5 }; const scores = { shoppingFrequency: { daily: 100, weekly: 75, monthly: 40, rarely: 10 }, browserType: { 'incognito-browser': 10, firefox: 30, safari: 50, chrome: 90 }, cookieManagement: { always: 10, sometimes: 50, never: 100 }, incognitoUsage: { always: 10, often: 30, sometimes: 60, never: 100 }, paymentMethods: { 'virtual-cards': 10, 'paypal-apple': 40, 'direct-card': 70, 'stored-cards': 100 }, accountCreation: { guest: 20, minimal: 50, always: 100 }, priceComparison: { 'private-tools': 20, 'different-devices': 40, 'same-browser': 100 } }; let totalScore = 0; for (let key in weights) { totalScore += (scores[key][inputs[key]] * weights[key]) / 100; } const privacyRisk = Math.round(totalScore); const trackingExposure = Math.round(totalScore * 0.8 + (inputs.shoppingFrequency === 'daily' ? 20: 0)); const riskGrade = privacyRisk <= 25 ? 'A': privacyRisk <= 40 ? 'B': privacyRisk <= 60 ? 'C': privacyRisk <= 80 ? 'D': 'F'; return { privacyRisk, riskGrade, trackingExposure };",
+  "formula": "const weights = { shoppingFrequency: 15, trackerBlocking: 25, cookieManagement: 20, incognitoUsage: 15, paymentMethods: 15, accountCreation: 5, priceComparison: 5 }; const scores = { shoppingFrequency: { daily: 100, weekly: 75, monthly: 40, rarely: 10 }, trackerBlocking: { strict: 10, standard: 40, none: 90, unsure: 70 }, cookieManagement: { always: 10, sometimes: 50, never: 100 }, incognitoUsage: { always: 10, often: 30, sometimes: 60, never: 100 }, paymentMethods: { 'virtual-cards': 10, 'paypal-apple': 40, 'direct-card': 70, 'stored-cards': 100 }, accountCreation: { guest: 20, minimal: 50, always: 100 }, priceComparison: { 'private-tools': 20, 'different-devices': 40, 'same-browser': 100 } }; let totalScore = 0; for (let key in weights) { totalScore += (scores[key][inputs[key]] * weights[key]) / 100; } const privacyRisk = Math.round(totalScore); const trackingExposure = Math.round(totalScore * 0.8 + (inputs.shoppingFrequency === 'daily' ? 20: 0)); const riskGrade = privacyRisk <= 25 ? 'A': privacyRisk <= 40 ? 'B': privacyRisk <= 60 ? 'C': privacyRisk <= 80 ? 'D': 'F'; return { privacyRisk, riskGrade, trackingExposure };",
   "educational": {
-    "methodology": "This calculator evaluates your online shopping privacy risk based on browser choice, tracking prevention, payment methods, and shopping habits. Higher scores indicate greater privacy risks including data collection, dynamic pricing exposure, and financial information vulnerability.",
+    "methodology": "This calculator evaluates your online shopping privacy risk based on your browser's tracker blocking, cookie habits, private browsing, payment methods, and shopping habits. Higher scores indicate greater privacy risks including data collection, dynamic pricing exposure, and financial information vulnerability.",
     "tips": [
-      "Use a privacy-focused browser or enable strict privacy settings to block shopping trackers automatically",
-      "Shop in incognito/private mode to avoid dynamic pricing based on your browsing history",
+      "Turn on strict tracker blocking in your browser, or use one that blocks trackers by default",
+      "Shop in a private window so the shop can't link the visit to your cookies and browsing history",
       "Use virtual credit cards or services like Apple Pay to protect your real payment information",
       "Clear cookies between shopping sessions or use separate browsers for different retailers",
       "Compare prices using private browsing or different devices to see true pricing"
@@ -216,7 +216,7 @@
       {
         "range": "26-40%",
         "label": "Moderate Risk",
-        "description": "Good privacy habits with room for improvement. Consider upgrading your browser or payment methods.",
+        "description": "Good privacy habits with room for improvement. Consider stricter tracker blocking or virtual cards.",
         "color": "yellow"
       },
       {

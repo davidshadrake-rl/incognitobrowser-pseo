@@ -12,37 +12,29 @@
   "description": "Evaluate your vulnerability to device fingerprinting attacks. This calculator analyzes your browser settings, device characteristics, and privacy measures to determine how uniquely identifiable you are online.",
   "inputs": [
     {
-      "id": "browserType",
-      "label": "Browser Type",
+      "id": "fingerprintDefense",
+      "label": "Your Browser's Fingerprinting Defense",
       "type": "select",
-      "defaultValue": "chrome",
+      "defaultValue": "none",
       "options": [
         {
-          "value": "chrome",
-          "label": "Chrome"
+          "value": "none",
+          "label": "None that I know of"
         },
         {
-          "value": "firefox",
-          "label": "Firefox"
+          "value": "blocks-scripts",
+          "label": "Blocks known fingerprinting scripts"
         },
         {
-          "value": "safari",
-          "label": "Safari"
+          "value": "masks",
+          "label": "Hides or randomizes the device details it reports"
         },
         {
-          "value": "edge",
-          "label": "Edge"
-        },
-        {
-          "value": "incognito",
-          "label": "a privacy-focused browser"
-        },
-        {
-          "value": "tor",
-          "label": "Tor Browser"
+          "value": "uniform",
+          "label": "Makes every user report the same values"
         }
       ],
-      "helpText": "Your primary web browser"
+      "helpText": "Check your browser's privacy settings. The strongest defense makes all its users look alike, so no one stands out."
     },
     {
       "id": "jsEnabled",
@@ -112,7 +104,7 @@
       "label": "Fingerprint Protection Enabled",
       "type": "checkbox",
       "defaultValue": false,
-      "helpText": "Built-in browser fingerprint protection or specialized tools"
+      "helpText": "An anti-fingerprinting extension or setting you turned on yourself, beyond your browser's defaults"
     }
   ],
   "outputFields": [
@@ -135,11 +127,11 @@
       "description": "Assessment of your anti-fingerprinting measures"
     }
   ],
-  "formula": "let baseRisk = 70; if (browserType === 'tor') baseRisk -= 40; else if (browserType === 'incognito') baseRisk -= 30; else if (browserType === 'firefox') baseRisk -= 10; if (!jsEnabled) baseRisk -= 25; if (adBlocker) baseRisk -= 15; if (fingerprintProtection) baseRisk -= 20; if (vpnUsage === 'always') baseRisk -= 15; else if (vpnUsage === 'sometimes') baseRisk -= 7; baseRisk += screenResolution * 2; baseRisk += Math.min(extensions * 2, 20); baseRisk = Math.max(5, Math.min(95, baseRisk)); let grade = 'A'; if (baseRisk > 20) grade = 'B'; if (baseRisk > 40) grade = 'C'; if (baseRisk > 70) grade = 'D'; let protection = 'Strong'; if (baseRisk > 20) protection = 'Moderate'; if (baseRisk > 40) protection = 'Weak'; if (baseRisk > 70) protection = 'Poor'; return { riskScore: baseRisk, uniqueness: grade, protectionLevel: protection };",
+  "formula": "let baseRisk = 70; const defenseBonus = { 'none': 0, 'blocks-scripts': -10, 'masks': -25, 'uniform': -40 }; baseRisk += defenseBonus[fingerprintDefense] ?? 0; if (!jsEnabled) baseRisk -= 25; if (adBlocker) baseRisk -= 15; if (fingerprintProtection) baseRisk -= 20; if (vpnUsage === 'always') baseRisk -= 15; else if (vpnUsage === 'sometimes') baseRisk -= 7; baseRisk += screenResolution * 2; baseRisk += Math.min(extensions * 2, 20); baseRisk = Math.max(5, Math.min(95, baseRisk)); let grade = 'A'; if (baseRisk > 20) grade = 'B'; if (baseRisk > 40) grade = 'C'; if (baseRisk > 70) grade = 'D'; let protection = 'Strong'; if (baseRisk > 20) protection = 'Moderate'; if (baseRisk > 40) protection = 'Weak'; if (baseRisk > 70) protection = 'Poor'; return { riskScore: baseRisk, uniqueness: grade, protectionLevel: protection };",
   "educational": {
-    "methodology": "This calculator evaluates multiple fingerprinting vectors including browser type, enabled features, screen characteristics, and protection measures. It weighs each factor based on research into real-world fingerprinting techniques used by tracking companies.",
+    "methodology": "This calculator evaluates multiple fingerprinting vectors including your browser's fingerprinting defense, enabled features, screen characteristics, and protection measures. It weighs each factor based on research into real-world fingerprinting techniques used by tracking companies.",
     "tips": [
-      "Use privacy-focused browsers like a privacy-focused browser or Firefox with strict privacy settings",
+      "Use a browser that resists fingerprinting by default, or turn on the strongest anti-fingerprinting setting yours offers",
       "Disable JavaScript on sensitive sites or use NoScript extensions",
       "Install ad blockers and anti-fingerprinting extensions",
       "Use common screen resolutions and avoid unique browser configurations",

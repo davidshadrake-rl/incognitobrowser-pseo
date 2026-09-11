@@ -8,33 +8,19 @@ import { RelatedContent } from '@/components/seo/RelatedContent';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
 import { proofToolFor } from '@/lib/proof-route';
+import { toComparisonView, type ComparisonSource } from '@/lib/comparison-score';
 
-interface ComparisonData {
-  niche: string;
+/**
+ * A comparison data file. Ratings are not part of it as far as the page is
+ * concerned: lib/comparison-score.ts works them out from `features`, and any
+ * products[].rating still in a file is never read.
+ */
+interface ComparisonData extends ComparisonSource {
   slug: string;
-  title: string;
   metaDescription: string;
-  intro: string;
-  products: Array<{
-    name: string;
-    slug: string;
-    tagline: string;
-    website?: string;
-    pricing?: string;
-    pros: string[];
-    cons: string[];
-    rating: number;
-  }>;
-  features: Array<{
-    name: string;
-    description: string;
-    scores: Record<string, { value: 'yes' | 'no' | 'partial' | 'excellent' | 'good' | 'fair' | 'poor'; note?: string }>;
-  }>;
-  verdict: {
-    summary: string;
-    bestFor: Array<{ useCase: string; product: string; reason: string }>;
-  };
   faqs: Array<{ question: string; answer: string }>;
+  editorial?: { status?: string; reviewedAt?: string | null };
+  author?: { name?: string } | null;
 }
 
 export const dynamicParams = false;
@@ -61,8 +47,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: data.metaDescription,
     path: `/comparisons/${niche}/${slug}`,
     noIndex: !isPublished(data as unknown as Parameters<typeof isPublished>[0]),
-    publishedAt: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    modifiedAt: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
+    publishedAt: data.editorial?.reviewedAt || undefined,
+    modifiedAt: data.editorial?.reviewedAt || undefined,
   });
 }
 
@@ -84,27 +70,29 @@ export default async function ComparisonDetailPage({ params }: PageProps) {
 
   const crossLinks = getCrossNicheLinks(niche, 'comparisons', slug);
 
-  // Per-article Article + Person JSON-LD. Surfaces the byline (Darkpool
-  // David, pseudonymous writer) and editor (David Shadrake, LinkedIn-
-  // verified) so Google can attribute the page to real entities.
+  // Article JSON-LD. It credits the editorial masthead (an organisation), not
+  // a person; `attributed` only says the page went through the promote
+  // pipeline.
   const articleSchema = generateArticleSchema({
-    headline: (data as unknown as { title: string }).title,
-    description: (data as unknown as { metaDescription?: string; definition?: string }).metaDescription
-      || (data as unknown as { definition?: string }).definition
-      || '',
+    headline: data.title,
+    description: data.metaDescription || '',
     url: 'https://incognitobrowser.io/resources' + `/comparisons/${niche}/${slug}`,
-    datePublished: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    dateModified: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    attributed: !!(data as unknown as { author?: { name?: string } | null }).author?.name,
+    datePublished: data.editorial?.reviewedAt || undefined,
+    dateModified: data.editorial?.reviewedAt || undefined,
+    attributed: !!data.author?.name,
   });
 
+  // The client component gets only what it renders (toComparisonView is a
+  // whitelist: no people, no typed rating, no cell notes) plus whether the
+  // page was reviewed, computed by the same rule as every other page.
+  const { reviewed } = redactPeople(data);
 
   return (
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       {faqSchema && <JsonLd data={faqSchema} />}
-      <ComparisonPage data={redactPeople(data)} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
+      <ComparisonPage data={toComparisonView(data)} nicheName={nicheName} reviewed={reviewed} proofRoute={proofToolFor(niche)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

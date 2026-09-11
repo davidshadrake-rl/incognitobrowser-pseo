@@ -1,8 +1,8 @@
 {
   "niche": "phishing",
   "slug": "best-phishing-social-engineering-tools-compared",
-  "title": "Best Phishing & Social Engineering Tools Compared 2024",
-  "metaDescription": "Compare top phishing protection tools and social engineering defense solutions. Find the best security tools to protect against email scams and phishing attacks.",
+  "title": "Best Phishing & Social Engineering Tools Compared",
+  "metaDescription": "Proofpoint, Mimecast, Microsoft Defender for Office 365 and KnowBe4 compared on email scanning, link and attachment protection and phishing training.",
   "keywords": [
     "phishing protection tools",
     "social engineering defense",
@@ -10,50 +10,57 @@
     "phishing scam detection",
     "anti-phishing solutions"
   ],
-  "intro": "Phishing attacks have become increasingly sophisticated, with AI-generated scams and perfect brand impersonations fooling even security-conscious users. The right protection tools can mean the difference between staying safe and falling victim to cybercriminals.",
+  "intro": "Phishing emails are harder to spot than they used to be, with AI-written messages and convincing brand impersonation. This page compares four business email-security and awareness-training tools on the same six criteria, and each rating is worked out from the table.",
   "products": [
     {
       "name": "Proofpoint Email Protection",
       "slug": "proofpoint-email-protection",
-      "tagline": "Enterprise-grade email security with advanced threat detection",
+      "tagline": "Email security for large organizations, with link and attachment sandboxing",
       "website": "proofpoint.com",
       "pricing": "Contact for pricing",
+      "platforms": [
+        "Web"
+      ],
       "pros": [
-        "Advanced AI-powered threat detection",
+        "Machine-learning threat detection for email",
         "Real-time URL analysis and sandboxing",
-        "Comprehensive phishing simulation training",
         "Detailed threat intelligence reporting"
       ],
       "cons": [
         "Expensive for small businesses",
-        "Complex setup and configuration required"
-      ],
-      "rating": 9.2
+        "Complex setup and configuration required",
+        "Phishing simulation and awareness training are a separate product (Proofpoint ZenGuide)"
+      ]
     },
     {
       "name": "Microsoft Defender for Office 365",
       "slug": "microsoft-defender-office-365",
-      "tagline": "Built-in protection for Microsoft Office users",
+      "tagline": "Email and collaboration protection for Microsoft 365",
       "website": "microsoft.com",
-      "pricing": "$2-5/user/month",
+      "pricing": "Plan 1 $2/user/month; Plan 2 $5/user/month (also included in some Microsoft 365 plans)",
+      "platforms": [
+        "Web"
+      ],
       "pros": [
-        "Seamless integration with Office 365",
+        "Built into Microsoft 365",
         "Safe Links and Safe Attachments features",
         "Anti-phishing policies and reporting",
-        "Competitive pricing for existing Office users"
+        "Low per-user price, and included in some Microsoft 365 plans"
       ],
       "cons": [
-        "Limited effectiveness against zero-day attacks",
+        "Attack simulation training and automated investigation need Plan 2",
         "Requires Microsoft ecosystem"
-      ],
-      "rating": 8.1
+      ]
     },
     {
       "name": "KnowBe4 Security Awareness",
       "slug": "knowbe4-security-awareness",
-      "tagline": "World's largest security awareness training platform",
+      "tagline": "Security awareness training with simulated phishing",
       "website": "knowbe4.com",
-      "pricing": "$4.50+/user/month",
+      "pricing": "Annual per-user subscription in four tiers (Silver to Diamond); quote-based",
+      "platforms": [
+        "Web"
+      ],
       "pros": [
         "Extensive phishing simulation library",
         "Comprehensive security training modules",
@@ -63,8 +70,7 @@
       "cons": [
         "Focuses on training rather than prevention",
         "Can be overwhelming for small teams"
-      ],
-      "rating": 8.7
+      ]
     },
     {
       "name": "Mimecast Email Security",
@@ -72,34 +78,20 @@
       "tagline": "Cloud-based email security with threat intelligence",
       "website": "mimecast.com",
       "pricing": "Contact for pricing",
+      "platforms": [
+        "Web"
+      ],
       "pros": [
         "Advanced threat protection and sandboxing",
-        "Email continuity and archiving",
+        "Email continuity and archiving available on the same platform",
         "User-friendly management interface",
         "Strong threat intelligence network"
       ],
       "cons": [
         "Can be expensive for smaller organizations",
-        "Occasional false positives"
-      ],
-      "rating": 8.4
-    },
-    {
-      "name": "Incognito Browser",
-      "slug": "incognito-browser",
-      "tagline": "Privacy-first browser with built-in phishing protection",
-      "website": "https://incognitobrowser.io/",
-      "pricing": "Free",
-      "pros": [
-        "Built-in phishing site detection",
-        "Blocks tracking and malicious scripts",
-        "Lightweight and fast performance"
-      ],
-      "cons": [
-        "Limited to browser-based protection only",
-        "Smaller market presence than major competitors"
-      ],
-      "rating": 7.8
+        "Occasional false positives",
+        "Awareness training and phishing simulation are an add-on (Mimecast Engage)"
+      ]
     }
   ],
   "features": [
@@ -122,10 +114,6 @@
         "mimecast-email-security": {
           "value": "excellent",
           "note": "Comprehensive scanning with threat intelligence"
-        },
-        "incognito-browser": {
-          "value": "no",
-          "note": "Browser-focused, no email scanning"
         }
       }
     },
@@ -148,10 +136,6 @@
         "mimecast-email-security": {
           "value": "excellent",
           "note": "URL rewriting and real-time analysis"
-        },
-        "incognito-browser": {
-          "value": "good",
-          "note": "Built-in phishing site detection and blocking"
         }
       }
     },
@@ -160,24 +144,20 @@
       "description": "Provides simulated phishing attacks to train users on recognition",
       "scores": {
         "proofpoint-email-protection": {
-          "value": "good",
-          "note": "Basic simulation capabilities included"
+          "value": "partial",
+          "note": "Phishing simulation comes with Proofpoint ZenGuide, sold separately"
         },
         "microsoft-defender-office-365": {
-          "value": "fair",
-          "note": "Limited simulation features in Attack Simulator"
+          "value": "good",
+          "note": "Attack simulation training is included in Plan 2 and Microsoft 365 E5, not Plan 1"
         },
         "knowbe4-security-awareness": {
           "value": "excellent",
-          "note": "Industry-leading simulation platform"
+          "note": "Large library of phishing simulation templates"
         },
         "mimecast-email-security": {
-          "value": "good",
-          "note": "Awareness training module available"
-        },
-        "incognito-browser": {
-          "value": "no",
-          "note": "No training capabilities"
+          "value": "partial",
+          "note": "Phishing simulation comes with Mimecast Engage, an add-on"
         }
       }
     },
@@ -200,10 +180,6 @@
         "mimecast-email-security": {
           "value": "excellent",
           "note": "Comprehensive attachment analysis"
-        },
-        "incognito-browser": {
-          "value": "partial",
-          "note": "Basic download protection only"
         }
       }
     },
@@ -226,10 +202,6 @@
         "mimecast-email-security": {
           "value": "excellent",
           "note": "Strong threat intelligence capabilities"
-        },
-        "incognito-browser": {
-          "value": "fair",
-          "note": "Basic threat database for known phishing sites"
         }
       }
     },
@@ -252,36 +224,32 @@
         "mimecast-email-security": {
           "value": "good",
           "note": "User-friendly reporting interface"
-        },
-        "incognito-browser": {
-          "value": "no",
-          "note": "No reporting capabilities"
         }
       }
     }
   ],
   "verdict": {
-    "summary": "For comprehensive enterprise protection, Proofpoint leads with advanced AI detection and threat intelligence. KnowBe4 excels in user training and awareness. Microsoft Defender offers the best value for Office 365 users, while Mimecast provides solid all-around protection. For privacy-conscious individuals, Incognito Browser adds an extra layer of protection during web browsing.",
+    "summary": "On these six criteria Proofpoint Email Protection scores highest, with Mimecast Email Security close behind: both scan email, links and attachments in real time and draw on large threat-intelligence networks, and both sell phishing simulation training as a separate product. Microsoft Defender for Office 365 comes next, rated good rather than excellent on each criterion; it is the natural choice if you already use Microsoft 365, and Plan 2 includes attack simulation training. KnowBe4 scores lowest here because it trains people rather than filtering email, but it has the best phishing simulation score of the four, so it pairs well with an email-security product.",
     "bestFor": [
       {
         "useCase": "Large enterprises with high security requirements",
         "product": "Proofpoint Email Protection",
-        "reason": "Advanced threat detection, comprehensive features, and enterprise-grade scalability"
+        "reason": "Highest score here: advanced threat detection, URL and attachment sandboxing, and detailed threat reporting"
+      },
+      {
+        "useCase": "Email security with continuity and archiving",
+        "product": "Mimecast Email Security",
+        "reason": "Strong scanning and threat intelligence, with continuity and archiving on the same platform"
+      },
+      {
+        "useCase": "Microsoft 365 organizations",
+        "product": "Microsoft Defender for Office 365",
+        "reason": "Built for Microsoft 365 at a per-user price; Plan 2 adds attack simulation training"
       },
       {
         "useCase": "Organizations focused on security awareness training",
         "product": "KnowBe4 Security Awareness",
-        "reason": "Industry-leading phishing simulations and comprehensive training modules"
-      },
-      {
-        "useCase": "Microsoft Office 365 users seeking integrated protection",
-        "product": "Microsoft Defender for Office 365",
-        "reason": "Seamless integration and competitive pricing for existing Office users"
-      },
-      {
-        "useCase": "Privacy-conscious individuals wanting browser-level protection",
-        "product": "Incognito Browser",
-        "reason": "Built-in phishing protection without data collection or tracking"
+        "reason": "Large phishing simulation library, training modules and detailed training analytics"
       }
     ]
   },
@@ -289,7 +257,7 @@
     "Always verify sender identity by calling the organization directly using a number from their official website, not from the email.",
     "Look for subtle spelling mistakes in URLs - attackers often use domains like 'arnazon.com' instead of 'amazon.com' to fool users.",
     "Enable two-factor authentication on all important accounts to add an extra security layer even if passwords are compromised.",
-    "Use a privacy-focused browser for sensitive online activities as it blocks tracking scripts commonly used in phishing campaigns.",
+    "Use a password manager: it fills your password only on the real site, so a look-alike login page gets nothing.",
     "Be especially cautious of urgent requests for money, passwords, or personal information - legitimate companies rarely create artificial urgency."
   ],
   "faqs": [
@@ -299,7 +267,7 @@
     },
     {
       "question": "Can antivirus software protect against phishing attacks?",
-      "answer": "Traditional antivirus software provides limited phishing protection. Dedicated email security tools and browsers with built-in phishing protection like a privacy-focused browser are more effective at detecting and blocking phishing attempts."
+      "answer": "Partly. Many security suites now include web protection that blocks known phishing sites, and mainstream browsers warn you about known phishing pages too (Google Safe Browsing in Chrome, Firefox and Safari; Microsoft Defender SmartScreen in Edge). Email security tools like the ones on this page stop many phishing emails before they arrive. None of them catches everything, so a password manager that fills passwords only on the real site and two-factor authentication are worth having as well."
     },
     {
       "question": "How can I tell if a suspicious email is actually a phishing attempt?",

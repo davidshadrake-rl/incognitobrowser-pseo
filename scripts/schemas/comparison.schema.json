@@ -53,9 +53,9 @@
           "name",
           "slug",
           "tagline",
+          "platforms",
           "pros",
-          "cons",
-          "rating"
+          "cons"
         ],
         "properties": {
           "name": {
@@ -73,6 +73,15 @@
           "pricing": {
             "type": "string"
           },
+          "platforms": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "description": "Where the product runs, e.g. [\"Android\", \"iOS\", \"Windows\"]."
+          },
           "pros": {
             "type": "array",
             "items": {
@@ -86,13 +95,14 @@
               "type": "string"
             },
             "minItems": 1
-          },
-          "rating": {
-            "type": "number",
-            "minimum": 1,
-            "maximum": 10
           }
-        }
+        },
+        "not": {
+          "required": [
+            "rating"
+          ]
+        },
+        "description": "No rating field: every rating is worked out from the feature table by lib/comparison-score.ts, and a typed one is never read."
       }
     },
     "features": {
@@ -115,20 +125,30 @@
           },
           "scores": {
             "type": "object",
+            "description": "One cell per product, keyed by the product's slug.",
             "additionalProperties": {
               "type": "object",
+              "required": [
+                "value"
+              ],
               "properties": {
                 "value": {
                   "type": "string",
                   "enum": [
                     "yes",
-                    "no",
-                    "partial",
                     "excellent",
                     "good",
+                    "partial",
                     "fair",
-                    "poor"
-                  ]
+                    "limited",
+                    "poor",
+                    "no",
+                    "none",
+                    "—",
+                    "unknown",
+                    "n/a"
+                  ],
+                  "description": "The rubric in lib/comparison-score.ts: yes/excellent 1, good 0.75, partial/fair/limited 0.5, poor 0.25, no/none 0; '—', 'unknown' and 'n/a' are not assessed and left out of the rating."
                 },
                 "note": {
                   "type": "string"

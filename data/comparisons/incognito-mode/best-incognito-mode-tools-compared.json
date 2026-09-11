@@ -1,8 +1,8 @@
 {
   "niche": "incognito-mode",
   "slug": "best-incognito-mode-tools-compared",
-  "title": "Best Incognito Mode Tools Compared - Private Browsing Guide 2024",
-  "metaDescription": "Compare the best incognito mode tools and private browsing options. Chrome, Firefox, Safari, Edge and dedicated privacy browsers reviewed.",
+  "title": "Best Incognito Mode Tools Compared - Private Browsing Guide",
+  "metaDescription": "Chrome, Firefox, Safari and Edge private modes compared with Tor Browser and Incognito Browser (which we make), each scored on the same rubric.",
   "keywords": [
     "incognito mode",
     "private browsing",
@@ -10,26 +10,33 @@
     "private mode",
     "browser privacy"
   ],
-  "intro": "Not all incognito modes are created equal. While every major browser offers private browsing, they vary significantly in features and protection levels. This comprehensive comparison evaluates built-in incognito modes and specialized privacy browsers to help you choose the best option for your needs.",
+  "intro": "Not all incognito modes are created equal. Every major browser offers private browsing, but they differ a lot in what they protect. This page compares four built-in private modes with Tor Browser and Incognito Browser on the same four criteria, and each rating is worked out from the table.",
   "products": [
     {
       "name": "Chrome Incognito Mode",
       "slug": "chrome-incognito",
-      "tagline": "Most widely used private browsing mode",
+      "tagline": "Google Chrome's private browsing mode",
       "website": "https://www.google.com/chrome/",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "ChromeOS",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Easy access with Ctrl+Shift+N",
         "Familiar interface for most users",
-        "Syncs across devices when signed in",
+        "Blocks third-party cookies by default",
         "Clear privacy reminder on new tab page"
       ],
       "cons": [
         "Google can still track browsing",
         "Limited privacy protection",
         "ISP and websites can still see activity"
-      ],
-      "rating": 6.5
+      ]
     },
     {
       "name": "Firefox Private Browsing",
@@ -37,6 +44,13 @@
       "tagline": "Enhanced tracking protection included",
       "website": "https://www.mozilla.org/firefox/",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Built-in Enhanced Tracking Protection",
         "Blocks many trackers by default",
@@ -45,17 +59,21 @@
       ],
       "cons": [
         "Still allows some fingerprinting",
-        "DNS queries not encrypted by default",
+        "DNS over HTTPS is on by default only in some countries",
         "Some websites may break functionality"
-      ],
-      "rating": 7.5
+      ]
     },
     {
       "name": "Safari Private Browsing",
       "slug": "safari-private",
-      "tagline": "Apple's privacy-first approach",
+      "tagline": "Safari's private mode on Mac, iPhone and iPad",
       "website": "https://www.apple.com/safari/",
-      "pricing": "Free (Mac/iOS only)",
+      "pricing": "Free (Apple devices only)",
+      "platforms": [
+        "macOS",
+        "iOS",
+        "iPadOS"
+      ],
       "pros": [
         "Intelligent Tracking Prevention",
         "Hides IP address from trackers",
@@ -66,66 +84,79 @@
         "Only available on Apple devices",
         "Limited customization options",
         "Some advanced features require macOS updates"
-      ],
-      "rating": 8
+      ]
     },
     {
       "name": "Edge InPrivate Browsing",
       "slug": "edge-inprivate",
-      "tagline": "Microsoft's improved privacy mode",
+      "tagline": "Microsoft Edge's private browsing mode",
       "website": "https://www.microsoft.com/edge/",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Multiple tracking prevention levels",
         "Built-in password monitor",
-        "Good performance and speed",
+        "Built into Windows",
         "Integration with Microsoft services"
       ],
       "cons": [
         "Still sends some data to Microsoft",
         "Less established privacy reputation",
-        "Limited third-party extension support"
-      ],
-      "rating": 7
+        "Extensions are off in InPrivate unless you allow each one"
+      ]
     },
     {
       "name": "Incognito Browser",
       "slug": "incognito-browser",
-      "tagline": "Dedicated private browsing experience",
+      "tagline": "Android browser that is always in private mode and wipes history, cookies and sessions when you exit",
       "website": "https://incognitobrowser.io/",
-      "pricing": "Free with premium features",
+      "pricing": "Free; optional Incognito Pro subscription",
+      "platforms": [
+        "Android"
+      ],
       "pros": [
-        "Built specifically for privacy",
-        "No browsing history ever saved",
-        "Advanced anti-tracking features",
-        "Simple, clean interface"
+        "Every tab is private; there is no normal mode to switch out of",
+        "History, cookies and sessions are wiped when you exit the app",
+        "Keeps no browsing history or cache on the device (downloaded files are kept)",
+        "Built-in ad blocker with a High Security Blocking option"
       ],
       "cons": [
-        "Smaller user base than major browsers",
-        "Limited extension ecosystem",
-        "Some websites may not display perfectly"
-      ],
-      "rating": 8.5
+        "Android only: no iOS, desktop or web version",
+        "No VPN: sites you visit still see your IP address, and your network and internet provider can see which sites you visit",
+        "Does not claim tracker blocking or fingerprinting protection",
+        "Google Play's Data safety section says it may collect crash logs and diagnostics"
+      ]
     },
     {
       "name": "Tor Browser",
       "slug": "tor-browser",
-      "tagline": "Maximum anonymity and privacy",
+      "tagline": "Browser that routes your traffic through the Tor network",
       "website": "https://www.torproject.org/",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
       "pros": [
         "Routes traffic through multiple servers",
-        "Blocks all trackers and fingerprinting",
-        "True anonymity when used properly",
+        "Isolates cookies to each site and makes users look alike to resist fingerprinting",
+        "Hides your IP address from the sites you visit",
         "Open source and transparent"
       ],
       "cons": [
-        "Significantly slower browsing speeds",
+        "Slower than a regular browser, because traffic passes through three relays",
         "Some websites block Tor traffic",
-        "Complex setup for average users",
+        "Many sites show CAPTCHAs to Tor users",
         "May draw unwanted attention"
-      ],
-      "rating": 9
+      ]
     }
   ],
   "features": [
@@ -134,8 +165,8 @@
       "description": "Blocks advertisers and websites from following your browsing activity across different sites",
       "scores": {
         "chrome-incognito": {
-          "value": "poor",
-          "note": "Basic protection only"
+          "value": "fair",
+          "note": "Blocks third-party cookies by default; no tracker blocking beyond that"
         },
         "firefox-private": {
           "value": "good",
@@ -150,12 +181,12 @@
           "note": "Three protection levels available"
         },
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Advanced anti-tracking built-in"
+          "value": "partial",
+          "note": "Wipes cookies and sessions when you exit, and cookies can be turned off; the ad blocker blocks ads. Tracker blocking is not claimed"
         },
         "tor-browser": {
           "value": "excellent",
-          "note": "Blocks all tracking attempts"
+          "note": "Isolates cookies to each site and clears them when you close it"
         }
       }
     },
@@ -168,24 +199,24 @@
           "note": "Minimal fingerprinting protection"
         },
         "firefox-private": {
-          "value": "fair",
-          "note": "Some fingerprinting resistance"
+          "value": "good",
+          "note": "Mozilla's added fingerprinting protections are on by default in private windows"
         },
         "safari-private": {
           "value": "good",
-          "note": "Built-in fingerprinting protection"
+          "note": "Advanced Tracking and Fingerprinting Protection is on by default in Private Browsing"
         },
         "edge-inprivate": {
           "value": "fair",
           "note": "Basic fingerprinting prevention"
         },
         "incognito-browser": {
-          "value": "good",
-          "note": "Anti-fingerprinting features included"
+          "value": "no",
+          "note": "Not claimed. Agent Cloaking changes the browser and device a site sees, which is not fingerprint protection"
         },
         "tor-browser": {
           "value": "excellent",
-          "note": "Comprehensive fingerprinting protection"
+          "note": "Makes every user look alike to resist fingerprinting"
         }
       }
     },
@@ -210,42 +241,12 @@
           "note": "Straightforward activation"
         },
         "incognito-browser": {
-          "value": "good",
-          "note": "Clean interface, small learning curve"
+          "value": "excellent",
+          "note": "Always in private mode; no special window to open"
         },
         "tor-browser": {
-          "value": "fair",
-          "note": "Requires setup and patience"
-        }
-      }
-    },
-    {
-      "name": "Speed Performance",
-      "description": "How browsing speed compares to regular browsing mode",
-      "scores": {
-        "chrome-incognito": {
-          "value": "excellent",
-          "note": "Minimal speed difference"
-        },
-        "firefox-private": {
           "value": "good",
-          "note": "Slight slowdown from tracking protection"
-        },
-        "safari-private": {
-          "value": "good",
-          "note": "Good performance on Apple devices"
-        },
-        "edge-inprivate": {
-          "value": "excellent",
-          "note": "Fast browsing speeds maintained"
-        },
-        "incognito-browser": {
-          "value": "good",
-          "note": "Optimized for privacy and speed"
-        },
-        "tor-browser": {
-          "value": "poor",
-          "note": "Significantly slower due to routing"
+          "note": "Simple download and install"
         }
       }
     },
@@ -263,15 +264,15 @@
         },
         "safari-private": {
           "value": "partial",
-          "note": "Limited extension ecosystem"
+          "note": "Extensions need permission to run in Private Browsing"
         },
         "edge-inprivate": {
           "value": "partial",
-          "note": "Growing extension support"
+          "note": "Extensions must be allowed in InPrivate one by one"
         },
         "incognito-browser": {
-          "value": "fair",
-          "note": "Limited but growing extension library"
+          "value": "no",
+          "note": "Extensions are not among its listed features"
         },
         "tor-browser": {
           "value": "poor",
@@ -281,32 +282,37 @@
     }
   ],
   "verdict": {
-    "summary": "For most users, Safari Private Browsing offers the best balance of privacy and usability, while Firefox Private Browsing provides excellent protection across all platforms. Chrome Incognito is convenient but offers minimal privacy benefits. For dedicated privacy, Incognito Browser provides purpose-built protection, while Tor Browser offers maximum anonymity for users who need it.",
+    "summary": "On these four criteria Safari Private Browsing scores highest: it blocks known trackers and adds fingerprinting protection by default, but it runs only on Apple devices. Firefox Private Browsing and Tor Browser tie for second (Firefox is listed first alphabetically). Firefox's private windows block known trackers and add fingerprinting protections by default, and Firefox runs on Windows, macOS, Linux, Android and iOS. Tor Browser ties Safari for tracking protection, has the strongest fingerprinting protection here and hides your IP address, but it discourages extensions. Edge InPrivate comes next, with three tracking-prevention levels. Chrome Incognito blocks third-party cookies but does little else to stop tracking. Incognito Browser, which we make, scores lowest here: it is always in private mode and wipes history, cookies and sessions when you exit, but it doesn't claim tracker blocking or fingerprinting protection, has no extensions and runs only on Android.",
     "bestFor": [
       {
-        "useCase": "Everyday private browsing",
+        "useCase": "Everyday private browsing on Apple devices",
         "product": "Safari Private Browsing",
-        "reason": "Best built-in tracking protection with easy access"
+        "reason": "Highest score here: blocks known trackers and adds fingerprinting protection by default"
       },
       {
         "useCase": "Cross-platform privacy",
         "product": "Firefox Private Browsing",
-        "reason": "Enhanced Tracking Protection works on all devices"
+        "reason": "Ties Tor Browser for second; its private windows block known trackers and add fingerprinting protections by default"
       },
       {
-        "useCase": "Dedicated privacy browsing",
-        "product": "Incognito Browser",
-        "reason": "Purpose-built for privacy with advanced protection"
-      },
-      {
-        "useCase": "Maximum anonymity",
+        "useCase": "Hiding your IP address too",
         "product": "Tor Browser",
-        "reason": "Strongest privacy protection available"
+        "reason": "Ties Firefox for second; ties Safari for tracking protection, has the strongest fingerprinting protection here and hides your IP address"
+      },
+      {
+        "useCase": "Windows users",
+        "product": "Edge InPrivate Browsing",
+        "reason": "Built into Windows, with three tracking-prevention levels"
       },
       {
         "useCase": "Quick private sessions",
         "product": "Chrome Incognito Mode",
-        "reason": "Fast access when privacy needs are minimal"
+        "reason": "Already installed on most computers and phones, and blocks third-party cookies by default"
+      },
+      {
+        "useCase": "Never forgetting to go private on Android",
+        "product": "Incognito Browser",
+        "reason": "Which we make: every tab is private, and history, cookies and sessions are wiped when you exit. It ranks last on this table's criteria"
       }
     ]
   },
@@ -314,7 +320,7 @@
     "Combine incognito mode with a VPN for better IP address protection - your ISP and network admin can still see your activity otherwise.",
     "Clear your DNS cache after private browsing sessions, as DNS queries may be stored even when using incognito mode.",
     "Remember that incognito mode doesn't hide your activity from your employer, school, or ISP - only from other users of your device.",
-    "Use a privacy-focused browser for sensitive browsing sessions as it's specifically designed for privacy, unlike general browsers with privacy modes.",
+    "Close every private window when you finish a sensitive session: most browsers clear private browsing data only once the last private window is closed.",
     "Disable location services and camera/microphone permissions in your browser settings for additional privacy protection during private browsing."
   ],
   "faqs": [
@@ -324,7 +330,7 @@
     },
     {
       "question": "Which browser has the best incognito mode for privacy?",
-      "answer": "Safari Private Browsing offers the strongest built-in privacy protection, followed by Firefox Private Browsing. For dedicated privacy, consider using a privacy-focused browser or Tor Browser instead of standard browser incognito modes."
+      "answer": "On this page's four criteria Safari Private Browsing scores highest, but it runs only on Apple devices. Firefox Private Browsing and Tor Browser tie for second. Tor Browser ties Safari for tracking protection, has the strongest fingerprinting protection here and hides your IP address, but it is a separate download and discourages extensions."
     },
     {
       "question": "Can websites detect when I'm using incognito mode?",

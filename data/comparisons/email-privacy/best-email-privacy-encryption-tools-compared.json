@@ -1,87 +1,109 @@
 {
   "niche": "email-privacy",
   "slug": "best-encrypted-email-providers-compared",
-  "title": "Best Encrypted Email Providers Compared (2024 Guide)",
-  "metaDescription": "Compare top encrypted email providers like ProtonMail, Tutanota & more. Find the best secure email service for privacy, features & pricing.",
+  "title": "Best Encrypted Email Providers Compared",
+  "metaDescription": "Compare Proton Mail, Tuta (formerly Tutanota), StartMail, Mailfence and Guerrilla Mail on encryption, sign-up, mail-app support, storage and apps.",
   "keywords": [
     "encrypted email",
     "email privacy",
-    "ProtonMail",
+    "Proton Mail",
     "secure email providers",
     "anonymous email"
   ],
-  "intro": "Your Gmail account isn't as private as you think. Google scans your emails for data, marketers track when you open messages, and hackers target unencrypted communications. Switching to an encrypted email provider protects your privacy and keeps sensitive information secure.",
+  "intro": "Your Gmail account isn't as private as you think. Standard email can be read by your provider's systems, marketers track when you open messages, and unencrypted mail is exposed when an account or server is breached. An encrypted email provider protects your privacy and keeps sensitive mail secure.",
   "products": [
     {
-      "name": "ProtonMail",
+      "name": "Proton Mail",
       "slug": "protonmail",
-      "tagline": "The gold standard for encrypted email with Swiss privacy laws",
-      "website": "protonmail.com",
-      "pricing": "Free plan, paid plans from $4/month",
+      "tagline": "Swiss encrypted email with end-to-end encryption by default",
+      "website": "https://proton.me/mail",
+      "pricing": "Free plan; Mail Plus from about $4/month billed yearly",
+      "platforms": [
+        "Web",
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "End-to-end encryption by default",
-        "Based in privacy-friendly Switzerland",
+        "Based in Switzerland",
         "No personal information required to sign up",
         "Open source and independently audited",
-        "Integrated calendar and VPN services"
+        "The same account includes Proton Calendar, Drive and VPN"
       ],
       "cons": [
         "Limited storage on free plan (1GB)",
-        "No IMAP/POP3 support without bridge app",
+        "Desktop mail apps need the Bridge app, which is for paid plans only",
         "Some features require paid subscription"
-      ],
-      "rating": 9.2
+      ]
     },
     {
-      "name": "Tutanota",
+      "name": "Tuta",
       "slug": "tutanota",
-      "tagline": "German-engineered encryption with the most affordable premium plans",
-      "website": "tutanota.com",
-      "pricing": "Free plan, paid plans from $1/month",
+      "tagline": "German encrypted email (formerly Tutanota) that also encrypts subject lines",
+      "website": "tuta.com",
+      "pricing": "Free plan; paid plans from €3/month",
+      "platforms": [
+        "Web",
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
         "Encrypts entire mailbox including subject lines",
-        "Very affordable premium plans",
+        "Affordable premium plans",
         "Based in Germany with strong privacy laws",
         "Custom domain support on all paid plans",
         "Integrated encrypted calendar"
       ],
       "cons": [
-        "Smaller user base than ProtonMail",
-        "Limited third-party email client support",
+        "Smaller user base than Proton Mail",
+        "No IMAP, so standard mail apps can't connect",
         "Search functionality requires decryption"
-      ],
-      "rating": 8.7
+      ]
     },
     {
       "name": "StartMail",
       "slug": "startmail",
       "tagline": "Privacy-focused email with unlimited disposable addresses",
       "website": "startmail.com",
-      "pricing": "$59.95/year (7-day free trial)",
+      "pricing": "From $4.99/month billed yearly (7-day free trial)",
+      "platforms": [
+        "Web"
+      ],
       "pros": [
         "Unlimited disposable email addresses",
         "Full PGP encryption support",
         "No logs policy from privacy-focused company",
         "IMAP support for email clients",
-        "Custom domain support"
+        "One custom domain included"
       ],
       "cons": [
         "No free plan available",
         "More expensive than competitors",
-        "Smaller feature set compared to ProtonMail"
-      ],
-      "rating": 8.1
+        "Smaller feature set compared to Proton Mail",
+        "No native mobile apps"
+      ]
     },
     {
       "name": "Mailfence",
       "slug": "mailfence",
       "tagline": "Belgian secure email with full collaboration suite",
       "website": "mailfence.com",
-      "pricing": "Free plan, paid plans from $2.50/month",
+      "pricing": "Free plan; paid plans from €2.50/month",
+      "platforms": [
+        "Web",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Full office suite with documents and calendar",
         "OpenPGP encryption with key management",
-        "IMAP/POP3 support on all plans",
+        "IMAP, POP and SMTP from the Entry plan (€3.50/month)",
         "Two-factor authentication",
         "Digital signatures for email verification"
       ],
@@ -89,28 +111,30 @@
         "Interface feels dated compared to competitors",
         "Encryption not automatic for all emails",
         "Free plan has limited features"
-      ],
-      "rating": 7.8
+      ]
     },
     {
       "name": "Guerrilla Mail",
       "slug": "guerrilla-mail",
-      "tagline": "Temporary disposable email addresses for maximum anonymity",
+      "tagline": "Temporary disposable email addresses, no sign-up needed",
       "website": "guerrillamail.com",
       "pricing": "Completely free",
+      "platforms": [
+        "Web"
+      ],
       "pros": [
         "No registration required",
         "Email addresses expire automatically",
-        "Perfect for one-time signups",
-        "Tor-friendly for maximum anonymity",
+        "Useful for one-time signups",
+        "Can send as well as receive mail",
         "Multiple domain options"
       ],
       "cons": [
         "Not suitable for long-term communication",
         "No encryption for stored emails",
-        "Limited functionality compared to full email services"
-      ],
-      "rating": 7.2
+        "Limited functionality compared to full email services",
+        "Inbox messages are deleted after about an hour"
+      ]
     }
   ],
   "features": [
@@ -120,7 +144,7 @@
       "scores": {
         "protonmail": {
           "value": "excellent",
-          "note": "Automatic for all ProtonMail to ProtonMail emails"
+          "note": "Automatic between Proton Mail users; password-protected messages to others"
         },
         "tutanota": {
           "value": "excellent",
@@ -172,19 +196,19 @@
       "scores": {
         "protonmail": {
           "value": "partial",
-          "note": "Requires ProtonMail Bridge app"
+          "note": "Requires the Proton Mail Bridge app, on paid plans"
         },
         "tutanota": {
           "value": "no",
-          "note": "Must use web app or official mobile apps"
+          "note": "No IMAP; use Tuta's web, desktop or mobile apps"
         },
         "startmail": {
           "value": "yes",
-          "note": "Full IMAP/POP3 support"
+          "note": "IMAP and SMTP on every plan"
         },
         "mailfence": {
           "value": "yes",
-          "note": "Standard IMAP/POP3 protocols supported"
+          "note": "IMAP, POP and SMTP on the Entry plan and above"
         },
         "guerrilla-mail": {
           "value": "no",
@@ -206,11 +230,11 @@
         },
         "startmail": {
           "value": "yes",
-          "note": "Included in subscription"
+          "note": "One custom domain on the Personal plan; unlimited on Business"
         },
         "mailfence": {
           "value": "yes",
-          "note": "Available on Pro plans and above"
+          "note": "Available on the Entry plan and above"
         },
         "guerrilla-mail": {
           "value": "no",
@@ -224,23 +248,23 @@
       "scores": {
         "protonmail": {
           "value": "good",
-          "note": "1GB free, up to 500GB paid"
+          "note": "1GB free; 15GB on Mail Plus, more on bundle plans"
         },
         "tutanota": {
           "value": "good",
-          "note": "1GB free, up to 1TB paid"
+          "note": "1GB free; 20GB or 500GB on personal paid plans"
         },
         "startmail": {
           "value": "excellent",
-          "note": "20GB included in subscription"
+          "note": "20GB on the Personal plan, 30GB on Business"
         },
         "mailfence": {
           "value": "fair",
-          "note": "500MB free, up to 50GB paid"
+          "note": "1GB free, shared between mail and documents; paid plans from 11GB"
         },
         "guerrilla-mail": {
           "value": "poor",
-          "note": "Temporary storage only"
+          "note": "Inbox messages are deleted after about an hour"
         }
       }
     },
@@ -257,12 +281,12 @@
           "note": "Well-designed mobile apps"
         },
         "startmail": {
-          "value": "good",
-          "note": "Works with standard email apps"
+          "value": "fair",
+          "note": "No native apps; use the mobile web app or any IMAP mail app"
         },
         "mailfence": {
-          "value": "fair",
-          "note": "Basic mobile web interface"
+          "value": "good",
+          "note": "Android and iOS apps"
         },
         "guerrilla-mail": {
           "value": "partial",
@@ -272,37 +296,37 @@
     }
   ],
   "verdict": {
-    "summary": "ProtonMail leads as the most comprehensive encrypted email solution, offering the best balance of security, features, and usability. Tutanota provides excellent value for budget-conscious users, while StartMail excels for those needing unlimited aliases. For temporary communications, Guerrilla Mail offers unmatched anonymity.",
+    "summary": "Proton Mail scores highest on this table: end-to-end encryption by default, sign-up without a phone number, custom domains on paid plans and full mobile apps, though desktop mail apps need its Bridge app, which is for paid plans only. StartMail and Tuta tie next (StartMail is listed first only because ties go alphabetically): StartMail for IMAP support, 20GB of storage and unlimited aliases, though it has no free plan or native apps; Tuta for encrypting subject lines and for its web, desktop and mobile apps, though it has no IMAP. Mailfence adds documents and a calendar, with IMAP from its Entry plan. Guerrilla Mail is a disposable inbox rather than an encrypted mail service, so it scores low on these criteria, but it is handy for one-off sign-ups.",
     "bestFor": [
       {
         "useCase": "Most users switching from Gmail",
-        "product": "ProtonMail",
-        "reason": "Best overall security, features, and ease of use with strong reputation"
+        "product": "Proton Mail",
+        "reason": "Highest score here: encryption by default, full mobile apps and no phone number needed to sign up"
       },
       {
-        "useCase": "Budget-conscious privacy seekers",
-        "product": "Tutanota",
-        "reason": "Most affordable premium plans with excellent encryption including subject lines"
+        "useCase": "Encrypting subject lines too",
+        "product": "Tuta",
+        "reason": "Encrypts the whole mailbox, including subject lines, with a free plan and paid plans from €3/month"
       },
       {
         "useCase": "Managing multiple email aliases",
         "product": "StartMail",
-        "reason": "Unlimited disposable addresses with full IMAP support for email clients"
+        "reason": "Unlimited aliases, with IMAP support for any email app"
       },
       {
-        "useCase": "Temporary anonymous communications",
+        "useCase": "Throwaway addresses for one-off sign-ups",
         "product": "Guerrilla Mail",
-        "reason": "No registration required with automatic expiration for maximum anonymity"
+        "reason": "No registration required, and inbox messages are deleted after about an hour"
       },
       {
         "useCase": "Business users needing office tools",
         "product": "Mailfence",
-        "reason": "Includes full collaboration suite with documents and calendar integration"
+        "reason": "Documents, calendar and groups alongside mail, with IMAP and custom domains from the Entry plan"
       }
     ]
   },
   "pro_tips": [
-    "Use a privacy-focused browser when accessing your encrypted email from public computers to prevent tracking and ensure your login session doesn't get saved or cached.",
+    "Use a private window when you check your email on a shared or public computer, and sign out when you finish, so your login session isn't left saved or cached.",
     "Enable two-factor authentication on your encrypted email account - even the most secure providers benefit from this additional security layer.",
     "Create email aliases or use disposable addresses when signing up for services to prevent your main encrypted email from being exposed in data breaches.",
     "Gradually migrate your important accounts to your new encrypted email rather than switching everything at once - this helps you identify which services really need the extra security.",
@@ -311,7 +335,7 @@
   "faqs": [
     {
       "question": "Can I send encrypted emails to people using Gmail or other regular email providers?",
-      "answer": "Yes, but the level of encryption varies. ProtonMail and Tutanota can send password-protected messages to any email address. For full end-to-end encryption, both parties need to use the same encrypted email service or compatible PGP encryption."
+      "answer": "Yes, but the level of encryption varies. Proton Mail, Tuta and StartMail can send password-protected messages to any email address. For full end-to-end encryption, both parties need to use the same encrypted email service or compatible PGP encryption."
     },
     {
       "question": "Will switching to encrypted email make me look suspicious?",
@@ -323,15 +347,15 @@
     },
     {
       "question": "Do encrypted email providers work with my current email apps like Outlook or Apple Mail?",
-      "answer": "It depends on the provider. StartMail and Mailfence offer standard IMAP support that works with any email client. ProtonMail requires their Bridge app for desktop clients, while Tutanota only works with their web and mobile apps."
+      "answer": "It depends on the provider. StartMail supports IMAP on every plan and Mailfence from its Entry plan, so they work with standard email clients. Proton Mail needs its Bridge app, available on paid plans, for desktop clients, and Tuta works only with its own web, desktop and mobile apps."
     },
     {
       "question": "Are free encrypted email plans sufficient for most users?",
-      "answer": "Free plans from ProtonMail and Tutanota provide solid encryption and privacy protection suitable for personal use. You'll mainly need paid plans for more storage, custom domains, or advanced features like email aliases and priority support."
+      "answer": "Free plans from Proton Mail and Tuta provide solid encryption and privacy protection suitable for personal use. You'll mainly need paid plans for more storage, custom domains, or advanced features like email aliases and priority support."
     },
     {
       "question": "Can law enforcement or governments access my encrypted emails?",
-      "answer": "Reputable encrypted email providers use zero-knowledge encryption, meaning they cannot decrypt your emails even if compelled by authorities. However, metadata like sender/receiver addresses and timestamps may still be accessible depending on the provider's jurisdiction and policies."
+      "answer": "Reputable encrypted email providers store your mail encrypted so that they cannot read it, even if compelled by authorities. However, mail from ordinary providers reaches their servers unencrypted before it is stored, and metadata like sender and recipient addresses and timestamps may still be accessible depending on the provider's jurisdiction and policies."
     }
   ],
   "editorial": {

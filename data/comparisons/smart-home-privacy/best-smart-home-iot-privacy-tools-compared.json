@@ -10,14 +10,20 @@
     "local smart home devices",
     "voice assistant alternatives"
   ],
-  "intro": "Smart home devices offer convenience but often sacrifice privacy by collecting data and connecting to remote servers. This comparison reviews the best tools and devices to secure your smart home while maintaining functionality.",
+  "intro": "Smart home devices offer convenience but often sacrifice privacy by collecting data and connecting to remote servers. This page compares five tools and devices that help secure a smart home without losing functionality, on the same six criteria.",
   "products": [
     {
-      "name": "Ubiquiti Dream Machine",
+      "name": "Ubiquiti UniFi Dream Machine Pro",
       "slug": "ubiquiti-dream-machine",
-      "tagline": "Professional-grade router with advanced privacy controls",
+      "tagline": "Router and firewall with VLANs and traffic inspection",
       "website": "ui.com",
       "pricing": "$379",
+      "platforms": [
+        "Router",
+        "Web",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Deep packet inspection and traffic monitoring",
         "VLAN isolation for IoT devices",
@@ -26,9 +32,9 @@
       ],
       "cons": [
         "Steep learning curve for beginners",
-        "Higher upfront cost"
-      ],
-      "rating": 8.5
+        "Higher upfront cost",
+        "No built-in Wi-Fi; needs separate UniFi access points"
+      ]
     },
     {
       "name": "Home Assistant",
@@ -36,17 +42,23 @@
       "tagline": "Open-source hub for local smart home control",
       "website": "home-assistant.io",
       "pricing": "Free (hardware required)",
+      "platforms": [
+        "Linux",
+        "Web",
+        "Android",
+        "iOS",
+        "macOS"
+      ],
       "pros": [
-        "100% local processing",
-        "No cloud dependencies",
+        "Runs locally; most automations keep working without the internet",
+        "No cloud account required",
         "Extensive device compatibility",
         "Active community support"
       ],
       "cons": [
         "Requires technical setup",
-        "Limited voice control options"
-      ],
-      "rating": 9
+        "Local voice control needs a voice device, and free-form speech needs more powerful hardware"
+      ]
     },
     {
       "name": "Pi-hole",
@@ -54,24 +66,35 @@
       "tagline": "Network-wide ad and tracker blocking",
       "website": "pi-hole.net",
       "pricing": "Free",
+      "platforms": [
+        "Linux",
+        "Docker",
+        "Web"
+      ],
       "pros": [
         "Blocks IoT device telemetry",
         "Easy web interface",
         "Detailed blocking statistics",
-        "Low resource requirements"
+        "Runs on modest hardware such as a Raspberry Pi"
       ],
       "cons": [
         "May break some smart device features",
-        "Requires Raspberry Pi or dedicated hardware"
-      ],
-      "rating": 8
+        "Needs an always-on device such as a Raspberry Pi, a Linux machine or Docker"
+      ]
     },
     {
       "name": "Reolink Security Cameras",
       "slug": "reolink-cameras",
-      "tagline": "Local storage security cameras with privacy focus",
+      "tagline": "Security cameras that can record locally, without a cloud subscription",
       "website": "reolink.com",
       "pricing": "$50-$300",
+      "platforms": [
+        "Camera",
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS"
+      ],
       "pros": [
         "Local storage options",
         "No mandatory cloud subscription",
@@ -81,15 +104,19 @@
       "cons": [
         "Limited smart home integration",
         "App could be more polished"
-      ],
-      "rating": 7.5
+      ]
     },
     {
-      "name": "Firewalla Gold",
+      "name": "Firewalla Gold SE",
       "slug": "firewalla-gold",
-      "tagline": "Cybersecurity router with IoT device monitoring",
+      "tagline": "Firewall router that monitors and controls each device on your network",
       "website": "firewalla.com",
-      "pricing": "$468",
+      "pricing": "$519",
+      "platforms": [
+        "Router",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Automatic device recognition",
         "Granular access controls",
@@ -98,9 +125,8 @@
       ],
       "cons": [
         "Expensive for home users",
-        "Limited WiFi range"
-      ],
-      "rating": 8.2
+        "No built-in Wi-Fi; needs a separate access point"
+      ]
     }
   ],
   "features": [
@@ -252,7 +278,7 @@
         },
         "reolink-cameras": {
           "value": "no",
-          "note": "Not applicable to camera systems"
+          "note": "A camera offers no protection from voice assistants"
         },
         "firewalla-gold": {
           "value": "good",
@@ -262,41 +288,41 @@
     }
   ],
   "verdict": {
-    "summary": "For comprehensive smart home privacy, combine multiple solutions. Home Assistant offers the best local control, while Ubiquiti Dream Machine provides enterprise-grade network security. Pi-hole is essential for blocking telemetry, and Reolink cameras offer privacy-focused surveillance. Firewalla Gold is ideal for users wanting professional features with easier setup.",
+    "summary": "On these six criteria Firewalla Gold SE and the Ubiquiti UniFi Dream Machine Pro tie for the top score; Firewalla is listed first only because ties are ordered alphabetically. Both isolate IoT devices and monitor their traffic: Firewalla is easier to set up through its phone app, while the Dream Machine Pro costs less but has a steeper learning curve. Home Assistant scores highest for voice privacy and keeps control of your devices local, but it is the hardest to set up. Pi-hole is a free way to block telemetry across your network. Reolink cameras score lowest because they only cover video, though they can record locally without a cloud subscription. Combining a network tool with local control gives the most protection.",
     "bestFor": [
+      {
+        "useCase": "All-in-one security with easier setup",
+        "product": "Firewalla Gold SE",
+        "reason": "Automatic device recognition, per-device traffic monitoring and a user-friendly mobile app"
+      },
+      {
+        "useCase": "Network security and IoT isolation",
+        "product": "Ubiquiti UniFi Dream Machine Pro",
+        "reason": "VLANs to isolate IoT devices, deep packet inspection and detailed traffic monitoring"
+      },
       {
         "useCase": "Tech-savvy users wanting complete control",
         "product": "Home Assistant",
         "reason": "Open-source, local processing, extensive customization"
       },
       {
-        "useCase": "Network security and IoT isolation",
-        "product": "Ubiquiti Dream Machine",
-        "reason": "Professional-grade features, VLAN support, detailed monitoring"
-      },
-      {
         "useCase": "Simple privacy improvement",
         "product": "Pi-hole",
-        "reason": "Easy to deploy, blocks ads and trackers network-wide"
+        "reason": "Free, and blocks ads and telemetry network-wide"
       },
       {
         "useCase": "Privacy-focused home security",
-        "product": "Reolink Cameras",
-        "reason": "Local storage, no cloud requirements, good value"
-      },
-      {
-        "useCase": "All-in-one security solution",
-        "product": "Firewalla Gold",
-        "reason": "User-friendly interface with advanced security features"
+        "product": "Reolink Security Cameras",
+        "reason": "Local recording with no mandatory cloud subscription, at a good price"
       }
     ]
   },
   "pro_tips": [
     "Create a separate IoT network to isolate smart devices from computers and phones containing sensitive data.",
-    "Use a privacy-focused browser when configuring smart home devices to prevent tracking cookies from following your setup activities.",
+    "Turn off cloud features you don't use, such as remote access or voice purchasing, in each device's app.",
     "Regularly audit your network traffic to identify devices sending unexpected data to remote servers.",
     "Change default passwords on all IoT devices and enable two-factor authentication where available.",
-    "Consider local alternatives to cloud-based services - many smart home functions work better offline anyway."
+    "Consider local alternatives to cloud-based services - many smart home functions can run on your own network without a cloud account."
   ],
   "faqs": [
     {
@@ -309,7 +335,7 @@
     },
     {
       "question": "How much technical knowledge do I need?",
-      "answer": "It varies by solution. Reolink cameras require minimal setup, while Home Assistant needs significant technical skills. Firewalla Gold offers a good middle ground with professional features but easier configuration."
+      "answer": "It varies by solution. Reolink cameras require minimal setup, while Home Assistant needs significant technical skills. Firewalla Gold SE offers a good middle ground with professional features but easier configuration."
     },
     {
       "question": "Do these solutions work with Alexa and Google Home?",

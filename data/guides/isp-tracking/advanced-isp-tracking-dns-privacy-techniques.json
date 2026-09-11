@@ -88,10 +88,10 @@
       "actions": [
         "Enable Encrypted SNI (ESNI) or ECH in browsers that support it",
         "Use domain fronting techniques through CDNs when available",
-        "Configure browsers to Use a privacy-focused browser for additional SNI protection",
+        "Turn on encrypted DNS alongside ECH, since plain DNS lookups reveal the same site names",
         "Test SNI leakage using tools like snileaktest.com"
       ],
-      "proTip": "Privacy-focused browsers includes advanced SNI protection features that automatically mask your website visits from ISP monitoring."
+      "proTip": "With ECH turned on, a browser can hide the site name from your ISP, but only on websites that support ECH, and the IP addresses you connect to stay visible."
     },
     {
       "stepNumber": 7,
@@ -140,7 +140,7 @@
     },
     {
       "question": "Can I use these techniques on mobile devices?",
-      "answer": "Yes, most mobile operating systems now support DoH. iOS 14+ and Android 9+ have built-in private DNS options. Use browsers like a privacy-focused browser for additional mobile privacy protection."
+      "answer": "Yes, most mobile operating systems now support DoH. iOS 14+ and Android 9+ have built-in private DNS options. Use a privacy-focused browser for additional mobile privacy protection."
     },
     {
       "question": "What should I do if my ISP blocks encrypted DNS?",

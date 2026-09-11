@@ -10,95 +10,120 @@
     "cross-site tracking prevention",
     "personalized ads blocker"
   ],
-  "intro": "Tired of ads following you across the web? Our comprehensive comparison reveals the best tools to stop ad tracking, prevent behavioral advertising, and protect your privacy from invasive targeting techniques used by major platforms.",
+  "intro": "Tired of ads following you across the web? This page compares five ways to cut ad tracking: three browser extensions (uBlock Origin, Ghostery and Privacy Badger) and two browsers (DuckDuckGo and Incognito Browser), each scored on the same five criteria.",
   "products": [
     {
       "name": "uBlock Origin",
       "slug": "ublock-origin",
-      "tagline": "Powerful open-source ad and tracker blocker",
-      "website": "https://ublockorigin.com/",
+      "tagline": "Open-source ad and tracker blocker with fine-grained filter controls",
+      "website": "https://github.com/gorhill/uBlock",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
       "pros": [
         "Blocks ads and trackers effectively",
-        "Low resource usage",
         "Highly customizable filter lists",
         "Open source and transparent"
       ],
       "cons": [
         "Requires manual configuration for best results",
-        "May break some websites initially"
-      ],
-      "rating": 9.2
+        "May break some websites initially",
+        "No longer runs in Chrome, which now only allows the more limited uBlock Origin Lite; the full version works in Firefox, including Firefox for Android"
+      ]
     },
     {
       "name": "Incognito Browser",
       "slug": "incognito-browser",
-      "tagline": "Privacy-focused browser with built-in ad tracking protection",
+      "tagline": "Android browser that stays in private mode and wipes history, cookies and sessions when you exit",
       "website": "https://incognitobrowser.io/",
-      "pricing": "Free with premium features",
+      "pricing": "Free; optional Incognito Pro subscription",
+      "platforms": [
+        "Android"
+      ],
       "pros": [
-        "Built-in tracker blocking",
-        "No configuration needed",
-        "Secure by default settings"
+        "Built-in ad blocker, with a High Security Blocking option added in May 2026",
+        "Always in private mode: history, cookies and sessions are wiped when you exit the app",
+        "Settings to turn images, JavaScript and cookies on or off"
       ],
       "cons": [
-        "Smaller market share than major browsers"
-      ],
-      "rating": 8.8
+        "Android only: there is no iOS, desktop or web version",
+        "No fingerprinting protection and no VPN",
+        "Google Play's Data safety section says it may collect crash logs and diagnostics for analytics",
+        "Custom filter rules and per-site allowlists are not among its listed features"
+      ]
     },
     {
       "name": "Ghostery",
       "slug": "ghostery",
-      "tagline": "Comprehensive tracker blocker with detailed insights",
+      "tagline": "Tracker and ad blocker that shows which trackers each site loads",
       "website": "https://www.ghostery.com/",
-      "pricing": "Free with premium plans from $4.99/month",
+      "pricing": "Free; optional Contributor plans",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android",
+        "iOS"
+      ],
       "pros": [
         "Shows detailed tracking information",
         "Easy to use interface",
         "Blocks multiple tracker types",
-        "Mobile app available"
+        "Safari extension on iPhone and iPad; Firefox add-on on Android"
       ],
       "cons": [
-        "Some features require premium subscription",
-        "Can slow down browsing slightly"
-      ],
-      "rating": 8.5
+        "Fewer custom filtering options than uBlock Origin"
+      ]
     },
     {
       "name": "Privacy Badger",
       "slug": "privacy-badger",
-      "tagline": "EFF's intelligent tracker blocker that learns as you browse",
+      "tagline": "EFF's tracker blocker that stops third parties seen tracking people across sites",
       "website": "https://privacybadger.org/",
       "pricing": "Free",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Android"
+      ],
       "pros": [
-        "Learns and adapts to new trackers",
+        "Blocks trackers from a list EFF keeps updated by crawling thousands of sites",
         "Developed by Electronic Frontier Foundation",
         "Simple set-and-forget approach",
         "Focuses specifically on tracking prevention"
       ],
       "cons": [
-        "Doesn't block ads by default",
+        "Blocks only ads that track you, not other ads",
         "Limited customization options"
-      ],
-      "rating": 8.3
+      ]
     },
     {
       "name": "DuckDuckGo Browser",
       "slug": "duckduckgo-browser",
-      "tagline": "Mobile browser with automatic tracker blocking",
+      "tagline": "Browser for phone and desktop with automatic tracker blocking",
       "website": "https://duckduckgo.com/app",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS"
+      ],
       "pros": [
         "Automatic tracker blocking",
         "Built-in search privacy",
-        "Simple privacy grade ratings",
-        "No data collection"
+        "Privacy Dashboard shows the trackers blocked on each site",
+        "Privacy policy says it doesn't save your search or browsing history"
       ],
       "cons": [
-        "Mobile-only currently",
+        "No Linux version",
         "Limited browser customization"
-      ],
-      "rating": 8
+      ]
     }
   ],
   "features": [
@@ -108,23 +133,23 @@
       "scores": {
         "ublock-origin": {
           "value": "excellent",
-          "note": "Comprehensive ad blocking with regular filter updates"
+          "note": "Blocks ads with regularly updated, customizable filter lists"
         },
         "incognito-browser": {
           "value": "good",
-          "note": "Built-in ad blocking covers most common ad types"
+          "note": "Built-in ad blocker, with a High Security Blocking option since May 2026"
         },
         "ghostery": {
-          "value": "good",
-          "note": "Effective ad blocking with customizable settings"
+          "value": "excellent",
+          "note": "Blocks ads with filter lists, including on YouTube and Facebook (per Ghostery)"
         },
         "privacy-badger": {
           "value": "partial",
-          "note": "Blocks tracking ads but not all display ads"
+          "note": "Blocks ads that track you, but not other ads: it is a tracker blocker, not an ad blocker"
         },
         "duckduckgo-browser": {
           "value": "good",
-          "note": "Automatic ad blocking without configuration"
+          "note": "Blocks tracker-based ads and most video ads, including on YouTube (per DuckDuckGo)"
         }
       }
     },
@@ -137,12 +162,12 @@
           "note": "Advanced tracking protection with multiple filter lists"
         },
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Built-in cross-site tracking prevention"
+          "value": "partial",
+          "note": "Wipes cookies and sessions on exit and lets you turn cookies off; no tracker blocking within a session is listed"
         },
         "ghostery": {
           "value": "excellent",
-          "note": "Comprehensive tracker database and blocking"
+          "note": "Blocks trackers from its tracker database"
         },
         "privacy-badger": {
           "value": "excellent",
@@ -159,16 +184,16 @@
       "description": "Prevents websites from identifying you through device characteristics",
       "scores": {
         "ublock-origin": {
-          "value": "good",
-          "note": "Some fingerprinting protection with additional filters"
+          "value": "partial",
+          "note": "Blocks known fingerprinting scripts through its filter lists; doesn't change the browser's fingerprint"
         },
         "incognito-browser": {
-          "value": "excellent",
-          "note": "Advanced fingerprinting protection built-in"
+          "value": "no",
+          "note": "Not claimed. Agent Cloaking changes the browser and device a site sees, which is not fingerprint protection"
         },
         "ghostery": {
-          "value": "good",
-          "note": "Fingerprinting protection in premium version"
+          "value": "partial",
+          "note": "Blocks fingerprinting scripts listed in its tracker database"
         },
         "privacy-badger": {
           "value": "partial",
@@ -176,7 +201,7 @@
         },
         "duckduckgo-browser": {
           "value": "good",
-          "note": "Basic fingerprinting protection included"
+          "note": "Blocks fingerprinting scripts and limits the browser APIs they rely on (per DuckDuckGo)"
         }
       }
     },
@@ -186,49 +211,23 @@
       "scores": {
         "ublock-origin": {
           "value": "good",
-          "note": "Works well out of box but advanced features need setup"
+          "note": "Works out of the box; advanced features need setup"
         },
         "incognito-browser": {
-          "value": "excellent",
-          "note": "No configuration needed, works immediately"
+          "value": "good",
+          "note": "Private mode is always on, so there is nothing to set up"
         },
         "ghostery": {
           "value": "excellent",
-          "note": "User-friendly interface with guided setup"
+          "note": "Ad blocking, anti-tracking and Never-Consent are on from install, with no setup needed"
         },
         "privacy-badger": {
           "value": "excellent",
-          "note": "Install and forget, learns automatically"
+          "note": "Install and forget; works from a tracker list EFF keeps updated"
         },
         "duckduckgo-browser": {
           "value": "excellent",
           "note": "Automatic protection without any setup"
-        }
-      }
-    },
-    {
-      "name": "Performance Impact",
-      "description": "How much the tool affects browsing speed and resource usage",
-      "scores": {
-        "ublock-origin": {
-          "value": "excellent",
-          "note": "Very low resource usage, often speeds up browsing"
-        },
-        "incognito-browser": {
-          "value": "good",
-          "note": "Minimal impact on browsing performance"
-        },
-        "ghostery": {
-          "value": "fair",
-          "note": "Some performance impact with full features enabled"
-        },
-        "privacy-badger": {
-          "value": "good",
-          "note": "Lightweight with minimal performance impact"
-        },
-        "duckduckgo-browser": {
-          "value": "good",
-          "note": "Fast browsing with built-in optimizations"
         }
       }
     },
@@ -241,16 +240,16 @@
           "note": "Extensive customization and filter list options"
         },
         "incognito-browser": {
-          "value": "good",
-          "note": "Basic customization with site-specific controls"
+          "value": "partial",
+          "note": "Switches for images, JavaScript, cookies and High Security Blocking; custom rules and per-site allowlists aren't listed"
         },
         "ghostery": {
           "value": "good",
-          "note": "Good customization options for trackers and ads"
+          "note": "Good options for trackers and ads, with fewer filter controls than uBlock Origin"
         },
         "privacy-badger": {
           "value": "fair",
-          "note": "Limited customization, focuses on automatic learning"
+          "note": "Per-site and per-domain controls; few other settings"
         },
         "duckduckgo-browser": {
           "value": "fair",
@@ -260,50 +259,45 @@
     }
   ],
   "verdict": {
-    "summary": "For comprehensive ad tracking protection, uBlock Origin offers the most powerful blocking capabilities, while Incognito Browser provides the best all-in-one privacy solution. Privacy Badger excels at learning new tracking techniques, and Ghostery offers detailed insights into tracking attempts.",
+    "summary": "Ghostery and uBlock Origin tie for the top score on these five criteria (Ghostery is listed first alphabetically). Ghostery blocks ads and trackers with nothing to set up and shows which trackers each site loads. uBlock Origin gives the most filtering control, though Chrome now only runs the more limited uBlock Origin Lite. DuckDuckGo Browser comes next, with tracker and ad blocking built in on phone and desktop, followed by Privacy Badger, which blocks trackers and the ads that track you but leaves other ads alone. Incognito Browser, which we make, scores lowest: it has a built-in ad blocker and wipes cookies and history when you exit, but it documents no fingerprinting protection or tracker blocking.",
     "bestFor": [
-      {
-        "useCase": "Maximum blocking power",
-        "product": "uBlock Origin",
-        "reason": "Most comprehensive filtering with extensive customization"
-      },
-      {
-        "useCase": "Complete privacy solution",
-        "product": "Incognito Browser",
-        "reason": "Built-in protection without configuration needed"
-      },
-      {
-        "useCase": "Set-and-forget protection",
-        "product": "Privacy Badger",
-        "reason": "Automatically learns and blocks new trackers"
-      },
       {
         "useCase": "Understanding your tracking exposure",
         "product": "Ghostery",
-        "reason": "Detailed reporting on tracking attempts and companies"
+        "reason": "Ties for the top score; shows the trackers found on each page, free, on desktop and mobile"
       },
       {
-        "useCase": "Mobile privacy",
+        "useCase": "Most control over what gets blocked",
+        "product": "uBlock Origin",
+        "reason": "Ties for the top score, with the deepest filter customization (full version on Firefox; Chrome gets uBlock Origin Lite)"
+      },
+      {
+        "useCase": "Tracker and ad blocking built into the browser",
         "product": "DuckDuckGo Browser",
-        "reason": "Simple mobile browser with automatic protections"
+        "reason": "Works without setup on Android, iOS, Windows and Mac"
+      },
+      {
+        "useCase": "Set-and-forget tracker blocking",
+        "product": "Privacy Badger",
+        "reason": "Blocks trackers from a list EFF keeps updated, with almost nothing to configure"
       }
     ]
   },
   "pro_tips": [
-    "Use multiple protection layers - combine a privacy browser like Incognito with an ad blocker extension for maximum protection against tracking.",
+    "Use more than one layer: a tracker-blocking browser plus a content-blocking extension catches more than either alone. Check that the extension supports your browser first, since many mobile browsers don't accept extensions.",
     "Regularly clear cookies and browsing data to break existing tracking profiles that advertisers have built about your browsing habits.",
-    "Disable third-party cookies in your browser settings and enable 'Do Not Track' requests to reduce behavioral advertising.",
+    "Block third-party cookies in your browser settings and turn on Global Privacy Control where your browser offers it; the older 'Do Not Track' signal is widely ignored.",
     "Review and adjust your ad personalization settings on Google, Facebook, and other platforms to limit targeted advertising.",
     "Consider using a VPN alongside tracking protection tools to hide your IP address from advertising networks and data brokers."
   ],
   "faqs": [
     {
       "question": "Will blocking ad tracking break websites I use regularly?",
-      "answer": "Most modern ad blockers and tracking protection tools are designed to minimize website breakage. Tools like uBlock Origin and a privacy-focused browser include built-in filters to prevent common issues. If a site breaks, you can usually whitelist it temporarily while keeping protection active on other sites."
+      "answer": "Most blockers are built to keep breakage low. uBlock Origin and Ghostery ship filters that fix common problems, and most tools let you pause protection on a single site while keeping it on everywhere else."
     },
     {
       "question": "How do I know if ad tracking protection is actually working?",
-      "answer": "You'll notice fewer targeted ads following you across sites, and tools like Ghostery show real-time blocking statistics. You can also test your browser's tracking protection at websites like Panopticlick or Cover Your Tracks to see how well you're protected from fingerprinting."
+      "answer": "You'll notice fewer targeted ads following you across sites, and tools like Ghostery show what they blocked on each page. You can also test your browser at EFF's Cover Your Tracks (formerly Panopticlick) to see how it handles trackers and fingerprinting."
     },
     {
       "question": "Can I still support websites while blocking ads and trackers?",
@@ -315,7 +309,7 @@
     },
     {
       "question": "Do mobile apps track me the same way websites do?",
-      "answer": "Yes, mobile apps often use similar tracking techniques plus additional methods like device identifiers and location data. Use privacy-focused browsers for web browsing and review app permissions carefully. Consider tools like DuckDuckGo's mobile browser for better mobile privacy protection."
+      "answer": "Yes. Mobile apps use similar tracking techniques, plus device identifiers and location data. Review app permissions carefully and limit ad tracking in your phone's privacy settings. For browsing, a browser with built-in tracker blocking, such as DuckDuckGo's, limits what websites can track."
     }
   ],
   "editorial": {

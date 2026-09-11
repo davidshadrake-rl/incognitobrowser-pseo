@@ -1,8 +1,8 @@
 {
   "niche": "encrypted-messaging",
   "slug": "best-encrypted-messaging-apps-compared",
-  "title": "Best Encrypted Messaging Apps Compared (2024 Guide)",
-  "metaDescription": "Compare Signal, WhatsApp, Telegram & more secure messaging apps. Find the best encrypted messenger for private communications with our detailed guide.",
+  "title": "Best Encrypted Messaging Apps Compared",
+  "metaDescription": "Signal, WhatsApp, Telegram, Element and Threema compared on encryption, metadata, open source, sign-up and disappearing messages, on one published rubric.",
   "keywords": [
     "encrypted messaging apps",
     "Signal vs WhatsApp",
@@ -15,28 +15,41 @@
     {
       "name": "Signal",
       "slug": "signal",
-      "tagline": "The gold standard for secure messaging",
+      "tagline": "End-to-end encrypted messaging with disappearing messages",
       "website": "https://signal.org",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
       "pros": [
-        "Open-source code audited by security experts",
+        "Open source; its encryption protocol has been independently analysed",
         "Minimal metadata collection",
-        "Disappearing messages by default",
+        "Disappearing messages for any chat, with an optional default timer",
         "Voice and video calls encrypted",
-        "No phone number sharing in groups"
+        "Phone number hidden from others by default; usernames available"
       ],
       "cons": [
         "Smaller user base than mainstream apps",
         "Requires phone number for registration"
-      ],
-      "rating": 9.5
+      ]
     },
     {
       "name": "WhatsApp",
       "slug": "whatsapp",
-      "tagline": "Encrypted messaging for the masses",
+      "tagline": "Meta's messaging app, end-to-end encrypted by default",
       "website": "https://whatsapp.com",
       "pricing": "Free",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Web"
+      ],
       "pros": [
         "End-to-end encryption enabled by default",
         "Massive user base worldwide",
@@ -46,17 +59,24 @@
       "cons": [
         "Owned by Meta (Facebook)",
         "Extensive metadata collection",
-        "Cloud backups not encrypted",
-        "Phone number visible to contacts"
-      ],
-      "rating": 6.5
+        "Cloud backups aren't end-to-end encrypted unless you turn that on",
+        "Shares your phone number with people you chat with (optional usernames are still rolling out)"
+      ]
     },
     {
       "name": "Telegram",
       "slug": "telegram",
-      "tagline": "Feature-rich with optional encryption",
+      "tagline": "Cloud messaging app with optional end-to-end encrypted Secret Chats",
       "website": "https://telegram.org",
       "pricing": "Free (Premium $4.99/month)",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux",
+        "Web"
+      ],
       "pros": [
         "Large group chats up to 200,000 members",
         "Excellent file sharing capabilities",
@@ -66,11 +86,10 @@
       ],
       "cons": [
         "Encryption not enabled by default",
-        "Secret chats limited to mobile devices",
-        "Proprietary encryption protocol",
+        "Secret chats aren't available in Telegram Desktop or on the web",
+        "Uses its own MTProto encryption protocol instead of the Signal Protocol",
         "Server locations in multiple countries"
-      ],
-      "rating": 7
+      ]
     },
     {
       "name": "Element (Matrix)",
@@ -78,6 +97,14 @@
       "tagline": "Decentralized and open-source messaging",
       "website": "https://element.io",
       "pricing": "Free (Paid hosting available)",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux",
+        "Web"
+      ],
       "pros": [
         "Fully decentralized network",
         "Open-source and auditable",
@@ -89,18 +116,25 @@
         "Steeper learning curve",
         "Smaller user base",
         "Can be complex for non-technical users"
-      ],
-      "rating": 8
+      ]
     },
     {
       "name": "Threema",
       "slug": "threema",
-      "tagline": "Swiss-made privacy with no phone number needed",
+      "tagline": "Swiss messaging app that needs no phone number",
       "website": "https://threema.ch",
-      "pricing": "$3.99 one-time",
+      "pricing": "One-time purchase (CHF 6 from Threema; store prices vary by country)",
+      "platforms": [
+        "Android",
+        "iOS",
+        "Windows",
+        "macOS",
+        "Linux",
+        "Web"
+      ],
       "pros": [
         "No phone number or email required",
-        "Swiss privacy laws protection",
+        "Based in Switzerland",
         "Open-source client code",
         "Anonymous usage possible",
         "Local contact verification"
@@ -109,8 +143,7 @@
         "Paid app with small user base",
         "Limited feature set compared to free alternatives",
         "Server code not open-source"
-      ],
-      "rating": 8.5
+      ]
     }
   ],
   "features": [
@@ -198,7 +231,7 @@
       "scores": {
         "signal": {
           "value": "no",
-          "note": "Phone number required"
+          "note": "Phone number required; a username can hide it from others"
         },
         "whatsapp": {
           "value": "no",
@@ -231,16 +264,16 @@
           "note": "24 hours, 7 days, or 90 days"
         },
         "telegram": {
-          "value": "partial",
-          "note": "Only in Secret Chats"
+          "value": "yes",
+          "note": "Auto-delete timer in any chat since 2021; self-destruct timers in Secret Chats"
         },
         "element": {
           "value": "no",
-          "note": "Not available"
+          "note": "No disappearing-messages timer in the app"
         },
         "threema": {
           "value": "partial",
-          "note": "Manual deletion only"
+          "note": "Can auto-delete old messages on your own device after 1 week to 1 year; not for the other person"
         }
       }
     },
@@ -253,8 +286,8 @@
           "note": "Up to 1,000 members"
         },
         "whatsapp": {
-          "value": "fair",
-          "note": "Up to 256 members"
+          "value": "good",
+          "note": "Up to 1,024 members"
         },
         "telegram": {
           "value": "excellent",
@@ -272,40 +305,40 @@
     }
   ],
   "verdict": {
-    "summary": "Signal remains the top choice for maximum privacy and security, while WhatsApp offers encrypted messaging for mainstream users despite metadata concerns. Telegram excels in features but lacks default encryption. Element provides decentralized messaging for tech-savvy users, and Threema offers true anonymity for those willing to pay.",
+    "summary": "On these six criteria Element (Matrix) and Signal tie for the top score; Element is listed first only because ties are ordered alphabetically. Signal encrypts everything by default, keeps very little metadata and is open source, but needs a phone number to sign up. Element is open source and decentralized and needs no phone number, but it has no disappearing-messages timer and takes more effort to learn. Threema comes next: it needs no phone number or email, but it is a paid app and its server code is closed. Telegram and WhatsApp score lowest: Telegram encrypts end to end only in Secret Chats, and WhatsApp encrypts chats by default but is closed source and collects more metadata.",
     "bestFor": [
       {
-        "useCase": "Maximum Privacy & Security",
+        "useCase": "Self-hosting and decentralization",
+        "product": "Element (Matrix)",
+        "reason": "Open source, needs no phone number, and you can run your own server"
+      },
+      {
+        "useCase": "Private messaging for most people",
         "product": "Signal",
-        "reason": "Open-source, minimal metadata, strong encryption by default"
+        "reason": "End-to-end encrypted by default, minimal metadata, open-source apps and server"
       },
       {
-        "useCase": "Mainstream Adoption",
-        "product": "WhatsApp",
-        "reason": "Largest user base with end-to-end encryption enabled"
-      },
-      {
-        "useCase": "Large Groups & File Sharing",
-        "product": "Telegram",
-        "reason": "Supports massive groups and excellent file sharing features"
-      },
-      {
-        "useCase": "Complete Anonymity",
+        "useCase": "Signing up without a phone number or email",
         "product": "Threema",
-        "reason": "No phone number required, Swiss privacy laws protection"
+        "reason": "A random Threema ID instead of a phone number, from a Swiss company"
       },
       {
-        "useCase": "Self-Hosting & Decentralization",
-        "product": "Element",
-        "reason": "Run your own server, fully decentralized network"
+        "useCase": "Large groups and file sharing",
+        "product": "Telegram",
+        "reason": "Groups of up to 200,000 members; use Secret Chats for end-to-end encryption"
+      },
+      {
+        "useCase": "Reaching people who already use it",
+        "product": "WhatsApp",
+        "reason": "Very large user base, with end-to-end encryption on by default"
       }
     ]
   },
   "pro_tips": [
-    "Use a privacy-focused browser when accessing messaging app web versions to prevent tracking cookies and maintain additional privacy layers.",
+    "If you use a messaging app's web version, keep the browser up to date and sign out when you're done, especially on shared computers.",
     "Enable disappearing messages even on encrypted apps to minimize data stored on devices in case of physical compromise.",
     "Verify contact identity through in-person key exchange or secondary channels before sharing sensitive information.",
-    "Turn off cloud backups or ensure they're separately encrypted, as most services don't encrypt backup files.",
+    "Turn off cloud backups or make sure they're end-to-end encrypted; WhatsApp's backups are end-to-end encrypted only if you turn that on.",
     "Consider using different messaging apps for different purposes - Signal for sensitive communications, others for casual chats."
   ],
   "faqs": [
