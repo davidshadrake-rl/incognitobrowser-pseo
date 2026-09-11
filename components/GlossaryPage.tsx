@@ -28,17 +28,22 @@ interface GlossaryData {
 
 interface GlossaryTermPageProps {
   data: GlossaryData;
-  validTermSlugs?: string[];
+  /** Slug -> display name ("gdpr" -> "GDPR") for the related terms that have
+   * a page. Terms without an entry here are dropped, not linked to a 404. */
+  relatedTermNames?: Record<string, string>;
   /** The niche this term is mapped to (nicheForGlossaryTerm), for the hero's
    * diagram — data.niche is rarely populated on the JSON itself. */
   niche?: string;
   nicheName?: string;
 }
 
-export function GlossaryTermPage({ data, validTermSlugs, niche, nicheName }: GlossaryTermPageProps) {
-  const filteredRelatedTerms = validTermSlugs
-    ? data.relatedTerms.filter(t => validTermSlugs.includes(t))
+export function GlossaryTermPage({ data, relatedTermNames, niche, nicheName }: GlossaryTermPageProps) {
+  const filteredRelatedTerms = relatedTermNames
+    ? data.relatedTerms.filter(t => Object.prototype.hasOwnProperty.call(relatedTermNames, t))
     : data.relatedTerms;
+  // The chip used to show the slug with hyphens swapped for spaces, so
+  // acronyms and names came out lowercase ("gdpr", "dns over https").
+  const nameOf = (slug: string) => relatedTermNames?.[slug] ?? slug.replace(/-/g, ' ');
   const resolvedNiche = niche || data.niche;
   return (
     <article className="max-w-3xl mx-auto">
@@ -100,10 +105,10 @@ export function GlossaryTermPage({ data, validTermSlugs, niche, nicheName }: Glo
               <Link
                 key={i}
                 href={`/glossary/${term}`}
-                aria-label={`Read glossary entry: ${term.replace(/-/g, ' ')}`}
+                aria-label={`Read glossary entry: ${nameOf(term)}`}
                 className="px-3 py-1.5 border border-b1 bg-s1 text-t2 rounded-[4px] text-row hover:border-b2 hover:text-t1 transition-colors"
               >
-                {term.replace(/-/g, ' ')}
+                {nameOf(term)}
               </Link>
             ))}
           </div>

@@ -3,10 +3,12 @@
  * No fonts fetched, no server, nothing uploaded. 1200×630 (the size every
  * social card slot expects) so a share lands as a proper preview.
  */
+import { pageLinkFor } from './handoff';
+
 export interface ScorecardSpec {
   /** Big line: "cnn.com" or "My browser fingerprint" */
   title: string;
-  /** The visitor's own number: "Grade D" / "63 / 100" / "12 trackers" */
+  /** The visitor's own number, with its label (see scorecardFigure): "Grade D" / "Score 63/100" / "12 trackers" */
   figure: string;
   /** One line under the figure */
   headline: string;
@@ -235,4 +237,114 @@ export async function renderScorecard(spec: ScorecardSpec): Promise<Blob> {
 /** A safe filename for the download. */
 export function scorecardFilename(title: string): string {
   return `privacy-scorecard-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'result'}.png`;
+}
+
+/**
+ * Tools that only produce a value (a hash, a password, ciphertext). There is
+ * nothing about the visitor to share, so they get no scorecard and no
+ * result CTA: the card used to show a bare "4" or "20" or "123 chars".
+ */
+export const VALUE_ONLY_ENGINES = new Set(['hash-generator', 'password-generator', 'text-encryption']);
+
+interface FigureSource {
+  score?: number;
+  /**
+   * How the tool writes its score (ToolResult.scoreUnit): '%' draws "72%",
+   * anything else "72/100". Optional, so a result bus without the field
+   * still draws "/100".
+   */
+  scoreUnit?: string;
+  grade?: string;
+  stats?: Array<{ label: string; value: string }>;
+}
+
+/**
+ * The scorecard's big figure for a tool result: the tool's own number WITH
+ * its label ("72% blocked", "3 trackers"), matching what the tool itself
+ * says. It used to be the grade, else the score as "/ 100" (so a percentage
+ * read "72 / 100"), else the first stat's value with no label at all.
+ * '' means nothing worth sharing, and the scorecard is not shown.
+ * Stats are looked up by label, not position, so reordering a tool's stats
+ * cannot silently change the figure.
+ */
+export function scorecardFigure(engine: string, r: FigureSource): string {
+  if (VALUE_ONLY_ENGINES.has(engine)) return '';
+  const stat = (label: string) => r.stats?.find((s) => s.label.toLowerCase() === label)?.value;
+  const num = (label: string) => {
+    const n = parseInt(stat(label) ?? '', 10);
+    return Number.isFinite(n) ? n : undefined;
+  };
+  const count = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+  const score = typeof r.score === 'number' ? Math.round(r.score) : undefined;
+  const scored = (label: string) => (score === undefined ? '' : `${label} ${score}${r.scoreUnit === '%' ? '%' : '/100'}`);
+  switch (engine) {
+    // A share of requests blocked: a percentage whatever unit the result names.
+    case 'ad-blocker-test': return score === undefined ? '' : `${score}% blocked`;
+    case 'password-strength': return scored('Strength');
+    // The quiz's number is its score. Its letter, "+" included, is in the
+    // share headline; drawn as "Grade X" it once lost the "+" ("A+" as "A").
+    case 'privacy-quiz':
+    case 'browser-privacy': return scored('Score');
+    case 'url-analyzer': return scored('Safety');
+    case 'whats-my-ip': {
+      const v = stat('verdict');
+      return v ? `IP ${v.toLowerCase()}` : '';
+    }
+    case 'dns-leak-test': {
+      // A VPN-off run only records the baseline: nothing to share yet.
+      const v = stat('verdict');
+      return v === 'Leaking' ? 'DNS leaking' : v === 'No leak' ? 'No DNS leak' : v === 'Inconclusive' ? 'Inconclusive' : '';
+    }
+    case 'useragent-analyzer': return stat('browser') ?? '';
+    case 'permission-checker': {
+      // The tool's own words (summarizePermissions): Allowed / Blocked / Asks
+      // first / Allowed by default. The figure is out of the permissions that
+      // need the visitor's OK (Allowed + Blocked + Asks first), the ones the
+      // headline talks about: counting "Allowed by default" too gave a fresh
+      // Chrome "0 of 11 allowed" beside "Allowed by default 5". Its unsupported
+      // branch reports only Checked 0 and Unsupported N: nothing was checked,
+      // so there is nothing to share.
+      const allowed = num('allowed');
+      if (allowed === undefined || num('checked') === 0) return '';
+      const total = allowed + (num('blocked') ?? 0) + (num('asks first') ?? 0);
+      return total ? `${allowed} of ${total} allowed` : '';
+    }
+    case 'link-unwrapper': {
+      const n = num('trackers');
+      return n === undefined ? '' : n ? count(n, 'tracker') : 'No trackers';
+    }
+    case 'email-pixel-detector': {
+      const pixels = num('pixels') ?? 0;
+      const links = num('tracked links') ?? 0;
+      return pixels ? count(pixels, 'tracking pixel') : links ? count(links, 'tracked link') : 'No trackers';
+    }
+    case 'screenshot-leak-checker': {
+      const n = num('leaks');
+      return n === undefined ? '' : n ? count(n, 'leak') : 'No leaks';
+    }
+    case 'metadata-viewer': {
+      if (stat('gps') === 'yes') return 'GPS location';
+      const n = num('fields');
+      return n === undefined ? '' : n ? count(n, 'metadata field') : 'No metadata';
+    }
+    case 'cookie-analyzer': {
+      const n = num('tracking cookies') ?? num('tracking');
+      return n === undefined ? '' : count(n, 'tracking cookie');
+    }
+    default:
+      return r.grade ? `Grade ${r.grade}` : scored('Score');
+  }
+}
+
+/**
+ * The link a shared scorecard carries: origin + path (lib/handoff's
+ * pageLinkFor drops the query and hash, so crafted text never rides along),
+ * plus the Privacy Score Quiz's own result hash when it is exactly that shape
+ * (#r= and the base-36 answer digits the quiz writes). Without it the
+ * recipient opened a blank quiz instead of the result.
+ */
+export function shareLinkFor(href: string): string {
+  let hash = '';
+  try { hash = new URL(href).hash; } catch { /* not an absolute URL: no hash kept */ }
+  return pageLinkFor(href) + (/^#r=[0-9a]{1,32}$/.test(hash) ? hash : '');
 }

@@ -1,8 +1,8 @@
 {
   "niche": "gdpr",
   "slug": "cookie-compliance-scanner",
-  "title": "Cookie Compliance Scanner",
-  "metaDescription": "Scan cookies on any website to check for GDPR compliance issues and unauthorized tracking.",
+  "title": "Pre-Consent Cookie Scanner",
+  "metaDescription": "See which tracking cookies and scripts a website sets on first load, before you accept anything. A starting point for GDPR questions, not a compliance audit.",
   "keywords": [
     "GDPR",
     "GDPR compliance",
@@ -12,10 +12,10 @@
   ],
   "toolType": "scanner",
   "toolEngine": "cookie-analyzer",
-  "description": "Scan cookies on any website to check for GDPR compliance issues and unauthorized tracking.",
+  "description": "See which tracking cookies and scripts a website sets on first load, before you accept anything. A starting point for GDPR questions, not a compliance audit.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool fetches the URL you enter through our server (not your browser) so it can read the Set-Cookie headers and tracking scripts a site sends before you ever visit it. Your request goes to our server, which is rate-limited and never logs the URLs you scan. The categorization against our database of known trackers then runs on the returned data.",
+    "howItWorks": "This tool fetches the URL you enter through our server (not your browser) so it can read the Set-Cookie headers and tracking scripts a site sends before you ever visit it. The categorization against our database of known trackers then runs on the returned data.",
     "tips": [
       "Block third-party cookies in your browser settings to prevent cross-site tracking",
       "Use a cookie auto-delete extension to clear tracking cookies after each session",

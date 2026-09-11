@@ -1,4 +1,4 @@
-import { getGlossaryFiles, getGlossaryItem } from '@/lib/content';
+import { getGlossaryFiles, getGlossaryItem, isPublished, type EditableContent } from '@/lib/content';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { redirect } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
@@ -23,9 +23,10 @@ interface GlossaryMeta {
 export default function GlossaryIndex() {
   if (IS_PRO_DEPLOYMENT) redirect('/tools'); // the Pro deployment serves tools only
   const files = getGlossaryFiles();
+  // Published only, the same rule as every other index and the home page's count.
   const terms: GlossaryMeta[] = files
-    .map(f => getGlossaryItem<GlossaryMeta>(f))
-    .filter((t): t is GlossaryMeta => t !== null)
+    .map(f => getGlossaryItem<GlossaryMeta & EditableContent>(f))
+    .filter((t): t is GlossaryMeta & EditableContent => t !== null && isPublished(t))
     .sort((a, b) => a.term.localeCompare(b.term));
 
 

@@ -15,12 +15,17 @@
   "sections": [
     {
       "heading": "Header Information",
-      "content": "[Your Name]\n[Your Address]\n[City, State ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[ISP Company Name]\nCustomer Privacy Department\n[ISP Address]\n[City, State ZIP Code]\n\nRe: Privacy Rights Request - Account #[ACCOUNT_NUMBER]",
+      "content": "[Your Name]\n[Your Address]\n[City, State ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[ISP Company Name]\nCustomer Privacy Department\n[ISP Address]\n[ISP City, State ZIP Code]\n\nRe: Privacy Rights Request - Account #[ACCOUNT_NUMBER]",
       "placeholders": [
         {
           "key": "ACCOUNT_NUMBER",
           "label": "Your ISP Account Number",
           "defaultValue": "Enter your account number"
+        },
+        {
+          "key": "ISP_CITY_STATE_ZIP_CODE",
+          "label": "ISP City, State ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },

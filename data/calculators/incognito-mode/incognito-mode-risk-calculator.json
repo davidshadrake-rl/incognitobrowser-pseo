@@ -103,7 +103,9 @@
       "min": 1,
       "max": 5,
       "step": 1,
-      "helpText": "How often do you use incognito mode? (1=Rarely, 5=Always)"
+      "minLabel": "Rarely",
+      "maxLabel": "Always",
+      "helpText": "How often do you use incognito mode?"
     },
     {
       "id": "additionalTools",
@@ -140,7 +142,7 @@
       "description": "Estimated percentage of your data that remains trackable"
     }
   ],
-  "formula": "let baseRisk = 40; let browserMultipliers = {chrome: 1.0, firefox: 0.9, safari: 0.95, edge: 1.0, 'incognito-browser': 0.7}; let activityRisks = {shopping: 15, banking: 25, social: 20, research: 10, streaming: 12}; let networkRisks = {home: 5, work: 15, public: 30, mobile: 10}; let frequencyMultiplier = frequency * 0.1; let toolsReduction = additionalTools ? -15: 0; let sharedRisk = sharedDevice ? 20: 0; let totalRisk = Math.max(0, Math.min(100, baseRisk * browserMultipliers[browser] + activityRisks[activities] + networkRisks[networkType] + (frequencyMultiplier * 10) + toolsReduction + sharedRisk)); let grade = totalRisk <= 25 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': totalRisk <= 80 ? 'D': 'F'; let exposurePercent = Math.round(totalRisk * 0.8); return {riskScore: Math.round(totalRisk), protectionLevel: grade, exposurePercentage: exposurePercent};",
+  "formula": "let baseRisk = 40; let browserMultipliers = {chrome: 1.0, firefox: 0.9, safari: 0.95, edge: 1.0, 'incognito-browser': 0.7}; let activityRisks = {shopping: 15, banking: 25, social: 20, research: 10, streaming: 12}; let networkRisks = {home: 5, work: 15, public: 30, mobile: 10}; let frequencyMultiplier = frequency * 0.1; let toolsReduction = additionalTools ? -15: 0; let sharedRisk = sharedDevice ? 20: 0; let totalRisk = Math.round(Math.max(0, Math.min(100, baseRisk * browserMultipliers[browser] + activityRisks[activities] + networkRisks[networkType] + (frequencyMultiplier * 10) + toolsReduction + sharedRisk))); let grade = totalRisk <= 25 ? 'A': totalRisk <= 40 ? 'B': totalRisk <= 60 ? 'C': 'D'; let exposurePercent = Math.round(totalRisk * 0.8); return {riskScore: totalRisk, protectionLevel: grade, exposurePercentage: exposurePercent};",
   "educational": {
     "methodology": "This calculator evaluates your privacy risk by analyzing your browser choice, online activities, network environment, and additional security measures. It accounts for the fact that incognito mode only prevents local data storage, not network-level tracking or ISP monitoring.",
     "tips": [

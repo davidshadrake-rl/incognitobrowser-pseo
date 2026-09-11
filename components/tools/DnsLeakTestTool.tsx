@@ -8,6 +8,7 @@ import { useReportResult, type ToolResult } from '@/components/tools/ResultConte
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import {
   classifyDnsLeak,
+  HOSTNAMES_PER_TEST,
   ispRangeOf,
   type DnsLeakBaseline,
   type DnsLeakClassification,
@@ -34,10 +35,14 @@ import {
  *      until the observation count stops growing.
  *   4. Classify (lib/dns-leak.ts) and report to the result bus.
  *
- * We cannot know whether a VPN is on, so the visitor tells us. A VPN-off run
- * is stored locally as a baseline (public IP + resolver IPs) so the VPN-on run
- * can recognise the ISP's resolver network. Nothing else is persisted; the
- * server side expires after 10 minutes.
+ * We cannot know whether a VPN is on, so the visitor tells us — by which of
+ * the two run buttons they press. There is deliberately no pre-selected
+ * answer: a default of "on" told visitors without a VPN about "your VPN exit
+ * IP", and a default of "off" would save a VPN-on run as the ISP baseline and
+ * turn every later VPN-on run into a false leak. A VPN-off run is stored
+ * locally as a baseline (public IP + resolver IPs) so the VPN-on run can
+ * recognise the ISP's resolver network. Nothing else is persisted; the server
+ * side expires after 10 minutes.
  */
 
 interface StartResponse {
@@ -183,7 +188,7 @@ function probeHostname(host: string): Promise<void> {
 const PHASE_LABEL: Record<Phase, string> = {
   idle: '',
   starting: 'Creating a unique test on our server…',
-  probing: 'Asking your browser to resolve 6 unique hostnames…',
+  probing: `Asking your browser to look up ${HOSTNAMES_PER_TEST} test hostnames…`,
   collecting: 'Waiting for our nameserver to report which resolver asked…',
   done: '',
   error: '',
@@ -211,6 +216,11 @@ function verdictTitle(c: DnsLeakClassification): string {
   }
 }
 
+/** One word for the scorecard's big figure and the console header — never the raw address. */
+function verdictWord(c: DnsLeakClassification): string {
+  return c.severity === 'red' ? 'Leaking' : c.severity === 'green' ? 'No leak' : c.severity === 'amber' ? 'Inconclusive' : 'Baseline';
+}
+
 function severityClasses(s: DnsLeakClassification['severity']): { border: string; text: string } {
   switch (s) {
     case 'red':
@@ -226,12 +236,13 @@ function severityClasses(s: DnsLeakClassification['severity']): { border: string
 
 export function DnsLeakTestTool() {
   const report = useReportResult();
-  const [vpnOn, setVpnOn] = useState(true);
   const [phase, setPhase] = useState<Phase>('idle');
   const [error, setError] = useState('');
   const [result, setResult] = useState<ResultResponse | null>(null);
   const [classification, setClassification] = useState<DnsLeakClassification | null>(null);
-  const [testedWithVpnOn, setTestedWithVpnOn] = useState(true);
+  // The visitor's answer for the run in progress or on screen. Null until they
+  // press one of the two run buttons — the tool never answers it for them.
+  const [testedWithVpnOn, setTestedWithVpnOn] = useState<boolean | null>(null);
   // The VPN-off baseline lives in localStorage. useSyncExternalStore keeps it in
   // sync (no setState-in-effect) and renders null during SSR, so no hydration mismatch.
   const baselineRaw = useSyncExternalStore(subscribeBaseline, getBaselineSnapshot, getServerBaselineSnapshot);
@@ -239,12 +250,11 @@ export function DnsLeakTestTool() {
 
   const running = phase === 'starting' || phase === 'probing' || phase === 'collecting';
 
-  const runTest = useCallback(async () => {
+  const runTest = useCallback(async (vpn: boolean) => {
     setPhase('starting');
     setError('');
     setResult(null);
     setClassification(null);
-    const vpn = vpnOn;
     setTestedWithVpnOn(vpn);
     try {
       const start = await startTest();
@@ -292,7 +302,7 @@ export function DnsLeakTestTool() {
       setError(err instanceof Error ? err.message : 'The DNS leak test failed.');
       setPhase('error');
     }
-  }, [vpnOn]);
+  }, []);
 
   // Result bus: severity red = leaking, amber = inconclusive, green = no leak, info = baseline.
   useEffect(() => {
@@ -302,9 +312,8 @@ export function DnsLeakTestTool() {
     }
     // stats[0] is the scorecard's big figure: a one-word verdict, never the raw
     // address (IPv6 overflows the card; a real IP has no place in a share image).
-    const verdict = classification.severity === 'red' ? 'Leaking' : classification.severity === 'green' ? 'No leak' : classification.severity === 'amber' ? 'Inconclusive' : 'Baseline';
     const stats: ToolResult['stats'] = [
-      { label: 'Verdict', value: verdict },
+      { label: 'Verdict', value: verdictWord(classification) },
       { label: 'Public IP', value: maskIp(result.publicIp) },
       { label: 'Resolvers seen', value: String(result.resolvers.length) },
       { label: 'Resolver networks', value: classification.networks.length ? classification.networks.join(', ') : '—' },
@@ -329,54 +338,38 @@ export function DnsLeakTestTool() {
   return (
     <div className="space-y-6">
       <div className="text-sm text-t2">
-        Your browser is asked to resolve six hostnames that exist only for this test, under a domain we run the
-        nameserver for. Whichever DNS resolver asks our nameserver for them is the resolver you are really using —
-        no third-party leak-test service is involved, and the record expires after ten minutes.
+        The test has your browser look up {HOSTNAMES_PER_TEST} hostnames that exist only for this test, on a domain
+        whose nameserver we run. Whichever DNS resolver asks our nameserver for them is the resolver you are really using.
       </div>
 
-      {/* Controls */}
+      {/* Controls. The VPN question is answered by the button you press: the
+          tool cannot detect a VPN, so it never picks an answer for you. */}
       <div className="bg-s0 border border-b1 rounded-lg p-6 space-y-4">
-        <div>
-          <div className="text-xs uppercase tracking-wider text-t3 mb-2">Is your VPN on right now?</div>
+        <div role="group" aria-labelledby="dns-vpn-question">
+          <div id="dns-vpn-question" className="text-xs uppercase tracking-wider text-t3 mb-2">Is your VPN on right now?</div>
           <p className="text-xs text-t2 mb-3">
-            We cannot detect this ourselves. For the clearest answer, run once with the VPN <strong className="text-white">off</strong> to record your ISP&apos;s resolver, then again with it <strong className="text-white">on</strong>.
+            We can&apos;t tell from here, so start the test with the button that matches. For the clearest answer, run it once with the VPN <strong className="text-white">off</strong> to record your ISP&apos;s resolver, then again with it <strong className="text-white">on</strong>.
           </p>
-          <div className="inline-flex rounded border border-b1 overflow-hidden" role="group" aria-label="VPN state">
-            <button
-              type="button"
-              aria-pressed={!vpnOn}
-              onClick={() => setVpnOn(false)}
-              disabled={running}
-              className={`px-4 py-2 text-sm transition-colors disabled:opacity-50 ${
-                !vpnOn ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
-              }`}
-            >
-              VPN is OFF
-            </button>
-            <button
-              type="button"
-              aria-pressed={vpnOn}
-              onClick={() => setVpnOn(true)}
-              disabled={running}
-              className={`px-4 py-2 text-sm border-l border-b1 transition-colors disabled:opacity-50 ${
-                vpnOn ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
-              }`}
-            >
-              VPN is ON
-            </button>
+          <div className="flex items-center gap-3 flex-wrap">
+            {([false, true] as const).map((vpn) => {
+              const pressed = running && testedWithVpnOn === vpn;
+              return (
+                <button
+                  key={String(vpn)}
+                  type="button"
+                  onClick={() => runTest(vpn)}
+                  disabled={running}
+                  className="btn-primary text-sm"
+                  // While a run is in progress both buttons are disabled; the one
+                  // pressed stays at full strength so the answer given is plain to see.
+                  style={pressed ? { opacity: 1 } : undefined}
+                >
+                  {pressed ? `Testing with VPN ${vpn ? 'on' : 'off'}…` : `Run DNS leak test (VPN ${vpn ? 'on' : 'off'})`}
+                </button>
+              );
+            })}
           </div>
-        </div>
-
-        <div className="flex items-center gap-4 flex-wrap">
-          <button
-            type="button"
-            onClick={runTest}
-            disabled={running}
-            className="px-5 py-2.5 bg-white text-black text-sm font-semibold rounded hover:bg-white/90 transition-colors disabled:opacity-50"
-          >
-            {running ? 'Testing…' : 'Run DNS leak test'}
-          </button>
-          {running && <span className="text-sm text-t2">{PHASE_LABEL[phase]}</span>}
+          {running && <p className="mt-3 text-sm text-t2" role="status">{PHASE_LABEL[phase]}</p>}
         </div>
 
         {baseline && (
@@ -385,7 +378,7 @@ export function DnsLeakTestTool() {
               <span className="text-white">VPN-off baseline saved</span>
               {baseline.savedAt ? ` at ${formatTime(baseline.savedAt)}` : ''}:{' '}
               ISP network {baselineRange ?? 'unknown'}, {baseline.resolverIps.length} resolver
-              {baseline.resolverIps.length === 1 ? '' : 's'} recorded. Stored only in this browser.
+              {baseline.resolverIps.length === 1 ? '' : 's'} recorded.
             </div>
             <button type="button" onClick={clearBaseline} className="underline hover:text-white">
               Clear baseline
@@ -402,8 +395,9 @@ export function DnsLeakTestTool() {
         <ConsoleFrame
           engine="dns-leak-test"
           status={statusFromSeverity(classification.severity)}
-          checks={6}
-          processing="server"
+          verdict={verdictWord(classification)}
+          checks={HOSTNAMES_PER_TEST}
+          checksNoun={['test lookup', 'test lookups']}
           statTiles={[
             { label: 'Verdict', value: verdictTitle(classification) },
             { label: 'Public IP', value: maskIp(result.publicIp) },
@@ -418,6 +412,12 @@ export function DnsLeakTestTool() {
             <h3 className={`text-lg font-semibold ${sev.text} mb-2`}>{verdictTitle(classification)}</h3>
             <p className="text-sm text-white">{classification.headline}</p>
             <p className="mt-2 text-sm text-t2">{classification.detail}</p>
+            <p className="mt-3 text-xs text-t3">
+              You ran this test with your VPN <strong className="text-white">{testedWithVpnOn ? 'on' : 'off'}</strong>.{' '}
+              {classification.verdict === 'baseline'
+                ? 'Its resolvers were saved as your baseline. If your VPN was actually on, clear the baseline and run the test again with the other button.'
+                : 'If that’s wrong, run the test again with the other button.'}
+            </p>
             {classification.reason === 'no-backend' && (
               <p className="mt-3 text-xs text-warn/80">
                 Inconclusive because the test backend is not configured on this deployment — no resolver could be recorded, so no verdict is possible.
@@ -479,7 +479,7 @@ export function DnsLeakTestTool() {
               </div>
             )}
             <p className="mt-3 text-xs text-t3">
-              Networks are shown as address ranges, not provider names — we do not run geo or ASN lookups on anyone.
+              Networks are shown as address ranges, not provider names.
               {result.observations > 0 && ` ${result.observations} quer${result.observations === 1 ? 'y' : 'ies'} reached our nameserver in total.`}
             </p>
           </div>

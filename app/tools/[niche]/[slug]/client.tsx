@@ -22,12 +22,6 @@ interface ToolData {
   toolType: string;
   description: string;
   toolEngine?: string;
-  /**
-   * Where the work happens. Defaults to 'client'. The cookie/tracker
-   * scanner is 'server' — it fetches the target URL through our API,
-   * so claiming "client-side" on it would be a false privacy claim.
-   */
-  processing?: 'client' | 'server';
   /** 'pro' engines live on the Pro deployment only (clean split, 2026-09-08). */
   tier?: 'free' | 'pro';
   inputs: Array<{
@@ -82,6 +76,11 @@ export function ToolPageClient({
       const howItWorks = data.educational.howItWorks
         ? data.educational.howItWorks.replace(/^This tool /, '').replace(/^\w/, (c) => c.toUpperCase())
         : '';
+      // Folio numbers follow what actually renders. Notes is hidden on the
+      // pages that repeat the canonical page's tips, and hard-coded folios
+      // then read "01 How it works, 03 Scoring" with no 02.
+      const sections = ['how', showNotes && 'notes', meta?.scoring && 'scoring'].filter(Boolean);
+      const folio = (id: string) => String(sections.indexOf(id) + 1).padStart(2, '0');
 
       return (
         <ResultProvider>
@@ -97,12 +96,7 @@ export function ToolPageClient({
             kicker={`${nicheName} · ${data.toolType}`}
             title={data.title}
             description={data.description}
-            badges={
-              <>
-                <Badge variant={tier === 'pro' ? 'pro' : 'free'} />
-                <Badge variant={data.processing === 'server' ? 'server' : 'client'} />
-              </>
-            }
+            badges={<Badge variant={tier === 'pro' ? 'pro' : 'free'} />}
             action={IS_PRO_DEPLOYMENT ? (
               <a
                 href={`${FREE_BASE_URL}/tools`}
@@ -118,8 +112,9 @@ export function ToolPageClient({
             tier={tier}
           />
 
-          {/* Interactive tool — the 8 heaviest engines wrap their own result
-              markup in ConsoleFrame; the other 9 render their existing markup. */}
+          {/* Interactive tool — 14 engines wrap their own result markup in
+              ConsoleFrame; the 3 value tools (hash, password generator, text
+              encryption) render theirs in ValueCard. */}
           <div className="mb-8">
             {engine}
           </div>
@@ -131,7 +126,7 @@ export function ToolPageClient({
           <div className="mt-10">
             <details className="panel">
               <summary>
-                <span className="folio">01</span> How it works <Icon name="chevron" size={16} />
+                <span className="folio">{folio('how')}</span> How it works <Icon name="chevron" size={16} />
               </summary>
               <div className="panel-body">
                 <div className="grid md:grid-cols-[1fr_200px] gap-6">
@@ -164,7 +159,7 @@ export function ToolPageClient({
             {showNotes && (
               <details className="panel">
                 <summary>
-                  <span className="folio">02</span> Notes ({tips.length + mistakes.length}) <Icon name="chevron" size={16} />
+                  <span className="folio">{folio('notes')}</span> Notes ({tips.length + mistakes.length}) <Icon name="chevron" size={16} />
                 </summary>
                 <div className="panel-body">
                   <ul className="space-y-2">
@@ -188,7 +183,7 @@ export function ToolPageClient({
             {meta?.scoring && (
               <details className="panel">
                 <summary>
-                  <span className="folio">03</span> Scoring <Icon name="chevron" size={16} />
+                  <span className="folio">{folio('scoring')}</span> Scoring <Icon name="chevron" size={16} />
                 </summary>
                 <div className="panel-body">
                   <p className="prose-ib text-row">{meta.scoring}</p>

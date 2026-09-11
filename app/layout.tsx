@@ -67,7 +67,10 @@ export default function RootLayout({
                 aria-label="Privacy Resources home"
               >
                 <IncognitoLogo size={28} className="rounded" />
-                <span className="font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap">
+                {/* At lg (1024-1279px) the free site's eight-link nav needs the
+                    room: the row overflowed the page sideways, so the wordmark
+                    shows from xl only (the link keeps its aria-label). */}
+                <span className={`font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap${IS_PRO_DEPLOYMENT ? "" : " lg:hidden xl:inline"}`}>
                   {IS_PRO_DEPLOYMENT ? "Incognito Pro" : "Privacy Resources"}
                 </span>
               </Link>
@@ -76,7 +79,7 @@ export default function RootLayout({
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="px-3 py-2 text-xs uppercase tracking-wider text-t2 hover:text-white transition-colors"
+                    className="px-2 xl:px-3 py-2 text-xs uppercase tracking-wider text-t2 hover:text-white transition-colors"
                   >
                     {item.label}
                   </Link>
@@ -104,13 +107,18 @@ export default function RootLayout({
                   <span className="hidden sm:inline">Upgrade to Pro in the app</span>
                 </a>
               ) : (
+                // Goes to Google Play: the app is Android only. "Download
+                // Browser" read as a desktop download to desktop visitors.
+                // The full label only where the row has room for it: under
+                // the menu (sm-lg) and from xl; the nav takes it at lg.
                 <a
                   href={playUrl({ medium: 'site', campaign: 'header' })}
                   rel="noopener"
                   className="btn-primary text-xs !px-3 sm:!px-4 !min-h-10 whitespace-nowrap"
                 >
                   <span className="sm:hidden">Get app</span>
-                  <span className="hidden sm:inline">Download Browser</span>
+                  <span className="hidden sm:inline lg:hidden xl:inline">Get the Android app</span>
+                  <span className="hidden lg:inline xl:hidden">Android app</span>
                 </a>
               )}
             </div>
@@ -139,7 +147,7 @@ export default function RootLayout({
               <div>
                 <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Product</h3>
                 <ul className="space-y-2 text-sm text-t2">
-                  <li><a href={playUrl({ medium: 'site', campaign: 'footer' })} rel="noopener" className="hover:text-white transition-colors">Download</a></li>
+                  <li><a href={playUrl({ medium: 'site', campaign: 'footer' })} rel="noopener" className="hover:text-white transition-colors">Android app</a></li>
                   <li><a href="https://incognitobrowser.io/news/" rel="noopener" className="hover:text-white transition-colors">Blog</a></li>
                 </ul>
               </div>

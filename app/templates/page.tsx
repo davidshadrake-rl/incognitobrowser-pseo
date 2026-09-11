@@ -1,4 +1,4 @@
-import { getAllContentItems } from '@/lib/content';
+import { getAllContentItems, isPublished, type EditableContent } from '@/lib/content';
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { redirect } from 'next/navigation';
@@ -24,7 +24,9 @@ interface TemplateMeta {
 
 export default function TemplatesIndex() {
   if (IS_PRO_DEPLOYMENT) redirect('/tools'); // the Pro deployment serves tools only
-  const items = getAllContentItems<TemplateMeta>('templates');
+  // Published only, like the home page's count for this type: drafts render
+  // (noindex) but are not listed, so every count on the site agrees.
+  const items = getAllContentItems<TemplateMeta & EditableContent>('templates').filter(isPublished);
   const niches = getAllNiches();
   const nicheMap = Object.fromEntries(niches.map(n => [n.id, n]));
 

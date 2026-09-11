@@ -683,7 +683,7 @@ export function analyzeLink(raw: string): LinkResult {
       : 'The wrapper encodes its destination in a form that cannot be decoded without fetching it.';
     shareText = `${headline}. The destination is hidden inside the wrapper.`;
   } else if (hidden) {
-    detail = `${hidden.host} logs every click and only reveals the real destination when you open it, so any trackers waiting there are still unknown. This tool never fetches.`;
+    detail = `${hidden.host} logs every click and only reveals the real destination when you open it, so any trackers waiting there are still unknown.`;
     shareText = `${headline}. Shorteners log every click and hide what is waiting on the other side.`;
   } else {
     detail = 'No redirect wrappers and no tracking parameters found.';

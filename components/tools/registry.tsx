@@ -3,12 +3,12 @@
 import React from 'react';
 import { PasswordStrengthTool } from './PasswordStrengthTool';
 import { PasswordGeneratorTool } from './PasswordGeneratorTool';
-import { BrowserPrivacyTool } from './BrowserPrivacyTool';
-import { TextEncryptionTool } from './TextEncryptionTool';
+import { BrowserPrivacyTool, BROWSER_PRIVACY_CHECKS } from './BrowserPrivacyTool';
+import { TextEncryptionTool, PBKDF2_ITERATIONS } from './TextEncryptionTool';
 import { URLAnalyzerTool } from './URLAnalyzerTool';
 import { HashGeneratorTool } from './HashGeneratorTool';
-import { PrivacyQuizTool } from './PrivacyQuizTool';
-import { PermissionCheckerTool } from './PermissionCheckerTool';
+import { PrivacyQuizTool, QUIZ_QUESTION_COUNT, QUIZ_CATEGORY_COUNT } from './PrivacyQuizTool';
+import { PermissionCheckerTool, PERMISSIONS_TO_CHECK } from './PermissionCheckerTool';
 import { CookieAnalyzerTool } from './CookieAnalyzerTool';
 import { UserAgentAnalyzerTool } from './UserAgentAnalyzerTool';
 import { MetadataViewerTool } from './MetadataViewerTool';
@@ -18,6 +18,14 @@ import { DnsLeakTestTool } from './DnsLeakTestTool';
 import { ScreenshotLeakCheckerTool } from './ScreenshotLeakCheckerTool';
 import { EmailPixelDetectorTool } from './EmailPixelDetectorTool';
 import { LinkUnwrapperTool } from './LinkUnwrapperTool';
+import { HOSTNAMES_PER_TEST } from '@/lib/dns-leak';
+import { NETWORK_BAITS } from '@/lib/adblock-bait';
+
+// Counts the copy below quotes, read from the code that runs rather than
+// typed by hand: the browser-privacy figure said 14 while 15 rows rendered.
+const BROWSER_PRIVACY_COUNT = BROWSER_PRIVACY_CHECKS.length;
+const PERMISSION_COUNT = PERMISSIONS_TO_CHECK.length;
+const BAIT_COUNT = NETWORK_BAITS.length;
 
 // Maps toolEngine values to their React components
 const TOOL_ENGINES: Record<string, React.ComponentType> = {
@@ -90,7 +98,7 @@ export const ENGINE_META: Record<string, {
   'whats-my-ip': {
     figure: null,
     io: ['Your request, seen by our server', 'Public IP plus a WebRTC probe', 'Exposed address, location, leak verdict'],
-    scoring: "There is no numeric score. The verdict is a leak when WebRTC reveals an IP your server-seen request did not.",
+    scoring: "There is no numeric score. The verdict is a leak when WebRTC shows a public address that differs from the one our server saw, comparing IPv4 with IPv4 and IPv6 with IPv6 (an IPv6 address on the same home network counts as the same).",
     checks: 2,
     canonicalTips: [
       'Run this tool with your VPN OFF and note your real IP, then turn the VPN ON and run again — both IPs should differ',
@@ -109,8 +117,9 @@ export const ENGINE_META: Record<string, {
   },
   'password-strength': {
     figure: null,
-    io: ['A password, typed locally', 'Entropy, charset and pattern analysis', 'Score, crack time, weaknesses found'],
-    scoring: 'Score starts from length and character-set entropy, then loses points for common passwords, known patterns, repeated runs and all-digit strings.',
+    io: ['A password you type', 'Entropy, charset and pattern analysis', 'Score, crack time, weaknesses found'],
+    // Describes analyzePassword's one scale; the old text described the points-and-penalties score it replaced.
+    scoring: 'Score is 1.25 points per bit of entropy, up to 100. Length and character set give the brute-force bits; common passwords (whole, inside a longer password or in leet spelling), years and dates, keyboard walks, sequences and repeated characters count for far fewer. The crack time uses the same bits at 10 billion guesses a second: red falls in under a minute, green takes decades or more.',
     canonicalTips: [
       'Use at least 16 characters for important accounts like banking and email',
       'Mix uppercase, lowercase, numbers, and symbols for maximum entropy',
@@ -127,10 +136,10 @@ export const ENGINE_META: Record<string, {
     ],
   },
   'browser-privacy': {
-    figure: { value: '14', label: 'checks' },
-    io: ['Nothing typed — your browser itself', '14 fingerprint and leak checks', 'Score plus a fail/warn/pass tally'],
-    scoring: 'Score starts at 100 and loses 15 points per failed check and 7 per warning, floored at 0.',
-    checks: 14,
+    figure: { value: String(BROWSER_PRIVACY_COUNT), label: 'checks' },
+    io: ['Nothing typed — your browser itself', `${BROWSER_PRIVACY_COUNT} fingerprint, tracking and network checks`, 'Score plus a fail/warn/pass tally'],
+    scoring: 'Score starts at 100 and loses 15 points per failed check and 7 per warning, floored at 0. Informational rows, such as the public IP WebRTC shows, do not change it.',
+    checks: BROWSER_PRIVACY_COUNT,
     canonicalTips: [
       'Enable Do Not Track in your browser settings, even though not all sites honor it',
       'Use a browser that patches WebRTC to prevent IP address leaks, especially when using a VPN',
@@ -147,9 +156,13 @@ export const ENGINE_META: Record<string, {
     ],
   },
   'text-encryption': {
-    figure: { value: '100k', label: 'iterations' },
+    // No hero figure: an iteration count is a setting, and as the biggest
+    // number on the page it read like a result the visitor already had.
+    figure: null,
     io: ['Plain text plus a passphrase', 'AES-256-GCM with a derived key', 'Ciphertext, or the text decrypted back'],
-    scoring: "This tool doesn't score a result. PBKDF2 with 100,000 iterations derives the key, and a random IV makes identical inputs produce different ciphertext.",
+    // Read from the tool: a typed number said 100,000 after the tool moved to 600,000.
+    // en-US grouping so the server and browser renders print the same text.
+    scoring: `This tool doesn't score a result. PBKDF2-SHA256 with ${PBKDF2_ITERATIONS.toLocaleString('en-US')} iterations derives the key, and a random IV makes identical inputs produce different ciphertext.`,
     canonicalTips: [
       'Use a strong, unique passphrase — the encryption is only as secure as your passphrase',
       'Share the passphrase through a different channel than the encrypted message',
@@ -186,8 +199,9 @@ export const ENGINE_META: Record<string, {
   },
   'url-analyzer': {
     figure: null,
-    io: ['A URL, never fetched', 'TLD, homograph, IP and path checks', 'Safety score and phishing findings'],
-    scoring: 'Score starts at 100 and loses points per structural red flag (bad protocol, suspicious TLD, IP host, lookalike brand and more), capped at 75 for any newly-registered-looking domain.',
+    io: ['A URL you paste', 'TLD, homograph, IP and path checks', 'Safety score and phishing findings'],
+    // Matches analyzeURL and urlVerdict: the cap applies to any link with no fail or warning outside the short trusted list (minor findings included), not to "newly registered" domains.
+    scoring: 'Score starts at 100 and loses points per structural red flag (bad protocol, suspicious TLD, IP host, lookalike brand and more). A link with no fail or warning on a site outside a short list of well-known domains is capped at 75 and marked Not verified, because only the link itself is checked. The verdict follows the findings: any fail is Fail, any warning is Warning.',
     canonicalTips: [
       'Always verify URLs before clicking, especially in emails and messages from unknown senders',
       'Look for HTTPS and a valid domain name — phishing sites often use HTTP or misspelled domains',
@@ -204,10 +218,11 @@ export const ENGINE_META: Record<string, {
     ],
   },
   'privacy-quiz': {
-    figure: { value: '12', label: 'questions' },
-    io: ['12 multiple-choice answers', 'Points summed across five categories', 'Overall score and weak categories'],
-    scoring: 'Each answer carries its own point value; the total across all 12 questions becomes the overall privacy score.',
-    checks: 12,
+    // Counts read from the quiz: this said "five categories" while the quiz has six.
+    figure: { value: String(QUIZ_QUESTION_COUNT), label: 'questions' },
+    io: [`${QUIZ_QUESTION_COUNT} multiple-choice answers`, `Points summed across ${QUIZ_CATEGORY_COUNT} categories`, 'Overall score and weak categories'],
+    scoring: `Each answer carries its own point value; the total across all ${QUIZ_QUESTION_COUNT} questions becomes the overall privacy score.`,
+    checks: QUIZ_QUESTION_COUNT,
     canonicalTips: [
       'Focus on improving your lowest-scoring categories first for the biggest privacy gains',
       'Privacy is a spectrum — even small improvements significantly reduce your exposure',
@@ -225,7 +240,7 @@ export const ENGINE_META: Record<string, {
   },
   'hash-generator': {
     figure: null,
-    io: ['Text you type', 'SHA-1/256/384/512, locally', 'The hex digest for each algorithm'],
+    io: ['Text you type', 'SHA-1/256/384/512 via Web Crypto', 'The hex digest for each algorithm'],
     scoring: "This tool doesn't score a result. It computes a fixed-length hash with the Web Crypto API and reports it as-is.",
     canonicalTips: [
       'Use SHA-256 or SHA-512 for security-critical applications — SHA-1 is considered weak',
@@ -243,10 +258,10 @@ export const ENGINE_META: Record<string, {
     ],
   },
   'permission-checker': {
-    figure: { value: '11', label: 'permissions' },
-    io: ['Nothing typed — the Permissions API', '11 device permissions queried', 'Granted, blocked or prompt, per permission'],
-    scoring: "This tool doesn't score a result. Each of the 11 permissions is reported as granted, blocked or prompt, with its own risk note.",
-    checks: 11,
+    figure: { value: String(PERMISSION_COUNT), label: 'permissions' },
+    io: ['Nothing typed — your browser answers', `${PERMISSION_COUNT} permissions, for this site`, 'Allowed, blocked or asks first, per permission'],
+    scoring: `This tool doesn't score a result. Each of the ${PERMISSION_COUNT} permissions is reported for this site as allowed, blocked or asks first, with its own risk note. It turns amber only when something that normally asks first is already allowed; permissions your browser allows every site by default are labelled as such and don't count.`,
+    checks: PERMISSION_COUNT,
     canonicalTips: [
       'Review and revoke unnecessary permissions regularly in your browser settings',
       'Deny location access by default and only grant it temporarily when needed',
@@ -264,7 +279,7 @@ export const ENGINE_META: Record<string, {
   },
   'metadata-viewer': {
     figure: null,
-    io: ['An image file, read locally', 'EXIF, GPS and text-chunk parsing', 'Every embedded field, plus a clean copy'],
+    io: ['An image file', 'EXIF, GPS and text-chunk parsing', 'Every embedded field, plus a clean copy'],
     scoring: "This tool doesn't score a result. It's red when GPS or a high-risk field is present, amber for lower-risk metadata, green when none is found.",
     canonicalTips: [
       'Always strip metadata from photos before sharing online, especially GPS coordinates',
@@ -359,7 +374,7 @@ export const ENGINE_META: Record<string, {
   },
   'screenshot-leak-checker': {
     figure: null,
-    io: ['An image file, read locally', 'PNG/JPEG/WebP metadata chunks parsed', 'Location, device and personal-data matches'],
+    io: ['An image file', 'PNG/JPEG/WebP metadata chunks parsed', 'Location, device and personal-data matches'],
     scoring: "This tool doesn't score a result. It's red for a location, thumbnail or personal-data match, amber for device or timestamp details only, green when nothing is found.",
     canonicalTips: [
       'Screenshots taken on phones often carry the OS name and version in the Software tag, and photos of your screen carry full camera Exif including GPS. Check both before posting',
@@ -377,10 +392,11 @@ export const ENGINE_META: Record<string, {
     ],
   },
   'dns-leak-test': {
-    figure: { value: '1', label: 'question: who resolves you' },
-    io: ['Six test hostnames, resolved by you', 'Our nameserver records who asked', 'Leak, no-leak, inconclusive or baseline'],
+    // No hero figure: "1 question" meant nothing to visitors and read like a result.
+    figure: null,
+    io: [`${HOSTNAMES_PER_TEST} test hostnames, looked up by your browser`, 'Our nameserver records who asked', 'Leak, no-leak, inconclusive or baseline'],
     scoring: "There is no numeric score. The verdict compares the resolver network that reached our nameserver against your public IP and, on a VPN-on run, your saved VPN-off baseline.",
-    checks: 6,
+    checks: HOSTNAMES_PER_TEST,
     canonicalTips: [
       "Run the test once with your VPN off first — that records the resolver your ISP hands you, which is what the VPN-on run needs to recognise a leak",
       "Repeat the test after switching networks (home, mobile hotspot, office) — a VPN that seals DNS on one network can leak on another",
@@ -397,10 +413,13 @@ export const ENGINE_META: Record<string, {
     ],
   },
   'ad-blocker-test': {
-    figure: { value: '50', label: 'bait requests' },
-    io: ['50 first-party bait requests', 'URL-pattern and cosmetic filter matching', 'Percent blocked, plus a per-category table'],
-    scoring: 'Score is simply the percentage of the 50 bait requests your blocker stopped; cosmetic filtering and the per-category table are shown separately and do not change it.',
-    checks: 50,
+    // No hero figure: before a run, a big "50" beside "bait requests" read
+    // like a blocked count. The count stays in the How-it-works copy.
+    figure: null,
+    // "Test requests to this site", the tool's own words: "first-party bait" was jargon.
+    io: [`${BAIT_COUNT} test requests to this site`, 'URL-pattern and cosmetic filter matching', 'Percent blocked, plus a per-category table'],
+    scoring: `The result is simply the percentage of the ${BAIT_COUNT} test requests your blocker stopped; cosmetic filtering and the per-category table are shown separately and do not change it.`,
+    checks: BAIT_COUNT,
     canonicalTips: [
       'Run the test once with your blocker on and once with it paused for this site — the difference is the protection you are actually getting',
       "If scripts are blocked but tracking pixels get through, enable EasyPrivacy (or your blocker's tracking-protection list) alongside the default ad list",

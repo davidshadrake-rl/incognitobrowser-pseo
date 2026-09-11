@@ -95,7 +95,9 @@
       "min": 1,
       "max": 10,
       "step": 1,
-      "helpText": "Rate your current privacy policy, opt-out processes, and data handling practices (1=none, 10=comprehensive)"
+      "minLabel": "None",
+      "maxLabel": "Comprehensive",
+      "helpText": "Rate your current privacy policy, opt-out processes, and data handling practices"
     },
     {
       "id": "requestVolume",
@@ -150,7 +152,7 @@
       "description": "Number of immediate actions required"
     }
   ],
-  "formula": "let riskScore = 20; const businessRisk = {'small': 0, 'medium': 15, 'large': 25, 'data-broker': 35}; riskScore += businessRisk[businessType]; const dataRisk = {'basic': 5, 'identifiers': 15, 'biometric': 25, 'sensitive': 35}; riskScore += dataRisk[dataTypes]; const sellingRisk = {'no': 0, 'advertising': 15, 'commercial': 25, 'extensive': 35}; riskScore += sellingRisk[dataSelling]; riskScore += Math.max(0, 10 - complianceMeasures); const requestRisk = {'none': 0, 'low': 5, 'medium': 10, 'high': 15}; riskScore += requestRisk[requestVolume]; if (!hasPrivacyOfficer && (businessType === 'large' || businessType === 'data-broker')) riskScore += 10; riskScore = Math.min(100, riskScore); let grade = 'F'; if (riskScore <= 30) grade = 'A'; else if (riskScore <= 45) grade = 'B'; else if (riskScore <= 60) grade = 'C'; else if (riskScore <= 75) grade = 'D'; let actions = 0; if (complianceMeasures < 5) actions += 2; if (dataSelling !== 'no' && complianceMeasures < 7) actions += 1; if (!hasPrivacyOfficer && businessType !== 'small') actions += 1; if (requestVolume === 'high' && complianceMeasures < 6) actions += 1; return {riskScore, complianceGrade: grade, priorityActions: actions};",
+  "formula": "let riskScore = 20; const businessRisk = {'small': 0, 'medium': 15, 'large': 25, 'data-broker': 35}; riskScore += businessRisk[businessType]; const dataRisk = {'basic': 5, 'identifiers': 15, 'biometric': 25, 'sensitive': 35}; riskScore += dataRisk[dataTypes]; const sellingRisk = {'no': 0, 'advertising': 15, 'commercial': 25, 'extensive': 35}; riskScore += sellingRisk[dataSelling]; riskScore += Math.max(0, 10 - complianceMeasures); const requestRisk = {'none': 0, 'low': 5, 'medium': 10, 'high': 15}; riskScore += requestRisk[requestVolume]; if (!hasPrivacyOfficer && (businessType === 'large' || businessType === 'data-broker')) riskScore += 10; riskScore = Math.min(100, riskScore); let grade = 'D'; if (riskScore <= 30) grade = 'A'; else if (riskScore <= 45) grade = 'B'; else if (riskScore <= 60) grade = 'C'; let actions = 0; if (complianceMeasures < 5) actions += 2; if (dataSelling !== 'no' && complianceMeasures < 7) actions += 1; if (!hasPrivacyOfficer && businessType !== 'small') actions += 1; if (requestVolume === 'high' && complianceMeasures < 6) actions += 1; return {riskScore, complianceGrade: grade, priorityActions: actions};",
   "educational": {
     "methodology": "This calculator evaluates privacy risk based on CCPA/CPRA requirements including business size thresholds, data sensitivity levels, selling practices, and current compliance measures. Higher risk scores indicate greater potential for violations and consumer complaints.",
     "tips": [

@@ -1,8 +1,9 @@
+import { Fragment } from 'react';
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import Link from 'next/link';
 import { getAllNiches, getNicheBySlug, getRelatedNiches } from '@/lib/taxonomy';
-import { getContentFiles, getContentItemTitle, isToolListed, getCrossNicheLinks } from '@/lib/content';
+import { getContentFiles, getContentItemTitle, isToolListed, getCrossNicheLinks, getGlossaryFiles, getGlossaryItem } from '@/lib/content';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -25,6 +26,25 @@ const CONTENT_TYPES = [
   { slug: 'templates', name: 'Templates', description: 'Ready-to-use documents' },
   { slug: 'calculators', name: 'Calculators', description: 'Privacy assessments' },
 ];
+
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+// Glossary entries by slug and by their term's slug, built once per build.
+let glossaryIndex: Map<string, string> | null = null;
+
+/** The glossary page a search phrase names ("private browsing", "COPPA"), if there is one. */
+function glossaryHrefFor(phrase: string): string | undefined {
+  if (!glossaryIndex) {
+    glossaryIndex = new Map();
+    for (const slug of getGlossaryFiles()) {
+      glossaryIndex.set(slug, slug);
+      const term = getGlossaryItem<{ term?: string }>(slug)?.term;
+      if (term && !glossaryIndex.has(slugify(term))) glossaryIndex.set(slugify(term), slug);
+    }
+  }
+  const slug = glossaryIndex.get(slugify(phrase));
+  return slug ? `/glossary/${slug}` : undefined;
+}
 
 export async function generateStaticParams() {
   if (IS_PRO_DEPLOYMENT) return [{ niche: '_pro_export_placeholder_' }]; // Pro serves tools only; output:export needs ≥1 static param per dynamic route, so this ships one placeholder that resolves to no real content (notFound() below skips it in the actual output)
@@ -150,17 +170,23 @@ export default async function NicheHubPage({ params }: PageProps) {
           — otherwise it would just repeat the sections above. */}
       <RelatedContent links={getCrossNicheLinks(niche, 'topics', niche, 12, 0)} />
 
-      {/* Keywords for SEO */}
+      {/* Keywords for SEO. Plain text, not chips: bordered chips here looked
+          like the clickable Related Topics above but did nothing. A phrase
+          that names a glossary entry links to it. */}
       {nicheData.keywords.length > 0 && (
         <section className="mt-8 mb-4">
-          <h3 className="text-sm font-medium text-t2/40 mb-2">Related searches</h3>
-          <div className="flex flex-wrap gap-1">
-            {nicheData.keywords.map((kw, i) => (
-              <span key={i} className="text-xs bg-white/5 text-t3 px-2 py-0.5 rounded border border-hair">
-                {kw}
-              </span>
-            ))}
-          </div>
+          <h3 className="text-sm font-medium text-t3 mb-1">Related searches</h3>
+          <p className="text-sm text-t3">
+            {nicheData.keywords.map((kw, i) => {
+              const href = glossaryHrefFor(kw);
+              return (
+                <Fragment key={i}>
+                  {i > 0 && ', '}
+                  {href ? <Link href={href} className="underline underline-offset-2 hover:text-white">{kw}</Link> : kw}
+                </Fragment>
+              );
+            })}
+          </p>
         </section>
       )}
     </>

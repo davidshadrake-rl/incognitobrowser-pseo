@@ -33,7 +33,7 @@ export const PRO_DEFINITION =
 /** Flip on gate day. Removes every "free for now" string and the ProNotice in one change. */
 export const PRO_WEB_GATED = false;
 export const PRO_FOOTNOTE = 'Subscription via Google Play. Android only.';
-export const PRO_FREE_FOR_NOW_TITLE = 'Part of the Incognito Pro subscription on Android. Free on the web today, no account.';
+export const PRO_FREE_FOR_NOW_TITLE = 'Part of the Incognito Pro subscription on Android. Free on the web today.';
 
 export const PRO_ENGINES = new Set<string>([
   'cookie-analyzer', // site-wide crawl, scheduled re-scans, compliance export

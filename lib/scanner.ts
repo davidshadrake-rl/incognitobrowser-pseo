@@ -10,8 +10,11 @@
  *     Privacy Report Cards (follows redirects, no rate limit, writes
  *     data/sites/*.json).
  *
- * Both call analyzeScan() on the fetched Response + capped HTML so the
- * public tool and the published report cards can never disagree.
+ * Both call analyzeScan() on the fetched Response + capped HTML, so the
+ * public tool and the published report cards detect the same cookies and
+ * trackers. Scoring is NOT shared: the tool grades with its own rules
+ * (CookieAnalyzerTool) and the report cards with lib/site-grade, so their
+ * grades for one site can differ.
  *
  * Extracted verbatim from the route on 2026-09-07; validation, error
  * handling, and the fetch itself deliberately stayed in the route.
@@ -74,6 +77,28 @@ export const TRACKER_PATTERNS: TrackerPattern[] = [
   { pattern: /cloudflare\.com\/cdn-cgi/i, name: 'Cloudflare', category: 'functional', risk: 'low', description: 'Cloudflare — CDN and security (bot protection, DDoS mitigation)' },
   { pattern: /stripe\.com\/v3|js\.stripe/i, name: 'Stripe', category: 'functional', risk: 'low', description: 'Stripe — payment processing (necessary for transactions)' },
 ];
+
+/**
+ * Inline tracking snippets, checked in the page's HTML in this order; each
+ * `label` is what ScanResult.inlineTrackers reports. `tracker` is the
+ * TRACKER_PATTERNS name of the tag each snippet is almost always loaded with
+ * (gtag('config') beside gtag/js, fbq('init') beside fbevents.js), so the
+ * report card page does not count one tag twice. It must be a real
+ * TRACKER_PATTERNS name: tests/scanner-inline.test.ts checks every label.
+ */
+export const INLINE_TRACKERS: Array<{ pattern: RegExp; label: string; tracker: string }> = [
+  { pattern: /fbq\s*\(\s*['"]init/i, label: 'Facebook Pixel (inline)', tracker: 'Facebook Pixel' },
+  { pattern: /gtag\s*\(\s*['"]config/i, label: 'Google gtag (inline)', tracker: 'Google Analytics / GTM' },
+  { pattern: /ga\s*\(\s*['"]create/i, label: 'Google Analytics (inline)', tracker: 'Google Analytics / GTM' },
+  { pattern: /_linkedin_partner_id/i, label: 'LinkedIn Insight (inline)', tracker: 'LinkedIn Insight' },
+  { pattern: /twq\s*\(\s*['"]init/i, label: 'Twitter Pixel (inline)', tracker: 'Twitter/X Pixel' },
+  { pattern: /pintrk\s*\(\s*['"]load/i, label: 'Pinterest Tag (inline)', tracker: 'Pinterest Tag' },
+];
+
+/** Inline label → the TRACKER_PATTERNS name of the tag it comes with (see INLINE_TRACKERS). */
+export const TRACKER_FOR_INLINE: Record<string, string> = Object.fromEntries(
+  INLINE_TRACKERS.map((i) => [i.label, i.tracker]),
+);
 
 // Known cookie names mapped to trackers
 export const KNOWN_COOKIES: Record<string, { name: string; category: TrackerCategory; risk: Risk; description: string }> = {
@@ -340,14 +365,8 @@ export function analyzeScan(
     }
   }
 
-  // Check for meta pixel / other inline tracking
-  const inlineTrackers: string[] = [];
-  if (/fbq\s*\(\s*['"]init/i.test(html)) inlineTrackers.push('Facebook Pixel (inline)');
-  if (/gtag\s*\(\s*['"]config/i.test(html)) inlineTrackers.push('Google gtag (inline)');
-  if (/ga\s*\(\s*['"]create/i.test(html)) inlineTrackers.push('Google Analytics (inline)');
-  if (/_linkedin_partner_id/i.test(html)) inlineTrackers.push('LinkedIn Insight (inline)');
-  if (/twq\s*\(\s*['"]init/i.test(html)) inlineTrackers.push('Twitter Pixel (inline)');
-  if (/pintrk\s*\(\s*['"]load/i.test(html)) inlineTrackers.push('Pinterest Tag (inline)');
+  // Check for meta pixel / other inline tracking (INLINE_TRACKERS, in order)
+  const inlineTrackers = INLINE_TRACKERS.filter((i) => i.pattern.test(html)).map((i) => i.label);
 
   const isHTTPS = parsedUrl.protocol === 'https:';
   const hasCSP = !!response.headers.get('content-security-policy');

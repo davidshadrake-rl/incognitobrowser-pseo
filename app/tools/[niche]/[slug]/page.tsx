@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, freeSitePrefix, redactPeople } from '@/lib/content';
-import { IS_PRO_DEPLOYMENT, tierOfEngine, proUrlFor } from '@/lib/tiers';
+import { tierOfEngine } from '@/lib/tiers';
+import { proHandoffFor } from '@/lib/proof-route';
 import type { NextStepsData } from '@/components/NextSteps';
 import { getNicheById } from '@/lib/taxonomy';
 import { engineVisibleInThisTier } from '@/lib/tiers';
@@ -57,28 +58,22 @@ function nextStepsFor(niche: string, nicheName: string, fallbackTips: string[] |
   if (own) return own;
   const related = getNicheById(niche)?.relatedNiches || [];
   for (const r of related) {
+    // Keep the related niche's name: the block says which checklist the steps
+    // come from, and it used to name this page's topic instead ("Three steps
+    // from the Digital Footprint checklist" above a Data Broker checklist link).
     const viaRelated = checklistSteps(r, getNicheById(r)?.name || r);
-    if (viaRelated) return { ...viaRelated, nicheName };
+    if (viaRelated) return viaRelated;
   }
   if (fallbackTips?.length) {
     return {
       nicheName,
+      fromTips: true,
       checklistTitle: `${nicheName} tips`,
       checklistHref: `${freeSitePrefix()}/topics/${niche}`,
       steps: fallbackTips.slice(0, 3).map((tip) => ({ task: tip, why: '' })),
     };
   }
   return null;
-}
-
-/** On the free site: the Pro web tool for this niche, if the niche has one. */
-function proWebUrlFor(niche: string): string | undefined {
-  if (IS_PRO_DEPLOYMENT) return undefined;
-  for (const slug of getContentFiles('tools', niche)) {
-    const t = getContentItem<{ toolEngine?: string }>('tools', niche, slug);
-    if (t && tierOfEngine(t.toolEngine) === 'pro') return proUrlFor(niche, slug);
-  }
-  return undefined;
 }
 
 export const dynamicParams = false;
@@ -155,7 +150,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
         nicheName={nicheName}
         niche={niche}
         nextSteps={nextStepsFor(niche, nicheName, data.educational?.tips)}
-        proWebUrl={proWebUrlFor(niche)}
+        proWebUrl={proHandoffFor(niche)}
         diagram={data.toolEngine ? (ENGINE_DIAGRAM[data.toolEngine] ?? 'tracking') : 'tracking'}
         family={data.toolEngine ? familyOfEngine(data.toolEngine) : 'trace'}
         tier={tierOfEngine(data.toolEngine)}

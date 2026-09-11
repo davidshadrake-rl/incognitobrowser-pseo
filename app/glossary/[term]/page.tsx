@@ -53,7 +53,15 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
   const data = getGlossaryItem<GlossaryData>(term);
   if (!data) notFound();
 
-  const validTermSlugs = getGlossaryFiles();
+  // Display names for the related-term chips, looked up here on the server so
+  // the client component gets only the strings it shows (never whole entries,
+  // which carry editorial and people fields).
+  const validTermSlugs = new Set(getGlossaryFiles());
+  const relatedTermNames: Record<string, string> = {};
+  for (const slug of data.relatedTerms) {
+    if (!validTermSlugs.has(slug)) continue;
+    relatedTermNames[slug] = getGlossaryItem<{ term?: string }>(slug)?.term || slug.replace(/-/g, ' ');
+  }
 
   const breadcrumbs = generateBreadcrumbSchema([
     { name: 'Resources', url: '/' },
@@ -83,7 +91,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <GlossaryTermPage data={redactPeople(data)} validTermSlugs={validTermSlugs} niche={glossaryNiche} nicheName={nicheName} />
+      <GlossaryTermPage data={redactPeople(data)} relatedTermNames={relatedTermNames} niche={glossaryNiche} nicheName={nicheName} />
       {/* Glossary terms previously linked only to sibling terms, never into the
           guides/checklists/tools that explain them. The niche comes from a
           hand-authored map (see nicheForGlossaryTerm). */}

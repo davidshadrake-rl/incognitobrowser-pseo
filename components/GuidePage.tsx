@@ -110,7 +110,9 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
   const links = (data.relatedLinks ?? []).filter((l) => l && l.title && l.url && isSafeHref(l.url));
   const { introSegments, stepSegments } = weaveGuideContent(cappedIntro, data.steps, links);
 
-  const reviewed = !!(data as unknown as { editor?: unknown }).editor;
+  // Same rule as redactPeople(): demoted drafts keep their editor block.
+  const { editor, editorial } = data as unknown as { editor?: unknown; editorial?: { status?: string } };
+  const reviewed = !!editor && editorial?.status === 'published';
 
   return (
     <article className="max-w-3xl mx-auto">

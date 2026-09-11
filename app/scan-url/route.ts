@@ -15,8 +15,11 @@ import {
 
 // Tracker patterns, cookie classifier, SSRF guard, capped reader and the
 // analysis itself live in lib/scanner.ts — shared with the offline Site
-// Privacy Report Card batch so the public tool and the published grades
-// can never disagree. Validation, fetch policy and error handling stay here.
+// Privacy Report Card batch, so both find the same cookies and trackers.
+// Only detection is shared: the tool scores and grades a result with its own
+// rules (CookieAnalyzerTool), the report cards with lib/site-grade, so the
+// two can give the same site different grades. Validation, fetch policy and
+// error handling stay here.
 import { isBlockedHostname, readCappedText, analyzeScan } from '@/lib/scanner';
 
 // Input length limits — sourced from lib/tuning.ts so they can be tweaked

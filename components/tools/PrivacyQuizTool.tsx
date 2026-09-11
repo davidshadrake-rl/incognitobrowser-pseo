@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useReportResult, severityFromScore } from './ResultContext';
+import { useState, useEffect, useRef } from 'react';
+import { useReportResult, severityFromScore, type ToolGrade } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
@@ -128,7 +128,11 @@ const QUESTIONS: Question[] = [
   },
 ];
 
-function getGrade(score: number): { letter: string; label: string; color: string } {
+/** Counts the tool page quotes (registry.tsx), read from the questions themselves. */
+export const QUIZ_QUESTION_COUNT = QUESTIONS.length;
+export const QUIZ_CATEGORY_COUNT = new Set(QUESTIONS.map((q) => q.category)).size;
+
+function getGrade(score: number): { letter: ToolGrade; label: string; color: string } {
   if (score >= 90) return { letter: 'A+', label: 'Privacy Expert', color: '#10b981' };
   if (score >= 80) return { letter: 'A', label: 'Very Private', color: '#22c55e' };
   if (score >= 70) return { letter: 'B', label: 'Good Habits', color: '#84cc16' };
@@ -171,18 +175,23 @@ export function PrivacyQuizTool() {
   const [answers, setAnswers] = useState<Record<string, number>>(initial.answers);
   const [currentQ, setCurrentQ] = useState(0);
   const [finished, setFinished] = useState(initial.finished);
-  const [shared, setShared] = useState(false);
+  // The short pause that lets the picked answer show before the next question.
+  // Held so Back (or a second click) can cancel it instead of racing it.
+  const advanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (advanceTimer.current) clearTimeout(advanceTimer.current); }, []);
 
   const handleAnswer = (questionId: string, score: number) => {
     const newAnswers = { ...answers, [questionId]: score };
     setAnswers(newAnswers);
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
 
     if (currentQ < QUESTIONS.length - 1) {
-      setTimeout(() => setCurrentQ(currentQ + 1), 300);
+      advanceTimer.current = setTimeout(() => setCurrentQ(currentQ + 1), 300);
     } else {
-      setTimeout(() => {
+      advanceTimer.current = setTimeout(() => {
         setFinished(true);
-        // Write answers to URL so refresh preserves results and the link is shareable.
+        // Answers go in the URL hash before the result is reported: a refresh keeps
+        // the result, and the scorecard's share link (shareLinkFor) carries it.
         if (typeof window !== 'undefined') {
           const url = new URL(window.location.href);
           url.hash = `r=${encodeAnswers(newAnswers)}`;
@@ -192,7 +201,14 @@ export function PrivacyQuizTool() {
     }
   };
 
+  // Back to the previous question; its answer stays selected and can be changed.
+  const goBack = () => {
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
+    setCurrentQ((q) => Math.max(0, q - 1));
+  };
+
   const reset = () => {
+    if (advanceTimer.current) clearTimeout(advanceTimer.current);
     setAnswers({});
     setCurrentQ(0);
     setFinished(false);
@@ -200,17 +216,6 @@ export function PrivacyQuizTool() {
       const url = new URL(window.location.href);
       url.hash = '';
       window.history.replaceState(null, '', url.toString());
-    }
-  };
-
-  const shareLink = async () => {
-    if (typeof window === 'undefined') return;
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setShared(true);
-      setTimeout(() => setShared(false), 2000);
-    } catch {
-      // ignore
     }
   };
 
@@ -237,11 +242,11 @@ export function PrivacyQuizTool() {
   useEffect(() => {
     if (!finished) { report(null); return; }
     const g = getGrade(totalScore);
-    const letter = g.letter.replace('+', '') as 'A' | 'B' | 'C' | 'D' | 'F';
     report({
       severity: severityFromScore(totalScore),
       score: totalScore,
-      grade: letter,
+      // With its '+': the share card used to print "Grade A" right above "My privacy habits scored A+".
+      grade: g.letter,
       headline: `Privacy habits: ${g.letter}, ${g.label}`,
       shareText: `My privacy habits scored ${g.letter} (${totalScore}/100). Take the quiz:`,
       stats: resultStats,
@@ -255,8 +260,9 @@ export function PrivacyQuizTool() {
         <ConsoleFrame
           engine="privacy-quiz"
           status={statusFromSeverity(severityFromScore(totalScore))}
+          verdict={`Grade ${getGrade(totalScore).letter}`}
           checks={QUESTIONS.length}
-          processing="client"
+          checksNoun={['question', 'questions']}
           score={totalScore}
           gaugeLabel="privacy score"
           statTiles={resultStats}
@@ -276,7 +282,8 @@ export function PrivacyQuizTool() {
                           {score}%
                         </span>
                       </div>
-                      <div className="h-2 bg-s0 rounded-full overflow-hidden">
+                      {/* Track on s1: on s0 it matched the card, so a 0% category showed nothing at all. */}
+                      <div className="h-2 bg-s1 rounded-full overflow-hidden">
                         <div
                           className="h-full rounded-full transition-all duration-500"
                           style={{ width: `${score}%`, backgroundColor: catGrade.color }}
@@ -312,15 +319,10 @@ export function PrivacyQuizTool() {
               </ul>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <button onClick={reset} className="btn-primary py-3">Retake Quiz</button>
-              <button
-                onClick={shareLink}
-                className="py-3 border border-b1 rounded text-white hover:bg-white/5"
-              >
-                {shared ? 'Link copied!' : 'Copy shareable link'}
-              </button>
-            </div>
+            {/* No share button of its own: "Share your result" below the tool
+                carries this result's #r= link, and a second copy button here
+                was one share control too many. */}
+            <button onClick={reset} className="btn-primary w-full py-3">Retake Quiz</button>
           </>
         </ConsoleFrame>
       </div>
@@ -338,9 +340,17 @@ export function PrivacyQuizTool() {
           <span className="text-xs text-t2">Question {currentQ + 1} of {QUESTIONS.length}</span>
           <span className="text-xs text-t2">{q.category}</span>
         </div>
-        <div className="h-2 bg-s0 rounded-full overflow-hidden">
+        {/* Track on s1 and fill on t2: the old s0 track matched the card and the bar was invisible. */}
+        <div
+          className="h-2 bg-s1 rounded-full overflow-hidden"
+          role="progressbar"
+          aria-label="Questions answered"
+          aria-valuemin={0}
+          aria-valuemax={QUESTIONS.length}
+          aria-valuenow={currentQ}
+        >
           <div
-            className="h-full bg-white/30 rounded-full transition-all duration-300"
+            className="h-full bg-t2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -354,9 +364,10 @@ export function PrivacyQuizTool() {
             <button
               key={i}
               onClick={() => handleAnswer(q.id, opt.score)}
+              aria-pressed={answers[q.id] === opt.score}
               className={`w-full text-left p-4 rounded-lg border transition-colors ${
                 answers[q.id] === opt.score
-                  ? 'border-b2 bg-white/10 text-white'
+                  ? 'border-b2 bg-s2 text-white'
                   : 'border-b1 bg-s0 text-t2 hover:border-white/20 hover:text-white'
               }`}
             >
@@ -364,6 +375,16 @@ export function PrivacyQuizTool() {
             </button>
           ))}
         </div>
+        {/* After the options on purpose: the answer choices stay the first buttons in the card. */}
+        {currentQ > 0 && (
+          <button
+            type="button"
+            onClick={goBack}
+            className="mt-4 inline-flex items-center gap-1 text-sm text-t2 hover:text-white transition-colors"
+          >
+            <Icon name="chevron" size={14} className="rotate-180" /> Back to question {currentQ}
+          </button>
+        )}
       </div>
     </div>
   );

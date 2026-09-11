@@ -7,6 +7,7 @@ import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, absoluteUrl } from '@/lib/seo';
 import { ReportCardFunnel } from '@/components/ReportCardFunnel';
 import { GRADE_LABEL } from '@/lib/site-grade';
+import { TRACKER_FOR_INLINE } from '@/lib/scanner';
 import { IS_PRO_DEPLOYMENT, proUrlFor } from '@/lib/tiers';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { Icon } from '@/components/ui/Icon';
@@ -41,6 +42,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+/**
+ * Inline pixels the tracker count does not already cover, for the funnel's
+ * "clean" / "but still N trackers" line. A card with no trackers but an
+ * inline gtag (garmin.com) must not be called clean; counting a snippet
+ * whose tag is already a tracker read "1 tracker and 1 tracking pixel" for a
+ * single Google tag on 49 green cards. TRACKER_FOR_INLINE (lib/scanner.ts,
+ * beside the inline detection list) names the tracker each snippet comes
+ * with; a label it has no entry for (an older scan's) always counts.
+ */
+function extraInlinePixels(scan: { trackers: Array<{ name: string }>; inlineTrackers: string[] }): number {
+  const trackers = new Set(scan.trackers.map((t) => t.name));
+  return scan.inlineTrackers.filter((i) => !trackers.has(TRACKER_FOR_INLINE[i])).length;
+}
 
 export default async function SiteReportPage({ params }: PageProps) {
   const { domain } = await params;
@@ -165,7 +180,7 @@ export default async function SiteReportPage({ params }: PageProps) {
             </table>
           </div>
         )}
-        <p className="text-xs text-t3 mt-2">Cookie values are never stored or shown — only names and attributes.</p>
+        <p className="text-xs text-t3 mt-2">Only cookie names and attributes are shown.</p>
       </section>
 
       {/* Third parties + security */}
@@ -211,6 +226,7 @@ export default async function SiteReportPage({ params }: PageProps) {
           { label: 'Third parties', value: String(scan.thirdPartyDomains.length) },
           { label: 'HTTPS', value: scan.security.isHTTPS ? 'yes' : 'no' },
         ]}
+        pixels={extraInlinePixels(scan)}
         proUrl={proUrlFor('ad-tracking', 'cookie-tracker-scanner')}
         pageUrl={absoluteUrl(`/site/${domain}`)}
       />

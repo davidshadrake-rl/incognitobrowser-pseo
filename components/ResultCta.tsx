@@ -9,15 +9,16 @@
  *      Incognito Pro is an Android app and a desktop visitor cannot convert
  *      on the spot.
  *   B. people already inside the free Incognito Browser app — "Upgrade to Pro".
- * Optional secondary link to the Pro web app for tools that have one.
+ * Optional secondary link to a related Pro tool page, which names that tool.
  */
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import type { Severity } from '@/components/tools/ResultContext';
-import { composeCta, IN_APP_COPY } from '@/lib/cta-copy';
+import { composeCta, IN_APP_COPY, proHandoffTitle, type SeverityCopy } from '@/lib/cta-copy';
 import { playUrl } from '@/lib/play';
 import { handoffMailBody, handoffMailto } from '@/lib/handoff';
 import { detectPlatform, isInsideIncognitoApp, track, type Platform } from '@/lib/track';
-import { PRO_FOOTNOTE, PRO_WEB_GATED } from '@/lib/tiers';
+import { PRO_FOOTNOTE } from '@/lib/tiers';
+import { Badge } from '@/components/ui/Badge';
 import { Icon } from '@/components/ui/Icon';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 
@@ -25,9 +26,11 @@ interface Props {
   engine: string;
   niche?: string;
   severity: Severity;
+  /** Replaces the engine's severity line when the result picks the wording (report cards). */
+  line?: SeverityCopy;
   /** The visitor's own number, shown above the ask so the CTA reads as an answer. */
   headline?: string;
-  /** Where this tool's deeper version lives, if any (absolute URL). */
+  /** A Pro tool page related to this result, if any (absolute URL). Shown only when lib/cta-copy can name it. */
   proWebUrl?: string;
   /** The page URL to include in the hand-off message. */
   pageUrl?: string;
@@ -45,17 +48,24 @@ const TONE: Record<Severity, string> = {
   info: 'border-t-b2',
 };
 
-export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUrl, content, term = 'tool' }: Props) {
-  const [platform, setPlatform] = useState<Platform>('other');
-  const [inApp, setInApp] = useState(false);
+// The user agent never changes during a visit: nothing to subscribe to. The
+// server snapshot ('other', not in the app) is what the static HTML shows.
+const noSubscribe = () => () => {};
+const serverPlatform = (): Platform => 'other';
+const serverInApp = () => false;
+
+export function ResultCta({ engine, niche, severity, line, headline, proWebUrl, pageUrl, content, term = 'tool' }: Props) {
+  const platform = useSyncExternalStore(noSubscribe, () => detectPlatform(), serverPlatform);
+  const inApp = useSyncExternalStore(noSubscribe, () => isInsideIncognitoApp(), serverInApp);
   const [copied, setCopied] = useState(false);
   useEffect(() => {
-    setPlatform(detectPlatform());
-    setInApp(isInsideIncognitoApp());
     track('cta_view', { tool: engine, niche, severity }, { once: true });
   }, [engine, niche, severity]);
 
-  const copy = useMemo(() => composeCta(engine, niche, severity), [engine, niche, severity]);
+  const copy = useMemo(() => composeCta(engine, niche, severity, line), [engine, niche, severity, line]);
+  // Name the Pro page the link opens: "Pro version of this check" sent the
+  // Ad-Blocker Test, Link Unwrapper, DNS Leak Test and What's My IP to other tools.
+  const proTitle = proHandoffTitle(proWebUrl);
   const play = playUrl({ medium: 'cta', campaign: engine, content: content || niche, term });
   const pageHref = pageUrl || (typeof window !== 'undefined' ? window.location.href : '');
   // See lib/handoff.ts: CRLF body (RFC 6068 — bare "\n" breaks Outlook on Windows), hash stripped.
@@ -120,13 +130,17 @@ export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUr
             <>
               <a href={play} rel="noopener" onClick={() => click('play')} className="btn-primary text-sm !px-5 !py-2.5">Get Incognito Browser for Android</a>
               <a href={mailto} onClick={emailClick} className="btn-ghost text-sm !px-4 !py-2">Email me the link</a>
-              <button type="button" onClick={copyLink} className="btn-ghost text-sm !px-4 !py-2">{copied ? 'Copied' : 'Copy link'}</button>
+              {/* Copies the Google Play link, not this page: say so. */}
+              <button type="button" onClick={copyLink} className="btn-ghost text-sm !px-4 !py-2">{copied ? 'App link copied' : 'Copy app link'}</button>
             </>
           )}
-          {proWebUrl && !inApp && (
-            <a href={proWebUrl} rel="noopener" onClick={() => click('pro-web')} className="text-sm text-pro underline underline-offset-4">
-              {PRO_WEB_GATED ? 'Pro version of this check →' : 'Pro version of this check, free for now →'}
-            </a>
+          {proWebUrl && proTitle && !inApp && (
+            <span className="inline-flex flex-wrap items-center gap-2">
+              <a href={proWebUrl} rel="noopener" onClick={() => click('pro-web')} className="text-sm text-pro underline underline-offset-4">
+                {`Try the Pro ${proTitle} →`}
+              </a>
+              <Badge variant="pro" />
+            </span>
           )}
         </div>
         {mailFallback && (
@@ -138,9 +152,11 @@ export function ResultCta({ engine, niche, severity, headline, proWebUrl, pageUr
         )}
         <p className="text-meta text-t3 mt-3">{PRO_FOOTNOTE}</p>
       </div>
-      <div className="hidden lg:block">
+      {/* A picture of the app, not a result: captioned so it never reads as a second score beside the visitor's own. */}
+      <figure className="hidden lg:flex flex-col items-center gap-2" aria-hidden="true">
         <PhoneFrame />
-      </div>
+        <figcaption className="text-meta text-t3 text-center">Incognito Pro on Android (illustration)</figcaption>
+      </figure>
     </aside>
   );
 }

@@ -94,7 +94,9 @@
       "min": 1,
       "max": 10,
       "step": 1,
-      "helpText": "Rate how unique your screen resolution is (1=common, 10=very rare)"
+      "minLabel": "Common",
+      "maxLabel": "Very rare",
+      "helpText": "Rate how unique your screen resolution is"
     },
     {
       "id": "extensions",
@@ -133,7 +135,7 @@
       "description": "Assessment of your anti-fingerprinting measures"
     }
   ],
-  "formula": "let baseRisk = 70; if (browserType === 'tor') baseRisk -= 40; else if (browserType === 'incognito') baseRisk -= 30; else if (browserType === 'firefox') baseRisk -= 10; if (!jsEnabled) baseRisk -= 25; if (adBlocker) baseRisk -= 15; if (fingerprintProtection) baseRisk -= 20; if (vpnUsage === 'always') baseRisk -= 15; else if (vpnUsage === 'sometimes') baseRisk -= 7; baseRisk += screenResolution * 2; baseRisk += Math.min(extensions * 2, 20); baseRisk = Math.max(5, Math.min(95, baseRisk)); let grade = 'A+'; if (baseRisk > 20) grade = 'A'; if (baseRisk > 40) grade = 'B'; if (baseRisk > 60) grade = 'C'; if (baseRisk > 80) grade = 'D'; let protection = 'Excellent'; if (baseRisk > 30) protection = 'Good'; if (baseRisk > 50) protection = 'Moderate'; if (baseRisk > 70) protection = 'Weak'; if (baseRisk > 85) protection = 'Poor'; return { riskScore: baseRisk, uniqueness: grade, protectionLevel: protection };",
+  "formula": "let baseRisk = 70; if (browserType === 'tor') baseRisk -= 40; else if (browserType === 'incognito') baseRisk -= 30; else if (browserType === 'firefox') baseRisk -= 10; if (!jsEnabled) baseRisk -= 25; if (adBlocker) baseRisk -= 15; if (fingerprintProtection) baseRisk -= 20; if (vpnUsage === 'always') baseRisk -= 15; else if (vpnUsage === 'sometimes') baseRisk -= 7; baseRisk += screenResolution * 2; baseRisk += Math.min(extensions * 2, 20); baseRisk = Math.max(5, Math.min(95, baseRisk)); let grade = 'A'; if (baseRisk > 20) grade = 'B'; if (baseRisk > 40) grade = 'C'; if (baseRisk > 70) grade = 'D'; let protection = 'Strong'; if (baseRisk > 20) protection = 'Moderate'; if (baseRisk > 40) protection = 'Weak'; if (baseRisk > 70) protection = 'Poor'; return { riskScore: baseRisk, uniqueness: grade, protectionLevel: protection };",
   "educational": {
     "methodology": "This calculator evaluates multiple fingerprinting vectors including browser type, enabled features, screen characteristics, and protection measures. It weighs each factor based on research into real-world fingerprinting techniques used by tracking companies.",
     "tips": [

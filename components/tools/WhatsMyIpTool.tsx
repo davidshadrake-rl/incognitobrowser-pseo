@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useReportResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
+import { isIPv4, isIPv6, networkOf } from '@/lib/dns-leak';
 
 interface IpInfo {
   ipv4?: string;
@@ -31,6 +32,86 @@ interface WebRtcResult {
 }
 
 const PRIVATE_IP_RE = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|127\.|::1$|fc[0-9a-f]{2}:|fd[0-9a-f]{2}:|fe80:)/i;
+
+/** How each public address WebRTC revealed compares with the address our server saw. */
+export interface WebRtcComparison {
+  /** A different address from the one our server saw for the same IP version: the leak. */
+  leaked: string[];
+  /** The address our server saw, so sites already see it. */
+  same: string[];
+  /** An IP version our server did not see on this visit, so there is nothing to compare it with. */
+  unmatched: string[];
+  /**
+   * The IP version the server's address was compared as, after `::ffff:a.b.c.d`
+   * is read as IPv4. The copy names this, not the raw field: /ip reports a mapped
+   * address as 'v6', and the card said "over IPv6 only" for an IPv4 connection.
+   * null when there was nothing real to compare with (local dev, no address).
+   */
+  seenVersion: 'v4' | 'v6' | 'both' | null;
+}
+
+/** `::ffff:1.2.3.4` is an IPv4 connection written in IPv6 notation. */
+function unmapIPv4(ip: string): string {
+  const m = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(ip.trim());
+  return m ? m[1] : ip.trim();
+}
+
+/**
+ * The one leak rule for this page — the verdict, the scorecard and the WebRTC
+ * card all read it. A WebRTC address only counts as a leak when it differs
+ * from the address our server saw, comparing IPv4 with IPv4 and IPv6 with
+ * IPv6. Comparing across versions flagged every dual-stack visitor: the
+ * server records one version per request, and WebRTC reports the other one
+ * too, with no VPN anywhere.
+ *
+ * IPv6 compares by /64 network, not exact address: one device routinely holds
+ * several addresses in its /64 (privacy extensions rotate the last half), so
+ * WebRTC can list a sibling of the address the request used.
+ */
+export function compareWebRtcToServer(
+  webrtcPublic: string[],
+  server: { ipv4?: string; ipv6?: string; isLocal?: boolean },
+): WebRtcComparison {
+  // Local dev: the server saw a loopback placeholder, so there is nothing real to compare with.
+  let seenV4 = server.isLocal ? undefined : server.ipv4 && unmapIPv4(server.ipv4);
+  let seenV6 = server.isLocal ? undefined : server.ipv6 && unmapIPv4(server.ipv6);
+  if (seenV6 && isIPv4(seenV6)) {
+    seenV4 = seenV4 || seenV6;
+    seenV6 = undefined;
+  }
+  const seenV6Net = seenV6 ? networkOf(seenV6) : null;
+  const seenVersion = seenV4 && seenV6Net ? 'both' : seenV4 ? 'v4' : seenV6Net ? 'v6' : null;
+  const out: WebRtcComparison = { leaked: [], same: [], unmatched: [], seenVersion };
+  for (const raw of webrtcPublic) {
+    const ip = unmapIPv4(raw);
+    if (isIPv4(ip)) {
+      if (!seenV4) out.unmatched.push(raw);
+      else if (ip === seenV4) out.same.push(raw);
+      else out.leaked.push(raw);
+    } else if (isIPv6(ip)) {
+      if (!seenV6Net) out.unmatched.push(raw);
+      else if (networkOf(ip) === seenV6Net) out.same.push(raw);
+      else out.leaked.push(raw);
+    } else {
+      out.unmatched.push(raw);
+    }
+  }
+  return out;
+}
+
+/** Why the `unmatched` addresses could not be compared, naming the version the server's address was compared as. */
+export function unmatchedNote(c: WebRtcComparison, isLocal?: boolean): string {
+  const one = c.unmatched.length === 1;
+  const it = one ? 'it' : 'them';
+  const onVpn = `On a VPN, ${one ? 'this is a leak if it belongs' : 'these are a leak if they belong'} to your own provider rather than the VPN.`;
+  if (isLocal) return 'This page is running locally, so there is no public IP to compare with.';
+  if (c.seenVersion === 'v4' || c.seenVersion === 'v6') {
+    return `Your connection reached our server over ${c.seenVersion === 'v4' ? 'IPv4' : 'IPv6'} only, so there is nothing to compare ${it} with. Without a VPN this is normal: your network has both kinds of address. ${onVpn}`;
+  }
+  if (c.seenVersion === null) return `Our server could not read your address on this visit, so there is nothing to compare ${it} with. ${onVpn}`;
+  // Both versions seen: only an entry that is not an IP address at all is left unmatched.
+  return `${one ? 'It is' : 'They are'} not a standard IP address, so there is nothing to compare ${it} with.`;
+}
 
 /**
  * WebRTC IP discovery. Browsers gather ICE candidates that include local + public
@@ -87,6 +168,31 @@ async function discoverWebRtcIPs(): Promise<WebRtcResult> {
   return { publicIPs: [...publicIPs], privateIPs: [...privateIPs], mdnsCount };
 }
 
+/** The fields of the POST /ip response (app/ip/route.ts) this page reads. */
+interface IpLookup {
+  ip: string; version: 'v4' | 'v6'; local: boolean;
+  city: string | null; region: string | null; country: string | null; timezone: string | null;
+}
+
+/**
+ * The /ip response as the page stores it. /ip calls any address with a ':'
+ * 'v6', but `::ffff:a.b.c.d` is an IPv4 connection written in IPv6 notation.
+ * It is unmapped here, once, and stored as ipv4, so the hero, the leak copy,
+ * the headline and the WebRTC comparison all read the same address. Stored
+ * as sent, the hero showed "::ffff:203.0.113.7" labelled IPv6.
+ */
+export function ipInfoFromLookup(d: IpLookup): IpInfo {
+  const out: IpInfo = {};
+  const ip = unmapIPv4(d.ip);
+  if (d.version === 'v6' && !isIPv4(ip)) out.ipv6 = ip; else out.ipv4 = ip;
+  if (d.city) out.city = d.city;
+  if (d.region) out.region = d.region;
+  if (d.country) out.country = d.country;
+  if (d.timezone) out.timezone = d.timezone;
+  if (d.local) out.isLocal = true;
+  return out;
+}
+
 /**
  * Fetch the public IP + geolocation from OUR OWN API (POST /ip).
  *
@@ -125,18 +231,7 @@ async function fetchPublicIpInfo(): Promise<IpInfo> {
           : `IP lookup failed (${res.status}).`,
     );
   }
-  const d = (await res.json()) as {
-    ip: string; version: 'v4' | 'v6'; local: boolean;
-    city: string | null; region: string | null; country: string | null; timezone: string | null;
-  };
-  const out: IpInfo = {};
-  if (d.version === 'v6') out.ipv6 = d.ip; else out.ipv4 = d.ip;
-  if (d.city) out.city = d.city;
-  if (d.region) out.region = d.region;
-  if (d.country) out.country = d.country;
-  if (d.timezone) out.timezone = d.timezone;
-  if (d.local) out.isLocal = true;
-  return out;
+  return ipInfoFromLookup((await res.json()) as IpLookup);
 }
 
 export function WhatsMyIpTool() {
@@ -145,13 +240,13 @@ export function WhatsMyIpTool() {
   const report = useReportResult();
   useEffect(() => {
     if (!ipInfo) { report(null); return; }
-    const seen = [ipInfo.ipv4, ipInfo.ipv6].filter(Boolean) as string[];
-    const leaked = (webrtc?.publicIPs || []).filter((ip) => !seen.includes(ip));
+    const { leaked } = compareWebRtcToServer(webrtc?.publicIPs || [], ipInfo);
     const where = [ipInfo.city, ipInfo.country].filter(Boolean).join(', ');
     report({
       severity: leaked.length ? 'red' : 'info',
-      headline: leaked.length ? `WebRTC leaks your real IP ${leaked[0]} around your VPN` : `Every site sees ${ipInfo.ipv4 || ipInfo.ipv6 || 'your IP'}${where ? ` in ${where}` : ''}`,
-      shareText: leaked.length ? 'My browser leaks my real IP through WebRTC. Check yours:' : 'Every site I visit sees my IP and location. Check yours:',
+      // The tool can't tell whether a VPN is on, so the headline says what it saw, not "around your VPN".
+      headline: leaked.length ? `WebRTC shows a different IP (${leaked[0]}) from the one sites see` : `Every site sees ${ipInfo.ipv4 || ipInfo.ipv6 || 'your IP'}${where ? ` in ${where}` : ''}`,
+      shareText: leaked.length ? 'My browser shows sites a second IP through WebRTC. Check yours:' : 'Every site I visit sees my IP and location. Check yours:',
       // stats[0] is the scorecard's big figure: a verdict, not the raw address
       // (an IPv6 does not fit at 120px, and a privacy brand should not put the
       // visitor's real IP in an image it asks them to share — see lib/privacy-mask).
@@ -167,10 +262,16 @@ export function WhatsMyIpTool() {
   const [error, setError] = useState('');
   const [refreshTick, setRefreshTick] = useState(0);
 
-  useEffect(() => {
-    let cancelled = false;
+  // Loading starts true and Refresh sets it again before bumping the tick, so
+  // the effect only has to settle it (setState in the effect body is a lint error).
+  const refresh = () => {
     setLoading(true);
     setError('');
+    setRefreshTick((t) => t + 1);
+  };
+
+  useEffect(() => {
+    let cancelled = false;
     Promise.all([fetchPublicIpInfo(), discoverWebRtcIPs()])
       .then(([info, rtc]) => {
         if (cancelled) return;
@@ -186,20 +287,15 @@ export function WhatsMyIpTool() {
     return () => { cancelled = true; };
   }, [refreshTick]);
 
-  const hasIp = ipInfo && (ipInfo.ipv4 || ipInfo.ipv6);
-  const publicIpLeak =
-    webrtc && hasIp && webrtc.publicIPs.some((ip) => ip === ipInfo?.ipv4 || ip === ipInfo?.ipv6);
-  const realIpLeakedViaWebrtc = webrtc && webrtc.publicIPs.length > 0;
-
   return (
     <div className="space-y-6">
       {/* Refresh button */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <div className="text-sm text-t2">
-          Your public IP, location, and WebRTC leak status. The IP is read from the request our own server sees — nothing is sent to third-party lookup services.
+          Your public IP, location, and WebRTC leak status.
         </div>
         <button
-          onClick={() => setRefreshTick((t) => t + 1)}
+          onClick={refresh}
           disabled={loading}
           className="text-xs px-3 py-1.5 border border-b1 text-t2 hover:text-white hover:border-b2 rounded transition-colors disabled:opacity-50"
         >
@@ -218,15 +314,15 @@ export function WhatsMyIpTool() {
       )}
 
       {!loading && !error && ipInfo && (() => {
-        const seen = [ipInfo.ipv4, ipInfo.ipv6].filter(Boolean) as string[];
-        const leaked = (webrtc?.publicIPs || []).filter((ip) => !seen.includes(ip));
+        const comparison = compareWebRtcToServer(webrtc?.publicIPs || [], ipInfo);
+        const { leaked, same, unmatched } = comparison;
         const where = [ipInfo.city, ipInfo.country].filter(Boolean).join(', ');
         return (
         <ConsoleFrame
           engine="whats-my-ip"
           status={statusFromSeverity(leaked.length ? 'red' : 'info')}
+          verdict={leaked.length ? 'Leaking' : 'Exposed'}
           checks={2}
-          processing="server"
           statTiles={[
             { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Exposed' },
             { label: 'IP', value: maskIp(ipInfo.ipv4 || ipInfo.ipv6) },
@@ -304,14 +400,17 @@ export function WhatsMyIpTool() {
             </div>
           )}
 
-          {/* WebRTC leak check */}
+          {/* WebRTC leak check — same rule as the verdict (compareWebRtcToServer):
+              only an address that differs from the one our server saw is a leak. */}
           {webrtc && (
             <div className={`bg-s0 border ${
-              publicIpLeak || realIpLeakedViaWebrtc
+              leaked.length > 0
                 ? 'border-danger/30'
                 : webrtc.privateIPs.length > 0
                   ? 'border-warn/30'
-                  : 'border-ok/30'
+                  : unmatched.length > 0
+                    ? 'border-b1'
+                    : 'border-ok/30'
             } rounded-lg p-6`}>
               <h3 className="text-sm font-semibold text-white mb-2">WebRTC Leak Test</h3>
               {webrtc.error ? (
@@ -320,19 +419,34 @@ export function WhatsMyIpTool() {
                 </p>
               ) : (
                 <>
-                  {realIpLeakedViaWebrtc && (
+                  {leaked.length > 0 && (
                     <div className="text-sm text-danger mb-3">
-                      <Icon name="warn" size={14} className="inline-block align-[-2px] mr-1" /> <strong>WebRTC is leaking public IPs:</strong> {webrtc.publicIPs.join(', ')}
+                      <Icon name="warn" size={14} className="inline-block align-[-2px] mr-1" /> <strong>WebRTC shows a different public IP from the one sites see:</strong> {leaked.join(', ')}
                       <p className="mt-1 text-t2">
-                        Even when using a VPN, sites can read these via WebRTC unless your VPN patches the API. Use a browser that patches WebRTC, or a VPN that specifically blocks this.
+                        Sites saw you as {ipInfo.ipv4 || ipInfo.ipv6}, but any page can read {leaked.length === 1 ? 'this address' : 'these addresses'} through WebRTC. On a VPN, that is usually your real address leaking around the tunnel. Use a browser that blocks WebRTC leaks, or a VPN that patches it.
                       </p>
+                    </div>
+                  )}
+                  {same.length > 0 && leaked.length === 0 && (
+                    <div className="text-sm text-t2 mb-3">
+                      <strong className="text-white">WebRTC shows the same IP sites already see:</strong> {same.join(', ')}
+                      <p className="mt-1">
+                        {/* Not while an address below is still unchecked: "no extra address leaks" then contradicted it. */}
+                        {unmatched.length === 0 ? 'No extra address leaks through WebRTC. ' : ''}On a VPN, check that the IP at the top is your VPN&apos;s and not your own.
+                      </p>
+                    </div>
+                  )}
+                  {unmatched.length > 0 && (
+                    <div className="text-sm text-t2 mb-3">
+                      <strong className="text-white">WebRTC also shows {unmatched.length === 1 ? 'this address' : 'these addresses'}:</strong> {unmatched.join(', ')}
+                      <p className="mt-1">{unmatchedNote(comparison, ipInfo.isLocal)}</p>
                     </div>
                   )}
                   {webrtc.privateIPs.length > 0 && (
                     <div className="text-sm text-warn mb-3">
                       Private/LAN IPs exposed: <code className="text-xs">{webrtc.privateIPs.slice(0, 3).join(', ')}{webrtc.privateIPs.length > 3 ? '…' : ''}</code>
                       <p className="mt-1 text-t2">
-                        These are RFC1918 addresses from your local network. Less severe than public-IP leaks, but they still help fingerprint you.
+                        These are addresses on your local network, handed out by your router. Sites can&apos;t reach you with them, but they still help fingerprint your device.
                       </p>
                     </div>
                   )}
@@ -341,7 +455,7 @@ export function WhatsMyIpTool() {
                       <Icon name="check" size={12} className="inline-block align-[-2px] mr-1" /> Browser is masking {webrtc.mdnsCount} local IP{webrtc.mdnsCount === 1 ? '' : 's'} as mDNS (.local) — good privacy posture.
                     </p>
                   )}
-                  {!realIpLeakedViaWebrtc && webrtc.privateIPs.length === 0 && (
+                  {webrtc.publicIPs.length === 0 && webrtc.privateIPs.length === 0 && (
                     <p className="text-sm text-ok"><Icon name="check" size={14} className="inline-block align-[-2px] mr-1" /> No WebRTC leak detected. Sites cannot use this vector to discover your IPs.</p>
                   )}
                 </>

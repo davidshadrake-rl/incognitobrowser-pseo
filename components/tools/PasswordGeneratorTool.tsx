@@ -2,12 +2,37 @@
 
 import { copyText } from '@/lib/clipboard';
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import { useReportResult } from './ResultContext';
-import { Icon } from '@/components/ui/Icon';
 import { ValueCard } from './ValueCard';
 
 type Mode = 'password' | 'passphrase' | 'pin';
+
+/** One generated value, with the facts about it frozen at the moment it was made. */
+interface Generated {
+  id: number;
+  value: string;
+  mode: Mode;
+  /** Entropy of THIS value's settings. The sliders can move afterwards without changing it. */
+  entropy: number;
+  /** Words in a passphrase (0 for the other modes). */
+  words: number;
+}
+
+const MODE_NAME: Record<Mode, string> = { password: 'Password', passphrase: 'Passphrase', pin: 'PIN' };
+
+/** The result line for a generated value, in the words of its own mode. */
+function describe(g: Generated): string {
+  if (g.mode === 'pin') return `A ${g.value.length}-digit random PIN`;
+  if (g.mode === 'passphrase') return `A ${g.words}-word random passphrase`;
+  return `A ${g.value.length}-character random password`;
+}
+
+// Segmented control. The selected side is filled and outlined (the pressed-chip
+// look from the A-Z catalogue); the old 10% white tint was too faint to tell
+// which mode was on.
+const SEG_ON = 'border-b2 bg-s2 text-white';
+const SEG_OFF = 'border-transparent text-t2 hover:text-white hover:bg-s1';
 
 interface GeneratorOptions {
   length: number;
@@ -172,31 +197,21 @@ export function PasswordGeneratorTool() {
   const [mode, setMode] = useState<Mode>('password');
   const [wordCount, setWordCount] = useState(5);
   const [pinLength, setPinLength] = useState(6);
-  const [password, setPassword] = useState('');
+  // `current` is the value on screen; `history` holds only the older ones, so
+  // "Recent (n)" counts exactly the rows it lists.
+  const [current, setCurrent] = useState<Generated | null>(null);
+  const [history, setHistory] = useState<Generated[]>([]);
+  const nextId = useRef(1);
   const report = useReportResult();
   useEffect(() => {
-    if (!password) { report(null); return; }
-    report({ severity: 'info', headline: `A ${password.length}-character password, generated on your device`, stats: [{ label: 'Length', value: String(password.length) }] });
-  }, [password, report]);
-  const [history, setHistory] = useState<string[]>([]);
-  const [copied, setCopied] = useState(false);
+    if (!current) { report(null); return; }
+    report({ severity: 'info', headline: describe(current), stats: [{ label: 'Length', value: String(current.value.length) }] });
+  }, [current, report]);
+  // Which value the "Copied" confirmation belongs to (the main card or one Recent row).
+  const [copiedId, setCopiedId] = useState<number | null>(null);
 
-  const generate = useCallback(() => {
-    let pw: string;
-    if (mode === 'password') pw = generatePassword(options);
-    else if (mode === 'passphrase') pw = generatePassphraseSecure(wordCount);
-    else pw = generatePin(pinLength);
-    setPassword(pw);
-    setHistory((prev) => [pw, ...prev].slice(0, 10));
-    setCopied(false);
-  }, [options, mode, wordCount, pinLength]);
-
-  const handleCopy = async (text: string) => {
-    if (!(await copyText(text))) return; // insecure context / denied: the password stays selectable on screen
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
+  // Entropy of what the current settings WILL generate. The card below shows the
+  // entropy saved with the value it displays, which may come from older settings.
   const entropy =
     mode === 'password'
       ? calcEntropy(options)
@@ -204,22 +219,48 @@ export function PasswordGeneratorTool() {
         ? Math.round(wordCount * Math.log2(PASSPHRASE_WORDS.length))
         : Math.round(pinLength * Math.log2(10));
 
+  // Every character set unticked: there is nothing to draw from.
+  const emptyPool = mode === 'password' && entropy === 0;
+
+  const generate = useCallback(() => {
+    let value: string;
+    if (mode === 'password') value = generatePassword(options);
+    else if (mode === 'passphrase') value = generatePassphraseSecure(wordCount);
+    else value = generatePin(pinLength);
+    if (!value) return;
+    const next: Generated = { id: nextId.current++, value, mode, entropy, words: mode === 'passphrase' ? wordCount : 0 };
+    if (current) setHistory((prev) => [current, ...prev].slice(0, 9));
+    setCurrent(next);
+    setCopiedId(null);
+  }, [options, mode, wordCount, pinLength, entropy, current]);
+
+  const handleCopy = async (g: Generated) => {
+    if (!(await copyText(g.value))) return; // insecure context / denied: the password stays selectable on screen
+    setCopiedId(g.id);
+    setTimeout(() => setCopiedId((id) => (id === g.id ? null : id)), 2000);
+  };
+
+  const switchMode = (m: Mode) => {
+    if (m === mode) return;
+    setMode(m);
+    // The value on screen belongs to the old mode; keep it reachable under Recent.
+    if (current) setHistory((prev) => [current, ...prev].slice(0, 9));
+    setCurrent(null);
+  };
+
   return (
     <div className="space-y-6">
       {/* Mode toggle */}
-      <div className="bg-s0 border border-b1 rounded-lg p-2 flex gap-1">
+      <div className="bg-s0 border border-b1 rounded-lg p-2 flex gap-1" role="group" aria-label="What to generate">
         {(['password', 'passphrase', 'pin'] as Mode[]).map((m) => (
           <button
             key={m}
-            onClick={() => {
-              setMode(m);
-              setPassword('');
-            }}
-            className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-              mode === m ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
-            }`}
+            type="button"
+            aria-pressed={mode === m}
+            onClick={() => switchMode(m)}
+            className={`flex-1 py-2 rounded border text-sm font-medium transition-colors ${mode === m ? SEG_ON : SEG_OFF}`}
           >
-            {m === 'password' ? 'Random Password' : m === 'passphrase' ? 'Passphrase' : 'PIN'}
+            {m === 'password' ? 'Random Password' : MODE_NAME[m]}
           </button>
         ))}
       </div>
@@ -318,48 +359,51 @@ export function PasswordGeneratorTool() {
           </div>
         )}
 
-        <button onClick={generate} className="btn-primary w-full py-3">
-          Generate {mode === 'password' ? 'Password' : mode === 'passphrase' ? 'Passphrase' : 'PIN'}
+        <button onClick={generate} disabled={emptyPool} className="btn-primary w-full py-3">
+          Generate {MODE_NAME[mode]}
         </button>
+        {emptyPool && <p className="text-xs text-warn">Tick at least one character set to generate a password.</p>}
       </div>
 
-      {/* Generated output */}
-      {password && (
+      {/* Generated output. Every fact here comes from the saved value, not the live settings. */}
+      {current && (
         <ValueCard
-          label={`Generated ${mode === 'password' ? 'Password' : mode === 'passphrase' ? 'Passphrase' : 'PIN'}`}
-          value={password}
+          label={`Generated ${MODE_NAME[current.mode]}`}
+          value={current.value}
           valueClassName="text-lg"
           actions={
             <button
-              onClick={() => handleCopy(password)}
+              onClick={() => handleCopy(current)}
               className="text-xs text-t2 hover:text-white active:bg-white/5 transition-colors px-3 py-2 border border-b1 rounded min-h-[36px] min-w-[64px]"
             >
-              {copied ? 'Copied!' : 'Copy'}
+              {copiedId === current.id ? 'Copied!' : 'Copy'}
             </button>
           }
           statTiles={[
-            { label: 'Length', value: password.length },
-            { label: 'Entropy', value: `${entropy} bits` },
+            current.mode === 'passphrase' ? { label: 'Words', value: current.words } : { label: 'Length', value: current.value.length },
+            { label: 'Entropy', value: `${current.entropy} bits` },
           ]}
         />
       )}
 
-      {history.length > 1 && (
+      {history.length > 0 && (
         <div className="bg-s0 border border-b1 rounded-lg p-6">
           <h3 className="text-sm font-semibold text-white mb-3">Recent ({history.length})</h3>
-          <p className="text-xs text-t3 mb-2">Tap to copy</p>
+          <p className="text-xs text-t3 mb-2">Tap a row to copy it</p>
           <div className="space-y-2">
-            {history.slice(1).map((pw, i) => (
+            {history.map((g) => (
               // Entire row is the tap target — big mobile-friendly hit area.
               // Native <button> so keyboard focus/Enter work too.
               <button
-                key={i}
-                onClick={() => handleCopy(pw)}
+                key={g.id}
+                onClick={() => handleCopy(g)}
                 className="w-full flex items-center justify-between gap-2 px-3 py-2 -mx-1 rounded hover:bg-white/5 transition-colors text-left cursor-pointer"
-                aria-label={`Copy password ${pw.substring(0, 8)}...`}
+                aria-label={`Copy ${MODE_NAME[g.mode].toLowerCase()} ${g.value.substring(0, 8)}...`}
               >
-                <code className="text-xs text-t2 font-mono truncate flex-1">{pw}</code>
-                <Icon name="list" size={14} className="text-t3 group-hover:text-white" title="Copy" />
+                <code className="text-xs text-t2 font-mono truncate flex-1">{g.value}</code>
+                <span className={`shrink-0 text-xs ${copiedId === g.id ? 'text-ok' : 'text-t3'}`}>
+                  {copiedId === g.id ? 'Copied!' : 'Copy'}
+                </span>
               </button>
             ))}
           </div>
@@ -367,7 +411,7 @@ export function PasswordGeneratorTool() {
       )}
 
       <p className="text-xs text-t3 text-center">
-        Generated using the Web Crypto API with unbiased rejection sampling. Nothing leaves your browser.
+        Generated using the Web Crypto API with unbiased rejection sampling.
       </p>
     </div>
   );

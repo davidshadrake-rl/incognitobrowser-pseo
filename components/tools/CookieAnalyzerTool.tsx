@@ -183,9 +183,12 @@ export function CookieAnalyzerTool() {
     });
   }, [mode, urlResult, scanned, cookies, report]);
   const [urlError, setUrlError] = useState('');
+  // "This Page" / "Paste" results stay mounted across re-scans, so their console is told when each ran.
+  const [cookieRunAt, setCookieRunAt] = useState(0);
 
   const scanBrowserCookies = () => {
     const raw = document.cookie;
+    setCookieRunAt(Date.now());
     if (!raw) {
       setCookies([]);
       setScanned(true);
@@ -206,6 +209,7 @@ export function CookieAnalyzerTool() {
       return categorizeCookie(name.trim(), rest.join('=').trim());
     });
     setCookies(parsed);
+    setCookieRunAt(Date.now());
     setScanned(true);
   };
 
@@ -337,28 +341,35 @@ export function CookieAnalyzerTool() {
 
   return (
     <div className="space-y-6">
-      {/* Mode toggle */}
-      <div className="bg-s0 border border-b1 rounded-lg p-2 flex">
+      {/* Mode toggle. The selected mode is filled white: the old 10% tint was
+          hard to tell apart from the unselected ones. */}
+      <div className="bg-s0 border border-b1 rounded-lg p-2 flex gap-1" role="group" aria-label="What to scan">
         <button
+          type="button"
+          aria-pressed={mode === 'url'}
           onClick={() => { setMode('url'); setScanned(false); setUrlResult(null); setUrlError(''); }}
           className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            mode === 'url' ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
+            mode === 'url' ? 'bg-white text-black' : 'text-t2 hover:text-white hover:bg-white/5'
           }`}
         >
           Scan a URL
         </button>
         <button
+          type="button"
+          aria-pressed={mode === 'browser'}
           onClick={() => { setMode('browser'); setScanned(false); setUrlResult(null); }}
           className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            mode === 'browser' ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
+            mode === 'browser' ? 'bg-white text-black' : 'text-t2 hover:text-white hover:bg-white/5'
           }`}
         >
           This Page
         </button>
         <button
+          type="button"
+          aria-pressed={mode === 'paste'}
           onClick={() => { setMode('paste'); setScanned(false); setUrlResult(null); }}
           className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-            mode === 'paste' ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
+            mode === 'paste' ? 'bg-white text-black' : 'text-t2 hover:text-white hover:bg-white/5'
           }`}
         >
           Paste
@@ -413,7 +424,7 @@ export function CookieAnalyzerTool() {
               </div>
             )}
             <p className="mt-2 text-xs text-t3">
-              We fetch the URL server-side to read Set-Cookie headers and detect tracking scripts in the HTML. The target site will see a request from our server, not your browser.
+              Scan has our server load the page, then lists the cookies it sets and the tracking scripts in its HTML. The site sees a visit from our server.
             </p>
           </div>
         ) : mode === 'browser' ? (
@@ -459,7 +470,6 @@ export function CookieAnalyzerTool() {
         <ConsoleFrame
           engine="cookie-analyzer"
           status={statusFromSeverity(severityFromScore(score))}
-          processing="server"
           score={score}
           gaugeLabel={`grade ${grade.letter}`}
           tally={{
@@ -655,7 +665,8 @@ export function CookieAnalyzerTool() {
           engine="cookie-analyzer"
           status={statusFromSeverity(tracking.length > 0 ? 'red' : analytics.length > 0 ? 'amber' : 'green')}
           checks={cookies.length}
-          processing="client"
+          checksNoun={['cookie', 'cookies']}
+          runAt={cookieRunAt || undefined}
           tally={{ fails: tracking.length, warns: analytics.length, passes: functional.length }}
           statTiles={[
             { label: 'Total cookies', value: cookies.length },

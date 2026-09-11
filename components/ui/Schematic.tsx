@@ -2,6 +2,10 @@
  * Compact input -> check -> verdict schematic (DESIGN-SPEC 5.4): three 8px
  * dots joined by 1px t3 lines, labelled in text-kicker. Sits under a
  * ToolCard blurb on the instrument panel. Server component.
+ *
+ * The end labels are anchored inward (start at the left edge, end at the
+ * right). Centred on the end dots, half of INPUT and VERDICT fell outside
+ * the viewBox and the SVG clipped them.
  */
 export function Schematic() {
   return (
@@ -11,13 +15,13 @@ export function Schematic() {
       <circle cx="4" cy="4" r="4" fill="var(--t3)" />
       <circle cx="100" cy="4" r="4" fill="var(--t3)" />
       <circle cx="196" cy="4" r="4" fill="var(--t3)" />
-      <text x="4" y="24" textAnchor="middle" fill="var(--t3)" className="text-kicker uppercase">
+      <text x="0" y="24" textAnchor="start" fill="var(--t3)" className="text-kicker uppercase">
         input
       </text>
       <text x="100" y="24" textAnchor="middle" fill="var(--t3)" className="text-kicker uppercase">
         check
       </text>
-      <text x="196" y="24" textAnchor="middle" fill="var(--t3)" className="text-kicker uppercase">
+      <text x="200" y="24" textAnchor="end" fill="var(--t3)" className="text-kicker uppercase">
         verdict
       </text>
     </svg>

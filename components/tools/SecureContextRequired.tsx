@@ -1,7 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { Icon } from '@/components/ui/Icon';
+
+// Neither value changes while the page is open, so there is nothing to subscribe to.
+const subscribeNoop = () => () => {};
+const hasSubtleCrypto = () => typeof crypto !== 'undefined' && typeof crypto.subtle?.digest === 'function';
+const httpsHref = () => window.location.href.replace(/^http:/i, 'https:');
 
 /**
  * Renders a friendly notice when the browser's Web Crypto API is unavailable —
@@ -14,15 +19,10 @@ import { Icon } from '@/components/ui/Icon';
  * Returns `null` when the context IS secure (the tool renders normally).
  */
 export function SecureContextRequired({ toolName }: { toolName: string }) {
-  // Avoid hydration mismatch: check on mount, not during SSR
-  const [isInsecure, setIsInsecure] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState('');
-
-  useEffect(() => {
-    const hasCrypto = typeof crypto !== 'undefined' && typeof crypto.subtle?.digest === 'function';
-    setIsInsecure(!hasCrypto);
-    setCurrentUrl(window.location.href.replace(/^http:/i, 'https:'));
-  }, []);
+  // Avoid hydration mismatch: the server snapshot (secure, no URL) is also what
+  // hydration renders; the real check runs on the client straight after.
+  const isInsecure = !useSyncExternalStore(subscribeNoop, hasSubtleCrypto, () => true);
+  const currentUrl = useSyncExternalStore(subscribeNoop, httpsHref, () => '');
 
   if (!isInsecure) return null;
 
@@ -46,9 +46,7 @@ export function SecureContextRequired({ toolName }: { toolName: string }) {
         </a>
       )}
       <p className="text-xs text-t3 mt-4">
-        On the production site, this tool works normally. All cryptography still happens
-        100% in your browser — the HTTPS requirement is a browser security policy, not a
-        server one.
+        Over HTTPS, this tool works normally.
       </p>
     </div>
   );
@@ -59,9 +57,5 @@ export function SecureContextRequired({ toolName }: { toolName: string }) {
  * Use in tools that need to conditionally disable input/buttons.
  */
 export function useIsSecureContext(): boolean {
-  const [secure, setSecure] = useState(true); // assume secure to avoid SSR hydration mismatch
-  useEffect(() => {
-    setSecure(typeof crypto !== 'undefined' && typeof crypto.subtle?.digest === 'function');
-  }, []);
-  return secure;
+  return useSyncExternalStore(subscribeNoop, hasSubtleCrypto, () => true); // assume secure on the server to avoid a hydration mismatch
 }

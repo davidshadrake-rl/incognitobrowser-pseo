@@ -15,7 +15,7 @@
   "description": "View and understand metadata in your photos that facial recognition systems could use to identify you.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool reads EXIF metadata from JPEG images directly in your browser. It parses the APP1 segment of JPEG files to extract camera information, timestamps, GPS coordinates, software details, and other embedded metadata. The image never leaves your device — all processing happens client-side using the File API and ArrayBuffer parsing.",
+    "howItWorks": "This tool reads EXIF metadata from JPEG images. It parses the APP1 segment of JPEG files to extract camera information, timestamps, GPS coordinates, software details, and other embedded metadata.",
     "tips": [
       "Always strip metadata from photos before sharing online, especially GPS coordinates",
       "Most phones embed precise GPS coordinates in every photo by default — check your settings",

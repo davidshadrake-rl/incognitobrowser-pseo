@@ -254,6 +254,11 @@ function detectFormat(buffer: ArrayBuffer): ImageFormat {
   return 'unknown';
 }
 
+/** "IMG_4471.HEIC" -> "IMG_4471-clean.jpg": the clean copy is always re-encoded as JPEG. */
+function cleanFileName(file: File): string {
+  return file.name.replace(/\.[^.]+$/, '') + '-clean.jpg';
+}
+
 function getPrivacyColor(privacy: string) {
   switch (privacy) {
     case 'high':
@@ -284,14 +289,13 @@ export function MetadataViewerTool() {
   const [imagePreview, setImagePreview] = useState('');
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [stripped, setStripped] = useState('');
+  // The console stays mounted when a second file is chosen, so it is told when each read finished.
+  const [runAt, setRunAt] = useState(0);
 
-  // Revoke object URLs on unmount or replacement.
-  useEffect(() => {
-    return () => {
-      if (imagePreview) URL.revokeObjectURL(imagePreview);
-      if (stripped) URL.revokeObjectURL(stripped);
-    };
-  }, [imagePreview, stripped]);
+  // Revoke object URLs on unmount or replacement. One effect per URL: a shared
+  // effect's cleanup revoked the live preview every time a clean copy was made.
+  useEffect(() => () => { if (imagePreview) URL.revokeObjectURL(imagePreview); }, [imagePreview]);
+  useEffect(() => () => { if (stripped) URL.revokeObjectURL(stripped); }, [stripped]);
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -323,7 +327,7 @@ export function MetadataViewerTool() {
           value: 'HEIC/HEIF detected',
           privacy: 'medium',
           warning:
-            'HEIC uses a container format where EXIF is embedded inside an ISOBMFF box. Full parsing requires a heavy decoder — upload after conversion to JPEG for full inspection. Most HEICs still contain GPS and camera data.',
+            'HEIC uses a container format where EXIF is embedded inside an ISOBMFF box. Full parsing requires a heavy decoder — convert the photo to JPEG and choose it again for full inspection. Most HEICs still contain GPS and camera data.',
         },
       ];
     } else if (fmt === 'webp' || fmt === 'gif' || fmt === 'tiff') {
@@ -341,11 +345,15 @@ export function MetadataViewerTool() {
     ];
 
     setFields(all);
+    setRunAt(Date.now());
     setScanned(true);
   };
 
   // Strip metadata by re-encoding the image through a <canvas>. Canvas decodes
   // only pixel data — no EXIF/GPS/author text survives. Output is a clean JPEG.
+  // The button says "& download", so the download starts on this click; the
+  // link it leaves behind is only a fallback (it used to be the only way to
+  // actually save the file, which took a second, unexplained click).
   const stripMetadata = async () => {
     if (!currentFile) return;
     const img = new Image();
@@ -364,8 +372,15 @@ export function MetadataViewerTool() {
       ctx.drawImage(img, 0, 0);
       const blob: Blob | null = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', 0.92));
       if (!blob) throw new Error('Encode failed');
-      if (stripped) URL.revokeObjectURL(stripped);
-      setStripped(URL.createObjectURL(blob));
+      const cleanUrl = URL.createObjectURL(blob);
+      // The previous clean copy is revoked by the [stripped] effect's cleanup.
+      setStripped(cleanUrl);
+      const a = document.createElement('a');
+      a.href = cleanUrl;
+      a.download = cleanFileName(currentFile);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Strip failed');
     } finally {
@@ -378,27 +393,29 @@ export function MetadataViewerTool() {
     if (!gps) return;
     const m = gps.value.match(/^(-?\d+\.\d+),\s*(-?\d+\.\d+)/);
     if (!m) return;
-    // OpenStreetMap — no tracking, no account.
+    // OpenStreetMap, in a new tab, centred on the photo's coordinates.
     window.open(`https://www.openstreetmap.org/?mlat=${m[1]}&mlon=${m[2]}&zoom=16`, '_blank', 'noopener,noreferrer');
   };
 
   const highRisk = fields.filter((f) => f.privacy === 'high');
   const medRisk = fields.filter((f) => f.privacy === 'medium');
   const hasGps = fields.some((f) => f.tag === 'GPS Coordinates');
-  const strippedName = currentFile ? currentFile.name.replace(/\.[^.]+$/, '') + '-clean.jpg' : 'clean.jpg';
+  const strippedName = currentFile ? cleanFileName(currentFile) : 'clean.jpg';
+  const exposed = fields.some((x) => /gps|latitude|longitude/i.test(x.tag)) || highRisk.length > 0;
 
   return (
     <div className="space-y-6">
       <div className="bg-s0 border border-b1 rounded-lg p-6">
-        <label className="block text-sm font-medium text-t2 mb-3">Upload an image to inspect its metadata</label>
+        <label htmlFor="metadata-file" className="block text-sm font-medium text-t2 mb-3">Choose an image to inspect its metadata</label>
         <input
+          id="metadata-file"
           type="file"
           accept="image/*,.heic,.heif"
           onChange={handleFile}
           className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
         />
         <p className="mt-2 text-xs text-t3">
-          Supports JPEG (full EXIF + GPS), PNG (tEXt/iTXt chunks), HEIC (basic detection), WebP, GIF, TIFF. Processed entirely in your browser.
+          Supports JPEG (full EXIF + GPS), PNG (tEXt/iTXt chunks), HEIC (basic detection), WebP, GIF, TIFF.
         </p>
       </div>
 
@@ -406,14 +423,16 @@ export function MetadataViewerTool() {
         <ConsoleFrame
           engine="metadata-viewer"
           status={statusFromSeverity(
-            fields.some((x) => /gps|latitude|longitude/i.test(x.tag)) || highRisk.length > 0
+            exposed
               ? 'red'
               : Math.max(0, fields.length - 4) > 0
                 ? 'amber'
                 : 'green'
           )}
+          verdict={exposed ? 'Exposed' : undefined}
           checks={fields.length}
-          processing="client"
+          checksNoun={['field', 'fields']}
+          runAt={runAt || undefined}
           tally={{ fails: highRisk.length, warns: medRisk.length, passes: Math.max(0, fields.length - highRisk.length - medRisk.length) }}
           statTiles={[
             { label: 'High risk', value: highRisk.length },
@@ -427,7 +446,7 @@ export function MetadataViewerTool() {
             {imagePreview && (
               <div className="bg-s0 border border-b1 rounded-lg p-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={imagePreview} alt="Uploaded preview" className="w-full h-48 object-contain rounded" />
+                <img src={imagePreview} alt="Preview of the image you chose" className="w-full h-48 object-contain rounded" />
                 <div className="mt-2 text-xs text-t3">Format: <span className="text-white uppercase">{format}</span></div>
               </div>
             )}
@@ -454,9 +473,12 @@ export function MetadataViewerTool() {
               </button>
             )}
             {stripped && (
-              <a href={stripped} download={strippedName} className="text-sm px-4 py-2 border border-ok/30 rounded text-ok hover:bg-ok-dim">
-                Download clean image ({strippedName})
-              </a>
+              <span className="text-sm text-t2">
+                Didn&apos;t download?{' '}
+                <a href={stripped} download={strippedName} className="text-ok underline underline-offset-4 hover:text-t1">
+                  Save {strippedName}
+                </a>
+              </span>
             )}
           </div>
 

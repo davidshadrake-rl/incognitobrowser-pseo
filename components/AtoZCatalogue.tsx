@@ -10,7 +10,7 @@
  */
 import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import Link from 'next/link';
-import { LETTERS, filterEntries, groupByLetter, letterOf, type CatalogueEntry } from '@/lib/catalogue';
+import { LETTERS, filingParts, filterEntries, groupByLetter, letterOf, type CatalogueEntry } from '@/lib/catalogue';
 import { GradeBadge } from '@/components/GradeBadge';
 import { ToolCard } from '@/components/ToolCard';
 import { Icon, IconTile, type IconName } from '@/components/ui/Icon';
@@ -26,7 +26,11 @@ export interface CatalogueTopic {
 
 interface Props {
   entries: CatalogueEntry[];
-  /** Plural noun for the count line and placeholder, e.g. "guides". */
+  /**
+   * Plural noun, e.g. "guides": names the catalogue (data-catalogue) and,
+   * except on the tools catalogue (see countNounOf), the count line,
+   * placeholder and A–Z heading.
+   */
   noun: string;
   /**
    * DESIGN-SPEC 5.5: the 32px IconTile every non-tool entry carries (the
@@ -56,6 +60,16 @@ function entryGridClass(noun: string): string {
   return noun === 'tools'
     ? 'grid grid-cols-1 md:grid-cols-2 gap-3'
     : 'grid sm:grid-cols-2 lg:grid-cols-3 gap-3';
+}
+
+/**
+ * What the count line, search box and A–Z heading call the entries. The
+ * tools catalogue has one entry per topic PAGE (one tool is listed under
+ * several topics), while the /tools hero counts distinct tools, so "23 tools"
+ * sat under "13 tools" on the same page. There the count says what it counts.
+ */
+function countNounOf(noun: string): string {
+  return noun === 'tools' ? 'tool pages' : noun;
 }
 
 const TOPIC_FADE = 'linear-gradient(to right, black calc(100% - 3rem), transparent)';
@@ -178,6 +192,7 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
   const q = query.trim();
   const matches = useMemo(() => (q ? filterEntries(groupByLetter(entries).flatMap((g) => g.entries), q) : null), [entries, q]);
   const gridClass = entryGridClass(noun);
+  const counted = countNounOf(noun);
 
   return (
     <>
@@ -186,18 +201,18 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
 
       {/* Search */}
       <div className="mb-4">
-        <label htmlFor={inputId} className="sr-only">Search {noun}</label>
+        <label htmlFor={inputId} className="sr-only">Search {counted}</label>
         <input
           id={inputId}
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={`Search ${entries.length} ${noun}…`}
+          placeholder={`Search ${entries.length} ${counted}…`}
           autoComplete="off"
           className="w-full md:max-w-md bg-s0 border border-b1 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-t3 focus:outline-none focus:border-b2"
         />
         <p className="text-xs text-t3 mt-2" aria-live="polite">
-          {q ? `${matches!.length} of ${entries.length} ${noun} match “${q}”` : `${entries.length} ${noun}, A to Z. Jump to a letter or search.`}
+          {q ? `${matches!.length} of ${entries.length} ${counted} match “${q}”` : `${entries.length} ${counted}, A to Z. Jump to a letter or search.`}
         </p>
       </div>
 
@@ -226,7 +241,7 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
       {/* Search results — directly under the box, so typing never sends you off-screen */}
       {q && (
         matches!.length === 0 ? (
-          <p className="text-t3 py-8">No {noun} match “{q}”. Try a shorter word, a topic name, or clear the search.</p>
+          <p className="text-t3 py-8">No {counted} match “{q}”. Try a shorter word, a topic name, or clear the search.</p>
         ) : (
           <div className={gridClass} data-results={matches!.length}>
             {matches!.map((e) => <Entry key={e.href} e={e} noun={noun} icon={icon} />)}
@@ -241,7 +256,7 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
     {/* Full A–Z list at the bottom of the page (hidden while a search is active) */}
     {!q && (
       <section id="a-to-z" className="mt-12 pt-8 border-t border-b1 scroll-mt-24" data-atoz={noun}>
-        <h2 className="text-xl font-semibold text-white mb-6">All {entries.length} {noun}, A to Z</h2>
+        <h2 className="text-xl font-semibold text-white mb-6">All {entries.length} {counted}, A to Z</h2>
         {groups.map((g) => (
           <section key={g.letter} id={`letter-${g.letter === '#' ? 'num' : g.letter}`} className="mb-8 scroll-mt-24">
             <h3 className="text-2xl font-bold text-white mb-4 sticky top-16 bg-black py-2 z-10">{g.letter === '#' ? '0–9' : g.letter}</h3>
@@ -257,8 +272,24 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
 }
 
 /**
+ * A title shown the way it is filed: leading words the catalogue skips
+ * ("Complete Guide to", "Best") in the quiet colour and weight, the words it
+ * files by at full strength, so "Complete Guide to Ad Tracking" visibly
+ * belongs under A. Same split as letterOf (lib/catalogue filingParts).
+ */
+function FiledTitle({ title }: { title: string }) {
+  const { lead, filed } = filingParts(title);
+  return (
+    <>
+      {lead && <span className="font-normal text-t3">{lead}</span>}
+      {filed}
+    </>
+  );
+}
+
+/**
  * Amendment A / DESIGN-SPEC 5.3: on the tools catalogue, entries render as a
- * compact 32px ToolCard — the engine comes from the `keywords` field every
+ * 32px ToolCard — the engine comes from the `keywords` field every
  * tools-page entry already carries (`${toolEngine} ${niche} ...`), matched
  * against ENGINE_ICON's own key list. Every other catalogue (guides,
  * checklists, comparisons, templates, calculators, glossary, site) keeps the
@@ -296,12 +327,10 @@ function Entry({ e, noun, icon }: { e: CatalogueEntry; noun: string; icon: IconN
       <div className="catalogue-entry" data-letter={letterOf(e.title)}>
         <ToolCard
           engine={engine}
-          title={e.title}
+          title={<FiledTitle title={e.title} />}
           blurb={e.description ?? ''}
           href={e.href}
-          processing={e.keywords?.includes('server-assisted') ? 'server' : undefined}
           tileSize={32}
-          compact
         />
       </div>
     );
@@ -320,7 +349,7 @@ function Entry({ e, noun, icon }: { e: CatalogueEntry; noun: string; icon: IconN
     >
       {e.grade ? <GradeBadge grade={e.grade} size="sm" /> : <IconTile name={icon} size={32} family={familyOfNiche(nicheFromHref(e.href))} />}
       <div className="min-w-0">
-        <h4 className="font-mono text-[15px] font-semibold text-t1">{e.title}</h4>
+        <h4 className="font-mono text-[15px] font-semibold text-t1"><FiledTitle title={e.title} /></h4>
         {e.meta && <p className="text-meta text-t3 mt-0.5">{e.meta}</p>}
         {e.description && <p className="prose-ib text-row line-clamp-2 mt-1">{e.description}</p>}
       </div>

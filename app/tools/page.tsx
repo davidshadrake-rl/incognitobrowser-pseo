@@ -11,8 +11,8 @@ import { PhoneFrame } from '@/components/ui/PhoneFrame';
 export const metadata = genMeta({
   title: IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools',
   description: IS_PRO_DEPLOYMENT
-    ? 'Pro privacy tools: cookie & tracker scanner, browser privacy audit, URL safety checker and image metadata viewer. No signup.'
-    : 'Free privacy tools that run in your browser: What\'s My IP with WebRTC leak test, password strength checker, secure password generator, hash generator, text encryption, permission checker, user-agent analyzer and a privacy quiz. No signup.',
+    ? 'Pro privacy tools: cookie & tracker scanner, browser privacy audit, URL safety checker and image metadata viewer.'
+    : 'Free privacy tools: What\'s My IP with WebRTC leak test, password strength checker, secure password generator, hash generator, text encryption, permission checker, user-agent analyzer and a privacy quiz.',
   path: '/tools',
   type: 'website',
 });
@@ -28,100 +28,96 @@ interface ToolMeta {
 }
 
 // The 17 tool engines with their display info (DESIGN-SPEC 5.3). Icons come
-// from ENGINE_ICON[engine] (lib/visuals); blurbs are the "what it checks,
-// where it runs" pattern, capped at 120 chars.
-const FEATURED_TOOLS: { engine: string; title: string; blurb: string; processing?: 'client' | 'server' }[] = [
+// from ENGINE_ICON[engine] (lib/visuals); blurbs say what each tool checks
+// or gives you, capped at 120 chars. No "where it runs" tail: that was a
+// reassurance slogan (CTO review, 2026-09-10), and every blurb must match
+// what the engine actually does.
+const FEATURED_TOOLS: { engine: string; title: string; blurb: string }[] = [
   {
     engine: 'whats-my-ip',
     title: 'What\'s My IP + WebRTC Leak Test',
-    blurb: 'The address every site sees, and whether WebRTC leaks your real one around your VPN. Asks our server once.',
-    processing: 'server',
+    blurb: 'The address every site sees, and whether WebRTC leaks your real one around your VPN.',
   },
   {
     engine: 'password-strength',
     title: 'Password Strength Checker',
-    blurb: 'Entropy, crack time and the patterns attackers try first. Runs in your browser; nothing is sent.',
+    blurb: 'Entropy, crack time and the patterns attackers try first.',
   },
   {
     engine: 'browser-privacy',
     title: 'Browser Privacy Audit',
-    blurb: '14 checks: Do Not Track, WebRTC, canvas fingerprint, device memory, cores and more. Runs in your browser.',
+    blurb: 'Do Not Track, WebRTC IP exposure, canvas and audio fingerprints, device memory, cores and more, scored out of 100.',
   },
   {
     engine: 'text-encryption',
     title: 'Text Encryption Tool',
-    blurb: 'AES-256-GCM with a PBKDF2 key, 100k iterations. Encrypts and decrypts in your browser.',
+    blurb: 'Encrypt and decrypt text with AES-256-GCM and a PBKDF2 key, 100k iterations.',
   },
   {
     engine: 'cookie-analyzer',
     title: 'Cookie & Tracker Scanner',
-    blurb: 'Cookies, analytics scripts and 30+ tracker signatures a site sets before you consent. Fetched via our server.',
-    processing: 'server',
+    blurb: 'Cookies, analytics scripts and 30+ tracker signatures a site sets before you consent.',
   },
   {
     engine: 'url-analyzer',
     title: 'URL Safety Checker',
-    blurb: 'Phishing marks in any link: odd TLDs, look-alike letters, raw IPs, shorteners, credential bait. In your browser.',
+    blurb: 'Phishing marks in any link: odd TLDs, look-alike letters, raw IPs, shorteners, credential bait.',
   },
   {
     engine: 'privacy-quiz',
     title: 'Privacy Score Quiz',
-    blurb: '12 questions on browsing, network, accounts, messaging and devices. A letter grade, in your browser.',
+    // The quiz's six categories, as PrivacyQuizTool's QUESTIONS name them.
+    blurb: '12 questions on browsing, network, accounts, communication, social media and devices, scored out of 100.',
   },
   {
     engine: 'hash-generator',
     title: 'Cryptographic Hash Generator',
-    blurb: 'MD5, SHA-1, SHA-256 and SHA-512 of any text. Computed in your browser.',
+    blurb: 'SHA-1, SHA-256, SHA-384 and SHA-512 of any text or file.',
   },
   {
     engine: 'permission-checker',
     title: 'Permission Checker',
-    blurb: 'Which of 11 permissions this browser grants: camera, mic, location, notifications and more. In your browser.',
+    blurb: 'Which of 11 permissions this site has in your browser: camera, mic, location, notifications and more.',
   },
   {
     engine: 'metadata-viewer',
     title: 'Image Metadata Viewer',
-    blurb: 'GPS, date, device and every EXIF tag inside a photo. Read in your browser; the file never uploads.',
+    blurb: 'GPS, date, device and every EXIF tag inside a photo.',
   },
   {
     engine: 'useragent-analyzer',
     title: 'User Agent Analyzer',
-    blurb: 'What your user-agent string tells sites about your device, OS and browser. In your browser.',
+    blurb: 'What your user-agent string tells sites about your device, OS and browser.',
   },
   {
     engine: 'password-generator',
     title: 'Secure Password Generator',
-    blurb: 'Random passwords and passphrases from your browser\'s own randomness. Nothing is sent.',
+    blurb: 'Random passwords and passphrases from your browser\'s own randomness.',
   },
   {
     engine: 'link-unwrapper',
     title: 'Link Unwrapper',
-    blurb: 'Where a shortened or tracking link really goes, and which parameters follow you. In your browser.',
-    processing: 'client',
+    blurb: 'Where a redirect-wrapped link really goes and which tracking IDs it carries, plus a clean copy.',
   },
   {
     engine: 'email-pixel-detector',
     title: 'Email Tracking-Pixel Detector',
-    blurb: 'Hidden 1x1 tracking pixels in an email\'s HTML source. Pasted and parsed in your browser.',
-    processing: 'client',
+    blurb: 'Hidden tracking pixels, click-tracking links and the sending platform in an email\'s source.',
   },
   {
     engine: 'screenshot-leak-checker',
     title: 'Screenshot Leak Checker',
-    blurb: 'Names, emails, addresses and tokens visible in a screenshot before you share it. In your browser.',
-    processing: 'client',
+    blurb: 'Hidden data in a screenshot file: GPS, embedded thumbnails, device names, personal details. Plus a clean copy.',
   },
   {
     engine: 'dns-leak-test',
     title: 'DNS Leak Test',
-    blurb: 'Whether your DNS queries escape your VPN to your ISP. Uses our resolver to see who asks.',
-    processing: 'server',
+    blurb: 'Whether your DNS queries escape your VPN to your ISP.',
   },
   {
     engine: 'ad-blocker-test',
     title: 'Ad-Blocker Test',
-    blurb: '50 bait requests that mimic ad and tracker domains; counts what your blocker lets through. In your browser.',
-    processing: 'client',
+    blurb: '50 requests to ad-style paths on this site, plus 12 hidden-element checks. Counts what your blocker stops.',
   },
 ];
 
@@ -169,9 +165,15 @@ export default function ToolsIndex() {
     }
   }
 
+  // Count TOOLS, not pages: one engine is listed under several topics (four
+  // encryption pages, four permission checkers), and "23 tools" for 13
+  // distinct ones was the number visitors could not reconcile. Same rule as
+  // the home page's tools count (app/page.tsx countForType).
+  const toolCount = new Set(items.map(i => i.toolEngine).filter(Boolean)).size;
+
   const lede = IS_PRO_DEPLOYMENT
-    ? "The web versions of Incognito Pro's tools. No account, no charge today."
-    : 'Every tool runs in your browser except the two marked server-assisted, which ask our server once and never log. No account.';
+    ? "The web versions of Incognito Pro's tools. Each one is listed under several topics in the A to Z below."
+    : 'Free privacy checks for your browser, network, passwords, links and files. Some are listed under more than one topic in the A to Z below.';
 
   return (
     <div>
@@ -180,7 +182,7 @@ export default function ToolsIndex() {
         kicker="Tools"
         title={IS_PRO_DEPLOYMENT ? 'Pro tools' : 'Free privacy tools'}
         description={lede}
-        figure={{ value: items.length, label: 'tools' }}
+        figure={{ value: toolCount, label: toolCount === 1 ? 'tool' : 'tools' }}
         diagram="funnel"
         tier={IS_PRO_DEPLOYMENT ? 'pro' : 'free'}
         aside={
@@ -208,11 +210,7 @@ export default function ToolsIndex() {
           description: item.metaDescription,
           meta: nicheMap[item._niche]?.name || item._niche,
           badge: item.toolType,
-          keywords: [
-            item.toolEngine,
-            item._niche,
-            FEATURED_TOOLS.find(t => t.engine === item.toolEngine)?.processing === 'server' ? 'server-assisted' : 'client-only',
-          ].filter(Boolean).join(' '),
+          keywords: [item.toolEngine, item._niche].filter(Boolean).join(' '),
         }))}
         topics={Array.from(new Set(items.map(i => i._niche))).map(n => ({ label: nicheMap[n]?.name || n, href: `/tools/${n}` })).sort((a, b) => a.label.localeCompare(b.label))}
       >
@@ -223,7 +221,7 @@ export default function ToolsIndex() {
           const link = engineToLink[engine];
           if (!tool || !link) return null;
           return (
-            <ToolCard key={engine} engine={engine} title={tool.title} blurb={tool.blurb} href={link.href} processing={tool.processing} tileSize={56} schematic />
+            <ToolCard key={engine} engine={engine} title={tool.title} blurb={tool.blurb} href={link.href} tileSize={56} schematic />
           );
         })}
       </div>
@@ -234,7 +232,7 @@ export default function ToolsIndex() {
           const link = engineToLink[tool.engine];
           if (!link) return null;
           return (
-            <ToolCard key={tool.engine} engine={tool.engine} title={tool.title} blurb={tool.blurb} href={link.href} processing={tool.processing} />
+            <ToolCard key={tool.engine} engine={tool.engine} title={tool.title} blurb={tool.blurb} href={link.href} />
           );
         })}
       </div>
@@ -247,21 +245,24 @@ export default function ToolsIndex() {
           data-pro-band
         >
           <div className="min-w-0">
-            <h2 className="font-mono text-h2 font-semibold text-t1 mb-4">Four Pro tools, on the web, free for now</h2>
+            {/* No "free for now" of its own: each card's Pro badge carries it, and PRO_WEB_GATED removes it there on gate day. */}
+            <h2 className="font-mono text-h2 font-semibold text-t1 mb-4">Four Pro tools, on the web</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[...PRO_ENGINES].map(engine => {
                 const tool = FEATURED_TOOLS.find(t => t.engine === engine);
                 const href = proEngineToLink[engine];
                 if (!tool || !href) return null;
                 return (
-                  <ToolCard key={engine} engine={engine} title={tool.title} blurb={tool.blurb} href={href} processing={tool.processing} />
+                  <ToolCard key={engine} engine={engine} title={tool.title} blurb={tool.blurb} href={href} />
                 );
               })}
             </div>
           </div>
-          <div className="hidden lg:flex items-center justify-center">
+          {/* A picture of the app, captioned as one, the same way ResultCta shows it. */}
+          <figure className="hidden lg:flex flex-col items-center justify-center gap-2" aria-hidden="true">
             <PhoneFrame />
-          </div>
+            <figcaption className="text-meta text-t3 text-center">Incognito Pro on Android (illustration)</figcaption>
+          </figure>
         </div>
       )}
       </AtoZCatalogue>

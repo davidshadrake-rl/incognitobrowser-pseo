@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import { useReportResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
@@ -112,33 +112,41 @@ function parseUserAgent(ua: string): UADetails {
   return result;
 }
 
+// navigator.userAgent never changes while the page is open.
+const subscribeNoop = () => () => {};
+
 export function UserAgentAnalyzerTool() {
-  // Read navigator.userAgent AFTER mount. Reading it at module load made the
-  // server render ('' / no result) differ from the client's first render (a
+  // Read navigator.userAgent only on the client. Reading it at module load made
+  // the server render ('' / no result) differ from the client's first render (a
   // full result tree) — a React hydration error, a visible flash, and the
-  // result-bus effect firing twice on every single visit.
-  const [ua, setUa] = useState('');
-  const [details, setDetails] = useState<UADetails | null>(null);
-  useEffect(() => {
-    const u = navigator.userAgent;
-    setUa(u);
-    setDetails(parseUserAgent(u));
-  }, []);
+  // result-bus effect firing twice on every single visit. The server snapshot
+  // ('') is also what hydration uses; the real value follows straight after.
+  const ua = useSyncExternalStore(subscribeNoop, () => navigator.userAgent, () => '');
+  const ownDetails = useMemo(() => (ua ? parseUserAgent(ua) : null), [ua]);
   const [useCustom, setUseCustom] = useState(false);
   const [customUA, setCustomUA] = useState('');
+  // A pasted string's analysis is kept apart from the visitor's own, so unticking
+  // the box brings the visitor's results straight back.
+  const [customDetails, setCustomDetails] = useState<UADetails | null>(null);
+  const [customRanAt, setCustomRanAt] = useState(0);
   const [hints, setHints] = useState<ClientHints | null>(null);
   const report = useReportResult();
+  // Only the visitor's own browser is their result. A pasted string is someone
+  // else's (or a test value), so it never reaches the CTA or the share card.
   useEffect(() => {
-    if (!details) { report(null); return; }
-    const n = details.uniquenessFactors.length;
+    if (!ownDetails) { report(null); return; }
+    const n = ownDetails.uniquenessFactors.length;
     report({
-      severity: details.privacyConcerns.length >= 3 ? 'amber' : 'info',
-      headline: `Your browser announces ${details.browser.name} ${details.browser.version} on ${details.os.name}${details.os.version ? ' ' + details.os.version : ''} to every site`,
+      severity: ownDetails.privacyConcerns.length >= 3 ? 'amber' : 'info',
+      headline: `Your browser announces ${ownDetails.browser.name} ${ownDetails.browser.version} on ${ownDetails.os.name}${ownDetails.os.version ? ' ' + ownDetails.os.version : ''} to every site`,
       // stats[0] is the scorecard's big figure — the browser name alone; the
       // full "Microsoft Edge 128.0.2739.42" string does not fit at 120px.
-      stats: [{ label: 'Browser', value: details.browser.name }, { label: 'Version', value: details.browser.version }, { label: 'OS', value: details.os.name }, { label: 'Uniqueness factors', value: String(n) }],
+      stats: [{ label: 'Browser', value: ownDetails.browser.name }, { label: 'Version', value: ownDetails.browser.version }, { label: 'OS', value: ownDetails.os.name }, { label: 'Uniqueness factors', value: String(n) }],
     });
-  }, [details, report]);
+  }, [ownDetails, report]);
+
+  const showingCustom = useCustom && customDetails !== null;
+  const details = showingCustom ? customDetails : ownDetails;
 
   // Fetch high-entropy Client Hints on mount (Chromium only, async).
   useEffect(() => {
@@ -175,7 +183,8 @@ export function UserAgentAnalyzerTool() {
 
   const analyzeCustom = () => {
     if (customUA.trim()) {
-      setDetails(parseUserAgent(customUA.trim()));
+      setCustomDetails(parseUserAgent(customUA.trim()));
+      setCustomRanAt(Date.now());
     }
   };
 
@@ -203,6 +212,7 @@ export function UserAgentAnalyzerTool() {
               type="text"
               value={customUA}
               onChange={(e) => setCustomUA(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && analyzeCustom()}
               placeholder="Paste a user agent string..."
               className="flex-1 px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white placeholder-white/20 font-mono"
             />
@@ -211,11 +221,22 @@ export function UserAgentAnalyzerTool() {
         )}
       </div>
 
+      {showingCustom && (
+        <div>
+          <h3 className="text-sm font-semibold text-white">Analysis of the pasted string</h3>
+          <p className="mt-1 text-xs text-t3">
+            Not your browser. Untick &ldquo;Analyze a different user agent&rdquo; to see your own results again.
+          </p>
+          <code className="mt-2 block text-xs text-t2 font-mono break-all">{customDetails.raw}</code>
+        </div>
+      )}
+
       {details && (
         <ConsoleFrame
           engine="useragent-analyzer"
           status={statusFromSeverity(details.privacyConcerns.length >= 3 ? 'amber' : 'info')}
-          processing="client"
+          // Same console for both analyses; a pasted string's run has its own time.
+          runAt={showingCustom ? customRanAt : undefined}
           statTiles={[
             { label: 'Browser', value: details.browser.name },
             { label: 'Version', value: details.browser.version },
@@ -247,8 +268,8 @@ export function UserAgentAnalyzerTool() {
             </div>
           </div>
 
-          {/* Client Hints (UA-CH) */}
-          {hints && (
+          {/* Client Hints (UA-CH). They describe the visitor's own browser, so they stay out of a pasted string's analysis. */}
+          {hints && !showingCustom && (
             <div className="bg-s0 border border-warn/30 rounded-lg p-6">
               <h3 className="text-sm font-semibold text-warn mb-1">High-Entropy Client Hints</h3>
               <p className="text-xs text-t2 mb-3">
@@ -283,7 +304,9 @@ export function UserAgentAnalyzerTool() {
           <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">Fingerprint Factors</h3>
             <p className="text-xs text-t2 mb-3">
-              These details from your user agent contribute to your browser fingerprint:
+              {showingCustom
+                ? 'These details from the pasted string would add to the fingerprint of any browser that sends it:'
+                : 'These details from your user agent contribute to your browser fingerprint:'}
             </p>
             <div className="space-y-2">
               {details.uniquenessFactors.map((f, i) => (
@@ -297,7 +320,9 @@ export function UserAgentAnalyzerTool() {
           <div className="bg-s0 border border-info/30 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-info mb-3">What This Means</h3>
             <p className="text-sm text-t2">
-              Your user agent string reveals your browser, OS, and device information to every website you visit.
+              {showingCustom
+                ? 'A user agent string reveals the browser, OS, and device information to every website that browser visits.'
+                : 'Your user agent string reveals your browser, OS, and device information to every website you visit.'}{' '}
               Combined with other browser properties, this creates a &quot;fingerprint&quot; that can track you
               without cookies. Consider using a privacy-focused browser that reduces or randomizes this data.
             </p>

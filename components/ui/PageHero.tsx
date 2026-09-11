@@ -52,7 +52,7 @@ export function PageHero({
   title: ReactNode;
   /** Capped ~160 chars. */
   description?: ReactNode;
-  /** Badge row: tier, client|server, difficulty, time, steps. */
+  /** Badge row: tier, difficulty, time, steps. */
   badges?: ReactNode;
   action?: ReactNode;
   /** Pull-quote figure. Never invented — see the module doc above. */

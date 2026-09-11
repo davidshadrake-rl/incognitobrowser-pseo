@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Letter Header",
-      "content": "[Your Full Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Phone Number]\n[Your Email Address]\n\n[Date]\n\n[Healthcare Provider/Company Name]\nAttn: Privacy Officer\n[Address]\n[City, State, ZIP Code]",
+      "content": "[Your Full Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Phone Number]\n[Your Email Address]\n\n[Date]\n\n[Healthcare Provider/Company Name]\nAttn: Privacy Officer\n[Provider Address]\n[Provider City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "your_name",
@@ -31,6 +31,16 @@
           "key": "request_date",
           "label": "Date of Request",
           "defaultValue": "MM/DD/YYYY"
+        },
+        {
+          "key": "provider_address",
+          "label": "Provider Address",
+          "defaultValue": "456 Oak Avenue"
+        },
+        {
+          "key": "provider_city_state_zip_code",
+          "label": "Provider City, State, ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },

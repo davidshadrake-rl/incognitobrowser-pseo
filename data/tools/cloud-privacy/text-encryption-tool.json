@@ -2,7 +2,7 @@
   "niche": "cloud-privacy",
   "slug": "text-encryption-tool",
   "title": "Cloud Data Encryption",
-  "metaDescription": "Encrypt sensitive files and text before uploading to cloud storage using client-side AES-256 encryption.",
+  "metaDescription": "Encrypt sensitive files and text with AES-256 before uploading them to cloud storage.",
   "keywords": [
     "cloud storage privacy",
     "Google Drive privacy",
@@ -12,10 +12,10 @@
   ],
   "toolType": "converter",
   "toolEngine": "text-encryption",
-  "description": "Encrypt sensitive files and text before uploading to cloud storage using client-side AES-256 encryption.",
+  "description": "Encrypt sensitive files and text with AES-256 before uploading them to cloud storage.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool uses the Web Crypto API built into modern browsers to perform AES-256-GCM authenticated encryption. Your passphrase is converted into a cryptographic key using PBKDF2 with 100,000 iterations and a random salt. Each encryption generates a unique random IV (initialization vector), ensuring identical plaintexts produce different ciphertexts. Everything runs in your browser — no data is transmitted.",
+    "howItWorks": "This tool uses the Web Crypto API built into modern browsers to perform AES-256-GCM authenticated encryption. Your passphrase is converted into a cryptographic key using PBKDF2 with 100,000 iterations and a random salt. Each encryption generates a unique random IV (initialization vector), ensuring identical plaintexts produce different ciphertexts.",
     "tips": [
       "Use a strong, unique passphrase — the encryption is only as secure as your passphrase",
       "Share the passphrase through a different channel than the encrypted message",

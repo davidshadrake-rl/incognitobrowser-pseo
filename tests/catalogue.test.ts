@@ -2,7 +2,9 @@
  * lib/catalogue — the A–Z + search behaviour shared by every index page.
  */
 import { describe, expect, it } from 'vitest';
-import { filterEntries, groupByLetter, letterOf, sortEntries, sortKeyOf, type CatalogueEntry } from '../lib/catalogue';
+import fs from 'node:fs';
+import path from 'node:path';
+import { filingParts, filterEntries, groupByLetter, letterOf, sortEntries, sortKeyOf, type CatalogueEntry } from '../lib/catalogue';
 
 const E: CatalogueEntry[] = [
   { title: 'Browser Privacy Audit', href: '/a', meta: 'Browser Privacy', badge: 'analyzer', keywords: 'browser-privacy' },
@@ -40,6 +42,54 @@ describe('sortKeyOf — leading filler is ignored for filing, never for display'
   it('letterOf files by the sort key', () => {
     expect(letterOf('Best CCPA Tools Compared')).toBe('C');
     expect(letterOf('Complete Guide to Browser Privacy')).toBe('B');
+  });
+});
+
+/**
+ * The A–Z shows each title split where its filing starts (AtoZCatalogue's
+ * FiledTitle): the skipped lead words quiet, the filed words at full
+ * strength, so "Complete Guide to Ad Tracking" visibly sits under A.
+ */
+describe('filingParts — the displayed split matches the filing', () => {
+  it('splits off the leading filler, spacing kept, and the filed part starts with the filing letter', () => {
+    expect(filingParts('Complete Guide to Ad Tracking')).toEqual({ lead: 'Complete Guide to ', filed: 'Ad Tracking' });
+    expect(filingParts('Best CCPA Tools Compared')).toEqual({ lead: 'Best ', filed: 'CCPA Tools Compared' });
+    expect(filingParts('How to Stop ISP Tracking')).toEqual({ lead: 'How to ', filed: 'Stop ISP Tracking' });
+    expect(filingParts('Complete  Guide   to Browser Privacy')).toEqual({ lead: 'Complete  Guide   to ', filed: 'Browser Privacy' });
+  });
+  it('leaves a title with no filler whole', () => {
+    expect(filingParts('Browser Privacy Audit')).toEqual({ lead: '', filed: 'Browser Privacy Audit' });
+    expect(filingParts('2FA Setup Checklist')).toEqual({ lead: '', filed: '2FA Setup Checklist' });
+  });
+  it('never leaves the filed part empty, and trims outer whitespace', () => {
+    expect(filingParts('The Best')).toEqual({ lead: 'The ', filed: 'Best' });
+    expect(filingParts('Best')).toEqual({ lead: '', filed: 'Best' });
+    expect(filingParts('  The Anonymous Web  ')).toEqual({ lead: 'The ', filed: 'Anonymous Web' });
+    expect(filingParts('')).toEqual({ lead: '', filed: '' });
+  });
+  it('for every real catalogue title: lead + filed is the title, and filed starts with letterOf\'s letter', () => {
+    const root = path.join(__dirname, '..', 'data');
+    const titles: string[] = [];
+    const walk = (dir: string) => {
+      for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+        const p = path.join(dir, e.name);
+        if (e.isDirectory()) walk(p);
+        else if (e.name.endsWith('.json')) {
+          const t = (JSON.parse(fs.readFileSync(p, 'utf-8')) as { title?: unknown }).title;
+          if (typeof t === 'string') titles.push(t);
+        }
+      }
+    };
+    for (const type of ['guides', 'checklists', 'comparisons', 'templates', 'calculators', 'tools']) walk(path.join(root, type));
+    expect(titles.length).toBeGreaterThan(300);
+    let split = 0;
+    for (const t of titles) {
+      const { lead, filed } = filingParts(t);
+      expect(lead + filed, t).toBe(t.trim());
+      expect(letterOf(filed), t).toBe(letterOf(t));
+      if (lead) split++;
+    }
+    expect(split, 'comparisons and guides open with filler words').toBeGreaterThan(50);
   });
 });
 

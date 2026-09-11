@@ -8,7 +8,9 @@
  * regression that removes the fit logic fails immediately.
  */
 import { describe, expect, it } from 'vitest';
-import { drawScorecard, wrapLines, type ScorecardSpec } from '../lib/scorecard';
+import { drawScorecard, scorecardFigure, shareLinkFor, VALUE_ONLY_ENGINES, wrapLines, type ScorecardSpec } from '../lib/scorecard';
+import { reportCardLine } from '../lib/cta-copy';
+import { PERMISSIONS_TO_CHECK, summarizePermissions, type PermissionResult } from '../components/tools/PermissionCheckerTool';
 
 const CHAR_W = 12; // fake monospace width per character, matches a real font closely enough to catch overlaps
 
@@ -205,5 +207,115 @@ describe('drawScorecard — gauge arc (DESIGN-SPEC 4.2)', () => {
     const [track] = ctx.arcs;
     const gaugeLeftEdge = track.x - track.radius;
     expect(titleEnd, `title ends at ${titleEnd}, gauge starts at ${gaugeLeftEdge}`).toBeLessThan(gaugeLeftEdge);
+  });
+});
+
+/**
+ * The share card's figure (CTO review 2026-09-10): the tool's own number
+ * with its label, never a bare count; no card at all for tools that only
+ * produce a value.
+ */
+describe('scorecardFigure — the number carries its label', () => {
+  it('labels each engine\'s number the way the tool itself says it', () => {
+    expect(scorecardFigure('ad-blocker-test', { score: 72, stats: [{ label: 'Blocked', value: '36/50' }] })).toBe('72% blocked');
+    expect(scorecardFigure('password-strength', { score: 41.6 })).toBe('Strength 42/100');
+    expect(scorecardFigure('whats-my-ip', { stats: [{ label: 'Verdict', value: 'Exposed' }] })).toBe('IP exposed');
+    expect(scorecardFigure('dns-leak-test', { stats: [{ label: 'Verdict', value: 'Leaking' }] })).toBe('DNS leaking');
+    expect(scorecardFigure('link-unwrapper', { stats: [{ label: 'Trackers', value: '1' }] })).toBe('1 tracker');
+    expect(scorecardFigure('link-unwrapper', { stats: [{ label: 'Trackers', value: '0' }] })).toBe('No trackers');
+    expect(scorecardFigure('email-pixel-detector', { stats: [{ label: 'Pixels', value: '0' }, { label: 'Tracked links', value: '3 of 9' }] })).toBe('3 tracked links');
+    expect(scorecardFigure('screenshot-leak-checker', { stats: [{ label: 'Leaks', value: '2' }] })).toBe('2 leaks');
+  });
+  it('shows the quiz score, never its letter (the "+" of an "A+" was lost that way)', () => {
+    expect(scorecardFigure('privacy-quiz', { score: 93, grade: 'A' })).toBe('Score 93/100');
+    expect(scorecardFigure('privacy-quiz', { score: 93, grade: 'A+' })).toBe('Score 93/100');
+  });
+  it('writes a score in the unit the result names: "72%" for a percentage, "/100" otherwise', () => {
+    expect(scorecardFigure('some-new-engine', { score: 72, scoreUnit: '%' })).toBe('Score 72%');
+    expect(scorecardFigure('some-new-engine', { score: 72 })).toBe('Score 72/100');
+    expect(scorecardFigure('some-new-engine', { score: 72, scoreUnit: '/100' })).toBe('Score 72/100');
+    expect(scorecardFigure('url-analyzer', { score: 64, scoreUnit: '%' })).toBe('Safety 64%');
+    // The ad-blocker's number is a share of requests: a percentage with or without the field.
+    expect(scorecardFigure('ad-blocker-test', { score: 72, scoreUnit: '%' })).toBe('72% blocked');
+    expect(scorecardFigure('ad-blocker-test', { score: 72 })).toBe('72% blocked');
+  });
+  it('returns nothing for value-only tools and a DNS baseline run', () => {
+    for (const e of ['hash-generator', 'password-generator', 'text-encryption']) {
+      expect(VALUE_ONLY_ENGINES.has(e)).toBe(true);
+      expect(scorecardFigure(e, { stats: [{ label: 'Algorithms', value: '4' }] }), e).toBe('');
+    }
+    expect(scorecardFigure('dns-leak-test', { stats: [{ label: 'Verdict', value: 'Baseline' }] })).toBe('');
+  });
+});
+
+/**
+ * Permission Checker: built from the stats the tool itself reports
+ * (summarizePermissions), never a hand-written list. The share card vanished
+ * from all 4 permission-checker pages when the tool renamed its stats and a
+ * literal fixture here kept the old labels, so a rename must fail this test.
+ */
+describe('scorecardFigure — Permission Checker, from the tool\'s real stats', () => {
+  const scan = (states: Record<string, PermissionResult['state']>, rest: PermissionResult['state']): PermissionResult[] =>
+    PERMISSIONS_TO_CHECK.map((p) => ({ ...p, state: states[p.name] ?? rest }));
+  // What a fresh Chrome profile reports: five sensors and clipboard-write
+  // granted without asking, everything else asks first.
+  const CHROME_DEFAULTS: Record<string, PermissionResult['state']> = {
+    'clipboard-write': 'granted', accelerometer: 'granted', gyroscope: 'granted', magnetometer: 'granted', 'screen-wake-lock': 'granted',
+  };
+  const figure = (results: PermissionResult[]) => scorecardFigure('permission-checker', { stats: summarizePermissions(results).stats });
+  /** The permissions a fresh Chrome profile does not grant by itself: the ones that need an OK. */
+  const NEEDS_OK = PERMISSIONS_TO_CHECK.length - Object.keys(CHROME_DEFAULTS).length;
+
+  it('a fresh Chrome profile: a card, none of the permissions that need an OK allowed', () => {
+    // Out of the 6 that need an OK, not all 11: "0 of 11 allowed" sat beside "Allowed by default 5".
+    expect(NEEDS_OK).toBe(6);
+    expect(figure(scan(CHROME_DEFAULTS, 'prompt'))).toBe('0 of 6 allowed');
+  });
+  it('counts the permissions the tool calls Allowed, out of Allowed + Blocked + Asks first', () => {
+    expect(figure(scan({ ...CHROME_DEFAULTS, camera: 'granted', microphone: 'granted', notifications: 'denied' }, 'prompt'))).toBe(`2 of ${NEEDS_OK} allowed`);
+    // A browser that reports some names and rejects the rest: out of the ones it reported.
+    expect(figure(scan({ geolocation: 'granted', notifications: 'prompt', camera: 'denied', microphone: 'prompt' }, 'unsupported'))).toBe('1 of 4 allowed');
+  });
+  it('the denominator is the sum of the tool\'s own Allowed, Blocked and Asks first stats, never Allowed by default', () => {
+    const results = scan({ ...CHROME_DEFAULTS, geolocation: 'granted', camera: 'denied', midi: 'denied' }, 'prompt');
+    const stats = summarizePermissions(results).stats;
+    const stat = (label: string) => Number(stats.find((s) => s.label === label)?.value);
+    expect(stat('Allowed by default')).toBe(Object.keys(CHROME_DEFAULTS).length);
+    expect(figure(results)).toBe(`${stat('Allowed')} of ${stat('Allowed') + stat('Blocked') + stat('Asks first')} allowed`);
+    expect(figure(results)).toBe(`1 of ${NEEDS_OK} allowed`);
+  });
+  it('shows no card when the browser exposes no permission states at all', () => {
+    expect(figure(scan({}, 'unsupported'))).toBe('');
+  });
+  it('shows no card when every permission reported is one the browser allows by default', () => {
+    // Nothing that needs an OK was reported: "0 of 0 allowed" would say nothing.
+    expect(figure(scan(CHROME_DEFAULTS, 'unsupported'))).toBe('');
+  });
+});
+
+describe('shareLinkFor — keeps the quiz result, drops everything else', () => {
+  it('keeps a #r= quiz result hash so the recipient sees the result', () => {
+    expect(shareLinkFor('https://a.b/tools/x/privacy-score-quiz#r=a98765432100')).toBe('https://a.b/tools/x/privacy-score-quiz#r=a98765432100');
+  });
+  it('drops the query string and any other hash (lib/handoff rule: nothing crafted rides along)', () => {
+    expect(shareLinkFor('https://a.b/tools/x/y?ref=CALL%200800#r=a9')).toBe('https://a.b/tools/x/y#r=a9');
+    expect(shareLinkFor('https://a.b/tools/x/y#r=CALL 0800 NOW')).toBe('https://a.b/tools/x/y');
+    expect(shareLinkFor('https://a.b/tools/x/y#section')).toBe('https://a.b/tools/x/y');
+  });
+});
+
+describe('reportCardLine — "clean" only when the scan found nothing (CTO review 2026-09-10)', () => {
+  it('calls an A or B clean only with no trackers and no tracking cookies', () => {
+    expect(reportCardLine('A', 'green', { trackingCookies: 0, trackers: 0 }).headline).toBe('A clean site. Most are not.');
+  });
+  it('says what still loads on an A or B that tracks (airbnb.com: B, 3 trackers)', () => {
+    const line = reportCardLine('B', 'green', { trackingCookies: 0, trackers: 3 });
+    expect(line.headline).toBe('Light tracking, but still 3 trackers before you click anything.');
+    expect(line.headline).not.toMatch(/clean/i);
+    expect(reportCardLine('A', 'green', { trackingCookies: 1, trackers: 1 }).headline).toBe('Minimal tracking, but still 1 tracker and 1 tracking cookie before you click anything.');
+    expect(reportCardLine('B', 'green', { trackingCookies: 0, trackers: 0, pixels: 1 }).headline).toMatch(/1 tracking pixel/);
+  });
+  it('leaves C, D and F on their own lines', () => {
+    expect(reportCardLine('D', 'red', { trackingCookies: 4, trackers: 9 }).headline).toBe('This site tracks you before you click anything.');
   });
 });

@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useReportResult } from './ResultContext';
+import { copyText } from '@/lib/clipboard';
+import { useReportResult, type Severity, type ToolResult } from './ResultContext';
 import { ConsoleFrame, statusFromSeverity, type ConsoleRow, type Status } from './ConsoleFrame';
 
-interface PermissionResult {
+export interface PermissionResult {
   name: string;
   displayName: string;
   state: 'granted' | 'denied' | 'prompt' | 'unsupported';
@@ -12,7 +13,8 @@ interface PermissionResult {
   recommendation: string;
 }
 
-const PERMISSIONS_TO_CHECK: { name: string; displayName: string; risk: string; recommendation: string }[] = [
+/** Also the count ENGINE_META (registry.tsx) advertises for this engine. */
+export const PERMISSIONS_TO_CHECK: { name: string; displayName: string; risk: string; recommendation: string }[] = [
   {
     name: 'geolocation',
     displayName: 'Location',
@@ -81,51 +83,137 @@ const PERMISSIONS_TO_CHECK: { name: string; displayName: string; risk: string; r
   },
 ];
 
-function getStateLabel(state: string) {
-  switch (state) {
-    case 'granted': return 'GRANTED';
-    case 'denied': return 'BLOCKED';
-    case 'prompt': return 'ASK';
-    default: return 'N/A';
-  }
+/**
+ * Permissions Chromium browsers report as 'granted' to every site without
+ * ever asking: clipboard write for the active tab, the motion sensors and
+ * screen wake lock. Counting them as "this site already holds N permissions"
+ * blamed the site for the browser's defaults and turned a clean result amber,
+ * so they get their own label and stay out of the verdict.
+ */
+const ALLOWED_BY_DEFAULT = new Set(['clipboard-write', 'accelerometer', 'gyroscope', 'magnetometer', 'screen-wake-lock']);
+
+type RowKind = 'allowed' | 'default' | 'blocked' | 'asks' | 'unsupported';
+
+function rowKind(r: PermissionResult): RowKind {
+  if (r.state === 'granted') return ALLOWED_BY_DEFAULT.has(r.name) ? 'default' : 'allowed';
+  if (r.state === 'denied') return 'blocked';
+  if (r.state === 'prompt') return 'asks';
+  return 'unsupported';
 }
 
-/** granted is the BAD state for a permission (a site already holds access), not a pass. */
-const ROW_STATUS: Record<PermissionResult['state'], Status> = {
-  granted: 'danger',
-  denied: 'ok',
-  prompt: 'warn',
+/**
+ * Only an allowed permission that normally asks first is a warning, and it is
+ * the same warning the header shows, so rows and header always agree. "Asks
+ * first" is the browser's normal, safe default: neutral, not a warning.
+ */
+const ROW_STATUS: Record<RowKind, Status> = {
+  allowed: 'warn',
+  default: 'info',
+  blocked: 'ok',
+  asks: 'info',
   unsupported: 'info',
 };
+
+const ROW_VALUE: Record<RowKind, string> = {
+  allowed: 'Allowed',
+  default: 'Allowed by default',
+  blocked: 'Blocked',
+  asks: 'Asks first',
+  unsupported: 'Not reported',
+};
+
+export interface PermissionSummary {
+  /** Allowed, and normally needs the visitor's OK. The only thing that turns the result amber. */
+  allowed: number;
+  allowedByDefault: number;
+  blocked: number;
+  asks: number;
+  supported: number;
+  severity: Severity;
+  headline: string;
+  stats: NonNullable<ToolResult['stats']>;
+}
+
+/** The one reading of a permission scan: report(), the header and the glance tiles all use it. */
+export function summarizePermissions(results: PermissionResult[]): PermissionSummary {
+  const kinds = results.map(rowKind);
+  const count = (k: RowKind) => kinds.filter((x) => x === k).length;
+  const allowed = count('allowed');
+  const allowedByDefault = count('default');
+  const blocked = count('blocked');
+  const asks = count('asks');
+  const supported = results.length - count('unsupported');
+  if (supported === 0) {
+    // Safari/Firefox reject most Permissions API names: every query threw.
+    // Reporting green here told those visitors "you are protected" beside a
+    // panel that checked nothing (found 2026-09-08).
+    return {
+      allowed, allowedByDefault, blocked, asks, supported,
+      severity: 'info',
+      headline: 'This browser does not expose permission states to web pages',
+      stats: [{ label: 'Checked', value: '0' }, { label: 'Unsupported', value: String(results.length) }],
+    };
+  }
+  return {
+    allowed, allowedByDefault, blocked, asks, supported,
+    severity: allowed > 0 ? 'amber' : 'green',
+    headline: allowed > 0
+      ? `This site already has ${allowed} permission${allowed === 1 ? '' : 's'} that normally ${allowed === 1 ? 'needs' : 'need'} your OK`
+      : `This site has none of the permissions that need your OK; ${asks} would ask first`,
+    stats: [
+      { label: 'Allowed', value: String(allowed) },
+      { label: 'Blocked', value: String(blocked) },
+      { label: 'Asks first', value: String(asks) },
+      { label: 'Allowed by default', value: String(allowedByDefault) },
+    ],
+  };
+}
+
+/**
+ * Web pages cannot link to or open chrome:// and about: pages, so these are
+ * copy buttons: the visitor pastes the address into their own address bar.
+ * Safari's settings have no address to paste, so it gets the menu path.
+ */
+const SETTINGS_PATHS: Array<{ browser: string; address?: string; menu?: string }> = [
+  { browser: 'Chrome, Brave or Edge', address: 'chrome://settings/content' },
+  { browser: 'Firefox', address: 'about:preferences#privacy' },
+  { browser: 'Safari', menu: 'Safari menu → Settings → Websites' },
+];
+
+function CopyAddress({ address }: { address: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    if (!(await copyText(address))) return; // insecure context / denied: the address stays selectable on screen
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <span className="inline-flex items-center gap-2 min-w-0">
+      <code className="font-mono text-white break-all select-all">{address}</code>
+      <button
+        type="button"
+        onClick={copy}
+        className="shrink-0 px-2 py-0.5 border border-b2 rounded text-t1 hover:border-white"
+        aria-label={`Copy ${address}`}
+      >
+        {copied ? 'Copied' : 'Copy'}
+      </button>
+    </span>
+  );
+}
 
 export function PermissionCheckerTool() {
   const [results, setResults] = useState<PermissionResult[]>([]);
   const report = useReportResult();
   useEffect(() => {
     if (!results.length) { report(null); return; }
-    const g = results.filter((r) => r.state === 'granted').length;
-    const d = results.filter((r) => r.state === 'denied').length;
-    const p = results.filter((r) => r.state === 'prompt').length;
-    const supported = results.length - results.filter((r) => r.state === 'unsupported').length;
-    if (supported === 0) {
-      // Safari/Firefox reject most Permissions API names: every query threw.
-      // Reporting green here told those visitors "you are protected" beside a
-      // panel that checked nothing (found 2026-09-08).
-      report({
-        severity: 'info',
-        headline: 'This browser does not expose permission states to web pages',
-        stats: [{ label: 'Checked', value: '0' }, { label: 'Unsupported', value: String(results.length) }],
-      });
-      return;
-    }
-    report({
-      severity: g > 0 ? 'amber' : 'green',
-      headline: g ? `This site already holds ${g} of ${supported} permissions` : `No permission is granted to this site; ${p} would prompt`,
-      stats: [{ label: 'Granted', value: String(g) }, { label: 'Denied', value: String(d) }, { label: 'Would prompt', value: String(p) }, { label: 'Checked', value: String(supported) }],
-    });
+    const s = summarizePermissions(results);
+    report({ severity: s.severity, headline: s.headline, stats: s.stats });
   }, [results, report]);
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState(false);
+  // The console stays mounted across re-checks, so it is told when each run finished.
+  const [runAt, setRunAt] = useState(0);
 
   const checkPermissions = async () => {
     setScanning(true);
@@ -147,82 +235,75 @@ export function PermissionCheckerTool() {
     }
 
     setResults(permResults);
+    setRunAt(Date.now());
     setScanning(false);
     setScanned(true);
   };
 
-  const granted = results.filter(r => r.state === 'granted').length;
-  const denied = results.filter(r => r.state === 'denied').length;
-  const prompt = results.filter(r => r.state === 'prompt').length;
-  const supported = results.filter(r => r.state !== 'unsupported').length;
+  const summary = summarizePermissions(results);
 
   return (
     <div className="space-y-6">
       <div className="bg-s0 border border-b1 rounded-lg p-6 text-center">
         <p className="text-t2 mb-4">
-          Check which browser permissions websites can access on your device.
+          See what this site can access on your device: camera, microphone, location and {PERMISSIONS_TO_CHECK.length - 3} more permissions.
         </p>
         <button
           onClick={checkPermissions}
           disabled={scanning}
           className="btn-primary px-8 py-3"
         >
-          {scanning ? 'Checking...' : scanned ? 'Re-check Permissions' : 'Check Permissions'}
+          {scanning ? 'Checking...' : scanned ? 'Check again' : 'Check permissions'}
         </button>
         <p className="mt-3 text-xs text-t3">
-          This reads your browser&apos;s permission states. Nothing is changed or sent anywhere.
+          Your browser only answers for the site you are on. Other sites can have different permissions: check those in your browser&apos;s site settings.
         </p>
       </div>
 
       {scanned && (
         <ConsoleFrame
           engine="permission-checker"
-          status={statusFromSeverity(supported === 0 ? 'info' : granted > 0 ? 'amber' : 'green')}
+          status={statusFromSeverity(summary.severity)}
+          verdict={summary.supported === 0 ? 'Not supported' : undefined}
           checks={results.length}
-          processing="client"
-          statTiles={
-            supported === 0
-              ? [{ label: 'Checked', value: '0' }, { label: 'Unsupported', value: String(results.length) }]
-              : [
-                  { label: 'Granted', value: String(granted) },
-                  { label: 'Denied', value: String(denied) },
-                  { label: 'Would prompt', value: String(prompt) },
-                  { label: 'Checked', value: String(supported) },
-                ]
-          }
+          checksNoun={['permission', 'permissions']}
+          runAt={runAt || undefined}
+          statTiles={summary.stats}
           groups={[
             {
-              name: 'Permissions',
-              rows: results.map((r): ConsoleRow => ({
-                status: ROW_STATUS[r.state],
-                name: r.displayName,
-                value: getStateLabel(r.state),
-                detail: `${r.risk} ${r.recommendation}`,
-              })),
+              name: 'What this site can access',
+              rows: results.map((r): ConsoleRow => {
+                const kind = rowKind(r);
+                return {
+                  status: ROW_STATUS[kind],
+                  name: r.displayName,
+                  value: ROW_VALUE[kind],
+                  detail: kind === 'default'
+                    ? `Your browser allows this for every site by default, so it shows as allowed without you ever saying yes. ${r.risk}`
+                    : `${r.risk} ${r.recommendation}`,
+                };
+              }),
             },
           ]}
         >
         <>
-          {/* Settings deep-link info */}
+          {/* How to change a permission. A web page cannot open browser
+              settings, so the addresses are copy buttons, not links. */}
           <div className="bg-s0 border border-info/30 rounded-lg p-4">
-            <p className="text-sm text-info font-medium mb-2">How to revoke a permission</p>
-            <p className="text-xs text-t2 mb-2">
-              Browsers intentionally don&apos;t expose a programmatic way to revoke permissions (it would be abused).
-              Open your site settings via the browser address bar or the shortcut below:
+            <p className="text-sm text-info font-medium mb-2">How to remove a permission</p>
+            <p className="text-xs text-t2 mb-3">
+              Web pages can&apos;t change or open your browser&apos;s settings. Copy the address for your browser, paste it into the address bar and press Enter, then find this site in the list.
             </p>
-            <div className="flex flex-wrap gap-2 text-xs">
-              {[
-                { label: 'Chrome / Brave / Edge', url: 'chrome://settings/content' },
-                { label: 'Firefox', url: 'about:preferences#privacy' },
-                { label: 'Safari', url: 'Settings → Websites' },
-              ].map((link) => (
-                <span key={link.label} className="px-2 py-1 bg-white/5 rounded font-mono text-t2">
-                  <span className="text-white">{link.label}:</span> {link.url}
-                </span>
+            <ul className="space-y-2 text-xs">
+              {SETTINGS_PATHS.map((p) => (
+                <li key={p.browser} className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                  <span className="text-t2">{p.browser}:</span>
+                  {p.address ? <CopyAddress address={p.address} /> : <span className="text-white">{p.menu}</span>}
+                </li>
               ))}
-            </div>
-            <p className="mt-2 text-xs text-t3">
-              Tip: in Chromium-based browsers, click the padlock icon in the address bar for per-site controls.
+            </ul>
+            <p className="mt-3 text-xs text-t3">
+              Faster for one site: click the icon at the left end of the address bar while you are on that site.
             </p>
           </div>
         </>

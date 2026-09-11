@@ -1,15 +1,19 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { useReportResult, severityFromScore } from './ResultContext';
+import { useReportResult, severityFromScore, type Severity } from './ResultContext';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import { Icon } from '@/components/ui/Icon';
 
-interface PasswordAnalysis {
-  score: number; // 0-100
+export interface PasswordAnalysis {
+  /** 0-100, read straight off `entropy` (see scoreFromBits). The word, the colour, the severity and the crack time all follow from it. */
+  score: number;
   label: string;
   crackTime: string;
+  /** Effective bits: what is left once common passwords and predictable runs are discounted. */
   entropy: number;
+  /** Length × log2(pool): the brute-force figure before any discount. */
+  rawEntropy: number;
   length: number;
   charsets: { name: string; found: boolean; count: number }[];
   warnings: string[];
@@ -33,15 +37,81 @@ const KEYBOARD_PATTERNS = [
   'abcd', 'bcde', 'cdef', 'defg', 'efgh', 'fghi',
 ];
 
-function analyzePassword(password: string): PasswordAnalysis {
+/**
+ * Leet stand-ins read back as the letters they replace. One character for one,
+ * so a word found in the normalised string sits at the same positions in the
+ * password. '1' stands for both 'l' and 'i', so it is tried both ways.
+ */
+const LEET: Record<string, string> = { '@': 'a', '4': 'a', '0': 'o', '$': 's', '5': 's', '!': 'i', '|': 'i', '3': 'e', '7': 't' };
+
+function deleet(s: string, one: 'l' | 'i'): string {
+  return s.replace(/[@40$5!|371]/g, (c) => (c === '1' ? one : LEET[c]));
+}
+
+/** Years (1900-2099) and written dates. No \b: in "Summer2024" the year touches a letter, and \b never matched there. */
+const DATE_PATTERNS = [/(?:19|20)\d{2}/g, /\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}/g];
+
+/** Offline attack rate the crack time assumes (a modern GPU cluster against a fast hash). */
+const GUESSES_PER_SEC = 1e10;
+
+/**
+ * One scale for everything. 1.25 points per effective bit puts the site-wide
+ * severity cut-offs (50 / 80, severityFromScore) at 40 bits (under a minute at
+ * GUESSES_PER_SEC) and 64 bits (about 30 years). The old score added length,
+ * charset and entropy points and then subtracted pattern penalties, while the
+ * crack time ignored the penalties and the word used its own 20/40/60/80
+ * cut-offs, so "abcdefghijklmnop" showed red "falls in seconds" next to
+ * "69k years" and "correcthorsebatterystaple" showed a yellow "Strong".
+ */
+function scoreFromBits(bits: number): number {
+  return Math.max(0, Math.min(100, Math.round(bits * 1.25)));
+}
+
+/** The word for a score. Bands nest inside the severity bands, so the word and the colour never disagree. */
+function labelFromScore(score: number): string {
+  if (score < 25) return 'Very Weak';
+  if (score < 50) return 'Weak';
+  // The whole amber band, which starts at a crack time of about 40 seconds:
+  // "Fair" read as acceptable next to "2 minutes".
+  if (score < 80) return 'Needs work';
+  if (score < 90) return 'Strong';
+  return 'Very Strong';
+}
+
+function formatCrackTime(seconds: number): string {
+  const n = (value: number, unit: string) => {
+    const r = Math.round(value);
+    return `${r} ${unit}${r === 1 ? '' : 's'}`;
+  };
+  if (seconds < 1) return 'Less than a second';
+  if (seconds < 60) return n(seconds, 'second');
+  if (seconds < 3600) return n(seconds / 60, 'minute');
+  if (seconds < 86400) return n(seconds / 3600, 'hour');
+  if (seconds < 31536000) return n(seconds / 86400, 'day');
+  if (seconds < 31536000 * 1000) return n(seconds / 31536000, 'year');
+  if (seconds < 31536000 * 1e6) return `${Math.round(seconds / 31536000 / 1000)}k years`;
+  if (seconds < 31536000 * 1e9) return `${Math.round(seconds / 31536000 / 1e6)}M years`;
+  return 'Centuries+';
+}
+
+/** The crack time as the end of a sentence: "would be cracked instantly", "… in 3 hours". */
+export function crackPhrase(crackTime: string): string {
+  if (crackTime === 'Instantly') return 'instantly';
+  if (crackTime === 'Centuries+') return 'in centuries or more';
+  return `in ${crackTime.charAt(0).toLowerCase()}${crackTime.slice(1)}`;
+}
+
+export function analyzePassword(password: string): PasswordAnalysis {
   const warnings: string[] = [];
   const suggestions: string[] = [];
   const patterns: string[] = [];
+  // [start, end) of every predictable run the detectors below find.
+  const spans: Array<[number, number]> = [];
 
   const length = password.length;
   if (length === 0) {
     return {
-      score: 0, label: 'Empty', crackTime: '—', entropy: 0, length: 0,
+      score: 0, label: 'Empty', crackTime: '—', entropy: 0, rawEntropy: 0, length: 0,
       charsets: [], warnings: ['Enter a password to analyze'], suggestions: [], patterns: [],
     };
   }
@@ -55,28 +125,78 @@ function analyzePassword(password: string): PasswordAnalysis {
   ];
 
   // Pool size matches the Password Generator so entropy comparisons agree between tools.
-  // If a user generates at N bits and pastes here, they see the same N bits.
+  // If a user generates at N bits and pastes here, they see the same N bits (unless
+  // the random draw happened to contain one of the patterns below).
   let poolSize = 0;
   if (charsets[0].found) poolSize += 26; // lowercase
   if (charsets[1].found) poolSize += 26; // uppercase
   if (charsets[2].found) poolSize += 10; // digits
   if (charsets[3].found) poolSize += 26; // symbols (same set generator uses: !@#$%^&*()_+-=[]{}|;:,.<>?)
 
-  // Entropy calculation
-  const entropy = length * Math.log2(Math.max(poolSize, 1));
+  // Brute-force entropy, before any pattern is discounted
+  const bitsPerChar = Math.log2(Math.max(poolSize, 1));
+  const rawEntropy = length * bitsPerChar;
 
   // Pattern detection
   const lower = password.toLowerCase();
+  const variants = [...new Set([lower, deleet(lower, 'l'), deleet(lower, 'i')])];
+  const common = COMMON_PASSWORDS.has(lower);
+  const leetCommon = !common && variants.some((v) => COMMON_PASSWORDS.has(v));
 
-  if (COMMON_PASSWORDS.has(lower)) {
+  if (common) {
     patterns.push('Common password detected');
     warnings.push('This is one of the most commonly used passwords');
+  }
+  if (leetCommon) {
+    patterns.push('Leet speak substitution of common password');
+    warnings.push('Swapping letters for look-alike symbols is one of the first things attackers try');
+  }
+
+  // A common password inside a longer one ("Password2024!", "iloveyou123").
+  // Only the whole-string match used to count, so those shapes were scored as
+  // random characters and came out green. Entries under 4 characters would
+  // match by chance. The pattern line doesn't quote the match: the field is
+  // masked, and the match can be the visitor's own name.
+  if (!common && !leetCommon) {
+    let found = false;
+    for (const word of COMMON_PASSWORDS) {
+      if (word.length < 4) continue;
+      for (const v of variants) {
+        for (let i = v.indexOf(word); i !== -1; i = v.indexOf(word, i + 1)) {
+          spans.push([i, i + word.length]);
+          // A list word buried inside longer words ("…mastery…" in a long
+          // passphrase) still costs its span, but naming it as a common
+          // password under a green "Very Strong" reads as a contradiction.
+          const buried = i > 0 && /[a-z]/.test(v[i - 1]) && /[a-z]/.test(v[i + word.length] ?? '');
+          if (!buried) found = true;
+        }
+      }
+    }
+    if (found) {
+      patterns.push('Contains a common password');
+      warnings.push('Built on a common password: attackers try those first, with digits and symbols added');
+    }
+
+    // One word with a few digits or symbols around it ("Liverpool1!",
+    // "Summer2024", "Tr0ub4dor&3") is the most common human password shape,
+    // and word-list-plus-rules attacks try it early. The tool has no
+    // dictionary, so the shape is the signal: a single run of 4-15 letters
+    // (look-alike digits allowed inside it) with at most a few non-letters
+    // around it. Long passphrases are several words, so they don't match.
+    const shape = lower.match(/^([^a-z]{0,4})([a-z](?:[a-z]|[013457@$](?=[a-z])){2,13}[a-z])([^a-z]{0,6})$/);
+    if (shape) {
+      const start = shape[1].length;
+      spans.push([start, start + shape[2].length]);
+      patterns.push('One word with a few numbers or symbols added');
+      warnings.push('A single word with digits or symbols tacked on is one of the first shapes attackers try');
+    }
   }
 
   // Keyboard patterns
   for (const pat of KEYBOARD_PATTERNS) {
     if (lower.includes(pat)) {
       patterns.push(`Keyboard pattern: "${pat}"`);
+      for (let i = lower.indexOf(pat); i !== -1; i = lower.indexOf(pat, i + 1)) spans.push([i, i + pat.length]);
     }
   }
 
@@ -84,21 +204,21 @@ function analyzePassword(password: string): PasswordAnalysis {
   const repeatMatch = password.match(/(.)\1{2,}/g);
   if (repeatMatch) {
     patterns.push(`Repeated characters: "${repeatMatch[0]}"`);
+    for (const m of password.matchAll(/(.)\1{2,}/g)) spans.push([m.index, m.index + m[0].length]);
   }
 
-  // Sequential letters
-  let sequential = 0;
-  for (let i = 0; i < lower.length - 1; i++) {
-    if (lower.charCodeAt(i + 1) - lower.charCodeAt(i) === 1) {
-      sequential++;
-      if (sequential >= 2) {
-        patterns.push('Sequential characters detected');
-        break;
-      }
-    } else {
-      sequential = 0;
+  // Sequential letters: every ascending run of 3 or more
+  let runStart = 0;
+  let sequentialFound = false;
+  for (let i = 1; i <= lower.length; i++) {
+    if (i < lower.length && lower.charCodeAt(i) - lower.charCodeAt(i - 1) === 1) continue;
+    if (i - runStart >= 3) {
+      spans.push([runStart, i]);
+      sequentialFound = true;
     }
+    runStart = i;
   }
+  if (sequentialFound) patterns.push('Sequential characters detected');
 
   // All same case
   if (length > 3 && password === password.toLowerCase()) {
@@ -113,19 +233,17 @@ function analyzePassword(password: string): PasswordAnalysis {
     warnings.push('Only digits — very easy to brute force');
   }
 
-  // Date patterns
-  if (/\b(19|20)\d{2}\b/.test(password) || /\b\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}\b/.test(password)) {
-    patterns.push('Date pattern detected');
-    warnings.push('Dates are easily guessable');
+  // Years and dates (not quoted back either: a birth date is personal)
+  let dateFound = false;
+  for (const re of DATE_PATTERNS) {
+    for (const m of password.matchAll(re)) {
+      spans.push([m.index, m.index + m[0].length]);
+      dateFound = true;
+    }
   }
-
-  // L33t speak detection
-  const l33t = password.replace(/[0@$!1|3]/g, '');
-  if (l33t.length < password.length * 0.7 && COMMON_PASSWORDS.has(lower.replace(/[@0$!1|3]/g, (c) => {
-    const map: Record<string, string> = { '@': 'a', '0': 'o', '$': 's', '!': 'i', '1': 'l', '|': 'i', '3': 'e' };
-    return map[c] || c;
-  }))) {
-    patterns.push('Leet speak substitution of common password');
+  if (dateFound) {
+    patterns.push('Contains a year or date');
+    warnings.push('Years and dates are easily guessable');
   }
 
   // Suggestions
@@ -137,78 +255,69 @@ function analyzePassword(password: string): PasswordAnalysis {
   if (patterns.length > 0) suggestions.push('Avoid predictable patterns — use random characters or a passphrase');
   if (suggestions.length === 0) suggestions.push('Consider using a password manager for all your accounts');
 
-  // Score calculation
-  let score = 0;
-
-  // Length scoring (up to 35 points)
-  score += Math.min(35, length * 2.5);
-
-  // Charset diversity (up to 25 points)
-  const activeSets = charsets.filter(c => c.found).length;
-  score += activeSets * 6.25;
-
-  // Entropy bonus (up to 25 points)
-  score += Math.min(25, entropy / 4);
-
-  // Penalties
-  if (COMMON_PASSWORDS.has(lower)) score = Math.min(score, 5);
-  if (patterns.length > 0) score -= patterns.length * 8;
-  if (repeatMatch) score -= 10;
-  if (/^\d+$/.test(password)) score -= 15;
-
-  score = Math.max(0, Math.min(100, Math.round(score)));
-
-  // Crack time estimation (assuming 10 billion guesses/sec — modern GPU cluster)
-  const guessesPerSec = 1e10;
-  const totalGuesses = Math.pow(poolSize, length);
-  const seconds = totalGuesses / guessesPerSec / 2; // average case
-
-  let crackTime: string;
-  if (COMMON_PASSWORDS.has(lower)) {
-    crackTime = 'Instantly';
-  } else if (seconds < 1) {
-    crackTime = 'Less than a second';
-  } else if (seconds < 60) {
-    crackTime = `${Math.round(seconds)} seconds`;
-  } else if (seconds < 3600) {
-    crackTime = `${Math.round(seconds / 60)} minutes`;
-  } else if (seconds < 86400) {
-    crackTime = `${Math.round(seconds / 3600)} hours`;
-  } else if (seconds < 31536000) {
-    crackTime = `${Math.round(seconds / 86400)} days`;
-  } else if (seconds < 31536000 * 1000) {
-    crackTime = `${Math.round(seconds / 31536000)} years`;
-  } else if (seconds < 31536000 * 1e6) {
-    crackTime = `${Math.round(seconds / 31536000 / 1000)}k years`;
-  } else if (seconds < 31536000 * 1e9) {
-    crackTime = `${Math.round(seconds / 31536000 / 1e6)}M years`;
+  // Effective entropy: what an attacker who tries common passwords and patterns
+  // first actually has to search. A common password is one of a short list. A
+  // predictable run (common password inside, keyboard walk, sequence, repeat,
+  // year or date) costs its first character plus its length, not a full
+  // character's worth per position.
+  let entropy: number;
+  if (common || leetCommon) {
+    entropy = Math.log2(COMMON_PASSWORDS.size);
   } else {
-    crackTime = 'Centuries+';
+    // Overlapping runs merge ("qwerty" inside "qwerty123"). Runs that only touch
+    // stay apart: "password" then "2024" are two guesses, not one.
+    // Clamped: toLowerCase() can lengthen a few non-ASCII characters, so a span
+    // found in `lower` may run past the end of the password itself.
+    const runs: Array<[number, number]> = [];
+    for (const [a, end] of [...spans].sort((x, y) => x[0] - y[0] || x[1] - y[1])) {
+      const b = Math.min(end, length);
+      if (b <= a) continue;
+      const last = runs[runs.length - 1];
+      if (last && a < last[1]) last[1] = Math.max(last[1], b);
+      else runs.push([a, b]);
+    }
+    const covered = runs.reduce((n, [a, b]) => n + (b - a), 0);
+    entropy = (length - covered) * bitsPerChar + runs.reduce((n, [a, b]) => n + bitsPerChar + Math.log2(b - a), 0);
+    entropy = Math.min(entropy, rawEntropy);
   }
 
-  // Label
-  let label: string;
-  if (score <= 20) label = 'Very Weak';
-  else if (score <= 40) label = 'Weak';
-  else if (score <= 60) label = 'Fair';
-  else if (score <= 80) label = 'Strong';
-  else label = 'Very Strong';
+  const score = scoreFromBits(entropy);
+  // Average case: half the space. Same effective bits as the score, so a red
+  // result can no longer sit next to a crack time of thousands of years.
+  const crackTime = common || leetCommon ? 'Instantly' : formatCrackTime(Math.pow(2, entropy) / GUESSES_PER_SEC / 2);
 
-  return { score, label, crackTime, entropy: Math.round(entropy * 10) / 10, length, charsets, warnings, suggestions, patterns };
+  return {
+    score,
+    label: labelFromScore(score),
+    crackTime,
+    entropy: Math.round(entropy * 10) / 10,
+    rawEntropy: Math.round(rawEntropy * 10) / 10,
+    length, charsets, warnings, suggestions, patterns,
+  };
 }
+
+/** Result panel colours per severity (literal classnames so Tailwind's scanner finds them). */
+const PANEL: Record<Severity, { box: string; text: string }> = {
+  red: { box: 'border-danger/30 bg-danger-dim', text: 'text-danger' },
+  amber: { box: 'border-warn/30 bg-warn-dim', text: 'text-warn' },
+  green: { box: 'border-ok/30 bg-ok-dim', text: 'text-ok' },
+  info: { box: 'border-b1 bg-s0', text: 'text-t1' },
+};
 
 export function PasswordStrengthTool() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [analysis, setAnalysis] = useState<PasswordAnalysis | null>(null);
+  // The console stays mounted while typing, so it is told when the latest analysis ran.
+  const [ranAt, setRanAt] = useState(0);
   const report = useReportResult();
   useEffect(() => {
     if (!analysis) { report(null); return; }
     report({
       severity: severityFromScore(analysis.score),
       score: analysis.score,
-      headline: `This password would be cracked in ${analysis.crackTime}`,
-      shareText: `My password would be cracked in ${analysis.crackTime}. Check yours:`,
+      headline: `This password would be cracked ${crackPhrase(analysis.crackTime)}`,
+      shareText: `My password would be cracked ${crackPhrase(analysis.crackTime)}. Check yours:`,
       stats: [{ label: 'Cracked in', value: analysis.crackTime }, { label: 'Strength', value: `${analysis.score}/100` }, { label: 'Entropy', value: `${Math.round(analysis.entropy)} bits` }, { label: 'Length', value: String(analysis.length) }],
     });
   }, [analysis, report]);
@@ -217,10 +326,15 @@ export function PasswordStrengthTool() {
     setPassword(value);
     if (value.length > 0) {
       setAnalysis(analyzePassword(value));
+      setRanAt(Date.now());
     } else {
       setAnalysis(null);
     }
   }, []);
+
+  // The one severity every surface below reads: panel colour, console dot, gauge, CTA.
+  const severity = analysis ? severityFromScore(analysis.score) : 'info';
+  const panel = PANEL[severity];
 
   return (
     <div className="space-y-6">
@@ -244,28 +358,36 @@ export function PasswordStrengthTool() {
             {showPassword ? 'Hide' : 'Show'}
           </button>
         </div>
-        <p className="mt-2 text-xs text-t3">
-          This tool runs entirely in your browser. No passwords are sent to any server.
-        </p>
       </div>
 
       {/* Results */}
       {analysis && (
-        <div className={`rounded-lg border p-6 text-center ${analysis.score < 50 ? 'border-danger/30 bg-danger-dim' : analysis.score < 80 ? 'border-warn/30 bg-warn-dim' : 'border-ok/30 bg-ok-dim'}`} data-cracked-in>
-          <div className="text-xs uppercase tracking-wider text-t3 mb-1">An offline attacker would crack this password in</div>
-          <div className={`text-4xl sm:text-5xl font-bold ${analysis.score < 50 ? 'text-danger' : analysis.score < 80 ? 'text-warn' : 'text-ok'}`}>{analysis.crackTime}</div>
-          <div className="text-xs text-t2 mt-2">{Math.round(analysis.entropy)} bits of entropy. Nothing you type here leaves your device.</div>
+        <div className={`rounded-lg border p-6 text-center ${panel.box}`} data-cracked-in>
+          <div className="text-xs uppercase tracking-wider text-t3 mb-1">Time an offline attacker needs to crack this password</div>
+          <div className={`text-4xl sm:text-5xl font-bold ${panel.text}`}>{analysis.crackTime}</div>
+          {/* Two sentences: the guessing rate belongs to the crack time, not to the entropy. */}
+          <div className="text-xs text-t2 mt-2 space-y-0.5">
+            <p>The crack time assumes 10 billion guesses a second.</p>
+            <p>
+              {Math.round(analysis.entropy)} bits of entropy
+              {Math.round(analysis.entropy) < Math.round(analysis.rawEntropy)
+                ? ` once the patterns below are discounted (${Math.round(analysis.rawEntropy)} by length alone)`
+                : ''}
+              .
+            </p>
+          </div>
         </div>
       )}
       {analysis && (
         <ConsoleFrame
           engine="password-strength"
-          status={statusFromSeverity(severityFromScore(analysis.score))}
-          processing="client"
+          status={statusFromSeverity(severity)}
+          verdict={analysis.label}
+          runAt={ranAt}
           score={analysis.score}
-          gaugeLabel={analysis.label}
+          gaugeLabel="strength"
           statTiles={[
-            { label: 'Cracked in', value: analysis.crackTime },
+            // The crack time is already the headline of the panel above; not repeated here.
             { label: 'Strength', value: `${analysis.score}/100` },
             { label: 'Entropy', value: `${Math.round(analysis.entropy)} bits` },
             { label: 'Length', value: analysis.length },

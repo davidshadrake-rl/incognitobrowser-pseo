@@ -242,10 +242,12 @@ describe.skipIf(!HAS_TARGET)('header + footer link integrity', () => {
     homeHtml = r.body;
   });
 
-  it('header Download button points to the Play Store', () => {
+  it('header app button points to the Play Store and says it is the Android app', () => {
+    // "Download Browser" read as a desktop download to desktop visitors (CTO review 2026-09-10).
     expect(homeHtml).toMatch(
-      /href="https:\/\/play\.google\.com\/store\/apps\/details\?id=com\.androidbull\.incognito\.browser[^"]*"[\s\S]{0,400}?Download[^<]*Browser/
+      /href="https:\/\/play\.google\.com\/store\/apps\/details\?id=com\.androidbull\.incognito\.browser[^"]*"[\s\S]{0,400}?Get the Android app/
     );
+    expect(homeHtml).not.toMatch(/Download Browser/);
   });
 
   it('footer Download link points to the Play Store', () => {
@@ -576,9 +578,12 @@ describe.skipIf(!HAS_TARGET)('free/Pro split — Pro tools are absent from the f
  * crawlers and no-JS visitors, and the search is a client-side enhancement.
  */
 describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', () => {
+  // Floors, not exact counts. Index pages list published items only, so a
+  // floor sits a margin under today's published count (calculators: 36 of 44
+  // published on 2026-09-10) and still catches an index that lost its list.
   const INDEXES: Array<[string, string, number]> = [
     ['/tools/', 'tools', 20], ['/guides/', 'guides', 40], ['/checklists/', 'checklists', 40], ['/comparisons/', 'comparisons', 40],
-    ['/templates/', 'templates', 40], ['/calculators/', 'calculators', 40], ['/glossary/', 'terms', 50], ['/site/', 'websites', 400],
+    ['/templates/', 'templates', 40], ['/calculators/', 'calculators', 30], ['/glossary/', 'terms', 50], ['/site/', 'websites', 400],
   ];
   for (const [route, noun, min] of INDEXES) {
     it(`${route} has a search box, letter links, and ≥${min} alphabetized entries in the HTML`, async () => {
@@ -600,6 +605,11 @@ describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', 
     expect(controls).toBeGreaterThan(0);
     expect(featured).toBeGreaterThan(controls);
     expect(list).toBeGreaterThan(featured);
+    // The hero counts distinct tools; the A–Z lists one entry per topic page,
+    // so its count says "tool pages" and never sits as "23 tools" under "13 tools".
+    expect(tools.body).toMatch(/placeholder="Search \d+ tool pages…"/);
+    expect(tools.body).toMatch(/\d+ tool pages, A to Z\. Jump to a letter/);
+    expect(tools.body).not.toMatch(/\d+ tools, A to Z/);
     const site = await fetchText('/site/');
     expect(site.body.indexOf('Most aggressive tracking')).toBeGreaterThan(site.body.indexOf('data-catalogue="websites"'));
     expect(site.body.indexOf('id="a-to-z"')).toBeGreaterThan(site.body.indexOf('Most aggressive tracking'));
@@ -654,12 +664,49 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
     expect(r.body).toMatch(/<details[^>]*lg:hidden/);
     expect(r.body).toMatch(/Get app/);
   });
-  it('content pages carry a "Check yours now" proof route to a free tool', async () => {
+  it('content pages carry a tool card that names the tool and says what it does', async () => {
     for (const route of [ROUTES.publishedGuide, ROUTES.publishedChecklist]) {
       const r = await fetchText(route);
-      expect(r.body, route).toMatch(/data-check-yours="[a-z0-9-]+"/);
-      expect(r.body, route).toMatch(/href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>Run the check/);
+      // The card is CheckYoursNow's <aside data-check-yours>; judge its own text only.
+      const start = r.body.search(/<aside[^>]*data-check-yours="[a-z0-9-]+"/);
+      expect(start, `${route}: tool card`).toBeGreaterThanOrEqual(0);
+      const card = r.body.slice(start, r.body.indexOf('</aside>', start));
+      // The button names the tool it opens ("Open the User Agent Analyzer →"), not "Run the check".
+      expect(card, route).toMatch(/href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>(Open|Take) [^<]+ →/);
+      // CTO review 2026-09-10: no false promises on the card, and no niche
+      // shell title for the user-agent tool. The shell title is still the
+      // real title of /tools/gaming-privacy/useragent-analyzer, so a related
+      // link elsewhere on the page may carry it: only the card is checked.
+      expect(card, route).not.toMatch(/Run the check|in one tap|your own number|Gaming Browser Analyzer/);
+      expect(r.body, route).not.toMatch(/Free, runs in your browser/);
     }
+  });
+  it('a topic no free tool fits shows no tool card', async () => {
+    const r = await fetchText('/templates/gdpr/gdpr-compliance-policy-template/');
+    expect(r.ok).toBe(true);
+    expect(r.body).not.toMatch(/data-check-yours=/);
+  });
+  it('checklists count progress in words, above the sections, with the tool card after the list', async () => {
+    const r = await fetchText(ROUTES.publishedChecklist);
+    expect(r.body).toMatch(/data-checklist-progress="0"/);
+    expect(r.body).toMatch(/0 of \d+<\/span> done/);
+    expect(r.body).not.toMatch(/>Progress</);
+    const progress = r.body.indexOf('data-checklist-progress');
+    const firstSection = r.body.indexOf('<details class="panel"');
+    const card = r.body.indexOf('data-check-yours');
+    expect(progress).toBeGreaterThan(0);
+    expect(firstSection).toBeGreaterThan(progress);
+    expect(card).toBeGreaterThan(firstSection);
+  });
+  it('report cards: no reassurance slogans, the Pro link names its tool, and "clean" only for a tracker-free scan', async () => {
+    const r = await fetchText('/site/cnn.com/');
+    expect(r.body).not.toMatch(/Nothing is uploaded|Drawn on your device|Pro version of this check/);
+    expect(r.body).toMatch(/Try the Pro Cookie &amp; Tracker Scanner →/);
+    // airbnb.com is a B that loads ad trackers: it must not be called clean.
+    const b = await fetchText('/site/airbnb.com/');
+    expect(b.ok).toBe(true);
+    expect(b.body).not.toMatch(/A clean site/);
+    expect(b.body).toMatch(/but still \d+ trackers? [^<]*before you click anything/);
   });
 });
 

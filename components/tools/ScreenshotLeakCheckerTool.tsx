@@ -105,10 +105,29 @@ function severityClasses(s: LeakSeverity): { border: string; text: string } {
   }
 }
 
+/**
+ * The clean copy's file name. Neutral on purpose: the original name is one of
+ * the leaks this tool reports (a username in a path, a client name, the
+ * camera app's IMG_4471 counter), so it is not carried over.
+ */
+export function cleanFileName(format: ScreenshotAnalysis['format']): string {
+  return format === 'png' ? 'screenshot-clean.png' : 'screenshot-clean.jpg';
+}
+
 function formatBytes(n: number): string {
   if (n < 1024) return `${n} B`;
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
   return `${(n / (1024 * 1024)).toFixed(2)} MB`;
+}
+
+/** Hand an object URL to the browser as a file download. */
+function saveObjectUrl(url: string, name: string) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
 export function ScreenshotLeakCheckerTool() {
@@ -206,9 +225,16 @@ export function ScreenshotLeakCheckerTool() {
 
   // Clean copy: decode → canvas → re-encode. The canvas only ever holds pixels,
   // so every metadata block (Exif, XMP, IPTC, PNG text, thumbnails) is gone.
+  // The button now starts the download itself; it used to only prepare the
+  // file and reveal a second "Save …" link, so the first click seemed to do
+  // nothing. A copy already made for this file is downloaded again, not re-encoded.
   const downloadClean = async () => {
     const file = fileRef.current;
     if (!file || !analysis) return;
+    if (cleanUrl) {
+      saveObjectUrl(cleanUrl, cleanName);
+      return;
+    }
     setCleaning(true);
     const src = URL.createObjectURL(file);
     try {
@@ -227,8 +253,11 @@ export function ScreenshotLeakCheckerTool() {
       const isPng = analysis.format === 'png';
       const blob: Blob | null = await new Promise((res) => (isPng ? canvas.toBlob(res, 'image/png') : canvas.toBlob(res, 'image/jpeg', 0.92)));
       if (!blob) throw new Error('Re-encoding failed.');
-      setCleanUrl(URL.createObjectURL(blob));
-      setCleanName(file.name.replace(/\.[^.]+$/, '') + (isPng ? '-clean.png' : '-clean.jpg'));
+      const url = URL.createObjectURL(blob);
+      const name = cleanFileName(analysis.format);
+      setCleanUrl(url);
+      setCleanName(name);
+      saveObjectUrl(url, name);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Clean copy failed.');
     } finally {
@@ -263,9 +292,6 @@ export function ScreenshotLeakCheckerTool() {
           onChange={onInput}
           className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
         />
-        <p className="mt-2 text-xs text-t3">
-          Everything runs in your browser. The file never leaves your device — no upload, no network request, nothing stored.
-        </p>
       </div>
 
       {error && (
@@ -282,7 +308,7 @@ export function ScreenshotLeakCheckerTool() {
         <ConsoleFrame
           engine="screenshot-leak-checker"
           status={statusFromSeverity(analysis.verdict)}
-          processing="client"
+          verdict={v.label}
           statTiles={[
             { label: 'Leaks', value: String(analysis.counts.leaks) },
             { label: 'GPS', value: analysis.counts.gps ? 'Yes' : 'No' },
@@ -366,7 +392,7 @@ export function ScreenshotLeakCheckerTool() {
               )}
               <div className="mt-1 text-xs text-t3">From: {analysis.gps.source}</div>
               <p className="mt-2 text-xs text-t3">
-                Shown as numbers only. We do not load a map or contact any service — paste the pair into a map yourself if you want to see where it points.
+                Shown as numbers only. Paste the pair into a map to see where it points.
               </p>
             </div>
           )}
@@ -442,13 +468,8 @@ export function ScreenshotLeakCheckerTool() {
           <div className="bg-s0 border border-b1 rounded-lg p-4">
             <div className="flex flex-wrap gap-3 items-center">
               <button onClick={downloadClean} disabled={cleaning} className="btn-primary text-sm px-4 py-2">
-                {cleaning ? 'Re-encoding…' : 'Download clean copy'}
+                {cleaning ? 'Making the clean copy…' : 'Download clean copy'}
               </button>
-              {cleanUrl && (
-                <a href={cleanUrl} download={cleanName} className="text-sm px-4 py-2 border border-ok/30 rounded text-ok hover:bg-ok-dim">
-                  Save {cleanName}
-                </a>
-              )}
               <button
                 onClick={reset}
                 className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
@@ -456,8 +477,15 @@ export function ScreenshotLeakCheckerTool() {
                 Check another file
               </button>
             </div>
+            {/* Fallback for browsers that block a download the page starts itself. */}
+            {cleanUrl && (
+              <p className="mt-3 text-xs text-t2">
+                Clean copy: <span className="font-mono text-white break-all">{cleanName}</span>. If the download did not start,{' '}
+                <a href={cleanUrl} download={cleanName} className="text-ok underline underline-offset-2">save it here</a>.
+              </p>
+            )}
             <p className="mt-3 text-xs text-t3">
-              The clean copy is made by drawing the decoded pixels onto a canvas and re-encoding, which drops every metadata block — Exif, XMP, IPTC, PNG text, the embedded thumbnail. PNG stays PNG and lossless. JPEG and WebP are saved as JPEG at quality 92, so they recompress slightly. The file name is reset too; pick a neutral one.
+              The clean copy is made by drawing the decoded pixels onto a canvas and re-encoding, which drops every metadata block — Exif, XMP, IPTC, PNG text, the embedded thumbnail. PNG stays PNG and lossless. JPEG and WebP are saved as JPEG at quality 92, so they recompress slightly. It is saved as {cleanFileName(analysis.format)}, so the original file name is left behind too.
             </p>
           </div>
         </div>

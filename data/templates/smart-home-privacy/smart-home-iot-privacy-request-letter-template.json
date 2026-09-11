@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Letter Header and Date",
-      "content": "[Your Name]\n[Your Address]\n[City, State ZIP Code]\n[Your Email]\n[Your Phone Number]\n\n[Date]\n\n[Company Name]\nPrivacy Officer / Data Protection Team\n[Company Address]\n[City, State ZIP Code]",
+      "content": "[Your Name]\n[Your Address]\n[City, State ZIP Code]\n[Your Email]\n[Your Phone Number]\n\n[Date]\n\n[Company Name]\nPrivacy Officer / Data Protection Team\n[Company Address]\n[Company City, State ZIP Code]",
       "placeholders": [
         {
           "key": "yourName",
@@ -26,6 +26,11 @@
           "key": "companyName",
           "label": "Device Manufacturer Name",
           "defaultValue": "Amazon"
+        },
+        {
+          "key": "companyCityStateZipCode",
+          "label": "Company City, State ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },

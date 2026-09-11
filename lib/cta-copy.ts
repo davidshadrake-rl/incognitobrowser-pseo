@@ -12,6 +12,7 @@
  */
 import type { Severity } from '@/components/tools/ResultContext';
 import type { IconName } from '@/components/ui/Icon';
+import { GRADE_LABEL, type Grade } from '@/lib/site-grade';
 
 export type ProBenefit = 'vpn' | 'adblock' | 'tools' | 'more';
 
@@ -20,10 +21,10 @@ export const PRO_BENEFITS: Record<ProBenefit, { title: string; line: string; ico
   vpn: { title: 'Built-in VPN', line: 'hides your real IP and location from every site and your ISP.', icon: 'shield' },
   adblock: { title: 'Pro ad blocking', line: 'stops ads and the trackers behind them before they load.', icon: 'block' },
   tools: { title: 'Every tool built in', line: 'the checks on this site run inside the browser, on every page you visit.', icon: 'finger' },
-  more: { title: 'And more', line: 'one subscription, every Pro protection, no accounts on our side.', icon: 'star' },
+  more: { title: 'And more', line: 'one subscription, every Pro protection.', icon: 'star' },
 };
 
-interface SeverityCopy { headline: string; body: string }
+export interface SeverityCopy { headline: string; body: string }
 
 export interface EngineCopy {
   /** Which Pro benefits answer this tool's result, most specific first. */
@@ -200,16 +201,66 @@ export interface ComposedCta {
   benefits: Array<{ key: ProBenefit; title: string; line: string; icon: IconName }>;
 }
 
-/** Compose the CTA copy for an engine, niche and severity. Pure. */
-export function composeCta(engine: string, niche: string | undefined, severity: Severity): ComposedCta {
+/**
+ * Compose the CTA copy for an engine, niche and severity. Pure. `override`
+ * replaces the engine's severity line when the result itself decides the
+ * wording (see reportCardLine); the niche hook and benefits still apply.
+ */
+export function composeCta(engine: string, niche: string | undefined, severity: Severity, override?: SeverityCopy): ComposedCta {
   const e = ENGINE_COPY[engine] || DEFAULT_ENGINE_COPY;
-  const line = e[severity] || e.info;
+  const line = override || e[severity] || e.info;
   const hook = niche ? NICHE_HOOK[niche] : undefined;
   return {
     headline: line.headline,
     body: hook ? `${hook} ${line.body}` : line.body,
     benefits: e.benefits.slice(0, 3).map((key) => ({ key, ...PRO_BENEFITS[key] })),
   };
+}
+
+/**
+ * The report-card line, picked from the scan instead of the letter. Every A
+ * and B used to get "A clean site. Most are not." — including 133 cards
+ * listing ad trackers or tracking cookies right above it (CTO review
+ * 2026-09-10). "Clean" now needs no tracking cookies and no trackers of any
+ * kind (the count the page lists under "Trackers loaded on the homepage"),
+ * so it can never contradict that list; otherwise the line says what loads.
+ */
+export function reportCardLine(grade: Grade, severity: Severity, found: { trackingCookies: number; trackers: number; pixels?: number }): SeverityCopy {
+  const copy = ENGINE_COPY['report-card'];
+  if (severity !== 'green') return copy[severity] || copy.info;
+  const { trackingCookies, trackers, pixels = 0 } = found;
+  if (!trackingCookies && !trackers && !pixels) return copy.green;
+  const count = (n: number, one: string, many: string) => (n ? `${n} ${n === 1 ? one : many}` : '');
+  const parts = [count(trackers, 'tracker', 'trackers'), count(pixels, 'tracking pixel', 'tracking pixels'), count(trackingCookies, 'tracking cookie', 'tracking cookies')].filter(Boolean);
+  const list = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` : parts[0];
+  return {
+    headline: `${GRADE_LABEL[grade]}, but still ${list} before you click anything.`,
+    body: 'Incognito Pro blocks trackers like these before they load, on every site.',
+  };
+}
+
+/**
+ * The Pro tool pages a free tool's result links to, by path on the Pro site,
+ * with the page's own title. The link used to read "Pro version of this
+ * check" and opened a different tool on 3 of the 4 pages that showed it, so
+ * it now names where it goes. Titles match data/tools/<niche>/<slug>.json
+ * (tests/proof-route.test.ts checks it); a link with no entry here is not shown.
+ */
+export const PRO_HANDOFF_TITLE: Record<string, string> = {
+  '/tools/ad-tracking/cookie-tracker-scanner': 'Cookie & Tracker Scanner',
+  '/tools/vpn-privacy/browser-leak-test': 'Browser Leak Test',
+};
+
+export function proHandoffTitle(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  try {
+    // Suffix match: NEXT_PUBLIC_PRO_URL may one day carry a path prefix.
+    const p = new URL(url).pathname.replace(/\/$/, '');
+    const key = Object.keys(PRO_HANDOFF_TITLE).find((k) => p === k || p.endsWith(k));
+    return key ? PRO_HANDOFF_TITLE[key] : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 /** Copy for a visitor who is already inside the free Incognito Browser app (population B). */

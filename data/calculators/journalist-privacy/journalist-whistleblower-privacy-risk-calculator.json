@@ -49,7 +49,9 @@
       "min": 1,
       "max": 5,
       "step": 1,
-      "helpText": "Rate your device security practices (1=basic, 5=advanced encryption/hardening)"
+      "minLabel": "Basic",
+      "maxLabel": "Advanced encryption and hardening",
+      "helpText": "Rate your device security practices"
     },
     {
       "id": "locationRisk",
@@ -101,7 +103,9 @@
       "min": 1,
       "max": 5,
       "step": 1,
-      "helpText": "Rate your current source protection practices (1=minimal, 5=comprehensive anonymization)"
+      "minLabel": "Minimal",
+      "maxLabel": "Comprehensive anonymization",
+      "helpText": "Rate your current source protection practices"
     },
     {
       "id": "internetUsage",
@@ -149,7 +153,7 @@
       "description": "Your current security preparedness out of 100"
     }
   ],
-  "formula": "const commRisk = { 'email': 80, 'encrypted-email': 40, 'messaging': 70, 'secure-messaging': 20, 'anonymous': 10 }[communicationMethods]; const locRisk = { 'low': 20, 'moderate': 50, 'high': 90 }[locationRisk]; const storyRisk = { 'low': 20, 'medium': 50, 'high': 80 }[storyType]; const toolsRisk = { 'none': 90, 'basic': 60, 'intermediate': 30, 'advanced': 10 }[internetUsage]; const deviceFactor = (6 - deviceSecurity) * 15; const sourceFactor = (6 - sourceProtection) * 12; const rawRisk = (commRisk + locRisk + storyRisk + toolsRisk + deviceFactor + sourceFactor) / 6; const overallRisk = Math.min(95, Math.max(5, rawRisk)); const securityScore = Math.round(100 - overallRisk); const riskCategory = overallRisk >= 70 ? 'Critical Risk': overallRisk >= 50 ? 'High Risk': overallRisk >= 30 ? 'Moderate Risk': 'Low Risk'; return { overallRisk: Math.round(overallRisk), securityScore, riskCategory };",
+  "formula": "const commRisk = { 'email': 80, 'encrypted-email': 40, 'messaging': 70, 'secure-messaging': 20, 'anonymous': 10 }[communicationMethods]; const locRisk = { 'low': 20, 'moderate': 50, 'high': 90 }[locationRisk]; const storyRisk = { 'low': 20, 'medium': 50, 'high': 80 }[storyType]; const toolsRisk = { 'none': 90, 'basic': 60, 'intermediate': 30, 'advanced': 10 }[internetUsage]; const deviceFactor = (6 - deviceSecurity) * 15; const sourceFactor = (6 - sourceProtection) * 12; const rawRisk = (commRisk + locRisk + storyRisk + toolsRisk + deviceFactor + sourceFactor) / 6; const overallRisk = Math.round(Math.min(95, Math.max(5, rawRisk))); const securityScore = 100 - overallRisk; const riskCategory = overallRisk >= 70 ? 'Critical Risk': overallRisk >= 50 ? 'High Risk': overallRisk >= 26 ? 'Moderate Risk': 'Low Risk'; return { overallRisk, securityScore, riskCategory };",
   "educational": {
     "methodology": "This calculator evaluates privacy risks for journalists and whistleblowers by analyzing communication methods, operational security practices, threat environment, and story sensitivity. The assessment considers real-world factors that affect source protection and personal safety in journalism.",
     "tips": [

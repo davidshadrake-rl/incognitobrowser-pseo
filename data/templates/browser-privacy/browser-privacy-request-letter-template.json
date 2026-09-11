@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Header and Contact Information",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Email Address]\n[Your Phone Number]\n\n[Date]\n\n[Company Name]\n[Privacy Officer/Data Protection Officer]\n[Company Address]\n[City, State, ZIP Code]",
+      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Email Address]\n[Your Phone Number]\n\n[Date]\n\n[Company Name]\n[Privacy Officer/Data Protection Officer]\n[Company Address]\n[Company City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "your_name",
@@ -30,6 +30,11 @@
         {
           "key": "company_name",
           "label": "Company Name (e.g., Google, Mozilla, Apple)",
+          "defaultValue": ""
+        },
+        {
+          "key": "company_city_state_zip_code",
+          "label": "Company City, State, ZIP Code",
           "defaultValue": ""
         }
       ]

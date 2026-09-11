@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Letter Header and Date",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[Recipient's Name]\n[Title]\n[Organization Name]\n[Address]\n[City, State, ZIP Code]",
+      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[Recipient's Name]\n[Title]\n[Organization Name]\n[Organization Address]\n[Organization City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "your_name",
@@ -31,6 +31,16 @@
           "key": "organization",
           "label": "Organization Name",
           "defaultValue": "ABC Company"
+        },
+        {
+          "key": "organization_address",
+          "label": "Organization Address",
+          "defaultValue": "456 Oak Avenue"
+        },
+        {
+          "key": "organization_city_state_zip_code",
+          "label": "Organization City, State, ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },

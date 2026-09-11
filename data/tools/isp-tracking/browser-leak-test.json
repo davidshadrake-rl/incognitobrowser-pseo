@@ -1,8 +1,8 @@
 {
   "niche": "isp-tracking",
   "slug": "browser-leak-test",
-  "title": "ISP Tracking Detector",
-  "metaDescription": "Detect browser settings and leaks that allow your ISP to track your online activity.",
+  "title": "IP Leak and Fingerprint Test",
+  "metaDescription": "See which IP address WebRTC shows sites, to spot the one your ISP gave you leaking past a VPN, and what else your browser exposes for fingerprinting.",
   "keywords": [
     "ISP tracking",
     "DNS privacy",
@@ -12,10 +12,10 @@
   ],
   "toolType": "analyzer",
   "toolEngine": "browser-privacy",
-  "description": "Detect browser settings and leaks that allow your ISP to track your online activity.",
+  "description": "See which IP address WebRTC shows sites, to spot the one your ISP gave you leaking past a VPN, and what else your browser exposes for fingerprinting.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool runs a series of privacy checks directly in your browser to detect fingerprinting vectors, tracking vulnerabilities, and privacy leaks. It tests Do Not Track settings, WebRTC exposure, canvas fingerprinting, device hardware detection, and more. All checks execute locally — no data leaves your device.",
+    "howItWorks": "This tool runs a series of privacy checks directly in your browser to detect fingerprinting vectors, tracking vulnerabilities, and privacy leaks. It tests Do Not Track settings, WebRTC exposure, canvas fingerprinting, device hardware detection, and more.",
     "tips": [
       "Enable Do Not Track in your browser settings, even though not all sites honor it",
       "Use a browser that patches WebRTC to prevent IP address leaks, especially when using a VPN",

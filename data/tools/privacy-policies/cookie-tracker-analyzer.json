@@ -2,7 +2,7 @@
   "niche": "privacy-policies",
   "slug": "cookie-tracker-analyzer",
   "title": "Website Cookie Analyzer",
-  "metaDescription": "Analyze website cookies to verify they match the site's stated privacy policy.",
+  "metaDescription": "See which cookies and trackers a website actually sets on first load, sorted by purpose, so you can compare them with what its privacy policy says.",
   "keywords": [
     "privacy policy",
     "terms of service",
@@ -12,10 +12,10 @@
   ],
   "toolType": "analyzer",
   "toolEngine": "cookie-analyzer",
-  "description": "Analyze website cookies to verify they match the site's stated privacy policy.",
+  "description": "See which cookies and trackers a website actually sets on first load, sorted by purpose, so you can compare them with what its privacy policy says.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool fetches the URL you enter through our server (not your browser) so it can read the Set-Cookie headers and tracking scripts a site sends before you ever visit it. Your request goes to our server, which is rate-limited and never logs the URLs you scan. The categorization against our database of known trackers then runs on the returned data.",
+    "howItWorks": "This tool fetches the URL you enter through our server (not your browser) so it can read the Set-Cookie headers and tracking scripts a site sends before you ever visit it. The categorization against our database of known trackers then runs on the returned data.",
     "tips": [
       "Block third-party cookies in your browser settings to prevent cross-site tracking",
       "Use a cookie auto-delete extension to clear tracking cookies after each session",

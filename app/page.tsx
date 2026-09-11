@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT, engineVisibleInThisTier } from '@/lib/tiers';
 import { getAllNiches, getAllContentTypes, type ContentType } from '@/lib/taxonomy';
-import { getAllContentItems, getGlossaryFiles, isPublished, type EditableContent } from '@/lib/content';
+import { getAllContentItems, getGlossaryFiles, getGlossaryItem, isPublished, type EditableContent } from '@/lib/content';
 import { Icon, IconTile } from '@/components/ui/Icon';
 import { Rings } from '@/components/ui/Rings';
 import { Diagram } from '@/components/ui/Diagram';
@@ -12,11 +12,21 @@ import { playUrl } from '@/lib/play';
 /** Glossary items are "terms" everywhere else in the site (AtoZCatalogue noun="terms"); every other slug already reads as a plural noun. */
 const COUNT_NOUN: Record<string, string> = { glossary: 'terms' };
 
-/** Published item count for a content type (DESIGN-SPEC 5.2's grid `count`). */
+/**
+ * Published item count for a content type (DESIGN-SPEC 5.2's grid `count`).
+ * Every category index uses the same rule (published items only), so the
+ * number here matches the one on the page it links to. Tools count distinct
+ * tools, not topic pages — the same rule as /tools.
+ */
 function countForType(slug: string): number {
-  if (slug === 'glossary') return getGlossaryFiles().length;
+  if (slug === 'glossary') {
+    return getGlossaryFiles().map(f => getGlossaryItem<EditableContent>(f)).filter(isPublished).length;
+  }
   const items = getAllContentItems<{ toolEngine?: string } & EditableContent>(slug);
-  return items.filter(i => (slug !== 'tools' || engineVisibleInThisTier(i.toolEngine)) && isPublished(i)).length;
+  if (slug === 'tools') {
+    return new Set(items.filter(i => engineVisibleInThisTier(i.toolEngine) && isPublished(i)).map(i => i.toolEngine).filter(Boolean)).size;
+  }
+  return items.filter(isPublished).length;
 }
 
 const TOPIC_RAIL: Record<Family, string> = {
@@ -49,7 +59,7 @@ export default function HomePage() {
             Know what the web sees. Then hide it.
           </h1>
           <p className="prose-ib text-lede mb-6">
-            Free checks that run in your browser, from the team behind Incognito Browser. No account, no upload.
+            Free checks that show what your browser, connection and passwords give away, from the team behind Incognito Browser.
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/tools" className="btn-primary">Try a tool</Link>

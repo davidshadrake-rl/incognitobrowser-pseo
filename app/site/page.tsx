@@ -67,16 +67,21 @@ export default function SiteIndexPage() {
         }))}
         topics={(Object.keys(byCat) as SiteCategory[]).map(c => ({ label: CATEGORY_LABEL[c], query: CATEGORY_LABEL[c] })).sort((a, b) => a.label.localeCompare(b.label))}
       >
-      {/* Distribution */}
-      <div className="flex flex-wrap gap-3 mb-10">
-        {(['A', 'B', 'C', 'D', 'F'] as const).map((g) => (
-          <div key={g} className="flex items-center gap-2 bg-s0 border border-b1 rounded-lg px-3 py-2">
-            <GradeBadge grade={g} size="sm" />
-            <span className="text-sm text-white">{dist[g]}</span>
-            <span className="text-xs text-t3">sites</span>
-          </div>
-        ))}
-      </div>
+      {/* Distribution. A plain count per grade: boxed, these looked like
+          filter buttons, and there is no per-grade list for them to open. */}
+      <section className="mb-10">
+        <h2 className="text-xs uppercase tracking-wider text-t3 mb-2">How the {all.length} sites scored</h2>
+        <dl className="flex flex-wrap gap-x-6 gap-y-2">
+          {(['A', 'B', 'C', 'D', 'F'] as const).map((g) => (
+            <div key={g} className="flex items-center gap-2">
+              <dt><GradeBadge grade={g} size="sm" /></dt>
+              <dd className="text-sm text-white tnum">
+                {dist[g]} <span className="text-xs text-t3">{dist[g] === 1 ? 'site' : 'sites'}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         <section className="bg-s0 border border-b1 rounded-lg p-4">

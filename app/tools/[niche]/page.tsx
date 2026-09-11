@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getAllContentItems, freeSitePrefix, isPublished, type EditableContent } from '@/lib/content';
-import { engineVisibleInThisTier } from '@/lib/tiers';
+import { IS_PRO_DEPLOYMENT, engineVisibleInThisTier } from '@/lib/tiers';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { Card } from '@/components/ui/Card';
@@ -36,7 +36,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const nicheData = getNicheById(niche);
   return genMeta({
     title: `${nicheData?.name ?? niche} Privacy Tools`,
-    description: `Free privacy tools tailored to ${nicheData?.name ?? niche}. All run client-side.`,
+    // The Pro deployment's hubs list Pro tools, which are not "free" except
+    // through the PRO_WEB_GATED badge, so only the free site says Free here.
+    description: `${IS_PRO_DEPLOYMENT ? 'Incognito Pro privacy tools' : 'Free privacy tools'} tailored to ${nicheData?.name ?? niche}.`,
     path: `/tools/${niche}`,
     type: 'website',
   });
@@ -62,7 +64,7 @@ export default async function ToolsByNiche({ params }: PageProps) {
         {nicheData?.name ?? niche} Privacy Tools
       </h1>
       <p className="text-t2 mb-8">
-        {nicheData?.description ?? `Free interactive tools for ${nicheData?.name ?? niche}.`}
+        {nicheData?.description ?? `Interactive privacy tools for ${nicheData?.name ?? niche}.`}
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

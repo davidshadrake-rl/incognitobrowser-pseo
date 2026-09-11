@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Letter Header",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Email Address]\n[Phone Number]\n[Date]\n\n[Recipient Name]\n[Title/Position]\n[Organization Name]\n[Address]\n[City, State, ZIP Code]",
+      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Email Address]\n[Phone Number]\n[Date]\n\n[Recipient Name]\n[Title/Position]\n[Organization Name]\n[Organization Address]\n[Organization City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "yourName",
@@ -31,6 +31,16 @@
           "key": "organizationName",
           "label": "Organization Name",
           "defaultValue": "Coffee Shop Name"
+        },
+        {
+          "key": "organizationAddress",
+          "label": "Organization Address",
+          "defaultValue": "456 Oak Avenue"
+        },
+        {
+          "key": "organizationCityStateZipCode",
+          "label": "Organization City, State, ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },

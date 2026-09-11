@@ -9,8 +9,7 @@
  *   - the brand-mention scrub: scripts/scrub-product-mentions.mjs, which
  *     scripts/promote-all.mjs refuses to run without (it covers articles, not
  *     tool pages, hence the wording below);
- *   - duplicate demotion: scripts/demote-overlap-duplicates.mjs;
- *   - the tool badges: components/ui/Badge.tsx 'client' / 'server'.
+ *   - duplicate demotion: scripts/demote-overlap-duplicates.mjs.
  * It names no person, on purpose — see components/EditorialNote.tsx.
  */
 import Link from 'next/link';
@@ -18,7 +17,6 @@ import { redirect } from 'next/navigation';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { PageHero } from '@/components/ui/PageHero';
-import { Badge } from '@/components/ui/Badge';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export const metadata = genMeta({
@@ -78,26 +76,6 @@ export default function EditorialStandardsPage() {
           the same kinds of article, like a security checklist or a complete guide. Where those
           overlap, one topic keeps the article and the copies are held back from search.
         </p>
-      </Section>
-
-      <Section title="Where the tools do their work">
-        <p className="prose-ib">Every tool page carries one of two labels:</p>
-        <ul className="space-y-2">
-          <li className="flex items-start gap-3 prose-ib">
-            <Badge variant="client" className="shrink-0 mt-0.5" />
-            <span>
-              The check runs on your device. If an optional extra step needs our server, its button
-              says so before you press it.
-            </span>
-          </li>
-          <li className="flex items-start gap-3 prose-ib">
-            <Badge variant="server" className="shrink-0 mt-0.5" />
-            <span>
-              The tool sends what you give it to our server, because it can&apos;t do the job from
-              your browser. A scanner that has to fetch a web page you name is the usual case.
-            </span>
-          </li>
-        </ul>
       </Section>
 
       <Section title="Website report cards">

@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Header Information",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Email]\n[Your Phone Number]\n\n[Date]\n\n[Company Name]\nPrivacy Officer / Data Protection Officer\n[Company Address]\n[City, State, ZIP Code]",
+      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Email]\n[Your Phone Number]\n\n[Date]\n\n[Company Name]\nPrivacy Officer / Data Protection Officer\n[Company Address]\n[Company City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "your_name",
@@ -26,12 +26,17 @@
           "key": "company_name",
           "label": "Retailer/Company Name",
           "defaultValue": "Company Name"
+        },
+        {
+          "key": "company_city_state_zip_code",
+          "label": "Company City, State, ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },
     {
       "heading": "Subject and Introduction",
-      "content": "Subject: Data Access Request Under Privacy Laws\n\nDear Privacy Officer,\n\nI am writing to request access to my personal data that your company has collected about me as a customer. As a consumer, I have the right to understand what information you collect, how it's used, and with whom it's shared. My account email is [YOUR_EMAIL] and I have been a customer since approximately [DATE].",
+      "content": "Subject: Data Access Request Under Privacy Laws\n\nDear Privacy Officer,\n\nI am writing to request access to my personal data that your company has collected about me as a customer. As a consumer, I have the right to understand what information you collect, how it's used, and with whom it's shared. My account email is [YOUR_EMAIL] and I have been a customer since approximately [CUSTOMER_SINCE].",
       "placeholders": [
         {
           "key": "your_email",

@@ -134,7 +134,7 @@
       "id": "riskLevel",
       "label": "Risk Category",
       "format": "grade",
-      "description": "Categorized risk level with specific recommendations"
+      "description": "Your risk category"
     },
     {
       "id": "exposureEstimate",
@@ -143,7 +143,7 @@
       "description": "Estimated times your face may be scanned per week"
     }
   ],
-  "formula": "let baseRisk = 0; const locationMultiplier = location === 'urban' ? 30: location === 'suburban' ? 15: 5; const publicExposure = (publicSpaces / 80) * 25; const socialRisk = socialMedia === 'frequent' ? 20: socialMedia === 'moderate' ? 12: socialMedia === 'limited' ? 5: 0; const workplaceRisk = workplace === 'extensive' ? 15: workplace === 'basic' ? 8: 0; const activismBonus = activism ? 15: 0; const protectionReduction = protections === 'advanced' ? 0.3: protections === 'moderate' ? 0.15: protections === 'basic' ? 0.05: 0; baseRisk = locationMultiplier + publicExposure + socialRisk + workplaceRisk + activismBonus; const riskScore = Math.max(0, Math.min(100, Math.round(baseRisk * (1 - protectionReduction)))); const riskLevel = riskScore >= 70 ? 'A+': riskScore >= 50 ? 'B+': riskScore >= 30 ? 'C+': 'D+'; const exposureEstimate = Math.round((publicSpaces / 10) * (location === 'urban' ? 3: location === 'suburban' ? 1.5: 0.5)); return { riskScore, riskLevel, exposureEstimate };",
+  "formula": "let baseRisk = 0; const locationMultiplier = location === 'urban' ? 30: location === 'suburban' ? 15: 5; const publicExposure = (publicSpaces / 80) * 25; const socialRisk = socialMedia === 'frequent' ? 20: socialMedia === 'moderate' ? 12: socialMedia === 'limited' ? 5: 0; const workplaceRisk = workplace === 'extensive' ? 15: workplace === 'basic' ? 8: 0; const activismBonus = activism ? 15: 0; const protectionReduction = protections === 'advanced' ? 0.3: protections === 'moderate' ? 0.15: protections === 'basic' ? 0.05: 0; baseRisk = locationMultiplier + publicExposure + socialRisk + workplaceRisk + activismBonus; const riskScore = Math.max(0, Math.min(100, Math.round(baseRisk * (1 - protectionReduction)))); const riskLevel = riskScore >= 70 ? 'Critical Risk': riskScore >= 50 ? 'High Risk': riskScore >= 30 ? 'Moderate Risk': 'Low Risk'; const exposureEstimate = Math.round((publicSpaces / 10) * (location === 'urban' ? 3: location === 'suburban' ? 1.5: 0.5)); return { riskScore, riskLevel, exposureEstimate };",
   "educational": {
     "methodology": "This calculator assesses facial recognition exposure based on location surveillance density, public space usage, digital footprint, workplace systems, and existing protection measures. Risk factors are weighted according to surveillance deployment patterns and biometric data collection practices.",
     "tips": [

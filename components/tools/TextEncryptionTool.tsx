@@ -8,8 +8,9 @@ import { useReportResult } from './ResultContext';
 import { ValueCard } from './ValueCard';
 
 // OWASP 2023+ recommends ≥600,000 iterations for PBKDF2-SHA256.
-// We bump this explicitly so the tool doesn't look dated.
-const PBKDF2_ITERATIONS = 600_000;
+// We bump this explicitly so the tool doesn't look dated. Exported so the tool
+// page's scoring copy (registry.tsx) quotes the number this code runs.
+export const PBKDF2_ITERATIONS = 600_000;
 const MAGIC = new Uint8Array([0x49, 0x42, 0x45, 0x31]); // "IBE1" — our container version
 const SALT_LEN = 16;
 const IV_LEN = 12;
@@ -134,6 +135,12 @@ const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100 MB
 type Mode = 'encrypt' | 'decrypt';
 type Source = 'text' | 'file';
 
+// Segmented controls. The selected side is filled and outlined (the pressed-chip
+// look from the A-Z catalogue); the old 10% white tint was too faint to tell
+// Encrypt from Decrypt at a glance.
+const SEG_ON = 'border-b2 bg-s2 text-white';
+const SEG_OFF = 'border-transparent text-t2 hover:text-white hover:bg-s1';
+
 export function TextEncryptionTool() {
   const [mode, setMode] = useState<Mode>('encrypt');
   const [source, setSource] = useState<Source>('text');
@@ -157,12 +164,35 @@ export function TextEncryptionTool() {
     const verb = mode === 'encrypt' ? 'Encrypted' : 'Decrypted';
     report({
       severity: 'info',
-      headline: `${verb} with AES-256-GCM on your device. Nothing was sent anywhere.`,
+      headline: `${verb} with AES-256-GCM.`,
       stats: [{ label: 'Output', value: source === 'file' ? (downloadName || 'file') : `${output.length} chars` }],
     });
   }, [output, downloadUrl, downloadName, mode, source, report]);
 
   useEffect(() => () => { if (downloadUrl) URL.revokeObjectURL(downloadUrl); }, [downloadUrl]);
+
+  // A result belongs to the mode and source that made it. Switching either one
+  // clears it: before, an encrypted file's panel relabelled itself "Decrypted
+  // File Ready" when Decrypt was pressed.
+  const clearResult = () => {
+    setOutput('');
+    setError('');
+    if (downloadUrl) { URL.revokeObjectURL(downloadUrl); setDownloadUrl(''); }
+  };
+
+  const switchMode = (m: Mode) => {
+    if (m === mode) return;
+    setMode(m);
+    clearResult();
+  };
+
+  // What was typed and what was chosen are kept separately, so flipping between
+  // Text and File no longer erases either one.
+  const switchSource = (s: Source) => {
+    if (s === source) return;
+    setSource(s);
+    clearResult();
+  };
 
   const handleProcess = async () => {
     setError('');
@@ -215,27 +245,30 @@ export function TextEncryptionTool() {
 
       {/* Mode toggles */}
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-s0 border border-b1 rounded-lg p-2 flex">
+        <div className="bg-s0 border border-b1 rounded-lg p-2 flex gap-1" role="group" aria-label="Encrypt or decrypt">
           {(['encrypt', 'decrypt'] as Mode[]).map((m) => (
             <button
               key={m}
-              onClick={() => { setMode(m); setOutput(''); setError(''); }}
-              className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-                mode === m ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
-              }`}
+              type="button"
+              aria-pressed={mode === m}
+              onClick={() => switchMode(m)}
+              // Locked mid-run: a result that lands after a switch would carry the wrong label.
+              disabled={processing}
+              className={`flex-1 py-2 rounded border text-sm font-medium transition-colors disabled:opacity-50 ${mode === m ? SEG_ON : SEG_OFF}`}
             >
               {m === 'encrypt' ? 'Encrypt' : 'Decrypt'}
             </button>
           ))}
         </div>
-        <div className="bg-s0 border border-b1 rounded-lg p-2 flex">
+        <div className="bg-s0 border border-b1 rounded-lg p-2 flex gap-1" role="group" aria-label="Text or file">
           {(['text', 'file'] as Source[]).map((s) => (
             <button
               key={s}
-              onClick={() => { setSource(s); setOutput(''); setError(''); setInputText(''); setInputFile(null); }}
-              className={`flex-1 py-2 rounded text-sm font-medium transition-colors ${
-                source === s ? 'bg-white/10 text-white' : 'text-t2 hover:text-white'
-              }`}
+              type="button"
+              aria-pressed={source === s}
+              onClick={() => switchSource(s)}
+              disabled={processing}
+              className={`flex-1 py-2 rounded border text-sm font-medium transition-colors disabled:opacity-50 ${source === s ? SEG_ON : SEG_OFF}`}
             >
               {s === 'text' ? 'Text' : 'File'}
             </button>
@@ -265,12 +298,13 @@ export function TextEncryptionTool() {
             </label>
             <input
               type="file"
-              onChange={(e) => setInputFile(e.target.files?.[0] ?? null)}
+              onChange={(e) => { setInputFile(e.target.files?.[0] ?? null); clearResult(); }}
               className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
             />
+            {/* The picker re-mounts empty after a trip to the Text tab; this line says which file is still selected. */}
             {inputFile && (
               <p className="mt-2 text-xs text-t2">
-                {inputFile.name} ({(inputFile.size / 1024).toLocaleString()} KB)
+                Selected: {inputFile.name} ({(inputFile.size / 1024).toLocaleString()} KB)
               </p>
             )}
           </div>
@@ -315,16 +349,12 @@ export function TextEncryptionTool() {
               {copied ? 'Copied!' : 'Copy'}
             </button>
           }
-          statTiles={[
-            { label: 'Iterations', value: PBKDF2_ITERATIONS.toLocaleString() },
-            { label: 'Output', value: `${output.length} chars` },
-          ]}
+          // The iteration count is a setting, not part of the result; it lives in the details below.
+          statTiles={[{ label: 'Output', value: `${output.length} chars` }]}
         >
-          <p className="text-row text-t3">
-            {mode === 'encrypt'
-              ? 'Share this text safely. The recipient needs the same passphrase to decrypt.'
-              : 'Decrypted entirely in your browser. No data was sent to any server.'}
-          </p>
+          {mode === 'encrypt' && (
+            <p className="text-row text-t3">Share this text safely. The recipient needs the same passphrase to decrypt.</p>
+          )}
         </ValueCard>
       )}
 
@@ -333,7 +363,6 @@ export function TextEncryptionTool() {
         <ValueCard
           label={mode === 'encrypt' ? 'Encrypted File Ready' : 'Decrypted File Ready'}
           value={downloadName}
-          statTiles={[{ label: 'Iterations', value: PBKDF2_ITERATIONS.toLocaleString() }]}
         >
           <a
             href={downloadUrl}
@@ -342,11 +371,9 @@ export function TextEncryptionTool() {
           >
             Download {downloadName}
           </a>
-          <p className="mt-3 text-row text-t3">
-            {mode === 'encrypt'
-              ? 'Encrypted as AES-256-GCM. Share the file + passphrase through separate channels.'
-              : 'Decrypted entirely in your browser. Nothing was uploaded.'}
-          </p>
+          {mode === 'encrypt' && (
+            <p className="mt-3 text-row text-t3">Encrypted as AES-256-GCM. Share the file + passphrase through separate channels.</p>
+          )}
         </ValueCard>
       )}
 
@@ -360,7 +387,6 @@ export function TextEncryptionTool() {
           <div className="text-t2">Salt</div><div className="text-white">Random 128-bit</div>
           <div className="text-t2">IV</div><div className="text-white">Random 96-bit</div>
           <div className="text-t2">Container</div><div className="text-white">IBE1 magic + salt + iv + ciphertext</div>
-          <div className="text-t2">Processing</div><div className="text-white">100% client-side</div>
           <div className="text-t2">Max file size</div><div className="text-white">100 MB</div>
         </div>
       </div>

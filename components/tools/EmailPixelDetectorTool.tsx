@@ -8,7 +8,7 @@ import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
 const MAX_BYTES = 2 * 1024 * 1024;
 
-function toToolResult(a: EmailAnalysis): ToolResult {
+export function toToolResult(a: EmailAnalysis): ToolResult {
   const detail =
     a.severity === 'red'
       ? 'Opening this email tells the sender when, where and on what device you read it.'
@@ -20,7 +20,8 @@ function toToolResult(a: EmailAnalysis): ToolResult {
     headline: a.headline,
     detail,
     stats: a.stats,
-    shareText: `${a.headline} — checked with a client-side email tracking-pixel detector.`,
+    // Plain, like the other tools' share lines; "checked with a (client-side) … detector" described the tool, not the result.
+    shareText: `${a.headline}. Check yours:`,
   };
 }
 
@@ -89,6 +90,10 @@ export function EmailPixelDetectorTool() {
   const [raw, setRaw] = useState('');
   const [fileName, setFileName] = useState('');
   const [analysis, setAnalysis] = useState<EmailAnalysis | null>(null);
+  // True when the analysis on screen is of the built-in example, not the visitor's own email.
+  const [fromExample, setFromExample] = useState(false);
+  // The console stays mounted across runs, so it is told when the latest one ran.
+  const [ranAt, setRanAt] = useState(0);
   const [error, setError] = useState('');
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -96,10 +101,12 @@ export function EmailPixelDetectorTool() {
 
   // Push the current verdict to the page-level result bus whenever it changes; clear it on unmount.
   // (`report` is a stable callback inside the provider and a no-op outside it.)
+  // The example is demo data, not the visitor's exposure: it used to bring up
+  // "This email reports back the moment you open it" and a share card for it.
   useEffect(() => {
-    report(analysis ? toToolResult(analysis) : null);
+    report(analysis && !fromExample ? toToolResult(analysis) : null);
     return () => report(null);
-  }, [analysis, report]);
+  }, [analysis, fromExample, report]);
 
   const run = useCallback((source: string) => {
     setError('');
@@ -110,6 +117,9 @@ export function EmailPixelDetectorTool() {
     }
     try {
       setAnalysis(analyzeEmail(source));
+      // Pressing Analyze on the unedited example is still the example.
+      setFromExample(source === EXAMPLE_EMAIL);
+      setRanAt(Date.now());
     } catch {
       setAnalysis(null);
       setError('Could not parse that input. Try pasting the raw source from "Show original" / "View source".');
@@ -147,6 +157,7 @@ export function EmailPixelDetectorTool() {
     setRaw('');
     setFileName('');
     setAnalysis(null);
+    setFromExample(false);
     setError('');
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
@@ -232,7 +243,6 @@ export function EmailPixelDetectorTool() {
         {error && <p className="mt-3 text-xs text-danger">{error}</p>}
         <p className="mt-3 text-xs text-t3">
           Get the source with &ldquo;Show original&rdquo; (Gmail), &ldquo;View message source&rdquo; (Outlook) or &ldquo;Raw Source&rdquo; (Apple Mail).
-          Everything is parsed in this browser tab — the email is never uploaded, and no image or link in it is ever requested.
         </p>
       </div>
 
@@ -240,15 +250,21 @@ export function EmailPixelDetectorTool() {
         <ConsoleFrame
           engine="email-pixel-detector"
           status={statusFromSeverity(analysis.severity)}
-          processing="client"
+          verdict={sev.label}
+          runAt={ranAt}
           statTiles={analysis.stats}
         >
         <div className="space-y-4">
+          {fromExample && (
+            <p className="rounded-md border border-b1 bg-s1 px-3 py-2 text-xs text-t2" data-example-result>
+              <span className="font-semibold text-white">Example.</span> This is the built-in sample email, not yours. Paste your own email above to check it.
+            </p>
+          )}
           {/* Verdict */}
           <div>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className={`text-xs uppercase tracking-wide mb-1 ${sev.text}`}>Verdict · {sev.label}</div>
+                <div className={`text-xs uppercase tracking-wide mb-1 ${sev.text}`}>{fromExample ? 'Example' : 'Verdict'} · {sev.label}</div>
                 <h3 className="text-lg font-bold text-white">{analysis.headline}</h3>
               </div>
               <Icon name={analysis.severity === 'red' ? 'x' : analysis.severity === 'amber' ? 'warn' : 'check'} size={28} className={sev.text} title={sev.label} />
@@ -370,14 +386,6 @@ export function EmailPixelDetectorTool() {
                 </li>
               ))}
             </ul>
-          </div>
-
-          {/* Privacy note */}
-          <div className="bg-s0 border border-b1 rounded-lg p-4">
-            <p className="text-xs text-t3">
-              <span className="text-white">Privacy note:</span> this analysis ran entirely in your browser. The email source was not uploaded, stored, or sent anywhere,
-              and none of the pixels or links above were requested — so the sender has not been notified by this check.
-            </p>
           </div>
         </div>
         </ConsoleFrame>

@@ -1,4 +1,4 @@
-import { getAllContentItems } from '@/lib/content';
+import { getAllContentItems, isPublished, type EditableContent } from '@/lib/content';
 import { getAllNiches } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { redirect } from 'next/navigation';
@@ -23,7 +23,9 @@ interface ComparisonMeta {
 
 export default function ComparisonsIndex() {
   if (IS_PRO_DEPLOYMENT) redirect('/tools'); // the Pro deployment serves tools only
-  const items = getAllContentItems<ComparisonMeta>('comparisons');
+  // Published only, like the home page's count for this type: drafts render
+  // (noindex) but are not listed, so every count on the site agrees.
+  const items = getAllContentItems<ComparisonMeta & EditableContent>('comparisons').filter(isPublished);
   const niches = getAllNiches();
   const nicheMap = Object.fromEntries(niches.map(n => [n.id, n]));
 

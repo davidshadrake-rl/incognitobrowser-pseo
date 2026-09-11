@@ -128,7 +128,8 @@
       "min": 1,
       "max": 10,
       "step": 1,
-      "helpText": "1 = Light browsing, 10 = Heavy browsing (many sites daily)"
+      "minLabel": "Light",
+      "maxLabel": "Heavy, many sites a day"
     },
     {
       "id": "socialMediaUse",
@@ -176,7 +177,7 @@
       "description": "Percentage of your browsing likely being tracked"
     }
   ],
-  "formula": "const browserScores = {chrome: 7, firefox: 4, safari: 5, edge: 6, incognito: 2, other: 5}; const cookieScores = {'allow-all': 10, default: 7, 'block-third-party': 4, 'block-all': 2}; const clearScores = {daily: 1, weekly: 3, monthly: 5, rarely: 8}; const toolScores = {none: 8, adblocker: 5, 'privacy-extensions': 3, comprehensive: 1}; const socialScores = {none: 0, light: 2, moderate: 4, heavy: 6}; const browserRisk = browserScores[inputs.browserType] || 5; const cookieRisk = cookieScores[inputs.cookieSettings] || 7; const clearRisk = clearScores[inputs.clearFrequency] || 8; const toolRisk = toolScores[inputs.privacyTools] || 8; const browsingRisk = inputs.browsingHabits * 0.8; const socialRisk = socialScores[inputs.socialMediaUse] || 4; const riskScore = Math.min(100, Math.round((browserRisk + cookieRisk + clearRisk + toolRisk + browsingRisk + socialRisk) / 6 * 10)); const riskLevel = riskScore >= 80 ? 'High Risk': riskScore >= 60 ? 'Moderate Risk': riskScore >= 40 ? 'Low-Moderate Risk': 'Low Risk'; const trackingExposure = Math.min(95, riskScore * 0.9 + (inputs.browsingHabits * 2)); return {riskScore, riskLevel, trackingExposure};",
+  "formula": "const browserScores = {chrome: 7, firefox: 4, safari: 5, edge: 6, incognito: 2, other: 5}; const cookieScores = {'allow-all': 10, default: 7, 'block-third-party': 4, 'block-all': 2}; const clearScores = {daily: 1, weekly: 3, monthly: 5, rarely: 8}; const toolScores = {none: 8, adblocker: 5, 'privacy-extensions': 3, comprehensive: 1}; const socialScores = {none: 0, light: 2, moderate: 4, heavy: 6}; const browserRisk = browserScores[inputs.browserType] ?? 5; const cookieRisk = cookieScores[inputs.cookieSettings] ?? 7; const clearRisk = clearScores[inputs.clearFrequency] ?? 8; const toolRisk = toolScores[inputs.privacyTools] ?? 8; const browsingRisk = inputs.browsingHabits * 0.8; const socialRisk = socialScores[inputs.socialMediaUse] ?? 4; const riskScore = Math.min(100, Math.round((browserRisk + cookieRisk + clearRisk + toolRisk + browsingRisk + socialRisk) / 6 * 10)); const riskLevel = riskScore >= 71 ? 'High Risk': riskScore >= 51 ? 'Moderate Risk': riskScore >= 31 ? 'Low-Moderate Risk': 'Low Risk'; const trackingExposure = Math.min(95, riskScore * 0.9 + (inputs.browsingHabits * 2)); return {riskScore, riskLevel, trackingExposure};",
   "educational": {
     "methodology": "This calculator evaluates your cookie and tracking risk based on browser choice, privacy settings, clearing habits, and browsing patterns. Browsers like a privacy-focused browser and Firefox offer better default privacy, while regular data clearing and privacy tools significantly reduce tracking exposure.",
     "tips": [

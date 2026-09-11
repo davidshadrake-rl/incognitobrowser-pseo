@@ -45,7 +45,9 @@
       "min": 1,
       "max": 10,
       "step": 1,
-      "helpText": "How often you spend time in outdoor spaces (1=rarely, 10=very frequently)"
+      "minLabel": "Rarely",
+      "maxLabel": "Very often",
+      "helpText": "How often you spend time in outdoor spaces"
     },
     {
       "id": "privacyMeasures",
@@ -122,7 +124,7 @@
       "description": "Categorized risk assessment with recommendations"
     }
   ],
-  "formula": "const baseRisk = propertyType === 'urban' ? 30: propertyType === 'suburban' ? 40: propertyType === 'rural' ? 50: 35; const activityRisk = outdoorActivity * 3; const protectionReduction = privacyMeasures === 'none' ? 0: privacyMeasures === 'basic' ? 10: privacyMeasures === 'moderate' ? 20: 30; const sensitiveBonus = sensitiveActivities ? 15: 0; const airportReduction = nearAirport ? 15: 0; const lawReduction = localLaws === 'weak' ? 0: localLaws === 'moderate' ? 10: 20; const riskScore = Math.max(0, Math.min(100, baseRisk + activityRisk + sensitiveBonus - protectionReduction - airportReduction - lawReduction)); const riskLevel = riskScore >= 70 ? 'High Risk': riskScore >= 40 ? 'Moderate Risk': 'Low Risk'; return { riskScore, riskLevel };",
+  "formula": "const baseRisk = propertyType === 'urban' ? 30: propertyType === 'suburban' ? 40: propertyType === 'rural' ? 50: 35; const activityRisk = outdoorActivity * 3; const protectionReduction = privacyMeasures === 'none' ? 0: privacyMeasures === 'basic' ? 10: privacyMeasures === 'moderate' ? 20: 30; const sensitiveBonus = sensitiveActivities ? 15: 0; const airportReduction = nearAirport ? 15: 0; const lawReduction = localLaws === 'weak' ? 0: localLaws === 'moderate' ? 10: 20; const riskScore = Math.max(0, Math.min(100, baseRisk + activityRisk + sensitiveBonus - protectionReduction - airportReduction - lawReduction)); const riskLevel = riskScore >= 70 ? 'High Risk': riskScore >= 31 ? 'Moderate Risk': 'Low Risk'; return { riskScore, riskLevel };",
   "educational": {
     "methodology": "This calculator evaluates drone surveillance risk based on location vulnerability, activity patterns, existing privacy protections, and legal framework strength. Scores consider property exposure, outdoor activity frequency, current countermeasures, and regulatory protections.",
     "tips": [

@@ -2,7 +2,7 @@
   "niche": "encrypted-messaging",
   "slug": "text-encryption-tool",
   "title": "Text Encryption Tool",
-  "metaDescription": "Encrypt and decrypt text messages using military-grade AES-256-GCM encryption, entirely in your browser.",
+  "metaDescription": "Encrypt and decrypt text messages using military-grade AES-256-GCM encryption.",
   "keywords": [
     "encrypted messaging",
     "Signal app",
@@ -12,10 +12,10 @@
   ],
   "toolType": "converter",
   "toolEngine": "text-encryption",
-  "description": "Encrypt and decrypt text messages using military-grade AES-256-GCM encryption, entirely in your browser.",
+  "description": "Encrypt and decrypt text messages using military-grade AES-256-GCM encryption.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool uses the Web Crypto API built into modern browsers to perform AES-256-GCM authenticated encryption. Your passphrase is converted into a cryptographic key using PBKDF2 with 100,000 iterations and a random salt. Each encryption generates a unique random IV (initialization vector), ensuring identical plaintexts produce different ciphertexts. Everything runs in your browser — no data is transmitted.",
+    "howItWorks": "This tool uses the Web Crypto API built into modern browsers to perform AES-256-GCM authenticated encryption. Your passphrase is converted into a cryptographic key using PBKDF2 with 100,000 iterations and a random salt. Each encryption generates a unique random IV (initialization vector), ensuring identical plaintexts produce different ciphertexts.",
     "tips": [
       "Use a strong, unique passphrase — the encryption is only as secure as your passphrase",
       "Share the passphrase through a different channel than the encrypted message",

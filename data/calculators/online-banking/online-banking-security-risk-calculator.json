@@ -111,8 +111,10 @@
       "min": 1,
       "max": 10,
       "step": 1,
+      "minLabel": "Poor",
+      "maxLabel": "Excellent",
       "defaultValue": 5,
-      "helpText": "Rate your ability to identify fake banking emails (1=poor, 10=excellent)"
+      "helpText": "Rate your ability to identify fake banking emails"
     },
     {
       "id": "browserSecurity",
@@ -150,7 +152,7 @@
       "description": "Letter grade representing your banking security posture"
     }
   ],
-  "formula": "let riskScore = 0; const twoFactorRisk = { 'none': 30, 'sms': 15, 'app': 5, 'hardware': 0 }; const passwordRisk = { 'weak': 25, 'medium': 15, 'strong': 5, 'manager': 0 }; const deviceRisk = { 'low': 20, 'medium': 10, 'high': 0 }; const wifiRisk = { 'never': 0, 'sometimes': 15, 'vpn': 2 }; const browserRisk = { 'poor': 15, 'basic': 8, 'good': 0 }; riskScore += twoFactorRisk[twoFactor] || 0; riskScore += passwordRisk[passwordStrength] || 0; riskScore += deviceRisk[deviceSecurity] || 0; riskScore += wifiRisk[publicWifiUsage] || 0; riskScore += browserRisk[browserSecurity] || 0; riskScore += Math.max(0, (10 - phishingAwareness) * 2); const finalRisk = Math.min(100, riskScore); let grade = 'F'; if (finalRisk <= 15) grade = 'A'; else if (finalRisk <= 30) grade = 'B'; else if (finalRisk <= 50) grade = 'C'; else if (finalRisk <= 70) grade = 'D'; return { riskScore: finalRisk, securityGrade: grade };",
+  "formula": "let riskScore = 0; const twoFactorRisk = { 'none': 30, 'sms': 15, 'app': 5, 'hardware': 0 }; const passwordRisk = { 'weak': 25, 'medium': 15, 'strong': 5, 'manager': 0 }; const deviceRisk = { 'low': 20, 'medium': 10, 'high': 0 }; const wifiRisk = { 'never': 0, 'sometimes': 15, 'vpn': 2 }; const browserRisk = { 'poor': 15, 'basic': 8, 'good': 0 }; riskScore += twoFactorRisk[twoFactor] ?? 0; riskScore += passwordRisk[passwordStrength] ?? 0; riskScore += deviceRisk[deviceSecurity] ?? 0; riskScore += wifiRisk[publicWifiUsage] ?? 0; riskScore += browserRisk[browserSecurity] ?? 0; riskScore += Math.max(0, (10 - phishingAwareness) * 2); const finalRisk = Math.min(100, riskScore); let grade = 'F'; if (finalRisk <= 15) grade = 'A'; else if (finalRisk <= 30) grade = 'B'; else if (finalRisk <= 50) grade = 'C'; else if (finalRisk <= 70) grade = 'D'; return { riskScore: finalRisk, securityGrade: grade };",
   "educational": {
     "methodology": "This calculator evaluates key security factors including authentication methods, password strength, device security, network safety, phishing awareness, and browser protection. Risk scores are weighted based on common attack vectors targeting online banking customers.",
     "tips": [

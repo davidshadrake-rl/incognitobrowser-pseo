@@ -331,10 +331,9 @@ test('email-pixel-detector: example email reveals tracking pixels and the sender
 // ─────────────────────────────────────────────────────────────────────────
 // 15. Screenshot Leak Checker (needs a binary upload for a full run — page-load check only)
 // ─────────────────────────────────────────────────────────────────────────
-test('screenshot-leak-checker: tool page loads with upload control and privacy note', async ({ page }) => {
+test('screenshot-leak-checker: tool page loads with upload control', async ({ page }) => {
   await page.goto(toolUrl('screenshot-leak-checker'));
   await expect(page.locator('input[type="file"]').first()).toBeVisible({ timeout: 10_000 });
-  await expect(page.getByText(/never leaves your device/i).first()).toBeVisible({ timeout: 10_000 });
 });
 
 // ─────────────────────────────────────────────────────────────────────────

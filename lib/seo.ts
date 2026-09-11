@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { IS_PRO_DEPLOYMENT, PRO_BASE_URL } from '@/lib/tiers';
+import { IS_PRO_DEPLOYMENT, PRO_BASE_URL, tierOfEngine } from '@/lib/tiers';
 
 const SITE_URL = 'https://incognitobrowser.io';
 const BASE_PATH = '/resources';
@@ -149,7 +149,13 @@ export function generateHowToSchema(title: string, steps: Array<{ title: string;
   };
 }
 
-export function generateWebApplicationSchema(name: string, description: string, url: string) {
+/**
+ * `offers` puts a price (0) on the page. Pro is the paid app tier and no page
+ * may state a price for it, so a Pro tool page carries no offer at all: every
+ * tool page of the Pro deployment, and any page that names a Pro engine.
+ */
+export function generateWebApplicationSchema(name: string, description: string, url: string, engine?: string) {
+  const pro = IS_PRO_DEPLOYMENT || tierOfEngine(engine) === 'pro';
   return {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
@@ -158,11 +164,13 @@ export function generateWebApplicationSchema(name: string, description: string, 
     url,
     applicationCategory: 'SecurityApplication',
     operatingSystem: 'Any',
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-    },
+    ...(pro ? {} : {
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+    }),
   };
 }
 

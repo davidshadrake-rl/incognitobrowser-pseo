@@ -1,19 +1,21 @@
 /**
- * The one chip (DESIGN-SPEC 5.9). Absorbs the hand-rolled tier / processing /
- * severity / difficulty chips. Blue is Pro and nothing else; status variants
- * always carry a word, never colour alone.
+ * The one chip (DESIGN-SPEC 5.9). Absorbs the hand-rolled tier / severity /
+ * difficulty chips. Blue is Pro and nothing else; status variants always
+ * carry a word, never colour alone.
+ *
+ * The client / server processing chip was removed (CTO review, 2026-09-10):
+ * it was a reassurance slogan, not something a visitor acts on. Functional
+ * disclosures (a button that fetches through our server) live in the tool.
  *
  * Server-safe (no hooks) so it renders in both server and client trees.
  */
 import { PRO_DEFINITION, PRO_FREE_FOR_NOW_TITLE, PRO_WEB_GATED } from '@/lib/tiers';
 
-export type BadgeVariant = 'free' | 'pro' | 'client' | 'server' | 'ok' | 'warn' | 'danger' | 'info' | 'neutral' | 'difficulty' | 'grade';
+export type BadgeVariant = 'free' | 'pro' | 'ok' | 'warn' | 'danger' | 'info' | 'neutral' | 'difficulty' | 'grade';
 
 const LOOK: Record<BadgeVariant, string> = {
   free:    'border-ok/30 text-ok',
   pro:     'border-pro text-pro bg-pro-dim',
-  client:  'border-b1 text-t2',
-  server:  'border-b1 text-t2',
   ok:      'border-ok/30 text-ok bg-ok-dim',
   warn:    'border-warn/30 text-warn bg-warn-dim',
   danger:  'border-danger/30 text-danger bg-danger-dim',
@@ -22,24 +24,25 @@ const LOOK: Record<BadgeVariant, string> = {
   difficulty: 'border-b1 text-t2', grade: 'border-b1 text-t1',
 };
 
-/** Old colorMap keys (priority / difficulty / yes-no / rating) → variants. */
+/**
+ * Old colorMap keys (priority / difficulty / yes-no / rating) → variants.
+ * "Good" is a positive rating, so it is green like "Excellent" (the word
+ * tells them apart); on info it was drawn in the secondary-text grey and
+ * read as switched off next to a green "Yes".
+ * A low priority and a difficulty are not results: green means done on a
+ * checklist, so "low" and "beginner" drawn green read as already finished.
+ * Low is neutral, and every difficulty uses the neutral difficulty chip.
+ */
 const LEGACY: Record<string, BadgeVariant> = {
   critical: 'danger', high: 'danger', no: 'danger', poor: 'danger',
   medium: 'warn', partial: 'warn', fair: 'warn',
-  low: 'ok', beginner: 'ok', yes: 'ok', excellent: 'ok',
-  intermediate: 'info', good: 'info',
-  advanced: 'neutral',
+  yes: 'ok', excellent: 'ok', good: 'ok',
+  low: 'neutral',
+  beginner: 'difficulty', intermediate: 'difficulty', advanced: 'difficulty',
 };
 
 const LABEL: Partial<Record<BadgeVariant, string>> = {
   free: 'Free tool',
-  client: 'runs in your browser',
-  server: 'server-assisted',
-};
-
-const TITLE: Partial<Record<BadgeVariant, string>> = {
-  free: 'Free, no account, stays free.',
-  server: 'Asks our server once. Never logged.',
 };
 
 export function resolveBadgeVariant(variant?: string): BadgeVariant {
@@ -56,7 +59,7 @@ export function Badge({
   className = '',
 }: {
   variant?: BadgeVariant | string;
-  /** Visible text. Defaults per variant (free "Free tool", pro "free for now" / "Pro tool", client, server). */
+  /** Visible text. Defaults per variant (free "Free tool", pro "free for now" / "Pro tool"). */
   label?: string;
   title?: string;
   /** Pro only: render the blue block alone, no label. */
@@ -66,7 +69,7 @@ export function Badge({
   const v = resolveBadgeVariant(variant);
   const isPro = v === 'pro';
   const text = label ?? (isPro ? (PRO_WEB_GATED ? 'Pro tool' : 'free for now') : LABEL[v]);
-  const tip = title ?? (isPro ? (PRO_WEB_GATED ? PRO_DEFINITION : PRO_FREE_FOR_NOW_TITLE) : TITLE[v]);
+  const tip = title ?? (isPro ? (PRO_WEB_GATED ? PRO_DEFINITION : PRO_FREE_FOR_NOW_TITLE) : undefined);
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-[4px] border px-1.5 py-0.5 font-mono text-[11px] tracking-[.04em] ${LOOK[v]} ${className}`}

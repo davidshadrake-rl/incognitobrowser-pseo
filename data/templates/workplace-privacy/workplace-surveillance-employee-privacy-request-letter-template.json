@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Letter Header and Date",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[Manager/HR Director Name]\n[Title]\n[Company Name]\n[Company Address]\n[City, State, ZIP Code]",
+      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[Manager/HR Director Name]\n[Title]\n[Company Name]\n[Company Address]\n[Company City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "employeeName",
@@ -31,6 +31,11 @@
           "key": "companyName",
           "label": "Company Name",
           "defaultValue": "ABC Corporation"
+        },
+        {
+          "key": "companyCityStateZipCode",
+          "label": "Company City, State, ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },

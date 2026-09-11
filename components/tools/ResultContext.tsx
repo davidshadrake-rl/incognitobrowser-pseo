@@ -16,6 +16,9 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 
 export type Severity = 'red' | 'amber' | 'green' | 'info';
 
+/** A result's letter grade. 'A+' is the privacy quiz's top grade. */
+export type ToolGrade = 'A+' | 'A' | 'B' | 'C' | 'D' | 'F';
+
 export interface ToolResult {
   /** red = exposed / failing; amber = partial; green = protected; info = neutral output (generators, converters). */
   severity: Severity;
@@ -25,8 +28,10 @@ export interface ToolResult {
   detail?: string;
   /** 0–100 when the tool produces a score. */
   score?: number;
+  /** What `score` is: a score out of 100 (the default when omitted) or a percentage ("72% blocked"). */
+  scoreUnit?: '/100' | '%';
   /** Letter grade when the tool produces one. */
-  grade?: 'A' | 'B' | 'C' | 'D' | 'F';
+  grade?: ToolGrade;
   /** Up to 4 label/value pairs for the scorecard image. */
   stats?: Array<{ label: string; value: string }>;
   /** Text used when sharing; defaults to headline. */
@@ -65,9 +70,9 @@ export function severityFromScore(score: number): Severity {
   return 'red';
 }
 
-/** Map a letter grade to a severity. */
+/** Map a letter grade to a severity. 'A+' is green like 'A'; it used to fall through to red. */
 export function severityFromGrade(grade: string): Severity {
-  if (grade === 'A' || grade === 'B') return 'green';
+  if (grade === 'A+' || grade === 'A' || grade === 'B') return 'green';
   if (grade === 'C') return 'amber';
   return 'red';
 }

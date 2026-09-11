@@ -2,7 +2,7 @@
   "niche": "ccpa",
   "slug": "cookie-privacy-scanner",
   "title": "Cookie Privacy Scanner",
-  "metaDescription": "Analyze website cookies for CCPA compliance and identify data collection practices.",
+  "metaDescription": "See the cookies and tracking scripts a website sets on first load, sorted into tracking, analytics and functional. It isn't a CCPA compliance check.",
   "keywords": [
     "CCPA",
     "California privacy law",
@@ -12,10 +12,10 @@
   ],
   "toolType": "scanner",
   "toolEngine": "cookie-analyzer",
-  "description": "Analyze website cookies for CCPA compliance and identify data collection practices.",
+  "description": "See the cookies and tracking scripts a website sets on first load, sorted into tracking, analytics and functional. It isn't a CCPA compliance check.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool fetches the URL you enter through our server (not your browser) so it can read the Set-Cookie headers and tracking scripts a site sends before you ever visit it. Your request goes to our server, which is rate-limited and never logs the URLs you scan. The categorization against our database of known trackers then runs on the returned data.",
+    "howItWorks": "This tool fetches the URL you enter through our server (not your browser) so it can read the Set-Cookie headers and tracking scripts a site sends before you ever visit it. The categorization against our database of known trackers then runs on the returned data.",
     "tips": [
       "Block third-party cookies in your browser settings to prevent cross-site tracking",
       "Use a cookie auto-delete extension to clear tracking cookies after each session",

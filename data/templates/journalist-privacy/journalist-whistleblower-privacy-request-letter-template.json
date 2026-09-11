@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Letter Header and Contact Information",
-      "content": "[Your Name]\n[Your Title/Organization]\n[Address]\n[City, State, ZIP]\n[Phone Number]\n[Secure Email Address]\n[Date]\n\n[Recipient Name]\n[Recipient Title]\n[Organization]\n[Address]\n[City, State, ZIP]",
+      "content": "[Your Name]\n[Your Title/Organization]\n[Address]\n[City, State, ZIP]\n[Phone Number]\n[Secure Email Address]\n[Date]\n\n[Recipient Name]\n[Recipient Title]\n[Organization]\n[Organization Address]\n[Organization City, State, ZIP]",
       "placeholders": [
         {
           "key": "your_name",
@@ -36,6 +36,16 @@
           "key": "recipient_organization",
           "label": "Recipient's Organization",
           "defaultValue": "ABC Corporation"
+        },
+        {
+          "key": "organization_address",
+          "label": "Organization Address",
+          "defaultValue": "456 Oak Avenue"
+        },
+        {
+          "key": "organization_city_state_zip",
+          "label": "Organization City, State, ZIP",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },

@@ -10,6 +10,7 @@ import { useToolResult } from '@/components/tools/ResultContext';
 import { ResultCta } from '@/components/ResultCta';
 import { Scorecard } from '@/components/Scorecard';
 import { NextSteps, type NextStepsData } from '@/components/NextSteps';
+import { scorecardFigure, VALUE_ONLY_ENGINES } from '@/lib/scorecard';
 import { track } from '@/lib/track';
 
 interface Props {
@@ -26,10 +27,13 @@ export function FunnelSurfaces({ engine, niche, title, nextSteps, proWebUrl }: P
     if (result) track('result_shown', { tool: engine, niche, severity: result.severity }, { once: true });
   }, [result, engine, niche]);
 
-  const figure = result?.grade ? `Grade ${result.grade}` : typeof result?.score === 'number' ? `${Math.round(result.score)} / 100` : result?.stats?.[0]?.value || '';
+  // A generated hash, password or ciphertext says nothing about the visitor:
+  // no "your result" CTA and no share card for those tools.
+  const aboutVisitor = !VALUE_ONLY_ENGINES.has(engine);
+  const figure = result ? scorecardFigure(engine, result) : '';
   return (
     <>
-      {result && (
+      {result && aboutVisitor && (
         <>
           <ResultCta engine={engine} niche={niche} severity={result.severity} headline={result.headline} proWebUrl={proWebUrl} content={niche} />
           {figure && (

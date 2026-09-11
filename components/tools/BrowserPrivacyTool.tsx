@@ -13,8 +13,33 @@ import type { Status } from '@/components/ui/StatusDot';
  */
 const CANVAS_PROBE_TEXT = 'Privacy \u{1F512} canvas';
 
-interface PrivacyCheck {
-  name: string;
+/**
+ * Every row the audit renders, in order. The one source for the check count:
+ * ENGINE_META (registry.tsx) reads its length for the hero figure and the
+ * How-it-works copy, which had drifted to "14" while 15 rows rendered.
+ * PrivacyCheck.name is typed against it, and tests/tool-result-rules.test.ts
+ * fails if a row is added or dropped without updating it.
+ */
+export const BROWSER_PRIVACY_CHECKS = [
+  'Do Not Track',
+  'Cookies',
+  'JavaScript',
+  'Screen Resolution',
+  'Platform',
+  'Language',
+  'Timezone',
+  'CPU Cores',
+  'Device Memory',
+  'WebRTC IP Exposure',
+  'Canvas Fingerprint',
+  'Audio Fingerprint',
+  'User Agent',
+  'Touch Support',
+  'PDF Viewer',
+] as const;
+
+export interface PrivacyCheck {
+  name: (typeof BROWSER_PRIVACY_CHECKS)[number];
   category: string;
   status: 'good' | 'warning' | 'bad' | 'info';
   value: string;
@@ -80,6 +105,55 @@ async function detectWebRtcLeaks(): Promise<{ publicIPs: string[]; privateIPs: s
   return { publicIPs: [...publicIPs], privateIPs: [...privateIPs] };
 }
 
+/**
+ * The WebRTC row. A public address from STUN is not proof of a leak: without a
+ * VPN it is simply the address every site already sees. Deciding "leak" needs
+ * the address the visitor's request arrived from, and this audit never asks
+ * our server for one (What's My IP does), so the row explains instead of
+ * failing. It used to mark every visitor "bad", costing 15 points, for the
+ * normal case.
+ */
+export function webrtcCheck(r: { publicIPs: string[]; privateIPs: string[]; error?: string }): PrivacyCheck {
+  const base = { name: 'WebRTC IP Exposure', category: 'Network' } as const;
+  if (r.error) {
+    return {
+      ...base,
+      status: 'good',
+      value: 'Blocked',
+      detail: 'WebRTC is blocked or unavailable, so sites cannot use it to read your IP address.',
+    };
+  }
+  const local = r.privateIPs.length > 0
+    ? `${r.privateIPs.slice(0, 3).join(', ')}${r.privateIPs.length > 3 ? '…' : ''}`
+    : '';
+  if (r.publicIPs.length > 0) {
+    const publicNote =
+      `WebRTC shows your public IP: ${r.publicIPs.join(', ')}. Without a VPN this is the address every site already sees, so it is not a leak. ` +
+      'On a VPN it should be the VPN’s address; if it is your own, WebRTC is leaking it around the tunnel. ' +
+      'This audit can’t see which address sites get from your connection, so it does not count this as a fail.';
+    // Local addresses are a fingerprinting signal on any connection; the public
+    // one is only information. So when both show, the row warns about, and is
+    // labelled by, the local ones: "Public IP visible" in amber blamed the public IP.
+    return local
+      ? {
+          ...base,
+          status: 'warning',
+          value: 'Local IPs visible',
+          detail: `WebRTC shows local network addresses (${local}), which help fingerprint your device. ${publicNote}`,
+        }
+      : { ...base, status: 'info', value: 'Public IP visible', detail: publicNote };
+  }
+  if (local) {
+    return {
+      ...base,
+      status: 'warning',
+      value: 'Local IPs only',
+      detail: `Only local network addresses are exposed (${local}). Sites can’t reach you with them, but they help fingerprint your device.`,
+    };
+  }
+  return { ...base, status: 'good', value: 'No IPs exposed', detail: 'WebRTC revealed no IP addresses.' };
+}
+
 /** Compute a hash of an OfflineAudioContext rendering — a classic fingerprint vector. */
 async function audioFingerprintHash(): Promise<string> {
   try {
@@ -135,6 +209,8 @@ export function BrowserPrivacyTool() {
     });
   }, [score, checks, report]);
   const [scanning, setScanning] = useState(false);
+  // The console stays mounted across re-runs, so it is told when each run finished.
+  const [runAt, setRunAt] = useState(0);
 
   const runAudit = async () => {
     setScanning(true);
@@ -254,40 +330,8 @@ export function BrowserPrivacyTool() {
           : 'Device memory API is not exposed — good for privacy.',
       });
 
-      // 10. WebRTC real-IP leak test
-      if (webrtcResult.error) {
-        results.push({
-          name: 'WebRTC IP Leak',
-          category: 'Leaks',
-          status: 'good',
-          value: 'Blocked / unavailable',
-          detail: 'WebRTC STUN gathering failed or is blocked. Your real IP cannot leak via this vector.',
-        });
-      } else {
-        const hasPublic = webrtcResult.publicIPs.length > 0;
-        const hasPrivate = webrtcResult.privateIPs.length > 0;
-        let status: PrivacyCheck['status'] = 'good';
-        const pieces: string[] = [];
-        if (hasPublic) {
-          status = 'bad';
-          pieces.push(`Public IP(s): ${webrtcResult.publicIPs.join(', ')}`);
-        }
-        if (hasPrivate) {
-          status = status === 'bad' ? 'bad' : 'warning';
-          pieces.push(`Private IP(s): ${webrtcResult.privateIPs.slice(0, 3).join(', ')}${webrtcResult.privateIPs.length > 3 ? '…' : ''}`);
-        }
-        results.push({
-          name: 'WebRTC IP Leak',
-          category: 'Leaks',
-          status,
-          value: hasPublic ? 'Public IP exposed' : hasPrivate ? 'Private IP only' : 'No leaks',
-          detail: hasPublic
-            ? `WebRTC is leaking your real IP. Even behind a VPN, sites can see: ${pieces.join(' | ')}. Use a browser WebRTC blocker or a VPN that patches WebRTC.`
-            : hasPrivate
-              ? `Only RFC1918 addresses exposed (${pieces.join(' | ')}). Less severe but still a fingerprint signal.`
-              : 'No IPs gathered — good.',
-        });
-      }
+      // 10. WebRTC address exposure (information, not a leak verdict — see webrtcCheck)
+      results.push(webrtcCheck(webrtcResult));
 
       // 11. Canvas fingerprint: hash the rendered pixels and report the fingerprint.
       // A short hash means canvas is disabled/blocked; a long/stable hash means
@@ -377,6 +421,7 @@ export function BrowserPrivacyTool() {
 
       setChecks(results);
       setScore(s);
+      setRunAt(Date.now());
       setScanning(false);
     };
     runSync();
@@ -388,7 +433,7 @@ export function BrowserPrivacyTool() {
     <div className="space-y-6">
       <div className="bg-s0 border border-b1 rounded-lg p-6 text-center">
         <p className="text-t2 mb-4">
-          Analyze your browser&apos;s privacy configuration and fingerprinting exposure.
+          Run {BROWSER_PRIVACY_CHECKS.length} checks on what your browser shows every site you visit: tracking settings, fingerprinting signals and the IP address WebRTC exposes.
         </p>
         <button
           onClick={runAudit}
@@ -397,9 +442,6 @@ export function BrowserPrivacyTool() {
         >
           {scanning ? 'Scanning...' : 'Run Privacy Audit'}
         </button>
-        <p className="mt-3 text-xs text-t3">
-          All checks run locally in your browser. Nothing is sent to any server.
-        </p>
       </div>
 
       {score !== null && (
@@ -407,7 +449,7 @@ export function BrowserPrivacyTool() {
           engine="browser-privacy"
           status={statusFromSeverity(severityFromScore(score))}
           checks={checks.length}
-          processing="client"
+          runAt={runAt || undefined}
           score={score}
           tally={{
             fails: checks.filter((c) => c.status === 'bad').length,

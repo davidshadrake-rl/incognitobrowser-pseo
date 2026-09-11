@@ -6,6 +6,7 @@
  * its family (IconTile's own tone="pro" precedence rule applies here too).
  */
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { IconTile } from './ui/Icon';
 import { Badge } from './ui/Badge';
 import { Schematic } from './ui/Schematic';
@@ -24,20 +25,17 @@ const RAIL: Record<Family, string> = {
 
 export interface ToolCardProps {
   engine: string;
-  title: string;
+  /** Plain text, or AtoZCatalogue's title with its filing word emphasised. */
+  title: ReactNode;
   blurb: string;
   href: string;
-  /** Defaults to 'client' — most engines run entirely in the browser. */
-  processing?: 'client' | 'server';
   /** 56px on the tools-index instrument panel, 40px (default) elsewhere, 32px in AtoZCatalogue. */
   tileSize?: 40 | 56 | 32;
   /** Instrument panel only: the input -> check -> verdict strip under the blurb. */
   schematic?: boolean;
-  /** AtoZCatalogue's compact listing: hides the processing badge, keeps only the tier badge. */
-  compact?: boolean;
 }
 
-export function ToolCard({ engine, title, blurb, href, processing, tileSize = 40, schematic = false, compact = false }: ToolCardProps) {
+export function ToolCard({ engine, title, blurb, href, tileSize = 40, schematic = false }: ToolCardProps) {
   const tier = tierOfEngine(engine);
   const rail = tier === 'pro' ? 'before:bg-pro' : RAIL[familyOfEngine(engine)];
   const gridCols = tileSize === 56 ? 'grid-cols-[56px_1fr]' : tileSize === 32 ? 'grid-cols-[32px_1fr]' : 'grid-cols-[40px_1fr]';
@@ -60,7 +58,6 @@ export function ToolCard({ engine, title, blurb, href, processing, tileSize = 40
         )}
         <div className="mt-3 flex flex-wrap gap-1.5">
           <Badge variant={tier} />
-          {!compact && <Badge variant={processing === 'server' ? 'server' : 'client'} />}
         </div>
       </div>
     </>

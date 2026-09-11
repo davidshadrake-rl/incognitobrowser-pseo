@@ -226,14 +226,16 @@ export function AdBlockerTestTool() {
       severity: score.severity,
       headline: headlineFor(score),
       detail: verdictFor(score, hidden, cosmeticResults.length),
+      // A percentage of requests blocked, not a score out of 100.
       score: score.percent,
+      scoreUnit: '%',
       stats: [
         { label: 'Blocked', value: `${score.blocked}/${score.total}` },
         { label: 'Allowed', value: `${score.allowed}` },
         { label: 'Elements hidden', value: `${hidden}/${cosmeticResults.length}` },
         { label: 'Categories', value: `${cleanCategories}/${byCategory.length} clean` },
       ],
-      shareText: `${headlineFor(score)} — ${score.percent}% blocked on the first-party Ad-Blocker Test.`,
+      shareText: `${headlineFor(score)}. Check yours:`,
     };
     report(result);
   }, [report]);
@@ -261,19 +263,24 @@ export function AdBlockerTestTool() {
         >
           {running ? `Testing… ${progress}/${total}` : phase === 'done' ? 'Run Again' : 'Run Ad-Blocker Test'}
         </button>
-        <p className="mt-3 text-xs text-t3">
-          Every request goes to this site only. Nothing about you or your result is sent or stored anywhere.
-        </p>
       </div>
 
       {running && (
         <div className="bg-s0 border border-b1 rounded-lg p-4">
           <div className="flex items-center justify-between mb-2 text-xs text-t2">
-            <span>Probing first-party bait requests…</span>
+            <span>Sending the test requests…</span>
             <span className="font-mono">{progress}/{total}</span>
           </div>
-          <div className="h-2 bg-s0 rounded-full overflow-hidden">
-            <div className="h-full rounded-full bg-white/40 transition-all duration-200" style={{ width: `${(progress / total) * 100}%` }} />
+          {/* Track on s1 and fill on t2: the old s0 track matched the card, so the bar had no visible background. */}
+          <div
+            className="h-2 bg-s1 rounded-full overflow-hidden"
+            role="progressbar"
+            aria-label="Test requests finished"
+            aria-valuemin={0}
+            aria-valuemax={total}
+            aria-valuenow={progress}
+          >
+            <div className="h-full rounded-full bg-t2 transition-all duration-200" style={{ width: `${(progress / total) * 100}%` }} />
           </div>
         </div>
       )}
@@ -283,8 +290,9 @@ export function AdBlockerTestTool() {
           engine="ad-blocker-test"
           status={statusFromSeverity(score.severity)}
           checks={score.total}
-          processing="client"
+          checksNoun={['test request', 'test requests']}
           score={score.percent}
+          scoreUnit="%"
           gaugeLabel="blocked"
           statTiles={[
             { label: 'Blocked', value: `${score.blocked}/${score.total}` },
@@ -382,12 +390,12 @@ export function AdBlockerTestTool() {
             </div>
           </div>
 
-          {/* Honesty + privacy notes */}
+          {/* How the test works */}
           <div className="bg-s0 border border-info/30 rounded-lg p-4 space-y-2">
             <p className="text-sm text-info font-medium">What this test did — and did not — load</p>
             <p className="text-xs text-t2">
               All {score.total} requests went to this site only, under <span className="font-mono text-white">{servedFrom}</span>.
-              Nothing was loaded from any ad network or tracking company. Each bait is a first-party file whose URL path
+              Nothing was loaded from any ad network or tracking company. Each bait is a file on this site whose URL path
               mirrors a generic EasyList / EasyPrivacy rule — the kind that matches on any domain — so a blocker with those
               lists cancels it before it leaves your browser. Scripts that arrived but never ran count as blocked (the
               blocker substituted a harmless stub).
@@ -396,10 +404,6 @@ export function AdBlockerTestTool() {
               Blockers that work by domain alone — DNS filters like Pi-hole or NextDNS, and most VPN &ldquo;ad blocking&rdquo;
               features — cannot see URL patterns and will score low here even though they stop real ad domains. A browser
               extension such as uBlock Origin, or a browser with built-in shields, is what this test measures.
-            </p>
-            <p className="text-xs text-t3">
-              Privacy: the test runs entirely in your browser. The bait files carry no identifiers, set no cookies, and your
-              result is never transmitted or stored.
             </p>
           </div>
         </>

@@ -59,6 +59,10 @@ export function LinkUnwrapperTool() {
   const report = useReportResult();
   const [input, setInput] = useState('');
   const [result, setResult] = useState<LinkResult | null>(null);
+  // True when the result on screen is one of the built-in examples, not the visitor's own link.
+  const [fromExample, setFromExample] = useState(false);
+  // The console stays mounted across runs, so it is told when the latest one ran.
+  const [ranAt, setRanAt] = useState(0);
   const [copied, setCopied] = useState(false);
 
   const run = useCallback((value: string) => {
@@ -68,13 +72,18 @@ export function LinkUnwrapperTool() {
       return;
     }
     setResult(analyzeLink(trimmed));
+    // Unwrapping an example URL again (Enter, the Unwrap button) is still the example.
+    setFromExample(EXAMPLES.some((ex) => ex.url === trimmed));
+    setRanAt(Date.now());
     setCopied(false);
   }, []);
 
   // Result bus: report whenever the analysis changes; clear on error or empty input.
+  // An example is demo data, not the visitor's exposure: it used to bring up
+  // "This link was built to identify you." and a share card for the canned link.
   useEffect(() => {
-    report(result && result.ok ? toToolResult(result) : null);
-  }, [result, report]);
+    report(result && result.ok && !fromExample ? toToolResult(result) : null);
+  }, [result, fromExample, report]);
 
   const handleChange = (value: string) => {
     setInput(value);
@@ -150,10 +159,6 @@ export function LinkUnwrapperTool() {
             </button>
           ))}
         </div>
-        <p className="mt-3 text-xs text-t3">
-          Parsed entirely in your browser. The link is never fetched, so nothing is logged by the sender, the redirect
-          service or the destination.
-        </p>
       </div>
 
       {error && (
@@ -167,13 +172,19 @@ export function LinkUnwrapperTool() {
         <ConsoleFrame
           engine="link-unwrapper"
           status={statusFromSeverity(analysis.severity)}
-          processing="client"
+          verdict={sev.label}
+          runAt={ranAt}
           statTiles={analysis.stats}
         >
         <div className="space-y-4">
+          {fromExample && (
+            <p className="rounded-md border border-b1 bg-s1 px-3 py-2 text-xs text-t2" data-example-result>
+              <span className="font-semibold text-white">Example.</span> This is a built-in sample link, not yours. Paste your own link above to check it.
+            </p>
+          )}
           {/* Verdict */}
           <div>
-            <div className={`text-xs uppercase tracking-wide font-semibold ${sev.text} mb-1`}>{sev.label}</div>
+            <div className={`text-xs uppercase tracking-wide font-semibold ${sev.text} mb-1`}>{fromExample ? `Example · ${sev.label}` : sev.label}</div>
             <h3 className="text-lg font-bold text-white">{analysis.headline}</h3>
             <p className="mt-1 text-sm text-t2">{analysis.detail}</p>
           </div>

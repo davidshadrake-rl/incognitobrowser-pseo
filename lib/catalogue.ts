@@ -33,12 +33,31 @@ export const LETTERS = ['#', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'] as const;
  */
 const LEADING_FILLER = new Set(['the', 'a', 'an', 'best', 'top', 'complete', 'advanced', 'ultimate', 'essential', 'free', 'your', 'how', 'to', 'guide', 'guides']);
 
+/** How many leading words of a title are filler (never all of them). */
+function fillerCount(words: string[]): number {
+  let i = 0;
+  while (i < words.length - 1 && LEADING_FILLER.has(words[i].toLowerCase().replace(/[^a-z]/g, ''))) i++;
+  return i;
+}
+
 /** The part of a title we file and sort by: the title minus leading filler words (falls back to the whole title). */
 export function sortKeyOf(title: string): string {
   const words = title.trim().split(/\s+/);
-  let i = 0;
-  while (i < words.length - 1 && LEADING_FILLER.has(words[i].toLowerCase().replace(/[^a-z]/g, ''))) i++;
-  return words.slice(i).join(' ') || title.trim();
+  return words.slice(fillerCount(words)).join(' ') || title.trim();
+}
+
+/**
+ * A title split where its filing starts, spacing kept, so a list can show
+ * why "Complete Guide to Ad Tracking" sits under A: render `lead` quietly
+ * and `filed` (which starts with the filing letter) at full weight.
+ * `lead + filed` is always the trimmed title; `lead` is '' when nothing was
+ * skipped. Files exactly as letterOf / sortKeyOf do.
+ */
+export function filingParts(title: string): { lead: string; filed: string } {
+  const t = title.trim();
+  const n = fillerCount(t.split(/\s+/));
+  const lead = n > 0 ? (t.match(new RegExp(`^(?:\\S+\\s+){${n}}`))?.[0] ?? '') : '';
+  return { lead, filed: t.slice(lead.length) };
 }
 
 /** Letter bucket for a title: A–Z, or '#' for anything else (digits, symbols). */

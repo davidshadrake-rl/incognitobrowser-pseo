@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Letter Header and Date",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[Recipient Name]\n[Organization/Agency]\n[Address]\n[City, State, ZIP Code]",
+      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Email Address]\n[Phone Number]\n\n[Date]\n\n[Recipient Name]\n[Organization/Agency]\n[Organization Address]\n[Organization City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "your_name",
@@ -36,6 +36,16 @@
           "key": "organization",
           "label": "Organization/Agency Name",
           "defaultValue": "City Police Department"
+        },
+        {
+          "key": "organization_address",
+          "label": "Organization Address",
+          "defaultValue": "456 Oak Avenue"
+        },
+        {
+          "key": "organization_city_state_zip_code",
+          "label": "Organization City, State, ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },
@@ -99,7 +109,7 @@
     },
     {
       "heading": "Request for Fee Waiver and Timeline",
-      "content": "I request a waiver of any fees associated with this request, as the information serves the public interest in government transparency. If fees cannot be waived, please provide an estimate before proceeding.\n\nI would appreciate a response within [Number] business days as required by law. If you cannot provide all requested information, please provide what is available and explain any exemptions claimed.",
+      "content": "I request a waiver of any fees associated with this request, as the information serves the public interest in government transparency. If fees cannot be waived, please provide an estimate before proceeding.\n\nI would appreciate a response within [Response Days] business days as required by law. If you cannot provide all requested information, please provide what is available and explain any exemptions claimed.",
       "placeholders": [
         {
           "key": "response_days",

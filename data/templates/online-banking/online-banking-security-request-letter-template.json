@@ -15,7 +15,7 @@
   "sections": [
     {
       "heading": "Letter Header and Date",
-      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Phone Number]\n[Your Email Address]\n\n[Date]\n\n[Bank Name]\n[Customer Service Department]\n[Bank Address]\n[City, State, ZIP Code]",
+      "content": "[Your Name]\n[Your Address]\n[City, State, ZIP Code]\n[Your Phone Number]\n[Your Email Address]\n\n[Date]\n\n[Bank Name]\n[Customer Service Department]\n[Bank Address]\n[Bank City, State, ZIP Code]",
       "placeholders": [
         {
           "key": "customerName",
@@ -26,6 +26,11 @@
           "key": "bankName",
           "label": "Bank Name",
           "defaultValue": "First National Bank"
+        },
+        {
+          "key": "bankCityStateZipCode",
+          "label": "Bank City, State, ZIP Code",
+          "defaultValue": "Austin, TX 78701"
         }
       ]
     },
