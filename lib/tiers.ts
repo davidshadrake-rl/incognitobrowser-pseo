@@ -29,7 +29,7 @@ export type Tier = 'free' | 'pro';
  * "the Pro tools site", never "Incognito Pro".
  */
 export const PRO_DEFINITION =
-  'Incognito Pro is the paid subscription tier of the free Incognito Browser Android app. It adds a built-in VPN, Pro ad and tracker blocking, and the deeper privacy tools, and it is bought inside the app through Google Play.';
+  'Incognito Pro is the paid subscription tier of the free Incognito Browser Android app. It adds Pro ad and tracker blocking and the deeper privacy tools, and it is bought inside the app through Google Play.';
 /** Flip on gate day. Removes every "free for now" string and the ProNotice in one change. */
 export const PRO_WEB_GATED = false;
 export const PRO_FOOTNOTE = 'Subscription via Google Play. Android only.';

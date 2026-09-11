@@ -264,7 +264,7 @@ export function redactPeople<T extends object>(data: T): T & { reviewed: boolean
     ? Object.fromEntries(Object.entries(editorial).filter(([k]) => k !== 'reviewedBy'))
     : editorial;
   // Demoting a page to draft leaves its editor block in place, so `!!editor`
-  // alone put "Editorially reviewed" on ~50 pages that are held back from
+  // alone put the editorial note on ~50 pages that are held back from
   // publication. The note is only true of published pages.
   const reviewed = !!editor && (editorial as { status?: string } | undefined)?.status === 'published';
   return { ...(rest as T), ...(editorial ? { editorial: safeEditorial } : {}), reviewed } as T & { reviewed: boolean };

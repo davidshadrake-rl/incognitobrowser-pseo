@@ -491,7 +491,7 @@ export function DnsLeakTestTool() {
             </h3>
             <ul className="space-y-2 text-sm text-t2">
               <li>• <strong className="text-white">Every site name you visit</strong> goes to the resolver first. If that resolver belongs to your ISP, your browsing destinations are visible to it even when your traffic is inside a VPN tunnel.</li>
-              <li>• <strong className="text-white">The fix is a VPN that owns the DNS path.</strong> The VPN in Incognito Pro answers every lookup from its own resolver inside the tunnel, so nothing reaches your ISP&apos;s resolver.</li>
+              <li>• <strong className="text-white">The fix is a VPN that owns the DNS path.</strong> Choose a VPN that answers every lookup from its own resolver inside the tunnel, or turn on Private DNS on your phone, so nothing reaches your ISP&apos;s resolver.</li>
               <li>• <strong className="text-white">Check the operating system too.</strong> Browser-only VPN extensions leave system DNS untouched, and some VPN clients lose their DNS override after updates.</li>
               <li>• <strong className="text-white">IPv6 counts.</strong> A tunnel that only carries IPv4 lets IPv6 lookups leave through your ISP.</li>
             </ul>

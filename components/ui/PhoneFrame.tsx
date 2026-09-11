@@ -1,13 +1,14 @@
 /**
  * Product graphic (DESIGN-SPEC section 4): a 150x300 phone, rx24, 2px b2
  * stroke, 6px s0 ring, speaker slot, screen s0 rx10 with a pro header band
- * reading "Incognito PRO" and three rows (VPN, Trackers, Audit) with pro
+ * reading "Incognito PRO" and three rows (Ads, Trackers, Audit) with pro
  * bars. Sits beside ResultCta and in the /tools Pro band. Server component.
  *
  * Decorative: hidden from assistive tech, and it shows no number. It used to
  * read "Audit · 92/100", which sat beside the visitor's real score in
  * ResultCta and read as a second result. Both callers caption it
- * "Incognito Pro on Android (illustration)".
+ * "Incognito Pro on Android (illustration)". Its rows may only show what Pro
+ * really includes (PRO_DEFINITION): there is no VPN, so there is no VPN row.
  */
 export function PhoneFrame() {
   return (
@@ -27,7 +28,7 @@ export function PhoneFrame() {
       </text>
       {/* rows */}
       <text x="24" y="86" fill="var(--t2)" className="text-row">
-        VPN · on
+        Ads · blocked
       </text>
       <rect x="24" y="94" width="102" height="4" rx="2" fill="var(--pro)" />
       <text x="24" y="122" fill="var(--t2)" className="text-row">

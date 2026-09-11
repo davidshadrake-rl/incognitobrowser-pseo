@@ -2,26 +2,33 @@
  * Result-moment CTA copy — one source of truth.
  *
  * The conversion is: free web tools + the free Incognito Browser Android app
- * → the paid Incognito Pro subscription (these tools built in, the VPN, pro
- * ad blocking, and more). The ask arrives when the visitor has just seen
- * THEIR exposure, so copy is composed from three parts:
- *   1. the engine's severity line (what the result means + the specific fix),
+ * → the paid Incognito Pro subscription. The ask arrives when the visitor has
+ * just seen THEIR exposure, so copy is composed from three parts:
+ *   1. the engine's severity line (what the result means + what helps),
  *   2. the niche hook (the fear that opened this door),
- *   3. the Pro benefits that answer it (ordered per engine).
+ *   3. the Pro benefits (ordered per engine).
  * Everything here is data; components only compose it.
+ *
+ * Every product claim must be backed, and there are only two sources:
+ *   - PRO_DEFINITION (lib/tiers.ts): Pro adds ad and tracker blocking and the
+ *     deeper privacy tools. There is NO VPN (owner, 2026-09-10) — never add one.
+ *   - the free app's verified features in data/brand.json: history, cookies
+ *     and sessions wiped on exit; a built-in ad blocker; Agent Cloaking.
+ * Earlier copy promised automatic photo stripping, link cleaning, WebRTC and
+ * canvas blocking and permission audits. None of that is confirmed to ship,
+ * so none of it is claimed. tests/no-vpn-claims.test.ts guards the VPN part.
  */
 import type { Severity } from '@/components/tools/ResultContext';
 import type { IconName } from '@/components/ui/Icon';
 import { GRADE_LABEL, type Grade } from '@/lib/site-grade';
 
-export type ProBenefit = 'vpn' | 'adblock' | 'tools' | 'more';
+export type ProBenefit = 'adblock' | 'tools' | 'more';
 
 /** Icon per benefit tile (DESIGN-SPEC 5.4, ResultCta). */
 export const PRO_BENEFITS: Record<ProBenefit, { title: string; line: string; icon: IconName }> = {
-  vpn: { title: 'Built-in VPN', line: 'hides your real IP and location from every site and your ISP.', icon: 'shield' },
-  adblock: { title: 'Pro ad blocking', line: 'stops ads and the trackers behind them before they load.', icon: 'block' },
-  tools: { title: 'Every tool built in', line: 'the checks on this site run inside the browser, on every page you visit.', icon: 'finger' },
-  more: { title: 'And more', line: 'one subscription, every Pro protection.', icon: 'star' },
+  adblock: { title: 'Pro ad and tracker blocking', line: 'blocks ads and the tracker requests behind them as you browse.', icon: 'block' },
+  tools: { title: 'The Pro privacy tools', line: 'the cookie scanner, fingerprint audit, link checker and photo metadata viewer.', icon: 'finger' },
+  more: { title: 'On top of the free app', line: 'which already wipes history, cookies and sessions every time you close it.', icon: 'star' },
 };
 
 export interface SeverityCopy { headline: string; body: string }
@@ -37,113 +44,113 @@ export interface EngineCopy {
 
 const GREEN_DEFAULT: SeverityCopy = {
   headline: 'You are protected here. Keep it that way everywhere.',
-  body: 'Incognito Pro makes this the default on every site, with the VPN and pro ad blocking included.',
+  body: 'Incognito Pro adds ad and tracker blocking and the deeper privacy tools to the free Incognito Browser app.',
 };
 const INFO_DEFAULT: SeverityCopy = {
   headline: 'Take this protection with you.',
-  body: 'Incognito Pro puts this tool, the VPN and pro ad blocking in one browser on your phone.',
+  body: 'Incognito Browser wipes history, cookies and sessions every time you close it. Incognito Pro adds ad and tracker blocking and the deeper privacy tools.',
 };
 
 export const ENGINE_COPY: Record<string, EngineCopy> = {
   'browser-privacy': {
-    benefits: ['tools', 'vpn', 'adblock'],
-    red: { headline: 'Your browser is exposing you right now.', body: 'Incognito Pro blocks canvas fingerprinting and WebRTC leaks, and its VPN hides the real IP this test just found.' },
-    amber: { headline: 'Partly protected. The gaps are the ones trackers use.', body: 'Incognito Pro closes the remaining leaks by default and hides your IP with the built-in VPN.' },
+    benefits: ['tools', 'adblock', 'more'],
+    red: { headline: 'Your browser is exposing you right now.', body: 'Agent Cloaking in Incognito Browser masks the browser and device sites see, and this audit comes with Incognito Pro, so you can check again after you switch.' },
+    amber: { headline: 'Partly protected. The gaps are the ones trackers use.', body: 'Agent Cloaking in Incognito Browser masks the browser and device sites see. Run this audit again from Incognito Pro to compare.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
   'cookie-analyzer': {
-    benefits: ['adblock', 'tools', 'vpn'],
-    red: { headline: 'This site tracks you before you agree to anything.', body: 'Incognito Pro blocks these trackers and tracking cookies before they load, on every site.' },
-    amber: { headline: 'Some tracking gets through here.', body: 'Incognito Pro blocks the trackers this scan found, automatically.' },
-    green: { headline: 'Clean site. Most are not.', body: 'Incognito Pro blocks trackers on the sites that are not this careful.' }, info: INFO_DEFAULT,
+    benefits: ['adblock', 'tools', 'more'],
+    red: { headline: 'This site tracks you before you agree to anything.', body: 'Incognito Browser wipes every cookie when you close it, and Incognito Pro\'s ad and tracker blocking stops many requests like these before they load.' },
+    amber: { headline: 'Some tracking gets through here.', body: 'Incognito Pro\'s ad and tracker blocking stops many requests like these, and the browser wipes cookies every time you close it.' },
+    green: { headline: 'Clean site. Most are not.', body: 'Incognito Pro\'s ad and tracker blocking covers the sites that are not this careful.' }, info: INFO_DEFAULT,
   },
   'url-analyzer': {
-    benefits: ['tools', 'adblock', 'vpn'],
-    red: { headline: 'This link has the marks of a phishing attempt.', body: 'Incognito Pro checks links like this one before you land, and hides your IP if you do.' },
-    amber: { headline: 'This link is not clearly safe.', body: 'Incognito Pro flags suspicious links as you browse, not only when you remember to check.' },
+    benefits: ['tools', 'adblock', 'more'],
+    red: { headline: 'This link has the marks of a phishing attempt.', body: 'Don\'t open it. This link checker comes with Incognito Pro, so you can check links on your phone before you tap them.' },
+    amber: { headline: 'This link is not clearly safe.', body: 'Check links like this before you open them. The link checker comes with Incognito Pro.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
   'metadata-viewer': {
-    benefits: ['tools', 'more', 'vpn'],
-    red: { headline: 'This photo gives away where it was taken.', body: 'Incognito Pro strips location and device data from uploads automatically.' },
-    amber: { headline: 'This photo carries device and time data.', body: 'Incognito Pro strips metadata from every upload so you never have to remember.' },
+    benefits: ['tools', 'more', 'adblock'],
+    red: { headline: 'This photo gives away where it was taken.', body: 'Save a clean copy before you share it. This viewer and its clean-copy tool come with Incognito Pro.' },
+    amber: { headline: 'This photo carries device and time data.', body: 'Save a clean copy before you share it. This viewer comes with Incognito Pro.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
   'whats-my-ip': {
-    benefits: ['vpn', 'tools', 'adblock'],
-    red: { headline: 'Your real IP is visible to every site you visit.', body: 'The VPN in Incognito Pro hides it, and the browser stops WebRTC from leaking it around the VPN.' },
-    amber: { headline: 'Your VPN is on, but the browser can still leak.', body: 'Incognito Pro blocks WebRTC leaks so the VPN actually holds.' },
-    green: GREEN_DEFAULT, info: { headline: 'This is what every site sees.', body: 'The VPN in Incognito Pro replaces it with a shared address on every page.' },
+    benefits: ['tools', 'more', 'adblock'],
+    red: { headline: 'Your real IP is visible to every site you visit.', body: 'A browser can\'t change the address sites see. What Incognito Browser does is wipe cookies and sessions every time you close it, so sites can\'t link your visits by cookie.' },
+    amber: { headline: 'Your VPN is on, but the browser can still leak.', body: 'The fingerprint audit in Incognito Pro shows what else this browser gives away besides your IP.' },
+    green: GREEN_DEFAULT, info: { headline: 'This is what every site sees.', body: 'Incognito Browser can\'t change this address, but it wipes cookies and sessions every time you close it, so sites can\'t link your visits by cookie.' },
   },
   'dns-leak-test': {
-    benefits: ['vpn', 'tools', 'adblock'],
-    red: { headline: 'Your DNS is leaking. Your ISP still sees every site you visit.', body: 'The VPN in Incognito Pro routes DNS through the tunnel, so nothing leaks to your ISP.' },
-    amber: { headline: 'We could not confirm your DNS is protected.', body: 'The VPN in Incognito Pro keeps DNS inside the tunnel by design.' },
+    benefits: ['tools', 'more', 'adblock'],
+    red: { headline: 'Your DNS is leaking. Your ISP still sees every site you visit.', body: 'The fix is in your VPN\'s settings or your phone\'s Private DNS setting. Incognito Browser wipes what is left on the phone every time you close it.' },
+    amber: { headline: 'We could not confirm your DNS is protected.', body: 'Check your VPN\'s DNS setting, or turn on Private DNS on your phone, then run the test again.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
   'ad-blocker-test': {
-    benefits: ['adblock', 'tools', 'vpn'],
-    red: { headline: 'Most ad and tracker requests got through.', body: 'Incognito Pro blocks these requests before they leave your phone.' },
-    amber: { headline: 'Your blocker misses some of what matters.', body: 'Incognito Pro blocks ads and the trackers behind them, no extension needed.' },
-    green: { headline: 'Well blocked. Take it to your phone.', body: 'Incognito Pro brings this level of blocking to Android, where extensions are rare.' }, info: INFO_DEFAULT,
+    benefits: ['adblock', 'more', 'tools'],
+    red: { headline: 'Most ad and tracker requests got through.', body: 'Incognito Browser has an ad blocker built in, and Incognito Pro adds ad and tracker blocking on top.' },
+    amber: { headline: 'Your blocker misses some of what matters.', body: 'Incognito Pro\'s ad and tracker blocking catches tracker requests a basic ad blocker lets through.' },
+    green: { headline: 'Well blocked. Take it to your phone.', body: 'Incognito Browser brings a built-in ad blocker to Android, where browser extensions are rare.' }, info: INFO_DEFAULT,
   },
   'password-strength': {
-    benefits: ['tools', 'vpn', 'more'],
-    red: { headline: 'This password falls in seconds.', body: 'Incognito Pro keeps the strength checker one tap away and hides the logins you type from your network.' },
-    amber: { headline: 'This password would not last a determined attack.', body: 'Incognito Pro keeps this checker built in, and the VPN protects your logins on any network.' },
+    benefits: ['more', 'tools', 'adblock'],
+    red: { headline: 'This password falls in seconds.', body: 'Use a long random password or a passphrase of several words, and keep it in a password manager.' },
+    amber: { headline: 'This password would not last a determined attack.', body: 'Make it longer, or switch to a passphrase of several unrelated words.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
-  'password-generator': { benefits: ['tools', 'vpn', 'more'], red: GREEN_DEFAULT, amber: GREEN_DEFAULT, green: GREEN_DEFAULT, info: { headline: 'Strong passwords, wherever you sign up.', body: 'Incognito Pro keeps the generator built in and hides your sign-ups from your network with the VPN.' } },
-  'hash-generator': { benefits: ['tools', 'more', 'vpn'], red: GREEN_DEFAULT, amber: GREEN_DEFAULT, green: GREEN_DEFAULT, info: { headline: 'Verify downloads on the go.', body: 'Incognito Pro puts the hash generator and every other tool in your browser.' } },
-  'text-encryption': { benefits: ['tools', 'vpn', 'more'], red: GREEN_DEFAULT, amber: GREEN_DEFAULT, green: GREEN_DEFAULT, info: { headline: 'Encrypt anywhere, not only here.', body: 'Incognito Pro keeps this encryption tool built in and hides your traffic with the VPN.' } },
+  'password-generator': { benefits: ['more', 'tools', 'adblock'], red: GREEN_DEFAULT, amber: GREEN_DEFAULT, green: GREEN_DEFAULT, info: { headline: 'Strong passwords, wherever you sign up.', body: 'Incognito Browser wipes history, cookies and sessions every time you close it, so a shared phone keeps none of your sign-ins.' } },
+  'hash-generator': { benefits: ['tools', 'more', 'adblock'], red: GREEN_DEFAULT, amber: GREEN_DEFAULT, green: GREEN_DEFAULT, info: { headline: 'Verify downloads on the go.', body: 'Incognito Pro adds the deeper privacy tools and ad and tracker blocking to the Incognito Browser app.' } },
+  'text-encryption': { benefits: ['more', 'tools', 'adblock'], red: GREEN_DEFAULT, amber: GREEN_DEFAULT, green: GREEN_DEFAULT, info: { headline: 'Encrypt anywhere, not only here.', body: 'Incognito Browser keeps no browsing history or cache on the phone, so what you open does not stay behind after you close it.' } },
   'useragent-analyzer': {
-    benefits: ['tools', 'vpn', 'adblock'],
-    red: { headline: 'Your browser announces exactly what you run.', body: 'Incognito Pro reduces what your browser reveals and hides your IP with the VPN.' },
-    amber: { headline: 'Your browser reveals more than it needs to.', body: 'Incognito Pro trims what your browser announces and hides your IP.' },
-    green: GREEN_DEFAULT, info: { headline: 'This is what every site reads first.', body: 'Incognito Pro reveals less, and its VPN hides where you are.' },
+    benefits: ['more', 'tools', 'adblock'],
+    red: { headline: 'Your browser announces exactly what you run.', body: 'Agent Cloaking in Incognito Browser masks the browser and device that sites see.' },
+    amber: { headline: 'Your browser reveals more than it needs to.', body: 'Agent Cloaking in Incognito Browser changes what sites read here.' },
+    green: GREEN_DEFAULT, info: { headline: 'This is what every site reads first.', body: 'Agent Cloaking in Incognito Browser changes what sites read here.' },
   },
   'permission-checker': {
-    benefits: ['tools', 'more', 'adblock'],
-    red: { headline: 'Sites hold permissions they should not.', body: 'Incognito Pro audits permissions on every site and drops them when you leave.' },
-    amber: { headline: 'Some permissions are one prompt away.', body: 'Incognito Pro makes deny the default and shows you who asks.' },
+    benefits: ['more', 'adblock', 'tools'],
+    red: { headline: 'Sites hold permissions they should not.', body: 'Revoke them in your browser\'s site settings. The steps are listed above.' },
+    amber: { headline: 'Some permissions are one prompt away.', body: 'Say no to prompts you did not expect; you can change your mind later in site settings.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
   'privacy-quiz': {
-    benefits: ['tools', 'vpn', 'adblock'],
-    red: { headline: 'Your habits leave you exposed.', body: 'Incognito Pro fixes the biggest items on your list by default: trackers blocked, IP hidden, tools built in.' },
-    amber: { headline: 'Good instincts, real gaps.', body: 'Incognito Pro covers the gaps automatically with the VPN and pro ad blocking.' },
+    benefits: ['more', 'adblock', 'tools'],
+    red: { headline: 'Your habits leave you exposed.', body: 'Incognito Browser covers two of the biggest items by default: it wipes history, cookies and sessions on exit and blocks ads. Incognito Pro adds tracker blocking and the deeper tools.' },
+    amber: { headline: 'Good instincts, real gaps.', body: 'Incognito Browser wipes history, cookies and sessions on exit and blocks ads; Incognito Pro adds tracker blocking and the deeper tools.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
   'link-unwrapper': {
-    benefits: ['adblock', 'tools', 'vpn'],
-    red: { headline: 'This link was built to identify you.', body: 'Incognito Pro strips tracking parameters from links automatically and blocks the trackers they feed.' },
-    amber: { headline: 'This link reports which campaign caught you.', body: 'Incognito Pro cleans links as you tap them.' },
-    green: { headline: 'Clean link. Most are not.', body: 'Incognito Pro cleans the ones that are not, automatically.' }, info: INFO_DEFAULT,
+    benefits: ['adblock', 'tools', 'more'],
+    red: { headline: 'This link was built to identify you.', body: 'Remove the tracking parameters before you share it. Incognito Pro\'s ad and tracker blocking stops many of the trackers links like this feed.' },
+    amber: { headline: 'This link reports which campaign caught you.', body: 'Remove the tracking parameters before you share it.' },
+    green: { headline: 'Clean link. Most are not.', body: 'Incognito Pro\'s ad and tracker blocking stops many of the trackers behind the ones that are not.' }, info: INFO_DEFAULT,
   },
   'email-pixel-detector': {
-    benefits: ['adblock', 'tools', 'vpn'],
-    red: { headline: 'This email reports back the moment you open it.', body: 'Incognito Pro blocks tracking pixels and wrapped links when you read mail in the browser, and the VPN hides where you opened it.' },
-    amber: { headline: 'The links in this email are tracked.', body: 'Incognito Pro cleans tracked links and blocks the beacons behind them.' },
+    benefits: ['adblock', 'tools', 'more'],
+    red: { headline: 'This email reports back the moment you open it.', body: 'Turn off automatic image loading in your mail app; that stops most tracking pixels.' },
+    amber: { headline: 'The links in this email are tracked.', body: 'Open the site directly instead of clicking through the email.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
   'screenshot-leak-checker': {
-    benefits: ['tools', 'more', 'vpn'],
-    red: { headline: 'This screenshot leaks more than what is on it.', body: 'Incognito Pro strips metadata from every image you upload, automatically.' },
-    amber: { headline: 'This screenshot carries device and time data.', body: 'Incognito Pro strips it from uploads so you never have to remember.' },
+    benefits: ['more', 'tools', 'adblock'],
+    red: { headline: 'This screenshot leaks more than what is on it.', body: 'Save the clean copy above and share that instead.' },
+    amber: { headline: 'This screenshot carries device and time data.', body: 'Save the clean copy above and share that instead.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
   'report-card': {
-    benefits: ['adblock', 'vpn', 'tools'],
-    red: { headline: 'This site tracks you before you click anything.', body: 'Incognito Pro blocks these trackers and tracking cookies before they load, on every site.' },
-    amber: { headline: 'This site tracks more than it needs to.', body: 'Incognito Pro blocks the trackers this report found, automatically.' },
-    green: { headline: 'A clean site. Most are not.', body: 'Incognito Pro blocks trackers on the sites that are not this careful.' }, info: INFO_DEFAULT,
+    benefits: ['adblock', 'more', 'tools'],
+    red: { headline: 'This site tracks you before you click anything.', body: 'Incognito Pro\'s ad and tracker blocking stops many of these before they load, and the browser wipes cookies every time you close it.' },
+    amber: { headline: 'This site tracks more than it needs to.', body: 'Incognito Pro\'s ad and tracker blocking stops many trackers like these before they load.' },
+    green: { headline: 'A clean site. Most are not.', body: 'Incognito Pro\'s ad and tracker blocking covers the sites that are not this careful.' }, info: INFO_DEFAULT,
   },
 };
 
 export const DEFAULT_ENGINE_COPY: EngineCopy = {
-  benefits: ['tools', 'vpn', 'adblock'],
-  red: { headline: 'You are exposed here.', body: 'Incognito Pro closes this by default, with the VPN and pro ad blocking included.' },
-  amber: { headline: 'Partly protected.', body: 'Incognito Pro closes the gaps by default, with the VPN and pro ad blocking included.' },
+  benefits: ['more', 'adblock', 'tools'],
+  red: { headline: 'You are exposed here.', body: 'Incognito Browser wipes history, cookies and sessions every time you close it. Incognito Pro adds ad and tracker blocking and the deeper privacy tools.' },
+  amber: { headline: 'Partly protected.', body: 'Incognito Browser wipes history, cookies and sessions every time you close it. Incognito Pro adds ad and tracker blocking and the deeper privacy tools.' },
   green: GREEN_DEFAULT, info: INFO_DEFAULT,
 };
 
@@ -235,7 +242,7 @@ export function reportCardLine(grade: Grade, severity: Severity, found: { tracki
   const list = parts.length > 1 ? `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}` : parts[0];
   return {
     headline: `${GRADE_LABEL[grade]}, but still ${list} before you click anything.`,
-    body: 'Incognito Pro blocks trackers like these before they load, on every site.',
+    body: 'Incognito Pro\'s ad and tracker blocking stops many trackers like these before they load.',
   };
 }
 
@@ -266,6 +273,6 @@ export function proHandoffTitle(url: string | undefined): string | undefined {
 /** Copy for a visitor who is already inside the free Incognito Browser app (population B). */
 export const IN_APP_COPY = {
   headline: 'You already use Incognito Browser. Pro finishes the job.',
-  body: 'Upgrade inside the app for the VPN, pro ad blocking and every tool on this site built in.',
+  body: 'Upgrade inside the app for Pro ad and tracker blocking and the deeper privacy tools.',
   button: 'Upgrade to Pro',
 };

@@ -187,7 +187,7 @@ describe.skipIf(!HAS_TARGET)('published article page (checklist)', () => {
     expect(html).not.toContain('Shadrake');
     expect(html).not.toContain('linkedin.com/in/');
     expect(html).not.toContain('data-testid="article-byline"');
-    expect(html).toMatch(/data-testid="editorial-note"[^]*?<a[^>]*href="[^"]*\/editorial-standards\/?"[^>]*>Editorially reviewed<\/a>/);
+    expect(html).toMatch(/data-testid="editorial-note"[^]*?<a[^>]*href="[^"]*\/editorial-standards\/?"[^>]*>Our editorial standards<\/a>/);
   });
 
   it('emits article:published_time + article:modified_time OG tags', () => {

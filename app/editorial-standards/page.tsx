@@ -1,14 +1,17 @@
 /**
- * What the "Editorially reviewed" fine print means — the page every
- * EditorialNote links to.
+ * Our editorial standards — the page every EditorialNote links to.
  *
- * Every claim here is a description of something the code actually does, so
- * keep it that way when editing:
+ * Every claim here describes something the code or the data actually does,
+ * so keep it that way when editing:
+ *   - publication: an editor approves pages for publication, mostly in
+ *     batches after the automated checks (editorial.notes "Bulk-promoted…"),
+ *     which is why this page must not say every page was read line by line;
  *   - the publish gate: lib/content.ts isPublished(), the noIndex in each
  *     content page's generateMetadata, and the sitemap filter;
  *   - the brand-mention scrub: scripts/scrub-product-mentions.mjs, which
- *     scripts/promote-all.mjs refuses to run without (it covers articles, not
- *     tool pages, hence the wording below);
+ *     scripts/promote-all.mjs refuses to run without. It covers guides,
+ *     checklists, templates and glossary text; comparisons and three
+ *     calculators still name the app, hence the disclosure below;
  *   - duplicate demotion: scripts/demote-overlap-duplicates.mjs.
  * It names no person, on purpose — see components/EditorialNote.tsx.
  */
@@ -20,9 +23,9 @@ import { PageHero } from '@/components/ui/PageHero';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export const metadata = genMeta({
-  title: 'Editorial Standards',
+  title: 'Our Editorial Standards',
   description:
-    'What the "Editorially reviewed" note on our privacy guides, checklists and tools means, and what is checked before a page is published.',
+    'How the privacy guides, checklists, comparisons and tools on this site are checked before they go live, and what that does and does not promise.',
   path: '/editorial-standards',
   type: 'website',
 });
@@ -47,8 +50,8 @@ export default function EditorialStandardsPage() {
       <PageHero
         icon="doc"
         kicker="Editorial standards"
-        title={<>What &ldquo;Editorially reviewed&rdquo; means</>}
-        description="The small note at the foot of our guides, checklists and tool pages, and what it does and doesn't promise."
+        title="Our editorial standards"
+        description="How pages here are checked before they go live, and what that does and doesn't promise."
       />
 
       <p className="prose-ib">
@@ -56,20 +59,25 @@ export default function EditorialStandardsPage() {
         That is a reason to be careful about what we tell you, so here is how a page gets published.
       </p>
 
-      <Section title="When a page gets the note">
+      <Section title="How a page gets published">
         <p className="prose-ib">
-          A page shows &ldquo;Editorially reviewed&rdquo; once an editor has reviewed it. Pages that
-          have not been approved for publication are left out of our sitemap and marked so search
-          engines don&apos;t index them.
+          A page goes live once it has passed the checks below and an editor has approved it for
+          publication. Approval clears a page to publish; it doesn&apos;t mean every line was read, and
+          most pages were approved in batches after those checks. Pages that haven&apos;t been approved
+          are left out of our sitemap and marked so search engines don&apos;t index them.
         </p>
       </Section>
 
       <Section title="What is checked before a page goes live">
         <p className="prose-ib">
-          <strong className="text-t1">It doesn&apos;t advertise our app.</strong> Before a guide,
-          checklist, comparison, template, calculator or glossary entry can be published, mentions of
-          our app are rewritten out of its text, so the advice stands on its own. Where we do suggest
-          the app, it sits in a separate panel, not in the steps.
+          <strong className="text-t1">Articles don&apos;t advertise our app.</strong> Mentions of it are
+          rewritten out of guides, checklists, templates and glossary entries before they can be
+          published, so the advice stands on its own. Where we do suggest the app, it sits in a
+          separate panel, not in the steps.
+        </p>
+        <p className="prose-ib">
+          <strong className="text-t1">Comparisons can include Incognito Browser.</strong> Some
+          comparisons list it next to other products. We make it, so read its row with that in mind.
         </p>
         <p className="prose-ib">
           <strong className="text-t1">It isn&apos;t a copy of another page.</strong> Many topics share

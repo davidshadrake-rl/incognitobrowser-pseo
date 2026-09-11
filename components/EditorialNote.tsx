@@ -1,10 +1,13 @@
 /**
- * Fine-print editorial note at the foot of every reviewed content page.
+ * Fine-print link to the editorial standards, at the foot of every published
+ * content page.
  *
  * Replaces the header byline ("By <pen name> · Editorially reviewed ·
- * Reviewed <date>"). The owner did not want a person named on content pages,
- * and a review claim reads better as a footnote that says where it is
- * explained than as a credit next to the title.
+ * Reviewed <date>"). The owner did not want a person named on content pages.
+ * It no longer says "Editorially reviewed": most pages were approved for
+ * publication in batches after automated checks (editorial.notes
+ * "Bulk-promoted…"), so a per-page review claim was not true. "Our editorial
+ * standards" is true of every page it appears on (owner, 2026-09-10).
  *
  * Takes a boolean, never a person: most content pages are client components,
  * whose props ship in the page's RSC payload, so passing an author or editor
@@ -22,7 +25,7 @@ const STANDARDS_PATH = '/editorial-standards';
 export function EditorialNote({ reviewed }: { reviewed?: boolean }) {
   if (!reviewed) return null;
   const linkClass = 'underline underline-offset-2 hover:text-t2';
-  const label = 'Editorially reviewed';
+  const label = 'Our editorial standards';
   return (
     <p className="mt-12 pt-4 border-t border-b1 text-meta text-t3" data-testid="editorial-note">
       {IS_PRO_DEPLOYMENT ? (
@@ -30,7 +33,7 @@ export function EditorialNote({ reviewed }: { reviewed?: boolean }) {
       ) : (
         <Link href={STANDARDS_PATH} className={linkClass}>{label}</Link>
       )}
-      {' '}— what that means, and what is checked before a page goes live.
+      : how pages here are checked before they go live.
     </p>
   );
 }

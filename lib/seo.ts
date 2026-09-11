@@ -66,7 +66,7 @@ export function generateMetadata({ title, description, path, type = 'article', n
  * Who content pages are credited to, in structured data. An organisation,
  * never a person: pages no longer show a byline, and Google's structured-data
  * guidelines say markup must not describe things readers cannot see on the
- * page. Its URL is the page that explains what "Editorially reviewed" means.
+ * page. Its URL is the editorial standards page.
  */
 const EDITORIAL_MASTHEAD = {
   '@type': 'Organization',
