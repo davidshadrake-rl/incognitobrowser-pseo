@@ -63,7 +63,10 @@ export default function HomePage() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Link href="/tools" className="btn-primary">Try a tool</Link>
-            <a href={playUrl({ medium: 'site', campaign: 'home-hero' })} rel="noopener" className="btn-secondary">Get the free app</a>
+            <a href={playUrl({ medium: 'site', campaign: 'home-hero' })} rel="noopener" data-upgrade-from="home" className="ib-upgrade btn-secondary">
+              <span className="ib-web-only">Get the free app</span>
+              <span className="ib-app-only">Upgrade to Pro</span>
+            </a>
           </div>
         </div>
         <div className="relative hidden lg:block">

@@ -39,6 +39,15 @@ export interface WebRtcComparison {
   leaked: string[];
   /** The address our server saw, so sites already see it. */
   same: string[];
+  /**
+   * A different IPv4 in the same /24 as the one our server saw: the same
+   * network, not a leak. Mobile carriers (and other large NATs) send each
+   * connection out through any address in their pool, so WebRTC's STUN
+   * request and the page's own request can leave from neighbouring
+   * addresses. Flagged as "Leaking" inside the Incognito Browser app on a
+   * mobile network (2026-09-10), with no VPN anywhere.
+   */
+  sameNetwork: string[];
   /** An IP version our server did not see on this visit, so there is nothing to compare it with. */
   unmatched: string[];
   /**
@@ -56,6 +65,11 @@ function unmapIPv4(ip: string): string {
   return m ? m[1] : ip.trim();
 }
 
+/** The /24 an IPv4 address sits in: its first three octets. */
+function ipv4Block(ip: string): string {
+  return ip.split('.').slice(0, 3).join('.');
+}
+
 /**
  * The one leak rule for this page — the verdict, the scorecard and the WebRTC
  * card all read it. A WebRTC address only counts as a leak when it differs
@@ -67,6 +81,11 @@ function unmapIPv4(ip: string): string {
  * IPv6 compares by /64 network, not exact address: one device routinely holds
  * several addresses in its /64 (privacy extensions rotate the last half), so
  * WebRTC can list a sibling of the address the request used.
+ *
+ * IPv4 in the same /24 is `sameNetwork`, not a leak: a carrier NAT pool hands
+ * the STUN request a neighbour of the address the page request used. A real
+ * leak around a VPN is the visitor's own ISP address, which is never in the
+ * VPN server's /24.
  */
 export function compareWebRtcToServer(
   webrtcPublic: string[],
@@ -81,12 +100,13 @@ export function compareWebRtcToServer(
   }
   const seenV6Net = seenV6 ? networkOf(seenV6) : null;
   const seenVersion = seenV4 && seenV6Net ? 'both' : seenV4 ? 'v4' : seenV6Net ? 'v6' : null;
-  const out: WebRtcComparison = { leaked: [], same: [], unmatched: [], seenVersion };
+  const out: WebRtcComparison = { leaked: [], same: [], sameNetwork: [], unmatched: [], seenVersion };
   for (const raw of webrtcPublic) {
     const ip = unmapIPv4(raw);
     if (isIPv4(ip)) {
       if (!seenV4) out.unmatched.push(raw);
       else if (ip === seenV4) out.same.push(raw);
+      else if (ipv4Block(ip) === ipv4Block(seenV4)) out.sameNetwork.push(raw);
       else out.leaked.push(raw);
     } else if (isIPv6(ip)) {
       if (!seenV6Net) out.unmatched.push(raw);
@@ -251,7 +271,7 @@ export function WhatsMyIpTool() {
       // (an IPv6 does not fit at 120px, and a privacy brand should not put the
       // visitor's real IP in an image it asks them to share — see lib/privacy-mask).
       stats: [
-        { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Exposed' },
+        { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Visible to sites' },
         { label: 'IP', value: maskIp(ipInfo.ipv4 || ipInfo.ipv6) },
         { label: 'Location', value: where || 'unknown' },
         { label: 'WebRTC IPs', value: String(webrtc?.publicIPs.length ?? 0) },
@@ -315,16 +335,16 @@ export function WhatsMyIpTool() {
 
       {!loading && !error && ipInfo && (() => {
         const comparison = compareWebRtcToServer(webrtc?.publicIPs || [], ipInfo);
-        const { leaked, same, unmatched } = comparison;
+        const { leaked, same, sameNetwork, unmatched } = comparison;
         const where = [ipInfo.city, ipInfo.country].filter(Boolean).join(', ');
         return (
         <ConsoleFrame
           engine="whats-my-ip"
           status={statusFromSeverity(leaked.length ? 'red' : 'info')}
-          verdict={leaked.length ? 'Leaking' : 'Exposed'}
+          verdict={leaked.length ? 'Leaking' : 'Visible to sites'}
           checks={2}
           statTiles={[
-            { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Exposed' },
+            { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Visible to sites' },
             { label: 'IP', value: maskIp(ipInfo.ipv4 || ipInfo.ipv6) },
             { label: 'Location', value: where || 'unknown' },
             { label: 'WebRTC IPs', value: webrtc?.publicIPs.length ?? 0 },
@@ -346,6 +366,10 @@ export function WhatsMyIpTool() {
                   <code className="text-base text-white/80 font-mono break-all select-all">{ipInfo.ipv6}</code>
                   <span className="text-xs text-t2">IPv6</span>
                 </div>
+              )}
+              {/* Not a score for this browser: "Exposed" read as the browser failing (tested inside the app, 2026-09-10). */}
+              {(ipInfo.ipv4 || ipInfo.ipv6) && !ipInfo.isLocal && (
+                <p className="text-xs text-t3">Every browser shows sites this address. Only a VPN, a proxy or Tor changes it.</p>
               )}
               {ipInfo.isLocal && (
                 <p className="text-xs text-warn/80">Running locally — no public IP is visible to this server, so a loopback address is shown.</p>
@@ -433,6 +457,14 @@ export function WhatsMyIpTool() {
                       <p className="mt-1">
                         {/* Not while an address below is still unchecked: "no extra address leaks" then contradicted it. */}
                         {unmatched.length === 0 ? 'No extra address leaks through WebRTC. ' : ''}On a VPN, check that the IP at the top is your VPN&apos;s and not your own.
+                      </p>
+                    </div>
+                  )}
+                  {sameNetwork.length > 0 && leaked.length === 0 && (
+                    <div className="text-sm text-t2 mb-3">
+                      <strong className="text-white">WebRTC shows a neighbouring address on the same network:</strong> {sameNetwork.join(', ')}
+                      <p className="mt-1">
+                        Mobile carriers and other large networks share a block of public addresses, so a second connection can leave through a different address in the same block as the one at the top. That is the network sites already see, not a leak.
                       </p>
                     </div>
                   )}

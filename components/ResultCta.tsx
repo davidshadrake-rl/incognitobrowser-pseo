@@ -103,8 +103,9 @@ export function ResultCta({ engine, niche, severity, line, headline, proWebUrl, 
   };
 
   return (
+    // ib-upgrade: hidden inside the app for someone who already has Pro (lib/in-app.ts).
     <aside
-      className={`relative mt-8 grid gap-6 overflow-hidden rounded-[16px] border border-b1 border-t-2 ${TONE[severity]} bg-s0 p-5 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pro lg:grid-cols-[1fr_200px]`}
+      className={`ib-upgrade relative mt-8 grid gap-6 overflow-hidden rounded-[16px] border border-b1 border-t-2 ${TONE[severity]} bg-s0 p-5 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pro lg:grid-cols-[1fr_200px]`}
       data-result-cta={severity}
       data-engine={engine}
     >
@@ -123,7 +124,17 @@ export function ResultCta({ engine, niche, severity, line, headline, proWebUrl, 
         {/* PR4 (DESIGN-SPEC 6.2): <TierCompare rows={['price', 'coming']} /> renders here when proWebUrl is present. */}
         <div className="flex flex-wrap items-center gap-3">
           {inApp || platform === 'android' ? (
-            <a href={play} rel="noopener" onClick={() => click('play')} className="btn-pro text-sm !px-5 !py-2.5">
+            // Inside the app, components/InAppBridge opens the app's upgrade screen with this context.
+            <a
+              href={play}
+              rel="noopener"
+              onClick={() => click('play')}
+              data-upgrade-from="result"
+              data-upgrade-topic={niche}
+              data-upgrade-result={severity}
+              data-upgrade-tool={engine}
+              className="btn-pro text-sm !px-5 !py-2.5"
+            >
               {inApp ? IN_APP_COPY.button : 'Get the app, then upgrade to Pro'}
             </a>
           ) : (

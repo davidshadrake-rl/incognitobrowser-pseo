@@ -3,6 +3,8 @@ import Link from "next/link";
 import { IncognitoLogo } from "@/components/ui/IncognitoLogo";
 import { IS_PRO_DEPLOYMENT, PRO_DEFINITION } from "@/lib/tiers";
 import { playUrl } from "@/lib/play";
+import { IN_APP_BOOT_SCRIPT } from "@/lib/in-app";
+import { InAppBridge } from "@/components/InAppBridge";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -52,12 +54,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
+    // suppressHydrationWarning: the in-app boot script below adds data-inapp /
+    // data-ib-pro to <html> before React hydrates it (attributes only, one level).
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-full flex flex-col bg-black text-white font-mono">
+        {/* First in <body>, so the header's labels are right on first paint inside the app. */}
+        <script dangerouslySetInnerHTML={{ __html: IN_APP_BOOT_SCRIPT }} />
+        <InAppBridge />
         {/* Header */}
         <header className="border-b border-b1 bg-black sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between gap-3 h-16">
+            {/* Below sm the wordmark steps down a size and the gaps close up: the
+                row ran 6px past a 375px screen and 21px past a 360px one. */}
+            <div className="flex items-center justify-between gap-2 sm:gap-3 h-16">
               {/* Logo + wordmark. SVG is a React component (see
                   components/ui/IncognitoLogo) so it works regardless of
                   basePath / deploy target — no file-load can fail. */}
@@ -70,7 +79,7 @@ export default function RootLayout({
                 {/* At lg (1024-1279px) the free site's eight-link nav needs the
                     room: the row overflowed the page sideways, so the wordmark
                     shows from xl only (the link keeps its aria-label). */}
-                <span className={`font-semibold text-white text-sm uppercase tracking-wider whitespace-nowrap${IS_PRO_DEPLOYMENT ? "" : " lg:hidden xl:inline"}`}>
+                <span className={`font-semibold text-white text-xs sm:text-sm uppercase tracking-wider whitespace-nowrap${IS_PRO_DEPLOYMENT ? "" : " lg:hidden xl:inline"}`}>
                   {IS_PRO_DEPLOYMENT ? "Incognito Pro" : "Privacy Resources"}
                 </span>
               </Link>
@@ -101,24 +110,37 @@ export default function RootLayout({
                   href={playUrl({ medium: 'site', campaign: 'header' })}
                   rel="noopener"
                   title={PRO_DEFINITION}
-                  className="btn-pro text-xs !px-3 sm:!px-4 !min-h-10 whitespace-nowrap"
+                  data-upgrade-from="header"
+                  className="ib-upgrade btn-pro text-xs !px-3 sm:!px-4 !min-h-10 whitespace-nowrap"
                 >
-                  <span className="sm:hidden">Upgrade to Pro</span>
-                  <span className="hidden sm:inline">Upgrade to Pro in the app</span>
+                  <span className="ib-web-only">
+                    <span className="sm:hidden">Upgrade to Pro</span>
+                    <span className="hidden sm:inline">Upgrade to Pro in the app</span>
+                  </span>
+                  <span className="ib-app-only">Upgrade to Pro</span>
                 </a>
               ) : (
                 // Goes to Google Play: the app is Android only. "Download
                 // Browser" read as a desktop download to desktop visitors.
                 // The full label only where the row has room for it: under
                 // the menu (sm-lg) and from xl; the nav takes it at lg.
+                // Inside the app the visitor already has it: "Upgrade to Pro".
                 <a
                   href={playUrl({ medium: 'site', campaign: 'header' })}
                   rel="noopener"
-                  className="btn-primary text-xs !px-3 sm:!px-4 !min-h-10 whitespace-nowrap"
+                  data-upgrade-from="header"
+                  className="ib-upgrade btn-primary text-xs !px-3 sm:!px-4 !min-h-10 whitespace-nowrap"
                 >
-                  <span className="sm:hidden">Get app</span>
-                  <span className="hidden sm:inline lg:hidden xl:inline">Get the Android app</span>
-                  <span className="hidden lg:inline xl:hidden">Android app</span>
+                  <span className="ib-web-only">
+                    <span className="sm:hidden">Get app</span>
+                    <span className="hidden sm:inline lg:hidden xl:inline">Get the Android app</span>
+                    <span className="hidden lg:inline xl:hidden">Android app</span>
+                  </span>
+                  {/* "Upgrade to Pro" ran off a 375px header beside the wordmark and Menu. */}
+                  <span className="ib-app-only">
+                    <span className="sm:hidden">Get Pro</span>
+                    <span className="hidden sm:inline">Upgrade to Pro</span>
+                  </span>
                 </a>
               )}
             </div>
@@ -147,7 +169,7 @@ export default function RootLayout({
               <div>
                 <h3 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Product</h3>
                 <ul className="space-y-2 text-sm text-t2">
-                  <li><a href={playUrl({ medium: 'site', campaign: 'footer' })} rel="noopener" className="hover:text-white transition-colors">Android app</a></li>
+                  <li className="ib-web-only"><a href={playUrl({ medium: 'site', campaign: 'footer' })} rel="noopener" className="hover:text-white transition-colors">Android app</a></li>
                   <li><a href="https://incognitobrowser.io/news/" rel="noopener" className="hover:text-white transition-colors">Blog</a></li>
                 </ul>
               </div>

@@ -35,12 +35,23 @@ const read = (rel: string) => fs.readFileSync(path.join(ROOT, rel), 'utf-8');
 describe("What's My IP: one leak rule for the verdict and the WebRTC card", () => {
   it('the same IPv4 the server saw is not a leak', () => {
     const r = compareWebRtcToServer(['203.0.113.7'], { ipv4: '203.0.113.7' });
-    expect(r).toEqual({ leaked: [], same: ['203.0.113.7'], unmatched: [], seenVersion: 'v4' });
+    expect(r).toEqual({ leaked: [], same: ['203.0.113.7'], sameNetwork: [], unmatched: [], seenVersion: 'v4' });
   });
 
   it('a different IPv4 from the one the server saw is a leak', () => {
     const r = compareWebRtcToServer(['198.51.100.20'], { ipv4: '203.0.113.7' });
     expect(r.leaked).toEqual(['198.51.100.20']);
+  });
+
+  it('a neighbouring IPv4 in the same /24 is the same network, not a leak (carrier NAT pools)', () => {
+    // Inside the Incognito Browser app on a mobile network (2026-09-10): the
+    // STUN request left from .17, the page request from .42, and the page said
+    // "Leaking" with no VPN anywhere.
+    const r = compareWebRtcToServer(['203.0.113.17'], { ipv4: '203.0.113.42' });
+    expect(r.leaked).toEqual([]);
+    expect(r.sameNetwork).toEqual(['203.0.113.17']);
+    // One octet further out is another network, and still a leak.
+    expect(compareWebRtcToServer(['203.0.114.17'], { ipv4: '203.0.113.42' }).leaked).toEqual(['203.0.114.17']);
   });
 
   it('dual-stack without a VPN: an IPv4 from WebRTC is not compared with the IPv6 the server saw', () => {
@@ -107,7 +118,7 @@ describe("What's My IP: one leak rule for the verdict and the WebRTC card", () =
       const info = ipInfoFromLookup({ ...lookup, ip: '::ffff:203.0.113.7', version: 'v6' });
       expect(info).toEqual({ ipv4: '203.0.113.7' });
       // The comparison reads the same address, as IPv4.
-      expect(compareWebRtcToServer(['203.0.113.7'], info)).toEqual({ leaked: [], same: ['203.0.113.7'], unmatched: [], seenVersion: 'v4' });
+      expect(compareWebRtcToServer(['203.0.113.7'], info)).toEqual({ leaked: [], same: ['203.0.113.7'], sameNetwork: [], unmatched: [], seenVersion: 'v4' });
       expect(compareWebRtcToServer(['198.51.100.20'], info).leaked).toEqual(['198.51.100.20']);
     });
 

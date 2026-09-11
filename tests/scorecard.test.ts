@@ -219,7 +219,8 @@ describe('scorecardFigure — the number carries its label', () => {
   it('labels each engine\'s number the way the tool itself says it', () => {
     expect(scorecardFigure('ad-blocker-test', { score: 72, stats: [{ label: 'Blocked', value: '36/50' }] })).toBe('72% blocked');
     expect(scorecardFigure('password-strength', { score: 41.6 })).toBe('Strength 42/100');
-    expect(scorecardFigure('whats-my-ip', { stats: [{ label: 'Verdict', value: 'Exposed' }] })).toBe('IP exposed');
+    expect(scorecardFigure('whats-my-ip', { stats: [{ label: 'Verdict', value: 'Visible to sites' }] })).toBe('IP visible to sites');
+    expect(scorecardFigure('whats-my-ip', { stats: [{ label: 'Verdict', value: 'Leaking' }] })).toBe('IP leaking');
     expect(scorecardFigure('dns-leak-test', { stats: [{ label: 'Verdict', value: 'Leaking' }] })).toBe('DNS leaking');
     expect(scorecardFigure('link-unwrapper', { stats: [{ label: 'Trackers', value: '1' }] })).toBe('1 tracker');
     expect(scorecardFigure('link-unwrapper', { stats: [{ label: 'Trackers', value: '0' }] })).toBe('No trackers');

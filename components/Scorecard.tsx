@@ -8,8 +8,9 @@
  */
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { drawScorecard, renderScorecard, scorecardFilename, shareLinkFor, SCORECARD_H, SCORECARD_W, type ScorecardSpec } from '@/lib/scorecard';
-import { track } from '@/lib/track';
+import { isInsideIncognitoApp, track } from '@/lib/track';
 import { pageLinkFor } from '@/lib/handoff';
+import { blobToDataUrl, saveImageInApp } from '@/lib/in-app';
 
 interface Props extends Omit<ScorecardSpec, 'url'> {
   url?: string;
@@ -35,6 +36,7 @@ function canShareFilesNow(): boolean {
 }
 const canShareNow = () => typeof navigator.share === 'function';
 const hrefNow = () => window.location.href;
+const inAppNow = () => isInsideIncognitoApp();
 const serverFalse = () => false;
 const serverHref = () => '';
 
@@ -43,10 +45,14 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
   const canShare = useSyncExternalStore(noSubscribe, canShareNow, serverFalse);
   const canShareFiles = useSyncExternalStore(noSubscribe, canShareFilesNow, serverFalse);
   const href = useSyncExternalStore(noSubscribe, hrefNow, serverHref);
+  const inApp = useSyncExternalStore(noSubscribe, inAppNow, serverFalse);
   // Separate states: "Copied" used to light up after a share, or after the
   // share fell back to a download, when nothing had been copied.
   const [shareState, setShareState] = useState<'idle' | 'busy' | 'shared'>('idle');
   const [copied, setCopied] = useState(false);
+  const [saved, setSaved] = useState(false);
+  /** Inside an app build with no save bridge: the picture itself, to press and hold. */
+  const [manualSave, setManualSave] = useState<string | null>(null);
 
   // Drawn on the card: origin + path only. Carried by Share / Copy: the same,
   // plus the quiz's result hash, so the recipient sees the result, not a blank quiz.
@@ -84,6 +90,18 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
   const download = async () => {
     track('share_click', { tool: engine, niche, target: 'download' });
     const b = await renderScorecard(full);
+    if (inApp) {
+      // The app's download manager takes http(s) links only, so the blob:
+      // link below fails there ("Invalid URL: blob"). Hand the image to the
+      // app instead (IN-APP-BRIDGE.md); without that, show it to press and hold.
+      if (await saveImageInApp(b, scorecardFilename(full.title))) {
+        setSaved(true);
+        setTimeout(() => setSaved(false), 2000);
+      } else {
+        setManualSave(await blobToDataUrl(b));
+      }
+      return;
+    }
     const a = document.createElement('a');
     a.href = URL.createObjectURL(b);
     a.download = scorecardFilename(full.title);
@@ -113,9 +131,19 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
             {shareState === 'busy' ? 'Preparing…' : shareState === 'shared' ? 'Shared' : canShareFiles ? 'Share image' : 'Share'}
           </button>
         )}
-        <button type="button" onClick={download} className={`${canShare ? 'btn-ghost' : 'btn-primary'} text-sm !px-4 !py-2`}>Download PNG</button>
+        <button type="button" onClick={download} className={`${canShare ? 'btn-ghost' : 'btn-primary'} text-sm !px-4 !py-2`}>
+          {saved ? 'Saved' : inApp ? 'Save image' : 'Download PNG'}
+        </button>
         <button type="button" onClick={copy} className="btn-ghost text-sm !px-4 !py-2">{copied ? 'Copied' : 'Copy text + link'}</button>
       </div>
+      {manualSave && (
+        <div className="mt-3 rounded-[12px] border border-b1 bg-black p-3" role="status" data-manual-save>
+          <p className="text-row text-t2 mb-2">To save it, press and hold the image, or take a screenshot.</p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={manualSave} alt={`Scorecard: ${full.title} ${full.figure}`} className="w-full rounded-[8px] border border-b1" />
+          <button type="button" onClick={() => setManualSave(null)} className="btn-ghost mt-2 text-xs !px-3 !py-1.5 !min-h-0">Close</button>
+        </div>
+      )}
     </section>
   );
 }

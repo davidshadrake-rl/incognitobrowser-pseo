@@ -30,11 +30,13 @@ export function detectPlatform(ua: string = typeof navigator !== 'undefined' ? n
 }
 
 /**
- * Is this page open inside the free Incognito Browser app? Assumption to
- * confirm with the app team: the app's WebView user agent carries the
- * product name. Until confirmed this only ever changes copy, never access.
+ * Is this page open inside the Incognito Browser app? The app says so with
+ * ?inapp=1 (lib/in-app.ts marks <html> data-inapp), because it spoofs its
+ * user agent; a user agent naming the app still counts. Only ever changes
+ * copy, never access.
  */
 export function isInsideIncognitoApp(ua: string = typeof navigator !== 'undefined' ? navigator.userAgent : ''): boolean {
+  if (typeof document !== 'undefined' && document.documentElement.hasAttribute('data-inapp')) return true;
   return /incognito ?browser/i.test(ua);
 }
 
