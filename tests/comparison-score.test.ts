@@ -12,7 +12,7 @@
  * 'no' when unbacked), IB_COMPARABLE (left out where it isn't comparable) and
  * the slug check (so the disclosure always renders).
  */
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import React from 'react';
@@ -1205,9 +1205,22 @@ describe('the published methodology', () => {
     expect(IB_COMPARABLE.filter((f) => /^(?:vpn-privacy|email-privacy)\//.test(f))).toEqual([]);
   });
 
-  it('is in the sitemap', async () => {
-    const { default: sitemap } = await import('@/app/sitemap');
-    expect(sitemap().map((e) => e.url)).toContain(`https://incognitobrowser.io/resources${METHODOLOGY_PATH}`);
+  it('is in the free site sitemap', async () => {
+    // The tier is read at module load, and the Pro deployment's sitemap is
+    // empty by design (tools only, noindex). Under the Pro project's build
+    // (NEXT_PUBLIC_TIER=pro) this test failed and blocked the Pro deploy of
+    // 21c32ed, so load the sitemap as the free site, as tests/seo-offers does.
+    const tier = process.env.NEXT_PUBLIC_TIER;
+    vi.resetModules();
+    delete process.env.NEXT_PUBLIC_TIER;
+    try {
+      const { default: sitemap } = await import('@/app/sitemap');
+      expect(sitemap().map((e) => e.url)).toContain(`https://incognitobrowser.io/resources${METHODOLOGY_PATH}`);
+    } finally {
+      vi.resetModules();
+      if (tier === undefined) delete process.env.NEXT_PUBLIC_TIER;
+      else process.env.NEXT_PUBLIC_TIER = tier;
+    }
   });
 });
 
