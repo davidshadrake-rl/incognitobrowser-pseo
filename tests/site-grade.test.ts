@@ -4,7 +4,10 @@
  * and meant to be argued with.
  */
 import { describe, expect, it } from 'vitest';
+import fs from 'fs';
+import path from 'path';
 import { gradeSite } from '../lib/site-grade';
+import { categorize } from '../lib/site-categories';
 
 const clean = { cookies: [], trackers: [], inlineTrackers: [], thirdPartyDomains: [], security: { isHTTPS: true, hasCSP: true, hasPermPolicy: true, hasHSTS: true } };
 
@@ -72,5 +75,28 @@ describe('gradeSite', () => {
   it('is deterministic', () => {
     const input = { ...clean, trackers: [{ category: 'analytics', risk: 'medium', name: 'GA' }] };
     expect(gradeSite(input)).toEqual(gradeSite(input));
+  });
+
+  it('the headline counts in the singular for one of anything', () => {
+    // 103 published cards read "1 third-party domains" (funnel pilot check, 2026-09-10).
+    expect(gradeSite({ ...clean, thirdPartyDomains: ['cdn.example'] }).headline).toBe('Grade A: 1 third-party domain on the homepage.');
+    expect(gradeSite({ ...clean, thirdPartyDomains: ['a.example', 'b.example'] }).headline).toBe('Grade A: 2 third-party domains on the homepage.');
+  });
+
+  it('no stored card headline says "1 third-party domains"', () => {
+    const dir = path.join(process.cwd(), 'data', 'sites');
+    const bad = fs.readdirSync(dir).filter((f) => /(?<!\d)1 third-party domains\b/.test(fs.readFileSync(path.join(dir, f), 'utf-8')));
+    expect(bad).toEqual([]);
+  });
+});
+
+describe('categorize', () => {
+  it('files a site by what it is, not a word inside its name', () => {
+    // "love" in ilovepdf.com filed a PDF tool under Dating.
+    expect(categorize('ilovepdf.com').category).toBe('tech');
+    expect(categorize('www.ilovepdf.com').category).toBe('tech');
+    expect(categorize('windowsupdate.com').category).not.toBe('dating');
+    expect(categorize('tinder.com').category).toBe('dating');
+    expect(categorize('elitesingles.com').category).toBe('dating');
   });
 });

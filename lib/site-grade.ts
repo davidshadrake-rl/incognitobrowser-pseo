@@ -86,7 +86,7 @@ export function gradeSite(r: ScanSummaryLike): GradeResult {
   const parts: string[] = [];
   if (trackingCookies) parts.push(`${trackingCookies} tracking cookie${trackingCookies === 1 ? '' : 's'} before consent`);
   if (adTrackers.length) parts.push(`${adTrackers.length} ad tracker${adTrackers.length === 1 ? '' : 's'}`);
-  if (third.length) parts.push(`${third.length} third-party domains`);
+  if (third.length) parts.push(`${third.length} third-party domain${third.length === 1 ? '' : 's'}`);
   const headline = parts.length ? `Grade ${grade}: ${parts.join(', ')} on the homepage.` : `Grade ${grade}: no trackers or tracking cookies detected on the homepage.`;
 
   return { score, grade, deductions, headline };
