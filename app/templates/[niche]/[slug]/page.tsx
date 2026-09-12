@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactPeople, type EditableContent } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
+import { funnelFor } from '@/lib/funnels';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { TemplatePage } from '@/components/TemplatePage';
 import { RelatedContent } from '@/components/seo/RelatedContent';
@@ -93,7 +94,7 @@ export default async function TemplateDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <TemplatePage data={redactPeople(data)} nicheName={nicheName} proofRoute={proofToolFor(niche)} />
+      <TemplatePage data={redactPeople(data)} nicheName={nicheName} proofRoute={proofToolFor(niche)}funnel={funnelFor(`/templates/${niche}/${slug}`)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

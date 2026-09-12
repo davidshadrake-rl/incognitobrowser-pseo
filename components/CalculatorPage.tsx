@@ -6,6 +6,8 @@ import { PageHero } from './ui/PageHero';
 import { Badge } from './ui/Badge';
 import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
+import { PageFunnel } from './PageFunnel';
+import type { PageFunnel as Funnel } from '@/lib/funnels';
 import { Icon } from './ui/Icon';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
@@ -184,7 +186,7 @@ function defaultsOf(inputs: CalcInput[]): Answers {
   return Object.fromEntries(inputs.map((i) => [i.id, i.defaultValue]));
 }
 
-export function CalculatorPage({ data, nicheName, proofRoute }: { data: CalculatorData; nicheName: string; proofRoute?: ProofRoute | null }) {
+export function CalculatorPage({ data, nicheName, proofRoute, funnel }: { data: CalculatorData; nicheName: string; proofRoute?: ProofRoute | null; funnel?: Funnel | null }) {
   const [inputValues, setInputValues] = useState<Answers>(() => defaultsOf(data.inputs));
   // The fields start on the page's sample answers. Until the visitor changes
   // one, the result is an example, and is labelled as one rather than
@@ -248,7 +250,9 @@ export function CalculatorPage({ data, nicheName, proofRoute }: { data: Calculat
 
       <p className="prose-ib text-lede mb-8">{data.description}</p>
 
-      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
+      {funnel
+        ? <PageFunnel funnel={funnel} niche={data.niche} />
+        : proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-s0 border border-b1 rounded-[12px] p-5">

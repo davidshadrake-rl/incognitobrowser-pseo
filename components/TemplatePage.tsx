@@ -7,6 +7,8 @@ import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
 import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
+import { PageFunnel } from './PageFunnel';
+import type { PageFunnel as Funnel } from '@/lib/funnels';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
 
@@ -194,7 +196,7 @@ export function fillTemplate(content: string, values: Record<string, string>, fi
   return piecesOf(content, values, fields).map((p) => (typeof p === 'string' ? p : p.value || p.spot.text)).join('');
 }
 
-export function TemplatePage({ data, nicheName, proofRoute }: { data: TemplateData; nicheName: string; proofRoute?: ProofRoute | null }) {
+export function TemplatePage({ data, nicheName, proofRoute, funnel }: { data: TemplateData; nicheName: string; proofRoute?: ProofRoute | null; funnel?: Funnel | null }) {
   const fields = templateFields(data.sections);
 
   // Fields start empty, with the JSON's example as grey placeholder text.
@@ -271,7 +273,9 @@ export function TemplatePage({ data, nicheName, proofRoute }: { data: TemplateDa
 
       <p className="prose-ib text-lede mb-8">{data.description}</p>
 
-      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
+      {funnel
+        ? <PageFunnel funnel={funnel} niche={data.niche} />
+        : proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {fields.length > 0 && (
         <div className="bg-s0 border border-b1 rounded-[12px] p-5 mb-8">

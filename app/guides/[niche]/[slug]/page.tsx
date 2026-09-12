@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { getContentItem, getContentFiles, getGlossaryFiles, getCrossNicheLinks, isPublished, isToolListed, type EditableContent } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
+import { funnelFor } from '@/lib/funnels';
 import { generateMetadata as genMeta, generateHowToSchema, generateFAQSchema, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { GuidePage } from '@/components/GuidePage';
 import { RelatedContent } from '@/components/seo/RelatedContent';
@@ -165,6 +166,7 @@ export default async function GuideDetailPage({ params }: PageProps) {
       <JsonLd data={howToSchema} />
       {faqSchema && <JsonLd data={faqSchema} />}
       <GuidePage
+        funnel={funnelFor(`/guides/${niche}/${slug}`)}
         data={{ ...data, relatedLinks: weaveLinkCandidates }}
         nicheName={nicheName}
         proofRoute={proofToolFor(niche)}

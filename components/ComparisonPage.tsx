@@ -22,6 +22,8 @@ import { Icon } from './ui/Icon';
 import { Badge, type BadgeVariant } from './ui/Badge';
 import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
+import { PageFunnel } from './PageFunnel';
+import type { PageFunnel as Funnel } from '@/lib/funnels';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
 import {
@@ -60,7 +62,9 @@ export function ComparisonPage({
   nicheName,
   reviewed,
   proofRoute,
+  funnel,
 }: {
+  funnel?: Funnel | null;
   data: ComparisonView;
   nicheName: string;
   reviewed: boolean;
@@ -126,7 +130,9 @@ export function ComparisonPage({
 
       <p className="prose-ib text-lede mb-8">{data.intro}</p>
 
-      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
+      {funnel
+        ? <PageFunnel funnel={funnel} niche={data.niche} />
+        : proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       <section className="mb-10">
         {/* The order applies to these cards and to the table's columns below.

@@ -6,6 +6,8 @@ import { getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, absoluteUrl } from '@/lib/seo';
 import { ReportCardFunnel } from '@/components/ReportCardFunnel';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 import { GRADE_LABEL } from '@/lib/site-grade';
 import { TRACKER_FOR_INLINE } from '@/lib/scanner';
 import { IS_PRO_DEPLOYMENT, proUrlFor } from '@/lib/tiers';
@@ -216,6 +218,8 @@ export default async function SiteReportPage({ params }: PageProps) {
           </ul>
         </div>
       </section>
+
+      {funnelFor(`/site/${domain}`) && <PageFunnel funnel={funnelFor(`/site/${domain}`)!} niche={category.niche} />}
 
       {/* The result moment: the grade is the proof, the ask follows it, the scorecard makes it shareable */}
       <ReportCardFunnel

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactPeople } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
+import { funnelFor } from '@/lib/funnels';
 import { generateMetadata as genMeta, generateFAQSchema, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { ComparisonPage } from '@/components/ComparisonPage';
 import { RelatedContent } from '@/components/seo/RelatedContent';
@@ -94,7 +95,7 @@ export default async function ComparisonDetailPage({ params }: PageProps) {
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
       {faqSchema && <JsonLd data={faqSchema} />}
-      <ComparisonPage data={toComparisonView(data)} nicheName={nicheName} reviewed={reviewed} proofRoute={proofToolFor(niche)} />
+      <ComparisonPage data={toComparisonView(data)} nicheName={nicheName} reviewed={reviewed} proofRoute={proofToolFor(niche)}funnel={funnelFor(`/comparisons/${niche}/${slug}`)} />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `/topics/${niche}` }}

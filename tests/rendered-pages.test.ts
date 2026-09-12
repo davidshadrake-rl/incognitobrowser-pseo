@@ -292,6 +292,8 @@ describe.skipIf(!HAS_TARGET)('no missing-space concatenations in visible text', 
     'OAuth', 'OpenID', 'WebKit', 'WebRTC', 'WebGL', 'WebGPU', 'WebAuthn',
     'OpenAI', 'ChatGPT', 'OpenVPN', 'WireGuard', 'BitTorrent',
     'AdBlock', 'uBlock', 'AdGuard', 'PrivacyBadger', 'CanvasBlocker', 'ClearURLs',
+    // Filter lists, named in the funnel's step-2 and step-3 copy.
+    'EasyList', 'EasyPrivacy',
     'resistFingerprinting', 'privacyResistFingerprinting',
     // More about:config pref identifiers, same class as resistFingerprinting
     // above. These became visible when ChecklistPage stopped hiding item.why
@@ -671,12 +673,18 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
   it('content pages carry a tool card that names the tool and says what it does', async () => {
     for (const route of [ROUTES.publishedGuide, ROUTES.publishedChecklist]) {
       const r = await fetchText(route);
-      // The card is CheckYoursNow's <aside data-check-yours>; judge its own text only.
-      const start = r.body.search(/<aside[^>]*data-check-yours="[a-z0-9-]+"/);
-      expect(start, `${route}: tool card`).toBeGreaterThanOrEqual(0);
-      const card = r.body.slice(start, r.body.indexOf('</aside>', start));
-      // The button names the tool it opens ("Open the User Agent Analyzer →"), not "Run the check".
-      expect(card, route).toMatch(/href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>(Open|Take) [^<]+ →/);
+      // Either surface: CheckYoursNow's <aside data-check-yours>, or the page's
+      // own five-step funnel (components/PageFunnel), which replaces it where
+      // one is drafted. Judge only the surface's own text.
+      const funnel = r.body.search(/<section[^>]*data-page-funnel="[a-z0-9-]+"/);
+      const aside = r.body.search(/<aside[^>]*data-check-yours="[a-z0-9-]+"/);
+      const start = funnel >= 0 ? funnel : aside;
+      expect(start, `${route}: tool card or page funnel`).toBeGreaterThanOrEqual(0);
+      const card = r.body.slice(start, r.body.indexOf(funnel >= 0 ? '</section>' : '</aside>', start));
+      // The button names what it opens, and goes to a real tool page.
+      expect(card, route).toMatch(funnel >= 0
+        ? /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?(\?[^"]*)?"/
+        : /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>(Open|Take) [^<]+ →/);
       // CTO review 2026-09-10: no false promises on the card, and no niche
       // shell title for the user-agent tool. The shell title is still the
       // real title of /tools/gaming-privacy/useragent-analyzer, so a related
@@ -697,7 +705,8 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
     expect(r.body).not.toMatch(/>Progress</);
     const progress = r.body.indexOf('data-checklist-progress');
     const firstSection = r.body.indexOf('<details class="panel"');
-    const card = r.body.indexOf('data-check-yours');
+    // data-page-funnel where a funnel is drafted for this page, else the old card.
+    const card = Math.max(r.body.indexOf('data-page-funnel'), r.body.indexOf('data-check-yours'));
     expect(progress).toBeGreaterThan(0);
     expect(firstSection).toBeGreaterThan(progress);
     expect(card).toBeGreaterThan(firstSection);

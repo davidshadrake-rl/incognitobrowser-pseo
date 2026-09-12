@@ -10,6 +10,8 @@ import { PageHero } from './ui/PageHero';
 import { Icon } from './ui/Icon';
 import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
+import { PageFunnel } from './PageFunnel';
+import type { PageFunnel as Funnel } from '@/lib/funnels';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import { weaveLinks, unmatchedLinkSentence, isSafeHref, type InlineLink, type WeaveSegment } from '@/lib/inline-links';
 import type { ProofRoute } from '@/lib/proof-route';
@@ -99,7 +101,7 @@ function weaveGuideContent(intro: string | undefined, steps: GuideStep[], links:
   return { introSegments, stepSegments };
 }
 
-export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; nicheName: string; proofRoute?: ProofRoute | null }) {
+export function GuidePage({ data, nicheName, proofRoute, funnel }: { data: GuideData; nicheName: string; proofRoute?: ProofRoute | null; funnel?: Funnel | null }) {
   const cappedIntro = data.intro ? capWords(data.intro, 60) : undefined;
   // isSafeHref here as well as inside weaveLinks: weaveLinks reports an
   // unsafe link back as *unmatched*, and weaveGuideContent turns every
@@ -139,7 +141,9 @@ export function GuidePage({ data, nicheName, proofRoute }: { data: GuideData; ni
 
       {cappedIntro && <p className="prose-ib text-lede mb-8">{renderSegments(introSegments)}</p>}
 
-      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
+      {funnel
+        ? <PageFunnel funnel={funnel} niche={data.niche} />
+        : proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {data.prerequisites.length > 0 && (
         <div className="flex flex-wrap items-center gap-2 mb-8">

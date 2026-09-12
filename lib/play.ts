@@ -7,7 +7,7 @@
  * stable: the app team reads it.
  *
  *   utm_source   resources | pro            which deployment
- *   utm_medium   site | tool | report-card | scorecard | cta
+ *   utm_medium   site | tool | report-card | scorecard | cta | funnel
  *   utm_campaign <engine> | header | footer  what earned the click
  *   utm_content  <niche> | grade-D | …       the specific door
  */
@@ -17,7 +17,7 @@ export const PLAY_PACKAGE = 'com.androidbull.incognito.browser';
 
 export interface PlayLinkOpts {
   source?: 'resources' | 'pro';
-  medium: 'site' | 'tool' | 'report-card' | 'scorecard' | 'cta' | 'handoff';
+  medium: 'site' | 'tool' | 'report-card' | 'scorecard' | 'cta' | 'handoff' | 'funnel';
   campaign: string;
   content?: string;
   /** Which page TYPE earned the click (tool | report-card | guide | checklist …): the only way to learn which content converts. */

@@ -7,6 +7,8 @@ import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
 import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
+import { PageFunnel } from './PageFunnel';
+import type { PageFunnel as Funnel } from '@/lib/funnels';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
 
@@ -95,7 +97,7 @@ function parseTicks(raw: string): Record<string, boolean> {
   }
 }
 
-export function ChecklistPage({ data, nicheName, proofRoute }: { data: ChecklistData; nicheName: string; proofRoute?: ProofRoute | null }) {
+export function ChecklistPage({ data, nicheName, proofRoute, funnel }: { data: ChecklistData; nicheName: string; proofRoute?: ProofRoute | null; funnel?: Funnel | null }) {
   const storageKey = `checklist-${data.niche}-${data.slug}`;
   const raw = useSyncExternalStore(subscribeTicks, () => readTicks(storageKey), () => '');
   const checked = useMemo(() => parseTicks(raw), [raw]);
@@ -281,7 +283,9 @@ export function ChecklistPage({ data, nicheName, proofRoute }: { data: Checklist
       )}
 
       {/* After the list, so the progress bar never reads as this tool's progress. */}
-      {proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
+      {funnel
+        ? <PageFunnel funnel={funnel} niche={data.niche} />
+        : proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
     </article>
