@@ -28,13 +28,14 @@ class FakeStorage {
 const CHROME_UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Mobile Safari/537.36';
 
 /** Load a page at `href` in a fake tab and run the boot script. */
-function boot(href: string, opts: { storage?: FakeStorage; ua?: string } = {}) {
+function boot(href: string, opts: { storage?: FakeStorage; ua?: string; bridge?: unknown } = {}) {
   const root = new FakeElement();
   const storage = opts.storage ?? new FakeStorage();
   const w = {
     document: { documentElement: root },
     location: { href },
     sessionStorage: storage,
+    IncognitoBrowserApp: opts.bridge,
     navigator: { userAgent: opts.ua ?? CHROME_UA },
     history: { state: null, replaceState: vi.fn((_s: unknown, _t: string, url: string) => { w.location.href = new URL(url, href).href; }) },
   };
@@ -68,6 +69,20 @@ describe('the boot script: ?inapp=1 marks the page and the tab', () => {
     const first = boot('https://example.test/?inapp=1');
     expect(boot('https://example.test/?inapp=0', { storage: first.storage }).root.hasAttribute('data-inapp')).toBe(false);
     expect(first.storage.getItem('ib-inapp')).toBeNull();
+  });
+
+  it('the app\'s own JavaScript bridge counts on its own, as "bridge"', () => {
+    // androidx.webkit injects this object into our origins only, so nothing
+    // else can put it there: it is proof without the parameter, and it
+    // survives a link opened from outside the app's own tiles.
+    const { root } = boot('https://example.test/guides/', { bridge: { postMessage: () => {} } });
+    expect(root.getAttribute('data-inapp')).toBe('bridge');
+  });
+
+  it('the parameter still wins over the bridge, and a non-object bridge is ignored', () => {
+    expect(boot('https://example.test/?inapp=1', { bridge: { postMessage: () => {} } }).root.getAttribute('data-inapp')).toBe('param');
+    expect(boot('https://example.test/', { bridge: 'nope' }).root.hasAttribute('data-inapp')).toBe(false);
+    expect(boot('https://example.test/', { bridge: null }).root.hasAttribute('data-inapp')).toBe(false);
   });
 
   it('a user agent naming the app still counts, as "ua"', () => {
@@ -145,6 +160,22 @@ describe('the upgrade handoff', () => {
     win.IncognitoBrowserApp = { openUpgrade };
     expect(openAppUpgrade(ctx)).toBe(true);
     expect(JSON.parse(openUpgrade.mock.calls[0][0])).toMatchObject({ v: 1, from: 'result', result: 'amber' });
+  });
+
+  it('a bridge injected after the page loaded is still found, and marks the page', () => {
+    const postMessage = vi.fn();
+    win.IncognitoBrowserApp = { postMessage };
+    expect(root.hasAttribute('data-inapp')).toBe(false);
+    expect(openAppUpgrade(ctx)).toBe(true);
+    expect(root.getAttribute('data-inapp')).toBe('bridge');
+    expect(JSON.parse(postMessage.mock.calls[0][0])).toMatchObject({ action: 'upgrade', from: 'result' });
+  });
+
+  it('a build known only by its bridge never gets the URL that only ?inapp=1 promises', () => {
+    root.setAttribute('data-inapp', 'bridge');
+    win.IncognitoBrowserApp = {};
+    expect(openAppUpgrade(ctx)).toBe(false);
+    expect(loc.href).toMatch(/^https:/);
   });
 
   it('an app that sent ?inapp=1 but has no bridge gets the upgrade URL', () => {

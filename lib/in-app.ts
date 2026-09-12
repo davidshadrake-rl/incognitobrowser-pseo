@@ -11,6 +11,10 @@
  *
  *   data-inapp="param"  the app sent ?inapp=1, so it has agreed to handle the
  *                       upgrade and save-image bridge (IN-APP-BRIDGE.md)
+ *   data-inapp="bridge" no parameter, but the app put its JavaScript bridge on
+ *                       the page, which only its own WebView can do: as good
+ *                       as the parameter, and it survives a link opened from
+ *                       outside the app's own tiles
  *   data-inapp="ua"     only the user agent names the app: labels change,
  *                       upgrade links stay ordinary Play links
  *   data-ib-pro         the app says this user already has Pro, so upgrade
@@ -21,7 +25,7 @@
  * to the app, and components/Scorecard.tsx hands it the scorecard image.
  */
 
-export type InAppSource = 'param' | 'ua';
+export type InAppSource = 'param' | 'bridge' | 'ua';
 
 /** Where the app's own upgrade screen opens when it has no JavaScript bridge. */
 export const APP_UPGRADE_URL = 'incognitobrowser://upgrade';
@@ -48,7 +52,9 @@ export function bootInApp(w: Window): void {
     let pro = get('ib-pro') === '1';
     if (q.has('inapp')) { fromApp = yes(q.get('inapp')); put('ib-inapp', fromApp); }
     if (q.has('pro')) { pro = yes(q.get('pro')); put('ib-pro', pro); }
-    const source = fromApp ? 'param' : /incognito ?browser/i.test(w.navigator.userAgent) ? 'ua' : '';
+    const bridged = typeof (w as unknown as { IncognitoBrowserApp?: unknown }).IncognitoBrowserApp === 'object'
+      && (w as unknown as { IncognitoBrowserApp?: unknown }).IncognitoBrowserApp !== null;
+    const source = fromApp ? 'param' : bridged ? 'bridge' : /incognito ?browser/i.test(w.navigator.userAgent) ? 'ua' : '';
     if (source) root.setAttribute('data-inapp', source); else root.removeAttribute('data-inapp');
     if (source && pro) root.setAttribute('data-ib-pro', ''); else root.removeAttribute('data-ib-pro');
     if (q.has('inapp') || q.has('pro')) {
@@ -64,11 +70,22 @@ export function bootInApp(w: Window): void {
 
 export const IN_APP_BOOT_SCRIPT = `(${bootInApp.toString()})(window);`;
 
-/** How this page knows it is in the app, or null on the open web (and on the server). */
+/**
+ * How this page knows it is in the app, or null on the open web (and on the
+ * server). The boot script settles it before the first paint; this also
+ * catches a bridge injected after that (androidx.webkit adds its object when
+ * a document is created, but an older app build may inject later), and marks
+ * <html> so the label CSS follows.
+ */
 export function inAppSource(): InAppSource | null {
   if (typeof document === 'undefined') return null;
   const v = document.documentElement.getAttribute('data-inapp');
-  return v === 'param' || v === 'ua' ? v : null;
+  if (v === 'param' || v === 'bridge' || v === 'ua') return v;
+  if (appBridge()) {
+    document.documentElement.setAttribute('data-inapp', 'bridge');
+    return 'bridge';
+  }
+  return null;
 }
 
 /** The app says this user already has Incognito Pro. */
@@ -138,6 +155,9 @@ export function openAppUpgrade(ctx: UpgradeContext): boolean {
   } catch {
     /* fall through to the URL */
   }
+  // Only an app build that sent ?inapp=1 has agreed to handle this URL. A
+  // build detected by its bridge would have taken one of the calls above; one
+  // detected by user agent alone keeps its ordinary Play link.
   if (source === 'param') {
     window.location.href = appUpgradeUrl(ctx);
     return true;

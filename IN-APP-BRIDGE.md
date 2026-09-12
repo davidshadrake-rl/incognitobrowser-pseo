@@ -11,6 +11,8 @@ The app spoofs its user agent, so the page can't tell from that. The app says so
 - The page keeps both flags for the rest of the tab and removes them from the address bar, so a link the user copies or shares never carries them. `inapp=0` and `pro=0` switch them off. Links between the free and Pro sites carry the flags across.
 - **Only send `inapp=1` once the app handles the upgrade handoff in section 2.** The flag tells the page it may hand upgrades to the app.
 - `pro=1` only changes wording. Anyone can type it, so never use it to grant anything.
+- **The bridge itself also counts.** If the page finds `window.IncognitoBrowserApp` (section 2) it treats that as proof it is inside the app, even with no `inapp=1` and a spoofed user agent, because only the app's own WebView can put that object on our pages. That covers a page the user reached by a link rather than from one of the app's own tiles. Send `inapp=1` anyway: it is what carries `pro=1`, and it is the only signal that survives an app build whose bridge is not yet injected when the page's first script runs.
+- **We do not fingerprint the WebView.** The user agent is the last resort, and on its own it changes wording only.
 
 What changes on the page inside the app:
 
