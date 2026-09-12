@@ -142,10 +142,11 @@ export const ENGINE_META: Record<string, {
     checks: BROWSER_PRIVACY_COUNT,
     canonicalTips: [
       'Enable Do Not Track in your browser settings, even though not all sites honor it',
-      'Use a browser that patches WebRTC to prevent IP address leaks, especially when using a VPN',
-      'Use a privacy browser that randomizes your canvas fingerprint to prevent unique identification',
+      'WebRTC can hand a site the IP address your connection really uses: Firefox switches it off with media.peerconnection.enabled in about:config, and Brave has a WebRTC IP handling policy you can set to Disable non-proxied UDP',
+      'Fingerprinting is fought two ways: Tor Browser and Mullvad Browser make every user look alike, while Brave randomizes the canvas and WebGL readings each site gets',
       'Regularly clear cookies and site data to reduce persistent tracking',
-      'Incognito Browser gives you built-in privacy protections with no setup',
+      // data/brand.json backs wipe-on-exit and "every tab private"; it never claims fingerprint protection.
+      'Incognito Browser runs every tab in private mode and wipes history, cookies and sessions when you close it',
     ],
     canonicalMistakes: [
       'Assuming incognito/private mode makes you anonymous — it only prevents local history storage',
@@ -180,14 +181,16 @@ export const ENGINE_META: Record<string, {
   },
   'cookie-analyzer': {
     figure: { value: '30+', label: 'tracker signatures' },
-    io: ["A URL, or this page's cookies", 'Cookies, scripts and tracker signatures', 'Tracking, analytics and functional counts'],
-    scoring: 'A URL scan starts at 100 and loses points per high-risk item, tracking and analytics cookie, tracker and third-party script, plus fixed deductions for missing HTTPS, CSP or HSTS.',
+    io: ["A URL, pasted cookies, or this page's cookies", 'Cookies, scripts and tracker signatures', 'A score out of 100, plus tracking, analytics and functional counts'],
+    // cookiePrivacyScore and severityFromScore in CookieAnalyzerTool: one rule for the console and the result.
+    scoring: "Every result starts at 100 and loses 10 points per high-risk item, 5 per tracking cookie or tracker, 3 per analytics cookie and 2 per third-party script (20 at most); a URL scan also loses 20 without HTTPS and 5 each without CSP or HSTS. Pasted cookies and this page's cookies are scored on the cookie points alone. The colour follows the score: green from 80, amber from 50, red below 50.",
     canonicalTips: [
       'Block third-party cookies in your browser settings to prevent cross-site tracking',
       'Use a cookie auto-delete extension to clear tracking cookies after each session',
       'Functional cookies (CSRF tokens, session IDs) are necessary and generally safe',
       'Review cookie settings on websites you visit frequently — many have opt-out options',
-      'Incognito Browser blocks tracking cookies by default',
+      // data/brand.json backs "wipes history, cookies and sessions when you exit", not blocking tracking cookies.
+      'Incognito Browser wipes history, cookies and sessions every time you close it',
     ],
     canonicalMistakes: [
       "Clicking \"Accept All Cookies\" without reviewing what you're consenting to",
@@ -279,13 +282,17 @@ export const ENGINE_META: Record<string, {
   },
   'metadata-viewer': {
     figure: null,
-    io: ['An image file', 'EXIF, GPS and text-chunk parsing', 'Every embedded field, plus a clean copy'],
-    scoring: "This tool doesn't score a result. It's red when GPS or a high-risk field is present, amber for lower-risk metadata, green when none is found.",
+    // What lib/exif.ts reads and how summarizeMetadata colours it. Every
+    // clause here is a claim about that function: green is the narrow case
+    // (technical fields only, nothing left unread), so a block found and not
+    // decoded, or a read that stopped early, is amber and must say so.
+    io: ['An image file', 'Exif tag by tag (IFD0, Exif, GPS, Interop, IFD1), the common XMP and IPTC fields', 'Each field with a risk rating, plus a clean copy'],
+    scoring: "This tool doesn't score a result. It's red when the file carries GPS coordinates, a person's name or contact details, a city or street-level place, or a serial number or unique ID that links photos to one device or file. It's amber for device, time, software or free-text details, a province, country or copyright line, an embedded thumbnail, or a block it found and could not read — including a read that a cap or a broken file cut short. Green needs both: every field it read is technical, and nothing was left unread. HEIC, AVIF and BigTIFF files are recognised but not read, so they get no verdict.",
     canonicalTips: [
       'Always strip metadata from photos before sharing online, especially GPS coordinates',
-      'Most phones embed precise GPS coordinates in every photo by default — check your settings',
+      'Phones add precise GPS coordinates to every photo while camera location is on — check your settings',
       'Screenshots typically contain less metadata than camera photos',
-      'Use image conversion (e.g., PNG to JPEG) as a simple way to strip most metadata',
+      'Use the clean copy: it redraws only the pixels into a new JPEG, so no Exif, XMP or IPTC block is carried over',
       'Check metadata in photos before posting on dating apps or social media',
     ],
     canonicalMistakes: [

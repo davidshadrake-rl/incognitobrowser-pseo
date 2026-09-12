@@ -15,12 +15,12 @@
   "description": "Inspect drone and aerial photos for embedded GPS coordinates, camera data, and other identifying metadata.",
   "inputs": [],
   "educational": {
-    "howItWorks": "This tool reads EXIF metadata from JPEG images. It parses the APP1 segment of JPEG files to extract camera information, timestamps, GPS coordinates, software details, and other embedded metadata.",
+    "howItWorks": "This tool reads the metadata stored inside an image file. In JPEG, PNG, WebP and TIFF files it walks the whole Exif structure (IFD0, the Exif, GPS and Interop directories, and IFD1 with the embedded thumbnail) and lists each tag by name, or by number when the tag is not a standard one. It also decodes the common XMP and IPTC fields, PNG text chunks and JPEG and GIF comments. Maker notes are listed by size but not decoded, and HEIC and AVIF photos are recognised but not read; so is a BigTIFF, which can carry the same Exif as a JPEG. When a block is found that it cannot decode, or a cap or a broken file stops the read, the result says so instead of reporting the photo as clean.",
     "tips": [
       "Always strip metadata from photos before sharing online, especially GPS coordinates",
-      "Most phones embed precise GPS coordinates in every photo by default — check your settings",
+      "Phones add precise GPS coordinates to every photo while camera location is on — check your settings",
       "Screenshots typically contain less metadata than camera photos",
-      "Use image conversion (e.g., PNG to JPEG) as a simple way to strip most metadata",
+      "Use the clean copy: it redraws only the pixels into a new JPEG, so no Exif, XMP or IPTC block is carried over",
       "Check metadata in photos before posting on dating apps or social media"
     ],
     "commonMistakes": [
@@ -34,6 +34,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:56:28.401Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Tool page: hand-built, indexable by default."
   },

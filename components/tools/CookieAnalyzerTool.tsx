@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { scanUrl } from '@/lib/scan-client';
-import { useReportResult, severityFromScore } from './ResultContext';
+import { lookupCookieName } from '@/lib/scanner';
+import { useReportResult, severityFromScore, type Severity, type ToolResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import type { Grade } from '@/lib/site-grade';
 
-interface CookieInfo {
+export interface CookieInfo {
   name: string;
   value: string;
   category: 'tracking' | 'analytics' | 'functional' | 'unknown';
@@ -15,7 +16,7 @@ interface CookieInfo {
   description: string;
 }
 
-interface URLScanResult {
+export interface URLScanResult {
   url: string;
   status: number;
   cookies: {
@@ -58,58 +59,189 @@ interface URLScanResult {
   };
 }
 
-const KNOWN_COOKIES: Record<string, { category: CookieInfo['category']; risk: CookieInfo['risk']; description: string }> = {
-  '_ga': { category: 'analytics', risk: 'medium', description: 'Google Analytics — tracks user behavior across sessions' },
-  '_gid': { category: 'analytics', risk: 'medium', description: 'Google Analytics — identifies unique users for 24 hours' },
-  '_gat': { category: 'analytics', risk: 'low', description: 'Google Analytics — rate limiting' },
-  '_fbp': { category: 'tracking', risk: 'high', description: 'Facebook Pixel — tracks you across websites for ad targeting' },
-  '_fbc': { category: 'tracking', risk: 'high', description: 'Facebook — stores click identifier from Facebook ads' },
-  'fr': { category: 'tracking', risk: 'high', description: 'Facebook — advertising and tracking cookie' },
-  '_gcl_au': { category: 'tracking', risk: 'high', description: 'Google AdSense — experiments with ad efficiency' },
-  'IDE': { category: 'tracking', risk: 'high', description: 'Google DoubleClick — used for targeted advertising' },
-  'NID': { category: 'tracking', risk: 'medium', description: 'Google — stores preferences and ad personalization' },
-  '_tt_enable_cookie': { category: 'tracking', risk: 'high', description: 'TikTok — checks if cookies can be placed' },
-  '_ttp': { category: 'tracking', risk: 'high', description: 'TikTok — tracks activity for ad targeting' },
-  'MUID': { category: 'tracking', risk: 'high', description: 'Microsoft/Bing — identifies unique web browsers' },
-  '_uetsid': { category: 'tracking', risk: 'high', description: 'Microsoft Ads — tracks conversions' },
-  '__stripe_mid': { category: 'functional', risk: 'low', description: 'Stripe — payment processing fraud prevention' },
-  '__stripe_sid': { category: 'functional', risk: 'low', description: 'Stripe — session identifier for payments' },
-  'csrf_token': { category: 'functional', risk: 'low', description: 'Security — prevents cross-site request forgery attacks' },
-  'XSRF-TOKEN': { category: 'functional', risk: 'low', description: 'Security — CSRF protection token' },
-  'session': { category: 'functional', risk: 'low', description: 'Session identifier — keeps you logged in' },
-  'sessionid': { category: 'functional', risk: 'low', description: 'Session identifier — keeps you logged in' },
-  '_hjid': { category: 'analytics', risk: 'medium', description: 'Hotjar — identifies unique visitors for behavior analytics' },
-  '_hjSessionUser': { category: 'analytics', risk: 'medium', description: 'Hotjar — user session tracking' },
-  'mp_': { category: 'analytics', risk: 'medium', description: 'Mixpanel — product analytics and user tracking' },
-  'ajs_anonymous_id': { category: 'analytics', risk: 'medium', description: 'Segment — anonymous user identifier for analytics' },
-  'intercom-': { category: 'analytics', risk: 'medium', description: 'Intercom — customer messaging platform tracking' },
-  '__cf_bm': { category: 'functional', risk: 'low', description: 'Cloudflare — bot management, security' },
-  'cf_clearance': { category: 'functional', risk: 'low', description: 'Cloudflare — proof of passing security challenge' },
-};
-
-function categorizeCookie(name: string, value: string): CookieInfo {
-  if (KNOWN_COOKIES[name]) {
-    return { name, value, ...KNOWN_COOKIES[name] };
-  }
-  for (const [pattern, info] of Object.entries(KNOWN_COOKIES)) {
-    if (pattern.endsWith('_') && name.startsWith(pattern)) {
-      return { name, value, ...info };
-    }
-    if (pattern.endsWith('-') && name.startsWith(pattern)) {
-      return { name, value, ...info };
-    }
+/**
+ * Cookie names come from lib/scanner's one list (KNOWN_COOKIES +
+ * KNOWN_COOKIE_PATTERNS), so a pasted list, this page's cookies and a URL
+ * scan all call the same cookie by the same name and the same category.
+ *
+ * This file kept its own shorter table until 2026-09-11. It held 26 names and
+ * none of the advertising ones, so pasting "__gads=1; __gpi=2; __eoi=3;
+ * _gcl_aw=4; _gcl_dc=5; cto_bundle=6; _pubcid=7; AMCV_x=8" — Google Ad
+ * Manager, Google Ads, Criteo, PubCommon ID and Adobe Experience Cloud —
+ * scored 100/100, "A · Excellent", "8 cookies, 0 tracking and 0 analytics".
+ */
+export function categorizeCookie(name: string, value: string): CookieInfo {
+  const known = lookupCookieName(name);
+  if (known) {
+    return { name, value, category: known.category, risk: known.risk, description: known.description };
   }
   const lower = name.toLowerCase();
-  if (lower.includes('track') || lower.includes('ad') || lower.includes('pixel') || lower.includes('campaign')) {
+  // "ad" and "stat" as whole name parts (ad_id, _ads, stats), not inside
+  // other words: "header", "admin", "download" and "status" are not trackers,
+  // and a wrong "tracking" now costs the score 15 points. Ad-click ids are
+  // safe to add whole: no other kind of cookie is called gclid or msclkid.
+  if (
+    lower.includes('track') || /(?:^|[^a-z])ads?(?:[^a-z]|$)/.test(lower) || lower.includes('pixel') ||
+    lower.includes('campaign') || lower.includes('retarget') || lower.includes('doubleclick') ||
+    /(?:^|[^a-z])(?:gclid|fbclid|msclkid|ttclid|click_?id)(?:[^a-z]|$)/.test(lower)
+  ) {
     return { name, value, category: 'tracking', risk: 'high', description: 'Likely a tracking or advertising cookie based on naming' };
   }
-  if (lower.includes('analytics') || lower.includes('stat') || lower.includes('metric')) {
+  if (lower.includes('analytics') || /(?:^|[^a-z])stats?(?:[^a-z]|$)|statistic/.test(lower) || lower.includes('metric')) {
     return { name, value, category: 'analytics', risk: 'medium', description: 'Likely an analytics cookie based on naming' };
   }
   if (lower.includes('session') || lower.includes('csrf') || lower.includes('token') || lower.includes('auth')) {
     return { name, value, category: 'functional', risk: 'low', description: 'Likely a functional/security cookie based on naming' };
   }
   return { name, value, category: 'unknown', risk: 'medium', description: 'Unknown cookie — could be functional or tracking' };
+}
+
+/** "a=1; b=2" or one cookie per line -> categorised cookies. Blank pieces ("a=1;;") are not cookies. */
+export function parseCookieList(input: string): CookieInfo[] {
+  return input
+    .split(/[;\n]/)
+    .map((c) => {
+      const [name, ...rest] = c.trim().split('=');
+      return { name: name.trim(), value: rest.join('=').trim() };
+    })
+    .filter((c) => c.name)
+    .map((c) => categorizeCookie(c.name, c.value));
+}
+
+/** The counts the score is made of. A URL scan has all of them; a cookie list only the cookie ones. */
+export interface CookieScoreInput {
+  highRiskItems: number;
+  trackingCookies: number;
+  analyticsCookies: number;
+  totalTrackers: number;
+  thirdPartyScripts: number;
+}
+
+export interface SecurityHeaders {
+  isHTTPS: boolean;
+  hasCSP: boolean;
+  hasPermPolicy: boolean;
+  hasHSTS: boolean;
+}
+
+/**
+ * The one scoring rule, for every mode: 100, minus 10 per high-risk item,
+ * 5 per tracking cookie, 3 per analytics cookie, 5 per tracker and 2 per
+ * third-party script (20 at most); a URL scan also loses 20 without HTTPS
+ * and 5 each without CSP or HSTS. A cookie list has no trackers, scripts or
+ * headers, so only its cookie points apply.
+ */
+export function cookiePrivacyScore(s: CookieScoreInput, security?: SecurityHeaders): number {
+  let score = 100;
+  score -= s.highRiskItems * 10;
+  score -= s.trackingCookies * 5;
+  score -= s.analyticsCookies * 3;
+  score -= s.totalTrackers * 5;
+  score -= Math.min(20, s.thirdPartyScripts * 2);
+  if (security) {
+    if (!security.isHTTPS) score -= 20;
+    if (!security.hasCSP) score -= 5;
+    if (!security.hasHSTS) score -= 5;
+  }
+  return Math.max(0, Math.min(100, score));
+}
+
+/**
+ * The letter for a score. Its bands are cut where severityFromScore and
+ * severityFromGrade cut theirs, so the letter and the colour can never
+ * disagree: A and B are green (≥80), C is amber (≥50), D and F are red.
+ *
+ * They used to be cut at 85/70/50/30, so 79 rendered "B · Good" on an amber
+ * Warning and 84 rendered the same letter on green, and a scan with a
+ * high-risk tracking cookie (85) was called "A · Excellent".
+ */
+export function gradeFromScore(score: number): { letter: Grade; label: string } {
+  if (score >= 90) return { letter: 'A', label: 'Excellent' };
+  if (score >= 80) return { letter: 'B', label: 'Good' };
+  if (score >= 50) return { letter: 'C', label: 'Fair' };
+  if (score >= 30) return { letter: 'D', label: 'Poor' };
+  return { letter: 'F', label: 'Very Poor' };
+}
+
+/**
+ * Everything one result shows, computed once. The console (status, gauge,
+ * grade) and the result bus (CTA, scorecard) both read this object, so they
+ * cannot disagree: the severity is severityFromScore(score) and nothing else.
+ * The bus used to say red for any tracking cookie while the console graded
+ * the same scan 85, "A · Excellent", on green.
+ */
+export interface CookieReport {
+  score: number;
+  grade: { letter: Grade; label: string };
+  severity: Severity;
+  result: ToolResult;
+}
+
+const count = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+
+export function urlScanReport(r: Pick<URLScanResult, 'url' | 'summary' | 'security'>): CookieReport {
+  const sm = r.summary;
+  const score = cookiePrivacyScore(sm, r.security);
+  const grade = gradeFromScore(score);
+  const severity = severityFromScore(score);
+  let host = '';
+  try { host = new URL(r.url).hostname; } catch { host = 'This site'; }
+  const found = sm.trackingCookies || sm.totalTrackers
+    ? `${count(sm.trackingCookies, 'tracking cookie')} and ${count(sm.totalTrackers, 'tracker')} before you click anything`
+    : 'no tracking cookies or trackers before you click anything';
+  return {
+    score,
+    grade,
+    severity,
+    result: {
+      severity,
+      headline: `${host} scores ${score}/100: ${found}${r.security.isHTTPS ? '' : ', and no HTTPS'}`,
+      score,
+      grade: grade.letter,
+      stats: [
+        { label: 'Tracking cookies', value: String(sm.trackingCookies) },
+        { label: 'Trackers', value: String(sm.totalTrackers) },
+        { label: 'Third parties', value: String(sm.thirdPartyScripts) },
+        { label: 'Cookies', value: String(sm.totalCookies) },
+      ],
+    },
+  };
+}
+
+/** "This page" (the cookies this page's scripts can read) and "Paste" results, on the same scoring rule. */
+export function cookieListReport(cookies: CookieInfo[], mode: 'browser' | 'paste'): CookieReport {
+  const tracking = cookies.filter((c) => c.category === 'tracking').length;
+  const analytics = cookies.filter((c) => c.category === 'analytics').length;
+  const functional = cookies.filter((c) => c.category === 'functional').length;
+  const score = cookiePrivacyScore({
+    highRiskItems: cookies.filter((c) => c.risk === 'high').length,
+    trackingCookies: tracking,
+    analyticsCookies: analytics,
+    totalTrackers: 0,
+    thirdPartyScripts: 0,
+  });
+  const grade = gradeFromScore(score);
+  const severity = severityFromScore(score);
+  const headline = cookies.length === 0
+    ? mode === 'browser' ? 'This page has no cookies its scripts can read' : 'No cookies found in the pasted text'
+    : `${mode === 'browser' ? 'This page scores' : 'The pasted cookies score'} ${score}/100: ${count(cookies.length, 'cookie')}, ${tracking} tracking and ${analytics} analytics`;
+  return {
+    score,
+    grade,
+    severity,
+    result: {
+      severity,
+      headline,
+      score,
+      grade: grade.letter,
+      stats: [
+        { label: 'Tracking', value: String(tracking) },
+        { label: 'Analytics', value: String(analytics) },
+        { label: 'Functional', value: String(functional) },
+        { label: 'Cookies', value: String(cookies.length) },
+      ],
+    },
+  };
 }
 
 function getCategoryColor(cat: string) {
@@ -151,64 +283,35 @@ export function CookieAnalyzerTool() {
   const [scanStatus, setScanStatus] = useState<'' | 'verifying' | 'solving' | 'scanning'>('');
   const [urlResult, setUrlResult] = useState<URLScanResult | null>(null);
   const report = useReportResult();
+  // One report per view, built by the same functions the consoles below read,
+  // so the CTA, the scorecard and the console always give the same verdict.
+  const urlReport = useMemo(() => (urlResult ? urlScanReport(urlResult) : null), [urlResult]);
+  const listReport = useMemo(
+    () => (scanned && mode !== 'url' ? cookieListReport(cookies, mode === 'browser' ? 'browser' : 'paste') : null),
+    [scanned, mode, cookies],
+  );
   // One effect for all three modes. "This Page" and "Paste" used to render
   // their result panel without ever reporting — no CTA, no scorecard on 5
   // Pro pages (found 2026-09-08). The URL branch also read the host from the
   // input box, so typing a new URL without scanning relabelled the old result.
   useEffect(() => {
-    if (mode === 'url') {
-      if (!urlResult) { report(null); return; }
-      const sm = urlResult.summary;
-      let host = '';
-      try { host = new URL(urlResult.url).hostname; } catch { host = 'This site'; }
-      const severity = sm.trackingCookies > 0 || sm.totalTrackers >= 3 ? 'red' : sm.totalTrackers > 0 || sm.thirdPartyScripts > 5 ? 'amber' : 'green';
-      report({
-        severity,
-        headline: `${host} sets ${sm.trackingCookies} tracking cookies and loads ${sm.totalTrackers} trackers before you click anything`,
-        stats: [{ label: 'Tracking cookies', value: String(sm.trackingCookies) }, { label: 'Trackers', value: String(sm.totalTrackers) }, { label: 'Third parties', value: String(sm.thirdPartyScripts) }, { label: 'Cookies', value: String(sm.totalCookies) }],
-      });
-      return;
-    }
-    if (!scanned) { report(null); return; }
-    const tracking = cookies.filter((c) => c.category === 'tracking').length;
-    const analytics = cookies.filter((c) => c.category === 'analytics').length;
-    const functional = cookies.filter((c) => c.category === 'functional').length;
-    const what = mode === 'browser' ? 'This page' : 'This cookie set';
-    report({
-      severity: tracking > 0 ? 'red' : analytics > 0 ? 'amber' : 'green',
-      headline: cookies.length === 0
-        ? `${what} holds no cookies`
-        : `${what} holds ${cookies.length} cookies: ${tracking} tracking, ${analytics} analytics`,
-      stats: [{ label: 'Tracking', value: String(tracking) }, { label: 'Analytics', value: String(analytics) }, { label: 'Functional', value: String(functional) }, { label: 'Cookies', value: String(cookies.length) }],
-    });
-  }, [mode, urlResult, scanned, cookies, report]);
+    const current = mode === 'url' ? urlReport : listReport;
+    report(current ? current.result : null);
+  }, [mode, urlReport, listReport, report]);
   const [urlError, setUrlError] = useState('');
   // "This Page" / "Paste" results stay mounted across re-scans, so their console is told when each ran.
   const [cookieRunAt, setCookieRunAt] = useState(0);
 
+  // document.cookie lists only the cookies scripts may read: HttpOnly cookies never appear in it.
   const scanBrowserCookies = () => {
-    const raw = document.cookie;
     setCookieRunAt(Date.now());
-    if (!raw) {
-      setCookies([]);
-      setScanned(true);
-      return;
-    }
-    const parsed = raw.split(';').map(c => {
-      const [name, ...rest] = c.trim().split('=');
-      return categorizeCookie(name, rest.join('='));
-    });
-    setCookies(parsed);
+    setCookies(parseCookieList(document.cookie));
     setScanned(true);
   };
 
   const analyzePastedCookies = () => {
     if (!customInput.trim()) return;
-    const parsed = customInput.split(/[;\n]/).filter(Boolean).map(c => {
-      const [name, ...rest] = c.trim().split('=');
-      return categorizeCookie(name.trim(), rest.join('=').trim());
-    });
-    setCookies(parsed);
+    setCookies(parseCookieList(customInput));
     setCookieRunAt(Date.now());
     setScanned(true);
   };
@@ -316,29 +419,6 @@ export function CookieAnalyzerTool() {
     setTimeout(() => URL.revokeObjectURL(url), 5000);
   };
 
-  // Calculate privacy score + letter grade for a URL scan.
-  const getPrivacyScore = (result: URLScanResult): number => {
-    const { summary, security } = result;
-    let score = 100;
-    score -= summary.highRiskItems * 10;
-    score -= summary.trackingCookies * 5;
-    score -= summary.analyticsCookies * 3;
-    score -= summary.totalTrackers * 5;
-    score -= Math.min(20, summary.thirdPartyScripts * 2);
-    if (!security.isHTTPS) score -= 20;
-    if (!security.hasCSP) score -= 5;
-    if (!security.hasHSTS) score -= 5;
-    return Math.max(0, Math.min(100, score));
-  };
-
-  const gradeFromScore = (score: number): { letter: Grade; label: string } => {
-    if (score >= 85) return { letter: 'A', label: 'Excellent' };
-    if (score >= 70) return { letter: 'B', label: 'Good' };
-    if (score >= 50) return { letter: 'C', label: 'Fair' };
-    if (score >= 30) return { letter: 'D', label: 'Poor' };
-    return { letter: 'F', label: 'Very Poor' };
-  };
-
   return (
     <div className="space-y-6">
       {/* Mode toggle. The selected mode is filled white: the old 10% tint was
@@ -430,7 +510,7 @@ export function CookieAnalyzerTool() {
         ) : mode === 'browser' ? (
           <div className="text-center">
             <p className="text-t2 mb-4">
-              Scan cookies set by this page to see what&apos;s tracking you.
+              List the cookies this page&apos;s scripts can read and see which ones track you. HttpOnly cookies are hidden from scripts, so they don&apos;t appear here.
             </p>
             <button onClick={scanBrowserCookies} className="btn-primary px-8 py-3">
               Scan Cookies
@@ -463,13 +543,12 @@ export function CookieAnalyzerTool() {
       )}
 
       {/* ===== URL SCAN RESULTS ===== */}
-      {urlResult && (() => {
-        const score = getPrivacyScore(urlResult);
-        const grade = gradeFromScore(score);
+      {urlResult && urlReport && (() => {
+        const { score, grade } = urlReport;
         return (
         <ConsoleFrame
           engine="cookie-analyzer"
-          status={statusFromSeverity(severityFromScore(score))}
+          status={statusFromSeverity(urlReport.severity)}
           score={score}
           gaugeLabel={`grade ${grade.letter}`}
           tally={{
@@ -645,12 +724,14 @@ export function CookieAnalyzerTool() {
             </div>
           )}
 
-          {/* Clean site message */}
-          {urlResult.summary.totalCookies === 0 && urlResult.trackers.length === 0 && (
+          {/* Nothing found. Inline trackers count too: the box used to show
+              beside a "Tracking Scripts Detected" list of inline pixels. */}
+          {urlResult.summary.totalCookies === 0 && urlResult.trackers.length === 0 && urlResult.inlineTrackers.length === 0 && (
             <div className="bg-s0 border border-ok/30 rounded-lg p-6 text-center">
-              <div className="text-ok text-lg font-semibold mb-2">Clean Site</div>
+              <div className="text-ok text-lg font-semibold mb-2">No cookies or known trackers</div>
               <p className="text-sm text-t2">
-                No cookies or tracking scripts detected on the initial page load. This site appears to respect visitor privacy.
+                The first page load set no cookies and loaded no script this scanner recognises as a tracker.
+                {urlResult.thirdPartyDomains.length > 0 && ` It still loads scripts from ${urlResult.thirdPartyDomains.length === 1 ? '1 other domain' : `${urlResult.thirdPartyDomains.length} other domains`}, listed above.`}
               </p>
             </div>
           )}
@@ -660,16 +741,18 @@ export function CookieAnalyzerTool() {
       })()}
 
       {/* ===== BROWSER / PASTE RESULTS ===== */}
-      {scanned && mode !== 'url' && (
+      {scanned && mode !== 'url' && listReport && (
         <ConsoleFrame
           engine="cookie-analyzer"
-          status={statusFromSeverity(tracking.length > 0 ? 'red' : analytics.length > 0 ? 'amber' : 'green')}
+          status={statusFromSeverity(listReport.severity)}
+          score={listReport.score}
+          gaugeLabel={`grade ${listReport.grade.letter}`}
           checks={cookies.length}
           checksNoun={['cookie', 'cookies']}
           runAt={cookieRunAt || undefined}
           tally={{ fails: tracking.length, warns: analytics.length, passes: functional.length }}
           statTiles={[
-            { label: 'Total cookies', value: cookies.length },
+            { label: 'Grade', value: `${listReport.grade.letter} · ${listReport.grade.label}` },
             { label: 'Tracking', value: tracking.length },
             { label: 'Analytics', value: analytics.length },
             { label: 'Functional', value: functional.length },
@@ -680,7 +763,7 @@ export function CookieAnalyzerTool() {
               <div className="text-ok text-lg font-semibold mb-2">No cookies detected</div>
               <p className="text-sm text-t2">
                 {mode === 'browser'
-                  ? 'This page has no accessible cookies. This is good for privacy.'
+                  ? 'This page has no cookies its scripts can read.'
                   : 'No valid cookies found in the input.'}
               </p>
             </div>

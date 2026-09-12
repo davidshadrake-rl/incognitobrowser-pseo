@@ -18,10 +18,10 @@
     "howItWorks": "This tool runs a series of privacy checks directly in your browser to detect fingerprinting vectors, tracking vulnerabilities, and privacy leaks. It tests Do Not Track settings, WebRTC exposure, canvas fingerprinting, device hardware detection, and more.",
     "tips": [
       "Enable Do Not Track in your browser settings, even though not all sites honor it",
-      "Use a browser that patches WebRTC to prevent IP address leaks, especially when using a VPN",
-      "Use a privacy browser that randomizes your canvas fingerprint to prevent unique identification",
+      "WebRTC can hand a site the IP address your connection really uses: Firefox switches it off with media.peerconnection.enabled in about:config, and Brave has a WebRTC IP handling policy you can set to Disable non-proxied UDP",
+      "Fingerprinting is fought two ways: Tor Browser and Mullvad Browser make every user look alike, while Brave randomizes the canvas and WebGL readings each site gets",
       "Regularly clear cookies and site data to reduce persistent tracking",
-      "Incognito Browser gives you built-in privacy protections with no setup"
+      "Incognito Browser runs every tab in private mode and wipes history, cookies and sessions when you close it"
     ],
     "commonMistakes": [
       "Assuming incognito/private mode makes you anonymous — it only prevents local history storage",
@@ -34,6 +34,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:56:28.401Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Tool page: hand-built, indexable by default."
   },
