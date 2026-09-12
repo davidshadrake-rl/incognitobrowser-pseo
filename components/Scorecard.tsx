@@ -77,7 +77,12 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
       if (canShareFiles) {
         const blob = await renderScorecard(full);
         const file = new File([blob], scorecardFilename(full.title), { type: 'image/png' });
-        await navigator.share({ files: [file], title: full.title, text: shareText, url: target });
+        // The link goes inside the text, not in `url`. A share sheet handed
+        // files + text + url passes three separate items, and what the target
+        // does with them is its own business: some attach the picture and then
+        // the link's preview picture too, and some drop the text, leaving the
+        // "Check yours:" with nothing after it. One picture, one message.
+        await navigator.share({ files: [file], title: full.title, text: `${shareText} ${target}` });
       } else {
         await navigator.share({ title: full.title, text: shareText, url: target });
       }
