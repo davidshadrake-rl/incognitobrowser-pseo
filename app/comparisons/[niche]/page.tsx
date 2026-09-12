@@ -6,6 +6,8 @@ import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { Card } from '@/components/ui/Card';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 interface ComparisonMeta {
   niche: string;
@@ -79,6 +81,7 @@ export default async function ComparisonsByNiche({ params }: PageProps) {
           </Link>
         </p>
       </div>
+      {funnelFor(`/comparisons/${niche}`) && <PageFunnel funnel={funnelFor(`/comparisons/${niche}`)!} niche={niche} />}
     </div>
   );
 }

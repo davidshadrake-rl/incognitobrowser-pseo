@@ -6,6 +6,8 @@ import { getAllNiches, getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { Card } from '@/components/ui/Card';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 interface ChecklistMeta {
   niche: string;
@@ -81,6 +83,7 @@ export default async function ChecklistsByNiche({ params }: PageProps) {
           </Link>
         </p>
       </div>
+      {funnelFor(`/checklists/${niche}`) && <PageFunnel funnel={funnelFor(`/checklists/${niche}`)!} niche={niche} />}
     </div>
   );
 }

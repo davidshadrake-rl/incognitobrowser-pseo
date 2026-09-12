@@ -6,6 +6,8 @@ import { IS_PRO_DEPLOYMENT, engineVisibleInThisTier } from '@/lib/tiers';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta } from '@/lib/seo';
 import { Card } from '@/components/ui/Card';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 interface ToolMeta {
   niche: string;
@@ -87,6 +89,7 @@ export default async function ToolsByNiche({ params }: PageProps) {
           </Link>
         </p>
       </div>
+      {funnelFor(`/tools/${niche}`) && <PageFunnel funnel={funnelFor(`/tools/${niche}`)!} niche={niche} />}
     </div>
   );
 }

@@ -11,6 +11,8 @@ import { IconTile } from '@/components/ui/Icon';
 import { PageHero } from '@/components/ui/PageHero';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { Metadata } from 'next';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 export const dynamicParams = false;
 
@@ -189,6 +191,7 @@ export default async function NicheHubPage({ params }: PageProps) {
           </p>
         </section>
       )}
+      {funnelFor(`/topics/${niche}`) && <PageFunnel funnel={funnelFor(`/topics/${niche}`)!} niche={niche} />}
     </>
   );
 }
