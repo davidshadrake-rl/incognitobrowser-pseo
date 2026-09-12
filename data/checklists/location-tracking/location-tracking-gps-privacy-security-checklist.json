@@ -115,14 +115,14 @@
           "id": "disable-browser-location",
           "task": "Block location requests in web browsers",
           "why": "Websites can request your precise location for ads, analytics, and tracking. This data is often shared with advertising networks and data brokers.",
-          "howTo": "Chrome: Settings > Privacy and security > Site Settings > Location (block). Safari: Preferences > Privacy > Location Services (deny). Use a privacy-focused browser for enhanced location privacy protection.",
+          "howTo": "Chrome: Settings > Privacy and security > Site Settings > Location (block). Safari (Mac): Settings > Websites > Location (deny). Firefox: Settings > Privacy & Security > Permissions > Location > Settings, then tick 'Block new requests asking to access your location'.",
           "priority": "high"
         },
         {
           "id": "clear-location-data",
-          "task": "Clear stored location data from browsers",
-          "why": "Browsers store location history that can be accessed by websites and used for tracking across sessions, even in private browsing mode.",
-          "howTo": "Chrome: Settings > Privacy and security > Clear browsing data > Advanced > Site settings. Safari: Settings > Privacy > Manage Website Data. Clear regularly or use a privacy-focused browser.",
+          "task": "Remove saved location permissions from browsers",
+          "why": "Browsers remember every site you've allowed to see your location, so a one-off permission keeps working on later visits.",
+          "howTo": "Chrome: Settings > Privacy and security > Site Settings > Location, and remove the sites listed as allowed. Safari (Mac): Settings > Websites > Location. Clearing cookies and site data as well removes anything a site stored about your earlier visits.",
           "priority": "medium"
         },
         {
@@ -155,7 +155,7 @@
           "id": "check-for-stalkerware",
           "task": "Scan for stalkerware and hidden tracking apps",
           "why": "Abusive partners or stalkers may install hidden apps that track your location continuously and report it to someone else.",
-          "howTo": "Use apps like Malwarebytes or Avast Mobile Security to scan for stalkerware. Look for unfamiliar apps with location permissions. Check battery usage for apps running excessively in background.",
+          "howTo": "Check which apps hold location, accessibility and device-admin permissions, and look for names you don't recognise. Run a scan with a reputable mobile security app; avoid Avast, which the FTC fined in 2024 for selling browsing data.",
           "priority": "critical"
         },
         {
@@ -169,14 +169,14 @@
           "id": "understand-geofence-warrants",
           "task": "Learn about geofence warrant risks",
           "why": "Police can request location data for everyone in a specific area during a crime, potentially making you a suspect based solely on your location.",
-          "howTo": "Understand that disabling Google Location History is key protection. Use airplane mode in sensitive areas when possible. Consider using location spoofing tools for high-risk situations.",
+          "howTo": "Check your Google Maps Timeline: Google now stores it on the device by default and auto-deletes after three months, and you can turn it off entirely. Your carrier's own records are separate and you cannot switch those off.",
           "priority": "medium"
         },
         {
           "id": "use-location-spoofing",
-          "task": "Consider location spoofing for sensitive situations",
-          "why": "Location spoofing can protect against stalkers, domestic abuse, or when you need to access geo-blocked content without revealing your true location.",
-          "howTo": "Android: Use apps like Fake GPS Location or Mock GPS. iPhone (jailbroken): Use LocationFaker. For computers, use VPN browser extensions or dedicated spoofing software.",
+          "task": "Don't rely on GPS-spoofing tools or a jailbreak",
+          "why": "Spoofing breaks most apps' terms, and a jailbreak strips out the protections that keep other apps away from your data. A VPN changes your IP address, not the location your phone reports.",
+          "howTo": "If an app doesn't need your location, revoke the permission rather than feed it a false one. Android's mock locations sit in Developer options and exist for testing apps; apps can detect them. On iPhone there is no supported way at all.",
           "priority": "low"
         },
         {
@@ -197,7 +197,7 @@
     }
   ],
   "pro_tips": [
-    "Use airplane mode when you need to be completely untrackable, but remember this prevents emergency calls too",
+    "Airplane mode is not a cloak: it switches off the radios, not the GPS receiver, so the phone can still fix and log its own position. It also stops calls and texts, emergency calls included",
     "Carry a secondary phone with no personal apps for truly sensitive activities where location privacy is critical",
     "Regularly check your Google Timeline and Apple Screen Time to see which apps are using location most frequently",
     "Consider using cash instead of cards in sensitive locations since payment data can also reveal location patterns",
@@ -228,6 +228,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

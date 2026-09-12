@@ -40,7 +40,7 @@
       "actions": [
         "Set up separate user accounts on shared devices with different privacy settings",
         "Use virtual machines or containers for personal browsing during breaks",
-        "Configure separate browsers - use a privacy-focused browser for personal activities",
+        "Configure separate browsers or browser profiles for work and personal accounts, so a managed work profile's extensions and policies stay out of your personal browsing",
         "Establish different DNS servers for personal vs work network traffic"
       ],
       "proTip": "Consider using a USB-bootable Linux distribution for completely isolated personal computing during lunch breaks.",
@@ -69,7 +69,7 @@
         "Set up secure, encrypted cloud storage for personal files",
         "Implement browser fingerprint protection and tracker blocking on personal devices"
       ],
-      "proTip": "Layer your privacy tools - use a privacy-focused browser with a VPN and secure DNS for maximum protection during personal time.",
+      "proTip": "On your own devices, a VPN hides your traffic from the network you're on and secure DNS hides your lookups, but neither hides anything from monitoring software on a work device.",
       "warning": "Using VPNs to circumvent workplace internet policies may violate your employment agreement. Only use for legitimate personal privacy."
     },
     {
@@ -143,7 +143,7 @@
     },
     {
       "question": "Are there any browsers that provide better privacy against workplace monitoring?",
-      "answer": "Privacy-focused browsers can block trackers and clear your browsing data when you close them, but employer monitoring often occurs at the device or network level, where no browser can hide your activity. The most effective approach is using private browsers on completely separate, unmonitored devices."
+      "answer": "Not really. Browsers with strict tracking protection, such as Brave or Firefox, block website trackers, and private windows keep history off the device, but employer monitoring often occurs at the device or network level, where no ordinary browser can hide your activity (Tor hides it from the network, not from software on the device). The most effective approach is doing personal browsing on a separate device you control, over your own connection."
     }
   ],
   "relatedLinks": [
@@ -156,6 +156,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

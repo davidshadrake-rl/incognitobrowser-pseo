@@ -21,7 +21,7 @@
           "id": "disable-third-party-cookies",
           "task": "Disable third-party cookies",
           "why": "Third-party cookies track you across websites, building detailed profiles of your browsing habits for advertisers.",
-          "howTo": "Chrome: Settings > Privacy and security > Cookies > Block third-party cookies. Firefox: Settings > Privacy & Security > Enhanced Tracking Protection > Strict. Safari: Preferences > Privacy > Block all cookies (or cross-site tracking).",
+          "howTo": "Chrome: Settings > Privacy and security > Cookies > Block third-party cookies. Firefox: Settings > Privacy & Security > Enhanced Tracking Protection > Strict. Safari: Settings > Privacy > Block all cookies (or cross-site tracking); the menu was called Preferences before Safari 17.",
           "priority": "critical"
         },
         {
@@ -35,7 +35,7 @@
           "id": "disable-location-tracking",
           "task": "Turn off location sharing",
           "why": "Prevents websites from accessing your physical location, protecting your privacy and preventing location-based tracking.",
-          "howTo": "Chrome: Settings > Privacy and security > Site Settings > Location > Don't allow sites to see location. Firefox: about:config > geo.enabled > false. Safari: Preferences > Privacy > Location Services.",
+          "howTo": "Chrome: Settings > Privacy and security > Site Settings > Location > Don't allow sites to see location. Firefox: about:config > geo.enabled > false. Safari: Settings > Privacy > Location Services (called Preferences before Safari 17).",
           "priority": "high"
         },
         {
@@ -96,7 +96,7 @@
           "id": "configure-referrer-policy",
           "task": "Limit referrer information",
           "why": "Referrer headers tell websites which page you came from, creating a trail of your browsing path across different sites.",
-          "howTo": "Firefox: about:config > network.http.referer.XOriginPolicy > 2 (same origin only). Chrome: Use extensions like uMatrix or configure via enterprise policies. Brave: Built-in protection enabled by default.",
+          "howTo": "Firefox: about:config > network.http.referer.XOriginPolicy > 2 (same origin only). Chrome: no user-facing setting; enterprise policy is the only control, and the old uMatrix extension was archived in 2021. Brave: Built-in protection enabled by default.",
           "priority": "medium"
         },
         {
@@ -109,27 +109,27 @@
       ]
     },
     {
-      "title": "Privacy-Focused Browser Selection",
+      "title": "Browser Choice and Everyday Habits",
       "items": [
         {
           "id": "evaluate-browser-choice",
-          "task": "Choose a privacy-focused browser",
+          "task": "Choose a browser with strong privacy defaults",
           "why": "Different browsers have varying privacy standards. Some prioritize user privacy while others focus on data collection for advertising revenue.",
-          "howTo": "Consider Brave (blocks ads/trackers by default) or Firefox (customizable privacy). Avoid Chrome for sensitive browsing due to Google's data collection practices.",
+          "howTo": "Consider Brave (blocks ads and trackers by default) or Firefox (set Enhanced Tracking Protection to Strict). Avoid Chrome for sensitive browsing due to Google's data collection practices.",
           "priority": "high"
         },
         {
           "id": "install-privacy-extensions",
           "task": "Install essential privacy extensions",
           "why": "Extensions can block trackers, ads, and malicious scripts that browsers' built-in protections might miss.",
-          "howTo": "Install uBlock Origin (ad/tracker blocking), Privacy Badger (tracker protection), ClearURLs (removes tracking parameters), and Decentraleyes (protects against tracking via CDNs). Avoid too many extensions to prevent fingerprinting.",
+          "howTo": "Install a blocker (uBlock Origin on Firefox, uBlock Origin Lite on Chrome and Edge, since Chrome disabled Manifest V2 extensions in July 2025), Privacy Badger (tracker protection) and, on Firefox, ClearURLs (removes tracking parameters; it is a Manifest V2 add-on Chrome no longer runs). Skip the old CDN-shielding add-ons such as Decentraleyes: browsers now partition the HTTP cache by site, which is the tracking they were written to stop. Avoid too many extensions to prevent fingerprinting.",
           "priority": "high"
         },
         {
           "id": "configure-search-engine",
           "task": "Switch to a private search engine",
           "why": "Google and Bing track searches to build advertising profiles. Private search engines don't store personal information or search history.",
-          "howTo": "Set DuckDuckGo, Startpage, or Searx as your default search engine. Chrome: Settings > Search engine. Firefox: Settings > Search > Default Search Engine. These engines don't track or profile users.",
+          "howTo": "Set DuckDuckGo, Startpage, or SearXNG as your default search engine. Chrome: Settings > Search engine. Firefox: Settings > Search > Default Search Engine.",
           "priority": "medium"
         },
         {
@@ -151,7 +151,7 @@
   ],
   "pro_tips": [
     "Use separate browser profiles for different activities (work, personal, banking) to compartmentalize your data and reduce cross-contamination of tracking cookies.",
-    "For maximum privacy protection, consider a privacy-focused browser with built-in anti-fingerprinting protection.",
+    "If fingerprinting is your main concern, use a browser that resists it by default: Tor Browser makes its users look alike, and Brave randomizes some of the values sites use to fingerprint you. Piling on extensions tends to make you easier to fingerprint, not harder.",
     "Regularly update your browser and extensions to patch security vulnerabilities, but be aware that frequent updates can sometimes reset privacy settings to defaults.",
     "Test websites in private mode first - if they work fine, your privacy settings are properly blocking tracking without breaking functionality.",
     "Use a VPN in combination with these browser settings for additional IP address protection, especially when connecting to public Wi-Fi networks."
@@ -181,6 +181,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

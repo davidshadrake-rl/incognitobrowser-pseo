@@ -41,7 +41,7 @@
         "Disable location sharing for websites",
         "Turn off personalized advertising in browser settings"
       ],
-      "proTip": "Consider switching to a privacy-focused browser, which blocks trackers and ads by default without requiring complex configuration."
+      "proTip": "If you'd rather not configure this by hand, Brave blocks trackers and most ads by default, and Firefox's Enhanced Tracking Protection switches to Strict with one setting."
     },
     {
       "stepNumber": 3,
@@ -72,7 +72,7 @@
       "title": "Install Ad Blocking Extensions",
       "description": "Browser extensions can block ads, trackers, and scripts before they load, providing comprehensive protection against behavioral advertising networks.",
       "actions": [
-        "Install uBlock Origin for comprehensive ad and tracker blocking",
+        "Install a blocker for ads and trackers: uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge",
         "Add Privacy Badger to prevent invisible tracking",
         "Use Ghostery to see and block tracking scripts",
         "Configure extensions to block social media trackers"
@@ -126,7 +126,7 @@
     },
     {
       "question": "Do private browsing modes prevent ad tracking?",
-      "answer": "Private browsing prevents local storage of tracking data but doesn't stop real-time tracking during your session. For better protection, use a dedicated privacy browser or configure regular browsers with the settings outlined in this guide."
+      "answer": "Private browsing deletes the session's cookies and history when you close the window, but it doesn't stop tracking while the window is open, and sites can still see your IP address and device fingerprint. For better protection, apply the tracking-protection and cookie settings in this guide, which also cover private windows, and allow your ad blocker to run in private windows."
     },
     {
       "question": "Can websites detect that I'm using ad blockers?",
@@ -148,6 +148,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

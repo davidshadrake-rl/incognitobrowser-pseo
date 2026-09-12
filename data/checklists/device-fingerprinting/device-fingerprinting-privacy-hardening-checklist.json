@@ -26,16 +26,16 @@
         },
         {
           "id": "javascript-blocking",
-          "task": "Install uBlock Origin with strict settings",
+          "task": "Block scripts you don't need, with a blocker that can do it",
           "why": "JavaScript enables most fingerprinting techniques including canvas, WebGL, and audio fingerprinting.",
-          "howTo": "Install uBlock Origin, enable medium or hard mode, and block JavaScript by default. Whitelist only essential sites.",
+          "howTo": "In Firefox, install uBlock Origin, turn on advanced-user mode and use medium mode, allowing scripts site by site. Chrome's uBlock Origin Lite has no such mode, so switch browsers for this or use NoScript on Firefox.",
           "priority": "critical"
         },
         {
           "id": "canvas-blocker",
           "task": "Add canvas fingerprinting protection",
           "why": "Canvas fingerprinting creates unique images based on your graphics card and fonts to identify your device.",
-          "howTo": "Install CanvasBlocker extension or enable built-in canvas protection in privacy browsers that offer it.",
+          "howTo": "In Firefox, install the CanvasBlocker extension or set privacy.resistFingerprinting to true in about:config. Brave, Tor Browser and Mullvad Browser protect canvas readings by default.",
           "priority": "high"
         },
         {
@@ -47,9 +47,9 @@
         },
         {
           "id": "user-agent",
-          "task": "Spoof or randomize User-Agent string",
+          "task": "Report a common User-Agent string",
           "why": "User-Agent reveals your exact browser version, OS, and device type, contributing to your fingerprint.",
-          "howTo": "Use User-Agent Switcher extension or privacy browsers with built-in spoofing. Set to common combinations.",
+          "howTo": "Keep your browser up to date so its user agent matches most other people's. Tor Browser and Mullvad Browser give everyone on the same operating system the same user agent. Avoid switcher extensions that set a rare value: a user agent that doesn't match your other signals makes you stand out.",
           "priority": "medium"
         },
         {
@@ -75,14 +75,14 @@
           "id": "timezone-spoofing",
           "task": "Spoof your timezone",
           "why": "Timezone reveals your geographic location and is combined with other data points for identification.",
-          "howTo": "Use timezone spoofing extensions or privacy browsers. Set to UTC or a common timezone like US Eastern.",
+          "howTo": "Firefox with privacy.resistFingerprinting, Tor Browser and Mullvad Browser report the same UTC time zone to every site. In other browsers, a time-zone extension can report UTC or a common time zone instead.",
           "priority": "medium"
         },
         {
           "id": "screen-resolution",
           "task": "Standardize screen resolution reporting",
           "why": "Unique screen resolutions and color depths help websites identify your specific device setup.",
-          "howTo": "Use browser extensions to spoof common resolutions like 1920x1080. Some privacy-focused browsers include this protection.",
+          "howTo": "Tor Browser and Mullvad Browser use letterboxing, which rounds the window size sites see to a few common values; in Firefox, set privacy.resistFingerprinting.letterboxing to true for the same effect. Avoid resizing the window to unusual sizes.",
           "priority": "medium"
         },
         {
@@ -103,7 +103,7 @@
           "id": "battery-api",
           "task": "Disable Battery Status API",
           "why": "Battery level and charging status can be used for device identification and tracking.",
-          "howTo": "Set dom.battery.enabled to false in Firefox. Most modern browsers have disabled this by default.",
+          "howTo": "Firefox and Safari don't give websites battery information. Chrome and Edge still do, so block the Battery Status API there with an extension.",
           "priority": "low"
         }
       ]
@@ -115,7 +115,7 @@
           "id": "fingerprint-testing",
           "task": "Test your fingerprint uniqueness regularly",
           "why": "You need to verify that your protection measures are working and your fingerprint isn't unique.",
-          "howTo": "Visit Panopticlick, AmIUnique, or BrowserLeaks monthly to test your fingerprint. Aim for common, non-unique results.",
+          "howTo": "Visit Cover Your Tracks (the EFF's renamed Panopticlick), AmIUnique or BrowserLeaks monthly to test your fingerprint. Aim for a common, non-unique result.",
           "priority": "critical"
         },
         {
@@ -128,8 +128,8 @@
         {
           "id": "vm-isolation",
           "task": "Use virtual machines for high-privacy activities",
-          "why": "VMs provide complete isolation and prevent any fingerprinting of your real hardware.",
-          "howTo": "Run privacy browsers in disposable VMs using VirtualBox or VMware. Reset VM regularly for maximum protection.",
+          "why": "A VM keeps your real hardware details, fonts and files out of sight of the sites you visit.",
+          "howTo": "Run your browser in a disposable VirtualBox or VMware VM and reset it to a clean snapshot after each session. A VM's virtual hardware can itself be rare, so use Tor Browser or Mullvad Browser inside it rather than a stock browser.",
           "priority": "low"
         },
         {
@@ -153,13 +153,13 @@
     "Disable JavaScript completely for maximum protection - most fingerprinting requires JavaScript to function",
     "Never use browser extensions in Tor Browser as they make you identifiable and defeat the anonymity",
     "Test your setup with multiple fingerprinting sites as each tests different vectors and techniques",
-    "Consider using a privacy-focused browser which includes built-in fingerprint protection without complex configuration",
+    "If this list is more setup than you want, Mullvad Browser and Tor Browser come with fingerprinting protection already configured, and Brave randomizes canvas, WebGL and audio readings by default",
     "Reset your browser profile regularly to eliminate any accumulated tracking data or fingerprint evolution"
   ],
   "relatedLinks": [
     {
-      "title": "Panopticlick Fingerprint Test",
-      "url": "https://panopticlick.eff.org/",
+      "title": "Cover Your Tracks Fingerprint Test",
+      "url": "https://coveryourtracks.eff.org/",
       "type": "tool"
     },
     {
@@ -181,6 +181,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /checklists/browser-privacy/."
   },

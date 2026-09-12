@@ -37,7 +37,7 @@
       "description": "California leads with the most comprehensive privacy laws. The California Consumer Privacy Act (CCPA) and its amendment, the California Privacy Rights Act (CPRA), set the gold standard for state privacy legislation.",
       "actions": [
         "Study the five core consumer rights: know, delete, correct, opt-out, and non-discrimination",
-        "Learn the business thresholds: $25M revenue, 100K+ consumers, or 50%+ revenue from selling personal info",
+        "Learn the business thresholds: annual gross revenue over $25 million (adjusted for inflation to $26,625,000 on January 1, 2025), buying, selling or sharing data on 100,000+ consumers or households, or 50%+ of revenue from selling or sharing personal information",
         "Understand enforcement by the California Privacy Protection Agency (CPPA)"
       ],
       "proTip": "CPRA introduced sensitive personal information categories with stricter protections - familiarize yourself with these distinctions."
@@ -47,8 +47,8 @@
       "title": "Learn Virginia's Consumer Data Protection Act (VCDPA)",
       "description": "Virginia's law, effective January 2023, takes a different approach than California with fewer consumer rights but clearer business obligations. It focuses on controllers and processors of personal data.",
       "actions": [
-        "Understand the revenue threshold of $25M and processing 100K+ consumers annually",
-        "Learn the four consumer rights: access, correct, delete, and data portability",
+        "Understand the thresholds: Virginia sets no revenue floor. It applies at 100,000 Virginia consumers, or 25,000 plus more than half your gross revenue from selling personal data",
+        "Learn the five consumer rights: access, correct, delete, data portability, and opt out of targeted advertising, sale and certain profiling",
         "Study the data protection assessment requirements for high-risk processing"
       ],
       "proTip": "Virginia's law emphasizes data minimization and purpose limitation - key principles that appear in most state laws."
@@ -58,8 +58,8 @@
       "title": "Explore Colorado Privacy Act (CPA) Requirements",
       "description": "Colorado's Privacy Act, effective July 2023, includes unique provisions like universal opt-out mechanisms and specific protections for sensitive data processing.",
       "actions": [
-        "Learn the business applicability: $25M revenue and processing 100K+ consumers",
-        "Understand the seven consumer rights including the right to opt-out of profiling",
+        "Learn the business applicability: Colorado sets no revenue floor either. It applies at 100,000 Colorado consumers a year, or 25,000 if you get revenue or a discount from selling personal data",
+        "Understand the rights Colorado grants: access, correction, deletion, portability, and opt-out of targeted advertising, sale and certain profiling",
         "Study the universal opt-out signal requirements"
       ],
       "proTip": "Colorado requires honoring universal opt-out signals like Global Privacy Control - ensure your website can detect and respond to these signals."
@@ -69,22 +69,22 @@
       "title": "Navigate Texas Data Privacy and Security Act (TDPSA)",
       "description": "Texas passed its comprehensive privacy law in 2023, effective July 2024. It closely follows the Virginia model but includes some unique Texas-specific requirements.",
       "actions": [
-        "Review the $25M revenue threshold and 100K Texas consumers requirement",
-        "Understand the biometric data specific protections",
-        "Learn about the cure period for violations and enforcement mechanisms"
+        "Check applicability: Texas sets no revenue or consumer-count threshold. It covers any business that is not a small business under the US Small Business Administration's size standards",
+        "Understand Texas's separate biometric statute, the Capture or Use of Biometric Identifier Act",
+        "Learn the enforcement mechanics: a 30-day cure period after the attorney general's notice, and up to $7,500 per violation"
       ],
-      "proTip": "Texas includes specific protections for biometric identifiers - if you collect fingerprints, facial recognition data, or similar, pay special attention to these requirements."
+      "proTip": "Texas's biometric rules live in a separate law, the Capture or Use of Biometric Identifier Act, not in its privacy act. If you capture fingerprints, voiceprints or face geometry for a commercial purpose you need consent first, and the attorney general can seek up to $25,000 per violation."
     },
     {
       "stepNumber": 6,
       "title": "Understand Emerging State Laws and Trends",
       "description": "Many other states have passed or are considering comprehensive privacy legislation. Stay informed about Connecticut, Utah, Montana, and other emerging laws to anticipate future compliance needs.",
       "actions": [
-        "Track Connecticut's SB 6 and Utah's Consumer Privacy Act developments",
-        "Monitor states like Florida, New York, and Washington for new legislation",
+        "Review Connecticut's CTDPA and Utah's Consumer Privacy Act, both now in force",
+        "Watch for narrower state laws too, such as Washington's My Health My Data Act, which covers health data outside HIPAA",
         "Follow the National Conference of State Legislatures privacy law tracker"
       ],
-      "proTip": "Use privacy-focused tools like a privacy-focused browser when researching state legislation to prevent your browsing data from being tracked by various government and commercial entities."
+      "proTip": "The IAPP's US State Privacy Legislation Tracker shows which states have passed comprehensive privacy laws and when each takes effect, and it is updated through each legislative session."
     },
     {
       "stepNumber": 7,
@@ -104,7 +104,7 @@
     "Subscribe to state attorney general newsletters and privacy law blogs to stay updated on enforcement actions and guidance",
     "Create a compliance calendar marking when new state laws take effect and when privacy policy updates are required",
     "Consider using a privacy management platform that can help automate compliance across multiple state jurisdictions",
-    "When browsing for privacy law updates, use a privacy-focused browser to prevent your research activities from being tracked and profiled",
+    "As a consumer, turn on Global Privacy Control in a browser that supports it (Firefox, Brave or DuckDuckGo): California, Colorado and several other states require businesses to treat it as a request to opt out of sales and targeted advertising",
     "Join privacy professional organizations like the IAPP for access to resources, training, and networking with compliance experts"
   ],
   "faqs": [
@@ -118,15 +118,15 @@
     },
     {
       "question": "Are there penalties for non-compliance with state privacy laws?",
-      "answer": "Yes, penalties vary by state. California can fine up to $7,500 per violation, Virginia up to $7,500 per violation, Colorado up to $20,000 per violation, and Texas up to $7,500 per violation. Some states also allow private rights of action for certain violations."
+      "answer": "Yes, penalties vary by state. California's amounts are adjusted for inflation and have stood at $2,663 per violation and $7,988 per intentional violation, or one involving a consumer known to be under 16, since January 1, 2025. Virginia and Texas cap at $7,500 per violation, and Colorado treats a violation as a deceptive trade practice worth up to $20,000. California is the only one with a private right of action, and only for certain data breaches."
     },
     {
       "question": "How do I handle consumer requests under multiple state laws?",
-      "answer": "Implement a unified system that provides the broadest rights available under any applicable law. For example, if California requires 45 days to respond and Virginia requires 45 days, stick to the shortest timeframe. This ensures compliance across all jurisdictions."
+      "answer": "Implement a unified system that provides the broadest rights available under any applicable law and works to the shortest deadline. California, Colorado, Texas and Virginia all give 45 days with one extension, so a single 45-day workflow covers them; re-check the clock for each new state you enter."
     },
     {
       "question": "Will there eventually be a federal privacy law that preempts state laws?",
-      "answer": "While federal privacy legislation has been proposed multiple times, there's no comprehensive federal law yet. The American Privacy Rights Act and other proposals are being discussed, but state laws remain the primary privacy regulations for most businesses."
+      "answer": "There is still no comprehensive federal privacy law. The American Privacy Rights Act cleared a House subcommittee in 2024 but never reached a floor vote, so state laws remain the primary privacy regulation for most businesses."
     }
   ],
   "relatedLinks": [
@@ -149,6 +149,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

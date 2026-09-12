@@ -22,10 +22,10 @@
     {
       "stepNumber": 1,
       "title": "Use Incognito Mode or Private Browsing",
-      "description": "Private browsing prevents retailers from tracking your shopping behavior and using it against you for dynamic pricing. It clears cookies and browsing history after each session.",
+      "description": "Private browsing starts each session without your saved cookies and clears cookies and history when you close the window, so a store can't use them to recognize you on your next visit.",
       "actions": [
         "Open an incognito/private window in your browser (Ctrl+Shift+N in Chrome)",
-        "Consider using a privacy-focused browser for enhanced privacy protection",
+        "Close every private window when you finish, since cookies are cleared only when the last one closes",
         "Always start fresh shopping sessions in private mode",
         "Never save passwords or payment info in incognito mode"
       ],
@@ -36,7 +36,7 @@
       "title": "Block Tracking Cookies and Scripts",
       "description": "Retailers use tracking technologies to build profiles of your shopping habits. Blocking these trackers prevents data collection and price manipulation.",
       "actions": [
-        "Install uBlock Origin or similar ad/tracker blocker",
+        "Install an ad and tracker blocker: uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge",
         "Enable strict tracking protection in your browser settings",
         "Disable third-party cookies in browser privacy settings",
         "Use browser extensions that block shopping trackers"
@@ -71,7 +71,7 @@
       "title": "Use Price Tracking Tools Privately",
       "description": "Price tracking tools help you monitor deals without revealing your interest to retailers, but choose privacy-focused options to avoid additional tracking.",
       "actions": [
-        "Use privacy-focused price trackers like Honey (with tracking disabled)",
+        "Prefer price trackers that don't need a browser extension, since shopping extensions can see every store page you visit",
         "Set up price alerts through private email addresses",
         "Compare prices across multiple platforms anonymously",
         "Avoid logging into price tracking accounts while shopping"
@@ -132,7 +132,7 @@
     },
     {
       "question": "Why do I see different prices when shopping privately vs normally?",
-      "answer": "Retailers use dynamic pricing based on your browsing history, location, device type, and perceived purchasing power. Private browsing prevents them from accessing this data, often resulting in lower prices."
+      "answer": "Retailers may set prices based on your browsing history, location, device type, and perceived purchasing power. A private window hides only your saved cookies and history, so if the price changes there, your earlier browsing on that site was probably a factor; your location, device and IP address are still visible."
     },
     {
       "question": "Can retailers still track me if I'm using incognito mode?",
@@ -146,6 +146,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with online-banking. Canonical version lives under /guides/online-banking/."
   },

@@ -82,7 +82,8 @@ const FEATURED_TOOLS: { engine: string; title: string; blurb: string }[] = [
   {
     engine: 'metadata-viewer',
     title: 'Image Metadata Viewer',
-    blurb: 'GPS, date, device and every EXIF tag inside a photo.',
+    // What lib/exif.ts reads: the whole Exif structure plus XMP and IPTC, in these four formats (HEIC is only recognised).
+    blurb: 'GPS, dates, device and serial numbers: the Exif, XMP and IPTC inside JPEG, PNG, WebP and TIFF photos.',
   },
   {
     engine: 'useragent-analyzer',

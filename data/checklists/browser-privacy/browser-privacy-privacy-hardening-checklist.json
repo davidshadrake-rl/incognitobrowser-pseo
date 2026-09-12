@@ -21,21 +21,21 @@
           "id": "disable-third-party-cookies",
           "task": "Block third-party cookies",
           "why": "Third-party cookies track you across websites, building detailed profiles of your browsing habits for advertising and data collection.",
-          "howTo": "Chrome: Settings > Privacy & Security > Cookies > Block third-party cookies. Firefox: Settings > Privacy & Security > Enhanced Tracking Protection > Strict. Safari: Preferences > Privacy > Prevent cross-site tracking.",
+          "howTo": "Chrome: Settings > Privacy & Security > Cookies > Block third-party cookies. Firefox: Settings > Privacy & Security > Enhanced Tracking Protection > Strict. Safari: Settings > Privacy > Prevent cross-site tracking (called Preferences before Safari 17).",
           "priority": "critical"
         },
         {
           "id": "enable-https-only",
           "task": "Force HTTPS connections",
           "why": "HTTPS encrypts data between your browser and websites, preventing eavesdropping and man-in-the-middle attacks.",
-          "howTo": "Firefox: Settings > Privacy & Security > HTTPS-Only Mode > Enable. Chrome: Install HTTPS Everywhere extension. Safari: Develop menu > Experimental Features > Upgrade Mixed Content.",
+          "howTo": "Firefox: Settings > Privacy & Security > HTTPS-Only Mode > Enable. Chrome: Settings > Privacy and security > Security > 'Always use secure connections'. Edge: Privacy, search, and services > Security > Automatic HTTPS. Safari upgrades to HTTPS on its own. The old HTTPS Everywhere add-on was retired once browsers did this themselves.",
           "priority": "critical"
         },
         {
           "id": "disable-location-sharing",
           "task": "Turn off location sharing",
           "why": "Location data reveals your physical movements and can be used to build detailed profiles of your daily routines and personal life.",
-          "howTo": "Chrome: Settings > Privacy & Security > Site Settings > Location > Don't allow sites to see your location. Firefox: about:config > geo.enabled > false. Safari: Preferences > Websites > Location.",
+          "howTo": "Chrome: Settings > Privacy & Security > Site Settings > Location > Don't allow sites to see your location. Firefox: about:config > geo.enabled > false. Safari: Settings > Websites > Location (called Preferences before Safari 17).",
           "priority": "high"
         },
         {
@@ -63,7 +63,7 @@
           "id": "configure-search-engine",
           "task": "Switch to privacy-focused search engine",
           "why": "Default search engines like Google track and store your search queries, building detailed profiles of your interests and intentions.",
-          "howTo": "Change default search to DuckDuckGo, Startpage, or Searx. Chrome: Settings > Search engine > Manage search engines. Firefox: Settings > Search > Default Search Engine. Consider a privacy-focused browser for enhanced privacy.",
+          "howTo": "Change default search to DuckDuckGo, Startpage, or SearXNG. Chrome: Settings > Search engine > Manage search engines. Firefox: Settings > Search > Default Search Engine.",
           "priority": "high"
         }
       ]
@@ -89,7 +89,7 @@
           "id": "disable-telemetry",
           "task": "Turn off browser telemetry and data collection",
           "why": "Browsers collect usage data, crash reports, and performance metrics that can include personal information and browsing patterns.",
-          "howTo": "Chrome: Settings > Privacy & Security > Send a 'Do Not Track' request (on), Usage and crash reports (off). Firefox: Settings > Privacy & Security > Firefox Data Collection and Use (all off).",
+          "howTo": "Chrome: Settings > Privacy & Security > Usage and crash reports (off). Firefox: Settings > Privacy & Security > Firefox Data Collection and Use (all off), and turn on 'Tell websites not to sell or share my data', the Global Privacy Control signal that replaced Firefox's Do Not Track setting in version 135.",
           "priority": "medium"
         },
         {
@@ -110,7 +110,7 @@
           "id": "configure-ua-string",
           "task": "Minimize user agent fingerprinting",
           "why": "Detailed user agent strings help websites identify and track you across sessions by revealing your specific browser, OS, and device configuration.",
-          "howTo": "Firefox: Enable resistFingerprinting in about:config. Chrome: Install User-Agent Switcher extension. Consider a browser that minimizes fingerprinting by default.",
+          "howTo": "Firefox: Enable resistFingerprinting in about:config. Don't install a User-Agent Switcher: a faked string that doesn't match the rest of the browser makes you more identifiable, not less. Keep the browser up to date so your string matches everyone else on the current version. For stronger protection, use a browser that resists fingerprinting by default, such as Tor Browser, which makes its users look alike, or Brave, which randomizes some of the values sites use to fingerprint you.",
           "priority": "medium"
         }
       ]
@@ -120,30 +120,30 @@
       "items": [
         {
           "id": "install-ublock-origin",
-          "task": "Install uBlock Origin ad blocker",
-          "why": "Blocks ads, trackers, and malicious content while significantly improving page load speeds and reducing data consumption.",
-          "howTo": "Install from browser extension stores. Enable additional filter lists like EasyPrivacy and Fanboy's Annoyance List. Configure to block JavaScript on untrusted sites.",
+          "task": "Install uBlock Origin, or uBlock Origin Lite if you use Chrome or Edge",
+          "why": "Blocks ads, trackers and malicious content, often speeding up page loads. Chrome disabled Manifest V2 extensions in July 2025, so uBlock Origin itself now runs in Firefox and Chrome and Edge get uBlock Origin Lite.",
+          "howTo": "Firefox: install uBlock Origin and enable EasyPrivacy and Fanboy's Annoyance List alongside the defaults; its advanced mode can also block scripts on untrusted sites. Chrome or Edge: install uBlock Origin Lite and set its default filtering mode to Optimal or Complete.",
           "priority": "critical"
         },
         {
           "id": "install-privacy-badger",
           "task": "Add Privacy Badger tracker blocker",
-          "why": "Automatically learns and blocks trackers that follow you across websites, complementing static ad blockers with dynamic protection.",
-          "howTo": "Install Privacy Badger from EFF. Allow it to learn tracking patterns over time. Review and adjust blocked trackers in settings as needed.",
+          "why": "Blocks third-party domains the EFF's own crawls caught tracking people across sites, so its list is built differently from community filter lists.",
+          "howTo": "Install Privacy Badger from the EFF and leave the defaults alone. It no longer learns from your browsing by default, so there is no break-in period; it works from the first page.",
           "priority": "high"
         },
         {
           "id": "install-decentraleyes",
-          "task": "Install Decentraleyes CDN protection",
-          "why": "Prevents tracking through CDN requests by serving common libraries locally, reducing external requests that can be used for tracking.",
-          "howTo": "Install Decentraleyes extension. No configuration needed - it works automatically. Pair with uBlock Origin for maximum effectiveness.",
+          "task": "Skip the old CDN-shielding add-ons such as Decentraleyes",
+          "why": "Browsers now partition the HTTP cache by site, which is the cross-site tracking those add-ons were written to stop, so they no longer add protection.",
+          "howTo": "Uninstall Decentraleyes if you still have it, and don't add a replacement. Your blocker's filter lists already cover the CDN-hosted scripts that actually track you.",
           "priority": "medium"
         },
         {
           "id": "install-clearurls",
           "task": "Add ClearURLs parameter cleaner",
           "why": "Removes tracking parameters from URLs automatically, preventing click tracking and attribution while keeping links functional.",
-          "howTo": "Install ClearURLs extension. Enable all filter lists in settings. URLs will be automatically cleaned as you browse.",
+          "howTo": "Install ClearURLs in Firefox and enable all filter lists in settings; URLs are then cleaned as you browse. ClearURLs is a Manifest V2 add-on, so it runs in Firefox; Chrome disabled Manifest V2 extensions in July 2025.",
           "priority": "medium"
         },
         {
@@ -160,9 +160,9 @@
       "items": [
         {
           "id": "choose-privacy-browser",
-          "task": "Consider switching to a privacy-focused browser",
-          "why": "Privacy-focused browsers like Brave or Tor Browser have better default settings and less data collection than mainstream browsers.",
-          "howTo": "Test Brave (built-in ad blocking) or Tor Browser (anonymity). Compare features and usability for your needs before switching completely.",
+          "task": "Consider switching to a browser with stronger privacy defaults",
+          "why": "Browsers such as Brave and Tor Browser block trackers out of the box and collect less data than Chrome does by default, so you rely less on changing every setting yourself.",
+          "howTo": "Test Brave (blocks ads and trackers by default), Firefox with Enhanced Tracking Protection set to Strict, or Tor Browser (routes your traffic through the Tor network to hide your IP address from sites, but is slower). Compare features and usability for your needs before switching completely.",
           "priority": "high"
         },
         {
@@ -197,8 +197,8 @@
     }
   ],
   "pro_tips": [
-    "Use different browsers for different activities - try a privacy-focused browser for sensitive browsing, regular browser for everyday use, and a separate profile for work to maintain compartmentalization.",
-    "Test your browser's privacy settings regularly using tools like browserleaks.com, panopticlick.eff.org, and amiunique.org to identify potential tracking vulnerabilities.",
+    "Use different browsers or profiles for different activities - for example, Firefox with strict tracking protection for sensitive browsing, your regular browser for everyday use, and a separate profile for work - so cookies and logins from one don't follow you into the others.",
+    "Test your browser's privacy settings regularly using tools like browserleaks.com, the EFF's Cover Your Tracks at coveryourtracks.eff.org (the tool formerly called Panopticlick), and amiunique.org to identify potential tracking vulnerabilities.",
     "Consider using a VPN alongside browser hardening for additional privacy protection, but remember that VPNs don't replace proper browser security settings.",
     "Enable two-factor authentication on all accounts accessed through your browser, as privacy settings don't protect against account compromises from weak passwords.",
     "Regularly clear your browser's stored data even with good privacy settings - accumulated cookies, cache, and local storage can still reveal usage patterns over time."
@@ -233,6 +233,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

@@ -1,7 +1,7 @@
 {
   "niche": "browser-privacy",
   "slug": "advanced-browser-privacy-techniques",
-  "title": "Advanced Browser Privacy Techniques: Ultimate Security Guide",
+  "title": "Advanced Browser Privacy Techniques",
   "metaDescription": "Master advanced browser privacy with expert techniques for Chrome, Firefox, Safari, and Brave. Secure settings, extensions, and anti-tracking methods.",
   "keywords": [
     "advanced browser privacy",
@@ -52,11 +52,11 @@
       "title": "Deploy Anti-Fingerprinting Countermeasures",
       "description": "Implement sophisticated techniques to prevent browser fingerprinting, one of the most persistent tracking methods.",
       "actions": [
-        "Spoof or randomize user agent strings using extensions",
-        "Modify screen resolution and timezone reporting",
+        "Leave the user agent alone: a switcher extension that doesn't match the rest of the browser makes you more identifiable, not less",
+        "Let the browser handle screen size and timezone: Firefox's resistFingerprinting rounds the window and reports UTC, which is safer than an extension reporting values the rest of the browser contradicts",
         "Disable WebGL, WebRTC, and other fingerprinting vectors",
-        "Use browser extensions that inject fake canvas fingerprints",
-        "Enable resist fingerprinting mode in Firefox or use a privacy-focused browser"
+        "On Firefox, use CanvasBlocker or resistFingerprinting for canvas; on Chrome there is no equivalent, so switch browsers if canvas matters to you",
+        "Enable resist fingerprinting mode in Firefox, or use a browser that resists fingerprinting by default, such as Tor Browser"
       ],
       "proTip": "Rotate fingerprinting countermeasures periodically to avoid creating a unique 'anti-fingerprinting' signature.",
       "warning": "Some anti-fingerprinting techniques may break websites that rely on these technologies for legitimate purposes."
@@ -66,10 +66,10 @@
       "title": "Configure Advanced Extension Privacy Stack",
       "description": "Build a sophisticated privacy extension setup that provides comprehensive protection without conflicts.",
       "actions": [
-        "Install uBlock Origin with advanced filter lists and custom rules",
-        "Add ClearURLs to remove tracking parameters from links",
-        "Use Privacy Badger for intelligent tracking protection",
-        "Install Decentraleyes to protect against CDN-based tracking",
+        "Install uBlock Origin on Firefox for advanced filter lists and custom rules; Chrome and Edge get uBlock Origin Lite, which has neither",
+        "On Firefox, add ClearURLs to remove tracking parameters from links; it is a Manifest V2 add-on, so Chrome no longer runs it",
+        "Use Privacy Badger, which blocks third-party domains the EFF's own crawls caught tracking people across sites",
+        "Skip the old CDN-shielding add-ons such as Decentraleyes: browsers now partition the HTTP cache by site, which is the cross-site tracking they were written to stop",
         "Configure NoScript or similar tools for granular JavaScript control"
       ],
       "proTip": "Test extension combinations carefully and use browser profiles to isolate different privacy setups.",
@@ -108,7 +108,7 @@
       "title": "Advanced Search and URL Privacy Protection",
       "description": "Protect your search queries and URL visits from being tracked or analyzed by various parties.",
       "actions": [
-        "Use privacy-focused search engines like DuckDuckGo or Searx exclusively",
+        "Use privacy-focused search engines such as DuckDuckGo or SearXNG (the maintained fork of the retired searx)",
         "Implement search query obfuscation techniques",
         "Clear URL parameters and referrer headers automatically",
         "Use URL shorteners strategically to break tracking chains",
@@ -121,8 +121,8 @@
   "pro_tips": [
     "Regularly audit your browser's privacy settings and extensions - privacy tools evolve rapidly and configurations may need updates.",
     "Use multiple browsers with different privacy configurations for different types of activities to compartmentalize your digital footprint.",
-    "Consider using a privacy-focused browser for maximum privacy protection, as it's specifically designed with advanced anti-tracking features built-in.",
-    "Test your privacy setup regularly using tools like Panopticlick, AmIUnique, and browser leak test sites to identify weaknesses.",
+    "If you'd rather not assemble every setting by hand, start from a browser with strong defaults: Brave blocks ads and trackers out of the box, and Tor Browser also resists fingerprinting and hides your IP address from the sites you visit.",
+    "Test your privacy setup regularly using tools like the EFF's Cover Your Tracks (the tool formerly called Panopticlick), AmIUnique, and browser leak test sites to identify weaknesses.",
     "Keep detailed documentation of your privacy setup so you can replicate it across devices and recover from configuration issues."
   ],
   "faqs": [
@@ -132,7 +132,7 @@
     },
     {
       "question": "How do I know if my advanced privacy setup is working?",
-      "answer": "Use privacy testing tools like Panopticlick, AmIUnique, and DNS leak tests regularly. Also monitor for reduced targeted advertising and tracking across websites as indicators of success."
+      "answer": "Use privacy testing tools like the EFF's Cover Your Tracks at coveryourtracks.eff.org (formerly Panopticlick), AmIUnique, and DNS leak tests regularly. Also monitor for reduced targeted advertising and tracking across websites as indicators of success."
     },
     {
       "question": "Can I use all these techniques together safely?",
@@ -153,14 +153,15 @@
   ],
   "relatedLinks": [
     {
-      "title": "Panopticlick Browser Fingerprinting Test",
-      "url": "https://panopticlick.eff.org/",
+      "title": "Cover Your Tracks Browser Fingerprinting Test",
+      "url": "https://coveryourtracks.eff.org/",
       "type": "external"
     }
   ],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

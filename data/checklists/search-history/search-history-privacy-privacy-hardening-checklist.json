@@ -113,9 +113,9 @@
         },
         {
           "id": "incognito-browser",
-          "task": "Use a privacy-focused browser for sensitive searches",
-          "why": "Specialized privacy browsers provide additional protection beyond standard incognito modes, blocking trackers and preventing data collection.",
-          "howTo": "Install a privacy-focused browser for enhanced privacy features. Use it for any searches you want to keep completely private, especially on shared devices or networks.",
+          "task": "Block third-party trackers in the browser you search with",
+          "why": "Incognito mode only stops your browser from saving history on your device. Tracker blocking cuts down the ad and analytics scripts that follow you from site to site after you click a search result.",
+          "howTo": "In Firefox, set Enhanced Tracking Protection to Strict (Settings > Privacy & Security); Brave blocks trackers by default. Use a private window for searches you don't want saved on a shared device. The search engine still sees your searches, so pair this with a private search engine.",
           "priority": "high"
         },
         {
@@ -128,7 +128,7 @@
         {
           "id": "vpn-search-protection",
           "task": "Enable VPN before searching",
-          "why": "VPNs hide your IP address from search engines and ISPs, preventing them from linking searches to your location and identity.",
+          "why": "A VPN hides your IP address from search engines and hides the sites you visit from your ISP; the VPN provider can see them instead, and a signed-in account still identifies you.",
           "howTo": "Use a reputable VPN service like ExpressVPN or NordVPN. Connect before opening browser. Ensure VPN doesn't log activity for maximum privacy protection.",
           "priority": "medium"
         },
@@ -136,7 +136,7 @@
           "id": "search-engine-variety",
           "task": "Rotate between different private search engines",
           "why": "Using multiple search engines prevents any single service from building a complete picture of your search habits and interests.",
-          "howTo": "Alternate between DuckDuckGo, Startpage, Searx, and Brave Search. Bookmark different engines and use them for different types of searches.",
+          "howTo": "Alternate between DuckDuckGo, Startpage, SearXNG, and Brave Search. Bookmark different engines and use them for different types of searches.",
           "priority": "low"
         },
         {
@@ -190,7 +190,7 @@
     }
   ],
   "pro_tips": [
-    "Use a privacy-focused browser instead of regular incognito mode for better tracker blocking and privacy protection during searches.",
+    "Searches made in a private window while signed out don't go into your Google account's history, though Google still receives them.",
     "Clear your search history before any software updates, as updates sometimes reset privacy settings to defaults.",
     "Create a 'search privacy' bookmark folder with links to all privacy dashboards for quick monthly checkups.",
     "Use different search engines for different topics (work vs personal) to prevent cross-contamination of your data profiles.",
@@ -216,6 +216,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with online-banking. Canonical version lives under /checklists/online-banking/."
   },

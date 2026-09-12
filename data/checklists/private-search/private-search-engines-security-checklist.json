@@ -40,9 +40,9 @@
         },
         {
           "id": "check-searx-instances",
-          "task": "Explore SearX open-source search",
-          "why": "SearX is completely open-source and can aggregate results from multiple engines without storing data.",
-          "howTo": "Find a reliable SearX instance at searx.space. Test different instances for speed and reliability. Consider running your own instance for maximum privacy.",
+          "task": "Explore SearXNG open-source metasearch",
+          "why": "SearXNG is the maintained fork of searx, whose own README says searx is no longer maintained. It aggregates results from other engines and an instance can be run without storing queries.",
+          "howTo": "searx.space lists public SearXNG instances; try a few for speed and uptime. Each one is run by a volunteer who could log your queries, so run your own if that matters to you.",
           "priority": "low"
         },
         {
@@ -61,7 +61,7 @@
           "id": "set-default-search",
           "task": "Change default search engine in all browsers",
           "why": "Setting a private search engine as default prevents accidental use of tracking search engines.",
-          "howTo": "In Chrome/Edge: Settings > Search engine. In Firefox: Settings > Search. In Safari: Preferences > Search. Select your chosen private search engine as default.",
+          "howTo": "In Chrome/Edge: Settings > Search engine. In Firefox: Settings > Search. In Safari: Settings > Search (called Preferences before Safari 17). Select your chosen private search engine as default.",
           "priority": "critical"
         },
         {
@@ -72,10 +72,10 @@
           "priority": "high"
         },
         {
-          "id": "configure-incognito-browser",
-          "task": "Set up a privacy-focused browser with private search",
-          "why": "Privacy-focused browsers provide an additional layer of privacy beyond private search engines, blocking trackers and ads.",
-          "howTo": "Install a privacy-focused browser and configure your preferred private search engine as default. This combines private browsing with private search for maximum protection.",
+          "id": "turn-on-tracking-protection",
+          "task": "Turn on your browser's tracking protection",
+          "why": "A private search engine keeps your searches off a profile, but the sites you open from the results still load trackers. Tracking protection blocks many of them.",
+          "howTo": "In Firefox, set Enhanced Tracking Protection to Strict. In Edge, set Tracking prevention to Strict. Brave blocks trackers by default with Shields, and Safari's 'Prevent cross-site tracking' is on by default. In Chrome, add a content blocker such as uBlock Origin Lite.",
           "priority": "high"
         },
         {
@@ -96,7 +96,7 @@
           "id": "block-search-redirects",
           "task": "Install extensions to prevent search hijacking",
           "why": "Some malware and extensions can redirect your searches back to tracking engines.",
-          "howTo": "Install uBlock Origin or similar ad blockers that can prevent search redirects. Configure them to block known tracking domains and search hijackers.",
+          "howTo": "Run a blocker with tracking lists on: uBlock Origin on Firefox, uBlock Origin Lite on Chrome. Then check that no extension has quietly changed your default search engine, which is how most search hijacking works.",
           "priority": "medium"
         }
       ]
@@ -107,7 +107,7 @@
         {
           "id": "enable-encrypted-dns",
           "task": "Configure DNS-over-HTTPS (DoH)",
-          "why": "Encrypted DNS prevents your ISP from seeing which search engines you visit and potentially redirecting your queries.",
+          "why": "Encrypted DNS stops your ISP reading or tampering with your lookups. It does not hide which sites you visit: the ISP still sees the servers you connect to.",
           "howTo": "Enable DoH in browser settings or use providers like Cloudflare (1.1.1.1) or Quad9. This encrypts DNS lookups for your search engine connections.",
           "priority": "medium"
         },
@@ -152,7 +152,7 @@
   "pro_tips": [
     "Use different private search engines for different purposes - DuckDuckGo for general searches, Startpage for Google-quality results, and Brave Search for independent results.",
     "Set up keyword shortcuts in your browser (e.g., 'dd' for DuckDuckGo) to quickly access private search engines from the address bar.",
-    "Remember that no search is completely anonymous - combine private search engines with a privacy-focused browser and VPN for maximum privacy protection.",
+    "No search is completely anonymous: even a private engine sees your IP address and the query itself. A VPN or Tor Browser keeps your IP address from the engine, and staying signed out of accounts keeps searches from being tied to your name.",
     "Create a bookmark folder with multiple private search engines so you can quickly compare results when one engine doesn't provide what you need.",
     "Regularly audit your browser's search settings as updates can sometimes reset your default search engine back to Google or other tracking engines."
   ],
@@ -176,6 +176,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

@@ -49,7 +49,7 @@
           "id": "transfer-mechanisms",
           "task": "Assess cross-border transfer mechanisms",
           "why": "International data transfers often require specific legal mechanisms to ensure adequate protection levels.",
-          "howTo": "Implement Standard Contractual Clauses (SCCs), adequacy decisions, or Binding Corporate Rules (BCRs) as appropriate. Consider using a privacy-focused browser for secure data access.",
+          "howTo": "Rely on an adequacy decision where one covers the destination country; otherwise use Standard Contractual Clauses (SCCs) or Binding Corporate Rules (BCRs). For US recipients, check whether they are certified under the EU-US Data Privacy Framework.",
           "priority": "high"
         },
         {
@@ -122,7 +122,7 @@
           "id": "encryption-standards",
           "task": "Deploy appropriate encryption standards",
           "why": "Strong encryption helps meet security obligations under international privacy laws and protects against breach notification requirements.",
-          "howTo": "Implement AES-256 encryption for data at rest and TLS 1.3 for data in transit. Use end-to-end encryption for sensitive communications and consider a privacy-focused browser for secure browsing.",
+          "howTo": "Implement AES-256 encryption for data at rest and TLS 1.3 for data in transit. Use end-to-end encryption for sensitive communications, and store encryption keys separately from the data they protect.",
           "priority": "high"
         },
         {
@@ -197,7 +197,7 @@
     }
   ],
   "pro_tips": [
-    "Use a privacy-focused browser when accessing sensitive compliance tools or conducting privacy research to prevent tracking by third parties and maintain confidential business information.",
+    "Keep evidence as you go: dated records of consent, impact assessments, transfer assessments and rights requests are what regulators ask to see, and they're hard to rebuild after the fact.",
     "Start with the most restrictive privacy law that applies to your business (often GDPR) as a baseline, then add jurisdiction-specific requirements to avoid over-compliance costs.",
     "Maintain a centralized privacy compliance dashboard that tracks obligations across all jurisdictions to avoid missing critical deadlines or requirements.",
     "Consider appointing regional Data Protection Officers or privacy leads who understand local culture and language nuances in addition to legal requirements.",
@@ -233,6 +233,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with us-state-privacy. Canonical version lives under /checklists/us-state-privacy/."
   },

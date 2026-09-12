@@ -54,7 +54,7 @@
         "Test the Anonymous View feature for visiting websites",
         "Compare result relevance to Google and DuckDuckGo"
       ],
-      "proTip": "Startpage's Anonymous View acts like a built-in VPN for visiting search results privately."
+      "proTip": "Startpage's Anonymous View opens a result through Startpage's proxy, so that site sees Startpage's IP address instead of yours. It covers only pages you open that way, not the rest of your browsing."
     },
     {
       "stepNumber": 4,
@@ -62,7 +62,7 @@
       "description": "Test other private search engines to find your preferred option for different use cases.",
       "actions": [
         "Try Brave Search for independent indexing",
-        "Test Searx for open-source search aggregation",
+        "Test SearXNG, the maintained fork of the searx metasearch project, for open-source search aggregation",
         "Check out Mojeek for truly independent results",
         "Compare speed and result quality across all options"
       ],
@@ -78,7 +78,7 @@
         "Set it as your default search engine",
         "Test that address bar searches now use the private engine"
       ],
-      "proTip": "Consider using a privacy-focused browser, which comes with private search engines pre-configured."
+      "proTip": "Some browsers already default to a private engine: the DuckDuckGo browser uses DuckDuckGo, and Brave uses Brave Search in many countries. In Chrome, Edge, Firefox or Safari you change the default yourself, as above."
     },
     {
       "stepNumber": 6,
@@ -119,7 +119,7 @@
   ],
   "pro_tips": [
     "Use DuckDuckGo's !bang shortcuts to search specific sites privately - !yt for YouTube, !reddit for Reddit searches.",
-    "Combine private search engines with a privacy-focused browser for complete search privacy protection.",
+    "A private search engine only covers the search itself: the sites you click through to can still track you. Pair it with tracking protection, such as Firefox's Enhanced Tracking Protection set to Strict, Brave's Shields, or a content blocker like uBlock Origin.",
     "Clear your existing search history in Google and other platforms after switching to prevent continued profiling.",
     "Consider using different private search engines for different purposes - DuckDuckGo for general queries, Startpage for Google-quality results.",
     "Enable your browser's private browsing mode when searching sensitive topics, even with private search engines."
@@ -149,6 +149,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

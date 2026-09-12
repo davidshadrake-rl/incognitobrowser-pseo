@@ -49,7 +49,7 @@
           "id": "minimal-install",
           "task": "Install only essential privacy extensions",
           "why": "Too many extensions increase attack surface, can conflict with each other, and may slow down your browser performance.",
-          "howTo": "Start with 3-5 core privacy extensions: uBlock Origin, Privacy Badger, and a password manager. Add others only if genuinely needed.",
+          "howTo": "Start with 3-5 core privacy extensions: a blocker (uBlock Origin on Firefox, uBlock Origin Lite on Chrome and Edge), Privacy Badger, and a password manager. Add others only if genuinely needed.",
           "priority": "medium"
         }
       ]
@@ -59,16 +59,16 @@
       "items": [
         {
           "id": "ublock-setup",
-          "task": "Configure uBlock Origin with recommended filter lists",
+          "task": "Configure uBlock Origin, or uBlock Origin Lite on Chrome",
           "why": "Proper filter list configuration maximizes ad and tracker blocking while minimizing false positives that break websites.",
-          "howTo": "Enable EasyList, EasyPrivacy, uBlock filters, and regional lists. Consider enabling Fanboy's Annoyances for social media widgets and cookie notices.",
+          "howTo": "In uBlock Origin on Firefox, enable EasyList, EasyPrivacy, uBlock filters and your regional list, plus Fanboy's Annoyances if cookie banners bother you. In uBlock Origin Lite on Chrome, raise the default filtering mode instead.",
           "priority": "high"
         },
         {
           "id": "privacy-badger-config",
-          "task": "Set up Privacy Badger for automatic tracker learning",
-          "why": "Privacy Badger learns to block trackers automatically as you browse, providing dynamic protection against new tracking methods.",
-          "howTo": "Install Privacy Badger and let it learn for a few weeks. Check its findings periodically and whitelist any legitimate services that get blocked.",
+          "task": "Set up Privacy Badger for third-party tracker blocking",
+          "why": "Privacy Badger blocks third-party domains the EFF has caught tracking people across sites, using a list the EFF builds from its own crawls of the web.",
+          "howTo": "Install it and leave the defaults. Local learning is off by default since 2020, so it protects you immediately. Check its panel now and then and allow any service it breaks.",
           "priority": "medium"
         },
         {
@@ -82,14 +82,14 @@
           "id": "script-blocking",
           "task": "Set up JavaScript blocking extensions carefully",
           "why": "JavaScript blockers provide strong privacy protection but require careful configuration to avoid breaking essential website functionality.",
-          "howTo": "If using NoScript or similar, start in 'learning mode' and gradually whitelist trusted domains. Consider uBlock Origin's medium mode as an alternative.",
+          "howTo": "If using NoScript, start in 'learning mode' and gradually whitelist trusted domains. uBlock Origin's medium mode is an alternative on Firefox; uBlock Origin Lite on Chrome has no such mode.",
           "priority": "low"
         },
         {
           "id": "https-everywhere",
-          "task": "Enable HTTPS enforcement extensions or browser settings",
+          "task": "Turn on your browser's HTTPS-only setting",
           "why": "HTTPS encryption protects your data from interception and tampering during transmission between your browser and websites.",
-          "howTo": "Modern browsers have built-in HTTPS-only modes. Enable in browser settings or use extensions like HTTPS Everywhere for older browser versions.",
+          "howTo": "Firefox: Privacy & Security > HTTPS-Only Mode. Chrome: Privacy and security > Security > 'Always use secure connections'. Edge: Privacy, search, and services > Security > Automatic HTTPS. Safari upgrades on its own. The old HTTPS Everywhere add-on has been retired.",
           "priority": "high"
         }
       ]
@@ -115,7 +115,7 @@
           "id": "conflict-detection",
           "task": "Test for extension conflicts and performance issues",
           "why": "Multiple extensions performing similar functions can conflict, cause performance problems, or create security gaps.",
-          "howTo": "Disable extensions one by one if experiencing issues. Use browser task manager to identify resource-heavy extensions. Consider a privacy-focused browser for conflict-free browsing.",
+          "howTo": "Disable extensions one by one if experiencing issues. Use browser task manager to identify resource-heavy extensions. If two extensions do the same job, such as two ad blockers, keep only one.",
           "priority": "medium"
         },
         {
@@ -129,7 +129,7 @@
           "id": "alternative-research",
           "task": "Research alternative browsers and built-in privacy features",
           "why": "Browser-native privacy features often provide better security and performance than extensions while reducing attack surface.",
-          "howTo": "Test privacy-focused browsers like Firefox with strict settings, or Brave. Compare built-in blocking vs. extension-based protection.",
+          "howTo": "Try Firefox with Enhanced Tracking Protection set to Strict, or Brave with Shields on. Compare their built-in blocking with your extension-based setup.",
           "priority": "medium"
         }
       ]
@@ -139,7 +139,7 @@
     "Use browser profiles to separate different extension setups for work, personal, and high-privacy browsing sessions.",
     "Enable automatic extension updates but monitor permission changes - set up email notifications if your browser supports them.",
     "Test critical websites in incognito/private mode first when installing aggressive privacy extensions to identify potential conflicts.",
-    "Consider using a privacy-focused browser as your primary browser - it has built-in privacy features that reduce the need for multiple extensions.",
+    "Before adding a tracker blocker, check what your browser already blocks: Brave's Shields and Firefox's Enhanced Tracking Protection stop many trackers by default, so on those browsers you may need fewer extensions.",
     "Keep a 'clean' browser profile with minimal extensions for banking and other sensitive activities to reduce attack surface."
   ],
   "relatedLinks": [
@@ -167,6 +167,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

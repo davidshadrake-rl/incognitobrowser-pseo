@@ -160,9 +160,9 @@
       "items": [
         {
           "id": "use-private-browsing",
-          "task": "Switch to privacy-focused browsing tools",
-          "why": "Regular browsers track your activities and share data with advertisers, building detailed profiles of your interests and behaviors over time.",
-          "howTo": "Use a privacy-focused browser for private browsing sessions, DuckDuckGo for searches, and consider Firefox with privacy extensions. Enable private mode by default.",
+          "task": "Block trackers and switch to private search",
+          "why": "Third-party trackers on the sites you visit build profiles of your interests over time. Blocking them, and searching with an engine that doesn't profile you, cuts much of this passive collection.",
+          "howTo": "Set Firefox's Enhanced Tracking Protection to Strict, or use Brave, whose Shields block trackers by default. Make DuckDuckGo or another private engine your default search. For sensitive browsing, use private windows; Firefox can open every window in private mode (Settings > Privacy & Security > History).",
           "priority": "high"
         },
         {
@@ -228,6 +228,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /checklists/browser-privacy/."
   },

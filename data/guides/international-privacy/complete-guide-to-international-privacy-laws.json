@@ -31,7 +31,7 @@
         "Create a matrix of applicable privacy laws by jurisdiction",
         "Assess whether you qualify as a multinational entity under various regulations"
       ],
-      "proTip": "Many privacy laws apply based on where data subjects are located, not where your business is headquartered. Use a privacy-focused browser to research regulations privately without tracking your compliance research."
+      "proTip": "Many privacy laws apply based on where data subjects are located, not where your business is headquartered. The GDPR, for example, can apply to a company with no EU office that offers goods or services to people in the EU."
     },
     {
       "stepNumber": 2,
@@ -53,7 +53,7 @@
       "actions": [
         "Determine if your organization meets the $3 million turnover threshold",
         "Implement the 13 Australian Privacy Principles in your data practices",
-        "Establish data breach notification procedures (within 72 hours to OAIC)",
+        "Establish data breach procedures: assess a suspected eligible breach within 30 days, then notify the OAIC and affected individuals as soon as practicable",
         "Create Australia-compliant privacy policies and consent mechanisms"
       ],
       "proTip": "Australia's Privacy Act has unique provisions for employee records and small business exemptions that don't exist in other major privacy laws."
@@ -73,14 +73,14 @@
     {
       "stepNumber": 5,
       "title": "Prepare for India's Digital Personal Data Protection Act (DPDP)",
-      "description": "India's DPDP Act, effective from 2024, introduces significant obligations for processing Indian residents' data, with strict localization requirements.",
+      "description": "India's DPDP Act 2023 introduces significant obligations for processing Indian residents' data. Its rules were notified in November 2025 and the main duties bite in May 2027. It imposes no general data localization: transfers are allowed except to countries the central government restricts by notification.",
       "actions": [
         "Assess your data processing activities involving Indian data principals",
         "Implement consent management systems supporting Indian requirements",
-        "Establish data localization infrastructure for sensitive personal data",
+        "Check whether a sector regulator, such as the Reserve Bank of India for payment data, imposes localization on the data you hold",
         "Designate Data Protection Officers (DPOs) if processing significant volumes"
       ],
-      "proTip": "India's DPDP Act includes unique provisions for 'deemed consent' in certain scenarios and has specific exemptions for startups in their first five years."
+      "proTip": "The DPDP Act dropped the earlier draft's 'deemed consent' in favor of a defined list of 'certain legitimate uses', and it lets the central government exempt named classes of data fiduciary, startups included, by notification rather than automatically."
     },
     {
       "stepNumber": 6,
@@ -137,7 +137,7 @@
     },
     {
       "question": "How do data localization requirements affect international businesses?",
-      "answer": "Data localization laws in countries like India and Russia require certain types of personal data to be stored within national borders. This can significantly impact your data architecture and may require establishing local data centers or cloud infrastructure in those countries."
+      "answer": "Data localization laws in countries like Russia and China require certain personal data to be stored within national borders. India imposes localization by sector, for example on payment data, rather than in its general privacy law. Either way it can reshape your data architecture and force local data centers or cloud regions."
     },
     {
       "question": "What happens if privacy laws in different countries conflict?",
@@ -167,6 +167,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with us-state-privacy. Canonical version lives under /guides/us-state-privacy/."
   },

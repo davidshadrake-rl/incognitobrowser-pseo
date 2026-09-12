@@ -79,9 +79,9 @@
         "Turn off 'Web & App Activity' in Google Activity Controls for maximum privacy",
         "Disable location history in Google account settings",
         "Turn off ad personalization at adssettings.google.com",
-        "Enable 'Do Not Track' in your browser privacy settings"
+        "Turn on Global Privacy Control: in Firefox it is 'Tell websites not to sell or share my data', which replaced the Do Not Track setting it removed in version 135, and Brave and DuckDuckGo send it by default"
       ],
-      "proTip": "Consider using a privacy-focused browser for searches you want to keep completely private from the start."
+      "proTip": "For a one-off sensitive search, use a private window while signed out: it keeps the search off your device and out of your account history, though the search engine still receives it."
     },
     {
       "stepNumber": 6,
@@ -97,11 +97,11 @@
     }
   ],
   "pro_tips": [
-    "Use a privacy-focused browser for sensitive searches - it's designed specifically for privacy and can keep your search history off your device.",
+    "To keep search history off your device, set your browser to clear history when it closes (in Firefox: Settings > Privacy & Security > History > Never remember history) or use a private window for sensitive searches.",
     "Set up regular monthly reminders to clear your search history if you don't use auto-delete features.",
     "Check your router's admin panel - some routers log search queries and visited sites that need separate clearing.",
     "Review connected apps and services that might access your search history through your Google account permissions.",
-    "Consider using different browsers for different activities - one for general browsing and a privacy-focused browser for private searches."
+    "Consider using separate browsers or browser profiles: one signed in to your accounts for everyday browsing, and one that stays signed out, with strict tracking protection, for private searches."
   ],
   "faqs": [
     {
@@ -110,7 +110,7 @@
     },
     {
       "question": "Does incognito mode completely hide my searches?",
-      "answer": "Incognito mode prevents your browser from storing history locally, but your ISP, employer, or the websites you visit can still see your activity. For complete privacy, use a dedicated private browser with a VPN."
+      "answer": "No. Incognito mode stops your browser from storing history on your device, but the search engine still receives your searches, and your ISP, employer or the websites you visit can still see your activity. A private search engine such as DuckDuckGo or Startpage keeps searches out of an ad profile; a VPN hides the sites you visit from your ISP or local network (the VPN provider sees them instead), but not from monitoring software on a work device."
     },
     {
       "question": "How often should I clear my search history?",
@@ -140,6 +140,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with online-banking. Canonical version lives under /guides/online-banking/."
   },

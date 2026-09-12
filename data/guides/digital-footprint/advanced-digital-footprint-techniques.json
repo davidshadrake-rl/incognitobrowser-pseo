@@ -39,13 +39,13 @@
       "title": "Implement Advanced Browser Fingerprint Protection",
       "description": "Deploy sophisticated browser configurations and tools to minimize passive tracking through device fingerprinting and behavioral analysis.",
       "actions": [
-        "Configure a privacy-focused browser with advanced privacy settings and extensions",
-        "Install and configure Canvas Blocker, WebRTC Leak Shield, and ClearURLs extensions",
-        "Randomize user agent strings and screen resolution reporting",
+        "Start from a browser with built-in fingerprinting defenses: Brave, or Firefox with Enhanced Tracking Protection set to Strict; Tor Browser and Mullvad Browser go further by making their users look alike",
+        "On Firefox, install CanvasBlocker and ClearURLs, and stop WebRTC leaking your local addresses with the browser's own control rather than an extension: media.peerconnection.enabled in about:config, or Brave's WebRTC IP handling policy",
+        "Leave the user agent and window size alone unless the browser itself manages them: Firefox's resistFingerprinting and Tor Browser round the window and freeze the string, while a switcher extension that contradicts the rest of the browser makes you easier to pick out",
         "Disable WebGL, WebRTC, and other fingerprinting vectors",
         "Use multiple browser profiles with different fingerprints for different activities"
       ],
-      "proTip": "Test your fingerprint uniqueness using tools like AmIUnique and Panopticlick before and after implementing protections."
+      "proTip": "Test your fingerprint with AmIUnique or the EFF's Cover Your Tracks (formerly Panopticlick) before and after each change: every extra extension or custom setting can make your browser more distinctive, not less."
     },
     {
       "stepNumber": 3,
@@ -133,6 +133,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /guides/browser-privacy/."
   },

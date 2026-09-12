@@ -37,7 +37,7 @@
       "description": "Before implementing protections, establish a baseline by testing how unique your current browser fingerprint is using online testing tools.",
       "actions": [
         "Visit AmIUnique.org to test your browser's uniqueness",
-        "Check your fingerprint on Panopticlick by EFF",
+        "Check your fingerprint with the EFF's Cover Your Tracks at coveryourtracks.eff.org, the tool formerly called Panopticlick",
         "Note which elements make your browser most identifiable",
         "Document your current fingerprint score for comparison"
       ],
@@ -61,8 +61,8 @@
       "description": "Modern browsers offer built-in settings to reduce fingerprinting, though effectiveness varies significantly between different browsers.",
       "actions": [
         "Enable Firefox's Enhanced Tracking Protection with strict settings",
-        "Configure Chrome's Privacy Sandbox and block third-party cookies",
-        "Install uBlock Origin with anti-fingerprinting filters enabled",
+        "Block third-party cookies in Chrome, which has few fingerprinting defences of its own",
+        "Add a blocker with fingerprinting filter lists: uBlock Origin on Firefox, uBlock Origin Lite on Chrome",
         "Disable JavaScript for non-essential websites when possible"
       ],
       "proTip": "Firefox offers the strongest built-in anti-fingerprinting protections among mainstream browsers, especially in strict mode."
@@ -70,14 +70,14 @@
     {
       "stepNumber": 5,
       "title": "Use Specialized Anti-Fingerprinting Browsers",
-      "description": "Purpose-built privacy browsers offer the most comprehensive protection against fingerprinting by randomizing or blocking fingerprinting vectors.",
+      "description": "Browsers built to resist fingerprinting take one of two approaches: Tor Browser and Mullvad Browser make all their users look the same, while Brave randomizes the readings fingerprinting scripts take, so they change from site to site.",
       "actions": [
         "Try Tor Browser for maximum anonymity and fingerprint resistance",
-        "Test a privacy-focused browser for advanced anti-fingerprinting features",
-        "Configure Brave's aggressive fingerprinting protection",
+        "Try Mullvad Browser, which has Tor Browser's fingerprinting protection without the Tor network",
+        "In Brave, check that fingerprinting protection is switched on in the Shields panel (it is by default)",
         "Consider using different browsers for different activities"
       ],
-      "proTip": "Some privacy-focused browsers are built specifically to resist fingerprinting, so everyday browsing is protected without extra setup."
+      "proTip": "Tor Browser and Mullvad Browser protect you best unchanged: every extension you add or setting you change makes you stand out from their other users."
     },
     {
       "stepNumber": 6,
@@ -107,7 +107,7 @@
   "pro_tips": [
     "Use virtual machines or separate browser profiles for different online activities to compartmentalize your fingerprints",
     "Regularly update your browser and operating system to blend in with the majority of users using current versions",
-    "Consider using a VPN alongside anti-fingerprinting measures for comprehensive privacy protection",
+    "A VPN changes the IP address a site sees, which is a separate signal from your fingerprint. It does nothing to the fonts, screen size and hardware details a fingerprinting script reads, so treat the two as different problems",
     "Disable unnecessary browser plugins and extensions that can add to your unique fingerprint signature",
     "Test your fingerprint protection monthly, as tracking techniques constantly evolve and improve"
   ],
@@ -140,14 +140,15 @@
       "type": "external"
     },
     {
-      "title": "EFF's Panopticlick Tool",
-      "url": "https://panopticlick.eff.org",
+      "title": "EFF's Cover Your Tracks",
+      "url": "https://coveryourtracks.eff.org/",
       "type": "external"
     }
   ],
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /guides/browser-privacy/."
   },

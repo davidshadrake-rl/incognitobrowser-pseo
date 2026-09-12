@@ -56,7 +56,7 @@
         "Monitor network traffic using Wireshark to identify unexpected data streams",
         "Set up application-specific rules that require manual approval for camera app network access"
       ],
-      "proTip": "Use a privacy-focused browser for video calls as it provides better isolation and doesn't store session data permanently."
+      "proTip": "Firewall rules control what a program can send, not whether it can use the camera, so pair them with the permission audit at the start of this guide."
     },
     {
       "stepNumber": 4,
@@ -110,7 +110,7 @@
     "Create a 'camera emergency protocol' - a quick way to physically disconnect all recording devices if you suspect unauthorized access during sensitive activities.",
     "Use multiple detection methods simultaneously, as sophisticated malware may bypass individual security measures but struggle against layered defenses.",
     "Regularly update your camera and microphone drivers, but only from official manufacturer sources to avoid malicious driver installations.",
-    "Consider using a privacy-focused browser for video calls, as it provides better session isolation and automatically clears data after closing.",
+    "Close the tab when a browser-based call ends: a site you've allowed can switch the camera or microphone back on for as long as its tab is open.",
     "Set up decoy applications that appear to use your camera but actually monitor for unauthorized access attempts - if they activate unexpectedly, you know you're compromised."
   ],
   "faqs": [
@@ -138,6 +138,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

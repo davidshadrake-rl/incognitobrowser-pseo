@@ -25,7 +25,7 @@
       "title": "Implement Multi-Layer Browser Protection",
       "description": "Create a comprehensive browser defense system using multiple privacy tools and advanced configurations to block sophisticated tracking methods.",
       "actions": [
-        "Install uBlock Origin with advanced filtering lists enabled",
+        "Install uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge, with the tracking filter lists enabled",
         "Add Ghostery or Privacy Badger for tracker blocking",
         "Configure browser to block third-party cookies completely",
         "Enable strict tracking protection in browser settings",
@@ -39,13 +39,13 @@
       "title": "Deploy Advanced Fingerprinting Countermeasures",
       "description": "Protect against device fingerprinting and canvas tracking that bypass traditional cookie-based blocking methods.",
       "actions": [
-        "Install Canvas Blocker extension to prevent canvas fingerprinting",
-        "Configure browser to spoof or randomize user agent strings",
-        "Use a privacy-focused browser which includes built-in fingerprinting protection",
+        "On Firefox, install the CanvasBlocker extension, which has no Chrome equivalent, to blunt canvas fingerprinting",
+        "Leave your user agent as it is: a switcher that doesn't match the rest of the browser makes you more identifiable, not less",
+        "Use a browser with built-in fingerprinting protection, such as Tor Browser, Mullvad Browser or Brave",
         "Disable WebRTC to prevent IP address leaking",
         "Turn off hardware acceleration and reduce browser feature exposure"
       ],
-      "proTip": "Regularly clear browser fingerprint data and rotate user agents to maintain anonymity across sessions."
+      "proTip": "A fingerprint is worked out from your setup on every visit, not stored on your device, so there is nothing to clear. Check what sites can see with the EFF's Cover Your Tracks test: unusual settings can make you stand out more, not less."
     },
     {
       "stepNumber": 3,
@@ -92,7 +92,7 @@
       "title": "Implement Advanced Mobile Protection",
       "description": "Deploy sophisticated mobile privacy measures to prevent app-based tracking and location-based advertising targeting.",
       "actions": [
-        "Use mobile browsers with advanced privacy features",
+        "Use a mobile browser that blocks trackers by default, such as Brave, or Firefox with Enhanced Tracking Protection set to Strict",
         "Install mobile ad blockers that work with VPN technology (AdGuard, Blokada)",
         "Disable location services for non-essential apps completely",
         "Turn off app-based advertising personalization in system settings",
@@ -141,7 +141,7 @@
     },
     {
       "question": "How do I know if my advanced privacy setup is actually working?",
-      "answer": "Use tools like Panopticlick, Cover Your Tracks, and Am I Unique to test your browser fingerprint uniqueness. Monitor for reduced targeted advertising and use privacy analysis tools to verify your protection levels."
+      "answer": "Use tools like the EFF's Cover Your Tracks at coveryourtracks.eff.org (formerly Panopticlick) and Am I Unique to test your browser fingerprint uniqueness. Monitor for reduced targeted advertising and use privacy analysis tools to verify your protection levels."
     }
   ],
   "relatedLinks": [
@@ -159,6 +159,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

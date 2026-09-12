@@ -2,7 +2,7 @@
   "niche": "vpn-privacy",
   "slug": "vpn-proxy-privacy-hardening-checklist",
   "title": "VPN & Proxy Privacy Hardening Checklist",
-  "metaDescription": "Complete checklist to maximize your VPN and proxy privacy protection. Harden your setup, avoid common mistakes, and stay truly anonymous online.",
+  "metaDescription": "Checklist to harden your VPN and proxy setup: prevent IP, DNS and WebRTC leaks, avoid common mistakes, and know what a VPN doesn't hide.",
   "keywords": [
     "VPN privacy",
     "proxy hardening",
@@ -106,9 +106,9 @@
       "items": [
         {
           "id": "browser-1",
-          "task": "Use a privacy-focused browser for enhanced privacy",
-          "why": "Regular browsers leak data through fingerprinting, cookies, and tracking. Privacy-focused browsers provide built-in privacy protections.",
-          "howTo": "Install a privacy-focused browser and configure it as your primary browser for sensitive activities. Enable all privacy features and use with your VPN/proxy setup.",
+          "task": "Block trackers and fingerprinting in your browser",
+          "why": "A VPN or proxy changes your IP address, but cookies, trackers and browser fingerprinting can still identify you to the sites you visit.",
+          "howTo": "For sensitive browsing, use Firefox with Enhanced Tracking Protection set to Strict, or Brave with Shields on; Tor Browser offers the strongest fingerprinting protection. Keep your signed-in accounts out of that browser, since logging in identifies you whatever your IP address.",
           "priority": "high"
         },
         {
@@ -155,7 +155,7 @@
           "id": "advanced-2",
           "task": "Use different VPN/proxy for different activities",
           "why": "Using the same service for all activities creates linkable patterns that can compromise your privacy across different use cases.",
-          "howTo": "Use separate VPN accounts for streaming, work, and sensitive browsing. Consider using Tor for maximum anonymity alongside VPN for extremely sensitive activities.",
+          "howTo": "Use separate VPN accounts for streaming, work, and sensitive browsing. For activities that need anonymity rather than a different IP address, use Tor Browser on its own.",
           "priority": "medium"
         },
         {
@@ -184,7 +184,7 @@
   ],
   "pro_tips": [
     "Test your setup using multiple leak detection websites - different sites check for different types of leaks and vulnerabilities.",
-    "Consider chaining VPN + Tor for maximum anonymity, but expect significantly slower speeds for this double-layer protection.",
+    "A VPN is not an anonymity tool, and putting one in front of Tor doesn't make you more anonymous. If you need to hide Tor use from your network, use Tor Browser's bridges instead.",
     "Use different email addresses and payment methods when signing up for VPN services to avoid creating linkable digital footprints.",
     "Keep a backup VPN service active - if your primary service goes down, you won't be exposed while finding alternatives.",
     "Document your configuration settings - when troubleshooting or switching devices, you'll want to replicate your secure setup exactly."
@@ -209,6 +209,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

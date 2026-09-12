@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactPeople } from '@/lib/content';
+import { getContentItem, getContentFiles, getCrossNicheLinks, isPublished, redactPeople, type EditableContent } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateArticleSchema } from '@/lib/seo';
 import { ChecklistPage } from '@/components/ChecklistPage';
@@ -50,13 +50,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { niche, slug } = await params;
   const data = getContentItem<ChecklistData>('checklists', niche, slug);
   if (!data) return {};
+  const { editorial } = data as unknown as EditableContent;
   return genMeta({
     title: data.title,
     description: data.metaDescription,
     path: `/checklists/${niche}/${slug}`,
     noIndex: !isPublished(data as unknown as Parameters<typeof isPublished>[0]),
-    publishedAt: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    modifiedAt: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
+    publishedAt: editorial?.reviewedAt || undefined,
+    modifiedAt: editorial?.updatedAt || editorial?.reviewedAt || undefined,
   });
 }
 
@@ -80,14 +81,17 @@ export default async function ChecklistDetailPage({ params }: PageProps) {
   // Per-article Article + Person JSON-LD. Surfaces the byline (Darkpool
   // David, pseudonymous writer) and editor (David Shadrake, LinkedIn-
   // verified) so Google can attribute the page to real entities.
+  // Published is the review; modified is the last text change after it
+  // (editorial.updatedAt), else the review. An edit never moves the review date.
+  const { editorial } = data as unknown as EditableContent;
   const articleSchema = generateArticleSchema({
     headline: (data as unknown as { title: string }).title,
     description: (data as unknown as { metaDescription?: string; definition?: string }).metaDescription
       || (data as unknown as { definition?: string }).definition
       || '',
     url: 'https://incognitobrowser.io/resources' + `/checklists/${niche}/${slug}`,
-    datePublished: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    dateModified: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
+    datePublished: editorial?.reviewedAt || undefined,
+    dateModified: editorial?.updatedAt || editorial?.reviewedAt || undefined,
     attributed: !!(data as unknown as { author?: { name?: string } | null }).author?.name,
   });
 

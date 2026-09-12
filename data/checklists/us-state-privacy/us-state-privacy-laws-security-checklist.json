@@ -26,9 +26,9 @@
         },
         {
           "id": "revenue-thresholds",
-          "task": "Verify if your business meets state privacy law revenue thresholds",
-          "why": "Most state privacy laws only apply to businesses above certain revenue thresholds, typically $25-50 million annually.",
-          "howTo": "Review your annual revenue and customer data processing volumes against each applicable state's thresholds. Document which laws apply to your business.",
+          "task": "Verify which state privacy law thresholds your business meets",
+          "why": "Only California's law has a revenue threshold ($25M, adjusted for inflation). Virginia, Colorado, Connecticut and Texas turn on other tests entirely.",
+          "howTo": "Review your annual revenue, consumer counts and data-sale revenue against each state's own test, and check the SBA size standard for your industry, which is what Texas uses. Document which laws apply.",
           "priority": "critical"
         },
         {
@@ -93,10 +93,10 @@
           "priority": "medium"
         },
         {
-          "id": "secure-browsing",
-          "task": "Use privacy-focused browsers for sensitive research and compliance work",
-          "why": "Protecting your own browsing privacy prevents data leakage when researching competitors or handling sensitive compliance matters.",
-          "howTo": "Use a privacy-focused browser for privacy research, competitor analysis, and accessing compliance resources without leaving tracking data.",
+          "id": "honor-gpc",
+          "task": "Honor Global Privacy Control signals on your website",
+          "why": "California, Colorado, Connecticut, Texas and a growing number of states require businesses to treat Global Privacy Control as a valid opt-out of sales and targeted advertising.",
+          "howTo": "Configure your site and consent tool to detect the Sec-GPC request header (or navigator.globalPrivacyControl in the page) and apply the opt-out automatically, including to ad and analytics tags. Test it with a browser that sends GPC, such as Firefox with the setting on, Brave or DuckDuckGo.",
           "priority": "low"
         }
       ]
@@ -174,6 +174,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

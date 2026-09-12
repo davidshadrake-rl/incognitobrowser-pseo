@@ -1,7 +1,7 @@
 {
   "niche": "incognito-mode",
   "slug": "incognito-mode-security-checklist",
-  "title": "Incognito Mode Security Checklist: Ultimate Privacy Guide",
+  "title": "Incognito Mode Security Checklist",
   "metaDescription": "Complete incognito mode security checklist for all browsers. Learn what private browsing actually hides and how to maximize your privacy protection.",
   "keywords": [
     "incognito mode",
@@ -87,9 +87,9 @@
         },
         {
           "id": "during-5",
-          "task": "Avoid plugins and browser permissions",
-          "why": "Plugins like Flash and browser permissions can track you across sessions and bypass incognito protections.",
-          "howTo": "Deny location, camera, microphone, and notification requests. Avoid sites requiring plugins. Use a browser that blocks tracking by default.",
+          "task": "Refuse the permission prompts a private window still shows",
+          "why": "Plugins are gone: no current browser runs Flash or Java. What is left are permission prompts, and granting location or camera in a private window still tells that site something about you.",
+          "howTo": "Deny location, camera, microphone and notification requests unless the page genuinely needs them. A browser that blocks trackers by default, such as Firefox on Strict or Brave, cuts down how often you are asked.",
           "priority": "medium"
         },
         {
@@ -155,7 +155,7 @@
           "id": "advanced-2",
           "task": "Disable WebRTC to prevent IP leaks",
           "why": "WebRTC can expose your real IP address even when using VPN or incognito mode through peer-to-peer connections.",
-          "howTo": "Use browser extensions to disable WebRTC or switch to a privacy-focused browser that has WebRTC protection built in.",
+          "howTo": "Firefox: set media.peerconnection.enabled to false in about:config, which also stops browser video calls. Brave has a WebRTC IP handling policy under Privacy and security. Chrome has no such setting, so use an extension, then run a WebRTC leak test.",
           "priority": "high"
         },
         {
@@ -167,9 +167,9 @@
         },
         {
           "id": "advanced-4",
-          "task": "Use a dedicated privacy-focused browser for sensitive activities",
-          "why": "Regular browsers in incognito mode still have limitations compared to browsers designed specifically for privacy.",
-          "howTo": "Consider using a privacy-focused browser for maximum privacy, or alternatives like Tor Browser for highly sensitive browsing that requires anonymity.",
+          "task": "Pick the right browser for sensitive activities",
+          "why": "An incognito window keeps your history off the device, but it doesn't change your IP address or stop sites fingerprinting your browser.",
+          "howTo": "For everyday sensitive browsing, use a browser with strict tracking protection, such as Firefox with Enhanced Tracking Protection set to Strict, or Brave. For browsing that needs anonymity, use Tor Browser, which hides your IP address from the sites you visit.",
           "priority": "medium"
         },
         {
@@ -209,6 +209,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /checklists/browser-privacy/."
   },

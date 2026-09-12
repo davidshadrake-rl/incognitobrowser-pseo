@@ -2,7 +2,7 @@
   "niche": "browser-extensions",
   "slug": "browser-extensions-privacy-addons-beginners",
   "title": "Browser Extensions & Privacy Add-ons for Beginners",
-  "metaDescription": "Learn to install and configure essential privacy browser extensions. Complete beginner's guide to uBlock Origin, Privacy Badger, and safe extension practices.",
+  "metaDescription": "Learn to install and configure essential browser privacy extensions. Complete beginner's guide to uBlock Origin, Privacy Badger, and safe extension practices.",
   "keywords": [
     "privacy extensions",
     "browser add-ons",
@@ -22,16 +22,16 @@
   "steps": [
     {
       "stepNumber": 1,
-      "title": "Install uBlock Origin for Ad and Tracker Blocking",
-      "description": "uBlock Origin is the most effective free ad blocker and tracker blocker available. It's lightweight, open-source, and blocks ads, pop-ups, and tracking scripts automatically.",
+      "title": "Install uBlock Origin, or uBlock Origin Lite on Chrome",
+      "description": "uBlock Origin is a free, open-source ad and tracker blocker. Which one you install depends on your browser: Chrome disabled Manifest V2 extensions for everyone in July 2025, so uBlock Origin itself now runs in Firefox, and Chrome and Edge users install uBlock Origin Lite, the Manifest V3 version by the same author.",
       "actions": [
         "Visit your browser's extension store (Chrome Web Store, Firefox Add-ons, or Edge Add-ons)",
-        "Search for 'uBlock Origin' by Raymond Hill",
+        "Search for 'uBlock Origin' by Raymond Hill in Firefox, or 'uBlock Origin Lite' by the same author in Chrome or Edge",
         "Click 'Add to Chrome/Firefox/Edge' and confirm the installation",
         "Pin the extension to your toolbar for easy access"
       ],
-      "proTip": "uBlock Origin is completely free and more effective than paid alternatives like AdBlock Plus. Always install the original 'uBlock Origin' not other similarly named extensions.",
-      "warning": "Avoid extensions named just 'uBlock' or 'AdBlock' - these are different, less effective tools. Only install uBlock Origin by Raymond Hill."
+      "proTip": "Both versions are free and neither takes money from advertisers, unlike blockers that run an 'acceptable ads' programme. Install the one published by Raymond Hill and nothing that merely sounds like it.",
+      "warning": "Extensions called just 'uBlock' or 'AdBlock' are different products by different developers. The only two to install are uBlock Origin and uBlock Origin Lite, both by Raymond Hill."
     },
     {
       "stepNumber": 2,
@@ -49,21 +49,21 @@
     {
       "stepNumber": 3,
       "title": "Install Privacy Badger for Tracking Protection",
-      "description": "Privacy Badger automatically learns to block invisible trackers and protects your privacy without breaking websites.",
+      "description": "Privacy Badger blocks third-party domains the EFF has caught tracking people from site to site, using a list the EFF builds from its own crawls.",
       "actions": [
         "Go to your browser's extension store",
         "Search for 'Privacy Badger' by Electronic Frontier Foundation (EFF)",
         "Install the extension and pin it to your toolbar",
         "Privacy Badger works automatically - no initial setup required"
       ],
-      "proTip": "Privacy Badger learns as you browse, becoming more effective over time. It works alongside uBlock Origin without conflicts."
+      "proTip": "Privacy Badger stopped learning from your own browsing by default in 2020, because that made each user's copy more identifiable. It ships with the EFF's list instead, so it works from the first page you load."
     },
     {
       "stepNumber": 4,
       "title": "Add ClearURLs to Remove Tracking Parameters",
-      "description": "ClearURLs automatically removes tracking parameters from URLs, preventing websites from tracking you through link clicks.",
+      "description": "ClearURLs automatically removes tracking parameters from URLs, preventing websites from tracking you through link clicks. ClearURLs is a Manifest V2 add-on, so it runs in Firefox; Chrome disabled Manifest V2 extensions in July 2025.",
       "actions": [
-        "Install 'ClearURLs' from your browser's extension store",
+        "Install 'ClearURLs' from the Firefox Add-ons site",
         "The extension works automatically in the background",
         "Check the extension icon occasionally to see how many tracking parameters it has blocked",
         "No configuration needed for basic protection"
@@ -103,14 +103,14 @@
         "Visit several different types of websites (news, social media, shopping)",
         "Check if any sites are broken due to aggressive blocking",
         "Use uBlock Origin's temporary allow feature for broken sites",
-        "Test a privacy-focused browser as an additional browsing option",
+        "Run a tracker test such as EFF's Cover Your Tracks to see what still gets through",
         "Bookmark frequently used extension dashboards for easy access"
       ],
       "proTip": "If a website breaks, try disabling extensions one by one to identify the cause. Most privacy extensions allow you to whitelist specific sites when needed."
     }
   ],
   "pro_tips": [
-    "Use a privacy-focused browser for maximum privacy - it's designed from the ground up with privacy in mind and doesn't require multiple extensions to achieve strong protection.",
+    "Your browser may already do some of this work: Brave blocks ads and trackers by default, and Firefox's Enhanced Tracking Protection blocks known trackers, so you may need fewer extensions there than on Chrome.",
     "Regularly update your extensions to get the latest security patches and improved blocking lists. Enable automatic updates when possible.",
     "Don't install too many similar extensions - uBlock Origin plus 2-3 complementary privacy tools is usually sufficient for most users.",
     "Create separate browser profiles for different activities (work, personal, banking) to compartmentalize your browsing and reduce tracking across contexts.",
@@ -131,15 +131,15 @@
     },
     {
       "question": "Are free privacy extensions as good as paid ones?",
-      "answer": "Often yes - uBlock Origin and Privacy Badger are completely free and more effective than many paid alternatives. Avoid paid ad blockers that allow 'acceptable ads' through paid partnerships."
+      "answer": "Often yes. uBlock Origin, uBlock Origin Lite and Privacy Badger are free and take no money from advertisers. Be wary of any blocker that runs an 'acceptable ads' programme, where advertisers pay to be let through the filter."
     },
     {
       "question": "How do I know if an extension is safe to install?",
       "answer": "Check the developer's reputation, read user reviews, verify the extension has many downloads, and ensure it only requests necessary permissions. Stick to extensions from well-known privacy organizations when possible."
     },
     {
-      "question": "Should I use a privacy-focused browser instead of extensions?",
-      "answer": "Privacy-focused browsers offer built-in protection without needing multiple extensions. They're often easier to use and more secure than trying to configure multiple browser extensions correctly."
+      "question": "Should I switch browsers instead of adding extensions?",
+      "answer": "It depends on the browser you'd switch to. Brave blocks ads and trackers without any extensions, and Firefox's Enhanced Tracking Protection blocks known trackers (set it to Strict for more). Chrome blocks little on its own, so there extensions do more of the work. Many people use a browser with good defaults plus one blocker, such as Firefox with uBlock Origin."
     }
   ],
   "relatedLinks": [
@@ -157,6 +157,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

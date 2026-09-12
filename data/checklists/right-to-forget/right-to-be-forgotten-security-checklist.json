@@ -19,10 +19,10 @@
       "items": [
         {
           "id": "secure-browser",
-          "task": "Use a privacy-focused browser for all deletion requests",
-          "why": "Standard browsers may leak information about your deletion activities to third parties through tracking and data collection.",
-          "howTo": "Download and use a privacy-focused browser. Disable JavaScript and clear all cookies before starting your deletion process.",
-          "priority": "critical"
+          "task": "Use a separate browser profile for deletion requests",
+          "why": "People-search and data-broker sites often carry many ad trackers. A separate profile keeps their cookies away from your everyday browsing and the accounts you are signed in to.",
+          "howTo": "Create a new profile in Chrome or Firefox (or use a private window) with third-party cookies blocked, and use it only for opt-out forms. Leave JavaScript on: most opt-out forms and their CAPTCHAs need it.",
+          "priority": "medium"
         },
         {
           "id": "vpn-connection",
@@ -89,7 +89,7 @@
           "id": "automated-monitoring",
           "task": "Set up monitoring for data reappearance",
           "why": "Deleted data sometimes reappears due to backup restores, data sharing agreements, or incomplete deletion processes.",
-          "howTo": "Use Google Alerts and other monitoring tools to track your name and identifying information. Set up regular searches using a privacy-focused browser.",
+          "howTo": "Use Google Alerts and other monitoring tools to track your name and identifying information. Repeat a signed-out search for your name in a private window every month, so the results aren't shaped by your own search history.",
           "priority": "medium"
         },
         {
@@ -176,6 +176,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

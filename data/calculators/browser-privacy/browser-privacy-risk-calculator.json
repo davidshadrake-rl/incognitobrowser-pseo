@@ -187,13 +187,13 @@
       "description": "How much you could improve with recommended changes"
     }
   ],
-  "formula": "let baseScore = 0; const clearScores = { 'on-close': 15, 'manual': 8, 'never': 0 }; baseScore += clearScores[clearOnClose] ?? 0; const trackingScores = { 'strict': 25, 'custom': 20, 'standard': 10, 'none': 0 }; baseScore += trackingScores[trackingProtection]; const cookieScores = { 'blocked': 20, 'limited': 12, 'allowed': 0 }; baseScore += cookieScores[thirdPartyCookies]; baseScore += Math.min(extensionsInstalled * 3, 15); const incognitoScores = { 'always': 10, 'frequently': 8, 'sometimes': 5, 'rarely': 2, 'never': 0 }; baseScore += incognitoScores[incognitoUsage]; baseScore += syncEnabled ? 0: 5; const signInScores = { 'no': 10, 'sometimes': 5, 'yes': 0 }; baseScore += signInScores[signedInAccounts] ?? 0; const locationScores = { 'blocked': 5, 'ask': 3, 'allowed': 0 }; baseScore += locationScores[locationSharing]; const privacyScore = Math.min(baseScore, 100); let riskLevel = 'High Risk'; if (privacyScore >= 80) riskLevel = 'Low Risk'; else if (privacyScore >= 60) riskLevel = 'Medium Risk'; else if (privacyScore >= 40) riskLevel = 'High Risk'; else riskLevel = 'Very High Risk'; const maxPossible = 100; const improvementPotential = Math.round(((maxPossible - privacyScore) / maxPossible) * 100); return { privacyScore, riskLevel, improvementPotential };",
+  "formula": "let baseScore = 0; const clearScores = { 'on-close': 15, 'manual': 8, 'never': 0 }; const trackingScores = { 'strict': 25, 'custom': 20, 'standard': 10, 'none': 0 }; baseScore += trackingScores[trackingProtection]; const cookieScores = { 'blocked': 20, 'limited': 12, 'allowed': 0 }; baseScore += cookieScores[thirdPartyCookies]; baseScore += Math.min(extensionsInstalled * 3, 15); const incognitoScores = { 'always': 10, 'frequently': 8, 'sometimes': 5, 'rarely': 2, 'never': 0 }; baseScore += Math.min((clearScores[clearOnClose] ?? 0) + (incognitoScores[incognitoUsage] ?? 0), 20); baseScore += syncEnabled ? 0: 5; const signInScores = { 'no': 10, 'sometimes': 5, 'yes': 0 }; baseScore += signInScores[signedInAccounts] ?? 0; const locationScores = { 'blocked': 5, 'ask': 3, 'allowed': 0 }; baseScore += locationScores[locationSharing]; const privacyScore = Math.min(baseScore, 100); let riskLevel = 'High Risk'; if (privacyScore >= 80) riskLevel = 'Low Risk'; else if (privacyScore >= 60) riskLevel = 'Medium Risk'; else if (privacyScore >= 40) riskLevel = 'High Risk'; else riskLevel = 'Very High Risk'; const maxPossible = 100; const improvementPotential = Math.round(((maxPossible - privacyScore) / maxPossible) * 100); return { privacyScore, riskLevel, improvementPotential };",
   "educational": {
-    "methodology": "This calculator evaluates your browser privacy from the features and settings you use, not the brand of browser: whether it clears cookies and history when it closes, tracking protection settings, cookie policies, privacy extensions, private browsing habits, sync and signed-in accounts, and permission settings. Each factor is weighted based on its impact on your overall privacy protection.",
+    "methodology": "This calculator evaluates your browser privacy from the features and settings you use, not the brand of browser: whether it clears cookies and history when it closes, tracking protection settings, cookie policies, privacy extensions, private browsing habits, sync and signed-in accounts, and permission settings. Each factor is weighted based on its impact on your overall privacy protection. Clearing data on close and using private windows do much the same job, so together they earn at most 20 of the 100 points.",
     "tips": [
       "Set your browser to clear cookies and history when you close it; most browsers have this setting, and some do it by default",
       "Enable strict tracking protection and block third-party cookies in your browser settings",
-      "Install essential privacy extensions like uBlock Origin and Privacy Badger",
+      "Install essential privacy extensions: a blocker (uBlock Origin on Firefox, uBlock Origin Lite on Chrome and Edge) and Privacy Badger",
       "Use private/incognito mode for sensitive browsing, especially on shared devices",
       "Regularly review and limit website permissions for location, camera, and microphone access"
     ],
@@ -244,6 +244,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

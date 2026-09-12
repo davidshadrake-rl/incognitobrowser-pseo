@@ -16,7 +16,7 @@
   "prerequisites": [
     "Basic familiarity with private search engines like DuckDuckGo or Startpage",
     "Understanding of search operators (AND, OR, quotes)",
-    "A privacy-focused browser such as Firefox",
+    "A browser with strong privacy settings, such as Firefox or Brave",
     "Basic knowledge of VPN usage (optional but recommended)"
   ],
   "steps": [
@@ -49,22 +49,22 @@
       "title": "Set Up Multiple Private Search Engine Profiles",
       "description": "Create different search engine setups for various activities to compartmentalize your search behavior and optimize for different privacy needs.",
       "actions": [
-        "Configure DuckDuckGo for general searches in a privacy-focused browser",
+        "Make DuckDuckGo the default for general searches in your main browser profile",
         "Set Startpage for Google results when search quality is critical",
         "Use Brave Search for independent indexing without Big Tech dependency",
-        "Set up Searx instances for maximum decentralization and control"
+        "Use SearXNG, the maintained fork of searx: the original project's own README says searx is no longer maintained"
       ],
       "proTip": "Use different search engines for different topics - this prevents any single service from building a complete picture of your interests."
     },
     {
       "stepNumber": 4,
       "title": "Implement Advanced Privacy Layering Techniques",
-      "description": "Stack multiple privacy technologies to create defense-in-depth protection for your search activities, making tracking nearly impossible.",
+      "description": "Stack multiple privacy technologies to create defense-in-depth protection for your search activities, making tracking much harder.",
       "actions": [
-        "Route searches through VPN + Tor for maximum anonymity when needed",
+        "Use Tor Browser for searches where the search engine must not see your IP address",
         "Use different browsers for different search engines (compartmentalization)",
         "Clear cookies and data between search sessions using browser settings",
-        "Rotate between different Searx instances to avoid pattern recognition"
+        "Pick two or three SearXNG instances from searx.space and switch when one is slow or down"
       ],
       "warning": "Using Tor will significantly slow down your searches. Only use it when anonymity is critical, not for everyday searching."
     },
@@ -98,7 +98,7 @@
       "description": "Regularly audit your search privacy setup to ensure your techniques are working and no data is leaking to tracking networks.",
       "actions": [
         "Use browser developer tools to check for tracking requests during searches",
-        "Test your setup with privacy analysis tools like Panopticlick",
+        "Test your setup with the EFF's Cover Your Tracks, the renamed Panopticlick, at coveryourtracks.eff.org",
         "Verify DNS queries aren't leaking to Google using DNS leak tests",
         "Review browser history and ensure private search sessions aren't being logged"
       ],
@@ -108,8 +108,8 @@
   "pro_tips": [
     "Use DuckDuckGo's !g bang sparingly - it redirects to Google and breaks your privacy chain, defeating the purpose of private search.",
     "Combine Startpage's Anonymous View with different regions to see how search results vary by location without revealing your true location.",
-    "Set up a privacy-focused browser as a dedicated 'search browser' configured only for private searching, separate from your main browsing profile.",
-    "Create a rotation schedule for Searx instances - bookmark 3-5 reliable instances and switch between them weekly to avoid usage pattern detection.",
+    "Set up a separate browser profile, or a second browser, used only for searching: make a private engine its default and don't sign in to anything there, so your searches never share cookies with your everyday browsing.",
+    "Bookmark a few SearXNG instances from searx.space rather than relying on one. Instances are run by volunteers and go offline; the trade is that you are trusting whoever runs the one you pick, which is the argument for hosting your own.",
     "Use private search engines' image and video search features - they're often overlooked but provide the same privacy benefits as web search."
   ],
   "faqs": [
@@ -144,6 +144,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

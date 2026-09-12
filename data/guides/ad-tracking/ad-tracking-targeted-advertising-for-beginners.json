@@ -49,12 +49,12 @@
       "title": "Configure Browser Privacy Settings",
       "description": "Your browser is your first line of defense against ad tracking. Modern browsers offer built-in protection against many tracking methods, but these features often need to be enabled manually.",
       "actions": [
-        "Enable 'Do Not Track' requests in your browser settings",
+        "Turn on Global Privacy Control: in Firefox it is 'Tell websites not to sell or share my data', which replaced the Do Not Track setting it removed in version 135, and Brave and DuckDuckGo send it by default",
         "Turn on enhanced tracking protection or strict privacy mode",
         "Block third-party cookies in your browser's privacy settings",
-        "Consider switching to a privacy-focused browser for enhanced privacy protection"
+        "If your browser has no strict tracking protection, switch to one that blocks trackers by default, such as Firefox or Brave"
       ],
-      "proTip": "Different browsers offer varying levels of privacy protection. Many privacy-focused browsers block tracking by default.",
+      "proTip": "Browsers differ here: Firefox, Safari and Brave block many cross-site trackers out of the box, while in other browsers you have to turn more of these settings on yourself.",
       "warning": "Some websites may not function properly with strict tracking protection enabled. You can whitelist specific sites if needed."
     },
     {
@@ -62,7 +62,7 @@
       "title": "Install and Configure Ad Blockers",
       "description": "Ad blockers don't just remove annoying ads - they also block many tracking scripts and pixels that follow you around the web. Quality ad blockers can significantly reduce your digital footprint.",
       "actions": [
-        "Install a reputable ad blocker extension like uBlock Origin or AdBlock Plus",
+        "Install a reputable ad blocker: uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge. Be wary of blockers that run a paid 'acceptable ads' programme, where advertisers pay to be let through",
         "Enable additional filter lists for enhanced tracking protection",
         "Configure the ad blocker to block social media trackers",
         "Set up custom filters for particularly intrusive tracking domains"
@@ -150,6 +150,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

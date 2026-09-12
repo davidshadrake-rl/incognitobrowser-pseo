@@ -96,7 +96,7 @@
           "id": "disable-link-previews",
           "task": "Turn off link previews",
           "why": "Link previews can leak metadata about your conversations to third-party websites and reveal your IP address.",
-          "howTo": "In Signal: Settings > Privacy > Link Previews (disable). In other apps, look for 'Generate link previews' or similar options and turn them off.",
+          "howTo": "Signal: Settings > Chats > Generate link previews. WhatsApp: Settings > Privacy > Advanced. In other apps look for a link-preview option under chat or privacy settings and turn it off.",
           "priority": "medium"
         }
       ]
@@ -129,7 +129,7 @@
           "id": "use-vpn-with-messaging",
           "task": "Use VPN when messaging on public networks",
           "why": "While message content is encrypted, metadata like when you're online can still be monitored on public WiFi networks.",
-          "howTo": "Connect to a trustworthy VPN service before using messaging apps on public WiFi. Use a privacy-focused browser for any web-based messaging to add another layer of privacy.",
+          "howTo": "Connect to a trustworthy VPN service before using messaging apps on public WiFi. The VPN hides which messaging services you connect to from the WiFi network; the VPN provider can see that instead.",
           "priority": "medium"
         },
         {
@@ -185,9 +185,9 @@
   "pro_tips": [
     "Consider using different messaging apps for different purposes - Signal for sensitive communications, others for casual chat to avoid putting all contacts on one platform.",
     "Regularly educate your contacts about privacy settings. A secure conversation requires both participants to follow good practices.",
-    "For ultimate privacy, use separate devices or user profiles for sensitive communications, keeping them isolated from your main digital identity.",
+    "For the most sensitive conversations, use a separate device or user profile, kept apart from your main accounts and digital identity.",
     "When transitioning friends from insecure platforms, start with less sensitive conversations to build their confidence in encrypted messaging before discussing private matters.",
-    "Use a privacy-focused browser when researching messaging apps or accessing web versions to prevent tracking of your privacy research activities."
+    "On a computer, prefer a messaging app's desktop version to its web version: a web client loads its code from the server each time you open it, which makes it harder to verify. Signal has no web version at all."
   ],
   "relatedLinks": [
     {
@@ -214,6 +214,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with social-media-privacy. Canonical version lives under /checklists/social-media-privacy/."
   },

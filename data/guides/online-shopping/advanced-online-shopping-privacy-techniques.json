@@ -16,7 +16,7 @@
   "intro": "Online retailers use sophisticated tracking to manipulate prices and collect personal data. This advanced guide reveals professional techniques to shop privately, avoid dynamic pricing, and protect your financial information from data brokers and advertisers.",
   "prerequisites": [
     "Basic understanding of browser settings and privacy controls",
-    "Familiarity with VPN or privacy browser usage",
+    "Familiarity with using a VPN and browser profiles",
     "Knowledge of cookie management",
     "Experience with online banking security practices"
   ],
@@ -26,13 +26,13 @@
       "title": "Set Up Advanced Browser Isolation for Shopping",
       "description": "Create a completely separate browsing environment dedicated solely to shopping to prevent cross-site tracking and price manipulation based on your browsing history.",
       "actions": [
-        "Use a dedicated privacy-focused browser exclusively for shopping",
+        "Keep a separate browser or browser profile just for shopping, signed in to nothing else",
         "Configure strict tracking protection and disable third-party cookies completely",
         "Set up multiple browser profiles with different geographic locations using VPN",
         "Clear all cookies, cache, and browsing data before each shopping session",
         "Disable JavaScript for price comparison sites to prevent fingerprinting"
       ],
-      "proTip": "A privacy-focused browser's built-in tracking protection can block many of the tracking scripts retailers use to profile shoppers.",
+      "proTip": "Built-in tracking protection, such as Firefox's Strict mode or Brave's Shields, blocks many of the third-party scripts retailers use to profile shoppers, though not a store's own first-party analytics.",
       "warning": "Never use your regular browser for shopping if you've been researching expensive items - retailers track this behavior for dynamic pricing."
     },
     {
@@ -66,7 +66,7 @@
       "title": "Implement Advanced Anti-Tracking Measures",
       "description": "Deploy sophisticated techniques to prevent retailers from building comprehensive profiles of your shopping behavior and preferences.",
       "actions": [
-        "Use browser extensions like uBlock Origin with custom filter lists for shopping sites",
+        "Use uBlock Origin on Firefox with custom filter lists for shopping sites; Chrome's uBlock Origin Lite takes no custom lists",
         "Employ canvas fingerprinting protection and WebGL blocking",
         "Rotate user agents and screen resolutions between shopping sessions",
         "Implement DNS-level tracking protection using services like NextDNS",
@@ -161,6 +161,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with online-banking. Canonical version lives under /guides/online-banking/."
   },

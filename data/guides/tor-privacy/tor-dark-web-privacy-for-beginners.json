@@ -74,29 +74,29 @@
     {
       "stepNumber": 5,
       "title": "Navigate Dark Web Safely",
-      "description": "Learn to access and explore .onion sites while avoiding scams, illegal content, and security threats.",
+      "description": "Learn to reach .onion sites you can verify, and why buying on dark web marketplaces is not something this guide will help you do.",
       "actions": [
-        "Find legitimate .onion directory sites",
-        "Bookmark trusted sites for future access",
-        "Never provide personal information",
-        "Use escrow services for any transactions",
-        "Report illegal content to appropriate authorities"
+        "Start from an address the organisation publishes itself, such as a news site's or a search engine's own .onion address",
+        "Compare the address character by character before you use it, then bookmark it",
+        "Never enter personal information, and never reuse a password you use anywhere else",
+        "Don't buy anything: marketplaces there are commonly scams or police operations, and buying illegal goods is a crime wherever you are",
+        "Close the tab and use New Identity if a site asks you to download or install something"
       ],
-      "proTip": "Start with well-known legitimate services like DuckDuckGo's .onion address to get comfortable with .onion navigation.",
-      "warning": "Many dark web sites are scams or contain illegal content - exercise extreme caution and follow local laws."
+      "proTip": "Start with a well-known legitimate service such as DuckDuckGo's .onion address to get comfortable with .onion navigation.",
+      "warning": "Onion addresses are long random strings, and look-alike addresses are a standard phishing trick. Much of what is advertised on these networks is a scam, malware or illegal content."
     },
     {
       "stepNumber": 6,
       "title": "Enhance Security with Additional Tools",
-      "description": "Layer additional privacy tools with Tor for enhanced protection, especially if you're in a high-risk situation.",
+      "description": "Protect your device and your communications around Tor, especially if you're in a high-risk situation.",
       "actions": [
-        "Consider using a VPN before Tor for extra protection",
+        "If you need to hide from your network that you use Tor at all, connect through a bridge: bridges are unlisted relays, so an observer doesn't see you contacting a public Tor relay",
         "Use Tails OS for maximum anonymity",
-        "Try a privacy-focused browser for additional privacy features",
+        "Don't install add-ons or change hidden settings in Tor Browser; if you want more protection, raise its security level to Safer or Safest",
         "Enable full-disk encryption on your device",
         "Use secure communication tools like Signal"
       ],
-      "proTip": "Privacy-focused browsers offer additional privacy features that complement Tor's anonymity protection for comprehensive security."
+      "proTip": "Tor Browser protects you by making its users look alike, so add-ons and custom settings make you easier to single out. A bridge changes how you reach the network; disk encryption and Signal protect your device and your messages."
     },
     {
       "stepNumber": 7,
@@ -104,20 +104,20 @@
       "description": "Learn to resolve common Tor problems like slow speeds, connection failures, and blocked access.",
       "actions": [
         "Configure bridge relays if Tor is blocked",
-        "Try different bridge types (obfs4, meek, snowflake)",
+        "Try the different transports Tor Browser offers: obfs4, webtunnel, snowflake or meek",
         "Restart Tor and get a new circuit if needed",
         "Check Tor network status for outages",
         "Use alternative connection methods if necessary"
       ],
-      "proTip": "If Tor is blocked in your area, bridges can help circumvent censorship - request them via email or the Tor website.",
+      "proTip": "If Tor is blocked where you are, get bridges at bridges.torproject.org, or email bridges@torproject.org from a Gmail or Riseup address.",
       "warning": "If Tor consistently fails to connect, your ISP or government may be actively blocking it."
     }
   ],
   "pro_tips": [
-    "Use Tor with a VPN for additional protection, but understand this may reduce anonymity in some cases",
+    "The Tor Project doesn't recommend adding a VPN to Tor unless you are an advanced user who can configure both without compromising your privacy. If the goal is to hide that you use Tor, use a bridge.",
     "Never torrent or use P2P applications through Tor as they can leak your real IP address",
     "Consider using Tails OS for maximum anonymity - it routes all traffic through Tor automatically",
-    "Privacy-focused browsers provide excellent privacy features that work well alongside Tor for comprehensive protection",
+    "Don't install extensions in Tor Browser, even privacy ones: they make you stand out from other Tor users, and the security level setting is the safe way to lock it down further",
     "Create a separate threat model document to understand what you're protecting against and adjust your practices accordingly"
   ],
   "faqs": [
@@ -139,7 +139,7 @@
     },
     {
       "question": "Should I use a VPN with Tor?",
-      "answer": "It depends on your threat model. VPN-over-Tor can provide additional protection but may reduce anonymity. Tor-over-VPN can hide Tor usage from your ISP but the VPN provider can see your traffic enters Tor."
+      "answer": "For most people, no. The Tor Project says it doesn't recommend using a VPN with Tor unless you're an advanced user who knows how to configure both in a way that doesn't compromise your privacy, because a fixed VPN can reduce anonymity or break Tor's protections. If you want to hide from your ISP that you use Tor, the tool for that is a bridge."
     }
   ],
   "relatedLinks": [
@@ -157,6 +157,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

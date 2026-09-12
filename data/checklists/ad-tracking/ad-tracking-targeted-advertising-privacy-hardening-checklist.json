@@ -26,9 +26,9 @@
         },
         {
           "id": "enable-do-not-track",
-          "task": "Enable Do Not Track headers",
-          "why": "Sends a signal to websites requesting not to track you, though compliance is voluntary.",
-          "howTo": "Chrome: Settings > Privacy & Security > Send 'Do Not Track' request. Firefox: Settings > Privacy & Security > Send websites a 'Do Not Track' signal.",
+          "task": "Send the opt-out signal your browser offers",
+          "why": "Sends a signal to websites asking them not to track or sell your data. Do Not Track was voluntary and widely ignored; Global Privacy Control carries legal weight under some US state privacy laws.",
+          "howTo": "Chrome: Settings > Privacy & Security > Send 'Do Not Track' request. Firefox removed its Do Not Track setting in version 135; use 'Tell websites not to sell or share my data' in Settings > Privacy & Security instead, which sends Global Privacy Control. Brave and DuckDuckGo send it by default.",
           "priority": "medium"
         },
         {
@@ -42,14 +42,14 @@
           "id": "install-ad-blocker",
           "task": "Install a comprehensive ad blocker extension",
           "why": "Blocks tracking scripts, advertising networks, and prevents data collection from ad-serving domains.",
-          "howTo": "Install uBlock Origin from your browser's extension store. Enable additional filter lists like EasyPrivacy for enhanced tracking protection.",
+          "howTo": "Install a blocker from your browser's extension store: uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge. On Firefox, enable additional filter lists such as EasyPrivacy; on uBlock Origin Lite, raise the default filtering mode instead.",
           "priority": "critical"
         },
         {
           "id": "use-private-browsing",
           "task": "Use private/incognito browsing for sensitive activities",
           "why": "Prevents local storage of cookies and browsing history that could be used for ad targeting.",
-          "howTo": "Use Ctrl+Shift+N (Chrome) or Ctrl+Shift+P (Firefox) for private windows. Consider a privacy-focused browser for enhanced privacy protection.",
+          "howTo": "Use Ctrl+Shift+N (Chrome) or Ctrl+Shift+P (Firefox) for private windows. Close every private window when you finish: its cookies are deleted only then, and sites can still track you while it's open.",
           "priority": "high"
         },
         {
@@ -185,7 +185,7 @@
   "pro_tips": [
     "Use multiple browsers: Keep one for general browsing with strong privacy settings and another for sites requiring cookies and tracking.",
     "Check privacy policies before using new apps or services - look for data sharing with advertising partners and opt-out mechanisms.",
-    "Consider using a privacy-focused browser that blocks tracking by default instead of relying on browser extensions.",
+    "Pick a browser that blocks known trackers by default, such as Brave or Firefox with Enhanced Tracking Protection set to Strict, so you're covered on devices where you can't install an ad-blocking extension.",
     "Set up a separate email address for shopping and services to limit the personal data connected to your main email for advertising purposes.",
     "Regularly audit your social media privacy settings as platforms frequently update their advertising and data sharing policies."
   ],
@@ -214,6 +214,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

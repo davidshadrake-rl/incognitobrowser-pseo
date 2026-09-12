@@ -26,34 +26,34 @@
       "actions": [
         "Download and install Brave Browser for automatic ad and tracker blocking",
         "Consider Firefox with enhanced privacy settings as an alternative",
-        "On mobile, test a browser that blocks trackers by default and can clear your data when you close it",
+        "On mobile, test Firefox Focus or the DuckDuckGo browser, which block trackers by default and erase your browsing data with one tap",
         "Avoid Chrome as your primary browser if privacy is a priority"
       ],
       "proTip": "Brave blocks ads and trackers by default, which can make pages load faster while protecting your privacy.",
-      "warning": "Don't rely solely on browser choice - even privacy browsers need proper configuration."
+      "warning": "Don't rely solely on browser choice - even a browser with strong defaults needs proper configuration."
     },
     {
       "stepNumber": 2,
       "title": "Configure Essential Privacy Settings",
       "description": "Every browser has hidden privacy settings that most users never touch. These settings control how much data your browser shares with websites and third parties.",
       "actions": [
-        "Enable 'Do Not Track' requests in your browser settings",
+        "Turn on Global Privacy Control where your browser offers it: Firefox's 'Tell websites not to sell or share my data' replaced its Do Not Track setting in version 135, and Brave and DuckDuckGo send the signal by default",
         "Set cookies to delete automatically when you close the browser",
         "Disable location sharing for websites unless absolutely necessary",
         "Turn off password saving in browser (use a dedicated password manager instead)",
         "Disable automatic form filling with personal information"
       ],
-      "proTip": "Access these settings quickly: Chrome (chrome://settings/privacy), Firefox (about:preferences#privacy), Safari (Preferences > Privacy)."
+      "proTip": "Access these settings quickly: Chrome (chrome://settings/privacy), Firefox (about:preferences#privacy), Safari (Settings > Privacy)."
     },
     {
       "stepNumber": 3,
       "title": "Block Trackers and Ads",
       "description": "Online trackers follow you across websites, building detailed profiles of your browsing habits. Ad blockers don't just remove annoying ads - they protect your privacy.",
       "actions": [
-        "Install uBlock Origin extension (Firefox/Chrome) for comprehensive ad and tracker blocking",
+        "Install uBlock Origin in Firefox, or uBlock Origin Lite in Chrome and Edge, for ad and tracker blocking",
         "Enable Enhanced Tracking Protection in Firefox (strict mode)",
         "Activate Brave's built-in shields for automatic protection",
-        "Use Privacy Badger extension for intelligent tracker blocking"
+        "Use Privacy Badger, which blocks third-party domains the EFF's own crawls caught tracking people across sites"
       ],
       "warning": "Some websites may not function properly with strict ad blocking - you can whitelist specific sites if needed."
     },
@@ -76,7 +76,7 @@
       "actions": [
         "Enable fingerprint protection in Firefox (privacy.resistFingerprinting = true)",
         "Use Brave's fingerprint randomization feature",
-        "Install Canvas Blocker extension to prevent canvas fingerprinting",
+        "On Firefox, install the CanvasBlocker extension, which has no Chrome equivalent, to blunt canvas fingerprinting",
         "Regularly clear your browser cache and stored data"
       ]
     },
@@ -88,7 +88,7 @@
         "Use private/incognito mode for sensitive searches and browsing",
         "Understand that private mode doesn't hide activity from your ISP or websites",
         "Close all private browsing windows when finished to clear temporary data",
-        "Consider using a privacy-focused browser app for enhanced mobile privacy"
+        "Remember that files you download and bookmarks you save in a private window stay on your device after you close it"
       ],
       "warning": "Private browsing doesn't provide complete anonymity - your ISP, employer, and visited websites can still see your activity."
     },
@@ -110,7 +110,7 @@
     "Enable HTTPS-only mode in your browser to ensure encrypted connections to websites whenever possible.",
     "Consider using a VPN alongside browser privacy settings for an additional layer of protection from your ISP and network administrators.",
     "Regularly audit your browser extensions - remove any you don't actively use, as they can access your browsing data.",
-    "For maximum privacy on mobile, use a privacy-focused browser that is designed for private browsing and has ad blocking built in."
+    "On mobile, check your browser's privacy settings too: Firefox for Android supports uBlock Origin and lets you set Enhanced Tracking Protection to Strict, and Brave's Shields are on by default."
   ],
   "faqs": [
     {
@@ -119,7 +119,7 @@
     },
     {
       "question": "Does private/incognito mode make me completely anonymous?",
-      "answer": "No, private browsing only prevents your browser from storing history and cookies locally. Your ISP, employer, school network, and visited websites can still see your activity. For true anonymity, you need additional tools like VPNs or Tor browser."
+      "answer": "No, private browsing only prevents your browser from storing history and cookies locally. Your ISP, employer, school network, and visited websites can still see your activity. To hide the sites you visit from your ISP or network, you need a VPN or Tor Browser, and only Tor Browser is designed for anonymity; signing in to your accounts identifies you either way."
     },
     {
       "question": "Are browser privacy extensions safe to use?",
@@ -138,6 +138,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

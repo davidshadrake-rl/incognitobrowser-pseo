@@ -83,14 +83,14 @@
     {
       "stepNumber": 6,
       "title": "Set Up Additional Privacy Protection",
-      "description": "Implement complementary privacy tools to prevent ISP tracking beyond DNS queries, including VPN usage and secure browsers.",
+      "description": "Encrypted DNS hides only your lookups: your ISP can still see the IP addresses you connect to. A VPN or Tor hides those too. Browser settings protect you from trackers on the sites themselves, not from your ISP.",
       "actions": [
         "Install a reputable VPN to encrypt all internet traffic",
-        "Use a privacy-focused browser for enhanced privacy and built-in tracking protection",
+        "Keep your browser's secure DNS on so Chrome and Firefox can use Encrypted Client Hello (ECH), which hides site names from your ISP on websites that support it",
         "Enable HTTPS-only mode in your browser settings",
         "Consider using Tor Browser for maximum anonymity when needed"
       ],
-      "proTip": "A VPN encrypts all your traffic, not just DNS queries, providing complete protection from ISP monitoring."
+      "proTip": "A VPN encrypts all your traffic, not just DNS queries, so your ISP sees only that you're connected to a VPN server and how much data you use. The VPN provider can then see what your ISP used to, so choose one you trust."
     },
     {
       "stepNumber": 7,
@@ -137,6 +137,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

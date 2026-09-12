@@ -55,8 +55,8 @@
         "Learn about mandatory data breach notification requirements",
         "Review cross-border disclosure restrictions"
       ],
-      "proTip": "Australia's Privacy Act applies to small businesses only if they handle health information or are credit reporting bodies.",
-      "warning": "The Privacy Commissioner can impose civil penalties up to AU$2.22 million for serious or repeated privacy breaches."
+      "proTip": "Australia's small business exemption has several carve-outs: businesses that provide a health service, trade in personal information, are credit reporting bodies, or are contracted service providers under a Commonwealth contract are covered whatever their turnover.",
+      "warning": "Since December 2022 the maximum civil penalty for a serious or repeated interference with privacy is the greatest of AU$50 million, three times the benefit obtained, or 30% of adjusted turnover over the breach period."
     },
     {
       "stepNumber": 4,
@@ -77,7 +77,7 @@
       "actions": [
         "Understand the concept of 'Data Principal' rights and 'Data Fiduciary' obligations",
         "Learn about lawful grounds for processing, including consent and legitimate use",
-        "Review cross-border transfer restrictions and approved country lists",
+        "Review cross-border transfer rules: the Act allows transfers except to countries the central government restricts by notification",
         "Identify significant data fiduciary obligations for large processors"
       ],
       "proTip": "India's DPDP Act includes a 'right to be forgotten' similar to GDPR, allowing individuals to request deletion of their personal data.",
@@ -93,7 +93,7 @@
         "Identify countries with data localization requirements",
         "Understand when additional safeguards like encryption are required"
       ],
-      "proTip": "Use a privacy-focused browser when researching international privacy requirements to avoid tracking and ensure you're seeing unbiased search results.",
+      "proTip": "The European Commission publishes the list of countries with an EU adequacy decision; transfers from the EU to those countries need no extra mechanism such as SCCs.",
       "warning": "Some countries require certain types of data to remain within their borders - violating data localization laws can result in significant penalties."
     },
     {
@@ -113,7 +113,7 @@
   "pro_tips": [
     "Privacy laws are constantly evolving - set up Google Alerts for privacy law updates in your key jurisdictions to stay informed about changes.",
     "When in doubt about cross-border transfers, err on the side of caution and implement additional safeguards like encryption and access controls.",
-    "Consider using privacy-focused tools like a privacy-focused browser for sensitive research to avoid creating unnecessary data trails across multiple jurisdictions.",
+    "Collect only the personal data you need: every data set you don't hold is one you don't have to map, secure or transfer under any country's law.",
     "Many privacy regulators offer guidance documents and FAQs - these are invaluable resources for understanding practical application of complex laws.",
     "Document your privacy compliance decisions and reasoning - regulators often consider good faith efforts and documented processes when determining penalties."
   ],
@@ -128,7 +128,7 @@
     },
     {
       "question": "How do I handle conflicting requirements between different privacy laws?",
-      "answer": "Generally, comply with the most restrictive requirement that applies to your situation. For example, if one law requires 30-day breach notification and another requires 72 hours, notify within 30 days to satisfy both. When requirements truly conflict, seek legal advice."
+      "answer": "Generally, comply with the most restrictive requirement that applies to your situation. For example, if one law allows 30 days for breach notification and another demands 72 hours, work to the 72 hours, since meeting the shorter deadline satisfies both. When requirements truly conflict, seek legal advice."
     },
     {
       "question": "Are there any countries I should be especially careful about when transferring data?",
@@ -142,6 +142,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with us-state-privacy. Canonical version lives under /guides/us-state-privacy/."
   },

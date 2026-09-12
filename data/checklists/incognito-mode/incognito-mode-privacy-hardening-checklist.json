@@ -94,9 +94,9 @@
         },
         {
           "id": "dedicated-browser",
-          "task": "Consider using a privacy-focused browser for enhanced privacy",
-          "why": "Dedicated privacy browsers offer stronger default protections than standard browser incognito modes.",
-          "howTo": "Use a privacy-focused browser which blocks ads, trackers, and scripts by default. Some run in private mode all the time, without needing special modes.",
+          "task": "Consider a browser that blocks trackers by default",
+          "why": "A private window only stops your device keeping history and cookies once you close it. Blocking trackers while you browse is a separate setting, and some browsers do much more of it by default.",
+          "howTo": "Firefox with Enhanced Tracking Protection set to Strict, or Brave with Shields on, blocks many cross-site trackers in every window, private or not. Expect the odd site to break; both let you relax protection for that site alone.",
           "priority": "high"
         }
       ]
@@ -151,7 +151,7 @@
   ],
   "pro_tips": [
     "Use incognito mode combined with a VPN for maximum privacy protection - incognito handles local data while VPN protects network traffic.",
-    "Consider a privacy-focused browser as your default browser for always-on privacy without needing to remember special modes.",
+    "If you often forget to open a private window, set your browser to clean up after itself: Firefox can be set to never remember history, and Chrome can delete cookies and site data whenever you close all its windows.",
     "Never assume incognito mode makes you anonymous - it only prevents local data storage on your device.",
     "For sensitive browsing, use Tor Browser instead of regular browser incognito modes for true anonymity.",
     "Remember that incognito mode won't hide your activity from your employer if you're using a work device or network."
@@ -181,6 +181,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /checklists/browser-privacy/."
   },

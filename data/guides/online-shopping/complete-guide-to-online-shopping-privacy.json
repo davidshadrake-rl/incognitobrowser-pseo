@@ -22,21 +22,21 @@
     {
       "stepNumber": 1,
       "title": "Set Up Private Browsing for Shopping",
-      "description": "Configure your browser and tools to prevent tracking while shopping online. Private browsing prevents retailers from building profiles based on your shopping behavior.",
+      "description": "Configure your browser and tools to limit tracking while shopping online. A private window starts without your saved cookies, so a retailer can't use them to link the visit to your earlier browsing.",
       "actions": [
-        "Download and use a privacy-focused browser or enable private/incognito mode in your current browser",
+        "Open a private/incognito window for shopping research, or use a browser with strict tracking protection, such as Firefox with Enhanced Tracking Protection set to Strict, or Brave",
         "Clear all existing cookies and browsing data before shopping",
         "Disable location services for shopping websites",
         "Turn off autofill for personal information"
       ],
-      "proTip": "Privacy-focused browsers offer superior privacy protection compared to standard browser incognito modes, blocking more tracking methods that retailers use."
+      "proTip": "A private window mainly stops cookies and history being kept after you close it. In Chrome it doesn't block tracking scripts or fingerprinting while the window is open, so pair it with tracking protection or a content blocker."
     },
     {
       "stepNumber": 2,
       "title": "Block Tracking and Data Collection",
       "description": "Install privacy extensions and adjust settings to prevent retailers from tracking your behavior across websites and building advertising profiles.",
       "actions": [
-        "Install uBlock Origin or similar ad blocker to block tracking scripts",
+        "Install a blocker to stop tracking scripts: uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge",
         "Add privacy extensions like Privacy Badger or Ghostery",
         "Disable third-party cookies in browser settings",
         "Turn off social media plugins and widgets"
@@ -72,7 +72,7 @@
       "title": "Use Anonymous Price Tracking",
       "description": "Monitor prices and deals without revealing your shopping interests to retailers or data brokers.",
       "actions": [
-        "Use privacy-focused price tracking tools like Honey in incognito mode",
+        "Prefer price trackers that don't need a browser extension, since shopping extensions can see every store page you visit",
         "Set up price alerts using temporary email addresses",
         "Check deal aggregator sites that don't require registration",
         "Use RSS feeds or bookmark deals instead of email subscriptions"
@@ -104,7 +104,6 @@
     }
   ],
   "pro_tips": [
-    "Use different browsers for different activities - one for general browsing, a privacy-focused browser specifically for shopping to maintain complete separation",
     "Check prices in multiple private browsing sessions spaced hours apart to detect dynamic pricing algorithms in action",
     "Virtual credit cards from services like Privacy.com can be paused instantly if you notice unauthorized charges, providing better protection than traditional cards",
     "Many retailers offer the same promotions through multiple channels - check their social media, app, and website separately for different discount codes",
@@ -113,7 +112,7 @@
   "faqs": [
     {
       "question": "Will shopping in incognito mode affect my ability to find deals and discounts?",
-      "answer": "No, incognito mode won't limit your access to deals. You can still use coupon codes, visit deal sites, and access sales. You just won't be tracked while doing so, which may actually help you see better prices due to reduced dynamic pricing."
+      "answer": "No, incognito mode won't limit your access to deals. You can still use coupon codes, visit deal sites, and access sales. The store won't see cookies from your earlier browsing, though it can still track what you do during the session."
     },
     {
       "question": "Are virtual credit cards really necessary for online shopping?",
@@ -121,7 +120,7 @@
     },
     {
       "question": "Can retailers still track me if I use incognito mode?",
-      "answer": "Standard incognito mode provides basic protection but isn't foolproof. Retailers can still use techniques like browser fingerprinting. For stronger protection, use dedicated privacy browsers along with VPNs and tracking blockers."
+      "answer": "Yes. Incognito mode stops cookies and history being kept after you close the window, but while you shop the retailer still sees your IP address and any account you sign in to, and can fingerprint your browser. For stronger protection, turn on strict tracking protection or add a content blocker (uBlock Origin on Firefox, uBlock Origin Lite on Chrome and Edge), don't sign in until checkout, and use a VPN if you don't want the store to see your IP address."
     },
     {
       "question": "How can I tell if a website is using dynamic pricing against me?",
@@ -142,6 +141,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with online-banking. Canonical version lives under /guides/online-banking/."
   },

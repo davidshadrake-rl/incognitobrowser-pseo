@@ -51,12 +51,12 @@
       "title": "Configure Advanced Browser Security",
       "description": "Optimize your browser settings and use specialized tools to prevent tracking and data leakage on public networks.",
       "actions": [
-        "Use a privacy-focused browser with enhanced privacy features for sensitive browsing",
+        "Turn on secure DNS (DNS over HTTPS) in your browser and choose a provider such as Cloudflare or Quad9, so a hostile hotspot can't read or redirect your lookups",
         "Enable HTTPS-only mode in your browser settings",
         "Disable automatic form filling and password saving on public networks",
         "Clear all cookies and site data before and after using public Wi-Fi"
       ],
-      "proTip": "A privacy-focused browser's built-in ad blocking and tracking protection work especially well on public networks where malicious ads are more common."
+      "proTip": "HTTPS-only mode matters most on public Wi-Fi: it stops a hostile hotspot from quietly downgrading a site to unencrypted HTTP, and warns you before any page loads without encryption."
     },
     {
       "stepNumber": 4,
@@ -108,7 +108,7 @@
     }
   ],
   "pro_tips": [
-    "Always carry a portable travel router to create your own secure network bubble - this eliminates most public Wi-Fi risks entirely",
+    "A travel router keeps other guests off your devices and lets one VPN cover gadgets that can't run a VPN app. It does not remove the risk: your traffic still crosses the hotel or cafe network upstream, so the encryption on each connection is what protects you.",
     "Use your phone's hotspot instead of public Wi-Fi when possible, as cellular data is much more secure than shared wireless networks",
     "Keep a list of verified network names for locations you visit frequently to quickly identify legitimate networks and avoid evil twins",
     "Consider using Tor browser for maximum anonymity on public networks, but be aware it will significantly slow your connection speed",
@@ -139,6 +139,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

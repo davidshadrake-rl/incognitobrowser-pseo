@@ -60,30 +60,30 @@
       "items": [
         {
           "id": "install-ublock-origin",
-          "task": "Install and configure uBlock Origin with optimal filter lists",
-          "why": "uBlock Origin blocks ads, trackers, and malware more effectively than other blockers while using less memory and maintaining better performance.",
-          "howTo": "Install uBlock Origin from official store. Enable EasyList, EasyPrivacy, uBlock filters, and regional lists for your location. Enable 'Prevent WebRTC from leaking local IP address'.",
+          "task": "Install uBlock Origin, or uBlock Origin Lite if you use Chrome",
+          "why": "It blocks ads and trackers with little memory overhead. Which build you get depends on the browser: Chrome disabled Manifest V2 extensions in July 2025, so uBlock Origin itself now runs in Firefox.",
+          "howTo": "Firefox: install uBlock Origin and enable EasyList, EasyPrivacy, uBlock filters and your regional list. Chrome or Edge: install uBlock Origin Lite and set its default filtering mode to Optimal or Complete.",
           "priority": "critical"
         },
         {
           "id": "setup-privacy-badger",
           "task": "Install Privacy Badger for intelligent tracker blocking",
-          "why": "Privacy Badger learns which domains track you across sites and automatically blocks them, complementing static filter lists with dynamic protection.",
-          "howTo": "Install Privacy Badger from EFF. Enable 'Send Do Not Track header' and 'Prevent WebRTC from leaking local IP address'. Let it learn for a few days before adjusting settings.",
+          "why": "Privacy Badger blocks third-party domains the EFF's own crawls caught tracking people across sites, so its list is built differently from community filter lists.",
+          "howTo": "Install Privacy Badger from the EFF and leave the defaults alone. It no longer learns from your browsing by default, so there is no break-in period; it works from the first page.",
           "priority": "high"
         },
         {
           "id": "configure-decentraleyes",
-          "task": "Install Decentraleyes to block CDN tracking",
-          "why": "Major CDNs like Google Fonts and jQuery can track you across websites. Decentraleyes serves local copies to prevent this tracking.",
-          "howTo": "Install Decentraleyes and enable it. No configuration needed - it works automatically. Complements uBlock Origin by handling CDN resources it doesn't block.",
+          "task": "Skip the old CDN-shielding add-ons such as Decentraleyes",
+          "why": "Those add-ons existed to stop a CDN recognising you by its cached files. Browsers closed that hole themselves: Chrome has partitioned the HTTP cache by site since 2020, and other browsers followed.",
+          "howTo": "Uninstall Decentraleyes if you still have it, and don't add a replacement. Your blocker's filter lists already cover the CDN-hosted scripts that actually track you.",
           "priority": "high"
         },
         {
           "id": "setup-clearurls",
           "task": "Install ClearURLs to remove tracking parameters",
           "why": "URLs often contain tracking parameters that follow you across sites. ClearURLs automatically removes these while preserving functionality.",
-          "howTo": "Install ClearURLs extension. Enable all default rules and check 'Allow domain blocking' for enhanced protection. Works silently in background.",
+          "howTo": "Install ClearURLs in Firefox, enable all default rules and check 'Allow domain blocking'. It works silently in the background. ClearURLs is a Manifest V2 add-on, so it runs in Firefox; Chrome disabled Manifest V2 extensions in July 2025.",
           "priority": "medium"
         },
         {
@@ -95,9 +95,9 @@
         },
         {
           "id": "setup-https-everywhere",
-          "task": "Enable HTTPS-only mode or install HTTPS Everywhere",
+          "task": "Turn on your browser's HTTPS-only mode",
           "why": "Unencrypted HTTP connections expose your browsing data to network eavesdropping and man-in-the-middle attacks.",
-          "howTo": "For Firefox/Chrome: Enable built-in HTTPS-only mode in Privacy settings. For older browsers: Install HTTPS Everywhere extension and enable 'Encrypt All Sites Eligible'.",
+          "howTo": "Firefox: Privacy & Security > HTTPS-Only Mode > enable in all windows. Chrome: Privacy and security > Security > 'Always use secure connections'. Edge: Privacy, search, and services > Security > Automatic HTTPS. No extension needed.",
           "priority": "high"
         }
       ]
@@ -151,11 +151,11 @@
     }
   ],
   "pro_tips": [
-    "Use a privacy-focused browser as your default for maximum privacy - it includes many of these protections built-in without needing multiple extensions.",
+    "If you'd rather run fewer extensions, use a browser with tracker blocking built in, such as Brave, or Firefox with Enhanced Tracking Protection set to Strict. It covers much of the tracker blocking this checklist adds with extensions.",
     "Enable extension sync only for trusted extensions - malicious extensions can use sync to spread across your devices.",
     "Test websites in private/incognito mode first when troubleshooting - this helps identify if extensions are causing issues.",
     "Keep extension count under 10 total - too many extensions slow down browsing and increase attack surface significantly.",
-    "Update extensions manually rather than auto-update - this lets you review changes and avoid potentially compromised updates."
+    "Leave automatic extension updates on. Blocker filter lists and security fixes arrive that way, and holding updates back leaves known bugs in place; review any new permission prompt instead."
   ],
   "relatedLinks": [
     {
@@ -182,6 +182,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

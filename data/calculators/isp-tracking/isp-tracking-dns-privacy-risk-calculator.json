@@ -39,7 +39,7 @@
           "label": "Mobile Hotspot (Verizon, T-Mobile)"
         }
       ],
-      "helpText": "Different ISP types have varying levels of tracking capabilities"
+      "helpText": "Every type of ISP can see your DNS lookups and the sites you connect to, so the score depends on your setup, not the type"
     },
     {
       "id": "dnsProvider",
@@ -124,7 +124,7 @@
         },
         {
           "value": "basic",
-          "label": "Basic privacy mode/incognito"
+          "label": "Private/incognito windows"
         },
         {
           "value": "enhanced",
@@ -135,7 +135,7 @@
           "label": "Browser that routes traffic through the Tor network"
         }
       ],
-      "helpText": "Browser privacy settings affect ISP visibility"
+      "helpText": "Private windows and tracker blocking don't change what your ISP sees; only Tor or a VPN does"
     },
     {
       "id": "dataUsage",
@@ -195,7 +195,7 @@
           "label": "Successfully opted out"
         }
       ],
-      "helpText": "Most ISPs sell browsing data unless you specifically opt out"
+      "helpText": "Some ISPs use or share browsing data for advertising unless you opt out"
     }
   ],
   "outputFields": [
@@ -218,9 +218,9 @@
       "description": "How much of your browsing data is visible to your ISP"
     }
   ],
-  "formula": "let baseRisk = 70; if(inputs.dnsProvider === 'isp-default') baseRisk += 20; if(inputs.dnsEncryption === 'none') baseRisk += 15; else if(inputs.dnsEncryption === 'doh' || inputs.dnsEncryption === 'dot') baseRisk -= 25; if(inputs.vpnUsage === 'always') baseRisk -= 30; else if(inputs.vpnUsage === 'often') baseRisk -= 20; else if(inputs.vpnUsage === 'sometimes') baseRisk -= 10; if(inputs.browserPrivacy === 'strict') baseRisk -= 15; else if(inputs.browserPrivacy === 'enhanced') baseRisk -= 10; else if(inputs.browserPrivacy === 'basic') baseRisk -= 5; if(inputs.streamingHabits === 'torrenting') baseRisk += 15; else if(inputs.streamingHabits === 'heavy') baseRisk += 10; if(inputs.dataUsage > 1000) baseRisk += 10; if(inputs.optOutAttempts === 'opted-out') baseRisk -= 10; else if(inputs.optOutAttempts === 'no-option') baseRisk += 5; let riskScore = Math.max(0, Math.min(100, baseRisk)); let privacyGrade = riskScore <= 25 ? 'A': riskScore <= 50 ? 'B': riskScore <= 75 ? 'C': 'D'; let exposureLevel = riskScore <= 25 ? 'Minimal - Well Protected': riskScore <= 50 ? 'Moderate - Some Visibility': riskScore <= 75 ? 'High - Significant Tracking': 'Critical - Maximum Exposure'; return { riskScore, privacyGrade, exposureLevel };",
+  "formula": "let baseRisk = 70; if(inputs.dnsProvider === 'isp-default') baseRisk += 20; if(inputs.dnsEncryption === 'none') baseRisk += 15; else if(inputs.dnsEncryption === 'doh' || inputs.dnsEncryption === 'dot') baseRisk -= 25; let vpnCredit = inputs.vpnUsage === 'always' ? 30 : inputs.vpnUsage === 'often' ? 20 : inputs.vpnUsage === 'sometimes' ? 10 : 0; let torCredit = inputs.browserPrivacy === 'strict' ? 30 : 0; baseRisk -= Math.max(vpnCredit, torCredit); if(inputs.streamingHabits === 'torrenting') baseRisk += 15; else if(inputs.streamingHabits === 'heavy') baseRisk += 10; if(inputs.dataUsage > 1000) baseRisk += 10; if(inputs.optOutAttempts === 'opted-out') baseRisk -= 10; else if(inputs.optOutAttempts === 'no-option') baseRisk += 5; let riskScore = Math.max(0, Math.min(100, baseRisk)); let privacyGrade = riskScore <= 25 ? 'A': riskScore <= 50 ? 'B': riskScore <= 75 ? 'C': 'D'; let exposureLevel = riskScore <= 25 ? 'Minimal - Well Protected': riskScore <= 50 ? 'Moderate - Some Visibility': riskScore <= 75 ? 'High - Significant Tracking': 'Critical - Maximum Exposure'; return { riskScore, privacyGrade, exposureLevel };",
   "educational": {
-    "methodology": "This calculator evaluates your ISP tracking risk based on DNS configuration, VPN usage, browser privacy settings, and data usage patterns. It considers how ISPs monitor unencrypted DNS queries, analyze traffic patterns, and collect browsing metadata even when using HTTPS.",
+    "methodology": "This calculator evaluates your ISP tracking risk based on your DNS configuration, whether you use a VPN or Tor, your data usage patterns and whether you've opted out of ISP data sharing. It considers how ISPs monitor unencrypted DNS queries, analyze traffic patterns, and collect browsing metadata even when using HTTPS. Private windows and tracker blocking don't change what your ISP sees, so they don't change the score.",
     "tips": [
       "Switch to encrypted DNS (DNS over HTTPS) in your browser settings to hide DNS queries from your ISP",
       "Use a reputable VPN or Tor to hide which sites you visit from your ISP; private browsing modes and tracker blockers don't",
@@ -270,6 +270,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

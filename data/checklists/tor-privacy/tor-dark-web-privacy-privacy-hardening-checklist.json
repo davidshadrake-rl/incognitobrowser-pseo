@@ -55,9 +55,9 @@
         },
         {
           "id": "maximize-window",
-          "task": "Use Tor Browser in maximized window only",
+          "task": "Keep Tor Browser's window at its default size",
           "why": "Unique window sizes can be used as a fingerprinting technique to track users across sessions.",
-          "howTo": "Always maximize Tor Browser window or use the standard sizes suggested by the browser's resize warning.",
+          "howTo": "Don't maximize the window. Tor Browser opens at a standard size and adds grey margins (letterboxing) when you resize it, so your screen size doesn't single you out.",
           "priority": "medium"
         }
       ]
@@ -103,8 +103,8 @@
         {
           "id": "time-sync-security",
           "task": "Secure system time synchronization",
-          "why": "Accurate timestamps can be used to correlate your activities across different sessions and compromise anonymity.",
-          "howTo": "Use secure NTP servers or disable automatic time sync. Consider using random time offsets for additional protection.",
+          "why": "Tor needs a reasonably accurate clock to build circuits and validate relay certificates, so a wrong clock stops you connecting.",
+          "howTo": "Keep automatic time sync on. Don't set a deliberate offset: it won't hide anything from a website, because Tor Browser reports a fixed time zone anyway, and it will stop Tor connecting.",
           "priority": "medium"
         }
       ]
@@ -114,9 +114,9 @@
       "items": [
         {
           "id": "verify-onion-addresses",
-          "task": "Always verify .onion site addresses from trusted sources",
+          "task": "Verify every .onion address against the operator's own published one",
           "why": "Phishing sites with similar .onion addresses can steal credentials or infect your system with malware.",
-          "howTo": "Use verified directories like DarkNetLive or bookmark legitimate sites. Double-check addresses character by character before visiting.",
+          "howTo": "Take the address from the operator's own published page or printed material, compare it character by character, then bookmark it. Don't re-derive it from a directory or a search result later.",
           "priority": "critical"
         },
         {
@@ -144,21 +144,21 @@
           "id": "avoid-clearnet-mixing",
           "task": "Don't mix dark web and regular browsing",
           "why": "Visiting regular websites through Tor can create patterns that help identify your dark web activities.",
-          "howTo": "Use separate browsers for regular internet and Tor browsing. Consider a privacy-focused browser for regular private browsing needs.",
+          "howTo": "Keep Tor Browser for the activity you want to stay anonymous, and do everyday browsing, especially anything signed in to your real accounts, in your normal browser. Use 'New Identity' before switching between unrelated activities in Tor Browser.",
           "priority": "high"
         },
         {
           "id": "exit-node-awareness",
           "task": "Be aware of exit node risks for clearnet sites",
           "why": "Malicious exit nodes can monitor or modify unencrypted traffic when accessing regular websites through Tor.",
-          "howTo": "Only visit HTTPS sites when browsing clearnet through Tor. Avoid sensitive activities and consider using VPN over Tor for clearnet access.",
+          "howTo": "Only visit HTTPS sites when browsing the clearnet through Tor, and use a service's .onion address where it publishes one, since that traffic never passes an exit relay at all.",
           "priority": "high"
         },
         {
           "id": "marketplace-safety",
-          "task": "Exercise extreme caution on dark web marketplaces",
-          "why": "Many marketplaces are scams, law enforcement honeypots, or contain illegal content that could result in legal consequences.",
-          "howTo": "Research marketplace reputation thoroughly, use escrow services, and be aware of legal risks. Avoid illegal activities entirely.",
+          "task": "Don't buy anything on dark web marketplaces",
+          "why": "Marketplaces there are commonly scams or law enforcement operations, and buying illegal goods is a crime wherever you live.",
+          "howTo": "Treat any marketplace as out of scope for this checklist. If you are researching one, read about it rather than registering, and never send funds, however the site frames its escrow.",
           "priority": "critical"
         }
       ]
@@ -168,23 +168,23 @@
       "items": [
         {
           "id": "vpn-over-tor",
-          "task": "Consider VPN over Tor for additional protection",
-          "why": "Adding VPN layer after Tor can hide your traffic from potentially malicious exit nodes.",
-          "howTo": "Connect to a no-logs VPN service after establishing Tor connection. Choose VPN providers that accept cryptocurrency payments.",
+          "task": "Don't add a VPN to Tor expecting more anonymity",
+          "why": "The Tor Project says it doesn't recommend using a VPN with Tor unless you're an advanced user, because it can reduce anonymity or break Tor's protections.",
+          "howTo": "If you want to hide from your network that you use Tor, use a bridge. If you're worried about an exit relay, use the service's .onion address and keep HTTPS-Only mode on.",
           "priority": "medium"
         },
         {
-          "id": "cryptocurrency-privacy",
-          "task": "Use privacy-focused cryptocurrencies for transactions",
-          "why": "Bitcoin transactions are traceable on the blockchain and can be linked back to your identity through exchange records.",
-          "howTo": "Use Monero or Zcash for private transactions. If using Bitcoin, employ mixing services and create new addresses for each transaction.",
-          "priority": "high"
+          "id": "prefer-onion-services",
+          "task": "Use a service's .onion address whenever it publishes one",
+          "why": "Traffic to an onion address never leaves the Tor network, so no exit relay is in a position to read or alter it.",
+          "howTo": "Watch for the '.onion available' notice Tor Browser shows in the URL bar, and check any address you're given against the operator's own published one.",
+          "priority": "medium"
         },
         {
           "id": "communication-security",
           "task": "Use encrypted communication tools",
           "why": "Standard messaging and email services can be monitored and compromise your privacy even when using Tor.",
-          "howTo": "Use Signal, Briar, or Ricochet for messaging. For email, use ProtonMail or Tutanota accessed only through Tor.",
+          "howTo": "Use Signal, Briar, or Ricochet Refresh for messaging. For email, use Proton Mail or Tuta accessed only through Tor.",
           "priority": "high"
         },
         {
@@ -206,7 +206,7 @@
   ],
   "pro_tips": [
     "Test your Tor setup regularly by visiting check.torproject.org to ensure your IP is properly masked and your browser is configured correctly.",
-    "Keep Tor Browser updated but wait a few days after new releases to avoid being part of a small, easily identifiable group of early adopters.",
+    "Install Tor Browser updates as soon as they're offered: they fix security holes that could be used to unmask you, and an out-of-date version makes you stand out.",
     "Use different exit countries for different activities to avoid patterns, but be aware that some countries have more trustworthy exit nodes than others.",
     "Create a threat model before using Tor - understand what you're protecting against and adjust your security measures accordingly.",
     "Practice good operational security (OPSEC) by maintaining consistent behavior patterns and never mixing your anonymous and real identities online."
@@ -228,8 +228,8 @@
       "type": "tool"
     },
     {
-      "title": "VPN over Tor Setup Guide",
-      "url": "/guides/vpn-over-tor-setup",
+      "title": "Complete Guide to Tor & Dark Web Privacy",
+      "url": "/guides/tor-privacy/complete-guide-to-tor-dark-web-privacy",
       "type": "guide"
     },
     {
@@ -241,6 +241,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

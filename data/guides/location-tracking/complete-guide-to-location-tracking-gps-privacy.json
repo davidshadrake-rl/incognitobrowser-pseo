@@ -77,9 +77,9 @@
         "Review location permissions in your browser settings",
         "Set default to 'Ask before accessing' or 'Block' for location requests",
         "Clear existing location permissions for websites you don't trust",
-        "Consider using a privacy-focused browser which blocks location requests by default"
+        "On your phone, limit the browser app's own location permission in system settings, so it has to ask each time or can't use location at all"
       ],
-      "proTip": "A privacy-focused browser can block location-tracking scripts, but websites can still estimate your location from your IP address."
+      "proTip": "Blocking location requests stops sites reading your device's GPS or Wi-Fi location, but they can still estimate your city from your IP address. A VPN changes that IP-based estimate, not your GPS."
     },
     {
       "stepNumber": 6,
@@ -98,25 +98,25 @@
       "title": "Implement Advanced Location Privacy Measures",
       "description": "For users who need maximum location privacy, these advanced techniques provide additional protection against tracking.",
       "actions": [
-        "Use location spoofing apps for high-risk situations",
+        "Turn Location Services off entirely, then grant location back one app at a time and only while you're using it",
         "Connect through VPN services that don't log location",
         "Turn off WiFi and Bluetooth when not needed to prevent beacon tracking",
         "Consider using a separate device for location-sensitive activities"
       ],
-      "warning": "GPS spoofing may violate terms of service for some apps and could have legal implications in certain contexts."
+      "warning": "Airplane mode is not a location kill switch. It turns the radios off, not the GPS receiver, so the phone can still fix its own position and log it. Turn Location Services off if you want it to stop."
     }
   ],
   "pro_tips": [
     "Create different location privacy profiles for work, personal, and high-privacy situations by quickly toggling groups of apps.",
-    "Use airplane mode with WiFi when you want to use your phone without any location tracking at all.",
+    "Airplane mode alone doesn't stop location tracking: GPS keeps working, so turn off Location Services as well when you need your location kept private.",
     "Regularly audit your location permissions monthly, as app updates often reset privacy settings.",
-    "Consider using cash and avoiding loyalty cards when you want to keep your physical location completely private.",
+    "Paying cash and leaving the loyalty card at home keeps a visit out of the merchant's records. It does nothing about the phone in your pocket, which is still talking to towers and Wi-Fi.",
     "Set up geofence alerts on your router to know when devices are tracking your home location."
   ],
   "faqs": [
     {
       "question": "Can apps still track my location if I turn off GPS?",
-      "answer": "Yes, apps can estimate your location using WiFi networks, cell towers, and Bluetooth beacons even with GPS disabled. For complete location privacy, you need to disable all location services and use airplane mode."
+      "answer": "Yes. Nearby Wi-Fi networks, cell towers and Bluetooth beacons all place you without GPS. Airplane mode doesn't close this either, since it switches off the radios but not the GPS receiver. Turn Location Services off (iPhone: Settings > Privacy & Security > Location Services; Android: Settings > Location) and revoke the permission app by app."
     },
     {
       "question": "What are geofence warrants and should I be concerned?",
@@ -124,7 +124,7 @@
     },
     {
       "question": "Is it safe to use location spoofing apps?",
-      "answer": "Location spoofing can be effective for privacy but may violate app terms of service and could have legal consequences. Use only for legitimate privacy protection, not to circumvent security measures or commit fraud."
+      "answer": "It is riskier than it looks. It breaks the terms of most apps that use location, and on iPhone the tools need a jailbreak or a desktop utility, which weakens the device. Revoking the location permission, or granting only approximate location, gets you the privacy without either problem."
     },
     {
       "question": "How do I know if someone installed stalkerware on my phone?",
@@ -142,6 +142,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

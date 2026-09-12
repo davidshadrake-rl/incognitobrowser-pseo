@@ -17,6 +17,17 @@ export const dynamic = 'force-static';
 const SITE_URL = 'https://incognitobrowser.io/resources';
 
 /**
+ * A content page's lastModified, by the rule its JSON-LD dateModified uses:
+ * the last text change after review (editorial.updatedAt), else the review
+ * (editorial.reviewedAt). Build time only when neither is a valid date.
+ */
+function contentLastModified(item: EditableContent | null): Date {
+  const raw = item?.editorial?.updatedAt || item?.editorial?.reviewedAt;
+  const date = raw ? new Date(raw) : null;
+  return date && !Number.isNaN(date.getTime()) ? date : new Date();
+}
+
+/**
  * Sitemap only lists pages that are editorially gated as "published".
  * Drafts and reviewed-but-not-promoted pages exist on the site and
  * render normally, but they emit noindex,follow and are excluded here
@@ -73,7 +84,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       if (type === 'tools' && !isToolVisible(niche, slug)) continue; // Pro-engine pages live on the Pro deployment
       entries.push({
         url: `${SITE_URL}/${type}/${niche}/${slug}`,
-        lastModified: new Date(),
+        lastModified: contentLastModified(item),
         changeFrequency: 'monthly',
         priority: 0.6,
       });
@@ -87,7 +98,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     if (!isPublished(item)) continue;
     entries.push({
       url: `${SITE_URL}/glossary/${term}`,
-      lastModified: new Date(),
+      lastModified: contentLastModified(item),
       changeFrequency: 'monthly',
       priority: 0.5,
     });

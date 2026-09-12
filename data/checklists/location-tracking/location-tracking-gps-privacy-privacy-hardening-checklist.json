@@ -2,7 +2,7 @@
   "niche": "location-tracking",
   "slug": "location-tracking-gps-privacy-hardening-checklist",
   "title": "Location Tracking & GPS Privacy Hardening Checklist",
-  "metaDescription": "Complete checklist to stop apps from tracking your location. Disable GPS tracking, audit app permissions, and protect your privacy from geolocation surveillance.",
+  "metaDescription": "Checklist to stop apps tracking your location: turn off GPS, audit app permissions, and cut the Wi-Fi, Bluetooth and photo metadata that give you away.",
   "keywords": [
     "location tracking",
     "GPS privacy",
@@ -96,7 +96,7 @@
           "id": "dating-app-location",
           "task": "Limit location precision on dating apps",
           "why": "Prevents stalking and exact location triangulation while still enabling matching",
-          "howTo": "Use approximate location settings. Avoid apps that require precise GPS. Consider location spoofing tools for additional protection. Review distance settings regularly.",
+          "howTo": "Set the app's location permission to approximate rather than precise, and only while using the app. Hide your distance where the app offers it. Don't reach for a spoofing app: the major dating apps' terms let them suspend an account over it.",
           "priority": "high"
         }
       ]
@@ -108,7 +108,7 @@
           "id": "browser-location-permission",
           "task": "Block location access for websites",
           "why": "Websites can track your location for advertising and profiling without clear benefit to you",
-          "howTo": "Chrome: Settings > Privacy and security > Site Settings > Location > Don't allow. Firefox: about:preferences#privacy > Permissions > Location > Settings > Block new requests. Use a privacy-focused browser for automatic blocking.",
+          "howTo": "Chrome: Settings > Privacy and security > Site Settings > Location > Don't allow. Firefox: about:preferences#privacy > Permissions > Location > Settings > Block new requests. On phones, also limit the browser app's own location permission in system settings (ask every time, or never).",
           "priority": "high"
         },
         {
@@ -183,11 +183,11 @@
     }
   ],
   "pro_tips": [
-    "Use airplane mode with WiFi to prevent GPS tracking while still accessing the internet when you need maximum location privacy",
+    "Airplane mode doesn't switch off GPS: when you need maximum location privacy, turn off Location Services too, and remember that Wi-Fi and your IP address still reveal roughly where you are",
     "Regularly audit your Google Timeline and Apple's Significant Locations to see exactly how much location data is being collected",
     "Consider using a Faraday bag or turning off your phone completely when attending sensitive meetings or locations",
     "Check if your employer or school has mobile device management that could be tracking your location through work/school apps",
-    "Be aware that even with location services off, cell tower triangulation can still approximate your location - only airplane mode prevents this completely"
+    "Even with Location Services off, your carrier can place you from the towers your phone is talking to. Only switching the cellular radio off stops that, and that stops calls and texts as well"
   ],
   "relatedLinks": [
     {
@@ -206,14 +206,15 @@
       "type": "internal"
     },
     {
-      "title": "Privacy-First Mobile Browser",
-      "url": "/incognito-browser",
+      "title": "Location Permission Audit",
+      "url": "/tools/location-tracking/permission-audit",
       "type": "tool"
     }
   ],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

@@ -90,7 +90,7 @@
         "Know that downloaded files remain on your device after closing incognito",
         "Recognize that bookmarks made in incognito mode are usually saved normally"
       ],
-      "warning": "For true anonymous browsing, you'll need additional tools like VPNs or specialized browsers that offer enhanced privacy features."
+      "warning": "For anonymous browsing you need Tor Browser. A VPN hides your IP address from sites, but the VPN provider can see where you go."
     },
     {
       "stepNumber": 7,
@@ -100,7 +100,7 @@
         "Always close all incognito windows when finished with private browsing",
         "Avoid logging into personal accounts unless necessary in incognito mode",
         "Remember to manually delete any downloaded files if you want them removed",
-        "Consider using a privacy-focused browser for enhanced privacy features beyond standard incognito mode"
+        "Turn up your browser's tracking protection as well (Strict in Firefox and Edge), since a private window mainly stops your device keeping a record"
       ],
       "proTip": "Some browser extensions don't work in incognito mode by default - you can enable them in browser settings if needed, but consider whether this defeats the privacy purpose."
     }
@@ -109,7 +109,7 @@
     "Combine incognito mode with a VPN for enhanced privacy - incognito handles local data while VPN masks your IP address from websites and ISPs.",
     "Use incognito mode when researching gifts or surprises to prevent targeted ads from spoiling the surprise for family members sharing your devices.",
     "Remember that incognito mode resets your session each time - you'll need to re-enter login credentials and preferences every time you open a new private window.",
-    "For maximum privacy, consider using a privacy-focused browser which offers enhanced features like built-in ad blocking and tracking protection beyond standard browser incognito modes.",
+    "If you also want ads and trackers blocked, use a browser that blocks them by default, such as Brave, or add a reputable content blocker such as uBlock Origin to Firefox.",
     "Test whether websites show different prices or content when you browse in incognito mode versus regular mode - many sites personalize content based on your browsing history."
   ],
   "faqs": [
@@ -127,7 +127,7 @@
     },
     {
       "question": "Is there a difference between incognito mode in different browsers?",
-      "answer": "While the basic function is the same across browsers, there are differences. Firefox includes enhanced tracking protection, Safari blocks location access by default, and specialized private browsers offer additional privacy features beyond standard incognito modes."
+      "answer": "While the basic function is the same across browsers, there are differences. Firefox blocks known trackers in private windows, Safari can lock private tabs behind Face ID or your password, and Chrome blocks third-party cookies in incognito windows by default."
     },
     {
       "question": "Can I use browser extensions in incognito mode?",
@@ -142,6 +142,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /guides/browser-privacy/."
   },

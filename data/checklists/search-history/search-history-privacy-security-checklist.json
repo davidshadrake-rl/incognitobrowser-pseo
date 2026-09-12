@@ -108,14 +108,14 @@
           "id": "private-search-engine",
           "task": "Switch to a privacy-focused search engine",
           "why": "Private search engines don't track users, store search history, or create advertising profiles, providing true search privacy.",
-          "howTo": "Set DuckDuckGo, Startpage, or Searx as your default search engine. In browser settings, change default search engine and remove Google/Bing.",
+          "howTo": "Set DuckDuckGo, Startpage, or SearXNG as your default search engine. In browser settings, change default search engine and remove Google/Bing.",
           "priority": "critical"
         },
         {
           "id": "incognito-browser",
-          "task": "Use a privacy-focused browser for sensitive searches",
-          "why": "Privacy-focused browsers provide enhanced privacy features specifically designed to protect search activity from tracking and data collection.",
-          "howTo": "Use a privacy-focused browser, set a private search engine as default, and use it for any searches you want to keep completely private.",
+          "task": "Turn on strict tracking protection for sensitive searches",
+          "why": "Ad and analytics trackers on the sites you open from search results can follow you across the web and build a profile of what you've been looking up.",
+          "howTo": "In Firefox, set Enhanced Tracking Protection to Strict; in Chrome, block third-party cookies (Settings > Privacy and security > Third-party cookies); Brave blocks trackers by default. Then set a private search engine as the default.",
           "priority": "high"
         },
         {
@@ -143,7 +143,7 @@
           "id": "ad-blocking",
           "task": "Install ad blockers to prevent search-based tracking",
           "why": "Search-based ads follow you across websites, creating detailed profiles of your interests and online behavior patterns.",
-          "howTo": "Install uBlock Origin or similar ad blocker. Enable privacy filter lists like EasyPrivacy and disconnect tracking protection.",
+          "howTo": "Install a blocker: uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge. On Firefox, enable privacy filter lists such as EasyPrivacy and Disconnect; uBlock Origin Lite ships equivalent rulesets you turn up with its filtering mode.",
           "priority": "medium"
         }
       ]
@@ -192,9 +192,9 @@
   "pro_tips": [
     "Use different search engines for different types of searches - DuckDuckGo for general queries, Startpage for Google results without tracking.",
     "Regularly audit your Google account at myaccount.google.com to see what data is being collected and adjust privacy settings accordingly.",
-    "Consider using a VPN when searching to hide your IP address and location from search engines and internet service providers.",
+    "Consider using a VPN when searching to hide your IP address from search engines and the sites you visit from your internet provider; the VPN provider can see them instead.",
     "Bookmark frequently visited sites instead of searching for them repeatedly to reduce the digital trail of your regular online activities.",
-    "Use a privacy-focused browser's enhanced privacy features for sensitive searches like medical, legal, or financial queries that you want to keep completely private."
+    "For sensitive searches, such as medical, legal or financial questions, use a private window signed out of your accounts and a private search engine, so the searches aren't saved on your device or in your account history."
   ],
   "relatedLinks": [
     {
@@ -221,6 +221,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with online-banking. Canonical version lives under /checklists/online-banking/."
   },

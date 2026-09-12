@@ -36,8 +36,8 @@
     },
     {
       "stepNumber": 2,
-      "title": "Configure Advanced uBlock Origin Rules",
-      "description": "Set up sophisticated filtering rules and custom blocklists to maximize uBlock Origin's effectiveness beyond default settings.",
+      "title": "Configure Advanced uBlock Origin Rules (Firefox)",
+      "description": "Custom rules and dynamic filtering are what separate uBlock Origin from a simple blocker. This step is for Firefox: the Manifest V3 build Chrome users have to run, uBlock Origin Lite, is declarative and has no dynamic filtering, no logger and no advanced mode.",
       "actions": [
         "Open uBlock Origin dashboard and navigate to Filter lists",
         "Enable additional privacy-focused lists like EasyPrivacy and Fanboy's Enhanced Tracking List",
@@ -45,7 +45,7 @@
         "Configure dynamic filtering rules for JavaScript and third-party frames",
         "Set up per-site permissions for granular control"
       ],
-      "proTip": "Use uBlock Origin's logger feature to identify and block specific tracking requests in real-time while browsing.",
+      "proTip": "The logger shows every request the page makes and lets you block one from the list. It is the fastest way to find what a site is loading, and it is one of the things uBlock Origin Lite does not have.",
       "warning": "Adding too many filter lists can slow down browsing and cause legitimate site functionality to break."
     },
     {
@@ -54,8 +54,8 @@
       "description": "Deploy complementary privacy extensions that work together without conflicts to create comprehensive protection.",
       "actions": [
         "Install Privacy Badger for algorithmic tracking protection",
-        "Add ClearURLs to remove tracking parameters from URLs",
-        "Configure Decentraleyes to serve local copies of common libraries",
+        "On Firefox, add ClearURLs to remove tracking parameters from URLs; it is a Manifest V2 add-on, so Chrome no longer runs it",
+        "Skip the old CDN-shielding add-ons such as Decentraleyes: browsers now partition the HTTP cache by site, which is the cross-site tracking they were written to stop",
         "Set up Cookie AutoDelete for automatic cookie management",
         "Test extension interactions to ensure no conflicts"
       ],
@@ -69,7 +69,7 @@
         "Create separate browser profiles for work, personal, and high-security browsing",
         "Configure minimal extensions for the work profile to avoid compatibility issues",
         "Set up maximum privacy extensions for the high-security profile",
-        "Use a privacy-focused browser for temporary browsing that requires no extension persistence",
+        "Use a private window for one-off browsing: in Chrome and Firefox, extensions don't run there unless you allow them, and its cookies are deleted when you close all private windows",
         "Document your profile configurations for easy maintenance"
       ],
       "proTip": "Keep one 'clean' profile with no extensions for testing whether site issues are caused by your privacy setup."
@@ -79,7 +79,7 @@
       "title": "Set Up Advanced Content Security and Script Management",
       "description": "Implement sophisticated script blocking and content security measures using advanced extension configurations.",
       "actions": [
-        "Install and configure NoScript or uMatrix for granular script control",
+        "Install NoScript on Firefox for granular script control; uMatrix was archived in 2021 and Chrome dropped Manifest V2 blockers in July 2025, so there is no Chrome equivalent left",
         "Set up default-deny policies for JavaScript execution",
         "Create whitelist rules for trusted domains",
         "Configure CSP header modifications using appropriate extensions",
@@ -119,8 +119,8 @@
   "pro_tips": [
     "Regularly export your extension configurations and custom rules to backup files - losing a well-tuned setup is frustrating and time-consuming to recreate.",
     "Join privacy-focused communities and forums to stay updated on new tracking techniques and corresponding countermeasures that require extension updates.",
-    "Test your privacy setup using tools like Panopticlick and Cover Your Tracks to verify your extensions are actually providing the protection you expect.",
-    "Consider using a hardened, privacy-focused browser for maximum privacy scenarios where extensions alone may not be sufficient protection.",
+    "Check your work with the EFF's Cover Your Tracks, the tool that used to be called Panopticlick. It shows which trackers your extensions stopped and how distinctive your browser still looks.",
+    "Extensions do little against fingerprinting, and each one you add can make your browser easier to tell apart. Where that matters, use a browser built to resist it, such as Tor Browser, or Brave, which randomizes some fingerprinting values.",
     "Keep detailed notes about why you configured each extension setting - you'll thank yourself later when troubleshooting or upgrading your setup."
   ],
   "faqs": [
@@ -134,7 +134,7 @@
     },
     {
       "question": "Should I use the same extensions on mobile browsers?",
-      "answer": "Mobile browsers have limited extension support. Firefox Mobile supports some extensions, but many advanced privacy extensions aren't available. Consider using a privacy-focused mobile browser with built-in tracker blocking instead."
+      "answer": "Where the browser allows it. Firefox for Android runs many desktop extensions, including uBlock Origin and Privacy Badger, and Safari on iPhone and iPad supports content blockers from the App Store. Chrome's mobile apps run no extensions, so on a phone a browser with tracker blocking built in, such as Brave or the DuckDuckGo browser, is the simpler route."
     },
     {
       "question": "How often should I audit my extensions for security?",
@@ -148,6 +148,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

@@ -49,7 +49,7 @@
           "id": "private-browsing-default",
           "task": "Use private/incognito browsing mode regularly",
           "why": "Prevents tracking cookies from being stored and limits cross-site tracking during your browsing session.",
-          "howTo": "Use Ctrl+Shift+N for Chrome incognito or Ctrl+Shift+P for Firefox private browsing. Consider a privacy-focused browser for enhanced privacy protection with built-in ad blocking.",
+          "howTo": "Use Ctrl+Shift+N for Chrome incognito or Ctrl+Shift+P for Firefox private browsing, and close the window when you finish so its cookies are deleted. Extensions such as uBlock Origin are off in private windows by default: turn on 'Allow in Incognito' (Chrome) or 'Run in Private Windows' (Firefox) in the extension's settings.",
           "priority": "medium"
         },
         {
@@ -68,35 +68,35 @@
           "id": "install-ad-blocker",
           "task": "Install a comprehensive ad blocker extension",
           "why": "Blocks display ads, tracking scripts, and behavioral advertising networks from loading on websites you visit.",
-          "howTo": "Install uBlock Origin from your browser's extension store. Enable all filter lists including tracking protection, malware domains, and privacy filters for maximum protection.",
+          "howTo": "Install a blocker from your browser's extension store: uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge. On Firefox, enable the tracking, malware-domain and privacy filter lists; on uBlock Origin Lite, raise the default filtering mode instead.",
           "priority": "critical"
         },
         {
           "id": "privacy-browser",
-          "task": "Switch to a privacy-focused browser",
-          "why": "Privacy browsers have built-in tracking protection and don't collect data for advertising purposes like mainstream browsers.",
-          "howTo": "Download privacy-focused browsers like Firefox with strict settings, or Brave. These block trackers by default and don't send data to advertising companies.",
+          "task": "Use a browser that blocks trackers by default",
+          "why": "Built-in tracking protection stops many ad trackers before they load, and it keeps working on phones, where many browsers can't run ad-blocking extensions.",
+          "howTo": "Set Firefox's Enhanced Tracking Protection to Strict (Settings > Privacy & Security), or use Brave, which blocks trackers and most ads with Shields on by default. In either browser, turn off sponsored content on the new-tab page.",
           "priority": "medium"
         },
         {
           "id": "tracking-protection-lists",
           "task": "Enable comprehensive tracking protection filter lists",
           "why": "Blocks known advertising and tracking domains from loading, preventing behavioral profiling and cross-site tracking.",
-          "howTo": "In uBlock Origin: Dashboard > Filter lists > Enable Privacy, Malware Domains, Annoyances. Also add EasyPrivacy and Fanboy's Enhanced Tracking List for comprehensive protection.",
+          "howTo": "In uBlock Origin on Firefox: Dashboard > Filter lists > Enable Privacy, Malware Domains, Annoyances, plus EasyPrivacy and Fanboy's Enhanced Tracking List. uBlock Origin Lite on Chrome and Edge has no filter-list dashboard; set its default filtering mode to Optimal or Complete instead.",
           "priority": "high"
         },
         {
           "id": "script-blocker",
           "task": "Use a script blocker for advanced protection",
           "why": "Prevents tracking scripts and advertising JavaScript from running, stopping sophisticated fingerprinting and behavioral tracking.",
-          "howTo": "Install NoScript (Firefox) or ScriptSafe (Chrome). Start with default-deny settings and only allow scripts from trusted sites you frequently use.",
+          "howTo": "Install NoScript on Firefox. Chrome has no equivalent left: ScriptSafe and the other Manifest V2 script blockers stopped running when Chrome disabled Manifest V2 in July 2025. Start with default-deny settings and only allow scripts from trusted sites you frequently use.",
           "priority": "medium"
         },
         {
           "id": "privacy-search-engine",
           "task": "Switch to a privacy-focused search engine",
           "why": "Mainstream search engines track your queries to build advertising profiles. Privacy search engines don't track or profile users.",
-          "howTo": "Change default search engine to DuckDuckGo, Startpage, or Searx. In browser settings > Search engine > Manage search engines, set privacy option as default.",
+          "howTo": "Change default search engine to DuckDuckGo, Startpage, or SearXNG. In browser settings > Search engine > Manage search engines, set privacy option as default.",
           "priority": "medium"
         }
       ]
@@ -176,7 +176,7 @@
           "id": "social-media-tracking",
           "task": "Block social media tracking widgets",
           "why": "Social media buttons and widgets on websites track you even if you don't click them, building profiles of your browsing habits.",
-          "howTo": "In uBlock Origin, enable 'Block social media icons clicking which leads to privacy breach'. Use container extensions to isolate social media sites from other browsing.",
+          "howTo": "In uBlock Origin on Firefox, enable 'Block social media icons clicking which leads to privacy breach'. Use container extensions to isolate social media sites from other browsing.",
           "priority": "medium"
         },
         {
@@ -193,7 +193,7 @@
     "Use separate browsers for different activities - one for work, one for personal browsing, and one for shopping to prevent cross-contamination of tracking data.",
     "Regularly audit your Google Takeout data and Facebook 'Your Information' to see what advertising data companies have collected about you.",
     "Create email aliases for different services to prevent companies from building unified profiles by matching email addresses across platforms.",
-    "Consider using a privacy-focused browser with built-in ad blocking and tracking protection enabled by default as your daily driver.",
+    "After changing your settings, run the EFF's Cover Your Tracks test (coveryourtracks.eff.org) to check whether your browser is blocking tracking ads and invisible trackers.",
     "Set calendar reminders every 3 months to review and clear your advertising preferences across major platforms as they often reset or add new tracking methods."
   ],
   "relatedLinks": [
@@ -221,6 +221,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

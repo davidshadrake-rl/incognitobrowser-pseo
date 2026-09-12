@@ -117,11 +117,11 @@
         },
         {
           "value": "intermediate",
-          "label": "Mixing/CoinJoin occasionally"
+          "label": "CoinJoin occasionally"
         },
         {
           "value": "advanced",
-          "label": "Regular mixing + Tor usage"
+          "label": "Regular CoinJoin + Tor"
         },
         {
           "value": "expert",
@@ -185,7 +185,7 @@
   ],
   "formula": "const cryptoRisk = {'public': 65, 'optional-rare': 50, 'optional-most': 15, 'private': 5}[ledgerPrivacy] ?? 65; const walletRisk = {'exchange-custodial': 40, 'software-hot': 25, hardware: 15, 'privacy-focused': 5, multisig: 10}[walletType]; const kycRisk = {never: 0, minimal: 10, regular: 30, exclusive: 50}[exchangeKyc]; const freqRisk = Math.min(transactionFrequency * 0.5, 20); const privacyBonus = {none: 0, basic: -5, intermediate: -15, advanced: -25, expert: -35}[privacyTechniques]; const addressRisk = {always: 25, sometimes: 15, rarely: 5, never: 0}[addressReuse]; const publicRisk = publicActivity ? 15: 0; const baseScore = cryptoRisk + walletRisk + kycRisk + freqRisk + privacyBonus + addressRisk + publicRisk; const privacyScore = Math.max(0, Math.min(100, baseScore)); const trackingVulnerability = privacyScore; const riskLevel = privacyScore <= 20 ? 'A': privacyScore <= 40 ? 'B': privacyScore <= 60 ? 'C': privacyScore <= 80 ? 'D': 'F'; return {privacyScore, riskLevel, trackingVulnerability};",
   "educational": {
-    "methodology": "This calculator evaluates cryptocurrency privacy risks by analyzing blockchain transparency, wallet security, exchange usage patterns, and privacy techniques. The scoring system weighs factors like how private your coin's ledger is (coins that hide payments by default score lower), wallet types (hardware and privacy wallets reduce risk), KYC exchange usage (increases traceability), transaction frequency (more transactions create larger patterns), privacy techniques used (mixing and Tor reduce scores), and address reuse patterns (reuse increases linkability).",
+    "methodology": "This calculator evaluates cryptocurrency privacy risks by analyzing blockchain transparency, wallet security, exchange usage patterns, and privacy techniques. The scoring system weighs factors like how private your coin's ledger is (coins that hide payments by default score lower), wallet types (hardware and privacy wallets reduce risk), KYC exchange usage (increases traceability), transaction frequency (more transactions create larger patterns), privacy techniques used (CoinJoin and Tor reduce scores), and address reuse patterns (reuse increases linkability).",
     "tips": [
       "Coins that hide addresses and amounts by default, such as Monero, leave far less on the public ledger than coins where privacy is optional",
       "Avoid reusing wallet addresses - generate new ones for each transaction",
@@ -241,6 +241,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

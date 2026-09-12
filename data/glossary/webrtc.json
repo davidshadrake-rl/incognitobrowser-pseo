@@ -17,7 +17,7 @@
     },
     {
       "scenario": "Browser-based file sharing",
-      "explanation": "Services like Firefox Send use WebRTC for direct file transfers, which is faster but can expose network information to the service provider."
+      "explanation": "Browser-based peer-to-peer transfer tools use WebRTC data channels to send a file straight from one device to the other. That avoids uploading it to a server, but each side learns the other's IP addresses in the process."
     }
   ],
   "relatedTerms": [
@@ -30,6 +30,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

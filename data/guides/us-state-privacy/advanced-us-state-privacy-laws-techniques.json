@@ -30,7 +30,7 @@
         "Map out conflicting requirements between states and develop hierarchy of compliance priorities",
         "Document extraterritorial reach provisions and how they affect multi-state operations"
       ],
-      "proTip": "Use a privacy-focused browser when researching state attorney general enforcement actions to avoid tracking while building your compliance intelligence.",
+      "proTip": "Read the enforcement actions regulators publish: the California Attorney General and the California Privacy Protection Agency post their CCPA cases, and early ones targeted ignored Global Privacy Control signals and opt-out processes that asked for too much.",
       "warning": "Never assume similarity between state laws - even minor differences can create significant compliance gaps."
     },
     {
@@ -43,8 +43,8 @@
         "Establish verification protocols that meet the highest standard among applicable states",
         "Implement cross-reference systems for opt-out preferences across different state frameworks"
       ],
-      "proTip": "Virginia's right to correction is unique among state laws - ensure your systems can handle data accuracy requests specifically.",
-      "warning": "Colorado's cure period provisions don't excuse initial non-compliance - build systems that work correctly from day one."
+      "proTip": "Nearly every state privacy law now includes a right to correction, California, Colorado, Connecticut, Texas, Utah and Virginia among them, so build data-accuracy request handling once and apply it everywhere. Iowa is the notable exception.",
+      "warning": "Colorado's 60-day cure period expired on January 1, 2025, so the attorney general and district attorneys can act without giving you a chance to fix the problem first."
     },
     {
       "stepNumber": 3,
@@ -52,11 +52,11 @@
       "description": "Create advanced consent mechanisms that satisfy varying state requirements while avoiding over-collection and maintaining user experience.",
       "actions": [
         "Build dynamic consent interfaces that adjust based on user location and applicable state laws",
-        "Implement granular consent categories that satisfy Texas's biometric data requirements and other state-specific needs",
+        "Implement granular consent categories that satisfy Texas's separate biometric statute and each state's sensitive-data consent rules",
         "Create consent withdrawal mechanisms that work across all applicable jurisdictions simultaneously",
         "Establish consent record-keeping systems with state-specific retention requirements"
       ],
-      "proTip": "Texas DPRA has specific requirements for biometric data consent that go beyond other states - ensure your consent flows address this separately.",
+      "proTip": "Texas's biometric rules sit outside its privacy act: the Capture or Use of Biometric Identifier Act requires consent before capturing a fingerprint, voiceprint or face geometry for a commercial purpose, and only the attorney general enforces it, at up to $25,000 per violation.",
       "warning": "Don't rely solely on broad consent - many state laws require specific, informed consent for sensitive data categories."
     },
     {
@@ -69,7 +69,7 @@
         "Implement vendor risk assessment frameworks that account for multi-state privacy law exposure",
         "Establish vendor monitoring procedures that track compliance across different state law timelines"
       ],
-      "proTip": "Use a privacy-focused browser when conducting vendor security assessments to prevent vendors from tracking your evaluation activities.",
+      "proTip": "Check whether each vendor uses data it receives from you for its own purposes. Under most state laws a processor may only act on your instructions, so a vendor that also uses the data for itself is a third party and needs different contract terms.",
       "warning": "Some states have specific requirements for international data transfers - ensure your vendor agreements address these explicitly."
     },
     {
@@ -94,7 +94,7 @@
         "Establish communication protocols with multiple state attorneys general offices simultaneously",
         "Build settlement strategy frameworks that account for precedent-setting risks across states"
       ],
-      "proTip": "Virginia's 30-day cure period is shorter than other states - always respond within Virginia's timeline even for multi-state issues.",
+      "proTip": "Virginia and Texas each give 30 days to cure after the attorney general's notice, and neither provision sunsets. Colorado's 60-day cure expired on January 1, 2025, so plan your response around the 30-day clock.",
       "warning": "Public statements during enforcement actions can affect your position in other states - coordinate all communications carefully."
     },
     {
@@ -107,7 +107,7 @@
         "Establish stakeholder notification systems for relevant legislative developments",
         "Build scenario planning models for potential new state privacy law enactments"
       ],
-      "proTip": "Use a privacy-focused browser when researching legislative developments to avoid creating trackable patterns that competitors might identify.",
+      "proTip": "The IAPP's US State Privacy Legislation Tracker lists bills by status in every state; track amendments to laws already in force as closely as new bills.",
       "warning": "State privacy laws often have delayed effective dates - track both passage dates and implementation deadlines carefully."
     }
   ],
@@ -141,34 +141,35 @@
     },
     {
       "question": "Are there safe harbors for good faith compliance efforts?",
-      "answer": "Some states like Colorado and Virginia offer cure periods for first violations, but this isn't a comprehensive safe harbor. The best protection is implementing robust compliance programs from the start rather than relying on enforcement discretion."
+      "answer": "Virginia and Texas give you 30 days to cure after the attorney general's notice, but that is not a comprehensive safe harbor, and Colorado's cure period expired on January 1, 2025. The best protection is a compliance program built right from the start rather than reliance on enforcement discretion."
     }
   ],
   "relatedLinks": [
     {
-      "title": "Texas Data Privacy and Security Act (DPRA) Full Text",
-      "url": "https://capitol.texas.gov",
+      "title": "Texas Data Privacy and Security Act Full Text",
+      "url": "https://statutes.capitol.texas.gov/Docs/BC/htm/BC.541.htm",
       "type": "official"
     },
     {
       "title": "Virginia Consumer Data Protection Act Guide",
-      "url": "https://law.lis.virginia.gov",
+      "url": "https://law.lis.virginia.gov/vacode/title59.1/chapter53/",
       "type": "official"
     },
     {
       "title": "Colorado Privacy Act Implementation Resources",
-      "url": "https://coag.gov",
+      "url": "https://coag.gov/resources/colorado-privacy-act/",
       "type": "official"
     },
     {
-      "title": "Multi-State Privacy Law Compliance Tools",
-      "url": "https://privacytools.com",
+      "title": "IAPP US State Privacy Legislation Tracker",
+      "url": "https://iapp.org/resources/article/us-state-privacy-legislation-tracker/",
       "type": "resource"
     }
   ],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

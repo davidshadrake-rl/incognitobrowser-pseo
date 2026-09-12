@@ -1,7 +1,7 @@
 {
   "niche": "vpn-privacy",
   "slug": "vpn-proxy-security-checklist",
-  "title": "VPN & Proxy Security Checklist: Complete Privacy Guide",
+  "title": "VPN & Proxy Security Checklist",
   "metaDescription": "Essential VPN and proxy security checklist to protect your privacy online. Verify logging policies, test for leaks, and secure your connection.",
   "keywords": [
     "VPN security checklist",
@@ -68,7 +68,7 @@
           "id": "test-webrtc-leaks",
           "task": "Check for WebRTC IP leaks in your browser",
           "why": "WebRTC can leak your real IP address through browser vulnerabilities, bypassing VPN protection entirely.",
-          "howTo": "Visit browserleaks.com/webrtc while connected to VPN. If you see your real IP, disable WebRTC in browser settings or use a privacy-focused browser with WebRTC protection.",
+          "howTo": "Visit browserleaks.com/webrtc while connected to VPN. If you see your real IP, limit WebRTC: in Firefox, set media.peerconnection.enabled to false in about:config (this breaks in-browser video calls); in Brave, set 'WebRTC IP handling policy' to 'Disable non-proxied UDP' under Settings > Privacy and security; Chrome and Edge need an extension for this.",
           "priority": "high"
         },
         {
@@ -134,9 +134,9 @@
         },
         {
           "id": "test-geolocation-accuracy",
-          "task": "Verify your apparent location matches VPN server",
-          "why": "Accurate geolocation spoofing is essential for bypassing geo-blocks and maintaining location privacy.",
-          "howTo": "Visit whatismylocation.com or Google 'what is my location' while connected to different VPN servers. Location should match server location.",
+          "task": "Check that your IP address location matches the VPN server",
+          "why": "Sites use IP geolocation for geo-blocks and to estimate where you are. A VPN changes this IP-based location, not the GPS or Wi-Fi location your device can share.",
+          "howTo": "Check an IP lookup site such as whatismyipaddress.com while connected to different servers; the location shown should match the server's. Deny websites' location requests, because a site you allow to read your device location sees where you really are.",
           "priority": "medium"
         },
         {
@@ -190,9 +190,9 @@
     }
   ],
   "pro_tips": [
-    "Use a privacy-focused browser with built-in proxy protection and WebRTC leak prevention for maximum privacy during sensitive browsing sessions.",
+    "A VPN only changes your IP address. For sensitive sessions, also block trackers in the browser (Firefox with Enhanced Tracking Protection set to Strict, or Brave) and keep signed-in accounts in a separate browser profile.",
     "Test your VPN/proxy setup monthly using different leak testing tools, as new vulnerabilities and testing methods are constantly being discovered.",
-    "Consider using Tor over VPN for maximum anonymity, but be aware this significantly reduces connection speeds and may trigger security alerts.",
+    "Use Tor Browser when you need anonymity rather than a new IP address. Running Tor through a VPN only hides your Tor use from your ISP, and Tor's built-in bridges can do that too.",
     "Keep a backup VPN service from a different provider and jurisdiction in case your primary service experiences issues or legal challenges.",
     "Avoid free VPN and proxy services for anything important - they often monetize by selling user data or injecting ads, defeating privacy purposes."
   ],
@@ -221,6 +221,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

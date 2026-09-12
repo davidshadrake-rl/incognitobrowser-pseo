@@ -39,10 +39,10 @@
       "actions": [
         "Access your browser's privacy or security settings menu",
         "Enable 'Block third-party cookies' option",
-        "Turn on 'Do Not Track' requests",
+        "Turn on Global Privacy Control: in Firefox it is 'Tell websites not to sell or share my data', which replaced the Do Not Track setting it removed in version 135, and Brave and DuckDuckGo send it by default",
         "Configure automatic cookie deletion on browser close"
       ],
-      "proTip": "Most browsers now block third-party cookies by default, but double-check your settings to ensure protection.",
+      "proTip": "Safari, Firefox and Brave block cross-site tracking cookies by default; Chrome doesn't, so check the setting yourself.",
       "warning": "Overly strict settings may cause some websites to malfunction or require frequent re-logins."
     },
     {
@@ -72,7 +72,7 @@
     },
     {
       "stepNumber": 5,
-      "title": "Installing Privacy-Focused Browser Extensions",
+      "title": "Installing Privacy Extensions",
       "description": "Enhance your cookie management with specialized tools that automatically block tracking cookies.",
       "actions": [
         "Install reputable cookie management extensions like Ghostery or Privacy Badger",
@@ -84,15 +84,15 @@
     },
     {
       "stepNumber": 6,
-      "title": "Using Privacy-Focused Browsers",
-      "description": "Consider switching to browsers specifically designed for privacy protection and cookie management.",
+      "title": "Switching to a Browser That Blocks Trackers by Default",
+      "description": "If you'd rather not configure everything by hand, pick a browser whose default settings already block cross-site tracking cookies.",
       "actions": [
-        "Try browsers that block trackers by default",
-        "Explore built-in ad blockers and anti-tracking features",
+        "Try Firefox (Enhanced Tracking Protection is on by default; Strict blocks more), Brave (Shields block trackers and cross-site cookies by default) or Safari (Prevent Cross-Site Tracking is on by default)",
+        "Check which protections are on by default and which you have to switch on yourself",
         "Test website compatibility with enhanced privacy settings",
-        "Set up automatic cookie deletion schedules"
+        "Keep your old browser for the few sites that don't work with stricter settings"
       ],
-      "proTip": "Privacy-focused browsers often provide better default protection than mainstream browsers with manual configuration."
+      "proTip": "Switching is easier than it sounds: Firefox, Brave and Safari can import your bookmarks and saved passwords from Chrome."
     },
     {
       "stepNumber": 7,
@@ -121,7 +121,7 @@
   ],
   "pro_tips": [
     "Use incognito or private browsing mode for sensitive activities - it automatically deletes cookies when you close the window.",
-    "Enable automatic cookie deletion in your privacy-focused browser to maintain protection without manual management.",
+    "Turn on your browser's delete-cookies-on-close option and add exceptions for the few sites you want to stay signed in to.",
     "Create separate browser profiles for work, personal use, and shopping to isolate cookie tracking between different activities.",
     "Regularly update your browser and privacy extensions to get the latest tracking protection features and security patches.",
     "Consider using a VPN alongside cookie management for comprehensive privacy protection against tracking and data collection."
@@ -145,13 +145,14 @@
     },
     {
       "question": "Can I still be tracked if I block all cookies?",
-      "answer": "Yes, tracking can still occur through other methods like browser fingerprinting, IP address tracking, and pixel tracking. Cookie management is just one part of comprehensive privacy protection - consider using privacy-focused browsers and VPNs for broader protection."
+      "answer": "Yes. Sites can also track you through browser fingerprinting, your IP address and tracking pixels in pages and emails. Brave and Tor Browser make fingerprinting harder, a VPN shows sites its IP address instead of yours, and blocking remote images in your email app stops most tracking pixels. No single tool covers everything."
     }
   ],
   "relatedLinks": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

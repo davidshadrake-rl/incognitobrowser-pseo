@@ -19,7 +19,15 @@ const DATA_DIR = path.join(process.cwd(), 'data');
  */
 export interface EditorialMeta {
   status: 'draft' | 'reviewed' | 'published';
+  /** When a reviewer signed the page off. A text edit never moves it. */
   reviewedAt?: string | null;
+  /**
+   * ISO date of the last change to the page's text after that review, set by
+   * scripts/stamp-updated.ts. Pages use `updatedAt ?? reviewedAt` for JSON-LD
+   * dateModified and og modified_time, and the sitemap for lastModified;
+   * datePublished stays reviewedAt.
+   */
+  updatedAt?: string | null;
   reviewedBy?: string | null;
   notes?: string | null;
 }

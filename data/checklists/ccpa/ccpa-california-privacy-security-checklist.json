@@ -41,7 +41,7 @@
         {
           "id": "check-thresholds",
           "task": "Verify if businesses you interact with fall under CCPA",
-          "why": "Only businesses meeting certain thresholds (revenue over $25M, handle 50K+ consumers, or earn 50%+ from selling data) must comply.",
+          "why": "Only businesses over a threshold must comply: revenue above $25M (adjusted to $26,625,000), 100K+ consumers or households, or 50%+ of revenue from selling or sharing.",
           "howTo": "Large retailers, social media platforms, and data brokers typically qualify. Check their privacy policies for CCPA compliance statements.",
           "priority": "medium"
         },
@@ -74,7 +74,7 @@
         {
           "id": "request-data-access",
           "task": "Request access to your personal information",
-          "why": "You have the right to know what personal information businesses have collected about you in the past 12 months.",
+          "why": "You can ask what a business collected in the past 12 months, and for data collected since January 1, 2022 you can ask beyond that window.",
           "howTo": "Submit data access requests through company privacy portals or contact forms. Businesses must respond within 45 days with categories and specific pieces of data collected.",
           "priority": "high"
         },
@@ -94,9 +94,9 @@
         },
         {
           "id": "use-private-browsing",
-          "task": "Use privacy-focused browsing tools",
-          "why": "Private browsers help prevent data collection and tracking that feeds into the data ecosystem covered by CCPA.",
-          "howTo": "Use a privacy-focused browser or similar privacy tools that block trackers by default. Enable 'Do Not Track' signals and regularly clear cookies and browsing data.",
+          "task": "Send a Global Privacy Control signal from your browser",
+          "why": "California regulations require covered businesses to treat a Global Privacy Control signal as an opt-out of selling or sharing, so one browser setting makes that request everywhere you browse.",
+          "howTo": "Brave and DuckDuckGo send GPC by default; in Firefox, turn on 'Tell websites not to sell or share my data' in Settings > Privacy & Security; elsewhere an extension such as Privacy Badger adds it. 'Do Not Track' carries no such obligation under the CCPA, so GPC is the signal that counts.",
           "priority": "high"
         }
       ]
@@ -120,8 +120,8 @@
         },
         {
           "id": "add-website-links",
-          "task": "Add required 'Do Not Sell' links to your website",
-          "why": "If you sell personal information, you must provide a clear 'Do Not Sell My Personal Information' link on your homepage.",
+          "task": "Add the required 'Do Not Sell or Share' link to your website",
+          "why": "If you sell or share personal information, your homepage needs a 'Do Not Sell or Share My Personal Information' link, or the combined 'Your Privacy Choices' link.",
           "howTo": "Place the link prominently in your website footer and ensure it leads to a simple opt-out mechanism that doesn't require account creation.",
           "priority": "critical"
         },
@@ -135,7 +135,7 @@
         {
           "id": "implement-age-verification",
           "task": "Implement enhanced protections for minors",
-          "why": "CCPA requires opt-in consent before selling information of consumers under 16, with additional protections for those under 13.",
+          "why": "CCPA requires opt-in consent before selling or sharing the information of consumers under 16, and a parent or guardian must consent for those under 13.",
           "howTo": "Implement age verification mechanisms and parental consent processes. Maintain records of consent and provide easy withdrawal methods.",
           "priority": "high"
         },
@@ -153,7 +153,7 @@
     "Set calendar reminders to review and update your privacy settings quarterly, as companies often change their data practices.",
     "Keep records of all privacy requests you submit, including screenshots and confirmation emails, in case you need to follow up or file complaints.",
     "Use the California Attorney General's website to stay updated on CCPA enforcement actions and new guidance that might affect your rights.",
-    "Consider using a privacy-focused browser by default to minimize data collection before it even begins.",
+    "Block third-party cookies in your browser, or use one that blocks cross-site trackers by default such as Firefox or Brave, to cut collection before you ever need to file a request.",
     "If you're a business, consider working with privacy management platforms that can automate much of the CCPA compliance process and reduce manual workload."
   ],
   "relatedLinks": [
@@ -181,6 +181,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

@@ -35,34 +35,34 @@
     },
     {
       "stepNumber": 2,
-      "title": "Install uBlock Origin (Essential Ad & Tracker Blocker)",
-      "description": "uBlock Origin is the gold standard for ad and tracker blocking. It's lightweight, open-source, and blocks ads, trackers, and malicious websites.",
+      "title": "Install uBlock Origin, or uBlock Origin Lite on Chrome",
+      "description": "uBlock Origin is the best known open-source ad and tracker blocker. It still runs in Firefox, but Chrome disabled Manifest V2 extensions for all users in July 2025, so on Chrome and other Chromium browsers you install its Manifest V3 sibling, uBlock Origin Lite.",
       "actions": [
-        "Download uBlock Origin from your browser's official extension store",
+        "Firefox: install uBlock Origin from the Firefox Add-ons site. Chrome or Edge: install uBlock Origin Lite instead",
         "Enable the extension and accept default filter lists",
         "Add additional filter lists like EasyPrivacy and Fanboy's Annoyance List",
         "Test on a few websites to ensure it's working properly"
       ],
-      "proTip": "Enable 'Advanced user' mode in uBlock Origin settings to access powerful blocking tools and detailed statistics about blocked requests."
+      "proTip": "Enable 'Advanced user' mode in uBlock Origin's settings for dynamic filtering and the request logger. uBlock Origin Lite has neither by design, so on Chrome you get blocking but not the per-request controls."
     },
     {
       "stepNumber": 3,
       "title": "Add Privacy Badger for Tracker Protection",
-      "description": "Privacy Badger automatically learns to block invisible trackers. Unlike filter-list-based blockers, it adapts to new tracking methods dynamically.",
+      "description": "Privacy Badger blocks third-party domains that the EFF's own crawls have caught tracking people across sites. Since 2020 it ships with that list instead of learning from your browsing, because local learning made each copy of the extension more identifiable.",
       "actions": [
         "Install Privacy Badger from the Electronic Frontier Foundation",
         "Allow it to run alongside uBlock Origin (they complement each other)",
         "Check the Privacy Badger panel on websites to see blocked trackers",
         "Adjust slider settings for any false positives that break site functionality"
       ],
-      "proTip": "Privacy Badger gets smarter over time as it learns your browsing patterns. Let it run for a few weeks to reach optimal effectiveness."
+      "proTip": "There is no break-in period any more: Privacy Badger's local learning is off by default. Just let it update, because the EFF refreshes the tracker list from scans it runs itself."
     },
     {
       "stepNumber": 4,
       "title": "Configure ClearURLs for Link Cleaning",
-      "description": "ClearURLs removes tracking parameters from URLs automatically, preventing companies from tracking you through link clicks and shares.",
+      "description": "ClearURLs removes tracking parameters from URLs automatically, preventing companies from tracking you through link clicks and shares. ClearURLs is a Manifest V2 add-on, so it runs in Firefox; Chrome disabled Manifest V2 extensions in July 2025.",
       "actions": [
-        "Install ClearURLs extension from your browser store",
+        "Install ClearURLs from the Firefox Add-ons site",
         "Enable automatic URL cleaning for all websites",
         "Review the statistics to see how many tracking parameters are removed",
         "Test by copying a link from Google search results to see parameters removed"
@@ -82,13 +82,13 @@
     },
     {
       "stepNumber": 6,
-      "title": "Add HTTPS Everywhere for Secure Connections",
-      "description": "HTTPS Everywhere forces secure connections whenever possible, protecting your data from interception on insecure networks.",
+      "title": "Turn On Your Browser's HTTPS-Only Mode",
+      "description": "This is no longer an extension's job. The EFF retired HTTPS Everywhere once browsers built the same upgrade in, and every major browser can now force HTTPS and warn you before it loads a page over plain HTTP.",
       "actions": [
-        "Install HTTPS Everywhere from the Electronic Frontier Foundation",
-        "Enable automatic HTTPS upgrades for all compatible websites",
-        "Review the extension's activity log to see forced upgrades",
-        "Report any websites that break when forced to HTTPS"
+        "Firefox: Settings > Privacy & Security > HTTPS-Only Mode > 'Enable HTTPS-Only Mode in all windows'",
+        "Chrome: Settings > Privacy and security > Security > turn on 'Always use secure connections'",
+        "Edge: Settings > Privacy, search, and services > Security > turn on Automatic HTTPS. Safari upgrades to HTTPS on its own",
+        "Uninstall HTTPS Everywhere if you still have it. It has been retired and is no longer maintained"
       ]
     },
     {
@@ -101,7 +101,7 @@
         "Set up custom filter lists for your specific browsing needs",
         "Create exception lists for websites that require specific functionality"
       ],
-      "proTip": "Consider using a privacy-focused browser for an additional layer of privacy, especially when researching sensitive topics or shopping."
+      "proTip": "Your browser's own settings add to what extensions do: set Firefox's Enhanced Tracking Protection or Edge's tracking prevention to Strict, and in Chrome block third-party cookies under Privacy and security."
     },
     {
       "stepNumber": 8,
@@ -125,7 +125,7 @@
   "faqs": [
     {
       "question": "Do I need multiple ad blockers, or is one enough?",
-      "answer": "One comprehensive ad blocker like uBlock Origin is usually sufficient. However, Privacy Badger uses different detection methods and can catch trackers that filter-list blockers miss, making them complementary rather than redundant."
+      "answer": "One blocker is usually enough. Privacy Badger's list is built from the EFF's own crawls of tracking behaviour rather than from community filter lists, so the two overlap without being identical, which is why some people run both."
     },
     {
       "question": "Will privacy extensions slow down my browser?",
@@ -141,7 +141,7 @@
     },
     {
       "question": "Are there privacy extensions specifically for mobile browsers?",
-      "answer": "Mobile browsers have limited extension support. Firefox Mobile supports some extensions like uBlock Origin. For better mobile privacy, consider using privacy-focused browsers like Brave or DuckDuckGo Browser instead of extensions."
+      "answer": "Some. Firefox for Android runs many desktop extensions, including uBlock Origin, and Safari on iPhone and iPad supports content blockers from the App Store. Chrome's mobile apps don't run extensions, so on a phone it is often simpler to use a browser with tracker blocking built in, such as Brave or the DuckDuckGo browser."
     }
   ],
   "relatedLinks": [
@@ -159,6 +159,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

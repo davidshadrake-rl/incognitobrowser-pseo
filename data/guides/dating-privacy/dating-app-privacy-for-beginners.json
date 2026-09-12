@@ -42,8 +42,8 @@
         "In Grindr: Tap your profile > Privacy > enable 'Approximate Distance' or 'Hide Distance'",
         "Turn off precise location sharing in your phone's app permissions"
       ],
-      "proTip": "Use a privacy-focused browser when accessing dating app websites to limit tracking, but note that a browser alone doesn't hide the location your IP address reveals.",
-      "warning": "Some apps like Grindr can reveal your exact location through triangulation - consider using a VPN for additional protection."
+      "proTip": "These settings change what other users see, not what the company collects: the app still receives your phone's location while it has permission. A VPN hides your IP address, not your GPS position.",
+      "warning": "Some apps like Grindr have exposed users' exact locations through distance triangulation. A VPN won't prevent this, because the distance comes from your phone's GPS: hide your distance in the app's settings instead."
     },
     {
       "stepNumber": 3,
@@ -95,10 +95,10 @@
     }
   ],
   "pro_tips": [
-    "Use a VPN to mask your real location, especially if you're in an area where dating apps could put you at risk",
+    "If using dating apps could put you at risk where you live, a VPN hides from your network provider that you're using them. It doesn't hide your GPS location from the app itself",
     "Create a separate email address just for dating apps to keep your main email private",
     "Regularly audit your app permissions and revoke unnecessary access to contacts, camera, or microphone",
-    "Consider using a privacy-focused browser for any web-based dating app access to prevent tracking cookies",
+    "If you use a dating site in a browser, open it in a private window so its cookies are deleted when you close the window",
     "Set up Google Alerts for your name and photos to monitor if someone is using your information elsewhere"
   ],
   "faqs": [
@@ -108,7 +108,7 @@
     },
     {
       "question": "How accurate is location sharing on dating apps?",
-      "answer": "Location can be very precise - sometimes within a few meters. Apps like Grindr have been known to reveal exact locations through triangulation. Always use approximate location settings and consider a VPN for additional privacy."
+      "answer": "Location can be very precise - sometimes within a few meters. Apps like Grindr have been known to reveal exact locations through triangulation. Always use approximate location settings; a VPN hides only your IP address, not the GPS location these apps use."
     },
     {
       "question": "Should I use my real name on dating apps?",
@@ -126,6 +126,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getContentItem, getContentFiles, getGlossaryFiles, getCrossNicheLinks, isPublished, isToolListed } from '@/lib/content';
+import { getContentItem, getContentFiles, getGlossaryFiles, getCrossNicheLinks, isPublished, isToolListed, type EditableContent } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateHowToSchema, generateFAQSchema, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { GuidePage } from '@/components/GuidePage';
@@ -94,13 +94,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { niche, slug } = await params;
   const data = getContentItem<GuideData>('guides', niche, slug);
   if (!data) return {};
+  const { editorial } = data as unknown as EditableContent;
   return genMeta({
     title: data.title,
     description: data.metaDescription,
     path: `/guides/${niche}/${slug}`,
     noIndex: !isPublished(data as unknown as Parameters<typeof isPublished>[0]),
-    publishedAt: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    modifiedAt: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
+    publishedAt: editorial?.reviewedAt || undefined,
+    modifiedAt: editorial?.updatedAt || editorial?.reviewedAt || undefined,
   });
 }
 
@@ -141,15 +142,18 @@ export default async function GuideDetailPage({ params }: PageProps) {
   ].slice(0, 4);
 
   // Per-article Article JSON-LD, credited to the editorial masthead (see
-  // generateArticleSchema for why no person is named).
+  // generateArticleSchema for why no person is named). Published is the
+  // review; modified is the last text change after it (editorial.updatedAt),
+  // else the review. An edit never moves the review date.
+  const { editorial } = data as unknown as EditableContent;
   const articleSchema = generateArticleSchema({
     headline: (data as unknown as { title: string }).title,
     description: (data as unknown as { metaDescription?: string; definition?: string }).metaDescription
       || (data as unknown as { definition?: string }).definition
       || '',
     url: 'https://incognitobrowser.io/resources' + `/guides/${niche}/${slug}`,
-    datePublished: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    dateModified: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
+    datePublished: editorial?.reviewedAt || undefined,
+    dateModified: editorial?.updatedAt || editorial?.reviewedAt || undefined,
     attributed: !!(data as unknown as { author?: { name?: string } | null }).author?.name,
   });
 

@@ -61,7 +61,7 @@
       "description": "Most modern browsers offer some fingerprint protection. Learn how to enable and configure these built-in defenses in Firefox, Chrome, and Safari.",
       "actions": [
         "Enable Firefox's Enhanced Tracking Protection in Strict mode",
-        "Turn on Chrome's Privacy Sandbox and disable third-party cookies",
+        "Block third-party cookies in Chrome, which has few fingerprinting defences of its own",
         "Configure Safari's Intelligent Tracking Prevention features",
         "Disable WebGL and canvas access where possible"
       ],
@@ -69,23 +69,23 @@
     },
     {
       "stepNumber": 5,
-      "title": "Installing Specialized Privacy Browsers",
-      "description": "Privacy-focused browsers like Tor Browser and Brave provide superior fingerprint protection through advanced spoofing and blocking techniques.",
+      "title": "Trying a Browser Built to Resist Fingerprinting",
+      "description": "Some browsers resist fingerprinting without any setup. Tor Browser and Mullvad Browser make all their users look the same, and Brave randomizes the readings fingerprinting scripts take.",
       "actions": [
-        "Download and use a privacy-focused browser with comprehensive fingerprint protection",
-        "Configure Brave's fingerprint blocking settings to maximum protection",
+        "Install Brave or Mullvad Browser and use it for everyday browsing",
+        "In Brave, check that fingerprinting protection is on in the Shields panel (it is by default)",
         "Test Tor Browser's fingerprint resistance capabilities",
-        "Compare fingerprint test results across different privacy browsers"
+        "Run the same fingerprint test in each browser and compare the results"
       ],
-      "proTip": "Some privacy-focused browsers are specifically designed to minimize fingerprinting while maintaining website compatibility."
+      "proTip": "Brave's approach keeps most sites working. Tor Browser's works best when you leave it unchanged, so don't add extensions or change its settings."
     },
     {
       "stepNumber": 6,
       "title": "Using Browser Extensions for Extra Protection",
       "description": "Browser extensions can add additional layers of fingerprint protection by spoofing or blocking fingerprinting scripts, though they may affect website functionality.",
       "actions": [
-        "Install Canvas Blocker extension for Firefox to prevent canvas fingerprinting",
-        "Add uBlock Origin with anti-fingerprinting filter lists",
+        "Install the CanvasBlocker extension for Firefox to blunt canvas fingerprinting",
+        "Add uBlock Origin on Firefox, or uBlock Origin Lite on Chrome, and turn on its fingerprinting filter lists",
         "Configure NoScript to block JavaScript-based fingerprinting",
         "Test website compatibility with different extension configurations"
       ],
@@ -106,7 +106,7 @@
     }
   ],
   "pro_tips": [
-    "Use a privacy-focused browser for automatic fingerprint protection without manual configuration - it's designed specifically to combat advanced tracking techniques.",
+    "If you'd rather not configure anything, use a browser whose fingerprinting protection is on from the start, such as Brave, Mullvad Browser or Tor Browser.",
     "Never rely on private/incognito mode alone for fingerprint protection - it only prevents local storage, not fingerprinting.",
     "Regularly test your fingerprint using different tools, as protection effectiveness can change with browser updates and new tracking methods.",
     "Consider using a VPN alongside anti-fingerprinting tools, as your IP address is often combined with fingerprinting data for tracking.",
@@ -119,7 +119,7 @@
     },
     {
       "question": "Can I completely prevent device fingerprinting?",
-      "answer": "Complete prevention is very difficult without severely limiting browser functionality. However, you can significantly reduce your fingerprint's uniqueness using privacy-focused browsers, browser extensions, and careful configuration of privacy settings."
+      "answer": "Complete prevention is very difficult without severely limiting browser functionality. However, you can significantly reduce your fingerprint's uniqueness with a browser built to resist fingerprinting (such as Tor Browser, Mullvad Browser or Brave), a few well-chosen extensions, and careful configuration of privacy settings."
     },
     {
       "question": "Does using private/incognito mode protect against fingerprinting?",
@@ -137,6 +137,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /guides/browser-privacy/."
   },

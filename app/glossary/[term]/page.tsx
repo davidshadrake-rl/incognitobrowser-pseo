@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
-import { getGlossaryItem, getGlossaryFiles, isPublished, getCrossNicheLinks, nicheForGlossaryTerm, redactPeople } from '@/lib/content';
+import { getGlossaryItem, getGlossaryFiles, isPublished, getCrossNicheLinks, nicheForGlossaryTerm, redactPeople, type EditableContent } from '@/lib/content';
 import { RelatedContent } from '@/components/seo/RelatedContent';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
@@ -38,13 +38,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { term } = await params;
   const data = getGlossaryItem<GlossaryData>(term);
   if (!data) return {};
+  const { editorial } = data as unknown as EditableContent;
   return genMeta({
     title: `${data.term} - Privacy Glossary`,
     description: data.metaDescription,
     path: `/glossary/${term}`,
     noIndex: !isPublished(data as unknown as Parameters<typeof isPublished>[0]),
-    publishedAt: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    modifiedAt: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
+    publishedAt: editorial?.reviewedAt || undefined,
+    modifiedAt: editorial?.updatedAt || editorial?.reviewedAt || undefined,
   });
 }
 
@@ -72,14 +73,17 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
   // Per-article Article + Person JSON-LD. Surfaces the byline (Darkpool
   // David, pseudonymous writer) and editor (David Shadrake, LinkedIn-
   // verified) so Google can attribute the page to real entities.
+  // Published is the review; modified is the last text change after it
+  // (editorial.updatedAt), else the review. An edit never moves the review date.
+  const { editorial } = data as unknown as EditableContent;
   const articleSchema = generateArticleSchema({
     headline: (data as unknown as { term?: string; title?: string }).term || (data as unknown as { title?: string }).title || term, // glossary items carry `term`, not `title` — every Article schema shipped without a headline
     description: (data as unknown as { metaDescription?: string; definition?: string }).metaDescription
       || (data as unknown as { definition?: string }).definition
       || '',
     url: 'https://incognitobrowser.io/resources' + `/glossary/${term}`,
-    datePublished: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
-    dateModified: (data as unknown as { editorial?: { reviewedAt?: string | null } }).editorial?.reviewedAt || undefined,
+    datePublished: editorial?.reviewedAt || undefined,
+    dateModified: editorial?.updatedAt || editorial?.reviewedAt || undefined,
     attributed: !!(data as unknown as { author?: { name?: string } | null }).author?.name,
   });
 

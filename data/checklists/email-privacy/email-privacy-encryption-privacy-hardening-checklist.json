@@ -69,7 +69,7 @@
           "id": "block-tracking-pixels",
           "task": "Enable tracking pixel blocking",
           "why": "Invisible tracking pixels in emails report when you open messages, your location, device info, and reading habits to senders and data brokers.",
-          "howTo": "Enable 'Block remote content' or 'Disable tracking pixels' in your email settings. Use a privacy-focused browser with tracking protection when accessing webmail. Install email clients with built-in pixel blocking.",
+          "howTo": "Enable 'Block remote content' or 'Disable tracking pixels' in your email settings. In Gmail on the web, set Settings > General > Images to 'Ask before displaying external images'. Install email clients with built-in pixel blocking.",
           "priority": "critical"
         },
         {
@@ -154,9 +154,9 @@
       "items": [
         {
           "id": "use-tor-access",
-          "task": "Access email through Tor for maximum anonymity",
-          "why": "Your IP address reveals your location and can be used to track your email usage patterns. Tor provides anonymous access.",
-          "howTo": "Use Tor Browser or a privacy-focused browser with Tor integration to access your email. Many privacy email providers offer .onion addresses for Tor access. Never log in to non-encrypted email through Tor.",
+          "task": "Access email through Tor to hide your IP address",
+          "why": "Your IP address reveals your rough location and can be used to track your email usage patterns. Tor hides it from your email provider, though the provider still knows which account you signed in to.",
+          "howTo": "Open your webmail in Tor Browser. Proton Mail, for one, has an official .onion address for Tor users. Only sign in over HTTPS or an .onion address, since the last relay in a Tor circuit can read unencrypted traffic. Expect extra verification prompts: some providers flag Tor sign-ins.",
           "priority": "medium"
         },
         {
@@ -191,7 +191,7 @@
     }
   ],
   "pro_tips": [
-    "Never access encrypted email from public computers or unsecured networks - use a privacy-focused browser with VPN on your own device instead",
+    "Never open encrypted email on public or shared computers, where a keylogger or a session left signed in can expose it - use your own device instead",
     "Set up email forwarding from your old Gmail account gradually, then delete it completely once migration is finished to prevent data mining",
     "Use different email signatures and writing styles for different aliases to maintain better compartmentalization of your identities",
     "Schedule regular 'email cleanups' to delete old messages and reduce the amount of sensitive data stored in your accounts",
@@ -227,6 +227,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

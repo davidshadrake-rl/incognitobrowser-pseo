@@ -21,16 +21,16 @@
   "steps": [
     {
       "stepNumber": 1,
-      "title": "Configure Advanced Chrome Incognito Settings",
-      "description": "Chrome's incognito mode has hidden settings that can enhance your privacy protection beyond the default configuration.",
+      "title": "Harden Chrome's Incognito Mode with Settings That Still Exist",
+      "description": "The incognito flags that older guides recommend are gone. SameSite-by-default cookies shipped as normal behaviour years ago, and the origin-isolation flags were retired once isolation became the default. These are the settings that are actually there.",
       "actions": [
-        "Type 'chrome://flags' in your incognito window address bar",
-        "Search for 'Incognito Screenshot' and disable it to prevent screenshots",
-        "Enable 'Strict-Origin-Isolation' for better site isolation",
-        "Set 'SameSite by default cookies' to Enabled for stricter cookie handling"
+        "Settings > Privacy and security > Third-party cookies: Incognito already blocks them, so block them in normal windows too",
+        "Settings > Privacy and security > Security: turn on 'Always use secure connections' so Incognito doesn't quietly load pages over HTTP",
+        "On Android and iOS: Settings > Privacy and security > 'Lock Incognito tabs when you leave Chrome', so the tabs need your face or fingerprint to reopen",
+        "Accept what Incognito is for: it clears history, cookies and site data when you close the last window, and hides nothing from the sites you visit, your employer or your ISP"
       ],
       "proTip": "Use Ctrl+Shift+N (Windows) or Cmd+Shift+N (Mac) to quickly open multiple incognito windows for different browsing sessions.",
-      "warning": "Chrome flags are experimental features. Some may affect browser stability or functionality."
+      "warning": "Treat any guide that tells you to set a chrome://flags entry with suspicion. Flags are unreleased experiments, they are removed without notice once the work ships, and most of the ones in older privacy advice no longer exist."
     },
     {
       "stepNumber": 2,
@@ -42,7 +42,7 @@
         "Go to about:config and set 'privacy.resistFingerprinting' to true",
         "Enable 'network.cookie.sameSite.laxByDefault' for better cookie protection"
       ],
-      "proTip": "Firefox's private browsing includes DNS over HTTPS by default, providing additional protection against DNS tracking."
+      "proTip": "DNS over HTTPS is not a private-window feature. Mozilla turned it on by default for Firefox users in the United States, and you can set it for every window under Settings > Privacy & Security > DNS over HTTPS."
     },
     {
       "stepNumber": 3,
@@ -54,7 +54,7 @@
         "Block all cookies except from websites you visit",
         "Enable 'Hide IP address from trackers' in Privacy settings"
       ],
-      "proTip": "Safari's private mode automatically uses DuckDuckGo as the default search engine for enhanced privacy.",
+      "proTip": "Safari does not switch search engines on its own in Private Browsing. If you want a different one there, turn off Settings > Safari > 'Also Use in Private Browsing' on iPhone and then pick a Private Search Engine.",
       "warning": "Some websites may not function properly with strict cookie blocking enabled."
     },
     {
@@ -77,9 +77,9 @@
         "Create dedicated profiles for work, personal, and sensitive browsing",
         "Use incognito mode within each profile for additional privacy layers",
         "Configure different privacy settings for each profile based on use case",
-        "Consider using a privacy-focused browser as a dedicated private browsing solution"
+        "In Firefox, use Multi-Account Containers to keep sites' cookies apart within one profile"
       ],
-      "proTip": "Use different browsers entirely for different activities - Chrome for work, Firefox for personal, and a privacy-focused browser for sensitive tasks."
+      "proTip": "Use different browsers entirely for different activities - Chrome for work, Firefox for personal browsing, and Tor Browser for anything that needs anonymity."
     },
     {
       "stepNumber": 6,
@@ -107,8 +107,8 @@
     }
   ],
   "pro_tips": [
-    "Combine incognito mode with a VPN for maximum privacy - incognito protects local data while VPN protects network traffic",
-    "Use a dedicated privacy-focused browser for sensitive activities instead of relying solely on private modes",
+    "Pick the tool for the job: a private window keeps history off the device, a VPN hides your IP address from sites and your traffic from the local network, and Tor Browser is the tool for anonymity",
+    "For sensitive activities, don't rely on private windows alone: turn tracking protection to its strictest setting, or use a browser that blocks trackers by default, such as Brave",
     "Clear your DNS cache regularly using 'ipconfig /flushdns' (Windows) or 'sudo dscacheutil -flushcache' (Mac)",
     "Enable two-factor authentication on accounts you access in private mode to add an extra security layer",
     "Use different search engines in private mode - DuckDuckGo or Startpage instead of Google for better privacy"
@@ -116,7 +116,7 @@
   "faqs": [
     {
       "question": "Does using advanced incognito techniques make me completely anonymous online?",
-      "answer": "No, even advanced incognito techniques don't provide complete anonymity. Your ISP, network administrator, and websites can still track your IP address and network activity. For stronger anonymity, combine these techniques with a VPN and consider using Tor browser."
+      "answer": "No, even advanced incognito techniques don't provide complete anonymity. Your ISP, network administrator, and websites can still track your IP address and network activity. For anonymity, use Tor Browser, which is built for it; the Tor Project does not recommend adding a VPN to Tor unless you are an advanced user who can configure both without undoing your privacy."
     },
     {
       "question": "Can websites detect that I'm using advanced privacy settings?",
@@ -131,14 +131,15 @@
       "answer": "These advanced techniques are best for sensitive browsing activities. For general browsing, standard incognito mode is usually sufficient. Consider your privacy needs and balance them with browsing convenience."
     },
     {
-      "question": "What's the difference between these techniques and using a dedicated private browser?",
-      "answer": "Dedicated private browsers are designed from the ground up for privacy, while these techniques enhance existing browsers. Private browsers often provide more comprehensive protection with less configuration required."
+      "question": "What's the difference between these techniques and switching to a browser built for privacy?",
+      "answer": "These techniques tighten a browser you already use. Browsers built around privacy start with stricter defaults, so there is less to set up: Brave blocks many ads and trackers out of the box, and Tor Browser also hides your IP address from the sites you visit by routing your traffic through the Tor network. None of them hides your browsing from software on a work or school device."
     }
   ],
   "relatedLinks": [],
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /guides/browser-privacy/."
   },

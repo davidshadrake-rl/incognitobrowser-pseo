@@ -43,7 +43,7 @@
         "Identify 'privacy theater' - complex settings that don't meaningfully protect privacy",
         "Check if consent options are truly granular or bundled together inappropriately"
       ],
-      "proTip": "Use a privacy-focused browser to test consent flows without previous cookies affecting the experience. Take screenshots to document dark patterns.",
+      "proTip": "Test each consent flow in a fresh private window or a new browser profile, so earlier cookies and choices don't change what you see. Take screenshots to document dark patterns.",
       "warning": "Pre-checked boxes and unnecessarily complex opt-out processes may violate GDPR even if technically legal elsewhere."
     },
     {
@@ -95,7 +95,7 @@
         "Check if you can limit data sharing between different company services",
         "Analyze how account linking affects privacy across the company's ecosystem"
       ],
-      "proTip": "Use separate email addresses and separate private browser sessions when testing different services to understand data linking practices.",
+      "proTip": "Use separate email addresses and separate browser profiles when testing different services to understand data linking practices (private windows in the same browser share one session).",
       "warning": "Companies may claim services are separate while extensively sharing data behind the scenes, creating comprehensive user profiles."
     },
     {
@@ -115,7 +115,7 @@
   "pro_tips": [
     "Create standardized evaluation templates to consistently analyze policies across different services and track changes over time.",
     "Join privacy researcher communities and forums where experts share analysis tools and discuss emerging privacy policy trends.",
-    "Use a privacy-focused browser when researching companies to avoid tracking during your analysis process.",
+    "Check what a site loads before you consent: open your browser's developer tools (Network tab) and note which third-party requests fire before you click anything in the cookie banner.",
     "Document everything with screenshots and archived copies - companies can change policies or remove evidence of problematic practices.",
     "Consider the business model: free services typically have more invasive data practices hidden in complex policy language."
   ],
@@ -144,6 +144,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

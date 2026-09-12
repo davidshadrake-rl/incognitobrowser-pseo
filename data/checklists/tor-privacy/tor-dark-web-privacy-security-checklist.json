@@ -82,7 +82,7 @@
           "id": "https-only",
           "task": "Only visit HTTPS websites and .onion sites",
           "why": "HTTP traffic can be monitored by exit nodes, compromising your privacy and security.",
-          "howTo": "Look for the lock icon in address bar. Use HTTPS Everywhere extension (built into Tor Browser) to force HTTPS connections.",
+          "howTo": "Look for the lock icon in the address bar. Tor Browser's HTTPS-Only mode, on by default, upgrades sites to HTTPS and warns you before loading a page that isn't encrypted.",
           "priority": "high"
         },
         {
@@ -113,9 +113,9 @@
       "items": [
         {
           "id": "vpn-over-tor",
-          "task": "Consider using VPN before connecting to Tor",
-          "why": "Hides Tor usage from your ISP and adds an extra layer of encryption and anonymity.",
-          "howTo": "Connect to a no-logs VPN service first, then launch Tor Browser. Choose VPN providers that accept anonymous payments.",
+          "task": "Use a bridge, not a VPN, to hide that you're using Tor",
+          "why": "Bridges are unlisted relays, so an observer doesn't see you contacting a public Tor relay. The Tor Project doesn't recommend adding a VPN unless you're an advanced user.",
+          "howTo": "In Tor Browser's Connection settings, choose a built-in bridge, or get one at bridges.torproject.org or by emailing bridges@torproject.org from a Gmail or Riseup address.",
           "priority": "high"
         },
         {
@@ -136,14 +136,14 @@
           "id": "system-clock-sync",
           "task": "Ensure system clock is accurate",
           "why": "Incorrect time can prevent Tor from connecting properly and may fingerprint your system.",
-          "howTo": "Enable automatic time sync on your OS. Verify time zone matches your claimed location if using VPN.",
+          "howTo": "Enable automatic time sync on your operating system. Tor needs a reasonably accurate clock to build circuits and validate certificates.",
           "priority": "medium"
         },
         {
           "id": "firewall-configuration",
           "task": "Configure firewall to only allow Tor traffic",
           "why": "Prevents other applications from bypassing Tor and leaking your real IP address.",
-          "howTo": "Set up firewall rules to block all traffic except through Tor ports (9001, 9030, 9050, 9051). Block direct internet access for other apps.",
+          "howTo": "Tor Browser's own SOCKS proxy listens on 127.0.0.1:9150 (a system tor daemon uses 9050). Allow those and block other outbound connections. Ports 9001 and 9030 are relay ports and are not used by a client.",
           "priority": "high"
         },
         {
@@ -160,9 +160,9 @@
       "items": [
         {
           "id": "onion-link-verification",
-          "task": "Verify .onion links from trusted sources only",
+          "task": "Verify every .onion address against the operator's own published one",
           "why": "Malicious .onion sites can host malware, scams, or law enforcement honeypots.",
-          "howTo": "Use established directories like The Hidden Wiki, cross-reference links from multiple sources, never click random links.",
+          "howTo": "Take the address from the operator's own published page, compare it character by character, then bookmark it. Don't rely on a directory or a search result.",
           "priority": "critical"
         },
         {
@@ -173,10 +173,10 @@
           "priority": "high"
         },
         {
-          "id": "cryptocurrency-anonymity",
-          "task": "Use privacy-focused cryptocurrencies for transactions",
-          "why": "Bitcoin transactions can be traced; privacy coins provide better anonymity for dark web purchases.",
-          "howTo": "Use Monero, Zcash, or other privacy coins. Never use exchanges that require KYC verification. Use coin mixing services.",
+          "id": "prefer-onion-services",
+          "task": "Use a service's .onion address whenever it publishes one",
+          "why": "Traffic to an onion address stays inside the Tor network, so no exit relay can read or alter it, and the address itself authenticates the service.",
+          "howTo": "Watch for the '.onion available' notice in Tor Browser's URL bar, and verify any address you're given against the operator's own published one.",
           "priority": "high"
         },
         {
@@ -187,11 +187,11 @@
           "priority": "high"
         },
         {
-          "id": "marketplace-research",
-          "task": "Research marketplace reputation and escrow systems",
-          "why": "Many dark web marketplaces are scams or honeypots designed to steal money or identify users.",
-          "howTo": "Read forum reviews, check marketplace uptime history, always use escrow services, start with small test purchases.",
-          "priority": "medium"
+          "id": "no-marketplace-purchases",
+          "task": "Don't buy anything on dark web marketplaces",
+          "why": "Marketplaces there are commonly scams or law enforcement operations, and buying illegal goods is a crime wherever you live.",
+          "howTo": "Treat marketplaces as out of scope. If you're researching one, read about it instead of registering, and never send funds, however the site describes its escrow.",
+          "priority": "critical"
         },
         {
           "id": "legal-awareness",
@@ -205,15 +205,15 @@
   ],
   "pro_tips": [
     "Always assume you're being monitored - practice perfect operational security even for legal activities on Tor.",
-    "Use a privacy-focused browser for regular privacy needs and reserve Tor only for situations requiring maximum anonymity.",
+    "For everyday browsing, an ordinary browser with strict tracking protection handles most tracking; save Tor Browser for when you need to hide your IP address and the sites you visit from your network.",
     "Never mix Tor activities with your real identity - create completely separate digital personas and never cross-contaminate them.",
     "Test your setup regularly using online anonymity checkers to ensure no information is leaking about your real identity.",
     "Keep detailed notes about your security practices in an encrypted journal to maintain consistency and identify potential weaknesses."
   ],
   "relatedLinks": [
     {
-      "title": "VPN Privacy Ultimate Guide",
-      "url": "/guides/vpn-privacy-ultimate-guide",
+      "title": "Complete Guide to VPN & Proxy for Privacy & Security",
+      "url": "/guides/vpn-privacy/complete-guide-to-vpn-proxy",
       "type": "internal"
     },
     {
@@ -235,6 +235,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

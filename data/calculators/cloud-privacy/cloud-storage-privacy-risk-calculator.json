@@ -94,7 +94,7 @@
           "label": "Use third-party encryption tool"
         }
       ],
-      "helpText": "Do you use any additional encryption beyond the provider's default?"
+      "helpText": "Do you use any encryption beyond the provider's default? It only lowers your score for files the provider could otherwise open."
     },
     {
       "id": "twoFactor",
@@ -163,9 +163,9 @@
       "description": "Most important step to improve your privacy"
     }
   ],
-  "formula": "const accessScores = { 'can-read': 60, 'partly': 35, 'cannot': 15, 'unsure': 65 }; const dataTypeScores = { 'personal': 10, 'business': 25, 'financial': 40, 'medical': 45, 'legal': 35, 'creative': 20 }; const encryptionReduction = { 'none': 0, 'manual': -25, 'zero-knowledge': -30, 'third-party': -20 }; const sharingScores = { 'never': 0, 'rare': 5, 'occasional': 10, 'frequent': 20, 'daily': 30 }; let baseScore = accessScores[providerAccess] ?? 65; baseScore += dataTypeScores[dataTypes] ?? 10; baseScore += encryptionReduction[encryptionUsed] ?? 0; baseScore += sharingScores[sharingFrequency] ?? 10; if (!twoFactor) baseScore += 15; if (dataAmount > 100) baseScore += 5; if (dataAmount > 500) baseScore += 10; const riskScore = Math.max(0, Math.min(100, baseScore)); let riskLevel, recommendation; if (riskScore <= 25) { riskLevel = 'Low Risk'; recommendation = 'Keep 2FA on and review your shared links from time to time.'; } else if (riskScore <= 50) { riskLevel = 'Moderate Risk'; recommendation = 'Turn on 2FA if it is off, and move sensitive files to end-to-end encrypted storage.'; } else if (riskScore <= 75) { riskLevel = 'High Risk'; recommendation = 'Switch to zero-knowledge providers and encrypt sensitive files before upload.'; } else { riskLevel = 'Critical Risk'; recommendation = 'Move sensitive files to end-to-end encrypted storage now and turn on every security feature your account offers.'; } return { riskScore, riskLevel, recommendation };",
+  "formula": "const accessScores = { 'can-read': 60, 'partly': 35, 'cannot': 15, 'unsure': 65 }; const sensitivity = { 'personal': 1, 'creative': 1.1, 'business': 1.2, 'legal': 1.3, 'financial': 1.4, 'medical': 1.5 }; const encryptionReduction = { 'none': 0, 'manual': -25, 'zero-knowledge': -30, 'third-party': -20 }; const sharingScores = { 'never': 0, 'rare': 5, 'occasional': 10, 'frequent': 20, 'daily': 30 }; const e2eLevel = accessScores['cannot']; const exposure = Math.max(e2eLevel, (accessScores[providerAccess] ?? 65) + (encryptionReduction[encryptionUsed] ?? 0)); const sharing = sharingScores[sharingFrequency] ?? 10; let points = exposure + sharing; if (!twoFactor) points += 15; if (dataAmount > 100) points += 5; if (dataAmount > 500) points += 10; const riskScore = Math.max(0, Math.min(100, Math.round(points * (sensitivity[dataTypes] ?? 1)))); let riskLevel; if (riskScore <= 25) riskLevel = 'Low Risk'; else if (riskScore <= 50) riskLevel = 'Moderate Risk'; else if (riskScore <= 75) riskLevel = 'High Risk'; else riskLevel = 'Critical Risk'; const ownEncryption = (encryptionReduction[encryptionUsed] ?? 0) < 0; const providerStep = { 'can-read': ownEncryption ? 'Make sure every sensitive file is encrypted before upload, with your own tool or a zero-knowledge option from your provider: the provider can open anything uploaded unencrypted.' : 'Move sensitive files to end-to-end encrypted storage, or encrypt them on your device before upload.', 'partly': 'Check that every sensitive file is inside your end-to-end encrypted folder, copies included, or encrypt the rest before upload.', 'unsure': 'Find out whether your provider can open your files (look for end-to-end or zero-knowledge encryption in its security settings); if it can, make sure every sensitive file is encrypted before upload.' }; const twoFactorStep = 'Turn on two-factor authentication, with an authenticator app rather than SMS.'; const steps = [[exposure - e2eLevel, providerStep[providerAccess] ?? providerStep['unsure']], [twoFactor ? 0 : 15, twoFactorStep], [sharing, 'Share with named people rather than open links, set links to expire, and remove shares you no longer need.']]; const top = steps.reduce((best, step) => (step[0] > best[0] ? step : best)); let recommendation; if (top[0] <= 0) recommendation = 'Keep 2FA on, and review which apps and devices can reach your account from time to time.'; else recommendation = top[1] + (!twoFactor && top[1] !== twoFactorStep ? ' Turn on two-factor authentication as well.' : ''); return { riskScore, riskLevel, recommendation };",
   "educational": {
-    "methodology": "This calculator evaluates your cloud storage privacy risk based on whether your provider can open your files, data sensitivity, encryption usage, account security, and sharing habits. Scores range from 0-100, with lower scores indicating better privacy protection.",
+    "methodology": "This calculator adds up what could expose your files: a provider that can open them, no two-factor authentication, frequent sharing and a large archive. Encryption you add counts only for files your provider could otherwise open. The total is then scaled up for more sensitive data, by up to 1.5 times for medical records. Scores range from 0-100, with lower scores indicating better privacy protection.",
     "tips": [
       "Use zero-knowledge encrypted providers like Proton Drive or Tresorit for sensitive data",
       "Always enable two-factor authentication on your cloud storage accounts",
@@ -183,7 +183,7 @@
       {
         "range": "26-50",
         "label": "Moderate Risk",
-        "description": "Good practices but room for improvement in encryption and provider choice",
+        "description": "Good practices, with one or two gaps worth closing",
         "color": "yellow"
       },
       {
@@ -220,6 +220,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

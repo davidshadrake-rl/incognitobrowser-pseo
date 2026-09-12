@@ -68,14 +68,14 @@
           "id": "https-only",
           "task": "Only visit HTTPS websites",
           "why": "HTTPS encrypts data between your browser and websites, preventing eavesdropping on unencrypted HTTP connections.",
-          "howTo": "Look for the lock icon in your browser's address bar. Use HTTPS Everywhere extension or enable 'Always use secure connections' in browser settings.",
+          "howTo": "Turn on the browser's own setting: Firefox Privacy & Security > HTTPS-Only Mode, or Chrome Security > 'Always use secure connections'. The old HTTPS Everywhere add-on was retired once browsers did this themselves.",
           "priority": "critical"
         },
         {
           "id": "private-browsing",
-          "task": "Use private browsing mode or a privacy-focused browser",
-          "why": "Private browsing prevents storing cookies, history, and login data that could be accessed if your device is compromised.",
-          "howTo": "Use Ctrl+Shift+N (Chrome) or Ctrl+Shift+P (Firefox) for private mode. Consider using a privacy-focused browser for enhanced privacy protection.",
+          "task": "Use private browsing mode",
+          "why": "A private window deletes its cookies, history and sign-ins when you close it, so they aren't left on the device. It doesn't hide your traffic from the Wi-Fi network: HTTPS and a VPN do that.",
+          "howTo": "Use Ctrl+Shift+N (Chrome) or Ctrl+Shift+P (Firefox) for private mode, and close every private window when you're done.",
           "priority": "high"
         },
         {
@@ -142,8 +142,8 @@
         {
           "id": "travel-router",
           "task": "Consider a travel router for frequent travelers",
-          "why": "Travel routers create your own secure network and can provide VPN protection for all connected devices.",
-          "howTo": "Research portable routers with built-in VPN support. Configure with your VPN credentials before traveling for seamless protection.",
+          "why": "A travel router gives your devices their own network segment and can run one VPN for all of them, including devices with no VPN app. The upstream link is still the venue's.",
+          "howTo": "Look for a portable router that can run a VPN client (WireGuard or OpenVPN), and set it up with your VPN account before you travel.",
           "priority": "low"
         }
       ]
@@ -153,7 +153,7 @@
     "Download offline maps, entertainment, and work files before traveling to reduce public Wi-Fi dependency and exposure time.",
     "Use a dedicated 'travel' email account for captive portals and public Wi-Fi registrations to keep your main email private.",
     "Screenshot important information before connecting to public Wi-Fi, so you won't need to access sensitive accounts if you need the data.",
-    "Set your device to 'airplane mode' first, then enable only Wi-Fi to prevent cellular data leaks while on public networks.",
+    "If your phone plan allows it, use cellular data or your own hotspot instead of the venue's Wi-Fi. It costs a little data and removes the shared network from the picture entirely.",
     "Create a checklist on your phone with these steps and review it each time before connecting to unfamiliar networks."
   ],
   "relatedLinks": [
@@ -176,6 +176,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

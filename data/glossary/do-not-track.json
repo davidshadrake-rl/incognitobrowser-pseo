@@ -5,7 +5,7 @@
   "metaDescription": "Learn about Do Not Track (DNT) - a browser privacy setting that requests websites not to track your online behavior for ads and analytics.",
   "simpleExplanation": "Do Not Track is like putting up a 'no solicitors' sign for your web browser. When enabled, it sends a polite request to websites asking them not to follow your browsing habits for advertising purposes.",
   "whyItMatters": "While DNT gives users a way to express privacy preferences, most websites ignore these requests since compliance is voluntary. Understanding its limitations helps users make informed decisions about browser privacy settings.",
-  "technicalDetail": "DNT works by adding a 'DNT: 1' header to HTTP requests. However, there's no enforcement mechanism, and major advertising networks typically don't honor DNT signals. The W3C discontinued the DNT standard in 2019 due to lack of industry adoption and disagreement over implementation.",
+  "technicalDetail": "DNT works by adding a 'DNT: 1' header to HTTP requests. However, there's no enforcement mechanism, and major advertising networks typically don't honor DNT signals. The W3C discontinued the DNT standard in 2019 due to lack of industry adoption and disagreement over implementation, and Firefox removed the setting from its preferences in version 135, pointing users to Global Privacy Control instead.",
   "examples": [
     {
       "scenario": "News website tracking",
@@ -31,6 +31,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

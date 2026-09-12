@@ -52,10 +52,10 @@
         "Disable search suggestion sync across devices in browser settings",
         "Clear all stored form data and search predictions",
         "Configure DNS over HTTPS to prevent ISP search monitoring",
-        "Install and configure privacy-focused extensions like uBlock Origin",
-        "Switch to a privacy-hardened browser for sensitive searches"
+        "Install and configure a privacy-focused blocker: uBlock Origin on Firefox, or uBlock Origin Lite on Chrome and Edge",
+        "Set tracking protection to strict (Firefox: Enhanced Tracking Protection set to Strict; Brave: trackers and ads blocking set to Aggressive)"
       ],
-      "proTip": "Privacy-focused browsers provide superior privacy protection compared to standard browsers' private modes."
+      "proTip": "A private window only stops the browser saving history on your device; the search engine and the sites you visit still see your activity. Tracker blocking and a private search engine deal with the parts a private window leaves open."
     },
     {
       "stepNumber": 4,
@@ -102,7 +102,7 @@
         "Disable Siri/Google Assistant search history and suggestions",
         "Configure mobile browsers with the same privacy settings as desktop",
         "Remove or disable pre-installed search apps that can't be secured",
-        "Use a privacy-focused mobile browser",
+        "Use a mobile browser that blocks trackers and clears your session with one tap, such as Firefox Focus or the DuckDuckGo browser",
         "Disable location-based search suggestions and trending searches"
       ],
       "warning": "Mobile operating systems may override some privacy settings during updates."
@@ -110,7 +110,7 @@
   ],
   "pro_tips": [
     "Use different search engines for different types of queries to prevent comprehensive profiling - DuckDuckGo for sensitive searches, Startpage for Google results without tracking.",
-    "Consider using a privacy-focused browser as your primary browser for superior built-in privacy protection that doesn't require extensive manual configuration.",
+    "If you don't want to configure everything by hand, start from a browser whose defaults already block cross-site trackers, such as Brave or Firefox, and change only what you need.",
     "Create fake personas and occasionally search for unrelated topics to pollute any remaining data collection and make your real interests harder to identify.",
     "Set up search privacy audits every 3 months - companies frequently change privacy policies and add new data collection methods.",
     "Use multiple VPN servers from different countries when researching sensitive topics to make traffic analysis more difficult for surveillance systems."
@@ -152,6 +152,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with online-banking. Canonical version lives under /guides/online-banking/."
   },

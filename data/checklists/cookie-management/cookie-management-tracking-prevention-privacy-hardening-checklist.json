@@ -33,9 +33,9 @@
         },
         {
           "id": "enable-do-not-track",
-          "task": "Enable Do Not Track requests",
-          "why": "Sends a signal to websites requesting they don't track your browsing activity, though compliance is voluntary.",
-          "howTo": "Chrome: Settings > Privacy and security > Send a 'Do Not Track' request. Firefox: Settings > Privacy & Security > Send websites a 'Do Not Track' signal.",
+          "task": "Send the opt-out signal your browser offers",
+          "why": "Sends a signal to websites asking them not to track or sell your data. Do Not Track was voluntary and widely ignored; Global Privacy Control carries legal weight under some US state privacy laws.",
+          "howTo": "Chrome: Settings > Privacy and security > Send a 'Do Not Track' request. Firefox removed its Do Not Track setting in version 135; use 'Tell websites not to sell or share my data' in Settings > Privacy & Security instead, which sends Global Privacy Control.",
           "priority": "medium"
         },
         {
@@ -80,9 +80,9 @@
         },
         {
           "id": "clear-flash-cookies",
-          "task": "Remove Flash cookies and supercookies",
-          "why": "Flash cookies (LSOs) can recreate deleted HTTP cookies, defeating your privacy efforts through 'respawning'.",
-          "howTo": "Use CCleaner or similar tools to remove Flash LSOs. Check Adobe Flash Player settings panel to disable local storage or set to 0KB.",
+          "task": "Remove leftover Flash local storage and other supercookies",
+          "why": "Flash cookies (LSOs) could recreate deleted HTTP cookies, defeating your privacy efforts through 'respawning'.",
+          "howTo": "There is no Flash settings panel or browser setting left: Adobe stopped supporting Flash Player at the end of 2020 and blocked it from running in January 2021, and Chrome removed it in Chrome 88. Uninstall Adobe Flash Player if it is still on the machine and any surviving LSOs go with it. For the storage that is still live, clear site data (not just cookies) in your browser's settings.",
           "priority": "high"
         },
         {
@@ -106,30 +106,30 @@
       "items": [
         {
           "id": "install-privacy-browser",
-          "task": "Install and configure a privacy-focused browser for sensitive browsing",
-          "why": "Dedicated privacy browsers provide built-in cookie blocking, tracking prevention, and enhanced privacy features.",
-          "howTo": "Use a privacy-focused browser, configure strict privacy settings, use for sensitive activities like banking, research, or personal browsing.",
+          "task": "Switch to a browser that blocks trackers by default",
+          "why": "Firefox, Brave and Safari block cross-site tracking cookies without any setup, and Firefox and Brave also block many known tracking scripts, so you depend less on per-site settings and extensions.",
+          "howTo": "Firefox: Settings > Privacy & Security > Enhanced Tracking Protection > Strict. Brave: Shields are on by default; you can raise 'Trackers & ads blocking' to Aggressive under Settings > Shields and switch back if a site you need breaks. Safari: keep Prevent Cross-Site Tracking turned on in its privacy settings. Then make it your default browser.",
           "priority": "high"
         },
         {
           "id": "cookie-manager-extension",
           "task": "Install a comprehensive cookie management extension",
           "why": "Extensions provide granular control over cookies, real-time blocking, and detailed visibility into tracking attempts.",
-          "howTo": "Install extensions like Cookie AutoDelete, Ghostery, or uBlock Origin. Configure to automatically delete cookies from untrusted sites.",
+          "howTo": "Install extensions like Cookie AutoDelete, Ghostery, or a blocker (uBlock Origin on Firefox, uBlock Origin Lite on Chrome and Edge). Configure to automatically delete cookies from untrusted sites.",
           "priority": "high"
         },
         {
           "id": "script-blocker-setup",
           "task": "Configure script blocking for tracking prevention",
           "why": "Many tracking cookies are set by JavaScript. Blocking scripts prevents cookie creation and other tracking methods.",
-          "howTo": "Use NoScript (Firefox) or uBlock Origin in medium/hard mode. Allow scripts only for sites you trust and need full functionality.",
+          "howTo": "Use NoScript or uBlock Origin in medium/hard mode, both on Firefox. Chrome's uBlock Origin Lite has no such mode, so switch browsers for this. Allow scripts only for sites you trust and need full functionality.",
           "priority": "medium"
         },
         {
           "id": "dns-level-blocking",
           "task": "Set up DNS-based ad and tracker blocking",
           "why": "Blocks tracking domains before they can load, preventing cookie creation and improving browsing speed.",
-          "howTo": "Configure router or device DNS to use services like Quad9 (9.9.9.9) or Cloudflare for Families (1.1.1.3) with malware/ad blocking.",
+          "howTo": "Point your router or device at a DNS service with ad and tracker blocklists, such as NextDNS or AdGuard DNS, or run Pi-hole on your home network. Quad9 and Cloudflare for Families block malware (and, on 1.1.1.3, adult content), not ads or trackers.",
           "priority": "medium"
         },
         {
@@ -162,7 +162,7 @@
           "id": "audit-website-cookies",
           "task": "Conduct comprehensive website cookie audit",
           "why": "You need to know what cookies your site uses before you can properly manage consent and compliance.",
-          "howTo": "Use tools like Cookie Checker, Ghostery, or browser developer tools to identify all cookies. Document purpose, duration, and data collected.",
+          "howTo": "Use your browser's developer tools (Application or Storage panel) or an extension such as Ghostery to identify every cookie. Document purpose, duration, and data collected.",
           "priority": "critical"
         },
         {
@@ -190,7 +190,7 @@
     }
   ],
   "pro_tips": [
-    "Use a privacy-focused browser for automatic cookie and tracking protection without manual configuration - it's designed specifically for privacy-conscious users.",
+    "Firefox's Total Cookie Protection, on by default, keeps each site's cookies in a separate jar, so a tracker embedded on many sites can't read the same cookie on all of them.",
     "Test your cookie settings on a few favorite websites first to ensure they still work properly before applying strict settings everywhere.",
     "Cookie banners asking for consent are often misleading - 'Accept All' usually means accepting tracking, while 'Manage Preferences' lets you choose.",
     "Social media widgets (Facebook Like, Twitter Share) set tracking cookies even if you don't click them - block or remove these widgets.",
@@ -216,6 +216,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

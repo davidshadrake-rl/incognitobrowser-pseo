@@ -42,7 +42,7 @@
           "id": "ccpa-04",
           "task": "Opt out of personalized advertising with major ad networks",
           "why": "Ad networks track your browsing behavior across websites to build detailed profiles for targeted advertising.",
-          "howTo": "Visit the Digital Advertising Alliance opt-out page and Google's Ad Settings. Disable personalized ads and cross-site tracking. Use a privacy-focused browser to prevent tracking cookies.",
+          "howTo": "Visit the Digital Advertising Alliance opt-out page and Google's Ad Settings, and turn off personalized ads. Then turn on Global Privacy Control, which CCPA-covered businesses must treat as an opt-out of selling or sharing: Brave and DuckDuckGo send it by default, Firefox has a setting.",
           "priority": "medium"
         },
         {
@@ -67,7 +67,7 @@
         {
           "id": "ccpa-07",
           "task": "Create and publish a comprehensive privacy policy",
-          "why": "CCPA requires businesses to clearly disclose data collection practices and consumer rights to avoid penalties up to $7,500 per violation.",
+          "why": "CCPA requires businesses to disclose data practices and consumer rights. Penalties are inflation-adjusted: $2,663 per violation, $7,988 if intentional or involving a minor.",
           "howTo": "Include: categories of personal information collected, sources and purposes, third-party sharing practices, consumer rights, and contact information for privacy requests.",
           "priority": "critical"
         },
@@ -136,7 +136,7 @@
           "id": "ccpa-16",
           "task": "Enable browser-based opt-out signals recognition",
           "why": "CPRA requires businesses to honor universal opt-out mechanisms like Global Privacy Control signals from browsers and extensions.",
-          "howTo": "Update your website to detect and respect opt-out preference signals. Consider recommending a privacy-focused browser to customers for enhanced privacy controls.",
+          "howTo": "Detect the Global Privacy Control signal (the Sec-GPC: 1 request header, or navigator.globalPrivacyControl in JavaScript) and treat it as an opt-out of sale and sharing for that browser, and for the account if the visitor is signed in. Test with a browser that sends it, such as Brave.",
           "priority": "medium"
         },
         {
@@ -149,7 +149,7 @@
         {
           "id": "ccpa-18",
           "task": "Prepare for California Privacy Protection Agency enforcement",
-          "why": "The new dedicated privacy agency has expanded enforcement powers and will conduct audits and investigations starting in 2023.",
+          "why": "The California Privacy Protection Agency enforces alongside the attorney general and has issued public fines and settlements, including against data brokers and retailers.",
           "howTo": "Review compliance documentation, ensure staff training is current, and establish relationships with privacy attorneys. Monitor CPPA guidance and enforcement actions.",
           "priority": "low"
         }
@@ -158,7 +158,7 @@
   ],
   "pro_tips": [
     "Keep detailed records of all privacy requests and your responses - documentation is crucial if the California Privacy Protection Agency investigates your business.",
-    "Use a privacy-focused browser's built-in privacy tools to automatically send Global Privacy Control signals and block tracking cookies when browsing California business websites.",
+    "Global Privacy Control sends an opt-out with every page you load, which covers much of what a 'Do Not Sell' request does on each site you visit; data brokers you never visit directly still need their own requests.",
     "Set calendar reminders to review and update your CCPA compliance quarterly, as regulations and enforcement guidance continue evolving.",
     "Consider hiring a privacy attorney or consultant if your business processes large volumes of California consumer data or faces complex compliance scenarios.",
     "Join industry privacy associations and subscribe to privacy law updates to stay current on CCPA/CPRA developments and best practices."
@@ -188,6 +188,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

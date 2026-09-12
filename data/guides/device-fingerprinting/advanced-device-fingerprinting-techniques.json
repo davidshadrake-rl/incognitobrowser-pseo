@@ -90,14 +90,14 @@
         "Test WebGL protection effectiveness with fingerprinting tools",
         "Balance protection level with website compatibility needs"
       ],
-      "proTip": "Consider using a privacy-focused browser which includes built-in WebGL fingerprinting protection."
+      "proTip": "Brave randomizes WebGL readings by default, and Tor Browser and Mullvad Browser hide your graphics card's name from WebGL, so none of them needs this set up by hand."
     },
     {
       "stepNumber": 7,
       "title": "Setting Up Audio Fingerprint Defense",
       "description": "Protect against audio fingerprinting while preserving legitimate audio functionality for media playback and web applications.",
       "actions": [
-        "Configure audio context blocking in privacy-focused browsers",
+        "Use a browser that protects audio readings by default, such as Brave, which adds small random changes to them",
         "Test audio fingerprint spoofing extensions",
         "Verify media playback still works after implementing protection",
         "Set up audio fingerprint randomization techniques"
@@ -152,6 +152,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /guides/browser-privacy/."
   },

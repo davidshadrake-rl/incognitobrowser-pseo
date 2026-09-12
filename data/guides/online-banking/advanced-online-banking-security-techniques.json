@@ -32,7 +32,7 @@
         "Test the key by logging out and back in",
         "Register a backup key and store it securely"
       ],
-      "proTip": "Hardware keys are immune to phishing attacks since they verify the website's authenticity before responding.",
+      "proTip": "Hardware keys are phishing-resistant: the key checks the website's address before it responds, so a lookalike site gets nothing it can use. Attackers then go after account recovery instead, so lock that down too.",
       "warning": "Always register a backup key in case your primary key is lost or damaged."
     },
     {
@@ -40,13 +40,13 @@
       "title": "Create a Dedicated Banking Browser Environment",
       "description": "Establish a clean, secure browsing environment exclusively for banking to prevent cross-site tracking and malware interference.",
       "actions": [
-        "Download and use a privacy-focused browser for dedicated banking use",
-        "Configure the browser to clear all data on exit",
+        "Create a separate browser profile used only for banking (Chrome, Edge and Firefox all support profiles)",
+        "Set that profile to delete cookies and site data when it closes; expect your bank to ask for 2FA more often",
         "Disable all extensions and plugins",
         "Enable strict security settings and disable JavaScript for non-banking sites",
         "Bookmark your bank's official URL and always use it"
       ],
-      "proTip": "A privacy-focused browser's built-in privacy features provide an extra layer of protection against tracking and fingerprinting.",
+      "proTip": "The main benefit of a banking-only profile is that it has no extensions: an extension with access to all sites can read and change your bank's pages.",
       "warning": "Never save banking passwords in any browser, even a dedicated one."
     },
     {
@@ -129,7 +129,7 @@
   "faqs": [
     {
       "question": "Is hardware 2FA really necessary if my bank offers app-based authentication?",
-      "answer": "Yes, hardware 2FA provides superior security because it's immune to phishing attacks and SIM swapping. App-based authentication can be compromised if your phone is infected with malware or if you're tricked into entering codes on fake websites."
+      "answer": "It's the strongest option where your bank supports it, though not every bank does. A hardware key is phishing-resistant because it checks the site's address before responding, and it can't be SIM-swapped. Codes from an authenticator app can be typed into a fake site if you're tricked, and malware on your phone can abuse them."
     },
     {
       "question": "Can using a VPN trigger fraud alerts from my bank?",
@@ -151,6 +151,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

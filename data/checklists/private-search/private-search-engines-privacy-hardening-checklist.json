@@ -22,7 +22,7 @@
           "id": "select-primary-engine",
           "task": "Select your primary private search engine",
           "why": "Different engines offer varying privacy levels and result quality. Choosing the right one ensures you'll stick with it long-term.",
-          "howTo": "Test DuckDuckGo for general searches, Startpage for Google-like results, Brave Search for independence, or Searx for maximum control. Use each for a week to find your preference.",
+          "howTo": "Try DuckDuckGo for general searches, Startpage for Google-style results, Brave Search for an independent index, or SearXNG if you want to aggregate several. Use each for a week and see which you stop fighting.",
           "priority": "critical"
         },
         {
@@ -43,7 +43,7 @@
           "id": "understand-engine-sources",
           "task": "Understand where your chosen engine gets results",
           "why": "Knowing result sources helps set realistic expectations and choose the best engine for different search types.",
-          "howTo": "Research your engine's methodology: DuckDuckGo uses multiple sources, Startpage proxies Google, Brave builds its own index, Searx aggregates others.",
+          "howTo": "Research your engine's methodology: DuckDuckGo draws on several sources, Startpage proxies Google, Brave builds its own index, SearXNG aggregates other engines.",
           "priority": "medium"
         },
         {
@@ -134,10 +134,10 @@
           "priority": "high"
         },
         {
-          "id": "configure-incognito-browser",
-          "task": "Set up a privacy-focused browser with private search",
-          "why": "Privacy-focused browsers provide additional privacy layers and can prevent search history from being stored locally.",
-          "howTo": "Install a privacy-focused browser and configure your private search engine as default. This adds extra protection against local tracking and history storage.",
+          "id": "stop-local-search-history",
+          "task": "Stop your browser keeping a record of your searches",
+          "why": "A private search engine doesn't keep your queries, but your browser still saves them in its history and suggests them again as you type.",
+          "howTo": "In Firefox, go to Settings > Privacy & Security > History and choose 'Never remember history', or 'Clear history when Firefox closes' under custom settings. In any browser, a private window keeps nothing in history after you close it. Set your private search engine as the default there too.",
           "priority": "medium"
         },
         {
@@ -177,7 +177,7 @@
           "id": "setup-tor-searching",
           "task": "Configure private searching over Tor if needed",
           "why": "For maximum anonymity, Tor hides your location and identity even from the private search engine.",
-          "howTo": "Install Tor Browser and verify your private search engines work over Tor. DuckDuckGo and Searx have .onion addresses for direct Tor access.",
+          "howTo": "Install Tor Browser and check your search engine works over it. DuckDuckGo runs an onion service, and some SearXNG instances do too, which keeps the request inside the Tor network.",
           "priority": "low"
         },
         {
@@ -195,7 +195,7 @@
     "Keep Startpage bookmarked as a backup when you need Google-quality results but with privacy protection through their proxy service.",
     "Create separate browser profiles for different privacy levels - one hardened profile for private searching and another for less sensitive browsing.",
     "Test your private search setup monthly by checking if autocomplete is disabled and verifying you're not accidentally using Google.",
-    "For search sessions that need maximum privacy, consider a privacy-focused browser that keeps no local history."
+    "If you clear cookies often, bookmark your search settings as a URL instead: DuckDuckGo and Startpage both offer a settings link, so clearing cookies doesn't reset your region, safe search and other choices."
   ],
   "relatedLinks": [
     {
@@ -222,6 +222,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

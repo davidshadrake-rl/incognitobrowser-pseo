@@ -191,8 +191,12 @@ describe.skipIf(!HAS_TARGET)('published article page (checklist)', () => {
   });
 
   it('emits article:published_time + article:modified_time OG tags', () => {
+    // published_time is reviewedAt, a timestamp: the moment a reviewer signed
+    // the page off. modified_time is editorial.updatedAt, a plain ISO date
+    // (lib/content.ts, scripts/stamp-updated.ts) — we know the day a page's
+    // text changed, not the second, and we don't invent a time we didn't record.
     expect(html).toMatch(/<meta[^>]+property="article:published_time"[^>]+content="\d{4}-\d{2}-\d{2}T/);
-    expect(html).toMatch(/<meta[^>]+property="article:modified_time"[^>]+content="\d{4}-\d{2}-\d{2}T/);
+    expect(html).toMatch(/<meta[^>]+property="article:modified_time"[^>]+content="\d{4}-\d{2}-\d{2}(T|")/);
   });
 
   it('emits Breadcrumb JSON-LD', () => {
@@ -287,7 +291,7 @@ describe.skipIf(!HAS_TARGET)('no missing-space concatenations in visible text', 
     'NextDNS', 'NextJS', 'NextJs', 'PostgreSQL', 'MySQL', 'GraphQL',
     'OAuth', 'OpenID', 'WebKit', 'WebRTC', 'WebGL', 'WebGPU', 'WebAuthn',
     'OpenAI', 'ChatGPT', 'OpenVPN', 'WireGuard', 'BitTorrent',
-    'AdBlock', 'uBlock', 'AdGuard', 'PrivacyBadger',
+    'AdBlock', 'uBlock', 'AdGuard', 'PrivacyBadger', 'CanvasBlocker', 'ClearURLs',
     'resistFingerprinting', 'privacyResistFingerprinting',
     // More about:config pref identifiers, same class as resistFingerprinting
     // above. These became visible when ChecklistPage stopped hiding item.why

@@ -13,7 +13,7 @@
   ],
   "difficulty": "intermediate",
   "estimatedTime": "20-25 minutes",
-  "intro": "With no comprehensive federal privacy law, US states are creating their own data protection regulations. This guide breaks down key state privacy laws including CCPA, Texas DPA, Virginia CDPA, and Colorado CPA to help you understand your rights and compliance obligations.",
+  "intro": "With no comprehensive federal privacy law, US states are creating their own data protection regulations. This guide breaks down key state privacy laws including CCPA, Texas TDPSA, Virginia CDPA, and Colorado CPA to help you understand your rights and compliance obligations.",
   "prerequisites": [
     "Basic understanding of data privacy concepts",
     "Knowledge of what constitutes personal information",
@@ -39,29 +39,29 @@
       "actions": [
         "Study CCPA's definition of personal information and sensitive data",
         "Understand consumer rights: know, delete, correct, opt-out, non-discrimination",
-        "Learn business thresholds: $25M revenue, 50,000+ consumers, or 50%+ revenue from selling data",
+        "Learn the thresholds: annual gross revenue over $25 million, adjusted for inflation to $26,625,000 on January 1, 2025; buying, selling or sharing the data of 100,000+ consumers or households; or 50%+ of revenue from selling or sharing",
         "Review CPRA enhancements including risk assessments and data minimization"
       ],
-      "proTip": "Use a privacy-focused browser to research privacy policies of similar businesses without leaving tracking cookies that could affect your browsing experience."
+      "proTip": "Under the CCPA regulations, businesses must treat a Global Privacy Control signal as a valid request to opt out of sale or sharing; the Attorney General's 2022 settlement with Sephora turned partly on ignoring it."
     },
     {
       "stepNumber": 3,
       "title": "Navigate Virginia's Consumer Data Protection Act (VCDPA)",
-      "description": "Virginia's law applies to businesses conducting business in Virginia or targeting Virginia residents, with specific revenue and data processing thresholds.",
+      "description": "Virginia's law applies to businesses conducting business in Virginia or targeting Virginia residents. It sets no revenue floor: the triggers are consumer counts and revenue from selling personal data.",
       "actions": [
         "Check if you meet the threshold: control/process data of 100,000+ consumers or 25,000+ consumers plus 50%+ revenue from data sales",
         "Understand Virginia's consumer rights: access, correct, delete, portability, opt-out",
         "Review data protection assessment requirements for high-risk processing",
         "Implement privacy policy requirements specific to Virginia law"
       ],
-      "warning": "Virginia's law has a 30-day cure period for violations, but this expires in 2025."
+      "warning": "Virginia gives a 30-day cure period after the attorney general's notice, and it does not sunset. Colorado's 60-day cure period did: it expired on January 1, 2025."
     },
     {
       "stepNumber": 4,
-      "title": "Comply with Colorado's Privacy Act (ColoPA)",
+      "title": "Comply with the Colorado Privacy Act (CPA)",
       "description": "Colorado's law closely mirrors Virginia's approach but includes some unique provisions for data protection assessments and consumer rights.",
       "actions": [
-        "Verify applicability: same thresholds as Virginia (100,000+ or 25,000+ consumers)",
+        "Verify applicability: 100,000+ Colorado consumers in a calendar year, or 25,000+ if you get revenue or a discount from selling personal data",
         "Understand universal opt-out mechanism requirements",
         "Implement data protection assessment procedures for high-risk processing",
         "Set up processes for consumer request verification and response"
@@ -71,18 +71,18 @@
     {
       "stepNumber": 5,
       "title": "Prepare for Texas Data Privacy and Security Act (TDPSA)",
-      "description": "Texas's comprehensive privacy law takes effect in 2024, covering businesses that meet specific revenue and data processing thresholds.",
+      "description": "Texas's comprehensive privacy law took effect on July 1, 2024. It sets no revenue or consumer-count threshold: it covers any business that is not a small business under the US Small Business Administration's size standards.",
       "actions": [
-        "Assess if your business meets Texas thresholds: $25M+ revenue and processes data of 100,000+ consumers",
+        "Assess applicability: the act reaches you if you do business in Texas or sell to Texans, process or sell personal data, and are not an SBA-defined small business",
         "Review Texas-specific consumer rights including data portability and correction",
-        "Understand biometric data protections and consent requirements",
+        "Check Texas's separate biometric statute (the Capture or Use of Biometric Identifier Act) if you capture fingerprints, voiceprints or face geometry",
         "Prepare for data processing agreements with third parties"
       ]
     },
     {
       "stepNumber": 6,
       "title": "Track Emerging State Privacy Legislation",
-      "description": "Stay informed about privacy bills in other states like Connecticut, Utah, Iowa, Indiana, Tennessee, and Montana that are becoming law.",
+      "description": "Connecticut, Utah, Iowa, Indiana, Tennessee and Montana have all enacted comprehensive privacy laws, and more states pass them each session.",
       "actions": [
         "Monitor state legislature websites for privacy bill introductions",
         "Join industry associations that track privacy legislation",
@@ -109,7 +109,7 @@
   "pro_tips": [
     "Start with the most restrictive state law that applies to your business - often California's CCPA/CPRA - and build your compliance program from there.",
     "Use privacy management platforms that can handle multiple state law requirements simultaneously rather than building separate systems for each state.",
-    "Consider using a privacy-focused browser when researching competitor privacy practices to avoid targeted ads that might influence your browsing experience.",
+    "Test your own opt-out flow as a customer would: send a request, visit your site with Global Privacy Control turned on in a browser that supports it (Firefox, Brave or DuckDuckGo), and check that ad and analytics tags stop firing.",
     "Implement universal opt-out signal detection even if not required in all states - it's becoming a standard expectation across state laws.",
     "Regular legal reviews are essential as state privacy laws are frequently updated and new states are passing comprehensive privacy legislation each year."
   ],
@@ -128,7 +128,7 @@
     },
     {
       "question": "Are there penalties for non-compliance with state privacy laws?",
-      "answer": "Yes, penalties vary by state. California can fine up to $7,500 per violation, while Virginia and Colorado start with cure periods. Texas allows fines up to $7,500 per violation. Most states allow only attorney general enforcement, not private lawsuits."
+      "answer": "Yes, penalties vary by state. California's are adjusted for inflation and have stood at $2,663 per violation and $7,988 per intentional violation, or one involving a consumer known to be under 16, since January 1, 2025. Virginia and Texas cap at $7,500 per violation and both still give a 30-day cure period; Colorado's cure period expired on January 1, 2025, and its violations carry up to $20,000 each as deceptive trade practices. Most states allow only attorney general enforcement, not private lawsuits."
     },
     {
       "question": "How often do state privacy laws change?",
@@ -136,7 +136,7 @@
     },
     {
       "question": "Should small businesses worry about state privacy laws?",
-      "answer": "Most state privacy laws have high thresholds that exempt small businesses (typically $25M+ revenue or 100,000+ consumers). However, if you sell personal data or operate in specific industries, lower thresholds may apply."
+      "answer": "Most have thresholds that leave small businesses out, but they are not all revenue-based. California uses revenue ($25 million, adjusted for inflation) or 100,000 consumers or households; Virginia and Colorado use consumer counts only; Texas exempts businesses that meet the US Small Business Administration's size standards. If you sell personal data, those counts drop sharply."
     }
   ],
   "relatedLinks": [
@@ -159,6 +159,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

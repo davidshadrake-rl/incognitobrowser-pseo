@@ -36,14 +36,14 @@
           "id": "data-subject-rights",
           "task": "Set up data subject rights fulfillment system",
           "why": "EU/UK residents have strong rights including access, rectification, erasure, and portability that must be honored within strict timeframes.",
-          "howTo": "Create processes to handle requests within 30 days. Implement data mapping to locate personal data quickly. Train staff on rights fulfillment procedures.",
+          "howTo": "Create processes to handle requests within one month, the GDPR and UK GDPR deadline. Implement data mapping to locate personal data quickly. Train staff on rights fulfillment procedures.",
           "priority": "high"
         },
         {
           "id": "eu-us-transfers",
           "task": "Secure EU-US data transfer mechanisms",
-          "why": "Schrems II ruling invalidated Privacy Shield. Transfers need adequate safeguards or risk regulatory action and business disruption.",
-          "howTo": "Implement Standard Contractual Clauses (SCCs) with supplementary measures. Consider data localization in EU. Use a privacy-focused browser for secure cross-border communications.",
+          "why": "Schrems II invalidated Privacy Shield. Its successor, the EU-US Data Privacy Framework, covers only certified US recipients; other transfers need safeguards such as SCCs.",
+          "howTo": "Implement Standard Contractual Clauses (SCCs) with supplementary measures. Consider data localization in EU. If a US recipient is certified under the EU-US Data Privacy Framework, the transfer can rely on that instead; check the recipient on the official Data Privacy Framework list.",
           "priority": "critical"
         },
         {
@@ -123,7 +123,7 @@
           "id": "apac-localization",
           "task": "Address APAC data localization laws",
           "why": "Several APAC countries have data residency requirements that can restrict cross-border operations and cloud usage.",
-          "howTo": "Map data localization requirements by country. Assess cloud provider compliance. Implement local data storage where required. Use a privacy-focused browser for secure local access.",
+          "howTo": "Map data localization requirements by country. Assess cloud provider compliance. Implement local data storage where required, and record which data sets must stay in which country.",
           "priority": "high"
         },
         {
@@ -184,7 +184,7 @@
     }
   ],
   "pro_tips": [
-    "Use privacy-focused browsers when accessing international systems to minimize cross-border data exposure and maintain compliance with local access requirements.",
+    "Record the transfer mechanism (adequacy decision, SCCs, BCRs or Data Privacy Framework certification) next to each cross-border flow in your data map, so when a court ruling or new law changes one mechanism, you know exactly which flows to fix.",
     "Maintain a living document mapping your data flows across jurisdictions - this becomes invaluable during audits and when responding to data subject requests from multiple countries.",
     "Consider appointing regional Data Protection Officers even where not legally required - they provide valuable local expertise and demonstrate commitment to privacy compliance.",
     "Implement privacy by design principles globally rather than trying to retrofit compliance - it's more cost-effective and provides better protection across all jurisdictions.",
@@ -220,6 +220,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with us-state-privacy. Canonical version lives under /checklists/us-state-privacy/."
   },

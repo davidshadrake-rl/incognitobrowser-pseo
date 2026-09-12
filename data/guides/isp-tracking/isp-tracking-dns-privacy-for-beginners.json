@@ -67,7 +67,7 @@
         "Enable 'DNS over HTTPS' or 'Secure DNS' option",
         "Select your preferred DNS provider from the list or enter custom addresses"
       ],
-      "proTip": "Use a privacy-focused browser for additional privacy protection alongside encrypted DNS - it blocks tracking scripts that regular DNS changes can't prevent."
+      "proTip": "In Firefox, choose Max Protection so it never falls back to your ISP's DNS. In Chrome, pick a provider from the list instead of 'your current service provider', which only encrypts lookups if your current DNS supports it."
     },
     {
       "stepNumber": 5,
@@ -100,7 +100,7 @@
       "actions": [
         "Research VPN services that have strict no-logging policies",
         "Consider using the Tor browser for sensitive browsing",
-        "Use a privacy-focused browser for daily browsing",
+        "Keep your browser's secure DNS on, which also lets Chrome and Firefox hide site names from your ISP on websites that support Encrypted Client Hello",
         "Enable HTTPS-only mode in your browsers to encrypt web traffic"
       ],
       "warning": "Free VPNs often log and sell your data just like ISPs do. Only use reputable paid VPN services with proven no-logging policies."
@@ -111,7 +111,7 @@
     "Regularly check your ISP's privacy policy for changes - many ISPs update their data collection practices without prominent notification.",
     "Use multiple DNS providers across different devices to avoid creating a single point of failure in your privacy setup.",
     "Monitor your internet speeds after changing DNS settings - if speeds drop significantly, try a different DNS provider closer to your location.",
-    "Consider using a privacy-focused browser alongside encrypted DNS for comprehensive protection against both ISP tracking and website tracking scripts."
+    "Encrypted DNS and your browser's tracking protection solve different problems: the first hides your lookups from your ISP, the second blocks tracking scripts on the sites you visit. Neither hides the sites you visit from your ISP; a VPN or Tor does."
   ],
   "faqs": [
     {
@@ -159,6 +159,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

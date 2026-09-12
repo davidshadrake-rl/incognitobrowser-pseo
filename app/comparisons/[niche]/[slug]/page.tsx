@@ -19,7 +19,7 @@ interface ComparisonData extends ComparisonSource {
   slug: string;
   metaDescription: string;
   faqs: Array<{ question: string; answer: string }>;
-  editorial?: { status?: string; reviewedAt?: string | null };
+  editorial?: { status?: string; reviewedAt?: string | null; updatedAt?: string | null };
   author?: { name?: string } | null;
 }
 
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     path: `/comparisons/${niche}/${slug}`,
     noIndex: !isPublished(data as unknown as Parameters<typeof isPublished>[0]),
     publishedAt: data.editorial?.reviewedAt || undefined,
-    modifiedAt: data.editorial?.reviewedAt || undefined,
+    modifiedAt: data.editorial?.updatedAt || data.editorial?.reviewedAt || undefined,
   });
 }
 
@@ -72,13 +72,15 @@ export default async function ComparisonDetailPage({ params }: PageProps) {
 
   // Article JSON-LD. It credits the editorial masthead (an organisation), not
   // a person; `attributed` only says the page went through the promote
-  // pipeline.
+  // pipeline. Published is the review; modified is the last text change after
+  // it (editorial.updatedAt), else the review. An edit never moves the review
+  // date.
   const articleSchema = generateArticleSchema({
     headline: data.title,
     description: data.metaDescription || '',
     url: 'https://incognitobrowser.io/resources' + `/comparisons/${niche}/${slug}`,
     datePublished: data.editorial?.reviewedAt || undefined,
-    dateModified: data.editorial?.reviewedAt || undefined,
+    dateModified: data.editorial?.updatedAt || data.editorial?.reviewedAt || undefined,
     attributed: !!data.author?.name,
   });
 

@@ -21,7 +21,7 @@
           "id": "wallet-1",
           "task": "Use privacy-focused wallets",
           "why": "Standard wallets often leak metadata and link addresses together, compromising your transaction privacy.",
-          "howTo": "Choose wallets like Wasabi, Samourai (Bitcoin) or official Monero GUI. Avoid custodial wallets and exchanges for storage. Generate new addresses for each transaction.",
+          "howTo": "Choose wallets with coin control and Tor: Wasabi or Electrum for Bitcoin, the official GUI or Cake Wallet for Monero. Avoid custodial wallets and exchanges for storage, and use a new address for each payment.",
           "priority": "critical"
         },
         {
@@ -66,30 +66,30 @@
         },
         {
           "id": "tx-2",
-          "task": "Implement Bitcoin mixing/CoinJoin",
-          "why": "Bitcoin transactions can be traced through chain analysis, revealing spending patterns and wallet balances.",
-          "howTo": "Use Wasabi Wallet's CoinJoin feature or Samourai's Whirlpool. Mix coins before spending on sensitive purchases. Understand mixing is not 100% anonymous.",
+          "task": "Understand what CoinJoin can and can't do for you",
+          "why": "A CoinJoin breaks the assumption that every input to a transaction has one owner. It doesn't erase history, and one careless later transaction undoes it.",
+          "howTo": "Keep coins that went through a CoinJoin apart from coins that didn't. Note that zkSNACKs shut down the coordinator Wasabi and Trezor Suite used on 1 June 2024, and Samourai's Whirlpool is gone with the service.",
           "priority": "high"
         },
         {
           "id": "tx-3",
-          "task": "Avoid exchange KYC when possible",
-          "why": "KYC exchanges link your real identity to wallet addresses, creating permanent surveillance records.",
-          "howTo": "Use decentralized exchanges like Bisq, peer-to-peer trading, or Bitcoin ATMs. If using KYC exchanges, withdraw to mixing services before final destinations.",
+          "task": "Know what an exchange's identity check records about you",
+          "why": "An exchange that verifies your identity keeps a permanent record linking you to every address you deposit from and withdraw to.",
+          "howTo": "Peer-to-peer platforms such as Bisq and Hodl Hodl escrow trades without taking custody. Bitcoin ATM operators in the US are money transmitters under FinCEN's 2019 guidance and must register and run an AML programme.",
           "priority": "high"
         },
         {
           "id": "tx-4",
           "task": "Practice proper coin selection",
           "why": "Wallets may combine coins from different sources in transactions, linking previously separate addresses.",
-          "howTo": "Manually select coins in transactions. Avoid combining mixed and unmixed coins. Use coin control features in advanced wallets like Electrum.",
+          "howTo": "Select coins manually when you send. Don't put coins from unrelated sources, or a joined and an unjoined coin, into the same payment. Electrum and Wasabi both expose coin control.",
           "priority": "medium"
         },
         {
           "id": "tx-5",
           "task": "Time transaction broadcasting strategically",
           "why": "Transaction timing patterns can reveal user behavior and geographic location to blockchain analysts.",
-          "howTo": "Use random delays before broadcasting. Broadcast through Tor at different times. Consider using transaction scheduling features in privacy wallets.",
+          "howTo": "Broadcast over Tor, and don't send at exactly the same time every day. Don't build a fixed schedule either: a pattern you invent is still a pattern.",
           "priority": "medium"
         },
         {
@@ -115,21 +115,21 @@
           "id": "exchange-2",
           "task": "Separate exchange accounts from storage wallets",
           "why": "Direct transfers between exchanges and personal wallets create clear links for chain analysis companies.",
-          "howTo": "Always transfer through intermediate addresses or mixing services. Never send directly from exchange to final destination wallet.",
+          "howTo": "Withdraw to a wallet you control, then plan what that coin is later spent with. Use coin control so an exchange withdrawal doesn't end up in the same payment as an unrelated coin.",
           "priority": "high"
         },
         {
           "id": "exchange-3",
           "task": "Use different email addresses for crypto accounts",
           "why": "Using your main email links your crypto activities to your real identity and other online accounts.",
-          "howTo": "Create dedicated email addresses for each exchange. Use encrypted email providers like ProtonMail. Access through a privacy-focused browser or Tor.",
+          "howTo": "Create dedicated email addresses for each exchange. Use encrypted email providers like Proton Mail, or an email alias service. Keep these accounts out of the browser profile you use for your everyday accounts.",
           "priority": "high"
         },
         {
           "id": "exchange-4",
           "task": "Access exchanges through VPN/Tor",
           "why": "Your IP address and location are logged by exchanges and can be correlated with transaction times.",
-          "howTo": "Always use VPN or Tor when accessing crypto exchanges. Use a privacy-focused browser for additional protection. Choose VPN providers that don't log activity.",
+          "howTo": "Use a VPN or Tor when accessing crypto exchanges, but check the exchange's rules first: some block Tor or VPN connections, or lock accounts that sign in from changing locations. Choose VPN providers that don't log activity.",
           "priority": "medium"
         },
         {
@@ -162,7 +162,7 @@
           "id": "advanced-3",
           "task": "Monitor your address exposure",
           "why": "Your addresses may become public through various means without your knowledge.",
-          "howTo": "Search your addresses on blockchain explorers periodically. Use tools like OXT or Blockchair to see what chain analysis reveals about your transactions.",
+          "howTo": "Search your addresses on a public block explorer from time to time, over Tor or your own node, so the explorer doesn't log which addresses you care about next to your IP address.",
           "priority": "medium"
         },
         {
@@ -183,7 +183,7 @@
     }
   ],
   "pro_tips": [
-    "Layer multiple privacy techniques instead of relying on single solutions - combine privacy coins, mixing, and Tor for maximum protection.",
+    "Layer techniques that do different jobs rather than trusting one: Tor hides your IP address, privacy coins hide what the ledger records, and coin control stops unrelated coins being linked.",
     "Always assume blockchain transactions are permanent and public - plan your privacy strategy before making transactions, not after.",
     "Test privacy tools with small amounts first to understand their limitations and proper usage before risking significant funds.",
     "Keep up with chain analysis techniques to understand what information can be extracted from your transaction patterns.",
@@ -214,6 +214,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

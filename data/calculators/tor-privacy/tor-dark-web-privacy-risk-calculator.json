@@ -53,22 +53,22 @@
         },
         {
           "value": "hardened",
-          "label": "Hardened with custom security settings"
+          "label": "Security level raised to Safer or Safest"
         },
         {
           "value": "bridges",
           "label": "Using bridge relays"
         },
         {
-          "value": "vpn-tor",
-          "label": "VPN over Tor setup"
+          "value": "customised",
+          "label": "Add-ons installed or settings changed"
         },
         {
           "value": "tails",
           "label": "Live operating system (e.g. Tails)"
         }
       ],
-      "helpText": "More secure configurations reduce risk"
+      "helpText": "Tor Browser protects you by making its users look alike; changes to it make you easier to single out."
     },
     {
       "id": "location",
@@ -186,13 +186,13 @@
       "description": "Descriptive assessment of your threat exposure"
     }
   ],
-  "formula": "const usageRisk = { 'general-browsing': 10, 'research': 25, 'circumvention': 40, 'activism': 60, 'dark-web': 80 }[torUsage]; const setupBonus = { 'default': 0, 'hardened': -15, 'bridges': -10, 'vpn-tor': -20, 'tails': -30 }[torSetup]; const locationRisk = { 'free-country': 5, 'some-censorship': 25, 'heavy-censorship': 50, 'authoritarian': 80 }[location]; const activityRisk = { 'legal-browsing': 5, 'sensitive-research': 20, 'marketplace-browsing': 50, 'file-sharing': 40, 'high-risk': 90 }[activities]; const opsecBonus = (5 - opsecLevel) * 10; const deviceBonus = { 'unsecured': 30, 'standard': 10, 'secured': -5, 'dedicated': -15, 'airgapped': -25 }[deviceSecurity]; const risk = Math.max(0, Math.min(100, usageRisk + locationRisk + activityRisk + setupBonus + opsecBonus + deviceBonus)); const grade = risk <= 20 ? 'A': risk <= 35 ? 'B': risk <= 50 ? 'C': risk <= 70 ? 'D': 'F'; const threat = risk <= 20 ? 'Very Low Risk': risk <= 35 ? 'Low Risk': risk <= 50 ? 'Moderate Risk': risk <= 70 ? 'High Risk': 'Very High Risk'; return { overallRisk: risk, riskGrade: grade, threatLevel: threat };",
+  "formula": "const usageRisk = { 'general-browsing': 10, 'research': 25, 'circumvention': 40, 'activism': 60, 'dark-web': 80 }[torUsage]; const setupBonus = { 'default': 0, 'hardened': -15, 'bridges': -10, 'customised': 15, 'tails': -30 }[torSetup]; const locationRisk = { 'free-country': 5, 'some-censorship': 25, 'heavy-censorship': 50, 'authoritarian': 80 }[location]; const activityRisk = { 'legal-browsing': 5, 'sensitive-research': 20, 'marketplace-browsing': 50, 'file-sharing': 40, 'high-risk': 90 }[activities]; const opsecBonus = (5 - opsecLevel) * 10; const deviceBonus = { 'unsecured': 30, 'standard': 10, 'secured': -5, 'dedicated': -15, 'airgapped': -25 }[deviceSecurity]; const risk = Math.max(0, Math.min(100, usageRisk + locationRisk + activityRisk + setupBonus + opsecBonus + deviceBonus)); const grade = risk <= 20 ? 'A': risk <= 35 ? 'B': risk <= 50 ? 'C': risk <= 70 ? 'D': 'F'; const threat = risk <= 20 ? 'Very Low Risk': risk <= 35 ? 'Low Risk': risk <= 50 ? 'Moderate Risk': risk <= 70 ? 'High Risk': 'Very High Risk'; return { overallRisk: risk, riskGrade: grade, threatLevel: threat };",
   "educational": {
-    "methodology": "This calculator evaluates your Tor privacy risk by analyzing your usage patterns, security configuration, geographic location, online activities, operational security practices, and device security. Higher risk scores indicate greater potential for surveillance, traffic analysis, or legal consequences.",
+    "methodology": "This calculator weighs what you use Tor for, how you have it set up, where you are, what you do, your operational security and your device security. Add-ons and changed settings count against you, because Tor Browser protects people by making them look alike. Higher scores mean more exposure to surveillance, traffic analysis or legal risk.",
     "tips": [
       "Always use the latest Tor Browser version and never install additional plugins or extensions",
-      "Consider using bridge relays if Tor is blocked in your country or you want extra anonymity",
-      "Combine Tor with a VPN for additional protection, but understand the trade-offs",
+      "Use a bridge if Tor is blocked where you are, or if you need to hide from your network that you use Tor at all",
+      "Don't add a VPN to Tor expecting more anonymity: the Tor Project doesn't recommend it unless you're an advanced user",
       "Use Tails OS or a dedicated device for maximum security when accessing sensitive content",
       "Never download files or enable JavaScript when browsing high-risk dark web content"
     ],
@@ -249,6 +249,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

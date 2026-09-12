@@ -68,14 +68,14 @@
           "id": "data-2",
           "task": "Enable HTTPS-only browsing",
           "why": "HTTPS encrypts your data in transit, preventing ISPs from reading the content of your communications and injecting ads.",
-          "howTo": "Enable HTTPS-only mode in browser settings. Install HTTPS Everywhere extension. Check for the lock icon in address bar before entering sensitive data.",
+          "howTo": "Enable HTTPS-only mode in browser settings (HTTPS-Only Mode in Firefox, 'Always use secure connections' in Chrome). Check for the lock icon in address bar before entering sensitive data.",
           "priority": "high"
         },
         {
           "id": "data-3",
-          "task": "Use a privacy-focused browser for sensitive browsing",
-          "why": "Privacy-focused browsers provide built-in privacy features, and some don't store browsing history on the device at all.",
-          "howTo": "Install a privacy-focused browser for enhanced privacy features. Use it for sensitive searches, banking, and personal browsing to minimize data collection.",
+          "task": "Let your browser hide site names with Encrypted Client Hello",
+          "why": "Even with encrypted DNS, your ISP can read the name of the site at the start of each HTTPS connection. Encrypted Client Hello (ECH) hides it, on websites that support it.",
+          "howTo": "Keep your browser's secure DNS setting on: Chrome and Firefox then use ECH automatically on websites that support it, as many sites behind Cloudflare do. Your ISP still sees the IP addresses you connect to; only a VPN or Tor hides those.",
           "priority": "high"
         },
         {
@@ -185,8 +185,8 @@
   "pro_tips": [
     "Use multiple DNS providers for redundancy - configure primary and secondary encrypted DNS servers to maintain privacy if one fails.",
     "Test your privacy setup monthly using tools like dnsleaktest.com, ipleak.net, and browserleaks.com to ensure ISP tracking protection remains active.",
-    "Consider using a privacy-focused ISP like ProtonVPN's ISP service or local providers with strong privacy policies if available in your area.",
-    "Combine VPN with Tor for maximum anonymity when conducting highly sensitive activities - this creates multiple encryption layers ISPs cannot penetrate.",
+    "Consider switching to a local ISP whose privacy policy says it doesn't sell or share browsing data, if one serves your area.",
+    "Don't count on a VPN to make Tor more anonymous: the Tor Project doesn't recommend combining them unless you know how to set up both. If you need to hide Tor use from your ISP, use a Tor bridge.",
     "Monitor your ISP's privacy policy changes by setting up Google Alerts - ISPs often change data collection practices with minimal customer notification."
   ],
   "relatedLinks": [
@@ -214,6 +214,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

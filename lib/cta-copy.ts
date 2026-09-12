@@ -58,11 +58,15 @@ export const ENGINE_COPY: Record<string, EngineCopy> = {
     amber: { headline: 'Partly protected. The gaps are the ones trackers use.', body: 'Agent Cloaking in Incognito Browser masks the browser and device sites see. Run this audit again from Incognito Pro to compare.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
+  // The colour is the tool's score (severityFromScore), in all three modes: a URL scan, pasted
+  // cookies and this page's cookies. So every line must hold for any result of that colour:
+  // green allows one high-risk tracking cookie (100 - 10 - 5 = 85, grade A), amber can come from
+  // a missing HTTPS alone, and a pasted list was not necessarily set before consent.
   'cookie-analyzer': {
     benefits: ['adblock', 'tools', 'more'],
-    red: { headline: 'This site tracks you before you agree to anything.', body: 'Incognito Browser wipes every cookie when you close it, and Incognito Pro\'s ad and tracker blocking stops many requests like these before they load.' },
-    amber: { headline: 'Some tracking gets through here.', body: 'Incognito Pro\'s ad and tracker blocking stops many requests like these, and the browser wipes cookies every time you close it.' },
-    green: { headline: 'Clean site. Most are not.', body: 'Incognito Pro\'s ad and tracker blocking covers the sites that are not this careful.' }, info: INFO_DEFAULT,
+    red: { headline: 'This site tracks you.', body: 'Incognito Browser wipes every cookie when you close it, and Incognito Pro\'s ad and tracker blocking stops many tracker requests before they load.' },
+    amber: { headline: 'This site has some privacy problems.', body: 'Incognito Pro\'s ad and tracker blocking stops many tracker requests before they load, and the browser wipes cookies every time you close it.' },
+    green: { headline: 'Few privacy problems here. Not every site is this careful.', body: 'Incognito Pro\'s ad and tracker blocking covers the sites that are not.' }, info: INFO_DEFAULT,
   },
   'url-analyzer': {
     benefits: ['tools', 'adblock', 'more'],
@@ -70,11 +74,18 @@ export const ENGINE_COPY: Record<string, EngineCopy> = {
     amber: { headline: 'This link is not clearly safe.', body: 'Check links like this before you open them. The link checker comes with Incognito Pro.' },
     green: GREEN_DEFAULT, info: INFO_DEFAULT,
   },
+  // Colours from summarizeMetadata (lib/exif.ts): red is GPS or a high-risk field (a name, a
+  // place, a serial number, a unique ID), not only GPS; amber any other personal detail
+  // (device, time, software, free text, a thumbnail); info a HEIC or AVIF file it can't read.
   'metadata-viewer': {
     benefits: ['tools', 'more', 'adblock'],
-    red: { headline: 'This photo gives away where it was taken.', body: 'Save a clean copy before you share it. This viewer and its clean-copy tool come with Incognito Pro.' },
-    amber: { headline: 'This photo carries device and time data.', body: 'Save a clean copy before you share it. This viewer comes with Incognito Pro.' },
-    green: GREEN_DEFAULT, info: INFO_DEFAULT,
+    red: { headline: 'This photo carries location or identifying data.', body: 'Save a clean copy before you share it. This viewer and its clean-copy tool come with Incognito Pro.' },
+    // Amber covers two results: medium-risk fields, and a block the viewer
+    // found and could not decode. A clean copy answers both (the copy is
+    // redrawn pixels, so no block survives it).
+    amber: { headline: 'This photo carries more than the picture.', body: 'Save a clean copy before you share it. This viewer comes with Incognito Pro.' },
+    green: { headline: 'No location, device or time data in the fields this viewer reads.', body: 'Incognito Pro adds ad and tracker blocking and the deeper privacy tools to the free Incognito Browser app.' },
+    info: { headline: 'Save it as a JPEG, then check it again.', body: 'This viewer reads JPEG, PNG, WebP and TIFF files. It recognises HEIC and AVIF photos but does not read them. The viewer comes with Incognito Pro.' },
   },
   'whats-my-ip': {
     benefits: ['tools', 'more', 'adblock'],

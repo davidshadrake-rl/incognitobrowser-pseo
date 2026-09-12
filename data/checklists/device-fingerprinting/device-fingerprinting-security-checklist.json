@@ -19,44 +19,44 @@
       "items": [
         {
           "id": "disable-webgl",
-          "task": "Disable WebGL rendering",
-          "why": "WebGL fingerprinting analyzes your graphics card capabilities to create a unique identifier that's nearly impossible to change.",
-          "howTo": "In Firefox: type about:config, search for webgl.disabled and set to true. In Chrome: use flags --disable-webgl or install uBlock Origin to block WebGL.",
+          "task": "Use a browser that handles WebGL for you",
+          "why": "WebGL reads how your graphics hardware draws, which is stable across sessions and tied to the machine. Browsers that randomise or block that output are what break the link.",
+          "howTo": "Turning WebGL off outright makes you rarer, not commoner. Prefer a browser that randomises or standardises the output: Brave does it by default, Firefox does it under privacy.resistFingerprinting, and Tor Browser and Mullvad Browser ship it on.",
           "priority": "high"
         },
         {
           "id": "block-canvas-access",
           "task": "Block or spoof HTML5 Canvas fingerprinting",
           "why": "Canvas fingerprinting forces your browser to draw hidden images, creating unique signatures based on your system's rendering differences.",
-          "howTo": "Install Canvas Blocker extension for Firefox or use a privacy-focused browser which has built-in canvas protection. Enable 'Block canvas fingerprinting' in settings.",
+          "howTo": "In Firefox, install the CanvasBlocker extension or set privacy.resistFingerprinting to true in about:config. Brave, Tor Browser and Mullvad Browser protect canvas readings by default.",
           "priority": "critical"
         },
         {
           "id": "disable-webrtc",
           "task": "Disable WebRTC to prevent IP leaks",
           "why": "WebRTC can expose your real IP address even when using VPN and provides additional fingerprinting data points.",
-          "howTo": "Firefox: Set media.peerconnection.enabled to false in about:config. Chrome: Install WebRTC Leak Prevent extension or use a privacy-focused browser.",
+          "howTo": "Firefox: Set media.peerconnection.enabled to false in about:config. Chrome: Install the WebRTC Leak Prevent extension. Brave: Set 'WebRTC IP handling policy' to 'Disable non-proxied UDP' in Settings > Privacy and security.",
           "priority": "high"
         },
         {
           "id": "standardize-user-agent",
-          "task": "Use a common User-Agent string",
-          "why": "Unique User-Agent strings reveal specific browser versions, operating systems, and device information that contribute to your fingerprint.",
-          "howTo": "Install User-Agent Switcher extension and select a common Windows Chrome user agent. Avoid rare or outdated user agents that stand out.",
+          "task": "Leave your User-Agent alone",
+          "why": "A switcher extension makes you rarer, not commoner: the faked string rarely matches what the rest of your browser reports, and that mismatch is itself distinctive.",
+          "howTo": "Don't install a User-Agent Switcher. Keep the browser up to date so your string matches everyone else on the current version, and if you want real fingerprint resistance use Tor Browser or Firefox's resistFingerprinting.",
           "priority": "medium"
         },
         {
           "id": "disable-plugins",
-          "task": "Disable unnecessary browser plugins",
-          "why": "Installed plugins create unique fingerprint combinations. Flash, Java, and PDF plugins are commonly fingerprinted.",
-          "howTo": "Go to browser settings, find plugins/extensions section, and disable Flash, Java, Silverlight, and other non-essential plugins. Keep only critical ones.",
+          "task": "Cut down the extensions you run",
+          "why": "Plugins are gone: no current browser runs Flash, Java or Silverlight, and there is no plugins section left in settings. Extensions are what remains, and an unusual set of them is fingerprintable.",
+          "howTo": "Open the extensions page and remove anything you don't use weekly. Extensions that inject content into pages are the most detectable, so keep the list short and ordinary.",
           "priority": "medium"
         },
         {
           "id": "timezone-spoofing",
           "task": "Mask or standardize timezone information",
           "why": "Your timezone is easily accessible to websites and combined with other data points creates a more unique fingerprint profile.",
-          "howTo": "Use Timezone Guard extension to spoof your timezone to UTC, or use a privacy-focused browser which includes timezone protection in privacy mode.",
+          "howTo": "Firefox with privacy.resistFingerprinting, Tor Browser and Mullvad Browser report the same UTC time zone to every site. In other browsers, a time-zone spoofing extension can do the same.",
           "priority": "low"
         }
       ]
@@ -75,7 +75,7 @@
           "id": "font-enumeration-blocking",
           "task": "Prevent font fingerprinting",
           "why": "Websites can detect installed fonts on your system, creating unique combinations that identify your device across different sites.",
-          "howTo": "Use uBlock Origin with filter lists that block font enumeration, or switch to a privacy-focused browser which limits font detection capabilities.",
+          "howTo": "Turn on privacy.resistFingerprinting in Firefox, which limits the fonts sites can detect to a standard set, or use Tor Browser or Mullvad Browser, which ship a fixed font list. Blocking known fingerprinting scripts with uBlock Origin also helps.",
           "priority": "medium"
         },
         {
@@ -96,7 +96,7 @@
           "id": "battery-api-blocking",
           "task": "Block Battery Status API access",
           "why": "Battery level and charging status provide additional unique identifiers, especially on mobile devices with varying battery health.",
-          "howTo": "Firefox: Set dom.battery.enabled to false in about:config. Chrome: Install extensions that block battery API or use privacy-focused browsers.",
+          "howTo": "Firefox and Safari don't give websites battery information, so there's nothing to change there. In Chrome and Edge, block the Battery Status API with an extension, or use Firefox for sensitive browsing.",
           "priority": "low"
         }
       ]
@@ -108,28 +108,28 @@
           "id": "fingerprint-testing",
           "task": "Test your fingerprint uniqueness regularly",
           "why": "Regular testing helps you understand how unique your browser appears and whether your protection measures are working effectively.",
-          "howTo": "Visit AmIUnique.org, Panopticlick.eff.org, and BrowserLeaks.com monthly to test your fingerprint. Document changes after implementing protections.",
+          "howTo": "Visit AmIUnique.org, coveryourtracks.eff.org (the EFF's renamed Panopticlick) and BrowserLeaks.com monthly to test your fingerprint. Note what changes after each protection you add.",
           "priority": "critical"
         },
         {
           "id": "multiple-browser-strategy",
           "task": "Use different browsers for different activities",
           "why": "Compartmentalizing your browsing creates separate fingerprint profiles, making it harder to track your activities across different contexts.",
-          "howTo": "Use a privacy-focused browser or Tor for sensitive browsing, Firefox with extensions for daily use, and a stock browser for sites that break with modifications.",
+          "howTo": "Use Tor Browser or Mullvad Browser for sensitive browsing, Firefox with extensions for daily use, and a stock browser for sites that break with modifications.",
           "priority": "medium"
         },
         {
           "id": "tracking-detection-tools",
           "task": "Install tracking detection extensions",
           "why": "Many fingerprinting attempts happen invisibly. Detection tools help you identify which sites are attempting to fingerprint your device.",
-          "howTo": "Install Ghostery, Privacy Badger, or uBlock Origin with additional filter lists. Enable logging to see blocked fingerprinting attempts.",
+          "howTo": "Install Privacy Badger or Ghostery, which both show what they blocked on a page. uBlock Origin's logger gives the fullest view but exists only on Firefox; uBlock Origin Lite on Chrome has no logger.",
           "priority": "medium"
         },
         {
           "id": "regular-profile-rotation",
           "task": "Rotate browser profiles and clear data",
-          "why": "Even with protections, some fingerprint data accumulates over time. Fresh profiles prevent long-term tracking correlation.",
-          "howTo": "Create new Firefox profiles monthly, or use a privacy-focused browser's session isolation. Clear all browser data including local storage and IndexedDB.",
+          "why": "Fingerprint protection doesn't clear stored identifiers: cookies, local storage and cache entries can still link your visits over time. A fresh profile removes them.",
+          "howTo": "Create new Firefox profiles monthly, or set your browser to delete cookies and site data when you close it. Clear all browser data, including local storage and IndexedDB.",
           "priority": "high"
         },
         {
@@ -143,10 +143,10 @@
     }
   ],
   "pro_tips": [
-    "Some privacy-focused browsers provide fingerprinting protection out of the box, including canvas spoofing, WebGL blocking, and timezone masking, without requiring manual configuration.",
+    "Tor Browser and Mullvad Browser come with fingerprinting protection already set up, including canvas protection, letterboxing and a UTC time zone. Brave randomizes canvas, WebGL and audio readings by default.",
     "Don't make your browser too unique - overly aggressive fingerprint protection can actually make you more identifiable. Aim to blend in with common configurations.",
     "Test your fingerprint protection on multiple testing sites, as each site checks different fingerprinting vectors and may reveal weaknesses in your setup.",
-    "Mobile browsers are particularly vulnerable to fingerprinting due to sensor access and touch capabilities. Consider using privacy-focused mobile browsers for sensitive browsing.",
+    "Mobile browsers are particularly vulnerable to fingerprinting due to sensor access and touch capabilities. On Android, Tor Browser and Brave both protect against fingerprinting; on iPhone, Safari's Private Browsing turns on Apple's advanced fingerprinting protection.",
     "Fingerprinting protection often breaks some websites. Keep a separate browser profile with standard settings for sites that require full functionality."
   ],
   "relatedLinks": [
@@ -156,8 +156,8 @@
       "type": "tool"
     },
     {
-      "title": "EFF Panopticlick - Privacy Test",
-      "url": "https://panopticlick.eff.org/",
+      "title": "EFF Cover Your Tracks - Privacy Test",
+      "url": "https://coveryourtracks.eff.org/",
       "type": "tool"
     },
     {
@@ -169,6 +169,7 @@
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with browser-privacy. Canonical version lives under /checklists/browser-privacy/."
   },

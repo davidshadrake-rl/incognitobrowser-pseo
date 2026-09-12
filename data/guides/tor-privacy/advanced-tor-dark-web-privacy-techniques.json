@@ -17,7 +17,7 @@
   "prerequisites": [
     "Basic understanding of Tor browser functionality",
     "Experience using Tor for regular browsing",
-    "Understanding of VPN technology",
+    "Understanding of how Tor circuits, relays and bridges work",
     "Basic knowledge of networking concepts",
     "Familiarity with threat modeling principles"
   ],
@@ -27,13 +27,13 @@
       "title": "Configure Advanced Tor Security Settings",
       "description": "Optimize Tor's built-in security features for maximum protection against advanced threats and traffic analysis.",
       "actions": [
-        "Set security level to 'Safest' in Tor browser settings",
-        "Disable JavaScript completely in about:config",
-        "Configure custom proxy chains through Tor settings",
-        "Enable connection padding to resist traffic analysis"
+        "Set the security level to 'Safest' from the shield menu",
+        "Leave everything else alone: the Tor Project says installing add-ons or changing settings can harm your privacy, weaken security and make you easier to track",
+        "Run separate Tor Browser instances for activities you never want linked",
+        "Use New Identity between unrelated activities instead of editing settings"
       ],
-      "proTip": "Use multiple Tor instances with different configurations for compartmentalized browsing activities.",
-      "warning": "Changing advanced settings incorrectly can compromise your anonymity or break Tor functionality."
+      "proTip": "Run separate Tor Browser instances for activities you never want linked, and leave each one at its defaults.",
+      "warning": "Every setting you change makes your browser easier to tell apart from other Tor users, which is the opposite of what Tor Browser is doing for you."
     },
     {
       "stepNumber": 2,
@@ -43,23 +43,23 @@
         "Request bridges from https://bridges.torproject.org",
         "Configure obfs4 or Snowflake bridges in Tor settings",
         "Test bridge connectivity and performance",
-        "Set up automatic bridge rotation for long-term use"
+        "Keep a few spare bridge addresses so you can switch when one stops working"
       ],
       "proTip": "Use different bridge types for different activities - Snowflake for general use, obfs4 for high-security scenarios.",
       "warning": "Never share bridge addresses publicly as this can lead to them being blocked by censors."
     },
     {
       "stepNumber": 3,
-      "title": "Deploy VPN-over-Tor Configuration",
-      "description": "Create a sophisticated privacy setup by routing VPN traffic through Tor for additional layers of protection.",
+      "title": "Reach Services Through Onion Addresses, Not Exit Relays",
+      "description": "Traffic to a .onion address never leaves the Tor network, so there is no exit relay in a position to read or alter it. That removes the threat a VPN layer is usually reached for.",
       "actions": [
-        "Choose a no-logs VPN provider that accepts anonymous payments",
-        "Configure VPN client to route through Tor SOCKS proxy",
-        "Test for DNS leaks and IP address exposure",
-        "Verify the connection chain: You -> Tor -> VPN -> Internet"
+        "Check whether the services you use publish a .onion address and use it when they do",
+        "Watch for the '.onion available' notice Tor Browser shows in the URL bar when a site advertises one",
+        "Verify any .onion address against the operator's own published address, never against a directory or a search result",
+        "For ordinary websites, leave HTTPS-Only mode on so an exit relay can't read or change the page"
       ],
-      "proTip": "Consider using a privacy-focused browser in conjunction with this setup for an additional privacy layer.",
-      "warning": "This configuration can significantly slow down your connection and may not be suitable for all use cases."
+      "proTip": "Onion services are end-to-end encrypted and authenticated by their address, so the exit-relay problem simply doesn't arise for them.",
+      "warning": "Onion addresses are long random strings and look-alike addresses are a standard phishing trick. Compare the whole address, not the first few characters."
     },
     {
       "stepNumber": 4,
@@ -76,27 +76,28 @@
     },
     {
       "stepNumber": 5,
-      "title": "Configure Traffic Analysis Countermeasures",
-      "description": "Implement advanced techniques to resist sophisticated traffic analysis attacks by well-resourced adversaries.",
+      "title": "Limit What Traffic Analysis Has to Work With",
+      "description": "A well-resourced adversary watching both ends of a circuit can correlate timing and volume. You can't configure that away in Tor Browser, but you can avoid the behaviour that makes it easy.",
       "actions": [
-        "Enable traffic padding and dummy traffic generation",
-        "Use random delay injection between requests",
-        "Implement bandwidth throttling to normalize traffic patterns",
-        "Configure automatic circuit rotation at regular intervals"
+        "Don't torrent over Tor: the Tor Project says torrent clients over Tor are unsafe and not recommended, and most of them leak your real IP address to peers",
+        "Keep long, high-volume transfers off Tor, since they stand out and hold one circuit open",
+        "Use New Identity between unrelated activities: it clears cookies and history and builds new circuits for all connections",
+        "Don't try to script fixed delays or throttling; a pattern you invent is itself a pattern"
       ],
-      "proTip": "Combine multiple countermeasures - no single technique is sufficient against advanced persistent threats."
+      "proTip": "Tor Browser applies its own defences by default. The parts you control are behavioural: what you do, when, and whether the same circuit sees two things that should never be linked.",
+      "warning": "No client-side habit defeats an adversary who can watch both the entry and the exit of your traffic. Treat end-to-end correlation as a limit of Tor, not a setting."
     },
     {
       "stepNumber": 6,
       "title": "Set Up Secure Dark Web Navigation",
       "description": "Establish safe practices for navigating hidden services while maintaining operational security and avoiding common pitfalls.",
       "actions": [
-        "Verify .onion addresses through multiple trusted sources",
+        "Verify every .onion address against the operator's own published address",
         "Use only HTTPS-enabled hidden services when possible",
         "Implement bookmark verification procedures",
-        "Configure automatic security checks for visited sites"
+        "Check your connection at check.torproject.org after any change to how you connect"
       ],
-      "proTip": "Keep a verified list of legitimate .onion directories and never trust random links or search results.",
+      "proTip": "Keep your own bookmarks of addresses you verified at the source, and don't re-derive them from directories or search results later.",
       "warning": "Many dark web sites are scams or law enforcement honeypots - extreme caution is required."
     },
     {
@@ -116,7 +117,7 @@
     "Use Tails OS for the highest level of anonymity - it routes all traffic through Tor and leaves no traces on your computer.",
     "Never download files through Tor without scanning them in an isolated environment first, as they may contain tracking elements.",
     "Rotate your Tor circuits frequently and use New Identity feature between different browsing sessions for maximum unlinkability.",
-    "Consider using a privacy-focused browser for clearnet browsing while keeping Tor exclusively for anonymous activities to avoid cross-contamination.",
+    "Keep Tor Browser for anonymous activity only, and do everyday browsing, especially anything signed in to your real accounts, in a separate browser so the two never overlap.",
     "Always verify your setup through multiple independent testing services and never trust a single anonymity verification tool."
   ],
   "faqs": [
@@ -130,11 +131,11 @@
     },
     {
       "question": "How much do these advanced techniques slow down browsing?",
-      "answer": "Advanced configurations can significantly impact browsing speed. VPN-over-Tor setups may reduce speeds by 70-90%. Bridge connections and traffic padding also add latency. Consider the security-speed trade-off for your specific needs."
+      "answer": "Tor is noticeably slower than direct browsing, and bridges add more latency because your traffic takes an extra, deliberately obfuscated hop. How much slower depends on the circuit and transport you get, so test rather than plan around a figure."
     },
     {
-      "question": "Should I use VPN-over-Tor or Tor-over-VPN?",
-      "answer": "VPN-over-Tor (VPN through Tor) provides better anonymity as your VPN provider cannot see your real IP. Tor-over-VPN is easier to set up but provides less privacy protection. For advanced users, VPN-over-Tor is generally recommended."
+      "question": "Should I use a VPN with Tor at all?",
+      "answer": "The Tor Project doesn't recommend it unless you're an advanced user who knows how to configure both in a way that doesn't compromise your privacy, because in practice it can reduce anonymity or break Tor's protections. The two goals people reach for a VPN to meet have better answers: use a bridge to hide from your network that you use Tor, and use a service's .onion address to take exit relays out of the picture."
     },
     {
       "question": "How often should I change my Tor configuration?",
@@ -151,6 +152,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T01:54:14.147Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "Darkpool David",
     "notes": "Bulk-promoted after R3 product-mention scrub + editorial-gate rollout. Pseudonymous byline."
   },

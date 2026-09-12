@@ -1,7 +1,7 @@
 {
   "niche": "encrypted-messaging",
   "slug": "advanced-encrypted-messaging-techniques",
-  "title": "Advanced Encrypted Messaging Techniques for Maximum Privacy",
+  "title": "Advanced Encrypted Messaging Techniques",
   "metaDescription": "Master advanced encrypted messaging techniques with Signal, disappearing messages, metadata protection, and secure group chat best practices.",
   "keywords": [
     "advanced encrypted messaging",
@@ -29,7 +29,7 @@
         "Open Signal settings and navigate to Privacy section",
         "Enable Registration Lock with a strong PIN",
         "Turn on Screen Security to prevent screenshots",
-        "Enable Incognito Keyboard to prevent keystroke logging",
+        "Turn on Incognito keyboard on Android: it asks the keyboard not to learn from what you type, though Signal notes a keyboard can ignore the flag",
         "Disable typing indicators and read receipts for maximum privacy"
       ],
       "proTip": "Use a unique PIN for Registration Lock that's different from your phone unlock code - this prevents SIM swap attacks.",
@@ -65,11 +65,11 @@
       "title": "Minimize Metadata Exposure",
       "description": "Reduce digital footprints by minimizing the data that messaging apps and networks can collect about your communication patterns.",
       "actions": [
-        "Use Signal with Tor Browser or a VPN to hide IP addresses",
+        "Route Signal through a VPN, or through Tor with Orbot on Android, to hide your IP address from Signal's servers",
         "Disable all cloud backups for messaging apps",
         "Turn off contact syncing and discovery features",
         "Use separate phone numbers or usernames when possible",
-        "Browse messaging apps only through a privacy-focused browser to prevent tracking"
+        "Turn on 'Always relay calls' (Settings > Privacy > Advanced) so the people you call don't see your IP address"
       ],
       "proTip": "Signal's sealed sender feature hides message sender information from Signal's servers - ensure it's enabled for all contacts."
     },
@@ -114,10 +114,10 @@
   ],
   "pro_tips": [
     "Use Signal's note-to-self feature with disappearing messages as a secure temporary storage for sensitive information.",
-    "Combine encrypted messaging with Tor or VPN routing, especially when using web versions through a privacy-focused browser.",
+    "If you route a messaging app through a VPN, the messaging service no longer sees your IP address, but the VPN provider can see when and how often you connect. Choose the provider as carefully as the app.",
     "Create separate Signal accounts for different contexts (personal, work, activism) using different phone numbers or usernames.",
     "Regularly export and securely store your Signal backup phrase, but never store it digitally or in cloud services.",
-    "For ultimate security, use Signal on a dedicated device that's only used for secure communications and kept offline when not needed."
+    "For the highest-risk work, use Signal on a separate device kept only for secure communications, and switch it off when you don't need it."
   ],
   "faqs": [
     {
@@ -138,13 +138,14 @@
     },
     {
       "question": "Can my internet service provider see who I'm messaging with Signal?",
-      "answer": "Your ISP can see you're connecting to Signal's servers but can't see message contents or recipients due to encryption. For additional privacy, route Signal traffic through a VPN or Tor, especially when using Signal's web interface through a privacy-focused browser."
+      "answer": "Your ISP can see you're connecting to Signal's servers but can't see message contents or recipients due to encryption. To hide that you use Signal at all, route it through a VPN (the VPN provider then sees the connection instead) or through Tor with Orbot on Android."
     }
   ],
   "relatedLinks": [],
   "editorial": {
     "status": "draft",
     "reviewedAt": "2026-05-19T03:22:44.057Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Demoted to draft to resolve R2 doorway-pattern overlap with social-media-privacy. Canonical version lives under /guides/social-media-privacy/."
   },
