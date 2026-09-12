@@ -41,7 +41,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 1 tracking cookie before consent, 1 ad tracker, 4 third-party domains on the homepage."
+    "headline": "Grade C: 1 tracking cookie before consent, 1 ad tracker, 1 analytics tracker, 4 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -87,20 +87,6 @@
         "path": "/",
         "maxAge": "86400",
         "expires": "Wed, 09 Sep 2026 02:34:41 GMT"
-      },
-      {
-        "cookieName": "PHPSESSID",
-        "name": "PHP Session",
-        "category": "functional",
-        "risk": "low",
-        "description": "PHP server-side session cookie — standard functionality",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": ".pixiv.net",
-        "path": "/",
-        "maxAge": "3600",
-        "expires": "Tue, 08 Sep 2026 03:34:41 GMT"
       },
       {
         "cookieName": "p_ab_id",
@@ -209,10 +195,10 @@
       "hasHSTS": true
     },
     "summary": {
-      "totalCookies": 9,
+      "totalCookies": 8,
       "trackingCookies": 1,
       "analyticsCookies": 4,
-      "functionalCookies": 3,
+      "functionalCookies": 2,
       "totalTrackers": 3,
       "thirdPartyScripts": 4,
       "highRiskItems": 1
@@ -222,6 +208,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -9,7 +9,7 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 89,
+    "score": 86,
     "grade": "B",
     "deductions": [
       {
@@ -19,8 +19,8 @@
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, comScore"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -32,7 +32,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 ad tracker, 6 third-party domains on the homepage."
+    "headline": "Grade B: 1 ad tracker, 2 analytics trackers, 6 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -49,6 +49,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "comScore",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "comScore (Scorecard Research) beacon — reports your visit for comScore's cross-site audience measurement"
       }
     ],
     "inlineTrackers": [],
@@ -71,7 +77,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 2,
+      "totalTrackers": 3,
       "thirdPartyScripts": 6,
       "highRiskItems": 1
     }
@@ -80,6 +86,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

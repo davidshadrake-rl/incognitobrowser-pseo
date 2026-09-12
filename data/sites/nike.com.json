@@ -28,7 +28,7 @@
         "detail": "Segment"
       }
     ],
-    "headline": "Grade C: 2 tracking cookies before consent, 1 ad tracker, 1 third-party domain on the homepage."
+    "headline": "Grade C: 2 tracking cookies before consent, 1 ad tracker, 1 analytics tracker, 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
@@ -63,10 +63,10 @@
       },
       {
         "cookieName": "kndctr_F0935E09512D2C270A490D4D_AdobeOrg_identity",
-        "name": "Third-Party Cookie",
+        "name": "Adobe Experience Platform",
         "category": "tracking",
         "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "description": "Adobe Experience Platform Web SDK — carries the Experience Cloud ID that identifies you to Adobe's services",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -77,10 +77,10 @@
       },
       {
         "cookieName": "kndctr_F0935E09512D2C270A490D4D_AdobeOrg_cluster",
-        "name": "Third-Party Cookie",
+        "name": "Adobe Experience Platform",
         "category": "tracking",
         "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "description": "Adobe Experience Platform Web SDK — carries the Experience Cloud ID that identifies you to Adobe's services",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -91,10 +91,10 @@
       },
       {
         "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Adaptive Acceleration — CDN cookie used to speed up page loads",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -118,95 +118,11 @@
         "expires": "Fri, 08-Oct-2027 02:34:29 GMT"
       },
       {
-        "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": "nike.com",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Tue, 08-Sep-2026 03:34:29 GMT"
-      },
-      {
-        "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": "nike.com",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Tue, 08-Sep-2026 03:34:29 GMT"
-      },
-      {
-        "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": "nike.com",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Tue, 08-Sep-2026 03:34:29 GMT"
-      },
-      {
-        "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": "nike.com",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Tue, 08-Sep-2026 03:34:29 GMT"
-      },
-      {
-        "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": "nike.com",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Tue, 08-Sep-2026 03:34:29 GMT"
-      },
-      {
-        "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": "nike.com",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Tue, 08-Sep-2026 03:34:29 GMT"
-      },
-      {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -241,10 +157,10 @@
       "hasHSTS": true
     },
     "summary": {
-      "totalCookies": 13,
+      "totalCookies": 7,
       "trackingCookies": 2,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
+      "functionalCookies": 2,
       "totalTrackers": 2,
       "thirdPartyScripts": 1,
       "highRiskItems": 3
@@ -254,6 +170,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

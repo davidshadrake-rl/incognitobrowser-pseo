@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 91,
-    "grade": "A",
+    "score": 82,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 12,
+        "detail": "Google Analytics / GTM, Optimizely, Marketo Munchkin, Adobe Marketo Measure (Bizible)"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -31,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 7 third-party domains on the homepage."
+    "headline": "Grade B: 4 analytics trackers, 7 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -42,6 +42,24 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Optimizely",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Optimizely — A/B testing that assigns you to experiments and records what you do"
+      },
+      {
+        "name": "Marketo Munchkin",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Marketo Munchkin — marketing-automation tracker that ties page visits to lead records"
+      },
+      {
+        "name": "Adobe Marketo Measure (Bizible)",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Adobe Marketo Measure (formerly Bizible) — marketing attribution"
       }
     ],
     "inlineTrackers": [],
@@ -65,7 +83,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 4,
       "thirdPartyScripts": 7,
       "highRiskItems": 0
     }
@@ -74,6 +92,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

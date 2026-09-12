@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 89,
+    "score": 86,
     "grade": "B",
     "deductions": [
       {
         "reason": "Analytics trackers loaded",
-        "points": 6,
-        "detail": "Google Analytics / GTM, HubSpot"
+        "points": 9,
+        "detail": "Google Analytics / GTM, Optimizely, HubSpot"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -31,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 6 third-party domains on the homepage."
+    "headline": "Grade B: 3 analytics trackers, 6 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -57,6 +57,12 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Optimizely",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Optimizely — A/B testing that assigns you to experiments and records what you do"
       },
       {
         "name": "reCAPTCHA",
@@ -91,7 +97,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 1,
       "functionalCookies": 0,
-      "totalTrackers": 3,
+      "totalTrackers": 4,
       "thirdPartyScripts": 6,
       "highRiskItems": 0
     }
@@ -100,6 +106,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

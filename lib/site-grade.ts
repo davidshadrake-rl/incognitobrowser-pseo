@@ -24,7 +24,13 @@
  *   no CSP                                −3
  *   no Permissions-Policy                 −1
  * Grade: A ≥90, B ≥78, C ≥62, D ≥45, F otherwise.
+ *
+ * What counts as a tracking cookie or a tracker is lib/scanner.ts's call
+ * (KNOWN_COOKIES, KNOWN_COOKIE_PATTERNS, TRACKER_PATTERNS). When that changes,
+ * run scripts/regrade-sites.ts so the stored cards follow (last: 2026-09-11).
  */
+
+import { TRACKER_FOR_INLINE } from './scanner';
 
 export interface ScanSummaryLike {
   cookies?: Array<{ category: string; risk: string }>;
@@ -83,11 +89,25 @@ export function gradeSite(r: ScanSummaryLike): GradeResult {
   const score = Math.max(0, 100 - total);
   const grade: Grade = score >= 90 ? 'A' : score >= 78 ? 'B' : score >= 62 ? 'C' : score >= 45 ? 'D' : 'F';
 
+  // The headline counts every kind of tracking that costs points, so its
+  // "none detected" line is only ever printed when that is true. It used to
+  // say "no trackers" beside Sentry (firefox.com) and beside Google Analytics
+  // on cards with no third-party domain (starlink.com); funnel pilot
+  // 2026-09-11. Functional scripts (error monitoring, CAPTCHAs, payments)
+  // cost nothing and are not claimed absent. An inline pixel counts only when
+  // its tag is not already one of the trackers, as on the report card page.
+  const trackerNames = new Set(trackers.map((t) => t.name).filter(Boolean));
+  const extraPixels = inline.filter((i) => !(TRACKER_FOR_INLINE[i] && trackerNames.has(TRACKER_FOR_INLINE[i]))).length;
+  const count = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
   const parts: string[] = [];
-  if (trackingCookies) parts.push(`${trackingCookies} tracking cookie${trackingCookies === 1 ? '' : 's'} before consent`);
-  if (adTrackers.length) parts.push(`${adTrackers.length} ad tracker${adTrackers.length === 1 ? '' : 's'}`);
-  if (third.length) parts.push(`${third.length} third-party domain${third.length === 1 ? '' : 's'}`);
-  const headline = parts.length ? `Grade ${grade}: ${parts.join(', ')} on the homepage.` : `Grade ${grade}: no trackers or tracking cookies detected on the homepage.`;
+  if (trackingCookies) parts.push(`${count(trackingCookies, 'tracking cookie', 'tracking cookies')} before consent`);
+  if (adTrackers.length) parts.push(count(adTrackers.length, 'ad tracker', 'ad trackers'));
+  if (analytics.length) parts.push(count(analytics.length, 'analytics tracker', 'analytics trackers'));
+  if (extraPixels) parts.push(count(extraPixels, 'tracking pixel', 'tracking pixels'));
+  if (third.length) parts.push(count(third.length, 'third-party domain', 'third-party domains'));
+  const headline = parts.length
+    ? `Grade ${grade}: ${parts.join(', ')} on the homepage.`
+    : `Grade ${grade}: no ad or analytics trackers or tracking cookies detected on the homepage.`;
 
   return { score, grade, deductions, headline };
 }

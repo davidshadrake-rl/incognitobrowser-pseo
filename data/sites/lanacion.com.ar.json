@@ -9,18 +9,18 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 61,
+    "score": 52,
     "grade": "D",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 24,
-        "detail": "Facebook Pixel, Google DoubleClick, Amazon Ads, Google Platform"
+        "points": 30,
+        "detail": "Facebook Pixel, Google DoubleClick, Amazon Ads, Permutive, Blockthrough, OneTag"
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, comScore"
       },
       {
         "reason": "Inline tracking pixels",
@@ -41,17 +41,17 @@
         "points": 1
       }
     ],
-    "headline": "Grade D: 4 ad trackers, 10 third-party domains on the homepage."
+    "headline": "Grade D: 7 ad trackers, 2 analytics trackers, 10 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Adaptive Acceleration — CDN cookie used to speed up page loads",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -85,6 +85,30 @@
         "category": "tracking",
         "risk": "high",
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Permutive",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Permutive — publisher data platform that sorts visitors into audience segments for ad targeting"
+      },
+      {
+        "name": "Blockthrough",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Blockthrough — ad-recovery script that shows ads to visitors who use an ad blocker"
+      },
+      {
+        "name": "OneTag",
+        "category": "tracking",
+        "risk": "high",
+        "description": "OneTag ad exchange — runs header-bidding ad auctions"
+      },
+      {
+        "name": "comScore",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "comScore (Scorecard Research) beacon — reports your visit for comScore's cross-site audience measurement"
       },
       {
         "name": "Google Platform",
@@ -124,16 +148,17 @@
       "totalCookies": 1,
       "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
-      "totalTrackers": 6,
+      "functionalCookies": 1,
+      "totalTrackers": 10,
       "thirdPartyScripts": 10,
-      "highRiskItems": 3
+      "highRiskItems": 5
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

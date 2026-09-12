@@ -9,14 +9,9 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 65,
+    "score": 70,
     "grade": "C",
     "deductions": [
-      {
-        "reason": "Tracking cookies set before any consent",
-        "points": 8,
-        "detail": "1 tracking cookie"
-      },
       {
         "reason": "Advertising / marketing trackers loaded",
         "points": 18,
@@ -24,8 +19,8 @@
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, comScore"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -41,17 +36,17 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 1 tracking cookie before consent, 3 ad trackers, 7 third-party domains on the homepage."
+    "headline": "Grade C: 3 ad trackers, 2 analytics trackers, 7 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "AWSALBTG",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "AWS Load Balancer",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "AWS Application Load Balancer target-group stickiness cookie — keeps your requests on the same server",
         "secure": false,
         "httpOnly": false,
         "sameSite": "not set",
@@ -62,10 +57,10 @@
       },
       {
         "cookieName": "AWSALBTGCORS",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "AWS Load Balancer",
+        "category": "functional",
+        "risk": "low",
+        "description": "AWS Application Load Balancer target-group stickiness cookie — the SameSite=None copy of AWSALBTG, for cross-origin requests",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -101,6 +96,12 @@
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
       },
       {
+        "name": "comScore",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "comScore (Scorecard Research) beacon — reports your visit for comScore's cross-site audience measurement"
+      },
+      {
         "name": "reCAPTCHA",
         "category": "functional",
         "risk": "medium",
@@ -125,18 +126,19 @@
     },
     "summary": {
       "totalCookies": 2,
-      "trackingCookies": 1,
+      "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
-      "totalTrackers": 5,
+      "functionalCookies": 2,
+      "totalTrackers": 6,
       "thirdPartyScripts": 7,
-      "highRiskItems": 4
+      "highRiskItems": 3
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

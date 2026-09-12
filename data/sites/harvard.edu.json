@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 90,
-    "grade": "A",
+    "score": 84,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 9,
+        "detail": "Google Analytics / GTM, Parse.ly, Jetpack Stats"
       },
       {
         "reason": "No HSTS (Strict-Transport-Security)",
@@ -30,7 +30,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 4 third-party domains on the homepage."
+    "headline": "Grade B: 3 analytics trackers, 4 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -41,6 +41,18 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Parse.ly",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Parse.ly — content analytics for publishers"
+      },
+      {
+        "name": "Jetpack Stats",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Jetpack Stats (WordPress.com) — page-view statistics for the site owner"
       }
     ],
     "inlineTrackers": [],
@@ -61,7 +73,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 3,
       "thirdPartyScripts": 4,
       "highRiskItems": 0
     }
@@ -70,6 +82,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

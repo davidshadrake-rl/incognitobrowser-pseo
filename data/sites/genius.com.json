@@ -9,18 +9,18 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 74,
-    "grade": "C",
+    "score": 59,
+    "grade": "D",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 12,
-        "detail": "Google DoubleClick, Amazon Ads"
+        "points": 24,
+        "detail": "Google DoubleClick, Amazon Ads, Quantcast, Integral Ad Science"
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, comScore"
       },
       {
         "reason": "Inline tracking pixels",
@@ -41,7 +41,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 2 ad trackers, 9 third-party domains on the homepage."
+    "headline": "Grade D: 4 ad trackers, 2 analytics trackers, 9 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -95,6 +95,24 @@
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
       },
       {
+        "name": "Quantcast",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Quantcast pixel — measures audiences and builds ad-targeting segments"
+      },
+      {
+        "name": "Integral Ad Science",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Integral Ad Science — ad-verification script that measures ad viewability and checks for ad fraud"
+      },
+      {
+        "name": "comScore",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "comScore (Scorecard Research) beacon — reports your visit for comScore's cross-site audience measurement"
+      },
+      {
         "name": "reCAPTCHA",
         "category": "functional",
         "risk": "medium",
@@ -126,15 +144,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 1,
       "functionalCookies": 1,
-      "totalTrackers": 4,
+      "totalTrackers": 7,
       "thirdPartyScripts": 9,
-      "highRiskItems": 2
+      "highRiskItems": 3
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

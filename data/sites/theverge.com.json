@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 74,
+    "score": 62,
     "grade": "C",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 18,
-        "detail": "Google AdSense, Google DoubleClick, Amazon Ads"
+        "points": 30,
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Google Publisher Tag, DoubleVerify"
       },
       {
         "reason": "Analytics trackers loaded",
@@ -32,7 +32,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 3 ad trackers, 9 third-party domains on the homepage."
+    "headline": "Grade C: 5 ad trackers, 1 analytics tracker, 9 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -90,6 +90,18 @@
         "category": "tracking",
         "risk": "high",
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Google Publisher Tag",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Google Publisher Tag — loads Google Ad Manager display ads"
+      },
+      {
+        "name": "DoubleVerify",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "DoubleVerify — ad-verification script that measures ad viewability and checks for ad fraud"
       }
     ],
     "inlineTrackers": [],
@@ -115,15 +127,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 1,
       "functionalCookies": 0,
-      "totalTrackers": 4,
+      "totalTrackers": 6,
       "thirdPartyScripts": 9,
-      "highRiskItems": 3
+      "highRiskItems": 4
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

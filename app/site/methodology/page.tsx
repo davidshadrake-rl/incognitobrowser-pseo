@@ -24,8 +24,10 @@ export default function MethodologyPage() {
       <h2 className="text-xl font-semibold text-white mt-8 mb-2">What we scan</h2>
       <ul className="list-disc pl-6 text-t2 space-y-1">
         <li>One request to the homepage over HTTPS, following redirects, with a normal desktop browser user-agent. No consent banner is clicked; no cookies are sent.</li>
-        <li><strong className="text-white">Set-Cookie</strong> headers in that response, classified by a database of known tracking, analytics and functional cookie names, plus naming heuristics and <code>SameSite=None</code> (which enables cross-site tracking).</li>
-        <li>The HTML, matched against known tracker and pixel scripts (Meta Pixel, Google Ads/DoubleClick, TikTok, Criteo, Taboola, Hotjar, and dozens more) and inline pixel initialisers.</li>
+        {/* Keep in step with lib/scanner.ts categorizeCookie: known names first
+            (KNOWN_COOKIES, KNOWN_COOKIE_PATTERNS), then the heuristics. */}
+        <li><strong className="text-white">Set-Cookie</strong> headers in that response. A cookie we know by name is classified by what it is: advertising, analytics, or functional. The hosting cookies we know (load balancers, CDNs and bot protection from AWS, Cloudflare, Akamai, F5, Imperva, Azure and others) are functional even when they are set <code>SameSite=None</code>. A cookie we don&apos;t know is judged by its name first (names with &ldquo;uid&rdquo;, &ldquo;visitor&rdquo; or &ldquo;track&rdquo; count as tracking; &ldquo;session&rdquo;, &ldquo;token&rdquo;, &ldquo;csrf&rdquo; or &ldquo;auth&rdquo; as functional); failing that, it counts as tracking when it is set <code>SameSite=None</code>, which lets the browser send it with requests from other sites, as cross-site tracking requires. A response that sets the same cookie several times &mdash; the same name, domain and path, sent again with a new expiry &mdash; leaves the visitor with one cookie, so we count it once.</li>
+        <li>The HTML, matched against known tracker and pixel scripts (Meta Pixel, Google Ads/DoubleClick, TikTok, Criteo, Taboola, comScore, Hotjar, ad exchanges, tag managers and dozens more) and inline pixel initialisers.</li>
         <li>Every <code>&lt;script src&gt;</code> that loads from a domain other than the site&apos;s own.</li>
         <li>Security headers: HTTPS, HSTS, Content-Security-Policy, Permissions-Policy.</li>
       </ul>
@@ -57,6 +59,8 @@ export default function MethodologyPage() {
         </table>
       </div>
       <p className="text-t2"><strong className="text-white">Grades:</strong> A ≥ 90 · B ≥ 78 · C ≥ 62 · D ≥ 45 · F below 45.</p>
+      <p className="text-t2">Advertising and marketing trackers include ad exchanges, ad-verification and retargeting tags. Analytics trackers include tag managers (Google, Adobe, Tealium) and A/B-testing tools. Scripts we recognise as functional, such as error monitoring, CAPTCHAs and payments, are listed on the card but cost no points.</p>
+      <p className="text-t2 text-sm">Rubric updated 11 September 2026: load-balancer, CDN and bot-protection cookies no longer count as tracking cookies, comScore and 54 more ad and analytics scripts are now detected, a cookie set several times in one response now counts once (lowes.com sent one ID cookie eight times and the card called it &ldquo;8 tracking cookies&rdquo;), and every card was re-graded from its stored scan (trackers matched against the script domains that scan recorded), so its scan date is unchanged.</p>
 
       <h2 className="text-xl font-semibold text-white mt-8 mb-2">What we deliberately don&apos;t do</h2>
       <ul className="list-disc pl-6 text-t2 space-y-1">
@@ -68,7 +72,7 @@ export default function MethodologyPage() {
 
       <h2 className="text-xl font-semibold text-white mt-8 mb-2">Disputing a grade</h2>
       <p className="text-t2">
-        Every deduction is itemised on the site&apos;s page. If you run a site and believe a finding is wrong, scan your homepage with the Cookie &amp; Tracker Scanner and compare what it finds (the cookies, trackers and security headers), not its score. If those findings differ from the report card, the card is out of date and will refresh on the next monthly scan. Grades change over time — each page shows its previous grade once a second scan exists.
+        Every deduction is itemised on the site&apos;s page. If you run a site and believe a finding is wrong, scan your homepage with the Cookie &amp; Tracker Scanner and compare what it finds (the cookies, trackers and security headers), not its score. If those findings differ from the report card, the card is out of date and will refresh on the next monthly scan. Grades change over time — each page shows its previous grade once there is a second scan of that site under the same rubric. When we change the rubric we re-grade every card, and a grade that moved because the rubric moved is never published as a change in the site.
       </p>
 
       <p className="mt-8"><Link href="/site" className="text-sm text-t2 hover:text-white">← All report cards</Link></p>

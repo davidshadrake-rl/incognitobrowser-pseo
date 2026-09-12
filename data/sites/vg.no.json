@@ -9,16 +9,21 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 99,
+    "score": 93,
     "grade": "A",
     "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Xandr (Microsoft)"
+      },
       {
         "reason": "Third-party script domains beyond a reasonable five",
         "points": 1,
         "detail": "6 third-party domains"
       }
     ],
-    "headline": "Grade A: 6 third-party domains on the homepage."
+    "headline": "Grade A: 1 ad tracker, 6 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -38,7 +43,14 @@
         "expires": "Tue, 22 Sep 2026 02:34:52 GMT"
       }
     ],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "Xandr (Microsoft)",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Xandr (formerly AppNexus), Microsoft's ad platform — serves and auctions display ads"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "esm.schibsted.tech",
@@ -59,15 +71,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 0,
+      "totalTrackers": 1,
       "thirdPartyScripts": 6,
-      "highRiskItems": 0
+      "highRiskItems": 1
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

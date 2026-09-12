@@ -9,30 +9,25 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 91,
+    "score": 99,
     "grade": "A",
     "deductions": [
-      {
-        "reason": "Tracking cookies set before any consent",
-        "points": 8,
-        "detail": "1 tracking cookie"
-      },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade A: 1 tracking cookie before consent, 1 third-party domain on the homepage."
+    "headline": "Grade A: 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "__cflb",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare Load Balancing session affinity — keeps your requests on the same server",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -83,18 +78,19 @@
     },
     "summary": {
       "totalCookies": 3,
-      "trackingCookies": 1,
+      "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
+      "functionalCookies": 1,
       "totalTrackers": 0,
       "thirdPartyScripts": 1,
-      "highRiskItems": 1
+      "highRiskItems": 0
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

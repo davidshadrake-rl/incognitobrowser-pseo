@@ -9,8 +9,8 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 58,
-    "grade": "D",
+    "score": 40,
+    "grade": "F",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
@@ -19,13 +19,13 @@
       },
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 18,
-        "detail": "Facebook Pixel, Google DoubleClick, Facebook SDK"
+        "points": 30,
+        "detail": "Facebook Pixel, Google DoubleClick, Permutive, Freestar, Nativo, Dianomi"
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 9,
+        "detail": "Google Analytics / GTM, Parse.ly, Sailthru"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -37,7 +37,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade D: 1 tracking cookie before consent, 3 ad trackers, 17 third-party domains on the homepage."
+    "headline": "Grade F: 1 tracking cookie before consent, 7 ad trackers, 3 analytics trackers, 17 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -91,6 +91,42 @@
         "description": "Google DoubleClick — ad serving and cross-site tracking"
       },
       {
+        "name": "Permutive",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Permutive — publisher data platform that sorts visitors into audience segments for ad targeting"
+      },
+      {
+        "name": "Freestar",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Freestar — ad-monetization script that runs header-bidding ad auctions"
+      },
+      {
+        "name": "Nativo",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Nativo — native-advertising platform that serves sponsored content"
+      },
+      {
+        "name": "Dianomi",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Dianomi — native-advertising widget that serves sponsored content"
+      },
+      {
+        "name": "Parse.ly",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Parse.ly — content analytics for publishers"
+      },
+      {
+        "name": "Sailthru",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Sailthru (Marigold) — records the pages you read to personalize email and content"
+      },
+      {
         "name": "Facebook SDK",
         "category": "tracking",
         "risk": "high",
@@ -134,15 +170,16 @@
       "trackingCookies": 1,
       "analyticsCookies": 0,
       "functionalCookies": 1,
-      "totalTrackers": 5,
+      "totalTrackers": 11,
       "thirdPartyScripts": 17,
-      "highRiskItems": 3
+      "highRiskItems": 7
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -9,9 +9,14 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 94,
+    "score": 91,
     "grade": "A",
     "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Optimizely"
+      },
       {
         "reason": "Third-party script domains beyond a reasonable five",
         "points": 2,
@@ -26,12 +31,19 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 7 third-party domains on the homepage."
+    "headline": "Grade A: 1 analytics tracker, 7 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "Optimizely",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Optimizely — A/B testing that assigns you to experiments and records what you do"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "static.files.bbci.co.uk",
@@ -53,7 +65,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 0,
+      "totalTrackers": 1,
       "thirdPartyScripts": 7,
       "highRiskItems": 0
     }
@@ -62,6 +74,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

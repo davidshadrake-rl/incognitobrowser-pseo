@@ -9,20 +9,20 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 75,
-    "grade": "C",
+    "score": 83,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
-        "points": 24,
-        "detail": "3 tracking cookies"
+        "points": 16,
+        "detail": "2 tracking cookies"
       },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade C: 3 tracking cookies before consent on the homepage."
+    "headline": "Grade B: 2 tracking cookies before consent on the homepage."
   },
   "scan": {
     "status": 200,
@@ -43,38 +43,10 @@
       },
       {
         "cookieName": "ASP.NET_SessionId",
-        "name": "Functional",
+        "name": "ASP.NET Session",
         "category": "functional",
         "risk": "low",
-        "description": "Likely a functional/security cookie",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "None",
-        "domain": "www.zilverenkruis.nl",
-        "path": "/",
-        "maxAge": null,
-        "expires": null
-      },
-      {
-        "cookieName": "shell#lang",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "None",
-        "domain": "www.zilverenkruis.nl",
-        "path": "/",
-        "maxAge": null,
-        "expires": null
-      },
-      {
-        "cookieName": "ASP.NET_SessionId",
-        "name": "Functional",
-        "category": "functional",
-        "risk": "low",
-        "description": "Likely a functional/security cookie",
+        "description": "ASP.NET server-side session cookie — standard functionality",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -113,10 +85,10 @@
       },
       {
         "cookieName": "TS01c766e6",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "F5 BIG-IP Advanced WAF",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "F5 BIG-IP Advanced WAF (ASM) security cookie — protects the site from attacks and bots",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -127,10 +99,10 @@
       },
       {
         "cookieName": "TS7ed6c70c027",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "F5 BIG-IP Advanced WAF",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "F5 BIG-IP Advanced WAF (ASM) security cookie — protects the site from attacks and bots",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -150,19 +122,20 @@
       "hasHSTS": true
     },
     "summary": {
-      "totalCookies": 8,
-      "trackingCookies": 3,
+      "totalCookies": 6,
+      "trackingCookies": 2,
       "analyticsCookies": 0,
-      "functionalCookies": 3,
+      "functionalCookies": 4,
       "totalTrackers": 0,
       "thirdPartyScripts": 0,
-      "highRiskItems": 3
+      "highRiskItems": 2
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

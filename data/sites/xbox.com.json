@@ -9,9 +9,14 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 94,
+    "score": 91,
     "grade": "A",
     "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Adobe Experience Platform Tags"
+      },
       {
         "reason": "Third-party script domains beyond a reasonable five",
         "points": 2,
@@ -26,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 7 third-party domains on the homepage."
+    "headline": "Grade A: 1 analytics tracker, 7 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -46,7 +51,14 @@
         "expires": null
       }
     ],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "Adobe Experience Platform Tags",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Adobe Experience Platform Tags (formerly Launch / DTM) — tag manager that loads Adobe Analytics and other marketing tags"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "cdnjs.cloudflare.com",
@@ -68,7 +80,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 0,
+      "totalTrackers": 1,
       "thirdPartyScripts": 7,
       "highRiskItems": 0
     }
@@ -77,6 +89,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

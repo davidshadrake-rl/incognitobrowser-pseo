@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 91,
-    "grade": "A",
+    "score": 88,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Analytics trackers loaded",
-        "points": 6,
-        "detail": "Google Analytics / GTM, Microsoft Clarity"
+        "points": 9,
+        "detail": "Google Analytics / GTM, Microsoft Clarity, Cloudflare Web Analytics"
       },
       {
         "reason": "Inline tracking pixels",
@@ -23,7 +23,7 @@
         "detail": "Google gtag (inline)"
       }
     ],
-    "headline": "Grade A: 2 third-party domains on the homepage."
+    "headline": "Grade B: 3 analytics trackers, 2 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -40,6 +40,12 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Microsoft Clarity — free session recording and heatmap analytics"
+      },
+      {
+        "name": "Cloudflare Web Analytics",
+        "category": "analytics",
+        "risk": "low",
+        "description": "Cloudflare Web Analytics — cookieless page-view and page-speed beacon"
       }
     ],
     "inlineTrackers": [
@@ -60,7 +66,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 2,
+      "totalTrackers": 3,
       "thirdPartyScripts": 2,
       "highRiskItems": 0
     }
@@ -69,6 +75,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

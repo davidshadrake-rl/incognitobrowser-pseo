@@ -9,8 +9,8 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 46,
-    "grade": "D",
+    "score": 43,
+    "grade": "F",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
@@ -23,6 +23,11 @@
         "detail": "Google AdSense, Google DoubleClick, Amazon Ads"
       },
       {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Optimizely"
+      },
+      {
         "reason": "No HSTS (Strict-Transport-Security)",
         "points": 3
       },
@@ -31,7 +36,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade D: 6 tracking cookies before consent, 3 ad trackers, 3 third-party domains on the homepage."
+    "headline": "Grade F: 6 tracking cookies before consent, 3 ad trackers, 1 analytics tracker, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -141,6 +146,12 @@
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
       },
       {
+        "name": "Optimizely",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Optimizely — A/B testing that assigns you to experiments and records what you do"
+      },
+      {
         "name": "Stripe",
         "category": "functional",
         "risk": "low",
@@ -164,30 +175,16 @@
       "trackingCookies": 6,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 4,
+      "totalTrackers": 5,
       "thirdPartyScripts": 3,
       "highRiskItems": 9
     }
   },
-  "history": [
-    {
-      "scannedAt": "2026-09-08T02:34:09.702Z",
-      "grade": "D",
-      "score": 46,
-      "summary": {
-        "totalCookies": 6,
-        "trackingCookies": 6,
-        "analyticsCookies": 0,
-        "functionalCookies": 0,
-        "totalTrackers": 4,
-        "thirdPartyScripts": 3,
-        "highRiskItems": 9
-      }
-    }
-  ],
+  "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

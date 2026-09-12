@@ -9,16 +9,10 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 68,
-    "grade": "C",
-    "deductions": [
-      {
-        "reason": "Tracking cookies set before any consent",
-        "points": 32,
-        "detail": "7 tracking cookies"
-      }
-    ],
-    "headline": "Grade C: 7 tracking cookies before consent, 1 third-party domain on the homepage."
+    "score": 100,
+    "grade": "A",
+    "deductions": [],
+    "headline": "Grade A: 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
@@ -53,10 +47,10 @@
       },
       {
         "cookieName": "akaas_ClearSiteData",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Audience Segmentation — keeps you in the same traffic segment when the site splits visitors between versions (A/B tests, rollouts)",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -67,10 +61,10 @@
       },
       {
         "cookieName": "akavpau_maintenance_vp",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Visitor Prioritization (waiting room) — admits you to the site during traffic peaks",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -81,10 +75,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -95,10 +89,10 @@
       },
       {
         "cookieName": "bm_mi",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -109,10 +103,10 @@
       },
       {
         "cookieName": "bm_s",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -123,10 +117,10 @@
       },
       {
         "cookieName": "bm_so",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -137,10 +131,10 @@
       },
       {
         "cookieName": "bm_sz",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -163,18 +157,19 @@
     },
     "summary": {
       "totalCookies": 9,
-      "trackingCookies": 7,
+      "trackingCookies": 0,
       "analyticsCookies": 1,
-      "functionalCookies": 0,
+      "functionalCookies": 7,
       "totalTrackers": 0,
       "thirdPartyScripts": 1,
-      "highRiskItems": 7
+      "highRiskItems": 0
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

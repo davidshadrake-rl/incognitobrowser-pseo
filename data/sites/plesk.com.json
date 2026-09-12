@@ -9,7 +9,7 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 87,
+    "score": 84,
     "grade": "B",
     "deductions": [
       {
@@ -19,15 +19,15 @@
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 6,
-        "detail": "Google Analytics / GTM, Hotjar"
+        "points": 9,
+        "detail": "Google Analytics / GTM, Hotjar, VWO"
       },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 ad tracker, 2 third-party domains on the homepage."
+    "headline": "Grade B: 1 ad tracker, 3 analytics trackers, 2 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -52,6 +52,12 @@
         "description": "Hotjar — records user sessions, heatmaps, and click tracking"
       },
       {
+        "name": "VWO",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "VWO — A/B testing, heatmaps and session recording"
+      },
+      {
         "name": "reCAPTCHA",
         "category": "functional",
         "risk": "medium",
@@ -74,7 +80,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 4,
+      "totalTrackers": 5,
       "thirdPartyScripts": 2,
       "highRiskItems": 1
     }
@@ -83,6 +89,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

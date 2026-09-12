@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 58,
-    "grade": "D",
+    "score": 82,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
-        "points": 32,
-        "detail": "4 tracking cookies"
+        "points": 8,
+        "detail": "1 tracking cookie"
       },
       {
         "reason": "Analytics trackers loaded",
@@ -35,7 +35,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade D: 4 tracking cookies before consent, 1 third-party domain on the homepage."
+    "headline": "Grade B: 1 tracking cookie before consent, 1 analytics tracker, 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
@@ -56,10 +56,10 @@
       },
       {
         "cookieName": "TS0121e8f2",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "F5 BIG-IP Advanced WAF",
+        "category": "functional",
+        "risk": "low",
+        "description": "F5 BIG-IP Advanced WAF (ASM) security cookie — protects the site from attacks and bots",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -70,10 +70,10 @@
       },
       {
         "cookieName": "TS7f23b040029",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "F5 BIG-IP Advanced WAF",
+        "category": "functional",
+        "risk": "low",
+        "description": "F5 BIG-IP Advanced WAF (ASM) security cookie — protects the site from attacks and bots",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -84,10 +84,10 @@
       },
       {
         "cookieName": "TSff41235b027",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "F5 BIG-IP Advanced WAF",
+        "category": "functional",
+        "risk": "low",
+        "description": "F5 BIG-IP Advanced WAF (ASM) security cookie — protects the site from attacks and bots",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -117,18 +117,19 @@
     },
     "summary": {
       "totalCookies": 4,
-      "trackingCookies": 4,
+      "trackingCookies": 1,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
+      "functionalCookies": 3,
       "totalTrackers": 1,
       "thirdPartyScripts": 1,
-      "highRiskItems": 4
+      "highRiskItems": 1
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

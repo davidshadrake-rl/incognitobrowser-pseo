@@ -9,14 +9,9 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 88,
-    "grade": "B",
+    "score": 96,
+    "grade": "A",
     "deductions": [
-      {
-        "reason": "Tracking cookies set before any consent",
-        "points": 8,
-        "detail": "1 tracking cookie"
-      },
       {
         "reason": "No Content-Security-Policy",
         "points": 3
@@ -26,17 +21,17 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 tracking cookie before consent, 2 third-party domains on the homepage."
+    "headline": "Grade A: 2 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "AWSALB",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "AWS Load Balancer",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "AWS Application Load Balancer stickiness cookie — keeps your requests on the same server",
         "secure": false,
         "httpOnly": false,
         "sameSite": "not set",
@@ -47,10 +42,10 @@
       },
       {
         "cookieName": "AWSALBCORS",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "AWS Load Balancer",
+        "category": "functional",
+        "risk": "low",
+        "description": "AWS Application Load Balancer stickiness cookie — the SameSite=None copy of AWSALB, for cross-origin requests",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -137,18 +132,19 @@
     },
     "summary": {
       "totalCookies": 6,
-      "trackingCookies": 1,
+      "trackingCookies": 0,
       "analyticsCookies": 2,
-      "functionalCookies": 2,
+      "functionalCookies": 4,
       "totalTrackers": 1,
       "thirdPartyScripts": 2,
-      "highRiskItems": 1
+      "highRiskItems": 0
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

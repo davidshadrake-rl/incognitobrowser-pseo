@@ -9,14 +9,9 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 65,
+    "score": 73,
     "grade": "C",
     "deductions": [
-      {
-        "reason": "Tracking cookies set before any consent",
-        "points": 8,
-        "detail": "1 tracking cookie"
-      },
       {
         "reason": "Advertising / marketing trackers loaded",
         "points": 24,
@@ -28,7 +23,7 @@
         "detail": "FullStory"
       }
     ],
-    "headline": "Grade C: 1 tracking cookie before consent, 4 ad trackers, 1 third-party domain on the homepage."
+    "headline": "Grade C: 4 ad trackers, 1 analytics tracker, 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
@@ -49,10 +44,10 @@
       },
       {
         "cookieName": "akavpau_p2",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Visitor Prioritization (waiting room) — admits you to the site during traffic peaks",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -63,10 +58,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -77,10 +72,10 @@
       },
       {
         "cookieName": "bm_mi",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -140,18 +135,19 @@
     },
     "summary": {
       "totalCookies": 4,
-      "trackingCookies": 1,
+      "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
+      "functionalCookies": 3,
       "totalTrackers": 6,
       "thirdPartyScripts": 1,
-      "highRiskItems": 5
+      "highRiskItems": 4
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

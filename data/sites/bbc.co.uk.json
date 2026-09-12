@@ -9,15 +9,28 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 100,
+    "score": 97,
     "grade": "A",
-    "deductions": [],
-    "headline": "Grade A: 3 third-party domains on the homepage."
+    "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "comScore"
+      }
+    ],
+    "headline": "Grade A: 1 analytics tracker, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "comScore",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "comScore (Scorecard Research) beacon — reports your visit for comScore's cross-site audience measurement"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "ichef.bbci.co.uk",
@@ -35,7 +48,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 0,
+      "totalTrackers": 1,
       "thirdPartyScripts": 3,
       "highRiskItems": 0
     }
@@ -44,6 +57,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -9,13 +9,18 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 90,
-    "grade": "A",
+    "score": 87,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
         "points": 6,
         "detail": "Google DoubleClick"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Sailthru"
       },
       {
         "reason": "No Content-Security-Policy",
@@ -26,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 1 ad tracker, 3 third-party domains on the homepage."
+    "headline": "Grade B: 1 ad tracker, 1 analytics tracker, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -52,6 +57,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Sailthru",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Sailthru (Marigold) — records the pages you read to personalize email and content"
       }
     ],
     "inlineTrackers": [],
@@ -71,7 +82,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 2,
       "thirdPartyScripts": 3,
       "highRiskItems": 1
     }
@@ -80,6 +91,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

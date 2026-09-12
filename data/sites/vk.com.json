@@ -15,14 +15,14 @@
       {
         "reason": "Tracking cookies set before any consent",
         "points": 32,
-        "detail": "7 tracking cookies"
+        "detail": "6 tracking cookies"
       },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade C: 7 tracking cookies before consent, 1 third-party domain on the homepage."
+    "headline": "Grade C: 6 tracking cookies before consent, 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
@@ -81,7 +81,7 @@
         "domain": ".vk.com",
         "path": "/",
         "maxAge": null,
-        "expires": "Wed, 08 Sep 2027 23:56:50 GMT"
+        "expires": "Sat, 04 Sep 2027 23:52:04 GMT"
       },
       {
         "cookieName": "remixua",
@@ -110,20 +110,6 @@
         "path": "/",
         "maxAge": null,
         "expires": "Thu, 09 Sep 2027 04:21:12 GMT"
-      },
-      {
-        "cookieName": "remixlgck",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "None",
-        "domain": ".vk.com",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Sat, 04 Sep 2027 23:52:04 GMT"
       }
     ],
     "trackers": [
@@ -145,19 +131,20 @@
       "hasHSTS": true
     },
     "summary": {
-      "totalCookies": 7,
-      "trackingCookies": 7,
+      "totalCookies": 6,
+      "trackingCookies": 6,
       "analyticsCookies": 0,
       "functionalCookies": 0,
       "totalTrackers": 1,
       "thirdPartyScripts": 1,
-      "highRiskItems": 7
+      "highRiskItems": 6
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

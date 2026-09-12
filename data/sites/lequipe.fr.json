@@ -9,30 +9,25 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 75,
-    "grade": "C",
+    "score": 99,
+    "grade": "A",
     "deductions": [
-      {
-        "reason": "Tracking cookies set before any consent",
-        "points": 24,
-        "detail": "3 tracking cookies"
-      },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade C: 3 tracking cookies before consent, 1 third-party domain on the homepage."
+    "headline": "Grade A: 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "bm_mi",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -43,10 +38,10 @@
       },
       {
         "cookieName": "bm_s",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -57,10 +52,10 @@
       },
       {
         "cookieName": "bm_so",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -90,18 +85,19 @@
     },
     "summary": {
       "totalCookies": 3,
-      "trackingCookies": 3,
+      "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
+      "functionalCookies": 3,
       "totalTrackers": 1,
       "thirdPartyScripts": 1,
-      "highRiskItems": 3
+      "highRiskItems": 0
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

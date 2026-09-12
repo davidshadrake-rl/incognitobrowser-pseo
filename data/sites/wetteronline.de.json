@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 75,
+    "score": 69,
     "grade": "C",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 12,
-        "detail": "Google DoubleClick, Amazon Ads"
+        "points": 18,
+        "detail": "Google DoubleClick, Amazon Ads, Relevant Digital"
       },
       {
         "reason": "Analytics trackers loaded",
@@ -36,7 +36,7 @@
         "points": 3
       }
     ],
-    "headline": "Grade C: 2 ad trackers, 9 third-party domains on the homepage."
+    "headline": "Grade C: 3 ad trackers, 1 analytics tracker, 9 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -59,6 +59,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Relevant Digital",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Relevant Digital (Relevant Yield) — header-bidding ad monetization"
       }
     ],
     "inlineTrackers": [],
@@ -84,15 +90,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 3,
+      "totalTrackers": 4,
       "thirdPartyScripts": 9,
-      "highRiskItems": 2
+      "highRiskItems": 3
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

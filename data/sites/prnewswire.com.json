@@ -9,9 +9,14 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 96,
+    "score": 93,
     "grade": "A",
     "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Cloudflare Web Analytics"
+      },
       {
         "reason": "No Content-Security-Policy",
         "points": 3
@@ -21,7 +26,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 5 third-party domains on the homepage."
+    "headline": "Grade A: 1 analytics tracker, 5 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -41,7 +46,14 @@
         "expires": "Tue, 08 Sep 2026 03:04:34 GMT"
       }
     ],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "Cloudflare Web Analytics",
+        "category": "analytics",
+        "risk": "low",
+        "description": "Cloudflare Web Analytics — cookieless page-view and page-speed beacon"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "js.qualified.com",
@@ -61,7 +73,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 1,
-      "totalTrackers": 0,
+      "totalTrackers": 1,
       "thirdPartyScripts": 5,
       "highRiskItems": 0
     }
@@ -70,6 +82,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

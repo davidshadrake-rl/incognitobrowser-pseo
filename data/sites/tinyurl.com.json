@@ -9,8 +9,8 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 86,
-    "grade": "B",
+    "score": 77,
+    "grade": "C",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
@@ -19,21 +19,26 @@
       },
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 6,
-        "detail": "Amazon Ads"
+        "points": 12,
+        "detail": "Amazon Ads, Freestar"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Cloudflare Web Analytics"
       }
     ],
-    "headline": "Grade B: 1 tracking cookie before consent, 1 ad tracker, 2 third-party domains on the homepage."
+    "headline": "Grade C: 1 tracking cookie before consent, 2 ad trackers, 1 analytics tracker, 2 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "XSRF-TOKEN",
-        "name": "Functional",
+        "name": "CSRF Protection",
         "category": "functional",
         "risk": "low",
-        "description": "Likely a functional/security cookie",
+        "description": "Cross-site request forgery protection token, the spelling Angular and Laravel use",
         "secure": true,
         "httpOnly": false,
         "sameSite": "lax",
@@ -105,6 +110,18 @@
         "category": "tracking",
         "risk": "high",
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Freestar",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Freestar — ad-monetization script that runs header-bidding ad auctions"
+      },
+      {
+        "name": "Cloudflare Web Analytics",
+        "category": "analytics",
+        "risk": "low",
+        "description": "Cloudflare Web Analytics — cookieless page-view and page-speed beacon"
       }
     ],
     "inlineTrackers": [],
@@ -123,15 +140,16 @@
       "trackingCookies": 1,
       "analyticsCookies": 1,
       "functionalCookies": 3,
-      "totalTrackers": 1,
+      "totalTrackers": 3,
       "thirdPartyScripts": 2,
-      "highRiskItems": 1
+      "highRiskItems": 2
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

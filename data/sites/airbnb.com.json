@@ -9,9 +9,14 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 87,
+    "score": 79,
     "grade": "B",
     "deductions": [
+      {
+        "reason": "Tracking cookies set before any consent",
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
       {
         "reason": "Advertising / marketing trackers loaded",
         "points": 12,
@@ -22,7 +27,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 2 ad trackers, 2 third-party domains on the homepage."
+    "headline": "Grade B: 1 tracking cookie before consent, 2 ad trackers, 2 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -43,62 +48,6 @@
       },
       {
         "cookieName": "bev",
-        "name": "Long-Lived Cookie",
-        "category": "analytics",
-        "risk": "medium",
-        "description": "Cookie with extended expiry — persistent tracking possible",
-        "secure": true,
-        "httpOnly": false,
-        "sameSite": "not set",
-        "domain": ".airbnb.com",
-        "path": "/",
-        "maxAge": "63071999",
-        "expires": "Thu, 07-Sep-2028 02:34:32 GMT"
-      },
-      {
-        "cookieName": "_user_attributes",
-        "name": "Long-Lived Cookie",
-        "category": "analytics",
-        "risk": "medium",
-        "description": "Cookie with extended expiry — persistent tracking possible",
-        "secure": true,
-        "httpOnly": false,
-        "sameSite": "not set",
-        "domain": ".airbnb.com",
-        "path": "/",
-        "maxAge": "15638399",
-        "expires": "Mon, 08-Mar-2027 02:34:32 GMT"
-      },
-      {
-        "cookieName": "_user_attributes",
-        "name": "Long-Lived Cookie",
-        "category": "analytics",
-        "risk": "medium",
-        "description": "Cookie with extended expiry — persistent tracking possible",
-        "secure": true,
-        "httpOnly": false,
-        "sameSite": "not set",
-        "domain": ".airbnb.com",
-        "path": "/",
-        "maxAge": "15638399",
-        "expires": "Mon, 08-Mar-2027 02:34:32 GMT"
-      },
-      {
-        "cookieName": "everest_cookie",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": true,
-        "httpOnly": false,
-        "sameSite": "not set",
-        "domain": ".airbnb.com",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Fri, 07-Sep-2029 02:34:33 GMT"
-      },
-      {
-        "cookieName": "bev",
         "name": "Unknown",
         "category": "unknown",
         "risk": "low",
@@ -110,6 +59,20 @@
         "path": "/",
         "maxAge": null,
         "expires": "Thu, 07-Sep-2028 02:34:33 GMT"
+      },
+      {
+        "cookieName": "everest_cookie",
+        "name": "Adobe Advertising Cloud",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Adobe Advertising Cloud (Everest) identifier used for ad targeting and attribution",
+        "secure": true,
+        "httpOnly": false,
+        "sameSite": "not set",
+        "domain": ".airbnb.com",
+        "path": "/",
+        "maxAge": null,
+        "expires": "Fri, 07-Sep-2029 02:34:33 GMT"
       },
       {
         "cookieName": "country",
@@ -127,10 +90,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -172,19 +135,20 @@
       "hasHSTS": true
     },
     "summary": {
-      "totalCookies": 8,
-      "trackingCookies": 0,
-      "analyticsCookies": 4,
-      "functionalCookies": 0,
+      "totalCookies": 5,
+      "trackingCookies": 1,
+      "analyticsCookies": 1,
+      "functionalCookies": 1,
       "totalTrackers": 3,
       "thirdPartyScripts": 2,
-      "highRiskItems": 2
+      "highRiskItems": 3
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

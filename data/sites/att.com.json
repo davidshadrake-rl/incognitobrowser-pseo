@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 64,
-    "grade": "C",
+    "score": 88,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
-        "points": 32,
-        "detail": "4 tracking cookies"
+        "points": 8,
+        "detail": "1 tracking cookie"
       },
       {
         "reason": "No Content-Security-Policy",
@@ -26,7 +26,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 4 tracking cookies before consent on the homepage."
+    "headline": "Grade B: 1 tracking cookie before consent on the homepage."
   },
   "scan": {
     "status": 200,
@@ -43,20 +43,6 @@
         "domain": ".att.com",
         "path": "/",
         "maxAge": null,
-        "expires": null
-      },
-      {
-        "cookieName": "ixp",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": false,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": "att.com",
-        "path": "/",
-        "maxAge": "0",
         "expires": null
       },
       {
@@ -215,10 +201,10 @@
       },
       {
         "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Adaptive Acceleration — CDN cookie used to speed up page loads",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -229,10 +215,10 @@
       },
       {
         "cookieName": "akaalb_prod_upperfunnel",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Application Load Balancer — keeps your requests on the same origin server",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -243,10 +229,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -257,10 +243,10 @@
       },
       {
         "cookieName": "bm_sz",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -280,19 +266,20 @@
       "hasHSTS": true
     },
     "summary": {
-      "totalCookies": 17,
-      "trackingCookies": 4,
+      "totalCookies": 16,
+      "trackingCookies": 1,
       "analyticsCookies": 2,
-      "functionalCookies": 0,
+      "functionalCookies": 4,
       "totalTrackers": 0,
       "thirdPartyScripts": 0,
-      "highRiskItems": 3
+      "highRiskItems": 0
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

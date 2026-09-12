@@ -9,15 +9,20 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 99,
+    "score": 96,
     "grade": "A",
     "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "VWO"
+      },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade A: 5 third-party domains on the homepage."
+    "headline": "Grade A: 1 analytics tracker, 5 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -37,7 +42,14 @@
         "expires": "Tue, 08 Sep 2026 03:04:35 GMT"
       }
     ],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "VWO",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "VWO — A/B testing, heatmaps and session recording"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "dev.visualwebsiteoptimizer.com",
@@ -57,7 +69,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 1,
-      "totalTrackers": 0,
+      "totalTrackers": 1,
       "thirdPartyScripts": 5,
       "highRiskItems": 0
     }
@@ -66,6 +78,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

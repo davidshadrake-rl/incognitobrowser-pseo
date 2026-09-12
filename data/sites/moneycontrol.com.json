@@ -9,7 +9,7 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 67,
+    "score": 64,
     "grade": "C",
     "deductions": [
       {
@@ -19,8 +19,8 @@
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, comScore"
       },
       {
         "reason": "Inline tracking pixels",
@@ -41,17 +41,17 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 3 ad trackers, 7 third-party domains on the homepage."
+    "headline": "Grade C: 3 ad trackers, 2 analytics trackers, 7 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "bm_s",
-        "name": "Long-Lived Cookie",
-        "category": "analytics",
-        "risk": "medium",
-        "description": "Cookie with extended expiry — persistent tracking possible",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -62,10 +62,10 @@
       },
       {
         "cookieName": "bm_so",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -76,10 +76,10 @@
       },
       {
         "cookieName": "bm_sz",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": false,
         "sameSite": "not set",
@@ -113,6 +113,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Taboola content recommendation — tracks browsing for ad personalization"
+      },
+      {
+        "name": "comScore",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "comScore (Scorecard Research) beacon — reports your visit for comScore's cross-site audience measurement"
       }
     ],
     "inlineTrackers": [
@@ -137,9 +143,9 @@
     "summary": {
       "totalCookies": 3,
       "trackingCookies": 0,
-      "analyticsCookies": 1,
-      "functionalCookies": 0,
-      "totalTrackers": 4,
+      "analyticsCookies": 0,
+      "functionalCookies": 3,
+      "totalTrackers": 5,
       "thirdPartyScripts": 7,
       "highRiskItems": 3
     }
@@ -148,6 +154,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

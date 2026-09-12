@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 89,
-    "grade": "B",
+    "score": 94,
+    "grade": "A",
     "deductions": [
       {
-        "reason": "Tracking cookies set before any consent",
-        "points": 8,
-        "detail": "1 tracking cookie"
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Adobe Experience Platform Tags"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -27,7 +27,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 tracking cookie before consent, 7 third-party domains on the homepage."
+    "headline": "Grade A: 1 analytics tracker, 7 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -48,10 +48,10 @@
       },
       {
         "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Adaptive Acceleration — CDN cookie used to speed up page loads",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -62,10 +62,10 @@
       },
       {
         "cookieName": "akavpau_WaitingRoomController",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Visitor Prioritization (waiting room) — admits you to the site during traffic peaks",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -76,10 +76,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -90,10 +90,10 @@
       },
       {
         "cookieName": "bm_mi",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -104,10 +104,10 @@
       },
       {
         "cookieName": "bm_sz",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": false,
         "sameSite": "not set",
@@ -118,6 +118,12 @@
       }
     ],
     "trackers": [
+      {
+        "name": "Adobe Experience Platform Tags",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Adobe Experience Platform Tags (formerly Launch / DTM) — tag manager that loads Adobe Analytics and other marketing tags"
+      },
       {
         "name": "reCAPTCHA",
         "category": "functional",
@@ -143,18 +149,19 @@
     },
     "summary": {
       "totalCookies": 6,
-      "trackingCookies": 1,
+      "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
-      "totalTrackers": 1,
+      "functionalCookies": 5,
+      "totalTrackers": 2,
       "thirdPartyScripts": 7,
-      "highRiskItems": 1
+      "highRiskItems": 0
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

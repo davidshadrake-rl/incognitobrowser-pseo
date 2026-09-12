@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 87,
+    "score": 84,
     "grade": "B",
     "deductions": [
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, StatCounter"
       },
       {
         "reason": "Inline tracking pixels",
@@ -35,7 +35,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 4 third-party domains on the homepage."
+    "headline": "Grade B: 2 analytics trackers, 4 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -61,6 +61,12 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "StatCounter",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "StatCounter — web analytics counter"
       }
     ],
     "inlineTrackers": [
@@ -83,7 +89,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 1,
-      "totalTrackers": 1,
+      "totalTrackers": 2,
       "thirdPartyScripts": 4,
       "highRiskItems": 0
     }
@@ -92,6 +98,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

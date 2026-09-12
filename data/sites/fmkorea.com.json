@@ -36,7 +36,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 ad tracker, 4 third-party domains on the homepage."
+    "headline": "Grade B: 1 ad tracker, 1 analytics tracker, 4 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -57,10 +57,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -103,7 +103,7 @@
       "totalCookies": 2,
       "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 1,
+      "functionalCookies": 2,
       "totalTrackers": 2,
       "thirdPartyScripts": 4,
       "highRiskItems": 1
@@ -113,6 +113,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

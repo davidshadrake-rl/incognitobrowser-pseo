@@ -9,14 +9,9 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 77,
-    "grade": "C",
+    "score": 93,
+    "grade": "A",
     "deductions": [
-      {
-        "reason": "Tracking cookies set before any consent",
-        "points": 16,
-        "detail": "2 tracking cookies"
-      },
       {
         "reason": "Advertising / marketing trackers loaded",
         "points": 6,
@@ -27,7 +22,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 2 tracking cookies before consent, 1 ad tracker, 1 third-party domain on the homepage."
+    "headline": "Grade A: 1 ad tracker, 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
@@ -62,10 +57,10 @@
       },
       {
         "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Adaptive Acceleration — CDN cookie used to speed up page loads",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -76,10 +71,10 @@
       },
       {
         "cookieName": "akavpau_zezxapz5yf",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Visitor Prioritization (waiting room) — admits you to the site during traffic peaks",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -90,10 +85,10 @@
       },
       {
         "cookieName": "akaas_AS01",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Audience Segmentation — keeps you in the same traffic segment when the site splits visitors between versions (A/B tests, rollouts)",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -104,10 +99,10 @@
       },
       {
         "cookieName": "bm_mi",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -118,10 +113,10 @@
       },
       {
         "cookieName": "bm_s",
-        "name": "Long-Lived Cookie",
-        "category": "analytics",
-        "risk": "medium",
-        "description": "Cookie with extended expiry — persistent tracking possible",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -132,10 +127,10 @@
       },
       {
         "cookieName": "bm_so",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -146,10 +141,10 @@
       },
       {
         "cookieName": "bm_sz",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": false,
         "sameSite": "not set",
@@ -185,18 +180,19 @@
     },
     "summary": {
       "totalCookies": 9,
-      "trackingCookies": 2,
-      "analyticsCookies": 1,
-      "functionalCookies": 0,
+      "trackingCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 7,
       "totalTrackers": 2,
       "thirdPartyScripts": 1,
-      "highRiskItems": 3
+      "highRiskItems": 1
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

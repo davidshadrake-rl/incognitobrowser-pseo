@@ -9,7 +9,7 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 56,
+    "score": 50,
     "grade": "D",
     "deductions": [
       {
@@ -19,8 +19,8 @@
       },
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 24,
-        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Criteo"
+        "points": 30,
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Criteo, LiveRamp"
       },
       {
         "reason": "Analytics trackers loaded",
@@ -41,7 +41,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade D: 1 tracking cookie before consent, 4 ad trackers, 10 third-party domains on the homepage."
+    "headline": "Grade D: 1 tracking cookie before consent, 5 ad trackers, 1 analytics tracker, 10 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -76,10 +76,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -90,10 +90,10 @@
       },
       {
         "cookieName": "bm_mi",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -104,10 +104,10 @@
       },
       {
         "cookieName": "bm_sz",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": false,
         "sameSite": "not set",
@@ -143,6 +143,12 @@
         "description": "Criteo retargeting — follows you across sites to show personalized ads"
       },
       {
+        "name": "LiveRamp",
+        "category": "tracking",
+        "risk": "high",
+        "description": "LiveRamp identity (ATS) — turns sign-in emails into an ID that ad platforms can target"
+      },
+      {
         "name": "Hotjar",
         "category": "analytics",
         "risk": "medium",
@@ -172,16 +178,17 @@
       "totalCookies": 5,
       "trackingCookies": 1,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
-      "totalTrackers": 5,
+      "functionalCookies": 3,
+      "totalTrackers": 6,
       "thirdPartyScripts": 10,
-      "highRiskItems": 4
+      "highRiskItems": 5
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

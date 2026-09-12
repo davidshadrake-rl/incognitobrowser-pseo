@@ -9,13 +9,18 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 80,
+    "score": 85,
     "grade": "B",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
-        "points": 16,
-        "detail": "2 tracking cookies"
+        "points": 8,
+        "detail": "1 tracking cookie"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Cloudflare Web Analytics"
       },
       {
         "reason": "No Content-Security-Policy",
@@ -26,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 2 tracking cookies before consent, 1 third-party domain on the homepage."
+    "headline": "Grade B: 1 tracking cookie before consent, 1 analytics tracker, 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
@@ -75,10 +80,10 @@
       },
       {
         "cookieName": "_cfuvid",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare rate limiting — tells apart visitors who share an IP address; deleted when you close the browser",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -88,7 +93,14 @@
         "expires": null
       }
     ],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "Cloudflare Web Analytics",
+        "category": "analytics",
+        "risk": "low",
+        "description": "Cloudflare Web Analytics — cookieless page-view and page-speed beacon"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "static.cloudflareinsights.com"
@@ -101,18 +113,19 @@
     },
     "summary": {
       "totalCookies": 4,
-      "trackingCookies": 2,
+      "trackingCookies": 1,
       "analyticsCookies": 0,
-      "functionalCookies": 2,
-      "totalTrackers": 0,
+      "functionalCookies": 3,
+      "totalTrackers": 1,
       "thirdPartyScripts": 1,
-      "highRiskItems": 1
+      "highRiskItems": 0
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

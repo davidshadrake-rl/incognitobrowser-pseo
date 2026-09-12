@@ -9,18 +9,18 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 77,
+    "score": 65,
     "grade": "C",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 12,
-        "detail": "Google AdSense, Google DoubleClick"
+        "points": 18,
+        "detail": "Google AdSense, Google DoubleClick, Wunderkind (BounceX)"
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 9,
+        "detail": "Google Analytics / GTM, comScore, Jetpack Stats"
       },
       {
         "reason": "Inline tracking pixels",
@@ -33,7 +33,7 @@
         "detail": "10 third-party domains"
       }
     ],
-    "headline": "Grade C: 2 ad trackers, 10 third-party domains on the homepage."
+    "headline": "Grade C: 3 ad trackers, 3 analytics trackers, 10 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -56,6 +56,24 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Wunderkind (BounceX)",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Wunderkind (formerly BounceX) — marketing tag that identifies visitors for email and ad retargeting"
+      },
+      {
+        "name": "comScore",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "comScore (Scorecard Research) beacon — reports your visit for comScore's cross-site audience measurement"
+      },
+      {
+        "name": "Jetpack Stats",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Jetpack Stats (WordPress.com) — page-view statistics for the site owner"
       },
       {
         "name": "reCAPTCHA",
@@ -90,15 +108,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 4,
+      "totalTrackers": 7,
       "thirdPartyScripts": 10,
-      "highRiskItems": 2
+      "highRiskItems": 3
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

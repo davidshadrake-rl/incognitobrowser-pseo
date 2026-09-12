@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 76,
+    "score": 70,
     "grade": "C",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 18,
-        "detail": "Google AdSense, Amazon Ads, Taboola"
+        "points": 24,
+        "detail": "Google AdSense, Amazon Ads, Taboola, Integral Ad Science"
       },
       {
         "reason": "Analytics trackers loaded",
@@ -32,17 +32,17 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 3 ad trackers, 7 third-party domains on the homepage."
+    "headline": "Grade C: 4 ad trackers, 1 analytics tracker, 7 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -76,6 +76,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Taboola content recommendation — tracks browsing for ad personalization"
+      },
+      {
+        "name": "Integral Ad Science",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Integral Ad Science — ad-verification script that measures ad viewability and checks for ad fraud"
       }
     ],
     "inlineTrackers": [],
@@ -98,8 +104,8 @@
       "totalCookies": 1,
       "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
-      "totalTrackers": 4,
+      "functionalCookies": 1,
+      "totalTrackers": 5,
       "thirdPartyScripts": 7,
       "highRiskItems": 3
     }
@@ -108,6 +114,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

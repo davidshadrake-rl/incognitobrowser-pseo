@@ -9,7 +9,7 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 74,
+    "score": 71,
     "grade": "C",
     "deductions": [
       {
@@ -19,8 +19,8 @@
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, Cxense (Piano)"
       },
       {
         "reason": "Inline tracking pixels",
@@ -41,7 +41,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 2 ad trackers, 6 third-party domains on the homepage."
+    "headline": "Grade C: 2 ad trackers, 2 analytics trackers, 6 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -64,6 +64,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Cxense (Piano)",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cxense (Piano) — audience analytics and segmentation for publishers"
       }
     ],
     "inlineTrackers": [
@@ -89,7 +95,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 3,
+      "totalTrackers": 4,
       "thirdPartyScripts": 6,
       "highRiskItems": 2
     }
@@ -98,6 +104,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

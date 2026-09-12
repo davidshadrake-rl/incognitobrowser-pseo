@@ -9,9 +9,14 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 96,
+    "score": 93,
     "grade": "A",
     "deductions": [
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Tealium iQ"
+      },
       {
         "reason": "Third-party script domains beyond a reasonable five",
         "points": 3,
@@ -22,7 +27,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 8 third-party domains on the homepage."
+    "headline": "Grade A: 1 analytics tracker, 8 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -71,10 +76,10 @@
       },
       {
         "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Adaptive Acceleration — CDN cookie used to speed up page loads",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -85,10 +90,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -98,7 +103,14 @@
         "expires": "Tue, 08 Sep 2026 04:34:11 GMT"
       }
     ],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "Tealium iQ",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Tealium iQ — tag manager that loads analytics and marketing tags"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "authz.intuitcdn.net",
@@ -120,8 +132,8 @@
       "totalCookies": 5,
       "trackingCookies": 0,
       "analyticsCookies": 1,
-      "functionalCookies": 0,
-      "totalTrackers": 0,
+      "functionalCookies": 2,
+      "totalTrackers": 1,
       "thirdPartyScripts": 8,
       "highRiskItems": 0
     }
@@ -130,6 +142,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

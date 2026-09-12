@@ -18,6 +18,8 @@ export interface SiteHistoryEntry {
   grade?: string;
   score?: number;
   summary?: SiteReport['scan']['summary'];
+  /** The rubric that produced this grade, when the scan that stored it recorded one. */
+  rubricVersion?: string;
 }
 
 export interface SiteReport extends EditableContent {
@@ -27,6 +29,8 @@ export interface SiteReport extends EditableContent {
   category: { category: SiteCategory; label: string; niche: string };
   scannedAt: string;
   grade: GradeResult;
+  /** The rubric the current grade was produced under, when the card records one. */
+  rubricVersion?: string;
   scan: {
     status: number;
     cookies: Array<{ cookieName: string; name: string; category: string; risk: string; description: string; secure: boolean; httpOnly: boolean; sameSite: string; domain: string; path: string; maxAge: string | null; expires: string | null }>;
@@ -85,9 +89,50 @@ export function gradeDistribution(): Record<string, number> {
   return d;
 }
 
-/** "Changed since last scan" — null when there's no prior scan or nothing changed. */
+/**
+ * The rubric the published grades were produced under (lib/site-grade.ts plus
+ * what lib/scanner.ts counts). BUMP BOTH OF THESE whenever those rules change,
+ * so a grade from the old rubric is never published as a change in the site.
+ *
+ * On 2026-09-11 the rubric changed (infrastructure cookies stopped counting as
+ * tracking cookies, 55 more scripts started counting as trackers, one cookie
+ * set several times started counting once) and every card was re-graded from
+ * its stored scan. cnn.com then read "Changed since September 8, 2026: D → F",
+ * which CNN had not done: the rubric had changed, not the site.
+ */
+export const RUBRIC_VERSION = '2026-09-11';
+/** Scans from before this ran under an older rubric, so their grades can't be compared with today's. */
+export const RUBRIC_UPDATED_AT = '2026-09-11T00:00:00.000Z';
+/**
+ * Two scans less than this apart are one batch, not a change over time.
+ * scripts/scan-sites.ts once wrote the same site twice a second apart, leaving
+ * a "previous grade" that is really the current one.
+ */
+export const SAME_BATCH_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Can this history entry's grade be compared with the card's current grade?
+ * Only when both were produced by the same rubric and by two different scans.
+ * A card and an entry that both name a rubric are compared on that; otherwise
+ * the entry has to be a scan from after the last rubric update.
+ */
+export function isComparableHistory(site: SiteReport, entry: SiteHistoryEntry | undefined): boolean {
+  if (!entry || entry.grade === undefined || entry.score === undefined || !entry.scannedAt) return false;
+  const then = Date.parse(entry.scannedAt);
+  const now = Date.parse(site.scannedAt);
+  if (!Number.isFinite(then) || !Number.isFinite(now)) return false;
+  if (now - then < SAME_BATCH_MS) return false;
+  if (entry.rubricVersion && site.rubricVersion) return entry.rubricVersion === site.rubricVersion;
+  return then >= Date.parse(RUBRIC_UPDATED_AT);
+}
+
+/**
+ * "Changed since last scan" — null unless a previous scan is genuinely
+ * comparable (same rubric, different scan) and the grade or score moved.
+ * A grade that moved because the rubric moved is not a change in the site.
+ */
 export function gradeChange(site: SiteReport): { from: string; to: string; scoreDelta: number; since: string } | null {
-  const prev = site.history?.[site.history.length - 1];
+  const prev = [...(site.history || [])].reverse().find((e) => isComparableHistory(site, e));
   if (!prev || prev.grade === undefined || prev.score === undefined) return null;
   if (prev.grade === site.grade.grade && prev.score === site.grade.score) return null;
   return { from: prev.grade, to: site.grade.grade, scoreDelta: site.grade.score - prev.score, since: prev.scannedAt };

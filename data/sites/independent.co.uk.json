@@ -9,8 +9,8 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 67,
-    "grade": "C",
+    "score": 61,
+    "grade": "D",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
@@ -19,8 +19,8 @@
       },
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 12,
-        "detail": "Google DoubleClick, Taboola"
+        "points": 18,
+        "detail": "Google DoubleClick, Taboola, LiveRamp"
       },
       {
         "reason": "Analytics trackers loaded",
@@ -33,7 +33,7 @@
         "detail": "7 third-party domains"
       }
     ],
-    "headline": "Grade C: 2 tracking cookies before consent, 2 ad trackers, 7 third-party domains on the homepage."
+    "headline": "Grade D: 2 tracking cookies before consent, 3 ad trackers, 1 analytics tracker, 7 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -185,6 +185,12 @@
         "description": "Taboola content recommendation — tracks browsing for ad personalization"
       },
       {
+        "name": "LiveRamp",
+        "category": "tracking",
+        "risk": "high",
+        "description": "LiveRamp identity (ATS) — turns sign-in emails into an ID that ad platforms can target"
+      },
+      {
         "name": "reCAPTCHA",
         "category": "functional",
         "risk": "medium",
@@ -212,15 +218,16 @@
       "trackingCookies": 2,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 4,
+      "totalTrackers": 5,
       "thirdPartyScripts": 7,
-      "highRiskItems": 2
+      "highRiskItems": 3
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

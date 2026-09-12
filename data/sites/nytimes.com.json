@@ -28,7 +28,7 @@
         "detail": "Google Analytics / GTM"
       }
     ],
-    "headline": "Grade D: 3 tracking cookies before consent, 3 ad trackers, 4 third-party domains on the homepage."
+    "headline": "Grade D: 3 tracking cookies before consent, 3 ad trackers, 1 analytics tracker, 4 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -49,10 +49,10 @@
       },
       {
         "cookieName": "datadome",
-        "name": "Long-Lived Cookie",
-        "category": "analytics",
-        "risk": "medium",
-        "description": "Cookie with extended expiry — persistent tracking possible",
+        "name": "DataDome",
+        "category": "functional",
+        "risk": "low",
+        "description": "DataDome bot protection — tells browsers from bots",
         "secure": true,
         "httpOnly": false,
         "sameSite": "Lax",
@@ -119,10 +119,10 @@
       },
       {
         "cookieName": "datadome",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "DataDome",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "DataDome bot protection — tells browsers from bots",
         "secure": true,
         "httpOnly": false,
         "sameSite": "Lax",
@@ -208,8 +208,8 @@
     "summary": {
       "totalCookies": 9,
       "trackingCookies": 3,
-      "analyticsCookies": 1,
-      "functionalCookies": 0,
+      "analyticsCookies": 0,
+      "functionalCookies": 2,
       "totalTrackers": 5,
       "thirdPartyScripts": 4,
       "highRiskItems": 6
@@ -219,6 +219,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

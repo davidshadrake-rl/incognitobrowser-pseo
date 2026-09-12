@@ -9,13 +9,18 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 74,
+    "score": 65,
     "grade": "C",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
         "points": 6,
         "detail": "Google DoubleClick"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 9,
+        "detail": "Chartbeat, Cxense (Piano), AppsFlyer"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -31,7 +36,7 @@
         "points": 3
       }
     ],
-    "headline": "Grade C: 1 ad tracker, 19 third-party domains on the homepage."
+    "headline": "Grade C: 1 ad tracker, 3 analytics trackers, 19 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -42,6 +47,24 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Chartbeat",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Chartbeat — real-time audience analytics for publishers"
+      },
+      {
+        "name": "Cxense (Piano)",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cxense (Piano) — audience analytics and segmentation for publishers"
+      },
+      {
+        "name": "AppsFlyer",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "AppsFlyer Web SDK — marketing attribution that measures which ads and campaigns bring visitors"
       }
     ],
     "inlineTrackers": [],
@@ -77,7 +100,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 4,
       "thirdPartyScripts": 19,
       "highRiskItems": 1
     }
@@ -86,6 +109,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

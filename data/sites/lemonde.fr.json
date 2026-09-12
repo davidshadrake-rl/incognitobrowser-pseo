@@ -9,20 +9,20 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 93,
-    "grade": "A",
+    "score": 87,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 6,
-        "detail": "Google AdSense"
+        "points": 12,
+        "detail": "Google AdSense, Magnite (Rubicon Project)"
       },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade A: 1 ad tracker, 4 third-party domains on the homepage."
+    "headline": "Grade B: 2 ad trackers, 4 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -62,6 +62,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google AdSense — serves personalized display ads"
+      },
+      {
+        "name": "Magnite (Rubicon Project)",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Magnite ad exchange — runs real-time auctions for the ads on the page"
       }
     ],
     "inlineTrackers": [],
@@ -82,15 +88,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 1,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 2,
       "thirdPartyScripts": 4,
-      "highRiskItems": 1
+      "highRiskItems": 2
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

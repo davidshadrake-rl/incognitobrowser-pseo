@@ -9,8 +9,8 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 82,
-    "grade": "B",
+    "score": 76,
+    "grade": "C",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
@@ -19,8 +19,8 @@
       },
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 6,
-        "detail": "Google DoubleClick"
+        "points": 12,
+        "detail": "Google DoubleClick, Yieldlove"
       },
       {
         "reason": "No Content-Security-Policy",
@@ -31,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 tracking cookie before consent, 1 ad tracker, 3 third-party domains on the homepage."
+    "headline": "Grade C: 1 tracking cookie before consent, 2 ad trackers, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -85,6 +85,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Yieldlove",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Yieldlove — header-bidding ad monetization"
       }
     ],
     "inlineTrackers": [],
@@ -104,15 +110,16 @@
       "trackingCookies": 1,
       "analyticsCookies": 0,
       "functionalCookies": 2,
-      "totalTrackers": 1,
+      "totalTrackers": 2,
       "thirdPartyScripts": 3,
-      "highRiskItems": 1
+      "highRiskItems": 2
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

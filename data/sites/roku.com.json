@@ -9,18 +9,18 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 77,
-    "grade": "C",
+    "score": 82,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
-        "points": 16,
-        "detail": "2 tracking cookies"
+        "points": 8,
+        "detail": "1 tracking cookie"
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, Cloudflare Web Analytics"
       },
       {
         "reason": "No Content-Security-Policy",
@@ -31,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 2 tracking cookies before consent, 1 third-party domain on the homepage."
+    "headline": "Grade B: 1 tracking cookie before consent, 2 analytics trackers, 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
@@ -89,8 +89,8 @@
         "sameSite": "not set",
         "domain": ".roku.com",
         "path": "/",
-        "maxAge": null,
-        "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
+        "maxAge": "3600",
+        "expires": "Tue, 08 Sep 2026 03:34:15 GMT"
       },
       {
         "cookieName": "amoeba_acct",
@@ -105,20 +105,6 @@
         "path": "/",
         "maxAge": null,
         "expires": "Thu, 01 Jan 1970 00:00:00 GMT"
-      },
-      {
-        "cookieName": "amoeba",
-        "name": "Unknown",
-        "category": "unknown",
-        "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
-        "secure": true,
-        "httpOnly": true,
-        "sameSite": "not set",
-        "domain": ".roku.com",
-        "path": "/",
-        "maxAge": "3600",
-        "expires": "Tue, 08 Sep 2026 03:34:15 GMT"
       },
       {
         "cookieName": "_uc",
@@ -164,10 +150,10 @@
       },
       {
         "cookieName": "__cflb",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Cloudflare",
+        "category": "functional",
+        "risk": "low",
+        "description": "Cloudflare Load Balancing session affinity — keeps your requests on the same server",
         "secure": true,
         "httpOnly": true,
         "sameSite": "None",
@@ -183,6 +169,12 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Cloudflare Web Analytics",
+        "category": "analytics",
+        "risk": "low",
+        "description": "Cloudflare Web Analytics — cookieless page-view and page-speed beacon"
       }
     ],
     "inlineTrackers": [],
@@ -196,19 +188,20 @@
       "hasHSTS": true
     },
     "summary": {
-      "totalCookies": 10,
-      "trackingCookies": 2,
+      "totalCookies": 9,
+      "trackingCookies": 1,
       "analyticsCookies": 0,
-      "functionalCookies": 2,
-      "totalTrackers": 1,
+      "functionalCookies": 3,
+      "totalTrackers": 2,
       "thirdPartyScripts": 1,
-      "highRiskItems": 2
+      "highRiskItems": 1
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

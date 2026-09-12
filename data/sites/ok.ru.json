@@ -9,7 +9,7 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 88,
+    "score": 82,
     "grade": "B",
     "deductions": [
       {
@@ -19,15 +19,15 @@
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 9,
+        "detail": "Google Analytics / GTM, Yandex Metrica, Top.Mail.Ru"
       },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 tracking cookie before consent, 5 third-party domains on the homepage."
+    "headline": "Grade B: 1 tracking cookie before consent, 3 analytics trackers, 5 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -109,6 +109,18 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Yandex Metrica",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Yandex Metrica — web analytics with optional session recording (Webvisor)"
+      },
+      {
+        "name": "Top.Mail.Ru",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Top.Mail.Ru — VK's web analytics counter, also used for VK ad retargeting"
       }
     ],
     "inlineTrackers": [],
@@ -130,7 +142,7 @@
       "trackingCookies": 1,
       "analyticsCookies": 3,
       "functionalCookies": 1,
-      "totalTrackers": 1,
+      "totalTrackers": 3,
       "thirdPartyScripts": 5,
       "highRiskItems": 1
     }
@@ -139,6 +151,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

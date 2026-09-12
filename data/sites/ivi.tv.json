@@ -35,7 +35,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade D: 8 ad trackers, 4 third-party domains on the homepage."
+    "headline": "Grade D: 8 ad trackers, 7 analytics trackers, 4 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -225,6 +225,12 @@
         "description": "Amplitude — product analytics and user behavior tracking"
       },
       {
+        "name": "Yandex Metrica",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Yandex Metrica — web analytics with optional session recording (Webvisor)"
+      },
+      {
         "name": "reCAPTCHA",
         "category": "functional",
         "risk": "medium",
@@ -249,7 +255,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 1,
-      "totalTrackers": 15,
+      "totalTrackers": 16,
       "thirdPartyScripts": 4,
       "highRiskItems": 8
     }
@@ -258,6 +264,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

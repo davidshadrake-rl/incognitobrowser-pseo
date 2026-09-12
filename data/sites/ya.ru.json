@@ -9,7 +9,7 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 67,
+    "score": 64,
     "grade": "C",
     "deductions": [
       {
@@ -18,11 +18,16 @@
         "detail": "11 tracking cookies"
       },
       {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Yandex Metrica"
+      },
+      {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade C: 11 tracking cookies before consent, 2 third-party domains on the homepage."
+    "headline": "Grade C: 11 tracking cookies before consent, 1 analytics tracker, 2 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -182,7 +187,14 @@
         "expires": "Wed, 13 Oct 2027 02:34:14 GMT"
       }
     ],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "Yandex Metrica",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Yandex Metrica — web analytics with optional session recording (Webvisor)"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "mc.yandex.ru",
@@ -199,7 +211,7 @@
       "trackingCookies": 11,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 0,
+      "totalTrackers": 1,
       "thirdPartyScripts": 2,
       "highRiskItems": 9
     }
@@ -208,6 +220,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

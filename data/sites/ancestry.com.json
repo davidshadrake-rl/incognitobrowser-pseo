@@ -9,20 +9,20 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 96,
+    "score": 93,
     "grade": "A",
     "deductions": [
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, Cloudflare Web Analytics"
       },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade A: 3 third-party domains on the homepage."
+    "headline": "Grade A: 2 analytics trackers, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -48,6 +48,12 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Cloudflare Web Analytics",
+        "category": "analytics",
+        "risk": "low",
+        "description": "Cloudflare Web Analytics — cookieless page-view and page-speed beacon"
       }
     ],
     "inlineTrackers": [],
@@ -67,7 +73,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 1,
-      "totalTrackers": 1,
+      "totalTrackers": 2,
       "thirdPartyScripts": 3,
       "highRiskItems": 0
     }
@@ -76,6 +82,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 76,
+    "score": 70,
     "grade": "C",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 18,
-        "detail": "Google AdSense, Google DoubleClick, Amazon Ads"
+        "points": 24,
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Permutive"
       },
       {
         "reason": "Analytics trackers loaded",
@@ -28,7 +28,7 @@
         "detail": "8 third-party domains"
       }
     ],
-    "headline": "Grade C: 3 ad trackers, 8 third-party domains on the homepage."
+    "headline": "Grade C: 4 ad trackers, 1 analytics tracker, 8 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -57,6 +57,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Permutive",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Permutive — publisher data platform that sorts visitors into audience segments for ad targeting"
       }
     ],
     "inlineTrackers": [],
@@ -81,15 +87,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 4,
+      "totalTrackers": 5,
       "thirdPartyScripts": 8,
-      "highRiskItems": 3
+      "highRiskItems": 4
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

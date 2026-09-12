@@ -9,7 +9,7 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 69,
+    "score": 66,
     "grade": "C",
     "deductions": [
       {
@@ -19,8 +19,8 @@
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, Clearbit Reveal"
       },
       {
         "reason": "No Content-Security-Policy",
@@ -31,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade C: 3 tracking cookies before consent, 4 third-party domains on the homepage."
+    "headline": "Grade C: 3 tracking cookies before consent, 2 analytics trackers, 4 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -101,6 +101,12 @@
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
       },
       {
+        "name": "Clearbit Reveal",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Clearbit Reveal — looks up the company behind your IP address for sales and marketing"
+      },
+      {
         "name": "reCAPTCHA",
         "category": "functional",
         "risk": "medium",
@@ -125,7 +131,7 @@
       "trackingCookies": 3,
       "analyticsCookies": 1,
       "functionalCookies": 0,
-      "totalTrackers": 2,
+      "totalTrackers": 3,
       "thirdPartyScripts": 4,
       "highRiskItems": 3
     }
@@ -134,6 +140,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -118,7 +118,11 @@ export default async function SiteReportPage({ params }: PageProps) {
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-white mb-3">Why {grade.grade}? Every point, itemised</h2>
         {grade.deductions.length === 0 ? (
-          <p className="text-t2">No deductions. On first load, {domain} set no tracking cookies, loaded no known trackers, and served the security headers we check for.</p>
+          // "no known trackers" was false beside the tracker list below it:
+          // get.it.com loads Sentry and reCAPTCHA, paloaltonetworks.com
+          // reCAPTCHA. Those are functional scripts, which cost no points, so
+          // say what the rubric actually found — the wording the headline uses.
+          <p className="text-t2">No deductions. On first load, {domain} set no tracking cookies, loaded no ad or analytics trackers, and served the security headers we check for.</p>
         ) : (
           <ul className="space-y-2">
             {grade.deductions.map((d, i) => (

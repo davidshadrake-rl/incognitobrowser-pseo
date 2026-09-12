@@ -9,9 +9,14 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 93,
-    "grade": "A",
+    "score": 87,
+    "grade": "B",
     "deductions": [
+      {
+        "reason": "Advertising / marketing trackers loaded",
+        "points": 6,
+        "detail": "Blockthrough"
+      },
       {
         "reason": "Analytics trackers loaded",
         "points": 3,
@@ -27,7 +32,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 3 third-party domains on the homepage."
+    "headline": "Grade B: 1 ad tracker, 1 analytics tracker, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -53,6 +58,12 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Blockthrough",
+        "category": "tracking",
+        "risk": "medium",
+        "description": "Blockthrough — ad-recovery script that shows ads to visitors who use an ad blocker"
       }
     ],
     "inlineTrackers": [
@@ -74,7 +85,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 1,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 2,
       "thirdPartyScripts": 3,
       "highRiskItems": 0
     }
@@ -83,6 +94,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 84,
+    "score": 78,
     "grade": "B",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 6,
-        "detail": "Google DoubleClick"
+        "points": 12,
+        "detail": "Google DoubleClick, Relevant Digital"
       },
       {
         "reason": "Analytics trackers loaded",
@@ -36,7 +36,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 ad tracker, 8 third-party domains on the homepage."
+    "headline": "Grade B: 2 ad trackers, 1 analytics tracker, 8 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -53,6 +53,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Relevant Digital",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Relevant Digital (Relevant Yield) — header-bidding ad monetization"
       }
     ],
     "inlineTrackers": [],
@@ -77,15 +83,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 2,
+      "totalTrackers": 3,
       "thirdPartyScripts": 8,
-      "highRiskItems": 1
+      "highRiskItems": 2
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -35,17 +35,17 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 3 third-party domains on the homepage."
+    "headline": "Grade B: 2 analytics trackers, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "XSRF-TOKEN",
-        "name": "Functional",
+        "name": "CSRF Protection",
         "category": "functional",
         "risk": "low",
-        "description": "Likely a functional/security cookie",
+        "description": "Cross-site request forgery protection token, the spelling Angular and Laravel use",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -131,6 +131,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

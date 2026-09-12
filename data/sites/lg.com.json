@@ -9,14 +9,9 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 88,
-    "grade": "B",
+    "score": 96,
+    "grade": "A",
     "deductions": [
-      {
-        "reason": "Tracking cookies set before any consent",
-        "points": 8,
-        "detail": "1 tracking cookie"
-      },
       {
         "reason": "No HSTS (Strict-Transport-Security)",
         "points": 3
@@ -26,17 +21,17 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 tracking cookie before consent, 1 third-party domain on the homepage."
+    "headline": "Grade A: 1 third-party domain on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
       {
         "cookieName": "AKA_A2",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Adaptive Acceleration — CDN cookie used to speed up page loads",
         "secure": true,
         "httpOnly": true,
         "sameSite": "not set",
@@ -47,10 +42,10 @@
       },
       {
         "cookieName": "akacd_pr_lgcom_us",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "Akamai",
+        "category": "functional",
+        "risk": "low",
+        "description": "Akamai Phased Release — keeps you on the same version of the site during a staged rollout",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -61,10 +56,10 @@
       },
       {
         "cookieName": "ak_bmsc",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": false,
         "httpOnly": true,
         "sameSite": "not set",
@@ -75,10 +70,10 @@
       },
       {
         "cookieName": "bm_mi",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "Akamai Bot Manager",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "Akamai Bot Manager — tells browsers from bots; set for security",
         "secure": true,
         "httpOnly": false,
         "sameSite": "not set",
@@ -101,18 +96,19 @@
     },
     "summary": {
       "totalCookies": 4,
-      "trackingCookies": 1,
+      "trackingCookies": 0,
       "analyticsCookies": 0,
-      "functionalCookies": 0,
+      "functionalCookies": 4,
       "totalTrackers": 0,
       "thirdPartyScripts": 1,
-      "highRiskItems": 1
+      "highRiskItems": 0
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

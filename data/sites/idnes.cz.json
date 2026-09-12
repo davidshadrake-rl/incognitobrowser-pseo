@@ -9,43 +9,29 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 64,
-    "grade": "C",
+    "score": 61,
+    "grade": "D",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
         "points": 32,
-        "detail": "7 tracking cookies"
+        "detail": "6 tracking cookies"
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, Cxense (Piano)"
       },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade C: 7 tracking cookies before consent, 3 third-party domains on the homepage."
+    "headline": "Grade D: 6 tracking cookies before consent, 2 analytics trackers, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
     "cookies": [
-      {
-        "cookieName": "personalizace",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
-        "secure": true,
-        "httpOnly": false,
-        "sameSite": "None",
-        "domain": ".idnes.cz",
-        "path": "/",
-        "maxAge": null,
-        "expires": "Tue, 07-Sep-2027 22:00:00 GMT"
-      },
       {
         "cookieName": "personalizace",
         "name": "Third-Party Cookie",
@@ -137,6 +123,12 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Cxense (Piano)",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Cxense (Piano) — audience analytics and segmentation for publishers"
       }
     ],
     "inlineTrackers": [],
@@ -152,19 +144,20 @@
       "hasHSTS": true
     },
     "summary": {
-      "totalCookies": 7,
-      "trackingCookies": 7,
+      "totalCookies": 6,
+      "trackingCookies": 6,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 2,
       "thirdPartyScripts": 3,
-      "highRiskItems": 7
+      "highRiskItems": 6
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

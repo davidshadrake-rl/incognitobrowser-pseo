@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 92,
-    "grade": "A",
+    "score": 89,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, Siteimprove Analytics"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -31,7 +31,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 6 third-party domains on the homepage."
+    "headline": "Grade B: 2 analytics trackers, 6 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -42,6 +42,12 @@
         "category": "analytics",
         "risk": "medium",
         "description": "Google Analytics or Tag Manager — collects page views, user behavior, demographics"
+      },
+      {
+        "name": "Siteimprove Analytics",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Siteimprove Analytics — web analytics"
       }
     ],
     "inlineTrackers": [],
@@ -64,7 +70,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 2,
       "thirdPartyScripts": 6,
       "highRiskItems": 0
     }
@@ -73,6 +79,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

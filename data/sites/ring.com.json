@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 90,
-    "grade": "A",
+    "score": 78,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
-        "points": 6,
-        "detail": "Amazon Ads"
+        "points": 18,
+        "detail": "Amazon Ads, Amazon Ad Server (Sizmek), Skai (Kenshoo)"
       },
       {
         "reason": "Third-party script domains beyond a reasonable five",
@@ -27,7 +27,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade A: 1 ad tracker, 8 third-party domains on the homepage."
+    "headline": "Grade B: 3 ad trackers, 8 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -109,6 +109,18 @@
         "category": "tracking",
         "risk": "high",
         "description": "Amazon advertising pixel — tracks shopping behavior for ad targeting"
+      },
+      {
+        "name": "Amazon Ad Server (Sizmek)",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Amazon Ad Server (formerly Sizmek) — ad serving and conversion tracking"
+      },
+      {
+        "name": "Skai (Kenshoo)",
+        "category": "tracking",
+        "risk": "high",
+        "description": "Skai (formerly Kenshoo) — ad-campaign conversion tracking"
       }
     ],
     "inlineTrackers": [],
@@ -133,15 +145,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 1,
+      "totalTrackers": 3,
       "thirdPartyScripts": 8,
-      "highRiskItems": 1
+      "highRiskItems": 3
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -9,13 +9,13 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 89,
+    "score": 86,
     "grade": "B",
     "deductions": [
       {
         "reason": "Analytics trackers loaded",
-        "points": 6,
-        "detail": "Google Analytics / GTM, Amplitude"
+        "points": 9,
+        "detail": "Google Analytics / GTM, Amplitude, Cloudflare Web Analytics"
       },
       {
         "reason": "Inline tracking pixels",
@@ -32,7 +32,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 6 third-party domains on the homepage."
+    "headline": "Grade B: 3 analytics trackers, 6 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -80,6 +80,12 @@
         "description": "Amplitude — product analytics and user behavior tracking"
       },
       {
+        "name": "Cloudflare Web Analytics",
+        "category": "analytics",
+        "risk": "low",
+        "description": "Cloudflare Web Analytics — cookieless page-view and page-speed beacon"
+      },
+      {
         "name": "reCAPTCHA",
         "category": "functional",
         "risk": "medium",
@@ -108,7 +114,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 1,
       "functionalCookies": 1,
-      "totalTrackers": 3,
+      "totalTrackers": 4,
       "thirdPartyScripts": 6,
       "highRiskItems": 0
     }
@@ -117,6 +123,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

@@ -15,10 +15,10 @@
       {
         "reason": "Advertising / marketing trackers loaded",
         "points": 30,
-        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Criteo, Taboola"
+        "detail": "Google AdSense, Google DoubleClick, Amazon Ads, Criteo, Taboola, The Trade Desk"
       }
     ],
-    "headline": "Grade C: 5 ad trackers, 3 third-party domains on the homepage."
+    "headline": "Grade C: 7 ad trackers, 3 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -180,6 +180,18 @@
         "category": "tracking",
         "risk": "high",
         "description": "Taboola content recommendation — tracks browsing for ad personalization"
+      },
+      {
+        "name": "The Trade Desk",
+        "category": "tracking",
+        "risk": "high",
+        "description": "The Trade Desk — ad-buying platform that recognizes visitors for ad targeting"
+      },
+      {
+        "name": "LiveIntent",
+        "category": "tracking",
+        "risk": "high",
+        "description": "LiveIntent — identity tag that recognizes visitors for email and display ad targeting"
       }
     ],
     "inlineTrackers": [],
@@ -199,15 +211,16 @@
       "trackingCookies": 0,
       "analyticsCookies": 8,
       "functionalCookies": 0,
-      "totalTrackers": 5,
+      "totalTrackers": 7,
       "thirdPartyScripts": 3,
-      "highRiskItems": 5
+      "highRiskItems": 7
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

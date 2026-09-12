@@ -9,8 +9,8 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 80,
-    "grade": "B",
+    "score": 77,
+    "grade": "C",
     "deductions": [
       {
         "reason": "Advertising / marketing trackers loaded",
@@ -19,8 +19,8 @@
       },
       {
         "reason": "Analytics trackers loaded",
-        "points": 3,
-        "detail": "Google Analytics / GTM"
+        "points": 6,
+        "detail": "Google Analytics / GTM, Pendo"
       },
       {
         "reason": "Inline tracking pixels",
@@ -41,7 +41,7 @@
         "points": 1
       }
     ],
-    "headline": "Grade B: 1 ad tracker, 9 third-party domains on the homepage."
+    "headline": "Grade C: 1 ad tracker, 2 analytics trackers, 9 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -58,6 +58,12 @@
         "category": "tracking",
         "risk": "high",
         "description": "Google DoubleClick — ad serving and cross-site tracking"
+      },
+      {
+        "name": "Pendo",
+        "category": "analytics",
+        "risk": "medium",
+        "description": "Pendo — product analytics and in-app guides"
       },
       {
         "name": "reCAPTCHA",
@@ -91,7 +97,7 @@
       "trackingCookies": 0,
       "analyticsCookies": 0,
       "functionalCookies": 0,
-      "totalTrackers": 3,
+      "totalTrackers": 4,
       "thirdPartyScripts": 9,
       "highRiskItems": 1
     }
@@ -100,6 +106,7 @@
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },

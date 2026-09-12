@@ -9,20 +9,25 @@
   },
   "scannedAt": "2026-09-08T02:34:10.697Z",
   "grade": {
-    "score": 75,
-    "grade": "C",
+    "score": 80,
+    "grade": "B",
     "deductions": [
       {
         "reason": "Tracking cookies set before any consent",
-        "points": 24,
-        "detail": "3 tracking cookies"
+        "points": 16,
+        "detail": "2 tracking cookies"
+      },
+      {
+        "reason": "Analytics trackers loaded",
+        "points": 3,
+        "detail": "Cloudflare Web Analytics"
       },
       {
         "reason": "No Permissions-Policy",
         "points": 1
       }
     ],
-    "headline": "Grade C: 3 tracking cookies before consent, 2 third-party domains on the homepage."
+    "headline": "Grade B: 2 tracking cookies before consent, 1 analytics tracker, 2 third-party domains on the homepage."
   },
   "scan": {
     "status": 200,
@@ -57,10 +62,10 @@
       },
       {
         "cookieName": "AWSALBTG",
-        "name": "Unknown",
-        "category": "unknown",
+        "name": "AWS Load Balancer",
+        "category": "functional",
         "risk": "low",
-        "description": "Purpose unknown — could be functional or tracking",
+        "description": "AWS Application Load Balancer target-group stickiness cookie — keeps your requests on the same server",
         "secure": false,
         "httpOnly": false,
         "sameSite": "not set",
@@ -71,10 +76,10 @@
       },
       {
         "cookieName": "AWSALBTGCORS",
-        "name": "Third-Party Cookie",
-        "category": "tracking",
-        "risk": "high",
-        "description": "SameSite=None allows cross-site tracking",
+        "name": "AWS Load Balancer",
+        "category": "functional",
+        "risk": "low",
+        "description": "AWS Application Load Balancer target-group stickiness cookie — the SameSite=None copy of AWSALBTG, for cross-origin requests",
         "secure": true,
         "httpOnly": false,
         "sameSite": "None",
@@ -154,7 +159,14 @@
         "expires": "Tue, 08 Sep 2026 03:04:22 GMT"
       }
     ],
-    "trackers": [],
+    "trackers": [
+      {
+        "name": "Cloudflare Web Analytics",
+        "category": "analytics",
+        "risk": "low",
+        "description": "Cloudflare Web Analytics — cookieless page-view and page-speed beacon"
+      }
+    ],
     "inlineTrackers": [],
     "thirdPartyDomains": [
       "substackcdn.com",
@@ -168,18 +180,19 @@
     },
     "summary": {
       "totalCookies": 9,
-      "trackingCookies": 3,
+      "trackingCookies": 2,
       "analyticsCookies": 3,
-      "functionalCookies": 1,
-      "totalTrackers": 0,
+      "functionalCookies": 3,
+      "totalTrackers": 1,
       "thirdPartyScripts": 2,
-      "highRiskItems": 3
+      "highRiskItems": 2
     }
   },
   "history": [],
   "editorial": {
     "status": "published",
     "reviewedAt": "2026-09-08T02:34:10.697Z",
+    "updatedAt": "2026-09-11",
     "reviewedBy": "David Shadrake",
     "notes": "Automated report card from our own scanner; methodology published on the page."
   },
