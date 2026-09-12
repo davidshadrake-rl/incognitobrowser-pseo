@@ -25,7 +25,8 @@
     },
     "title": {
       "type": "string",
-      "maxLength": 70
+      "maxLength": 70,
+      "description": "No year. At most 70 characters: tests/comparison-score.test.ts checks every file against this limit."
     },
     "metaDescription": {
       "type": "string",
@@ -118,7 +119,8 @@
         ],
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "The criterion. Used once on the page (names are compared without regard to case or spacing). A criterion about speed, performance, latency or resource use (load time, memory, CPU, battery), by its name or its description, gets a value only in cells whose note cites a third-party lab result; see scores' note."
           },
           "description": {
             "type": "string"
@@ -151,7 +153,8 @@
                   "description": "The rubric in lib/comparison-score.ts: yes/excellent 1, good 0.75, partial/fair/limited 0.5, poor 0.25, no/none 0; '—', 'unknown' and 'n/a' are not assessed and left out of the rating."
                 },
                 "note": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "Not shown on the page. A speed or performance cell cites a third-party lab result here: the lab (AV-Comparatives, AV-TEST or SE Labs) followed by the test's name, its date or a figure, as in \"Impact score 9.6 (ADVANCED+), AV-Comparatives April 2026\". Without one the cell is '—', and the page names any lab it uses in text it shows."
                 }
               }
             }
