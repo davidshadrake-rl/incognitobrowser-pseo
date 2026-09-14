@@ -11,6 +11,8 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { ToolPageClient } from './client';
 import { ENGINE_DIAGRAM, familyOfEngine } from '@/lib/visuals';
 import type { Metadata } from 'next';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 interface ToolData {
   niche: string;
@@ -163,6 +165,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `${freeSitePrefix()}/topics/${niche}` }}
       />
+      {funnelFor(`/tools/${niche}/${slug}`) && <PageFunnel funnel={funnelFor(`/tools/${niche}/${slug}`)!} />}
     </>
   );
 }

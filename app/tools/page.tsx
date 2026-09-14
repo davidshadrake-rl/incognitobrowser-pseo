@@ -7,6 +7,8 @@ import { AtoZCatalogue } from '@/components/AtoZCatalogue';
 import { ToolCard } from '@/components/ToolCard';
 import { PageHero } from '@/components/ui/PageHero';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 export const metadata = genMeta({
   title: IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools',
@@ -267,6 +269,7 @@ export default function ToolsIndex() {
         </div>
       )}
       </AtoZCatalogue>
+      {funnelFor('/tools') && <PageFunnel funnel={funnelFor('/tools')!} />}
     </div>
   );
 }

@@ -6,6 +6,8 @@ import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
 import { PageHero } from '@/components/ui/PageHero';
 import { TYPE_ICON } from '@/lib/visuals';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 export const metadata = genMeta({
   title: 'Privacy Templates',
@@ -61,6 +63,7 @@ export default function TemplatesIndex() {
         </div>
       )}
 
+      {funnelFor('/templates') && <PageFunnel funnel={funnelFor('/templates')!} />}
     </div>
   );
 }

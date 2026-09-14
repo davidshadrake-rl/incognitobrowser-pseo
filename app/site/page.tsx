@@ -8,6 +8,8 @@ import { GradeBadge } from '@/components/GradeBadge';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
 import { PageHero } from '@/components/ui/PageHero';
 import { TYPE_ICON } from '@/lib/visuals';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 export const metadata = genMeta({
   title: 'Website Privacy Report Cards: 500 Sites Graded A–F',
@@ -94,6 +96,7 @@ export default function SiteIndexPage() {
         </section>
       </div>
       </AtoZCatalogue>
+      {funnelFor('/site') && <PageFunnel funnel={funnelFor('/site')!} />}
     </div>
   );
 }

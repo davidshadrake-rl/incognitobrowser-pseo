@@ -5,6 +5,8 @@ import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { AtoZCatalogue } from '@/components/AtoZCatalogue';
 import { PageHero } from '@/components/ui/PageHero';
 import { TYPE_ICON } from '@/lib/visuals';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 export const metadata = genMeta({
   title: 'Privacy Glossary',
@@ -58,6 +60,7 @@ export default function GlossaryIndex() {
         }))}
         topics={Array.from(new Set(terms.map(t => t.category))).sort().map(c => ({ label: c, query: c }))}
       />
+      {funnelFor('/glossary') && <PageFunnel funnel={funnelFor('/glossary')!} />}
     </div>
   );
 }

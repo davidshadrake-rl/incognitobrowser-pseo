@@ -8,6 +8,8 @@ import { Rings } from '@/components/ui/Rings';
 import { Diagram } from '@/components/ui/Diagram';
 import { TYPE_ICON, familyOfNiche, type Family } from '@/lib/visuals';
 import { playUrl } from '@/lib/play';
+import { PageFunnel } from '@/components/PageFunnel';
+import { funnelFor } from '@/lib/funnels';
 
 /** Glossary items are "terms" everywhere else in the site (AtoZCatalogue noun="terms"); every other slug already reads as a plural noun. */
 const COUNT_NOUN: Record<string, string> = { glossary: 'terms' };
@@ -143,6 +145,7 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+      {funnelFor('/') && <PageFunnel funnel={funnelFor('/')!} />}
     </div>
   );
 }
