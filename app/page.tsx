@@ -83,6 +83,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* The way into the free tool, first thing under the hero (owner, 2026-09-16). */}
+      {funnelFor('/') && <div className="mb-16"><PageFunnel funnel={funnelFor('/')!} /></div>}
+
       {/* Content types grid (DESIGN-SPEC 5.2) */}
       <section className="mb-16">
         <h2 className="text-2xl font-bold text-white mb-6">Browse by Type</h2>
@@ -145,7 +148,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-      {funnelFor('/') && <PageFunnel funnel={funnelFor('/')!} />}
     </div>
   );
 }
