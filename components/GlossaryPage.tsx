@@ -6,6 +6,8 @@ import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
 import { EditorialNote } from './EditorialNote';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
+import { PageFunnel } from './PageFunnel';
+import type { PageFunnel as Funnel } from '@/lib/funnels';
 
 interface GlossaryExample {
   scenario: string;
@@ -35,9 +37,11 @@ interface GlossaryTermPageProps {
    * diagram — data.niche is rarely populated on the JSON itself. */
   niche?: string;
   nicheName?: string;
+  /** This term's funnel: its card into the free tool sits above "In simple terms" (owner, 2026-09-16). */
+  funnel?: Funnel | null;
 }
 
-export function GlossaryTermPage({ data, relatedTermNames, niche, nicheName }: GlossaryTermPageProps) {
+export function GlossaryTermPage({ data, relatedTermNames, niche, nicheName, funnel }: GlossaryTermPageProps) {
   const filteredRelatedTerms = relatedTermNames
     ? data.relatedTerms.filter(t => Object.prototype.hasOwnProperty.call(relatedTermNames, t))
     : data.relatedTerms;
@@ -63,6 +67,8 @@ export function GlossaryTermPage({ data, relatedTermNames, niche, nicheName }: G
       <div className="border-l-2 border-t1 bg-s0 p-5 mb-8 rounded-r-[12px]">
         <p className="prose-ib text-lede font-medium">{data.definition}</p>
       </div>
+
+      {funnel && <PageFunnel funnel={funnel} />}
 
       <section className="mb-8">
         <h2 className="font-mono text-h3 font-semibold text-t1 mb-3">In simple terms</h2>

@@ -5,7 +5,6 @@ import { RelatedContent } from '@/components/seo/RelatedContent';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, generateArticleSchema } from '@/lib/seo';
 import { GlossaryTermPage } from '@/components/GlossaryPage';
-import { PageFunnel } from '@/components/PageFunnel';
 import { funnelFor } from '@/lib/funnels';
 import { JsonLd } from '@/components/seo/JsonLd';
 import type { Metadata } from 'next';
@@ -97,8 +96,7 @@ export default async function GlossaryDetailPage({ params }: PageProps) {
     <>
       <JsonLd data={breadcrumbs} />
       {articleSchema && <JsonLd data={articleSchema} />}
-      <GlossaryTermPage data={redactPeople(data)} relatedTermNames={relatedTermNames} niche={glossaryNiche} nicheName={nicheName} />
-      {funnelFor(`/glossary/${term}`) && <PageFunnel funnel={funnelFor(`/glossary/${term}`)!} niche={glossaryNiche ?? undefined} />}
+      <GlossaryTermPage data={redactPeople(data)} relatedTermNames={relatedTermNames} niche={glossaryNiche} nicheName={nicheName} funnel={funnelFor(`/glossary/${term}`)} />
       {/* Glossary terms previously linked only to sibling terms, never into the
           guides/checklists/tools that explain them. The niche comes from a
           hand-authored map (see nicheForGlossaryTerm). */}
