@@ -18,7 +18,8 @@ import type { ComponentType } from 'react';
 
 const loading = () => <p className="text-row text-t3 py-6" role="status">Loading the check…</p>;
 
-export const ENGINE_LOADERS: Record<string, ComponentType> = {
+/** autoRun is read by the engines that would otherwise wait for a second press (the Ad-Blocker Test); the rest ignore it. */
+export const ENGINE_LOADERS: Record<string, ComponentType<{ autoRun?: boolean }>> = {
   'password-strength': dynamic(() => import('./PasswordStrengthTool').then((m) => m.PasswordStrengthTool), { ssr: false, loading }),
   'password-generator': dynamic(() => import('./PasswordGeneratorTool').then((m) => m.PasswordGeneratorTool), { ssr: false, loading }),
   'browser-privacy': dynamic(() => import('./BrowserPrivacyTool').then((m) => m.BrowserPrivacyTool), { ssr: false, loading }),

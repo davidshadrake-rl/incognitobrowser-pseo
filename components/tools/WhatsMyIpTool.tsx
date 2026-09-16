@@ -31,7 +31,11 @@ interface WebRtcResult {
   error?: string;
 }
 
-const PRIVATE_IP_RE = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|169\.254\.|127\.|::1$|fc[0-9a-f]{2}:|fd[0-9a-f]{2}:|fe80:)/i;
+// 100.64.0.0/10 is carrier-grade NAT: the address a mobile carrier (or
+// Tailscale) gives the phone itself, never one a website sees. Counted as
+// public, a phone's own CGNAT address landed in a different /24 from the
+// address sites see and read as "Leaking" when nothing leaked (2026-09-16).
+export const PRIVATE_IP_RE = /^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|169\.254\.|127\.|::1$|fc[0-9a-f]{2}:|fd[0-9a-f]{2}:|fe80:)/i;
 
 /** How each public address WebRTC revealed compares with the address our server saw. */
 export interface WebRtcComparison {

@@ -21,6 +21,8 @@
  */
 import fs from 'fs';
 import path from 'path';
+import { PRO_ENGINES } from '../../lib/tiers';
+import { LINK_OUT_ENGINES } from '../../lib/funnels';
 
 export interface Funnel {
   step1: { unitKey: string; label: string; quote: string };
@@ -73,11 +75,24 @@ const BANNED: Array<[RegExp, string]> = [
   [/\b(safe to|guarantee|compliant|compliance-ready|legitimate|100%)\b/i, 'overclaim word'],
   [/\bfree for now\b/i, '"free for now" belongs to the Pro badge only'],
 ];
-/** Engines that can report `info` (nothing to judge): their funnels answer it too. */
-const INFO_ENGINES = new Set(['whats-my-ip', 'useragent-analyzer', 'dns-leak-test', 'metadata-viewer', 'screenshot-leak-checker', 'email-pixel-detector']);
+/**
+ * The results each check can actually return, read from its code on
+ * 2026-09-16. A funnel answers exactly these: What's My IP never reports
+ * amber or green, and the User Agent Analyzer never reports red or green, so
+ * asking for those answers would only produce copy nobody sees.
+ * An engine not listed yet is held to red, amber and green.
+ */
+const ENGINE_RESULTS: Record<string, Severity[]> = {
+  'whats-my-ip': ['red', 'info'],
+  'useragent-analyzer': ['amber', 'info'],
+  'screenshot-leak-checker': ['red', 'amber', 'green'],
+  'ad-blocker-test': ['red', 'amber', 'green'],
+  'password-strength': ['red', 'amber', 'green'],
+  'cookie-analyzer': ['red', 'amber', 'green'],
+};
 const words = (t: string) => t.trim().split(/\s+/).filter(Boolean).length;
 /** Words a visitor meets in these funnels that most people don't know. Explain them in brackets, or drop them. */
-const JARGON = /\b(WebRTC|DNS|third-party|same-site|SameSite|HTTP headers?|user agent|Client Hints|Exif|EXIF|IPTC|XMP|fingerprint(?:ing)?|pixel|IP address|ISP)\b/;
+const JARGON = /\b(WebRTC|DNS|third-party|same-site|SameSite|HTTP headers?|user agents?|Client Hints|Exif|EXIF|IPTC|XMP|fingerprint(?:ing|s)?|pixels?|IP address(?:es)?|ISPs?)\b/;
 /** A check's own button is pressed before anything has run. */
 const RAN_ALREADY = /\b(checked|tested|scanned|measured|counted|done|found)\b/i;
 /** A Pro line that opens by talking the reader out of it. */
@@ -112,11 +127,17 @@ function validateV2(r: Rec, f: FunnelV2, errors: string[], warnings: string[], s
   check('check.button', f.check?.button, 8);
   if (f.check?.button && RAN_ALREADY.test(f.check.button)) errors.push(`${where}: check.button says the check already ran: "${f.check.button}"`);
 
-  // one answer per result the visitor can get.
+  // one answer per result the visitor can get on THIS page. A check that
+  // opens on another page (a Pro tool from the free site, the quiz) shows its
+  // result there, answered by that page's own funnel, so none is needed here.
   const engine = f.check?.engine ?? '';
+  const onItsOwnPage = r.type === 'tool' || r.type === 'pro-tool';
+  const linksOut = !onItsOwnPage && (PRO_ENGINES.has(engine) || LINK_OUT_ENGINES.has(engine));
   const needed: Severity[] = engine === 'report-card'
     ? [GRADE_SEVERITY[String(r.facts?.grade ?? '')] ?? 'amber']
-    : ['red', 'amber', 'green', ...(INFO_ENGINES.has(engine) ? ['info' as const] : [])];
+    : linksOut
+      ? (Object.keys(f.results ?? {}) as Severity[])
+      : (ENGINE_RESULTS[engine] ?? ['red', 'amber', 'green']);
   for (const sev of needed) {
     const c = f.results?.[sev];
     if (!c) { errors.push(`${where}: no answer for a ${sev} result`); continue; }

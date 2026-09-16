@@ -38,8 +38,10 @@ describe('v2 funnel rules', () => {
   it('answers every result the check can return', () => {
     const { amber: _gone, ...rest } = GOOD.results;
     expect(errorsFor({ ...GOOD, results: rest })).toContainEqual(expect.stringContaining('no answer for a amber result'));
-    // What's My IP can report `info` (nothing to judge), so its funnel answers that too.
-    expect(errorsFor({ ...GOOD, check: { engine: 'whats-my-ip', button: 'Show my address' } })).toContainEqual(expect.stringContaining('no answer for a info result'));
+    // What's My IP reports only red or info (read from its code), so its funnel answers those two.
+    const ip = { ...GOOD, check: { engine: 'whats-my-ip', button: 'Show my address' } };
+    expect(errorsFor(ip)).toContainEqual(expect.stringContaining('no answer for a info result'));
+    expect(errorsFor(ip).join('\n')).not.toContain('amber result');
   });
 
   it('a report card answers only its own grade', () => {
@@ -94,5 +96,14 @@ describe('per-page funnel events', () => {
     const keys = eventKeys('2026-09-16', { event: 'funnel_click', tool: 'ad-blocker-test', severity: 'red', target: 'play', platform: 'android', page });
     expect(keys).toContain(`evt:2026-09-16:page:funnel_click:${page}:sev-red:play`);
     expect(keys.length).toBeLessThanOrEqual(7);
+  });
+});
+
+describe('a check that opens on another page', () => {
+  it('needs no answers on this page: the result is answered where it happens', () => {
+    const linkOut = { ...GOOD, check: { engine: 'cookie-analyzer', button: 'Scan your homepage' }, results: {} };
+    expect(errorsFor(linkOut, { type: 'calculator' })).toEqual([]);
+    // The same Pro engine on its own tool page answers every result.
+    expect(errorsFor(linkOut, { type: 'pro-tool', units: [] }).join('\n')).toContain('no answer for a red result');
   });
 });

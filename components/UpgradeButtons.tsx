@@ -48,6 +48,12 @@ interface Props {
 const noSubscribe = () => () => {};
 const serverPlatform = (): Platform => 'other';
 const serverInApp = () => false;
+// The page address, read the same way on both sides of hydration: '' on the
+// server and in the first client pass, then the real address. Reading
+// window.location during render made a report card's server-rendered
+// "Email me the link" differ from the browser's, a hydration mismatch.
+const hrefNow = () => window.location.href;
+const serverHref = () => '';
 
 export function UpgradeButtons({ engine, niche, severity, from, content, term, pageUrl, label, onClick, children }: Props) {
   const platform = useSyncExternalStore(noSubscribe, () => detectPlatform(), serverPlatform);
@@ -57,7 +63,8 @@ export function UpgradeButtons({ engine, niche, severity, from, content, term, p
   const [msgCopied, setMsgCopied] = useState(false);
 
   const play = playUrl({ medium: from === 'funnel' ? 'funnel' : 'cta', campaign: engine, content: content || niche, term });
-  const pageHref = pageUrl || (typeof window !== 'undefined' ? window.location.href : '');
+  const liveHref = useSyncExternalStore(noSubscribe, hrefNow, serverHref);
+  const pageHref = pageUrl || liveHref;
   // See lib/handoff.ts: CRLF body (RFC 6068 — bare "\n" breaks Outlook on Windows), hash stripped.
   const mailBody = handoffMailBody(play, pageHref);
   const mailto = handoffMailto(play, pageHref);

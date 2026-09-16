@@ -681,10 +681,17 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
       const start = funnel >= 0 ? funnel : aside;
       expect(start, `${route}: tool card or page funnel`).toBeGreaterThanOrEqual(0);
       const card = r.body.slice(start, r.body.indexOf(funnel >= 0 ? '</section>' : '</aside>', start));
-      // The button names what it opens, and goes to a real tool page.
-      expect(card, route).toMatch(funnel >= 0
-        ? /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?(\?[^"]*)?"/
-        : /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>(Open|Take) [^<]+ →/);
+      // The check is reachable: a v2 funnel runs it in the page with a button
+      // (components/FunnelCheck.tsx) or links to its tool page; a v1 funnel
+      // and the old card link to the tool page.
+      const v2 = /data-funnel-v="2"/.test(card);
+      expect(card, route).toMatch(v2
+        ? /<button[^>]*>[^<]+<\/button>|href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?(\?[^"]*)?"/
+        : funnel >= 0
+          ? /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?(\?[^"]*)?"/
+          : /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>(Open|Take) [^<]+ →/);
+      // A v2 funnel never prints every result before the visitor has one.
+      if (v2) expect(card, route).not.toMatch(/data-funnel-result=/);
       // CTO review 2026-09-10: no false promises on the card, and no niche
       // shell title for the user-agent tool. The shell title is still the
       // real title of /tools/gaming-privacy/useragent-analyzer, so a related

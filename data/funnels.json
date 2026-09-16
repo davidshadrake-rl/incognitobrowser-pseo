@@ -1,32 +1,38 @@
 {
  "/": {
+  "v": 2,
   "type": "home",
   "topic": null,
   "step1": {
-   "label": "Intro",
-   "quote": "what your browser, connection and passwords give away"
+   "label": "Start here",
+   "quote": "Know what the web sees. Then hide it."
   },
-  "step2": {
+  "stakes": "Start with the quickest check: how many of 50 common ad and tracking requests your browser lets load. It takes about five seconds.",
+  "check": {
    "engine": "ad-blocker-test",
-   "heading": "Start with your browser: how many of 50 ad and tracker requests does it let load?",
-   "instruction": "Press Run in the browser you use most; you get a result with or without a blocker. It sends 50 ad, analytics, social and beacon test requests to our own server and counts the ones that load. About 5 seconds.",
-   "button": "Run the 5-second Ad-Blocker Test",
+   "button": "Run the five-second test",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
    },
    "query": "from=home"
   },
-  "step3": {
-   "red": "26 or more of the 50 loaded. On other sites, trackers that match these patterns would load too and see your visit. DNS filters such as Pi-hole score zero here by design.",
-   "amber": "6 to 25 of the 50 loaded: something filters, with gaps. Look at which of the four groups leaked; analytics, social pixels or beacons point to a missing tracker list.",
-   "green": "45 or more of the 50 were stopped, so common tracker patterns get little from this browser. Your connection and passwords, the other two, are separate free checks."
-  },
-  "step4": {
-   "line": "On a computer, the free fix is a blocker extension with EasyList and EasyPrivacy both on. On an Android phone, the free Incognito Browser app has an ad blocker built in, and Incognito Pro adds ad and tracker blocking that stops many analytics and social trackers before they load."
-  },
-  "step5": {
-   "label": "See how Incognito Pro blocks trackers on Android"
+  "results": {
+   "red": {
+    "meaning": "More than half loaded, as counted above: this browser is doing little to stop ads and tracking. Sites you open with it can load theirs too.",
+    "pro": "Incognito Browser blocks ads on your Android phone for free. Incognito Pro adds tracker blocking, stopping the hidden scripts that follow you, and hides the empty ad boxes.",
+    "button": "Stop the trackers with Incognito Pro"
+   },
+   "amber": {
+    "meaning": "Some were stopped and some weren't, as counted above. Often that means ads are blocked but the tracking behind them isn't.",
+    "pro": "Incognito Pro blocks that tracking part as well: the hidden scripts that follow you from site to site, plus the empty ad boxes a blocker leaves.",
+    "button": "Block the tracking half with Pro"
+   },
+   "green": {
+    "meaning": "Nearly all were stopped, as counted above, so this browser is doing its job. The rest of this site checks what else you give away: your connection, passwords and photos.",
+    "pro": "On Android, Incognito Pro blocks trackers and hides empty ad boxes, and cleans the hidden details out of a whole folder of photos at once.",
+    "button": "Get both with Incognito Pro"
+   }
   }
  },
  "/guides": {
@@ -630,33 +636,39 @@
   }
  },
  "/topics/ad-tracking": {
+  "v": 2,
   "type": "topic-hub",
   "topic": "ad-tracking",
   "step1": {
    "label": "The topic",
    "quote": "Ad networks follow you from site to site to build a profile they sell."
   },
-  "step2": {
+  "stakes": "Ad networks on the sites you read add each visit to a profile of you. See how much your browser stops, in about five seconds.",
+  "check": {
    "engine": "ad-blocker-test",
-   "heading": "See how many of 50 ad and tracker requests your browser lets through",
-   "instruction": "Check the browser you're reading this in, with its blocker switched on if it has one. Press Run: it fires 50 harmless test requests from this site and takes about 5 seconds.",
-   "button": "Run the Ad-Blocker Test",
+   "button": "Test this browser",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
    },
    "query": "topic=ad-tracking&from=topic-hub"
   },
-  "step3": {
-   "red": "Fewer than 25 of 50 stopped: little ad or tracker filtering happens in this browser. The beginners' guide in this topic walks you through setting up a blocker.",
-   "amber": "25 to 44 stopped: a blocker runs, with gaps. If the leaks are analytics, pixels or beacons, turn on a tracking list such as EasyPrivacy; the checklists cover it.",
-   "green": "45 or more stopped: this browser blocks well. The profile is also fed by your accounts and phone, so the guides' opt-out steps come next."
-  },
-  "step4": {
-   "line": "Ad networks build that profile on every device you browse on. On Android, the free Incognito Browser blocks ads and wipes cookies when you close it; Incognito Pro adds ad and tracker blocking that stops many of their trackers before they load."
-  },
-  "step5": {
-   "label": "See what Incognito Pro blocks"
+  "results": {
+   "red": {
+    "meaning": "Most of the ad and tracker requests got through, as counted above. On a real site, that's the ad network seeing this visit and adding it to your profile.",
+    "pro": "Incognito Browser blocks ads on its own. Incognito Pro also blocks the trackers that build the profile, and hides the empty ad boxes left behind.",
+    "button": "Block the trackers too with Pro"
+   },
+   "amber": {
+    "meaning": "Your blocker caught some, but a share got through, as counted above. That's often the tracking half: many ad blockers stop the ads and let tracking calls through.",
+    "pro": "Incognito Pro blocks the trackers as well as the ads, and hides the empty ad boxes a blocker leaves behind.",
+    "button": "Close the gap with Pro"
+   },
+   "green": {
+    "meaning": "This browser stopped nearly all of them. That's this browser only: your other browsers and devices may be letting the same requests through.",
+    "pro": "On Android, Incognito Pro blocks trackers as well as ads, and hides the empty ad boxes.",
+    "button": "Get the same on Android with Pro"
+   }
   }
  },
  "/guides/ad-tracking": {
@@ -1560,33 +1572,39 @@
   }
  },
  "/guides/password-security": {
+  "v": 2,
   "type": "type-hub",
   "topic": "password-security",
   "step1": {
    "label": "Guides",
    "quote": "One weak password is the way into every account that shares it."
   },
-  "step2": {
+  "stakes": "Attackers try common and leaked passwords by the million, automatically. Type one like yours and see how long it would hold out; it never leaves this page.",
+  "check": {
    "engine": "password-strength",
-   "heading": "Score one password and it tells you which of the three guides to open",
-   "instruction": "Type the password you fall back on most, or one built like it. It's scored in your browser as you type, and the crack time points you to one of the three guides.",
-   "button": "Score it, then pick a guide",
+   "button": "Test a password",
    "target": {
     "niche": "password-security",
     "slug": "password-strength-checker"
    },
    "query": "topic=password-security&from=type-hub"
   },
-  "step3": {
-   "red": "Begin with the beginners' guide: this falls in under a minute. The guide's step 2 covers what makes a password strong, and step 3 sets up a manager to end reuse.",
-   "amber": "The complete guide fits a 'Needs work' result: its step 5 replaces weak and reused passwords with generated ones, email and banking first.",
-   "green": "Good for decades on its own, so go to the advanced guide: step 1 audits reuse, which a strength score can't show, and step 5 adds hardware keys."
-  },
-  "step4": {
-   "line": "Free first: the guides' manager and two-factor steps. A generated password still goes wherever a link sends you; Incognito Pro's URL Safety Checker reads that link's address for look-alike brands, raw IPs and shorteners before you tap it."
-  },
-  "step5": {
-   "label": "Add a link check to the guides' password steps with Pro"
+  "results": {
+   "red": {
+    "meaning": "A password like that falls in seconds to a guessing program, as shown above. If it's used on more than one account, every one of them opens with it.",
+    "pro": "Fix it with a password manager and a different password per account; the guides here show how. Then Incognito Pro's URL Safety Checker reads a link before you tap it, so you can spot a fake login page first.",
+    "button": "Check links before you log in, with Pro"
+   },
+   "amber": {
+    "meaning": "That holds out for the time shown above against a guessing program. Make it longer and it holds out far longer: length does more than odd characters.",
+    "pro": "A stronger password still gets typed wherever a link sends you. Incognito Pro's URL Safety Checker reads the link first, so you can spot a fake login page before you use it there.",
+    "button": "Check the link first, with Pro"
+   },
+   "green": {
+    "meaning": "That would take a guessing program decades or more, as shown above. The likelier way it gets stolen now is you typing it into a page that only looks like the real login.",
+    "pro": "Incognito Pro's URL Safety Checker reads a link for look-alike brand names, raw addresses and link shorteners before you tap it, so you can keep that password for the real site.",
+    "button": "Check every login link with Pro"
+   }
   }
  },
  "/checklists/password-security": {
@@ -8526,33 +8544,34 @@
   }
  },
  "/guides/browser-privacy/complete-guide-to-browser-privacy": {
+  "v": 2,
   "type": "guide",
   "topic": "browser-privacy",
   "step1": {
    "label": "Step 5 of 7",
-   "quote": "Device fingerprinting allows websites to track you even without cookies by analyzing your browser, screen size, installed fonts, and other unique characteristics."
+   "quote": "Device fingerprinting allows websites to track you even without cookies"
   },
-  "step2": {
+  "stakes": "Before you type anything, every site you open reads what browser, version and device you're using. With a few other details, that can be enough to tell you apart without any cookie.",
+  "check": {
    "engine": "useragent-analyzer",
-   "heading": "The one characteristic you can read right now, before this step's settings",
-   "instruction": "Nothing to type. The User Agent Analyzer reads the string this browser sends to every site and names its browser, version, OS and device type. Screen size, fonts and canvas are not in that string.",
-   "button": "See the string sites already have",
+   "button": "See what your browser announces",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
    },
    "query": "topic=browser-privacy&from=guide"
   },
-  "step3": {
-   "red": "The concerns list flags this browser version as outdated. Update before anything else here: a rare version narrows the crowd this step wants you to blend into.",
-   "amber": "A Client Hints box appears, so scripts may also ask for your full version, platform version and, on Android, your phone model. No cookie is involved in any of it.",
-   "green": "Current version, no Client Hints box: sites get the plain string. That is one characteristic of several, and the Firefox and Brave switches here aim at the rest."
-  },
-  "step4": {
-   "line": "The switches this step names cost nothing to turn on. For the characteristics the string leaves out, Incognito Pro's Browser Fingerprint Checker reads canvas and audio hashes, screen, timezone and CPU cores in your own browser, and Pro's ad and tracker blocking stops many trackers before they load."
-  },
-  "step5": {
-   "label": "Read the signals the user agent leaves out"
+  "results": {
+   "info": {
+    "meaning": "Your browser tells every site its name, version and system, as shown above. That's normal, and on its own it doesn't single you out; combined with screen size and fonts, it can.",
+    "pro": "Agent Cloaking in Incognito Browser changes the browser and device sites are told about. Incognito Pro also blocks trackers.",
+    "button": "Block tracking scripts with Pro"
+   },
+   "amber": {
+    "meaning": "Your browser announces an old version, as flagged above. Old versions are rarer, so they stand out more, and they also miss security fixes. Update it before anything else in this guide.",
+    "pro": "Update first. Then Agent Cloaking in Incognito Browser changes the browser and device sites are told about, and Incognito Pro blocks trackers on top.",
+    "button": "Add tracker blocking with Pro"
+   }
   }
  },
  "/guides/ccpa/advanced-ccpa-california-privacy-techniques": {
@@ -12876,33 +12895,39 @@
   }
  },
  "/checklists/dating-privacy/dating-app-privacy-security-checklist": {
+  "v": 2,
   "type": "checklist",
   "topic": "dating-privacy",
   "step1": {
    "label": "Item 1 of 16 · critical",
    "quote": "Photos with identifiable backgrounds, street signs, or landmarks can help strangers locate your home or workplace."
   },
-  "step2": {
+  "stakes": "The background isn't the only giveaway. A photo taken on your phone can carry the exact spot it was taken, hidden inside the file, and some apps and chats pass the file on untouched.",
+  "check": {
    "engine": "screenshot-leak-checker",
-   "heading": "You checked the background. Now check inside the file",
-   "instruction": "A street sign is visible; a GPS tag isn't. Choose the profile photo you reviewed for item 1 (PNG, JPEG or WebP) and see any location, thumbnail, device details or personal data hidden in it.",
-   "button": "Check inside my photo",
+   "button": "Check a photo for hidden location",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
    },
    "query": "topic=dating-privacy&from=checklist"
   },
-  "step3": {
-   "red": "A plain background isn't enough: the file carries a location, a hidden thumbnail or personal details, and the result lists which. Use a clean copy.",
-   "amber": "No location, thumbnail or personal details, but device and capture-time fields are inside. The clean copy drops them too.",
-   "green": "No hidden data in the file. Item 1 still comes down to what the picture shows: house numbers, street signs, distinctive buildings."
-  },
-  "step4": {
-   "line": "Free fix: turn off camera location and post the clean copy the check saves. Incognito Pro's Photo Metadata Viewer lists every field in a photo, GPS included, so you can give each new photo's hidden side the same review as its background."
-  },
-  "step5": {
-   "label": "See Incognito Pro for your profile photo review"
+  "results": {
+   "red": {
+    "meaning": "This photo carries hidden details that point to you, listed above: a location, a preview copy of the image, or personal details. Anyone who gets the file can read them.",
+    "pro": "Incognito Pro strips the location and other hidden details from a whole folder of photos at once, so your profile photos go up without them.",
+    "button": "Clean all your photos with Pro"
+   },
+   "amber": {
+    "meaning": "No location, but the file still names things about you: the phone or app that made it, when it was taken, or a username, as listed above.",
+    "pro": "Incognito Pro strips these details from a whole folder of photos at once, so a dating profile shows your face and nothing about your phone.",
+    "button": "Strip them from every photo with Pro"
+   },
+   "green": {
+    "meaning": "This file carries no hidden details we could detect. What's left to check is the picture itself: the street signs, house numbers and buildings behind you.",
+    "pro": "Your other photos may not be this clean. Incognito Pro strips location and other hidden details from a whole folder at once, so you don't have to check them one by one.",
+    "button": "Clean the whole folder with Pro"
+   }
   }
  },
  "/checklists/device-fingerprinting/device-fingerprinting-privacy-hardening-checklist": {
@@ -19418,34 +19443,24 @@
   }
  },
  "/calculators/gdpr/gdpr-compliance-risk-calculator": {
+  "v": 2,
   "type": "calculator",
   "topic": "gdpr",
   "step1": {
-   "label": "Input 6 of 8",
-   "quote": "Extent of data sharing with processors and partners"
+   "label": "Input 4 of 8",
+   "quote": "How you obtain and manage user consent"
   },
-  "step2": {
+  "stakes": "The honest answer to this input is on your homepage: the tracking cookies its server sets before a visitor agrees to anything. Scan it and use what it finds, not a guess.",
+  "check": {
    "engine": "cookie-analyzer",
-   "heading": "Count the third parties in your homepage's code before you rate input 6",
-   "instruction": "Paste your homepage address. Our server fetches it once and counts the outside domains and known trackers in its HTML and the tracking cookies in its response. Bring those numbers to input 6.",
-   "button": "Count my third parties",
+   "button": "Scan your homepage with the Pro scanner",
    "target": {
     "niche": "gdpr",
     "slug": "cookie-compliance-scanner"
    },
    "query": "topic=gdpr&from=calculator"
   },
-  "step3": {
-   "red": "A tracking cookie in the response, or three or more known trackers in the HTML. Each is a third party in your code; weigh them all when you answer input 6.",
-   "amber": "One or two known trackers or more than five outside domains. Input 6's limited-sharing answer assumes a documented agreement with each of these.",
-   "green": "No known trackers and five or fewer outside domains on this one page, scripts not run. Server-side sharing, like your email provider, never shows here."
-  },
-  "step4": {
-   "line": "Sharing less is free: remove partner scripts you don't use, and hold the rest until consent. The Cookie & Tracker Scanner comes with Incognito Pro, and a recount shows the scripts you've removed; Pro's ad and tracker blocking stops many partner trackers like these on other sites."
-  },
-  "step5": {
-   "label": "See Incognito Pro, then score your risk again"
-  }
+  "results": {}
  },
  "/calculators/healthcare-privacy/healthcare-medical-privacy-risk-calculator": {
   "type": "calculator",
@@ -20258,33 +20273,39 @@
   }
  },
  "/glossary/behavioral-tracking": {
+  "v": 2,
   "type": "glossary",
   "topic": "ad-tracking",
   "step1": {
    "label": "The term",
-   "quote": "The practice of monitoring and recording users' online activities, preferences, and patterns across websites and applications to build detailed profiles for targeted advertising."
+   "quote": "recording users' online activities, preferences, and patterns across websites"
   },
-  "step2": {
+  "stakes": "In practice it's small files your browser loads without showing you: a script here, an invisible image there, each reporting that you were on a page. Count how many your browser lets through.",
+  "check": {
    "engine": "ad-blocker-test",
-   "heading": "See whether your browser blocks the scripts that record behavior",
-   "instruction": "Run it in your everyday browser. Its 50 harmless requests include analytics scripts, social pixels and beacons like those that record what you do on a page; about 5 seconds.",
-   "button": "Run the tracking test",
+   "button": "Count what gets through",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
    },
    "query": "topic=ad-tracking&from=glossary"
   },
-  "step3": {
-   "red": "Under 25 of 50 blocked: analytics scripts and pixels shaped like the ones that record clicks and pages load here. Install a blocker with a tracking list.",
-   "amber": "25 to 44 blocked: some recording scripts get through. Check whether analytics or beacons leaked; EasyPrivacy covers both.",
-   "green": "45 or more blocked: this browser stops most recording scripts and pixels of these kinds. Apps on your phone track you separately."
-  },
-  "step4": {
-   "line": "Behavioral profiles draw on every browser you use. Incognito Browser wipes cookies each time you close it, so sites can't link your visits by cookie, and Incognito Pro's ad and tracker blocking stops many recording scripts before they load."
-  },
-  "step5": {
-   "label": "See how Pro stops behavioral trackers"
+  "results": {
+   "red": {
+    "meaning": "More than half of those scripts and invisible images loaded, as counted above. On a site that tracks, each one is a line added to the record of what you do.",
+    "pro": "Incognito Pro blocks trackers, those scripts and invisible images, before they load, and hides the empty ad boxes they leave.",
+    "button": "Stop the record-keeping with Pro"
+   },
+   "amber": {
+    "meaning": "Your browser stopped some, but a share of those scripts and invisible images still loaded, as counted above. Each one still reports the visit.",
+    "pro": "Incognito Pro goes past ad blocking: it blocks tracking scripts and pixels (those invisible images) too, and hides the empty ad boxes.",
+    "button": "Block the rest of them with Pro"
+   },
+   "green": {
+    "meaning": "Almost none got through here, so this browser keeps little of that record. The apps and browsers on your phone are a separate question.",
+    "pro": "On your Android phone, Incognito Pro blocks trackers and ads, and hides the empty ad boxes.",
+    "button": "Block them on Android with Pro"
+   }
   }
  },
  "/glossary/biometric-data": {
@@ -24794,33 +24815,34 @@
   }
  },
  "/tools/vpn-privacy/whats-my-ip": {
+  "v": 2,
   "type": "tool",
   "topic": "vpn-privacy",
   "step1": {
    "label": "This tool",
-   "quote": "See exactly what your IP address reveals about you, and verify your VPN isn't leaking your real IP via WebRTC."
+   "quote": "See exactly what your IP address reveals about you"
   },
-  "step2": {
+  "stakes": "Every site you open sees your IP address (the number your connection is known by) and roughly where you are. A VPN is meant to hide it, and sometimes your browser gives it away anyway.",
+  "check": {
    "engine": "whats-my-ip",
-   "heading": "Open it with your VPN on and compare the two addresses",
-   "instruction": "Connect your VPN, then refresh this page in the browser you use with it. The address sites see and every address WebRTC offers load side by side; nothing to type.",
-   "button": "Show my addresses with the VPN on",
+   "button": "Show what sites see",
    "target": {
     "niche": "vpn-privacy",
     "slug": "whats-my-ip"
    },
    "query": "topic=vpn-privacy&from=tool"
   },
-  "step3": {
-   "red": "Leaking: WebRTC shows a public address different from the one sites see. On a VPN, that's usually your real one, and any page can read it.",
-   "amber": "No leak in the verdict, but the WebRTC card lists extra addresses: local ones your router handed out, or one there was nothing to compare with.",
-   "green": "WebRTC adds nothing from outside your address block; a neighbour inside it is your own network. Every browser shows sites an address; only a VPN or a proxy changes it."
-  },
-  "step4": {
-   "line": "Free fix for a WebRTC leak: limit WebRTC in your browser settings or with an extension. Every browser shows sites an address; changing it takes a VPN or proxy, which Pro doesn't include. Pro's Browser Fingerprint Checker shows what else identifies you."
-  },
-  "step5": {
-   "label": "Address checked. Now see what else identifies you with Pro"
+  "results": {
+   "red": {
+    "meaning": "Your browser is handing sites a second address, different from the one your connection shows. If you're on a VPN, that second address is usually your real one, and any page can read it quietly.",
+    "pro": "Switch JavaScript off in Incognito Browser and no page can read that address at all; sites that need JavaScript won't work while it's off. Incognito Pro also blocks the trackers that follow you between sites.",
+    "button": "Block trackers too with Incognito Pro"
+   },
+   "info": {
+    "meaning": "No leak: sites see one address, the one your connection shows, along with roughly where you are. Every browser shows sites this much; only a VPN or proxy changes it.",
+    "pro": "Sites follow you with more than your address. Incognito Pro blocks the trackers that do much of the rest, and Incognito Browser wipes cookies when you close it. Neither changes your address: that takes a VPN, which Pro doesn't include.",
+    "button": "Block the trackers with Incognito Pro"
+   }
   }
  },
  "/tools/webcam-privacy/permission-checker": {
@@ -27254,33 +27276,26 @@
   }
  },
  "/site/apple.com": {
+  "v": 2,
   "type": "report-card",
   "topic": "browser-privacy",
   "step1": {
    "label": "Graded A",
    "quote": "Grade A: 1 third-party domain on the homepage."
   },
-  "step2": {
-   "engine": "ad-blocker-test",
-   "heading": "apple.com's one outside domain is Apple's own image server. Test yours instead",
-   "instruction": "Nothing on this page answers to a blocker, so aim the test at your browser: Run fires 50 ad and tracker requests from our server, about five seconds. It reads no cookies, and a DNS filter like Pi-hole barely registers.",
-   "button": "Aim the 50 at your own browser",
-   "target": {
-    "niche": "ad-tracking",
-    "slug": "ad-blocker-test"
-   },
+  "stakes": "apple.com set no tracking cookies and loaded no ad or analytics trackers when we opened it. Two in three of the 500 sites we graded did one or the other.",
+  "check": {
+   "engine": "report-card",
+   "button": "See what it means",
+   "target": null,
    "query": "topic=browser-privacy&from=report-card"
   },
-  "step3": {
-   "red": "Your blocker let most through. apple.com asked nothing of it; the ad-funded pages you reach from a search result ask plenty.",
-   "amber": "A middling count. Read which group leaked, advertising, analytics, social or beacons, then add EasyPrivacy to cover that group.",
-   "green": "45 or more blocked. A homepage as spare as this one needed none of it; the rest of a day's browsing does."
-  },
-  "step4": {
-   "line": "One point came off apple.com, for a missing Permissions-Policy header, and its single cookie is named geo. The free Incognito Browser keeps no browsing history and wipes cookies and sessions when you close it; Pro's ad and tracker blocking stops many tracker requests on sites that run them."
-  },
-  "step5": {
-   "label": "apple.com asked little of your blocker. Other sites ask plenty"
+  "results": {
+   "green": {
+    "meaning": "Nothing on apple.com's homepage is following you. The trouble is the next site you open, and the one after that.",
+    "pro": "Incognito Pro blocks trackers on the sites that do load them, and hides the empty ad boxes they leave behind.",
+    "button": "Block trackers on the other sites with Pro"
+   }
   }
  },
  "/site/applovin.com": {
@@ -31412,30 +31427,26 @@
   }
  },
  "/site/google.com": {
+  "v": 2,
   "type": "report-card",
   "topic": "private-search",
   "step1": {
    "label": "Graded B",
    "quote": "Grade B: 1 tracking cookie before consent, 2 third-party domains on the homepage."
   },
-  "step2": {
+  "stakes": "Open google.com and, before you've agreed to anything, it gives your browser a cookie called NID that lasts six months. Google can recognise this browser by it every time you come back.",
+  "check": {
    "engine": "report-card",
-   "heading": "One of google.com's four cookies is marked tracking, and it is NID",
-   "instruction": "Under the grade sit four cookies. NID is the tracking row: SameSite=none, its Purpose column reading Google. The other three read unknown. The scan covers a signed-out homepage on first load, and reads no cookie values.",
-   "button": "Find NID in the four-cookie table",
+   "button": "See what it means",
    "target": null,
    "query": "topic=private-search&from=report-card"
   },
-  "step3": {
-   "red": "Nothing on this card points at a D. That would take advertising or analytics scripts on the homepage, and the scan found none loading before a click.",
-   "amber": "A C is two more cookies away: three like NID cost 24 points, and with the missing Content-Security-Policy that makes 73, five short of a B.",
-   "green": "B at 89, a point under an A, and the missing point is not a cookie. A Content-Security-Policy header would carry google.com over 90 with NID still set."
-  },
-  "step4": {
-   "line": "google.com's 11 lost points are 8 for NID and 3 for the absent Content-Security-Policy. The free Incognito Browser can switch cookies off outright in settings, and wipes them at exit either way. Pro's Cookie & Tracker Scanner reads an address you choose, which a homepage-only card never opens."
-  },
-  "step5": {
-   "label": "NID is 8 of google.com's 11 lost points. Scan deeper with Pro"
+  "results": {
+   "green": {
+    "meaning": "It gets a B, not an A, mostly because of that one cookie. No ad trackers load on the homepage: here it's the cookie that recognises you.",
+    "pro": "Incognito Browser wipes that cookie every time you close it, so it can't follow you for six months. Incognito Pro also blocks the trackers other sites load.",
+    "button": "Block other sites' trackers with Pro"
+   }
   }
  },
  "/site/grammarly.com": {

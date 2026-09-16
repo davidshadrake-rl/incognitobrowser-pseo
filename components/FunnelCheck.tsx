@@ -111,7 +111,7 @@ export function FunnelCheck({ funnel }: { funnel: PageFunnelV2 }) {
       {running ? (
         <ResultProvider>
           <div className="mt-4 rounded-[12px] border border-b1 bg-black p-3 sm:p-4" data-funnel-engine={engine}>
-            <Engine />
+            <Engine autoRun />
           </div>
           <FunnelAnswer funnel={funnel} />
         </ResultProvider>

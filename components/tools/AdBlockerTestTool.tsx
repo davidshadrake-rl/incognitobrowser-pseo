@@ -175,7 +175,12 @@ function reasonText(r: ProbeResult): string {
   }
 }
 
-export function AdBlockerTestTool() {
+/**
+ * autoRun: a funnel (components/FunnelCheck.tsx) loads this test only after
+ * the visitor pressed its button, so starting it again would ask twice. On
+ * its own tool page it still waits for "Run Ad-Blocker Test".
+ */
+export function AdBlockerTestTool({ autoRun = false }: { autoRun?: boolean } = {}) {
   const [phase, setPhase] = useState<'idle' | 'running' | 'done'>('idle');
   const [progress, setProgress] = useState(0);
   const [results, setResults] = useState<ProbeResult[]>([]);
@@ -183,13 +188,23 @@ export function AdBlockerTestTool() {
   const [servedFrom, setServedFrom] = useState('');
   const report = useReportResult();
   const runIdRef = useRef(0);
+  // Which run is current. A counter, not the time: two runs started in the same
+  // millisecond (React's development double mount) must not both count.
+  const runSeq = useRef(0);
 
-  // A run that finishes after unmount must not touch state.
-  useEffect(() => () => { runIdRef.current = -1; }, []);
+  const autoStarted = useRef(false);
+
+  // A run that finishes after unmount must not touch state. The auto-start
+  // guard resets with it: React's development double mount unmounts once
+  // between the two, and a guard left set there skipped the second mount's
+  // run, so an auto-started test hung at "Testing… 0/50" (2026-09-16).
+  useEffect(() => () => { runIdRef.current = -1; autoStarted.current = false; }, []);
 
   const run = useCallback(async () => {
-    const runId = Date.now();
+    const runId = ++runSeq.current;
     runIdRef.current = runId;
+    // The time busts the browser cache, so every run really requests the baits.
+    const cacheBust = Date.now();
     const base = basePathFrom(window.location.pathname);
     setPhase('running');
     setProgress(0);
@@ -201,7 +216,7 @@ export function AdBlockerTestTool() {
     let completed = 0;
     const cosmeticPromise = probeCosmetic(COSMETIC_BAITS, COSMETIC_SETTLE_MS);
     const probes = NETWORK_BAITS.map((bait) => {
-      const url = baitUrl(base, bait, runId);
+      const url = baitUrl(base, bait, cacheBust);
       const p = bait.kind === 'script' ? probeScript(bait, url, PROBE_TIMEOUT_MS) : probeImage(bait, url, PROBE_TIMEOUT_MS);
       return p.then((r) => {
         completed += 1;
@@ -239,6 +254,13 @@ export function AdBlockerTestTool() {
     };
     report(result);
   }, [report]);
+
+  useEffect(() => {
+    if (autoRun && !autoStarted.current) {
+      autoStarted.current = true;
+      void run();
+    }
+  }, [autoRun, run]);
 
   const total = NETWORK_BAITS.length;
   const blockedResults = results.filter((r) => r.outcome === 'blocked');
