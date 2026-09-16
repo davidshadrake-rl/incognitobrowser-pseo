@@ -35,11 +35,19 @@ export const PRO_WEB_GATED = false;
 export const PRO_FOOTNOTE = 'Subscription via Google Play. Android only.';
 export const PRO_FREE_FOR_NOW_TITLE = 'Part of the Incognito Pro subscription on Android. Free on the web today.';
 
+/**
+ * The tools that are part of Incognito Pro. What Pro itself adds, as outcomes,
+ * is data/brand.json's `pro` block (owner, 2026-09-16): tracker blocking,
+ * hiding the empty ad boxes, and cleaning the metadata from a whole folder of
+ * photos. Pro does NOT do fingerprint change alerts, link monitoring, scheduled
+ * re-scans or a compliance export; those are never-claims, whatever these
+ * tools' names might suggest.
+ */
 export const PRO_ENGINES = new Set<string>([
-  'cookie-analyzer', // site-wide crawl, scheduled re-scans, compliance export
-  'browser-privacy', // fingerprint history over time, change alerts, reports
-  'url-analyzer', // bulk URL checking, unfurl + monitoring
-  'metadata-viewer', // batch / folder EXIF strip
+  'cookie-analyzer',
+  'browser-privacy',
+  'url-analyzer',
+  'metadata-viewer', // the one-photo reader; Pro's batch cleaning handles whole folders
 ]);
 
 export function tierOfEngine(engine: string | undefined | null): Tier {

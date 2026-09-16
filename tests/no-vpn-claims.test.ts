@@ -142,6 +142,11 @@ const NEVER_CLAIM: ClaimRules = {
   ],
   'voted best by Android Authority': [{ pattern: /\bAndroid\s+Authority\b|\bvoted\b|\baward[- ]winning\b/i, deniable: false }],
   'an aggregateRating in structured data': [{ pattern: /\baggregate\s*rating\b/i, deniable: false }],
+  // Owner, 2026-09-16: Pro does none of these. "Pro doesn't monitor links" is an honest denial.
+  'fingerprint change alerts or a history over time': [{ pattern: /\b(?:change\s+)?alerts?\b|\bnotif(?:y|ies|ications?)\b[^.;]{0,30}\bchanges?\b|\bover\s+time\b|\bhistory\s+of\s+(?:your\s+)?(?:fingerprint|browser)\b/i, deniable: true }],
+  'link monitoring': [{ pattern: /\bmonitor(?:s|ed|ing)?\b|\bkeeps?\s+watching\b|\bwatch(?:es|ing)?\s+(?:your\s+|the\s+)?links?\b/i, deniable: true }],
+  'scheduled site re-scans': [{ pattern: /\bre-?scan(?:s|ned|ning)?\b|\bscheduled\s+scans?\b|\bscans?\s+on\s+a\s+schedule\b/i, deniable: true }],
+  'compliance export': [{ pattern: /\bcompliance\s+(?:exports?|reports?)\b|\bexport(?:s|ed|ing)?\s+(?:a\s+|the\s+)?(?:compliance\s+)?reports?\b/i, deniable: true }],
 };
 
 /**
@@ -1079,6 +1084,10 @@ describe('no VPN claims for Incognito Browser or Pro', () => {
   it('the never-claim check catches claims and lets denials through', () => {
     const claims = [
       'Incognito Browser includes a built-in VPN.',
+      'Incognito Pro alerts you when your browser fingerprint changes.',
+      'Incognito Pro monitors every link you save.',
+      'Incognito Pro re-scans the site every week.',
+      'Incognito Pro exports a compliance report.',
       'Incognito Browser adds Tor routing.',
       'Incognito Browser is open source.',
       'Incognito Browser has anti-fingerprinting built in.',
@@ -1141,6 +1150,7 @@ describe('no VPN claims for Incognito Browser or Pro', () => {
       'It does not log your browsing, and also encrypts your traffic.',
     ];
     const denials = [
+      "Incognito Pro doesn't monitor links, send alerts or re-scan sites.",
       'Incognito Browser does not include a VPN.',
       'Android only: there is no iOS, desktop or web version.',
       'It is not open source, does not claim tracker or fingerprint protection, and runs only on Android.',

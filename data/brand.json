@@ -20,20 +20,81 @@
     "source": "Google Play listing, US storefront"
   },
   "features": [
-    { "id": "wipe-on-exit", "text": "Runs in private mode all the time and wipes history, cookies and sessions when you exit the app", "source": "Google Play listing" },
-    { "id": "no-history", "text": "Keeps no browsing history or cache on the device (downloaded files are kept)", "source": "Google Play listing" },
-    { "id": "ad-blocker", "text": "Built-in ad blocker, with a High Security Blocking option added in the May 2026 release", "source": "Google Play listing and release notes" },
-    { "id": "web3", "text": "Opens IPFS, .eth and .crypto addresses", "source": "Google Play listing" },
-    { "id": "search-engines", "text": "Choice of search engine, including Google, DuckDuckGo and Bing", "source": "Google Play listing (US)" },
-    { "id": "agent-cloaking", "text": "Agent Cloaking: masks the browser and device the site sees and can load desktop versions of sites", "source": "Google Play listing" },
-    { "id": "tabs", "text": "Tabbed browsing, every tab private", "source": "Google Play listing" },
-    { "id": "settings", "text": "Settings to turn images, JavaScript and cookies on or off", "source": "Google Play listing" },
-    { "id": "dark-mode", "text": "Dark mode", "source": "Google Play listing" },
-    { "id": "languages", "text": "Available in 13 languages", "source": "Google Play listing (US)" }
+    {
+      "id": "wipe-on-exit",
+      "text": "Runs in private mode all the time and wipes history, cookies and sessions when you exit the app",
+      "source": "Google Play listing"
+    },
+    {
+      "id": "no-history",
+      "text": "Keeps no browsing history or cache on the device (downloaded files are kept)",
+      "source": "Google Play listing"
+    },
+    {
+      "id": "ad-blocker",
+      "text": "Built-in ad blocker, with a High Security Blocking option added in the May 2026 release",
+      "source": "Google Play listing and release notes"
+    },
+    {
+      "id": "web3",
+      "text": "Opens IPFS, .eth and .crypto addresses",
+      "source": "Google Play listing"
+    },
+    {
+      "id": "search-engines",
+      "text": "Choice of search engine, including Google, DuckDuckGo and Bing",
+      "source": "Google Play listing (US)"
+    },
+    {
+      "id": "agent-cloaking",
+      "text": "Agent Cloaking: masks the browser and device the site sees and can load desktop versions of sites",
+      "source": "Google Play listing"
+    },
+    {
+      "id": "tabs",
+      "text": "Tabbed browsing, every tab private",
+      "source": "Google Play listing"
+    },
+    {
+      "id": "settings",
+      "text": "Settings to turn images, JavaScript and cookies on or off",
+      "source": "Google Play listing"
+    },
+    {
+      "id": "dark-mode",
+      "text": "Dark mode",
+      "source": "Google Play listing"
+    },
+    {
+      "id": "languages",
+      "text": "Available in 13 languages",
+      "source": "Google Play listing (US)"
+    }
   ],
   "pricing": {
     "app": "Free",
     "pro": "Incognito Pro is an optional subscription sold in the Android app through Google Play"
+  },
+  "pro": {
+    "_comment": "Owner-confirmed on 2026-09-16: what Incognito Pro adds, as outcomes. Claim only these for Pro. Pro's blocking has not yet been run against this site's Ad-Blocker Test, so quote no Pro score.",
+    "checkedOn": "2026-09-16",
+    "features": [
+      {
+        "id": "pro-tracker-blocking",
+        "text": "Blocks tracking scripts and pixels, where the free app's built-in blocker blocks ads",
+        "source": "owner, 2026-09-16"
+      },
+      {
+        "id": "pro-hides-ad-boxes",
+        "text": "Hides the empty boxes and banners that blocked ads leave on the page",
+        "source": "owner, 2026-09-16"
+      },
+      {
+        "id": "pro-batch-photo-cleaning",
+        "text": "Strips location and other metadata from a whole folder of photos at once",
+        "source": "owner, 2026-09-16"
+      }
+    ]
   },
   "dataSafety": {
     "summary": "Google Play's Data safety section says no data is shared with third parties; the app may collect app info and performance data (crash logs and diagnostics) for analytics; data is encrypted in transit.",
@@ -54,9 +115,17 @@
     "anti-fingerprinting or fingerprint protection",
     "works on all platforms / iOS / desktop",
     "voted best by Android Authority",
-    "an aggregateRating in structured data"
+    "an aggregateRating in structured data",
+    "fingerprint change alerts or a history over time",
+    "link monitoring",
+    "scheduled site re-scans",
+    "compliance export"
   ],
   "thirdPartyMentions": [
-    { "text": "Listed in Android Authority's \"9 best privacy web browsers for Android\"", "url": "https://www.androidauthority.com/best-privacy-web-browsers-android-1084899/", "note": "Ranked 8th of 9; do not describe it as a vote or a 'best' award." }
+    {
+      "text": "Listed in Android Authority's \"9 best privacy web browsers for Android\"",
+      "url": "https://www.androidauthority.com/best-privacy-web-browsers-android-1084899/",
+      "note": "Ranked 8th of 9; do not describe it as a vote or a 'best' award."
+    }
   ]
 }

@@ -169,6 +169,11 @@ const NEVER_CLAIM: Record<string, RegExp> = {
     /\ball\s+(?:major\s+|the\s+|your\s+)?(?:platforms|devices|operating\s+systems)\b|\bcross[- ]platform\b|\bmulti[- ](?:device|platform)\b|\bdesktop\b(?!\s+(?:versions?|sites?|mode|view|pages?)\b)|\biOS\b|\biPhones?\b|\biPads?\b|\bmacOS\b|\bMac\b|\bWindows\b|\bLinux\b|\bChromebooks?\b/,
   'voted best by Android Authority': /\bAndroid\s+Authority\b|\bvoted\b|\baward[- ]winning\b/i,
   'an aggregateRating in structured data': /\baggregate\s*rating\b/i,
+  // Owner, 2026-09-16: Pro does none of these.
+  'fingerprint change alerts or a history over time': /\b(?:change\s+)?alerts?\b|\bnotif(?:y|ies|ications?)\b[^.;]{0,30}\bchanges?\b|\bover\s+time\b|\bhistory\s+of\s+(?:your\s+)?(?:fingerprint|browser)\b/i,
+  'link monitoring': /\bmonitor(?:s|ed|ing)?\b|\bkeeps?\s+watching\b|\bwatch(?:es|ing)?\s+(?:your\s+|the\s+)?links?\b/i,
+  'scheduled site re-scans': /\bre-?scan(?:s|ned|ning)?\b|\bscheduled\s+scans?\b|\bscans?\s+on\s+a\s+schedule\b/i,
+  'compliance export': /\bcompliance\s+(?:exports?|reports?)\b|\bexport(?:s|ed|ing)?\s+(?:a\s+|the\s+)?(?:compliance\s+)?reports?\b/i,
 };
 
 /** Our app by name. Plain "incognito mode" is Chrome's feature, not us. */
