@@ -44,6 +44,12 @@ interface Props {
   topics?: CatalogueTopic[];
   /** The page's own content (featured grid, summaries…). Rendered between the controls and the A–Z list. */
   children?: ReactNode;
+  /**
+   * The A–Z letter bar and the letter headings over the list. On by default;
+   * the Pro tools page turns it off (owner, 2026-09-16): 22 tools don't need
+   * an alphabet to find them. The entries stay in A–Z order and search stays.
+   */
+  letters?: boolean;
 }
 
 // DESIGN-SPEC 5.5: the A–Z list uses a "rules grid" — 1px hairlines rather
@@ -184,7 +190,7 @@ function TopicChips({ topics, query, setQuery }: { topics: CatalogueTopic[]; que
  * top beneath the heading → search results (only while typing) → the page's
  * own content → the full A–Z list at the bottom (letter links jump to it).
  */
-export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, children }: Props) {
+export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, children, letters = true }: Props) {
   const [query, setQuery] = useState('');
   const inputId = useId();
   const groups = useMemo(() => groupByLetter(entries), [entries]);
@@ -212,12 +218,12 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
           className="w-full md:max-w-md bg-s0 border border-b1 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-t3 focus:outline-none focus:border-b2"
         />
         <p className="text-xs text-t3 mt-2" aria-live="polite">
-          {q ? `${matches!.length} of ${entries.length} ${counted} match “${q}”` : `${entries.length} ${counted}, A to Z. Jump to a letter or search.`}
+          {q ? `${matches!.length} of ${entries.length} ${counted} match “${q}”` : letters ? `${entries.length} ${counted}, A to Z. Jump to a letter or search.` : `${entries.length} ${counted}. Search, or browse them all below.`}
         </p>
       </div>
 
       {/* Letter bar — every letter rendered so the bar is stable; empty letters are inert */}
-      <nav aria-label="Jump to letter" className="flex flex-wrap gap-1 mb-8">
+      {letters && <nav aria-label="Jump to letter" className="flex flex-wrap gap-1 mb-8">
         {LETTERS.map((letter) =>
           present.has(letter) && !q ? (
             <a
@@ -233,7 +239,7 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
             </span>
           ),
         )}
-      </nav>
+      </nav>}
 
       {/* Browse by topic — chips, not a second full listing */}
       {topics && topics.length > 0 && <TopicChips topics={topics} query={query} setQuery={setQuery} />}
@@ -256,8 +262,13 @@ export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, ch
     {/* Full A–Z list at the bottom of the page (hidden while a search is active) */}
     {!q && (
       <section id="a-to-z" className="mt-12 pt-8 border-t border-b1 scroll-mt-24" data-atoz={noun}>
-        <h2 className="text-xl font-semibold text-white mb-6">All {entries.length} {counted}, A to Z</h2>
-        {groups.map((g) => (
+        <h2 className="text-xl font-semibold text-white mb-6">All {entries.length} {counted}{letters ? ', A to Z' : ''}</h2>
+        {!letters && (
+          <div className={gridClass}>
+            {groups.flatMap((g) => g.entries).map((e) => <Entry key={e.href} e={e} noun={noun} icon={icon} />)}
+          </div>
+        )}
+        {letters && groups.map((g) => (
           <section key={g.letter} id={`letter-${g.letter === '#' ? 'num' : g.letter}`} className="mb-8 scroll-mt-24">
             <h3 className="text-2xl font-bold text-white mb-4 sticky top-16 bg-black py-2 z-10">{g.letter === '#' ? '0–9' : g.letter}</h3>
             <div className={gridClass}>

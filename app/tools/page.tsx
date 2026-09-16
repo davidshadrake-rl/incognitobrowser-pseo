@@ -209,6 +209,7 @@ export default function ToolsIndex() {
 
       <AtoZCatalogue
         noun="tools"
+        letters={!IS_PRO_DEPLOYMENT}
         entries={items.map(item => ({
           title: item.title,
           href: `/tools/${item._niche}/${item._slug}`,
