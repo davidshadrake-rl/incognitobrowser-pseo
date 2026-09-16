@@ -7,6 +7,7 @@
  * cannot be used as a free-text sink.
  */
 import { TRACK_EVENTS, type TrackEvent } from './track';
+import { allFunnelPaths } from './funnels';
 
 export interface EventPayload {
   event: TrackEvent;
@@ -16,6 +17,7 @@ export interface EventPayload {
   target?: 'play' | 'pro-web' | 'email' | 'copy' | 'share' | 'download' | 'checklist' | 'check-yours';
   platform?: 'android' | 'ios' | 'desktop' | 'other';
   inApp?: boolean;
+  page?: string;
 }
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,47}$/;
@@ -33,6 +35,10 @@ export const TOOL_IDS = new Set([
   'report-card',
 ]);
 const PLATFORMS = new Set(['android', 'ios', 'desktop', 'other']);
+// A page may only name a funnel page: a fixed list (about 1,400), so a counter
+// key can never be minted from free text.
+let funnelPaths: Set<string> | null = null;
+const isFunnelPath = (p: string) => (funnelPaths ??= new Set(allFunnelPaths())).has(p);
 
 export type Validation = { ok: true; value: EventPayload } | { ok: false; error: string };
 
@@ -51,6 +57,7 @@ export function validateEvent(input: unknown): Validation {
   if (o.target !== undefined) { if (!TARGETS.has(o.target as string)) return { ok: false, error: 'bad target' }; v.target = o.target as EventPayload['target']; }
   if (o.platform !== undefined) { if (!PLATFORMS.has(o.platform as string)) return { ok: false, error: 'bad platform' }; v.platform = o.platform as EventPayload['platform']; }
   if (o.inApp !== undefined) { if (typeof o.inApp !== 'boolean') return { ok: false, error: 'bad inApp' }; v.inApp = o.inApp; }
+  if (o.page !== undefined) { if (typeof o.page !== 'string' || !isFunnelPath(o.page)) return { ok: false, error: 'unknown page' }; v.page = o.page; }
   return { ok: true, value: v };
 }
 
@@ -59,14 +66,16 @@ export function dayOf(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** The counters one event increments. Bounded (≤5) so a burst cannot fan out. */
+/** The counters one event increments. Bounded (≤7) so a burst cannot fan out. */
 export function eventKeys(day: string, v: EventPayload): string[] {
   const p = v.platform || '-';
   const keys = [`evt:${day}:_all`, `evt:${day}:${v.event}`, `evt:${day}:${v.event}:${v.tool || '-'}:${p}`];
   if (v.target) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:${v.target}`);
   if (v.severity) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:sev-${v.severity}`);
   if (v.inApp) keys.push(`evt:${day}:_inapp:${v.event}`);
-  return keys.slice(0, 6);
+  // Per funnel page: views, runs, results by colour and clicks (scripts/funnels/stats.ts).
+  if (v.page) keys.push(`evt:${day}:page:${v.event}:${v.page}${v.severity ? `:sev-${v.severity}` : ''}${v.target ? `:${v.target}` : ''}`);
+  return keys.slice(0, 7);
 }
 
 export const EVENT_TTL_SECONDS = 400 * 24 * 3600;

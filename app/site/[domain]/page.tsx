@@ -7,7 +7,8 @@ import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, absoluteUrl } from '@/lib/seo';
 import { ReportCardFunnel } from '@/components/ReportCardFunnel';
 import { PageFunnel } from '@/components/PageFunnel';
-import { funnelFor } from '@/lib/funnels';
+import { funnelFor, isV2 } from '@/lib/funnels';
+import { severityFromGrade } from '@/lib/severity';
 import { GRADE_LABEL } from '@/lib/site-grade';
 import { TRACKER_FOR_INLINE } from '@/lib/scanner';
 import { IS_PRO_DEPLOYMENT, proUrlFor } from '@/lib/tiers';
@@ -88,6 +89,8 @@ export default async function SiteReportPage({ params }: PageProps) {
 
   const trackingCookies = scan.cookies.filter((c) => c.category === 'tracking');
   const otherCookies = scan.cookies.filter((c) => c.category !== 'tracking');
+
+  const pageFunnel = funnelFor(`/site/${domain}`);
 
   return (
     <article className="max-w-3xl mx-auto">
@@ -219,10 +222,11 @@ export default async function SiteReportPage({ params }: PageProps) {
         </div>
       </section>
 
-      {funnelFor(`/site/${domain}`) && <PageFunnel funnel={funnelFor(`/site/${domain}`)!} niche={category.niche} />}
+      {pageFunnel && <PageFunnel funnel={pageFunnel} niche={category.niche} cardSeverity={severityFromGrade(grade.grade)} />}
 
       {/* The result moment: the grade is the proof, the ask follows it, the scorecard makes it shareable */}
       <ReportCardFunnel
+        hideCta={!!pageFunnel && isV2(pageFunnel) && pageFunnel.check.mode === 'card'}
         domain={domain}
         niche={category.niche}
         grade={grade.grade}

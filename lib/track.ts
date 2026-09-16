@@ -10,7 +10,7 @@
  */
 import { SCAN_API_BASE } from './scan-client';
 
-export const TRACK_EVENTS = ['tool_run', 'result_shown', 'cta_view', 'cta_click', 'share_click', 'handoff_send', 'next_step_click', 'report_card_view', 'proof_route_click'] as const;
+export const TRACK_EVENTS = ['tool_run', 'result_shown', 'cta_view', 'cta_click', 'share_click', 'handoff_send', 'next_step_click', 'report_card_view', 'proof_route_click', 'funnel_view', 'funnel_run', 'funnel_click'] as const;
 export type TrackEvent = (typeof TRACK_EVENTS)[number];
 
 export interface TrackProps {
@@ -18,6 +18,8 @@ export interface TrackProps {
   niche?: string;
   severity?: 'red' | 'amber' | 'green' | 'info';
   target?: 'play' | 'pro-web' | 'email' | 'copy' | 'share' | 'download' | 'checklist' | 'check-yours';
+  /** The funnel page it happened on (lib/funnels.ts path); the server keeps only known paths. */
+  page?: string;
 }
 
 export type Platform = 'android' | 'ios' | 'desktop' | 'other';
@@ -45,7 +47,8 @@ const sent = new Set<string>();
 export function track(event: TrackEvent, props: TrackProps = {}, opts: { once?: boolean } = {}): void {
   try {
     if (typeof window === 'undefined') return;
-    const key = `${event}:${props.tool || ''}:${props.target || ''}`;
+    // The page is part of the key: a visit that moves between funnel pages counts each one.
+    const key = `${event}:${props.tool || ''}:${props.target || ''}:${props.page || ''}`;
     if (opts.once) {
       if (sent.has(key)) return;
       sent.add(key);

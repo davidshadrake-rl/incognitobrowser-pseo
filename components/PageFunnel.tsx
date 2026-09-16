@@ -1,10 +1,15 @@
 /**
- * The five-step Pro funnel, rendered for one page (lib/funnels.ts).
+ * The per-page Pro funnel (lib/funnels.ts).
  *
- * Server-rendered: every word is drafted and reviewed offline, so there is
- * nothing here to compute in the browser and no tool code to load. The check
- * itself opens on its own tool page, carrying this page's topic so the result
- * there speaks for the page the visitor came from.
+ * v2 records: the page's problem and what it means for the visitor are plain
+ * HTML (so they're crawlable and read without JavaScript), and the check plus
+ * the answer to the visitor's own result are components/FunnelCheck.tsx. A
+ * report card's result is its grade, known when the page is built, so its
+ * answer renders straight away. On a tool page the page itself is the check:
+ * the answer sits inside the tool (app/tools/[niche]/[slug]/client.tsx) and
+ * nothing renders here.
+ *
+ * v1 records render exactly as they did on 2026-09-14 until they're rewritten.
  *
  * The upgrade link is the Play listing, with the data-upgrade-* attributes
  * components/InAppBridge.tsx watches: inside the Incognito Browser app that tap
@@ -13,9 +18,34 @@
  */
 import Link from 'next/link';
 import { playUrl } from '@/lib/play';
-import type { PageFunnel as Funnel } from '@/lib/funnels';
+import { FunnelCheck, FunnelOutcome } from '@/components/FunnelCheck';
+import { isV2, type FunnelSeverity, type PageFunnel as Funnel, type PageFunnelV1, type PageFunnelV2 } from '@/lib/funnels';
 
-export function PageFunnel({ funnel, niche }: { funnel: Funnel; niche?: string }) {
+export function PageFunnel({ funnel, niche, cardSeverity }: { funnel: Funnel; niche?: string; cardSeverity?: FunnelSeverity }) {
+  return isV2(funnel) ? <PageFunnelV2View funnel={funnel} cardSeverity={cardSeverity} /> : <PageFunnelV1View funnel={funnel} niche={niche} />;
+}
+
+function PageFunnelV2View({ funnel, cardSeverity }: { funnel: PageFunnelV2; cardSeverity?: FunnelSeverity }) {
+  const { mode, engine } = funnel.check;
+  if (mode === 'page') return null;
+  return (
+    <section
+      className="my-10 rounded-[16px] border border-b1 bg-white/[0.03] p-5 sm:p-6"
+      data-page-funnel={engine}
+      data-funnel-v="2"
+      aria-labelledby="page-funnel-heading"
+    >
+      <p className="text-xs uppercase tracking-wider text-t3">{funnel.step1.label}</p>
+      <blockquote className="mt-2 text-t2 text-row border-l-2 border-b1 pl-3">{funnel.step1.quote}</blockquote>
+      <h3 id="page-funnel-heading" className="mt-4 text-white text-row font-semibold">{funnel.stakes}</h3>
+      {mode === 'card'
+        ? cardSeverity && <FunnelOutcome funnel={funnel} severity={cardSeverity} />
+        : <FunnelCheck funnel={funnel} />}
+    </section>
+  );
+}
+
+function PageFunnelV1View({ funnel, niche }: { funnel: PageFunnelV1; niche?: string }) {
   const topic = funnel.topic || niche || '';
   const play = playUrl({ medium: 'funnel', campaign: funnel.step2.engine, content: topic || funnel.type });
 

@@ -24,12 +24,20 @@ const RECORDS = path.join(ROOT, 'funnel-drafts', 'records.json');
 const OUT = path.join(ROOT, 'data', 'funnels.json');
 
 interface Step2 { engine: string; heading: string; instruction: string; button: string }
+interface FunnelV2 {
+  v: 2;
+  step1: { unitKey: string; label: string; quote: string };
+  stakes: string;
+  check: { engine: string; button: string };
+  results: Record<string, { meaning: string; pro: string; button: string }>;
+}
 interface DraftRecord {
   id: string;
   url: string;
   type: string;
   topic: string | null;
-  funnel?: {
+  funnel?: FunnelV2 | {
+    v?: 1;
     step1: { unitKey: string; label: string; quote: string };
     step2: Step2;
     step3: { red: string; amber: string; green: string };
@@ -86,6 +94,25 @@ function main() {
   const noCheckPage: string[] = [];
   for (const r of records) {
     if (!r.funnel) continue;
+    // v2: the check and one answer per result (lib/funnels.ts). The review
+    // notes and the unit key stay behind in funnel-drafts/.
+    if (r.funnel.v === 2) {
+      const f = r.funnel;
+      const target = checkTarget(f.check.engine, r.topic, index);
+      const q = new URLSearchParams();
+      if (r.handoff?.topic) q.set('topic', r.handoff.topic);
+      q.set('from', r.type);
+      out[r.url] = {
+        v: 2,
+        type: r.type,
+        topic: r.topic,
+        step1: { label: f.step1.label, quote: f.step1.quote },
+        stakes: f.stakes,
+        check: { ...f.check, target, query: q.toString() },
+        results: f.results,
+      };
+      continue;
+    }
     const target = checkTarget(r.funnel.step2.engine, r.topic, index);
     if (!target) noCheckPage.push(`${r.url} (${r.funnel.step2.engine})`);
     // The check page gets the page's context, so the result it shows can speak

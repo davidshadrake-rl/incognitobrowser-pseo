@@ -10,6 +10,7 @@ import { Diagram } from '@/components/ui/Diagram';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ResultProvider } from '@/components/tools/ResultContext';
 import { FunnelSurfaces } from '@/components/FunnelSurfaces';
+import type { PageFunnelV2 } from '@/lib/funnels';
 import { EditorialNote } from '@/components/EditorialNote';
 import { ENGINE_ICON, type Diagram as DiagramId, type Family } from '@/lib/visuals';
 import type { NextStepsData } from '@/components/NextSteps';
@@ -47,6 +48,7 @@ export function ToolPageClient({
   diagram = 'tracking',
   family = 'trace',
   tier = 'free',
+  funnel,
 }: {
   data: ToolData;
   nicheName: string;
@@ -57,6 +59,8 @@ export function ToolPageClient({
   diagram?: DiagramId;
   family?: Family;
   tier?: Tier;
+  /** This page's v2 funnel: it answers the tool's result in this page's words. */
+  funnel?: PageFunnelV2 | null;
 }) {
   // If the tool has an engine, render the dedicated component
   if (data.toolEngine) {
@@ -120,7 +124,7 @@ export function ToolPageClient({
           </div>
 
           {/* Result moment: CTA, shareable scorecard, what to do now */}
-          <FunnelSurfaces engine={data.toolEngine} niche={niche} title={data.title} nextSteps={nextSteps} proWebUrl={proWebUrl} />
+          <FunnelSurfaces engine={data.toolEngine} niche={niche} title={data.title} nextSteps={nextSteps} proWebUrl={proWebUrl} funnel={funnel} />
 
           {/* Numbered collapsed sections (DESIGN-SPEC 5.4, "Below the result") */}
           <div className="mt-10">

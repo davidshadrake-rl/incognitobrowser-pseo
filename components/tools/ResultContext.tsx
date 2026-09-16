@@ -63,16 +63,5 @@ export function useToolResult(): ToolResult | null {
   return useContext(ResultContext);
 }
 
-/** Map a 0–100 score to a severity with the thresholds used site-wide. */
-export function severityFromScore(score: number): Severity {
-  if (score >= 80) return 'green';
-  if (score >= 50) return 'amber';
-  return 'red';
-}
-
-/** Map a letter grade to a severity. 'A+' is green like 'A'; it used to fall through to red. */
-export function severityFromGrade(grade: string): Severity {
-  if (grade === 'A+' || grade === 'A' || grade === 'B') return 'green';
-  if (grade === 'C') return 'amber';
-  return 'red';
-}
+// Pure, so a server page can use them too (lib/severity.ts).
+export { severityFromScore, severityFromGrade } from '@/lib/severity';

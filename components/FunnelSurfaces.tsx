@@ -12,6 +12,8 @@ import { Scorecard } from '@/components/Scorecard';
 import { NextSteps, type NextStepsData } from '@/components/NextSteps';
 import { scorecardFigure, VALUE_ONLY_ENGINES } from '@/lib/scorecard';
 import { track } from '@/lib/track';
+import { FunnelAnswer } from '@/components/FunnelCheck';
+import type { PageFunnelV2 } from '@/lib/funnels';
 
 interface Props {
   engine: string;
@@ -19,9 +21,14 @@ interface Props {
   title: string;
   nextSteps?: NextStepsData | null;
   proWebUrl?: string;
+  /**
+   * This tool page's own v2 funnel. When present it answers the result in the
+   * words written for this page, in place of the generic ResultCta: one ask.
+   */
+  funnel?: PageFunnelV2 | null;
 }
 
-export function FunnelSurfaces({ engine, niche, title, nextSteps, proWebUrl }: Props) {
+export function FunnelSurfaces({ engine, niche, title, nextSteps, proWebUrl, funnel }: Props) {
   const result = useToolResult();
   useEffect(() => {
     if (result) track('result_shown', { tool: engine, niche, severity: result.severity }, { once: true });
@@ -35,7 +42,9 @@ export function FunnelSurfaces({ engine, niche, title, nextSteps, proWebUrl }: P
     <>
       {result && aboutVisitor && (
         <>
-          <ResultCta engine={engine} niche={niche} severity={result.severity} headline={result.headline} proWebUrl={proWebUrl} content={niche} />
+          {funnel
+            ? <section className="mt-8 rounded-[16px] border border-b1 bg-white/[0.03] p-5 sm:p-6" data-page-funnel={engine} data-funnel-v="2"><FunnelAnswer funnel={funnel} /></section>
+            : <ResultCta engine={engine} niche={niche} severity={result.severity} headline={result.headline} proWebUrl={proWebUrl} content={niche} />}
           {figure && (
             <Scorecard engine={engine} niche={niche} title={title} figure={figure} headline={result.shareText || result.headline} stats={result.stats} tone={result.severity} />
           )}
