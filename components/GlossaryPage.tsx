@@ -7,7 +7,7 @@ import { PageHero } from './ui/PageHero';
 import { EditorialNote } from './EditorialNote';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import { PageFunnel } from './PageFunnel';
-import type { PageFunnel as Funnel } from '@/lib/funnels';
+import type { PageFunnel as Funnel } from '@/lib/funnel-types';
 
 interface GlossaryExample {
   scenario: string;

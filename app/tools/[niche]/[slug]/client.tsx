@@ -10,7 +10,7 @@ import { Diagram } from '@/components/ui/Diagram';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ResultProvider } from '@/components/tools/ResultContext';
 import { FunnelSurfaces } from '@/components/FunnelSurfaces';
-import type { PageFunnel } from '@/lib/funnels';
+import type { PageFunnel } from '@/lib/funnel-types';
 import { EditorialNote } from '@/components/EditorialNote';
 import { ENGINE_ICON, type Diagram as DiagramId, type Family } from '@/lib/visuals';
 import type { NextStepsData } from '@/components/NextSteps';

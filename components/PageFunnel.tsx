@@ -16,7 +16,7 @@
  */
 import { ToolEntryCard } from '@/components/ToolEntryCard';
 import { FunnelOutcome } from '@/components/FunnelCheck';
-import { isV2, type FunnelSeverity, type PageFunnel as Funnel } from '@/lib/funnels';
+import { isV2, type FunnelSeverity, type PageFunnel as Funnel } from '@/lib/funnel-types';
 
 export function PageFunnel({ funnel, cardSeverity }: { funnel: Funnel; niche?: string; cardSeverity?: FunnelSeverity }) {
   if (funnel.type === 'tool' || funnel.type === 'pro-tool') return null;

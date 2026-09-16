@@ -23,7 +23,7 @@ import { Badge, type BadgeVariant } from './ui/Badge';
 import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
 import { PageFunnel } from './PageFunnel';
-import type { PageFunnel as Funnel } from '@/lib/funnels';
+import type { PageFunnel as Funnel } from '@/lib/funnel-types';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import type { ProofRoute } from '@/lib/proof-route';
 import {

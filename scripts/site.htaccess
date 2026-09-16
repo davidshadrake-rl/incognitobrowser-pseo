@@ -1,0 +1,12 @@
+# Shipped inside each uploaded site folder by scripts/deploy.sh.
+#
+# Cache busting. CSS and JS under _next/static are named after their contents,
+# so a changed file gets a new name; they're cached for a year (set higher up).
+# Everything else here — the pages, data files, images — is "no-cache": the
+# browser keeps a copy but checks for a newer one on every load, so a refresh
+# after a deploy always shows it. Unchanged files answer 304, nothing re-downloads.
+<IfModule mod_headers.c>
+  <If "%{REQUEST_URI} !~ m#/_next/static/#">
+    Header set Cache-Control "no-cache"
+  </If>
+</IfModule>

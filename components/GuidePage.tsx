@@ -12,7 +12,7 @@ import { Icon } from './ui/Icon';
 import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
 import { PageFunnel } from './PageFunnel';
-import type { PageFunnel as Funnel } from '@/lib/funnels';
+import type { PageFunnel as Funnel } from '@/lib/funnel-types';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
 import { weaveLinks, unmatchedLinkSentence, isSafeHref, type InlineLink, type WeaveSegment } from '@/lib/inline-links';
 import type { ProofRoute } from '@/lib/proof-route';

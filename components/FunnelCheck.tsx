@@ -20,7 +20,7 @@ import { UpgradeButtons } from '@/components/UpgradeButtons';
 import { basePathFrom } from '@/lib/adblock-bait';
 import { track } from '@/lib/track';
 import { PRO_FOOTNOTE } from '@/lib/tiers';
-import type { FunnelSeverity, PageFunnelV2, ResultCopy } from '@/lib/funnels';
+import type { FunnelSeverity, PageFunnelV2, ResultCopy } from '@/lib/funnel-types';
 
 const TONE: Record<FunnelSeverity, string> = {
   red: 'border-t-danger',

@@ -13,7 +13,7 @@ import { NextSteps, type NextStepsData } from '@/components/NextSteps';
 import { scorecardFigure, VALUE_ONLY_ENGINES } from '@/lib/scorecard';
 import { track } from '@/lib/track';
 import { FunnelAnswer, useFromPageFunnel } from '@/components/FunnelCheck';
-import { isV2, type PageFunnel as Funnel } from '@/lib/funnels';
+import { isV2, type PageFunnel as Funnel } from '@/lib/funnel-types';
 
 interface Props {
   engine: string;
