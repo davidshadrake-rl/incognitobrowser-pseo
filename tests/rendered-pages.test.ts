@@ -673,25 +673,19 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
   it('content pages carry a tool card that names the tool and says what it does', async () => {
     for (const route of [ROUTES.publishedGuide, ROUTES.publishedChecklist]) {
       const r = await fetchText(route);
-      // Either surface: CheckYoursNow's <aside data-check-yours>, or the page's
-      // own five-step funnel (components/PageFunnel), which replaces it where
-      // one is drafted. Judge only the surface's own text.
-      const funnel = r.body.search(/<section[^>]*data-page-funnel="[a-z0-9-]+"/);
+      // The way into the free tool: ToolEntryCard's <aside data-tool-entry>, or
+      // the older CheckYoursNow card. Judge only the card's own markup.
+      const entry = r.body.search(/<aside[^>]*data-tool-entry="[a-z0-9-]+"/);
       const aside = r.body.search(/<aside[^>]*data-check-yours="[a-z0-9-]+"/);
-      const start = funnel >= 0 ? funnel : aside;
-      expect(start, `${route}: tool card or page funnel`).toBeGreaterThanOrEqual(0);
-      const card = r.body.slice(start, r.body.indexOf(funnel >= 0 ? '</section>' : '</aside>', start));
-      // The check is reachable: a v2 funnel runs it in the page with a button
-      // (components/FunnelCheck.tsx) or links to its tool page; a v1 funnel
-      // and the old card link to the tool page.
-      const v2 = /data-funnel-v="2"/.test(card);
-      expect(card, route).toMatch(v2
-        ? /<button[^>]*>[^<]+<\/button>|href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?(\?[^"]*)?"/
-        : funnel >= 0
-          ? /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?(\?[^"]*)?"/
-          : /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>(Open|Take) [^<]+ →/);
-      // A v2 funnel never prints every result before the visitor has one.
-      if (v2) expect(card, route).not.toMatch(/data-funnel-result=/);
+      const start = entry >= 0 ? entry : aside;
+      expect(start, `${route}: a card into the free tool`).toBeGreaterThanOrEqual(0);
+      const card = r.body.slice(start, r.body.indexOf('</aside>', start));
+      // It opens the tool page, and tells it which page the visitor came from.
+      expect(card, route).toMatch(entry >= 0
+        ? /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?\?[^"]*from=/
+        : /href="[^"]*\/tools\/[a-z0-9-]+\/[a-z0-9-]+\/?"[^>]*>(Open|Take) [^<]+ →/);
+      // Owner, 2026-09-16: the page never spells the funnel out.
+      expect(r.body, route).not.toMatch(/>Amber<|data-funnel-result=|>This tool</);
       // CTO review 2026-09-10: no false promises on the card, and no niche
       // shell title for the user-agent tool. The shell title is still the
       // real title of /tools/gaming-privacy/useragent-analyzer, so a related
@@ -713,7 +707,7 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
     const progress = r.body.indexOf('data-checklist-progress');
     const firstSection = r.body.indexOf('<details class="panel"');
     // data-page-funnel where a funnel is drafted for this page, else the old card.
-    const card = Math.max(r.body.indexOf('data-page-funnel'), r.body.indexOf('data-check-yours'));
+    const card = Math.max(r.body.indexOf('data-tool-entry'), r.body.indexOf('data-check-yours'));
     expect(progress).toBeGreaterThan(0);
     expect(firstSection).toBeGreaterThan(progress);
     expect(card).toBeGreaterThan(firstSection);

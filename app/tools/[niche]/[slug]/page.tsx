@@ -11,8 +11,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { ToolPageClient } from './client';
 import { ENGINE_DIAGRAM, familyOfEngine } from '@/lib/visuals';
 import type { Metadata } from 'next';
-import { PageFunnel } from '@/components/PageFunnel';
-import { funnelFor, isV2 } from '@/lib/funnels';
+import { funnelFor } from '@/lib/funnels';
 
 interface ToolData {
   niche: string;
@@ -162,13 +161,12 @@ export default async function ToolDetailPage({ params }: PageProps) {
         diagram={data.toolEngine ? (ENGINE_DIAGRAM[data.toolEngine] ?? 'tracking') : 'tracking'}
         family={data.toolEngine ? familyOfEngine(data.toolEngine) : 'trace'}
         tier={tierOfEngine(data.toolEngine)}
-        funnel={pageFunnel && isV2(pageFunnel) ? pageFunnel : null}
+        funnel={pageFunnel}
       />
       <RelatedContent
         links={crossLinks}
         nicheHub={{ name: nicheName, href: `${freeSitePrefix()}/topics/${niche}` }}
       />
-      {pageFunnel && !isV2(pageFunnel) && <PageFunnel funnel={pageFunnel} />}
     </>
   );
 }

@@ -22,6 +22,7 @@ import { ENGINE_CANONICAL } from '../../components/tools/registry';
 const ROOT = process.cwd();
 const RECORDS = path.join(ROOT, 'funnel-drafts', 'records.json');
 const OUT = path.join(ROOT, 'data', 'funnels.json');
+const CTA_DIR = path.join(ROOT, 'public', 'funnels', 'cta');
 
 interface Step2 { engine: string; heading: string; instruction: string; button: string }
 interface FunnelV2 {
@@ -136,6 +137,20 @@ function main() {
   }
 
   fs.writeFileSync(OUT, `${JSON.stringify(out, null, 1)}\n`);
+
+  // The tool page answers a visitor with the CTA written for the page they
+  // came from (?from=). Per engine, so a tool page fetches only its own.
+  const byEngine = new Map<string, Record<string, unknown>>();
+  for (const r of records) {
+    const f = r.funnel;
+    if (!f || f.v !== 2 || f.check.engine === 'report-card' || r.type === 'tool' || r.type === 'pro-tool') continue;
+    if (!Object.keys(f.results ?? {}).length) continue;
+    if (!byEngine.has(f.check.engine)) byEngine.set(f.check.engine, {});
+    byEngine.get(f.check.engine)![r.url] = { type: r.type, topic: r.topic, results: f.results };
+  }
+  fs.rmSync(CTA_DIR, { recursive: true, force: true });
+  fs.mkdirSync(CTA_DIR, { recursive: true });
+  for (const [engine, pages] of byEngine) fs.writeFileSync(path.join(CTA_DIR, `${engine}.json`), `${JSON.stringify(pages)}\n`);
   console.log(`${Object.keys(out).length} funnels written to data/funnels.json (${checked} checked, 0 errors)`);
   if (noCheckPage.length) {
     console.log(`${noCheckPage.length} with no published tool page for their engine — they render steps 1, 4 and 5 only:`);

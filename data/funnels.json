@@ -1579,7 +1579,7 @@
    "label": "Guides",
    "quote": "One weak password is the way into every account that shares it."
   },
-  "stakes": "Attackers try common and leaked passwords by the million, automatically. Type one like yours and see how long it would hold out; it never leaves this page.",
+  "stakes": "Attackers try common and leaked passwords by the million, automatically. Type one like yours and see how long it would hold out; it never leaves your browser.",
   "check": {
    "engine": "password-strength",
    "button": "Test a password",
@@ -1592,7 +1592,7 @@
   "results": {
    "red": {
     "meaning": "A password like that falls in seconds to a guessing program, as shown above. If it's used on more than one account, every one of them opens with it.",
-    "pro": "Fix it with a password manager and a different password per account; the guides here show how. Then Incognito Pro's URL Safety Checker reads a link before you tap it, so you can spot a fake login page first.",
+    "pro": "Fix it with a password manager and a different password per account; our password guides show how. Then Incognito Pro's URL Safety Checker reads a link before you tap it, so you can spot a fake login page first.",
     "button": "Check links before you log in, with Pro"
    },
    "amber": {
@@ -8568,7 +8568,7 @@
     "button": "Block tracking scripts with Pro"
    },
    "amber": {
-    "meaning": "Your browser announces an old version, as flagged above. Old versions are rarer, so they stand out more, and they also miss security fixes. Update it before anything else in this guide.",
+    "meaning": "Your browser announces an old version, as flagged above. Old versions are rarer, so they stand out more, and they also miss security fixes. Update it before anything else.",
     "pro": "Update first. Then Agent Cloaking in Incognito Browser changes the browser and device sites are told about, and Incognito Pro blocks trackers on top.",
     "button": "Add tracker blocking with Pro"
    }
@@ -23405,16 +23405,16 @@
   }
  },
  "/tools/ad-tracking/cookie-tracker-scanner": {
+  "v": 2,
   "type": "pro-tool",
   "topic": "ad-tracking",
   "step1": {
    "label": "This tool",
-   "quote": "Scan and categorize cookies on any webpage to identify advertising trackers, analytics scripts, and privacy-invasive cookies."
+   "quote": "identify advertising trackers, analytics scripts, and privacy-invasive cookies"
   },
-  "step2": {
+  "stakes": "Most sites set cookies and start trackers the moment you arrive, before any banner asks. Scan one you use and see what it starts on you.",
+  "check": {
    "engine": "cookie-analyzer",
-   "heading": "Scan a site you use for the cookies and trackers it sets on arrival",
-   "instruction": "Type the address of a site you use often. The scanner loads that one page once, as a first visit, without running its scripts, and lists the cookies its server sets and known tracker scripts.",
    "button": "Scan a site",
    "target": {
     "niche": "ad-tracking",
@@ -23422,16 +23422,22 @@
    },
    "query": "topic=ad-tracking&from=pro-tool"
   },
-  "step3": {
-   "red": "Tracking cookies, or three or more trackers, before you've clicked anything: this site starts profiling you on the first page.",
-   "amber": "One or two trackers, or more than five third-party scripts: lighter tracking, but your visit is still shared with others.",
-   "green": "No tracking cookies and no known trackers on this first load. Scripts aren't run, so cookies they set won't show, and other pages may set more."
-  },
-  "step4": {
-   "line": "The free Incognito Browser wipes cookies like these each time you close it. Incognito Pro adds ad and tracker blocking that stops many trackers like these before they load, on every site you open in the app, not just the one you scanned."
-  },
-  "step5": {
-   "label": "Get the scanner and tracker blocking in Pro"
+  "results": {
+   "red": {
+    "meaning": "This one scores badly, for the reasons listed above: tracking cookies, trackers or both. On a site you use, that is collected every time you visit.",
+    "pro": "Incognito Browser wipes cookies like these every time you close it. Incognito Pro also blocks trackers before they load, on every site you open in the app, not just this one.",
+    "button": "Block trackers on every site with Pro"
+   },
+   "amber": {
+    "meaning": "A middling score, for the reasons listed above. It can be a few trackers, a lot of outside scripts, or missing security settings; the list says which.",
+    "pro": "Where the list shows trackers, Incognito Pro blocks them before they load and hides the empty ad boxes, on every site you open in the app.",
+    "button": "Block what it lists with Pro"
+   },
+   "green": {
+    "meaning": "A good score: little or no tracking on this check, as listed above. The scan doesn't run the page's scripts, so cookies they set later won't show here.",
+    "pro": "Two in three of the 500 sites we graded aren't this careful. Incognito Pro blocks trackers before they load on every site you open in the app.",
+    "button": "Block trackers everywhere with Pro"
+   }
   }
  },
  "/tools/ad-tracking/link-unwrapper": {

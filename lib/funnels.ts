@@ -8,14 +8,19 @@
  *   4 what Incognito Pro does about it, as an outcome
  *   5 the upgrade, carrying this page's context
  *
+ * These records are the PLAN for each page, not something visitors see
+ * (owner, 2026-09-16). The page shows only the path: a plain card into the
+ * free tool page (components/ToolEntryCard.tsx), and once the visitor has a
+ * result there, the Pro subscription CTA written for the page they came from
+ * (components/FunnelSurfaces.tsx). The whole plan, page by page, is the
+ * internal funnel doc.
+ *
  * Two record shapes live side by side while pages are rewritten:
- *   v1 (the first draft, live 2026-09-14): one step-3 line per colour, all
- *      shown before the visitor has run anything, and one Pro line for every
- *      result. The owner judged these "a fair start but not compelling".
- *   v2 (2026-09-16): the check runs inside the page and only the visitor's own
- *      result is answered, with its own meaning, Pro line and button. Stakes
- *      come first, in plain words.
- * A v1 record renders as it always has until it is rewritten as v2.
+ *   v1 (first draft, 2026-09-14): one line per colour and one Pro line for
+ *      every result. Its page gets the card; its tool page answers with the
+ *      tool's own CTA.
+ *   v2 (2026-09-16): a line for the card and one answer per result the tool
+ *      can return — meaning, Pro line, button.
  *
  * The text is drafted and reviewed offline in funnel-drafts/, which is kept out
  * of the repo (it is public, and the drafts carry review notes), validated by
@@ -48,12 +53,13 @@ export interface ResultCopy {
 }
 
 /**
- * How the check is reached from this page:
- *   inline  it runs inside the funnel (a free engine on a content page)
- *   link    it opens on its own page: a Pro engine on the free site, or an
- *           engine that can't share a page (LINK_OUT_ENGINES)
- *   page    this IS the tool page: the funnel answers the page's own engine
+ * Where the visitor meets the tool from this page:
+ *   inline  a free tool on this deployment: the card links to its page
+ *   link    a tool this deployment doesn't build (a Pro tool on the free site)
+ *           or one that can't share a page: the card links to it absolutely
+ *   page    this IS the tool page: the answer sits under "What to do now"
  *   card    a report card: the grade is the result, known when the page is built
+ * All but `card` reach the visitor through the same plain card.
  */
 export type CheckMode = 'inline' | 'link' | 'page' | 'card';
 
@@ -97,11 +103,14 @@ const BY_URL = funnels as unknown as Record<string, StoredV1 | StoredV2>;
  * absolutely; a free engine is a path within whichever site is rendering.
  * Null when the engine has no page here at all.
  */
-function hrefFor(engine: string, target: StoredTarget | null, query: string): string | null {
+function hrefFor(engine: string, target: StoredTarget | null, query: string, from: string): string | null {
   if (!target) return null;
-  if (tierOfEngine(engine) === 'pro') return proUrlFor(target.niche, target.slug);
+  // ?from= is the page itself, so the tool page can answer with that page's CTA.
+  const q = new URLSearchParams(query);
+  q.set('from', from);
+  if (tierOfEngine(engine) === 'pro') return `${proUrlFor(target.niche, target.slug)}/?${q.toString()}`;
   if (!engineVisibleInThisTier(engine)) return null;
-  return `/tools/${target.niche}/${target.slug}/${query ? `?${query}` : ''}`;
+  return `/tools/${target.niche}/${target.slug}/?${q.toString()}`;
 }
 
 function modeFor(type: string, engine: string): CheckMode {
@@ -127,11 +136,11 @@ export function funnelFor(path: string): PageFunnel | null {
   if ((stored as StoredV2).v === 2) {
     const s = stored as StoredV2;
     const { target, query, ...check } = s.check;
-    return { ...s, v: 2, path: key, check: { ...check, mode: modeFor(s.type, check.engine), href: hrefFor(check.engine, target, query) } };
+    return { ...s, v: 2, path: key, check: { ...check, mode: modeFor(s.type, check.engine), href: hrefFor(check.engine, target, query, key) } };
   }
   const s = stored as StoredV1;
   const { target, query, ...step2 } = s.step2;
-  return { ...s, path: key, step2: { ...step2, href: hrefFor(step2.engine, target, query) } };
+  return { ...s, path: key, step2: { ...step2, href: hrefFor(step2.engine, target, query, key) } };
 }
 
 /** Every page that has one: the coverage test, and the allowlist for per-page event counters. */

@@ -10,7 +10,7 @@ import { Diagram } from '@/components/ui/Diagram';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ResultProvider } from '@/components/tools/ResultContext';
 import { FunnelSurfaces } from '@/components/FunnelSurfaces';
-import type { PageFunnelV2 } from '@/lib/funnels';
+import type { PageFunnel } from '@/lib/funnels';
 import { EditorialNote } from '@/components/EditorialNote';
 import { ENGINE_ICON, type Diagram as DiagramId, type Family } from '@/lib/visuals';
 import type { NextStepsData } from '@/components/NextSteps';
@@ -59,8 +59,8 @@ export function ToolPageClient({
   diagram?: DiagramId;
   family?: Family;
   tier?: Tier;
-  /** This page's v2 funnel: it answers the tool's result in this page's words. */
-  funnel?: PageFunnelV2 | null;
+  /** This page's funnel. It sits under "What to do now"; a v2 funnel answers the tool's result there. */
+  funnel?: PageFunnel | null;
 }) {
   // If the tool has an engine, render the dedicated component
   if (data.toolEngine) {
@@ -119,7 +119,8 @@ export function ToolPageClient({
           {/* Interactive tool — 14 engines wrap their own result markup in
               ConsoleFrame; the 3 value tools (hash, password generator, text
               encryption) render theirs in ValueCard. */}
-          <div className="mb-8">
+          {/* id="tool": a funnel on this page points back up here — the page is its own check. */}
+          <div className="mb-8 scroll-mt-20" id="tool">
             {engine}
           </div>
 

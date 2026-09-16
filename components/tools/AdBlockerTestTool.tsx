@@ -175,12 +175,7 @@ function reasonText(r: ProbeResult): string {
   }
 }
 
-/**
- * autoRun: a funnel (components/FunnelCheck.tsx) loads this test only after
- * the visitor pressed its button, so starting it again would ask twice. On
- * its own tool page it still waits for "Run Ad-Blocker Test".
- */
-export function AdBlockerTestTool({ autoRun = false }: { autoRun?: boolean } = {}) {
+export function AdBlockerTestTool() {
   const [phase, setPhase] = useState<'idle' | 'running' | 'done'>('idle');
   const [progress, setProgress] = useState(0);
   const [results, setResults] = useState<ProbeResult[]>([]);
@@ -192,13 +187,8 @@ export function AdBlockerTestTool({ autoRun = false }: { autoRun?: boolean } = {
   // millisecond (React's development double mount) must not both count.
   const runSeq = useRef(0);
 
-  const autoStarted = useRef(false);
-
-  // A run that finishes after unmount must not touch state. The auto-start
-  // guard resets with it: React's development double mount unmounts once
-  // between the two, and a guard left set there skipped the second mount's
-  // run, so an auto-started test hung at "Testing… 0/50" (2026-09-16).
-  useEffect(() => () => { runIdRef.current = -1; autoStarted.current = false; }, []);
+  // A run that finishes after unmount must not touch state.
+  useEffect(() => () => { runIdRef.current = -1; }, []);
 
   const run = useCallback(async () => {
     const runId = ++runSeq.current;
@@ -254,13 +244,6 @@ export function AdBlockerTestTool({ autoRun = false }: { autoRun?: boolean } = {
     };
     report(result);
   }, [report]);
-
-  useEffect(() => {
-    if (autoRun && !autoStarted.current) {
-      autoStarted.current = true;
-      void run();
-    }
-  }, [autoRun, run]);
 
   const total = NETWORK_BAITS.length;
   const blockedResults = results.filter((r) => r.outcome === 'blocked');
