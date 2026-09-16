@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { IS_PRO_DEPLOYMENT } from '@/lib/tiers';
 import { getAuthor, authorJsonLd, getAllAuthors } from '@/lib/authors';
@@ -112,12 +113,12 @@ export default async function AuthorPage({ params }: PageProps) {
               <h2 className="text-xl font-semibold text-white mt-8 mb-2">Edited by</h2>
               <p className="text-white/80">
                 Content under this byline is reviewed by{' '}
-                <a
+                <Link
                   href={`/authors/${editor.slug}`}
                   className="underline text-white/90 hover:text-white"
                 >
                   {editor.name}
-                </a>
+                </Link>
                 , the named editor responsible for the resource library's
                 editorial standards.
               </p>

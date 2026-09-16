@@ -41,7 +41,9 @@ const exists = (p) => {
 const dangling = new Map(); // target -> { count, example }
 let hrefs = 0;
 for (const f of files) {
-  const html = fs.readFileSync(f, 'utf-8');
+  // Resource hints in <head> (preconnect, dns-prefetch) aren't links anyone
+  // follows; Next writes href="/" for a same-origin preconnect.
+  const html = fs.readFileSync(f, 'utf-8').replace(/<link[^>]*rel="(?:preconnect|dns-prefetch)"[^>]*>/g, '');
   const re = /href="(\/[^"#?]*)(?:[#?][^"]*)?"/g;
   let m;
   while ((m = re.exec(html))) {
@@ -49,6 +51,16 @@ for (const f of files) {
     let p = m[1];
     if (base && p.startsWith(base + '/')) p = p.slice(base.length);
     else if (base && p === base) p = '/';
+    // Served under a base path, a link that leaves it out goes to the host's
+    // root, not this site. /tools/… happened to exist in out/ too, so 674 such
+    // links passed here and 404'd on the droplet (2026-09-16).
+    else if (base && !p.startsWith('/_next/') && !allow.has(p)) {
+      const key = `${p} (missing ${base})`;
+      const cur = dangling.get(key) || { count: 0, example: path.relative(dir, f) };
+      cur.count++;
+      dangling.set(key, cur);
+      continue;
+    }
     if (p.length > 1) p = p.replace(/\/$/, '');
     if (!exists(p)) {
       const cur = dangling.get(p) || { count: 0, example: path.relative(dir, f) };

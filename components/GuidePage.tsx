@@ -4,6 +4,7 @@
  * pills + activeStep tab state are gone on purpose (nothing indexable may
  * move behind JS, and a reader scrolling is simpler than a reader clicking).
  */
+import Link from 'next/link';
 import { Badge } from './ui/Badge';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
@@ -61,12 +62,13 @@ function capWords(text: string, max: number): string {
 function renderSegments(segments: WeaveSegment[]): ReactNode {
   return segments.map((seg, i) => {
     if (typeof seg === 'string') return seg;
-    const external = seg.type === 'external';
-    return (
-      <a key={i} href={seg.href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-        {seg.text}
-      </a>
-    );
+    if (seg.type === 'external') {
+      return <a key={i} href={seg.href} target="_blank" rel="noopener noreferrer">{seg.text}</a>;
+    }
+    // A link to another page of this site goes through next/link, which adds
+    // the base path: a plain <a href="/checklists/…"> skipped /resources on the
+    // static export and 404'd on the droplet (2026-09-16).
+    return <Link key={i} href={seg.href}>{seg.text}</Link>;
   });
 }
 
