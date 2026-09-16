@@ -122,6 +122,7 @@ export default async function NicheHubPage({ params }: PageProps) {
         diagram={diagramForNiche(nicheData.id)}
       />
 
+      {funnelFor(`/topics/${niche}`) && <PageFunnel funnel={funnelFor(`/topics/${niche}`)!} niche={niche} />}
       {/* Content sections */}
       {sections.map(section => (
         <section key={section.slug} className="mb-12">
@@ -191,7 +192,6 @@ export default async function NicheHubPage({ params }: PageProps) {
           </p>
         </section>
       )}
-      {funnelFor(`/topics/${niche}`) && <PageFunnel funnel={funnelFor(`/topics/${niche}`)!} niche={niche} />}
     </>
   );
 }

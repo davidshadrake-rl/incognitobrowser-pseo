@@ -63,6 +63,7 @@ export default async function GuidesByNiche({ params }: PageProps) {
         {nicheData?.description ?? `In-depth guides for ${nicheData?.name ?? niche}.`}
       </p>
 
+      {funnelFor(`/guides/${niche}`) && <PageFunnel funnel={funnelFor(`/guides/${niche}`)!} niche={niche} />}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map(item => (
           <Card
@@ -83,7 +84,6 @@ export default async function GuidesByNiche({ params }: PageProps) {
           </Link>
         </p>
       </div>
-      {funnelFor(`/guides/${niche}`) && <PageFunnel funnel={funnelFor(`/guides/${niche}`)!} niche={niche} />}
     </div>
   );
 }

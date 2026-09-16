@@ -199,6 +199,8 @@ export default function ToolsIndex() {
         }
       />
 
+      {funnelFor('/tools') && <PageFunnel funnel={funnelFor('/tools')!} />}
+
       {items.length === 0 && (
         <div className="text-center py-12 text-t3">
           <p className="text-lg">Tools are being generated. Check back soon!</p>
@@ -269,7 +271,6 @@ export default function ToolsIndex() {
         </div>
       )}
       </AtoZCatalogue>
-      {funnelFor('/tools') && <PageFunnel funnel={funnelFor('/tools')!} />}
     </div>
   );
 }

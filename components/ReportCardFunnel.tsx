@@ -29,6 +29,8 @@ interface Props {
   pixels?: number;
   /** The page's v2 funnel already answers the grade with its own ask: show only the share card. */
   hideCta?: boolean;
+  /** Render only the ask: the share card sits lower on the page (owner, 2026-09-16: the ask goes near the top). */
+  hideShare?: boolean;
 }
 
 /** A count from the stats the page already passes, by label; 0 when absent. */
@@ -37,7 +39,7 @@ function statCount(stats: Props['stats'], label: string): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-export function ReportCardFunnel({ domain, niche, grade, score, headline, stats, proUrl, pageUrl, pixels = 0, hideCta = false }: Props) {
+export function ReportCardFunnel({ domain, niche, grade, score, headline, stats, proUrl, pageUrl, pixels = 0, hideCta = false, hideShare = false }: Props) {
   const severity = severityFromGrade(grade);
   // The tone follows the grade; the words follow the scan (see reportCardLine).
   const line = useMemo(
@@ -48,7 +50,7 @@ export function ReportCardFunnel({ domain, niche, grade, score, headline, stats,
   return (
     <div data-report-card-funnel={grade}>
       {!hideCta && <ResultCta engine="report-card" niche={niche} severity={severity} line={line} headline={`${domain}: grade ${grade}, ${score} / 100`} proWebUrl={proUrl} pageUrl={pageUrl} content={`grade-${grade}`} term="report-card" />}
-      <Scorecard engine="report-card" niche={niche} title={`Does ${domain} track you?`} figure={`Grade ${grade}`} headline={headline} stats={stats} tone={severity} url={pageUrl} />
+      {!hideShare && <Scorecard engine="report-card" niche={niche} title={`Does ${domain} track you?`} figure={`Grade ${grade}`} headline={headline} stats={stats} tone={severity} url={pageUrl} />}
     </div>
   );
 }

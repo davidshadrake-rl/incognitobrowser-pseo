@@ -699,18 +699,20 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
     expect(r.ok).toBe(true);
     expect(r.body).not.toMatch(/data-check-yours=/);
   });
-  it('checklists count progress in words, above the sections, with the tool card after the list', async () => {
+  it('checklists count progress in words, above the sections, with the card into the tool before the list', async () => {
     const r = await fetchText(ROUTES.publishedChecklist);
     expect(r.body).toMatch(/data-checklist-progress="0"/);
     expect(r.body).toMatch(/0 of \d+<\/span> done/);
     expect(r.body).not.toMatch(/>Progress</);
     const progress = r.body.indexOf('data-checklist-progress');
     const firstSection = r.body.indexOf('<details class="panel"');
-    // data-page-funnel where a funnel is drafted for this page, else the old card.
+    // The card into the free tool sits near the top, before the list (owner,
+    // 2026-09-16: once the page has said what it is, or visitors never see it).
     const card = Math.max(r.body.indexOf('data-tool-entry'), r.body.indexOf('data-check-yours'));
     expect(progress).toBeGreaterThan(0);
     expect(firstSection).toBeGreaterThan(progress);
-    expect(card).toBeGreaterThan(firstSection);
+    expect(card).toBeGreaterThan(0);
+    expect(card).toBeLessThan(firstSection);
   });
   it('report cards: no reassurance slogans, the Pro link names its tool, and "clean" only for a tracker-free scan', async () => {
     const r = await fetchText('/site/cnn.com/');

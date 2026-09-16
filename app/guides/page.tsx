@@ -43,6 +43,8 @@ export default function GuidesIndex() {
         figure={{ value: items.length, label: 'guides' }}
       />
 
+      {funnelFor('/guides') && <PageFunnel funnel={funnelFor('/guides')!} />}
+
       <AtoZCatalogue
         noun="guides"
         icon={TYPE_ICON.guides}
@@ -63,7 +65,6 @@ export default function GuidesIndex() {
         </div>
       )}
 
-      {funnelFor('/guides') && <PageFunnel funnel={funnelFor('/guides')!} />}
     </div>
   );
 }

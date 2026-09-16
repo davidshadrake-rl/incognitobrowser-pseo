@@ -42,6 +42,8 @@ export default function GlossaryIndex() {
         figure={{ value: terms.length, label: 'terms' }}
       />
 
+      {funnelFor('/glossary') && <PageFunnel funnel={funnelFor('/glossary')!} />}
+
       {terms.length === 0 && (
         <div className="text-center py-12 text-t3">
           <p className="text-lg">Glossary terms are being generated. Check back soon!</p>
@@ -60,7 +62,6 @@ export default function GlossaryIndex() {
         }))}
         topics={Array.from(new Set(terms.map(t => t.category))).sort().map(c => ({ label: c, query: c }))}
       />
-      {funnelFor('/glossary') && <PageFunnel funnel={funnelFor('/glossary')!} />}
     </div>
   );
 }

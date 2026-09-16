@@ -119,6 +119,27 @@ export default async function SiteReportPage({ params }: PageProps) {
         </div>
       </header>
 
+      {/* The ask, right under the grade (owner, 2026-09-16: near the top, or visitors never see it). */}
+      {pageFunnel && isV2(pageFunnel) && pageFunnel.check.mode === 'card'
+        ? <PageFunnel funnel={pageFunnel} niche={category.niche} cardSeverity={severityFromGrade(grade.grade)} />
+        : <ReportCardFunnel
+            hideShare
+            domain={domain}
+            niche={category.niche}
+            grade={grade.grade}
+            score={grade.score}
+            headline={grade.headline}
+            stats={[
+              { label: 'Tracking cookies', value: String(scan.summary.trackingCookies) },
+              { label: 'Trackers', value: String(scan.summary.totalTrackers) },
+              { label: 'Third parties', value: String(scan.thirdPartyDomains.length) },
+              { label: 'HTTPS', value: scan.security.isHTTPS ? 'yes' : 'no' },
+            ]}
+            pixels={extraInlinePixels(scan)}
+            proUrl={proUrlFor('ad-tracking', 'cookie-tracker-scanner')}
+            pageUrl={absoluteUrl(`/site/${domain}`)}
+          />}
+
       {/* Deductions — the arguable part, itemised */}
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-white mb-3">Why {grade.grade}? Every point, itemised</h2>
@@ -222,11 +243,10 @@ export default async function SiteReportPage({ params }: PageProps) {
         </div>
       </section>
 
-      {pageFunnel && <PageFunnel funnel={pageFunnel} niche={category.niche} cardSeverity={severityFromGrade(grade.grade)} />}
 
-      {/* The result moment: the grade is the proof, the ask follows it, the scorecard makes it shareable */}
+      {/* The shareable card stays with the detail; the ask sits under the grade. */}
       <ReportCardFunnel
-        hideCta={!!pageFunnel && isV2(pageFunnel) && pageFunnel.check.mode === 'card'}
+        hideCta
         domain={domain}
         niche={category.niche}
         grade={grade.grade}

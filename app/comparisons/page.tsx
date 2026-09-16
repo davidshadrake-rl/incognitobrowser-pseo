@@ -42,6 +42,8 @@ export default function ComparisonsIndex() {
         figure={{ value: items.length, label: 'comparisons' }}
       />
 
+      {funnelFor('/comparisons') && <PageFunnel funnel={funnelFor('/comparisons')!} />}
+
       <AtoZCatalogue
         noun="comparisons"
         icon={TYPE_ICON.comparisons}
@@ -62,7 +64,6 @@ export default function ComparisonsIndex() {
         </div>
       )}
 
-      {funnelFor('/comparisons') && <PageFunnel funnel={funnelFor('/comparisons')!} />}
     </div>
   );
 }

@@ -55,6 +55,8 @@ export default function SiteIndexPage() {
         Every point is itemised on each page. <Link href="/site/methodology" className="underline hover:text-white">Read the methodology</Link> — and argue with it.
       </p>
 
+      {funnelFor('/site') && <PageFunnel funnel={funnelFor('/site')!} />}
+
 
       <AtoZCatalogue
         noun="websites"
@@ -96,7 +98,6 @@ export default function SiteIndexPage() {
         </section>
       </div>
       </AtoZCatalogue>
-      {funnelFor('/site') && <PageFunnel funnel={funnelFor('/site')!} />}
     </div>
   );
 }

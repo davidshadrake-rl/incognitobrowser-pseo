@@ -43,6 +43,8 @@ export default function TemplatesIndex() {
         figure={{ value: items.length, label: 'templates' }}
       />
 
+      {funnelFor('/templates') && <PageFunnel funnel={funnelFor('/templates')!} />}
+
       <AtoZCatalogue
         noun="templates"
         icon={TYPE_ICON.templates}
@@ -63,7 +65,6 @@ export default function TemplatesIndex() {
         </div>
       )}
 
-      {funnelFor('/templates') && <PageFunnel funnel={funnelFor('/templates')!} />}
     </div>
   );
 }

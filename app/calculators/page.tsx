@@ -42,6 +42,8 @@ export default function CalculatorsIndex() {
         figure={{ value: items.length, label: 'calculators' }}
       />
 
+      {funnelFor('/calculators') && <PageFunnel funnel={funnelFor('/calculators')!} />}
+
       <AtoZCatalogue
         noun="calculators"
         icon={TYPE_ICON.calculators}
@@ -62,7 +64,6 @@ export default function CalculatorsIndex() {
         </div>
       )}
 
-      {funnelFor('/calculators') && <PageFunnel funnel={funnelFor('/calculators')!} />}
     </div>
   );
 }

@@ -43,6 +43,8 @@ export default function ChecklistsIndex() {
         figure={{ value: items.length, label: 'checklists' }}
       />
 
+      {funnelFor('/checklists') && <PageFunnel funnel={funnelFor('/checklists')!} />}
+
       <AtoZCatalogue
         noun="checklists"
         icon={TYPE_ICON.checklists}
@@ -63,7 +65,6 @@ export default function ChecklistsIndex() {
         </div>
       )}
 
-      {funnelFor('/checklists') && <PageFunnel funnel={funnelFor('/checklists')!} />}
     </div>
   );
 }

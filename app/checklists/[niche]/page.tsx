@@ -63,6 +63,7 @@ export default async function ChecklistsByNiche({ params }: PageProps) {
         {nicheData?.description ?? `Privacy and security checklists for ${nicheData?.name ?? niche}.`}
       </p>
 
+      {funnelFor(`/checklists/${niche}`) && <PageFunnel funnel={funnelFor(`/checklists/${niche}`)!} niche={niche} />}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map(item => (
           <Card
@@ -83,7 +84,6 @@ export default async function ChecklistsByNiche({ params }: PageProps) {
           </Link>
         </p>
       </div>
-      {funnelFor(`/checklists/${niche}`) && <PageFunnel funnel={funnelFor(`/checklists/${niche}`)!} niche={niche} />}
     </div>
   );
 }

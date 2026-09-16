@@ -62,6 +62,7 @@ export default async function ComparisonsByNiche({ params }: PageProps) {
         {nicheData?.description ?? `Side-by-side comparisons for ${nicheData?.name ?? niche}.`}
       </p>
 
+      {funnelFor(`/comparisons/${niche}`) && <PageFunnel funnel={funnelFor(`/comparisons/${niche}`)!} niche={niche} />}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map(item => (
           <Card
@@ -81,7 +82,6 @@ export default async function ComparisonsByNiche({ params }: PageProps) {
           </Link>
         </p>
       </div>
-      {funnelFor(`/comparisons/${niche}`) && <PageFunnel funnel={funnelFor(`/comparisons/${niche}`)!} niche={niche} />}
     </div>
   );
 }

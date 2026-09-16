@@ -62,6 +62,7 @@ export default async function CalculatorsByNiche({ params }: PageProps) {
         {nicheData?.description ?? `Risk calculators for ${nicheData?.name ?? niche}.`}
       </p>
 
+      {funnelFor(`/calculators/${niche}`) && <PageFunnel funnel={funnelFor(`/calculators/${niche}`)!} niche={niche} />}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map(item => (
           <Card
@@ -81,7 +82,6 @@ export default async function CalculatorsByNiche({ params }: PageProps) {
           </Link>
         </p>
       </div>
-      {funnelFor(`/calculators/${niche}`) && <PageFunnel funnel={funnelFor(`/calculators/${niche}`)!} niche={niche} />}
     </div>
   );
 }

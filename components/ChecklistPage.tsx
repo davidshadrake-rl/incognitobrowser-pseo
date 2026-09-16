@@ -160,6 +160,10 @@ export function ChecklistPage({ data, nicheName, proofRoute, funnel }: { data: C
       />
 
       {data.intro && <p className="prose-ib text-lede mb-8">{data.intro}</p>}
+      {/* The way into the free tool, once the page has said what it is (owner, 2026-09-16: near the top, or visitors never see it). */}
+      {funnel
+        ? <PageFunnel funnel={funnel} niche={data.niche} />
+        : proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       {/* Progress: directly above the sections it counts, with the count in words. */}
       <div className="mb-4" data-checklist-progress={completedItems}>
@@ -283,9 +287,6 @@ export function ChecklistPage({ data, nicheName, proofRoute, funnel }: { data: C
       )}
 
       {/* After the list, so the progress bar never reads as this tool's progress. */}
-      {funnel
-        ? <PageFunnel funnel={funnel} niche={data.niche} />
-        : proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
       <EditorialNote reviewed={(data as unknown as { reviewed?: boolean }).reviewed} />
     </article>

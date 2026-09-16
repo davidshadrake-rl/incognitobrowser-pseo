@@ -69,6 +69,7 @@ export default async function ToolsByNiche({ params }: PageProps) {
         {nicheData?.description ?? `Interactive privacy tools for ${nicheData?.name ?? niche}.`}
       </p>
 
+      {funnelFor(`/tools/${niche}`) && <PageFunnel funnel={funnelFor(`/tools/${niche}`)!} niche={niche} />}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map(item => (
           <Card
@@ -89,7 +90,6 @@ export default async function ToolsByNiche({ params }: PageProps) {
           </Link>
         </p>
       </div>
-      {funnelFor(`/tools/${niche}`) && <PageFunnel funnel={funnelFor(`/tools/${niche}`)!} niche={niche} />}
     </div>
   );
 }
