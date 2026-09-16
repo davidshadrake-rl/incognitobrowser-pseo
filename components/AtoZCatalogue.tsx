@@ -45,9 +45,9 @@ interface Props {
   /** The page's own content (featured grid, summaries…). Rendered between the controls and the A–Z list. */
   children?: ReactNode;
   /**
-   * The A–Z letter bar and the letter headings over the list. On by default;
-   * the Pro tools page turns it off (owner, 2026-09-16): 22 tools don't need
-   * an alphabet to find them. The entries stay in A–Z order and search stays.
+   * The A–Z letter bar and the letter headings over the list. Off by default:
+   * the owner kept them only on the glossary and guides (2026-09-16). Entries stay in
+   * A–Z order and search stays either way.
    */
   letters?: boolean;
 }
@@ -190,7 +190,7 @@ function TopicChips({ topics, query, setQuery }: { topics: CatalogueTopic[]; que
  * top beneath the heading → search results (only while typing) → the page's
  * own content → the full A–Z list at the bottom (letter links jump to it).
  */
-export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, children, letters = true }: Props) {
+export function AtoZCatalogue({ entries, noun, icon = 'doc', heading, topics, children, letters = false }: Props) {
   const [query, setQuery] = useState('');
   const inputId = useId();
   const groups = useMemo(() => groupByLetter(entries), [entries]);

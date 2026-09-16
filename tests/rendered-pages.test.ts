@@ -583,7 +583,7 @@ describe.skipIf(!HAS_TARGET)('free/Pro split — Pro tools are absent from the f
  * Privacy Glossary), so the full alphabetized catalogue is in the HTML for
  * crawlers and no-JS visitors, and the search is a client-side enhancement.
  */
-describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', () => {
+describe.skipIf(!HAS_TARGET)('index pages: search + catalogue (letter links on the glossary and guides only)', () => {
   // Floors, not exact counts. Index pages list published items only, so a
   // floor sits a margin under today's published count (calculators: 36 of 44
   // published on 2026-09-10) and still catches an index that lost its list.
@@ -592,18 +592,25 @@ describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', 
     ['/templates/', 'templates', 40], ['/calculators/', 'calculators', 30], ['/glossary/', 'terms', 50], ['/site/', 'websites', 400],
   ];
   for (const [route, noun, min] of INDEXES) {
-    it(`${route} has a search box, letter links, and ≥${min} alphabetized entries in the HTML`, async () => {
+    // Owner, 2026-09-16: the A–Z letter navigation stays only where a long
+    // alphabetical list is the point — the glossary and the guides.
+    const letters = route === '/glossary/' || route === '/guides/';
+    it(`${route} has a search box, ${letters ? 'letter links' : 'no letter links'}, and ≥${min} alphabetized entries in the HTML`, async () => {
       const r = await fetchText(route);
       expect(r.ok, route).toBe(true);
       expect(r.body).toMatch(new RegExp(`data-catalogue="${noun}" data-count="(\\d+)"`));
       expect(r.body).toMatch(/<input[^>]*type="search"/);
-      expect((r.body.match(/href="#letter-[A-Z]"/g) || []).length).toBeGreaterThanOrEqual(5);
       expect((r.body.match(/catalogue-entry/g) || []).length).toBeGreaterThanOrEqual(min);
-      expect(r.body).toMatch(/id="letter-[A-Z]"/);
+      if (letters) {
+        expect((r.body.match(/href="#letter-[A-Z]"/g) || []).length).toBeGreaterThanOrEqual(5);
+        expect(r.body).toMatch(/id="letter-[A-Z]"/);
+      } else {
+        expect(r.body, route).not.toMatch(/Jump to letter|href="#letter-|id="letter-/);
+      }
       expect((r.body.match(/topic-chip/g) || []).length, `${route} topic chips`).toBeGreaterThanOrEqual(5);
     });
   }
-  it('layout: search + letters at the top, page content in the middle, the A–Z list at the bottom', async () => {
+  it('layout: search at the top, page content in the middle, the full list at the bottom', async () => {
     const tools = await fetchText('/tools/');
     const controls = tools.body.indexOf('data-catalogue="tools"');
     const featured = tools.body.indexOf('data-featured-tools');
@@ -614,7 +621,7 @@ describe.skipIf(!HAS_TARGET)('index pages: search + clickable A–Z catalogue', 
     // The hero counts distinct tools; the A–Z lists one entry per topic page,
     // so its count says "tool pages" and never sits as "23 tools" under "13 tools".
     expect(tools.body).toMatch(/placeholder="Search \d+ tool pages…"/);
-    expect(tools.body).toMatch(/\d+ tool pages, A to Z\. Jump to a letter/);
+    expect(tools.body).toMatch(/\d+ tool pages\. Search, or browse them all below/);
     expect(tools.body).not.toMatch(/\d+ tools, A to Z/);
     const site = await fetchText('/site/');
     expect(site.body.indexOf('Most aggressive tracking')).toBeGreaterThan(site.body.indexOf('data-catalogue="websites"'));

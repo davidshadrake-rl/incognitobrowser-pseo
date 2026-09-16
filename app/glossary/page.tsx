@@ -51,6 +51,7 @@ export default function GlossaryIndex() {
       )}
 
       <AtoZCatalogue
+        letters
         noun="terms"
         icon={TYPE_ICON.glossary}
         entries={terms.map(term => ({

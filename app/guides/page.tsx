@@ -46,6 +46,7 @@ export default function GuidesIndex() {
       {funnelFor('/guides') && <PageFunnel funnel={funnelFor('/guides')!} />}
 
       <AtoZCatalogue
+        letters
         noun="guides"
         icon={TYPE_ICON.guides}
         entries={items.map(item => ({
