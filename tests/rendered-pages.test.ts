@@ -654,7 +654,8 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
   it('every Play link on sampled pages carries an attributed referrer and no template residue', async () => {
     for (const route of ['/', '/tools/', ROUTES.publishedGuide, '/site/google.com/']) {
       const r = await fetchText(route);
-      const links = r.body.match(/href="https:\/\/play\.google\.com[^"]*"/g) || [];
+      // Install links only: the Data safety page (play.google.com/store/apps/datasafety) is a source, not an ask.
+      const links = r.body.match(/href="https:\/\/play\.google\.com\/store\/apps\/details[^"]*"/g) || [];
       expect(links.length, route).toBeGreaterThan(0);
       for (const l of links) {
         expect(l, route).toMatch(/referrer=utm_source%3D(resources|pro)%26utm_medium%3D/);
