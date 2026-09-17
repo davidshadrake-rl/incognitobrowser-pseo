@@ -44,7 +44,6 @@ export function ToolPageClient({
   nicheName,
   niche,
   nextSteps,
-  proWebUrl,
   diagram = 'tracking',
   family = 'trace',
   tier = 'free',
@@ -55,11 +54,12 @@ export function ToolPageClient({
   /** The niche slug (page.tsx's own `niche` param) — used for the canonical-page dedupe check and hub links. */
   niche: string;
   nextSteps?: NextStepsData | null;
+  /** No longer shown at the result (the result card sells Pro outcomes, not Pro web tools); kept for the page's props. */
   proWebUrl?: string;
   diagram?: DiagramId;
   family?: Family;
   tier?: Tier;
-  /** This page's funnel. It sits under "What to do now"; a v2 funnel answers the tool's result there. */
+  /** This page's funnel. A v2 funnel's words answer the tool's result in the result card. */
   funnel?: PageFunnel | null;
 }) {
   // If the tool has an engine, render the dedicated component
@@ -87,7 +87,7 @@ export function ToolPageClient({
       const folio = (id: string) => String(sections.indexOf(id) + 1).padStart(2, '0');
 
       return (
-        <ResultProvider>
+        <ResultProvider ask={{ engine: data.toolEngine, niche, title: data.title, funnel }}>
         <article className="max-w-4xl mx-auto">
           <Breadcrumbs items={[
             { label: 'Tools', href: '/tools' },
@@ -114,6 +114,7 @@ export function ToolPageClient({
             figureFamily={tier === 'free' ? family : undefined}
             diagram={diagram}
             tier={tier}
+            compact={!!meta?.resultOnLoad}
           />
 
           {/* Interactive tool — 14 engines wrap their own result markup in
@@ -125,7 +126,7 @@ export function ToolPageClient({
           </div>
 
           {/* Result moment: CTA, shareable scorecard, what to do now */}
-          <FunnelSurfaces engine={data.toolEngine} niche={niche} title={data.title} nextSteps={nextSteps} proWebUrl={proWebUrl} funnel={funnel} />
+          <FunnelSurfaces engine={data.toolEngine} niche={niche} nextSteps={nextSteps} />
 
           {/* Numbered collapsed sections (DESIGN-SPEC 5.4, "Below the result") */}
           <div className="mt-10">
@@ -152,6 +153,8 @@ export function ToolPageClient({
                         </div>
                       </dl>
                     )}
+                    {/* A tool that answers on page load keeps its hero to the title, so the result card is on screen; its description opens here. */}
+                    {meta?.resultOnLoad && <p className="prose-ib mb-3">{data.description}</p>}
                     {howItWorks && <p className="prose-ib">{howItWorks}</p>}
                   </div>
                   <div className="hidden md:block">

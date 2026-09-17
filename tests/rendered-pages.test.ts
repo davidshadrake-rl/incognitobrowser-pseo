@@ -640,14 +640,16 @@ describe.skipIf(!HAS_TARGET)('index pages: search + catalogue (letter links on t
  * carry an unrendered template literal; the header serves phones.
  */
 describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
-  it('report cards render the result-moment funnel with a Play referrer that names the grade', async () => {
+  it('report cards answer the grade with the result card: the ask, a Play referrer naming the benefit, and sharing', async () => {
+    // Owner, 2026-09-16: the ask and sharing sit with the result, above the long report.
     const r = await fetchText('/site/cnn.com/');
     expect(r.ok).toBe(true);
-    expect(r.body).toMatch(/data-report-card-funnel="[A-F]"/);
+    expect(r.body).toMatch(/data-result-card="report-card"/);
     expect(r.body).toMatch(/data-result-cta="(red|amber|green|info)"/);
     expect(r.body).toMatch(/data-scorecard="report-card"/);
+    expect(r.body.indexOf('data-scorecard="report-card"')).toBeLessThan(r.body.indexOf('Every point, itemised'));
     expect(r.body).not.toMatch(/\{grade/);
-    expect(r.body).toMatch(/utm_medium%3Dcta[^"]*utm_content%3Dgrade-[A-F]/);
+    expect(r.body).toMatch(/utm_medium%3Dcta[^"]*utm_content%3D(tracker-blocking|hides-ad-boxes|photo-cleaning)[^"]*utm_term%3Dreport-card/);
   });
   it('every Play link on sampled pages carries an attributed referrer and no template residue', async () => {
     for (const route of ['/', '/tools/', ROUTES.publishedGuide, '/site/google.com/']) {
@@ -721,10 +723,10 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
     expect(card).toBeGreaterThan(0);
     expect(card).toBeLessThan(firstSection);
   });
-  it('report cards: no reassurance slogans, the Pro link names its tool, and "clean" only for a tracker-free scan', async () => {
+  it('report cards: no reassurance slogans, the scanner link names its tool, and "clean" only for a tracker-free scan', async () => {
     const r = await fetchText('/site/cnn.com/');
     expect(r.body).not.toMatch(/Nothing is uploaded|Drawn on your device|Pro version of this check/);
-    expect(r.body).toMatch(/Try the Pro Cookie &amp; Tracker Scanner →/);
+    expect(r.body).toMatch(/Scan any site: Cookie &amp; Tracker Scanner/);
     // airbnb.com is a B that loads ad trackers: it must not be called clean.
     const b = await fetchText('/site/airbnb.com/');
     expect(b.ok).toBe(true);

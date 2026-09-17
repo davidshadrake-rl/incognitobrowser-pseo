@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useReportResult, severityFromScore, type ToolGrade } from './ResultContext';
+import { useReportResult, severityFromScore, type ToolGrade, type ToolResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
@@ -238,19 +238,21 @@ export function PrivacyQuizTool() {
     ...categoryScores.slice(0, 3).map((c) => ({ label: c.category, value: `${c.score}%` })),
   ];
 
+  // One object for the result bus and the console's result card.
+  const grade = getGrade(totalScore);
+  const result: ToolResult | null = finished ? {
+    severity: severityFromScore(totalScore),
+    score: totalScore,
+    // With its '+': the share card used to print "Grade A" right above "My privacy habits scored A+".
+    grade: grade.letter,
+    headline: `Privacy habits: ${grade.letter}, ${grade.label}`,
+    shareText: `My privacy habits scored ${grade.letter} (${totalScore}/100). Take the quiz:`,
+    stats: resultStats,
+  } : null;
+
   const report = useReportResult();
   useEffect(() => {
-    if (!finished) { report(null); return; }
-    const g = getGrade(totalScore);
-    report({
-      severity: severityFromScore(totalScore),
-      score: totalScore,
-      // With its '+': the share card used to print "Grade A" right above "My privacy habits scored A+".
-      grade: g.letter,
-      headline: `Privacy habits: ${g.letter}, ${g.label}`,
-      shareText: `My privacy habits scored ${g.letter} (${totalScore}/100). Take the quiz:`,
-      stats: resultStats,
-    });
+    report(result);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finished, totalScore, report]);
 
@@ -260,11 +262,23 @@ export function PrivacyQuizTool() {
         <ConsoleFrame
           engine="privacy-quiz"
           status={statusFromSeverity(severityFromScore(totalScore))}
-          verdict={`Grade ${getGrade(totalScore).letter}`}
+          verdict={`Grade ${grade.letter}`}
           checks={QUESTIONS.length}
           checksNoun={['question', 'questions']}
           score={totalScore}
           gaugeLabel="privacy score"
+          result={result}
+          // Straight under the result card. No share button of its own: the
+          // card's share row carries this result's #r= link, and a second copy
+          // button was one share control too many.
+          actions={
+            <button
+              onClick={reset}
+              className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
+            >
+              Retake Quiz
+            </button>
+          }
           statTiles={resultStats}
         >
           <>
@@ -318,11 +332,6 @@ export function PrivacyQuizTool() {
                 )}
               </ul>
             </div>
-
-            {/* No share button of its own: "Share your result" below the tool
-                carries this result's #r= link, and a second copy button here
-                was one share control too many. */}
-            <button onClick={reset} className="btn-primary w-full py-3">Retake Quiz</button>
           </>
         </ConsoleFrame>
       </div>

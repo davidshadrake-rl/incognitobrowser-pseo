@@ -16,6 +16,12 @@ interface Props extends Omit<ScorecardSpec, 'url'> {
   url?: string;
   engine: string;
   niche?: string;
+  /**
+   * 'row': a small preview beside the buttons, inside the result card, so
+   * sharing sits above the tool's long report (owner, 2026-09-16).
+   * 'panel': the full-width preview.
+   */
+  variant?: 'panel' | 'row';
 }
 
 // Browser capabilities and the page address, read without effects. None of
@@ -40,7 +46,7 @@ const inAppNow = () => isInsideIncognitoApp();
 const serverFalse = () => false;
 const serverHref = () => '';
 
-export function Scorecard({ engine, niche, url, ...spec }: Props) {
+export function Scorecard({ engine, niche, url, variant = 'panel', ...spec }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canShare = useSyncExternalStore(noSubscribe, canShareNow, serverFalse);
   const canShareFiles = useSyncExternalStore(noSubscribe, canShareFilesNow, serverFalse);
@@ -122,25 +128,42 @@ export function Scorecard({ engine, niche, url, ...spec }: Props) {
     } catch { /* no clipboard */ }
   };
 
-  return (
-    <section className="mt-6 rounded-[16px] border border-b1 bg-s0 p-4" data-scorecard={engine}>
-      <h3 className="text-row font-semibold text-t1 mb-3">Share your result</h3>
-      {/* No link over the picture: its footer URL is this page, and following it reloaded the page and wiped the result. */}
-      <div className="relative" style={{ aspectRatio: `${SCORECARD_W} / ${SCORECARD_H}` }}>
-        <canvas ref={canvasRef} width={SCORECARD_W} height={SCORECARD_H} className="absolute inset-0 w-full h-full rounded-[12px] border border-b1" aria-label={`Scorecard: ${full.title} ${full.figure}`} />
-      </div>
-      <div className="flex flex-wrap gap-2 mt-3">
-        {/* Only where the device can share: elsewhere "Share" just downloaded the PNG, a second Download button. */}
-        {canShare && (
-          <button type="button" onClick={share} disabled={shareState === 'busy'} className="btn-primary text-sm !px-4 !py-2">
-            {shareState === 'busy' ? 'Preparing…' : shareState === 'shared' ? 'Shared' : canShareFiles ? 'Share image' : 'Share'}
-          </button>
-        )}
-        <button type="button" onClick={download} className={`${canShare ? 'btn-ghost' : 'btn-primary'} text-sm !px-4 !py-2`}>
-          {saved ? 'Saved' : inApp ? 'Save image' : 'Download PNG'}
+  const buttons = (
+    <div className={variant === 'row' ? 'rc-share-buttons' : 'flex flex-wrap gap-2 mt-3'}>
+      {/* Only where the device can share: elsewhere "Share" just downloaded the PNG, a second Download button. */}
+      {canShare && (
+        <button type="button" onClick={share} disabled={shareState === 'busy'} className={variant === 'row' ? 'btn-ghost' : 'btn-primary text-sm !px-4 !py-2'}>
+          {shareState === 'busy' ? 'Preparing…' : shareState === 'shared' ? 'Shared' : canShareFiles ? 'Share image' : 'Share'}
         </button>
-        <button type="button" onClick={copy} className="btn-ghost text-sm !px-4 !py-2">{copied ? 'Copied' : 'Copy text + link'}</button>
-      </div>
+      )}
+      <button type="button" onClick={download} className={variant === 'row' || canShare ? `btn-ghost${variant === 'row' ? '' : ' text-sm !px-4 !py-2'}` : 'btn-primary text-sm !px-4 !py-2'}>
+        {saved ? 'Saved' : inApp ? 'Save image' : 'Download PNG'}
+      </button>
+      <button type="button" onClick={copy} className={variant === 'row' ? 'btn-ghost' : 'btn-ghost text-sm !px-4 !py-2'}>{copied ? 'Copied' : 'Copy text + link'}</button>
+    </div>
+  );
+  const canvas = (
+    <canvas ref={canvasRef} width={SCORECARD_W} height={SCORECARD_H} className="absolute inset-0 w-full h-full rounded-[8px] border border-b1" aria-label={`Scorecard: ${full.title} ${full.figure}`} />
+  );
+
+  return (
+    <section className={variant === 'row' ? 'rc-share' : 'mt-6 rounded-[16px] border border-b1 bg-s0 p-4'} data-scorecard={engine}>
+      {variant === 'row' ? (
+        <>
+          <div className="rc-share-thumb" style={{ aspectRatio: `${SCORECARD_W} / ${SCORECARD_H}` }}>{canvas}</div>
+          <div className="min-w-0">
+            <h3 className="rc-share-title">Share your result</h3>
+            {buttons}
+          </div>
+        </>
+      ) : (
+        <>
+          <h3 className="text-row font-semibold text-t1 mb-3">Share your result</h3>
+          {/* No link over the picture: its footer URL is this page, and following it reloaded the page and wiped the result. */}
+          <div className="relative" style={{ aspectRatio: `${SCORECARD_W} / ${SCORECARD_H}` }}>{canvas}</div>
+          {buttons}
+        </>
+      )}
       {manualSave && (
         <div className="mt-3 rounded-[12px] border border-b1 bg-black p-3" role="status" data-manual-save>
           <p className="text-row text-t2 mb-2">To save it, press and hold the image, or take a screenshot.</p>

@@ -5,9 +5,10 @@
  * eight comparison rows). Nothing may claim that Incognito Browser or Pro
  * includes a VPN until the owner says it ships.
  *
- * Mentioning the visitor's OWN VPN is fine ("Your VPN is on, but…", "check
- * your VPN's DNS setting"), so the copy check is per sentence: a sentence may
- * not name our product and a VPN together.
+ * Mentioning the visitor's OWN VPN is fine ("with a VPN on…", "check your
+ * VPN's DNS setting"), so the copy check is per sentence: a sentence about
+ * our product may name a VPN only to deny one ("doesn't change your IP
+ * address or include a VPN", which What's My IP and the DNS leak test say).
  *
  * The comparisons get the same per-sentence check against every one of
  * data/brand.json's never-claims (VPN, Tor, open source, no data collection,
@@ -59,7 +60,8 @@
 import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { PRO_BENEFITS, ENGINE_COPY, DEFAULT_ENGINE_COPY, IN_APP_COPY, reportCardLine } from '@/lib/cta-copy';
+import { BENEFIT_FEATURE, CARD_COPY, DEFAULT_CARD_COPY, PLAY_PROOF, PRO_LINE, reportCardCopy } from '@/lib/card-copy';
+import { IN_APP_COPY } from '@/lib/cta-copy';
 import { PRO_DEFINITION } from '@/lib/tiers';
 
 function strings(v: unknown): string[] {
@@ -71,6 +73,8 @@ function strings(v: unknown): string[] {
 
 const OURS = /\bIncognito\b|\bPro\b/;
 const VPN = /\bVPN\b/i;
+/** Pro's tracker blocking, owner-confirmed on 2026-09-16 (data/brand.json `pro`): not a never-claim when Pro says it. */
+const CONFIRMED_FOR_PRO = /\bblock(?:s|ing)?\s+(?:\S+\s+){0,2}?trackers\b|\btracker\s+(?:blocking|blocker)\b/gi;
 
 // --- brand.json's never-claims, for the comparisons ---------------------------
 
@@ -119,7 +123,9 @@ const NEVER_CLAIM: ClaimRules = {
         /\btracker[- ]free\b|\b(?:no|zero)\s+(?:third[- ]party\s+)?trackers?\b(?!\s+(?:blocking|blocker|protection))|\bno\s+tracking\b(?!\s+(?:protection|prevention|blocking))|\bwithout\s+(?:any\s+)?(?:trackers|tracking)\b|\b(?:doesn't|does\s+not|never|won't)\s+track\b/i,
       deniable: false,
     },
-    // brand.json lists an ad blocker, not a tracker blocker, so "blocks trackers" counts here too.
+    // The free app lists an ad blocker, not a tracker blocker, so "blocks trackers" said of Incognito
+    // Browser counts here too. Pro's tracker blocking is owner-confirmed (brand.json `pro`,
+    // 2026-09-16); the result card's sweep below takes that wording out before it checks.
     { pattern: /\bblock(?:s|ing)?\s+(?:\S+\s+){0,2}?trackers\b|\btracker\s+(?:blocking|blocker)\b|\banti[- ]?tracking\b/i, deniable: true },
   ],
   'anti-fingerprinting or fingerprint protection': [
@@ -1057,20 +1063,23 @@ function methodologyClaims(): string[] {
 }
 
 describe('no VPN claims for Incognito Browser or Pro', () => {
-  it('the CTA copy never names our product and a VPN in the same sentence', () => {
-    const copy = strings([
-      PRO_BENEFITS, ENGINE_COPY, DEFAULT_ENGINE_COPY, IN_APP_COPY,
-      reportCardLine('B', 'green', { trackingCookies: 2, trackers: 3 }),
-    ]);
-    const offenders = copy
-      .flatMap((s) => s.split(/(?<=[.!?])\s+/))
-      .filter((sentence) => OURS.test(sentence) && VPN.test(sentence));
+  it("the result card's words name a VPN only to deny one, and make none of brand.json's never-claims", () => {
+    const cards = [DEFAULT_CARD_COPY, ...Object.values(CARD_COPY).flatMap((e) => Object.values(e)), reportCardCopy('B', 'green', { trackingCookies: 2, trackers: 3 })];
+    // The Pro line and the button are about our product: the card labels them "Incognito Pro".
+    const aboutUs = strings([cards.map((c) => [c.pro, c.button]), PRO_LINE, IN_APP_COPY, PRO_DEFINITION, PLAY_PROOF]);
+    // A meaning is about the visitor's result ("with a VPN on, it can be the real one"), and a free fix
+    // may be on the page ("run it again with the VPN on"): only a sentence in them that names us counts.
+    const named = cards.flatMap((c) => [c.meaning, c.free ?? ''].flatMap(sentencesOf)).filter((s) => OURS.test(s) || /\bfree app\b/i.test(s));
+    // Only what Pro says may block trackers: "the free app blocks trackers" still fails.
+    const checked = [...aboutUs.flatMap(sentencesOf).map((s) => [s, s.replace(CONFIRMED_FOR_PRO, 'Pro outcome')]), ...named.map((s) => [s, s])];
+    const offenders = checked.flatMap(([sentence, text]) => claimsIn(text).map((claim) => `[${claim}]: ${sentence}`));
     expect(offenders).toEqual([]);
   });
 
-  it('there is no VPN benefit tile', () => {
-    expect(Object.keys(PRO_BENEFITS)).not.toContain('vpn');
-    for (const e of Object.values(ENGINE_COPY)) expect(e.benefits as string[]).not.toContain('vpn');
+  it("Pro sells brand.json's pro outcomes and nothing else, and none of them is a VPN", () => {
+    const pro = (JSON.parse(fs.readFileSync(path.join(process.cwd(), 'data', 'brand.json'), 'utf-8')) as { pro: { features: Array<{ id: string; text: string }> } }).pro.features;
+    expect(Object.values(BENEFIT_FEATURE).sort()).toEqual(pro.map((f) => f.id).sort());
+    for (const f of pro) expect(f.text).not.toMatch(VPN);
   });
 
   it('PRO_DEFINITION does not mention a VPN', () => {

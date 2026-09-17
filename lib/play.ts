@@ -9,7 +9,12 @@
  *   utm_source   resources | pro            which deployment
  *   utm_medium   site | tool | report-card | scorecard | cta | funnel
  *   utm_campaign <engine> | header | footer  what earned the click
- *   utm_content  <niche> | grade-D | …       the specific door
+ *   utm_content  <benefit> | <niche> | grade-D | …  the specific door
+ *
+ * On a result card's upgrade button (components/UpgradeButtons.tsx),
+ * utm_content is the Pro benefit the card sold: tracker-blocking |
+ * hides-ad-boxes | photo-cleaning (lib/card-copy.ts). Otherwise it is the
+ * niche or the grade.
  */
 import { IS_PRO_DEPLOYMENT } from './tiers';
 

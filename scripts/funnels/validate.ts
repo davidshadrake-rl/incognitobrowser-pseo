@@ -13,9 +13,16 @@
  * approved when the v1 funnels were judged "not compelling":
  *   - stakes before the check, in at most 40 words;
  *   - one answer per result the check can return (a report card: its grade);
- *   - the Pro line leads with an outcome, never with a negation or a free fix;
  *   - the check's button never says it has already run;
- *   - result to button in about 70 words; jargon explained in brackets.
+ *   - jargon explained in brackets.
+ * Each answer is shown in the result card (components/tools/ResultCard.tsx),
+ * so it fits the card (lib/card-copy.ts CARD_LIMITS):
+ *   - meaning: one sentence, and never "above" or "below" (the card moves);
+ *   - free (optional): the free fix, which never names Pro;
+ *   - pro: starts with its verb (the card labels the row "Incognito Pro"),
+ *     sells exactly one data/brand.json `pro` outcome, never a free feature,
+ *     never with a negation first;
+ *   - button: one line on a phone.
  *
  * Usage: npx tsx scripts/funnels/validate.ts [funnel-drafts/records.json]
  */
@@ -23,6 +30,7 @@ import fs from 'fs';
 import path from 'path';
 import { PRO_ENGINES } from '../../lib/tiers';
 import { LINK_OUT_ENGINES } from '../../lib/funnels';
+import { benefitOf, CARD_LIMITS } from '../../lib/card-copy';
 
 export interface Funnel {
   step1: { unitKey: string; label: string; quote: string };
@@ -37,7 +45,7 @@ export interface FunnelV2 {
   step1: { unitKey: string; label: string; quote: string };
   stakes: string;
   check: { engine: string; button: string };
-  results: Partial<Record<Severity, { meaning: string; pro: string; button: string }>>;
+  results: Partial<Record<Severity, { meaning: string; free?: string; pro: string; button: string }>>;
 }
 interface Rec {
   id: string; url: string; type: string; topic: string | null; title: string;
@@ -97,15 +105,27 @@ const JARGON = /\b(WebRTC|DNS|third-party|same-site|SameSite|HTTP headers?|user 
 const RAN_ALREADY = /\b(checked|tested|scanned|measured|counted|done|found)\b/i;
 /** A Pro line that opens by talking the reader out of it. */
 const WEAK_OPENER = /^\s*(free\b|no\b|not\b|nothing\b|pro (?:doesn't|does not|can't|cannot|won't)\b|(?:it|this) (?:doesn't|does not|can't|cannot|won't)\b|you (?:can|could) (?:also )?(?:just|already)\b)/i;
-/** What the reader gets, as a thing that happens. */
-const OUTCOME = /\b(stops?|blocks?|hides?|removes?|strips?|cleans?|wipes?|switch(?:es)? (?:it |JavaScript )?off|turns? (?:it |JavaScript )?off)\b/i;
+/** The card labels the Pro row "Incognito Pro", so the line doesn't say it again. */
+const NAMES_PRO_FIRST = /^\s*(?:Incognito\s+)?Pro\b/i;
+/** The line starts with what Pro does; one word of framing first ("Separately,") is allowed. */
+const PRO_VERB = /^\s*(?:[a-z]+,\s+)?(?:blocks|hides|strips|cleans|removes|stops)\b/i;
+/** A stop with more words after it. */
+const SENTENCES = /[.!?]\s+\S/;
+/** The card sits over a report on one page and alone on another, so nothing points. */
+const POINTS = /\b(above|below)\b/i;
+/** The free app's own features (data/brand.json `features`): a Pro line names one only as free. */
+const FREE_FEATURE = /\bblocks? (?:the )?ads\b|\bad[- ]?block(?:er|ing)\b|\bwipes?\b|\bAgent Cloaking\b|\bJavaScript\b/i;
+/** Every Pro outcome a line sells, asked of benefitOf clause by clause. */
+const benefitsIn = (pro: string) =>
+  new Set(pro.split(/[,;:()]|\b(?:and|plus|as well as)\b/i).map(benefitOf).filter((b): b is NonNullable<typeof b> => !!b));
 const GRADE_SEVERITY: Record<string, Severity> = { 'A+': 'green', A: 'green', B: 'green', C: 'amber', D: 'red', F: 'red' };
 
 function validateV2(r: Rec, f: FunnelV2, errors: string[], warnings: string[], seen: Map<string, string>) {
   const where = r.url;
-  const check = (k: string, v: string | undefined, maxWords: number, rules = true) => {
+  const check = (k: string, v: string | undefined, max: { words: number } | { chars: number }, rules = true) => {
     if (!v || !v.trim()) { errors.push(`${where}: ${k} is empty`); return; }
-    if (words(v) > maxWords) errors.push(`${where}: ${k} is ${words(v)} words (max ${maxWords})`);
+    if ('words' in max && words(v) > max.words) errors.push(`${where}: ${k} is ${words(v)} words (max ${max.words})`);
+    if ('chars' in max && v.length > max.chars) errors.push(`${where}: ${k} is ${v.length} characters (max ${max.chars})`);
     if (!rules) return;
     for (const [re, why] of BANNED) if (re.test(v)) errors.push(`${where}: ${k} has a banned ${why}: "${v}"`);
     for (const [re, n] of NEVER) if (re.test(v)) errors.push(`${where}: ${k} makes a never-claim (${n})`);
@@ -121,10 +141,10 @@ function validateV2(r: Rec, f: FunnelV2, errors: string[], warnings: string[], s
     if (!norm(headline).includes(norm(f.step1.quote))) errors.push(`${where}: step1 quote is not the card's headline: "${f.step1.quote}"`);
   } else if (r.units.length && !unit) errors.push(`${where}: step1 unit "${f.step1.unitKey}" is not one of this page's units`);
   else if (unit && !norm(`${unit.text} ${unit.detail ?? ''}`).includes(norm(f.step1.quote))) errors.push(`${where}: step1 quote is not on the page: "${f.step1.quote}"`);
-  check('step1.quote', f.step1.quote, 40, false);
+  check('step1.quote', f.step1.quote, { words: 40 }, false);
 
-  check('stakes', f.stakes, 40);
-  check('check.button', f.check?.button, 8);
+  check('stakes', f.stakes, { words: 40 });
+  check('check.button', f.check?.button, { words: 8 });
   if (f.check?.button && RAN_ALREADY.test(f.check.button)) errors.push(`${where}: check.button says the check already ran: "${f.check.button}"`);
 
   // one answer per result the visitor can get on THIS page. A check that
@@ -141,14 +161,27 @@ function validateV2(r: Rec, f: FunnelV2, errors: string[], warnings: string[], s
   for (const sev of needed) {
     const c = f.results?.[sev];
     if (!c) { errors.push(`${where}: no answer for a ${sev} result`); continue; }
-    check(`results.${sev}.meaning`, c.meaning, 35);
-    check(`results.${sev}.pro`, c.pro, 45);
-    check(`results.${sev}.button`, c.button, 9);
-    if (words(c.meaning) + words(c.pro) > 75) errors.push(`${where}: ${sev} result to button is ${words(c.meaning) + words(c.pro)} words (about 70)`);
-    if (WEAK_OPENER.test(c.pro)) errors.push(`${where}: results.${sev}.pro opens by talking the reader out of it: "${c.pro}"`);
-    if (UNBACKED.test(c.pro.replace(VPN_DENIAL, ' '))) errors.push(`${where}: results.${sev}.pro claims something Pro isn't confirmed to do: "${c.pro}"`);
-    if (!BACKED.test(c.pro)) errors.push(`${where}: results.${sev}.pro names nothing Pro or the app really has: "${c.pro}"`);
-    if (!OUTCOME.test(c.pro)) warnings.push(`${where}: results.${sev}.pro offers no outcome (stops, blocks, hides, strips, cleans…)`);
+    const k = `results.${sev}`;
+    const meaning = c.meaning ?? '';
+    const pro = c.pro ?? '';
+    check(`${k}.meaning`, meaning, { chars: CARD_LIMITS.meaning });
+    if (SENTENCES.test(meaning)) errors.push(`${where}: ${k}.meaning is more than one sentence: "${meaning}"`);
+    if (POINTS.test(meaning)) errors.push(`${where}: ${k}.meaning points above or below: "${meaning}"`);
+    if (c.free !== undefined) {
+      check(`${k}.free`, c.free, { chars: CARD_LIMITS.free });
+      if (/\bPro\b/.test(c.free)) errors.push(`${where}: ${k}.free names Pro, and a free fix is free: "${c.free}"`);
+    }
+    check(`${k}.pro`, pro, { chars: CARD_LIMITS.pro });
+    check(`${k}.button`, c.button, { chars: CARD_LIMITS.button });
+    if (NAMES_PRO_FIRST.test(pro)) errors.push(`${where}: ${k}.pro starts with Pro's name, which the card already shows; start with the verb: "${pro}"`);
+    else if (!PRO_VERB.test(pro)) errors.push(`${where}: ${k}.pro doesn't start with what Pro does (blocks, hides, strips…): "${pro}"`);
+    if (WEAK_OPENER.test(pro)) errors.push(`${where}: ${k}.pro opens by talking the reader out of it: "${pro}"`);
+    if (UNBACKED.test(pro.replace(VPN_DENIAL, ' '))) errors.push(`${where}: ${k}.pro claims something Pro isn't confirmed to do: "${pro}"`);
+    const sold = benefitsIn(pro);
+    if (sold.size !== 1) errors.push(`${where}: ${k}.pro sells ${sold.size ? [...sold].join(' and ') : 'no Pro outcome'}; it sells exactly one (data/brand.json pro): "${pro}"`);
+    if (FREE_FEATURE.test(pro) && !/\bfree\b/i.test(pro)) errors.push(`${where}: ${k}.pro sells a free app feature as Pro: "${pro}"`);
+    const asks = c.button ? benefitOf(c.button) : null;
+    if (asks && sold.size === 1 && !sold.has(asks)) errors.push(`${where}: ${k}.button asks for ${asks}, but the Pro line sells ${[...sold][0]}`);
   }
 
   const whole = norm([f.stakes, ...needed.map((s) => `${f.results?.[s]?.meaning} ${f.results?.[s]?.pro}`)].join(' | '));
@@ -163,9 +196,11 @@ const UNBACKED = /strips? (metadata|location)[^.]* automatically|automatic(ally)
  * The network group's honesty line may name a VPN only to say Pro doesn't
  * include one ("…takes a VPN or Private DNS, which Pro doesn't include").
  * Those exact denial forms are removed before UNBACKED is tested; any other
- * VPN mention in step 4 still fails (pilot recheck, 2026-09-11).
+ * VPN mention in step 4 still fails (pilot recheck, 2026-09-11). A v2 Pro
+ * line starts with its verb, so its subject is the card's "Incognito Pro"
+ * label: "…, but doesn't change your IP address or include a VPN".
  */
-const VPN_DENIAL = /\b(?:a\s+)?VPN\b(?:\s+or\s+[\w-]+(?:\s+DNS)?)?,?\s+(?:which|that)\s+(?:Incognito\s+)?Pro\s+(?:doesn't|does not)\s+include\b|\b(?:Incognito\s+)?Pro\s+(?:doesn't|does not)\s+include\s+a\s+VPN\b/gi;
+const VPN_DENIAL = /\b(?:a\s+)?VPN\b(?:\s+or\s+[\w-]+(?:\s+DNS)?)?,?\s+(?:which|that)\s+(?:Incognito\s+)?Pro\s+(?:doesn't|does not)\s+include\b|\b(?:Incognito\s+)?Pro\s+(?:doesn't|does not)\s+include\s+a\s+VPN\b|\b(?:doesn't|does not)\s+(?:change\s+your\s+IP\s+address\s+or\s+)?include\s+a\s+VPN\b/gi;
 /** Step 4 must name something Pro or the free app really has. */
 const BACKED = /ad and tracker blocking|tracker blocking|blocks? (?:the )?track(?:ers|ing scripts)|pixels|(?:empty )?ad boxes|whole folder|batch|JavaScript (?:off|switch)|privacy tools|Cookie (&|and) Tracker Scanner|cookie scanner|Browser Fingerprint Checker|fingerprint audit|URL Safety Checker|link checker|Photo Metadata Viewer|metadata viewer|wipes? (your )?(history|cookies|sessions)|Agent Cloaking|ad blocker/i;
 

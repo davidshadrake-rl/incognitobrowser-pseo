@@ -26,13 +26,18 @@ export type Tier = 'free' | 'pro';
 /**
  * The definition of Pro every surface shares. Import it, never paraphrase it.
  * "Pro" alone always means the paid app tier; the second deployment is
- * "the Pro tools site", never "Incognito Pro".
+ * "the Pro tools site", never "Incognito Pro". What it adds is exactly
+ * data/brand.json's `pro` outcomes (owner, 2026-09-16).
  */
 export const PRO_DEFINITION =
-  'Incognito Pro is the paid subscription tier of the free Incognito Browser Android app. It adds Pro ad and tracker blocking and the deeper privacy tools, and it is bought inside the app through Google Play.';
+  'Incognito Pro is the paid subscription tier of the free Incognito Browser Android app, bought inside the app through Google Play. It blocks tracking scripts and pixels (the free app already blocks ads), hides the empty boxes blocked ads leave, and strips location and other metadata from a whole folder of photos at once.';
 /** Flip on gate day. Removes every "free for now" string and the ProNotice in one change. */
 export const PRO_WEB_GATED = false;
-export const PRO_FOOTNOTE = 'Subscription via Google Play. Android only.';
+/**
+ * Under every upgrade button. The Play listing a button opens is the free
+ * Incognito Browser app's and never mentions Pro, so this says where Pro is.
+ */
+export const PRO_FOOTNOTE = 'Pro is a subscription inside the free Incognito Browser app. Android only.';
 export const PRO_FREE_FOR_NOW_TITLE = 'Part of the Incognito Pro subscription on Android. Free on the web today.';
 
 /**

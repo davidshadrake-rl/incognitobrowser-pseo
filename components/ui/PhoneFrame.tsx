@@ -2,7 +2,7 @@
  * Product graphic (DESIGN-SPEC section 4): a 150x300 phone, rx24, 2px b2
  * stroke, 6px s0 ring, speaker slot, screen s0 rx10 with a pro header band
  * reading "Incognito PRO" and three rows (Ads, Trackers, Audit) with pro
- * bars. Sits beside ResultCta and in the /tools Pro band. Server component.
+ * bars. Sits in the /tools Pro band only (the result card has no device picture: owner, 2026-09-16). Server component.
  *
  * Decorative: hidden from assistive tech, and it shows no number. It used to
  * read "Audit · 92/100", which sat beside the visitor's real score in

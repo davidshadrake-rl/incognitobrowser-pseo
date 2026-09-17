@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useMemo, useId } from 'react';
+import { useState, useMemo, useId, useEffect, useRef } from 'react';
 import { Breadcrumbs } from './ui/Breadcrumbs';
 import { PageHero } from './ui/PageHero';
 import { Badge } from './ui/Badge';
 import { EditorialNote } from './EditorialNote';
 import { CheckYoursNow } from './CheckYoursNow';
 import { PageFunnel } from './PageFunnel';
+import { NextStepBar, NextStepBlock, nextStepOf } from './CalculatorNextStep';
 import type { PageFunnel as Funnel } from '@/lib/funnel-types';
 import { Icon } from './ui/Icon';
 import { TYPE_ICON, diagramForNiche } from '@/lib/visuals';
@@ -215,6 +216,27 @@ export function CalculatorPage({ data, nicheName, proofRoute, funnel }: { data: 
     setTouched(false);
   };
 
+  // No upgrade box at a calculator's result (owner, 2026-09-16): once the
+  // result is the visitor's own, the way into the page's check is on screen.
+  const next = touched && results ? nextStepOf(funnel, proofRoute) : null;
+  const hasNext = !!next;
+  const nextLinkRef = useRef<HTMLAnchorElement>(null);
+  const [nextInView, setNextInView] = useState(true);
+
+  // The bar stands in for the result's own button while that one is off
+  // screen, or under the sticky site header.
+  useEffect(() => {
+    const link = nextLinkRef.current;
+    if (!hasNext || !link || typeof IntersectionObserver === 'undefined') return;
+    const header = Math.max(0, Math.round(document.querySelector('[data-site-header]')?.getBoundingClientRect().bottom ?? 0));
+    const io = new IntersectionObserver(
+      (entries) => setNextInView(entries[entries.length - 1].intersectionRatio >= 0.99),
+      { threshold: 0.99, rootMargin: `-${header}px 0px 0px 0px` },
+    );
+    io.observe(link);
+    return () => { io.disconnect(); setNextInView(true); };
+  }, [hasNext]);
+
   const formatValue = (field: OutputField, value: number | string) => {
     switch (field.format) {
       case 'percentage': return `${Number(value).toFixed(1)}%`;
@@ -226,6 +248,8 @@ export function CalculatorPage({ data, nicheName, proofRoute, funnel }: { data: 
   };
 
   const resultHeading = !results ? 'Result' : touched ? 'Your result' : 'Example result';
+  // The figure the bar shows: the one the legend reads, else the first.
+  const mainField = legendField ?? data.outputFields[0];
 
   return (
     <article className="max-w-3xl mx-auto">
@@ -254,136 +278,144 @@ export function CalculatorPage({ data, nicheName, proofRoute, funnel }: { data: 
         ? <PageFunnel funnel={funnel} niche={data.niche} />
         : proofRoute && <CheckYoursNow route={proofRoute} niche={data.niche} nicheName={nicheName} />}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-s0 border border-b1 rounded-[12px] p-5">
-          <div className="flex items-center justify-between gap-2 mb-1">
-            <h2 className="font-mono text-h3 font-semibold text-t1">Your settings</h2>
-            {touched && (
-              <button type="button" onClick={resetAnswers} className="btn-ghost text-xs">Reset to example</button>
-            )}
-          </div>
-          {!touched && <p className="text-meta text-t3">These start as sample answers. Change them to match you.</p>}
-          <div className="space-y-4 mt-4">
-            {data.inputs.map(input => {
-              const fieldId = `${idPrefix}-${input.id}`;
-              const helpId = input.helpText ? `${fieldId}-help` : undefined;
-              const min = input.min ?? 0;
-              const max = input.max ?? 100;
-              const labelled = !!(input.minLabel || input.maxLabel);
-              return (
-                <div key={input.id}>
-                  {input.type === 'checkbox' ? (
-                    <label htmlFor={fieldId} className="flex items-center gap-2 text-row font-medium text-t2">
+      {/* Laptop: the settings and then the legend on the left, the result on the
+          right, sticky under the site header. Under the result, the legend made
+          that column taller than the settings on most calculators, so it had
+          nowhere to stick. Phone: settings, result, legend. The next-step bar
+          follows, and this wrapper keeps it from showing outside the calculator. */}
+      <div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-s0 border border-b1 rounded-[12px] p-5 lg:col-start-1 lg:row-start-1">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <h2 className="font-mono text-h3 font-semibold text-t1">Your settings</h2>
+              {touched && (
+                <button type="button" onClick={resetAnswers} className="btn-ghost text-xs">Reset to example</button>
+              )}
+            </div>
+            {!touched && <p className="text-meta text-t3">These start as sample answers. Change them to match you.</p>}
+            <div className="space-y-4 mt-4">
+              {data.inputs.map(input => {
+                const fieldId = `${idPrefix}-${input.id}`;
+                const helpId = input.helpText ? `${fieldId}-help` : undefined;
+                const min = input.min ?? 0;
+                const max = input.max ?? 100;
+                const labelled = !!(input.minLabel || input.maxLabel);
+                return (
+                  <div key={input.id}>
+                    {input.type === 'checkbox' ? (
+                      <label htmlFor={fieldId} className="flex items-center gap-2 text-row font-medium text-t2">
+                        <input
+                          id={fieldId}
+                          type="checkbox"
+                          checked={!!inputValues[input.id]}
+                          onChange={e => setAnswer(input.id, e.target.checked)}
+                          aria-describedby={helpId}
+                          className="h-4 w-4 rounded border-b2 shrink-0"
+                        />
+                        {input.label}
+                      </label>
+                    ) : (
+                      <label htmlFor={fieldId} className="block text-row font-medium text-t2 mb-1">{input.label}</label>
+                    )}
+                    {input.type === 'number' && (
                       <input
                         id={fieldId}
-                        type="checkbox"
-                        checked={!!inputValues[input.id]}
-                        onChange={e => setAnswer(input.id, e.target.checked)}
-                        aria-describedby={helpId}
-                        className="h-4 w-4 rounded border-b2 shrink-0"
-                      />
-                      {input.label}
-                    </label>
-                  ) : (
-                    <label htmlFor={fieldId} className="block text-row font-medium text-t2 mb-1">{input.label}</label>
-                  )}
-                  {input.type === 'number' && (
-                    <input
-                      id={fieldId}
-                      type="number"
-                      value={Number(inputValues[input.id])}
-                      min={input.min}
-                      max={input.max}
-                      step={input.step}
-                      onChange={e => setAnswer(input.id, numberAnswer(input, Number(e.target.value)))}
-                      aria-describedby={helpId}
-                      className="w-full px-3 py-2 rounded-[8px] text-row"
-                    />
-                  )}
-                  {input.type === 'range' && (
-                    <div>
-                      <input
-                        id={fieldId}
-                        type="range"
+                        type="number"
                         value={Number(inputValues[input.id])}
                         min={input.min}
                         max={input.max}
                         step={input.step}
-                        onChange={e => setAnswer(input.id, Number(e.target.value))}
+                        onChange={e => setAnswer(input.id, numberAnswer(input, Number(e.target.value)))}
                         aria-describedby={helpId}
-                        aria-valuetext={labelled
-                          ? `${inputValues[input.id]} on a scale from ${min}${input.minLabel ? ` (${input.minLabel})` : ''} to ${max}${input.maxLabel ? ` (${input.maxLabel})` : ''}`
-                          : undefined}
-                        className="w-full"
+                        className="w-full px-3 py-2 rounded-[8px] text-row"
                       />
-                      {/* Both ends are printed, so a bare "3" has a scale to be read against. */}
-                      <div className="flex items-baseline justify-between gap-3 text-meta text-t3 tnum">
-                        <span className="flex-1">{input.minLabel ?? min}</span>
-                        <span className="text-row font-semibold text-t1 whitespace-nowrap">
-                          {labelled ? `${inputValues[input.id]} of ${max}` : String(inputValues[input.id])}
-                        </span>
-                        <span className="flex-1 text-right">{input.maxLabel ?? max}</span>
+                    )}
+                    {input.type === 'range' && (
+                      <div>
+                        <input
+                          id={fieldId}
+                          type="range"
+                          value={Number(inputValues[input.id])}
+                          min={input.min}
+                          max={input.max}
+                          step={input.step}
+                          onChange={e => setAnswer(input.id, Number(e.target.value))}
+                          aria-describedby={helpId}
+                          aria-valuetext={labelled
+                            ? `${inputValues[input.id]} on a scale from ${min}${input.minLabel ? ` (${input.minLabel})` : ''} to ${max}${input.maxLabel ? ` (${input.maxLabel})` : ''}`
+                            : undefined}
+                          className="w-full"
+                        />
+                        {/* Both ends are printed, so a bare "3" has a scale to be read against. */}
+                        <div className="flex items-baseline justify-between gap-3 text-meta text-t3 tnum">
+                          <span className="flex-1">{input.minLabel ?? min}</span>
+                          <span className="text-row font-semibold text-t1 whitespace-nowrap">
+                            {labelled ? `${inputValues[input.id]} of ${max}` : String(inputValues[input.id])}
+                          </span>
+                          <span className="flex-1 text-right">{input.maxLabel ?? max}</span>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  {input.type === 'select' && input.options && (
-                    <select
-                      id={fieldId}
-                      value={String(inputValues[input.id])}
-                      onChange={e => setAnswer(input.id, e.target.value)}
-                      aria-describedby={helpId}
-                      className="w-full px-3 py-2 rounded-[8px] text-row"
-                    >
-                      {input.options.map(opt => (
-                        <option key={String(opt.value)} value={String(opt.value)}>{opt.label}</option>
-                      ))}
-                    </select>
-                  )}
-                  {input.helpText && <p id={helpId} className="text-meta text-t3 mt-1">{input.helpText}</p>}
-                </div>
-              );
-            })}
+                    )}
+                    {input.type === 'select' && input.options && (
+                      <select
+                        id={fieldId}
+                        value={String(inputValues[input.id])}
+                        onChange={e => setAnswer(input.id, e.target.value)}
+                        aria-describedby={helpId}
+                        className="w-full px-3 py-2 rounded-[8px] text-row"
+                      >
+                        {input.options.map(opt => (
+                          <option key={String(opt.value)} value={String(opt.value)}>{opt.label}</option>
+                        ))}
+                      </select>
+                    )}
+                    {input.helpText && <p id={helpId} className="text-meta text-t3 mt-1">{input.helpText}</p>}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <div className="bg-s1 border border-b1 rounded-[12px] p-5 mb-6" data-calculator-result={!results ? 'unavailable' : touched ? 'yours' : 'example'}>
-            <h2 className="font-mono text-h3 font-semibold text-t1">{resultHeading}</h2>
-            {results && !touched && (
-              <p className="text-meta text-t3 mt-1">Worked out from the sample answers, not yours. Change any setting to see your own.</p>
-            )}
-            {results ? (
-              <div className="space-y-4 mt-4">
-                {data.outputFields.map(field => {
-                  // Only the field the legend describes gets a colour, and only
-                  // once it is the visitor's own result: other numbers have no
-                  // scale on the page to say whether high is good or bad.
-                  const tone: Tone = field === legendField && activeBand ? activeBand.tone : 'neutral';
-                  return (
-                    <div key={field.id} className="bg-s0 border border-b1 rounded-lg p-4">
-                      <div className="text-meta text-t3">{field.label}</div>
-                      <div className={`text-2xl font-bold tnum ${touched ? TONE_TEXT[tone] : 'text-t2'}`}>
-                        {formatValue(field, results[field.id])}
+          <div className="lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-start lg:sticky lg:top-20">
+            <div className="bg-s1 border border-b1 rounded-[12px] p-5" data-calculator-result={!results ? 'unavailable' : touched ? 'yours' : 'example'}>
+              <h2 className="font-mono text-h3 font-semibold text-t1">{resultHeading}</h2>
+              {results && !touched && (
+                <p className="text-meta text-t3 mt-1">Worked out from the sample answers, not yours. Change any setting to see your own.</p>
+              )}
+              {next && <NextStepBlock step={next} linkRef={nextLinkRef} />}
+              {results ? (
+                <div className="space-y-4 mt-4">
+                  {data.outputFields.map(field => {
+                    // Only the field the legend describes gets a colour, and only
+                    // once it is the visitor's own result: other numbers have no
+                    // scale on the page to say whether high is good or bad.
+                    const tone: Tone = field === legendField && activeBand ? activeBand.tone : 'neutral';
+                    return (
+                      <div key={field.id} className="bg-s0 border border-b1 rounded-lg p-4">
+                        <div className="text-meta text-t3">{field.label}</div>
+                        <div className={`text-2xl font-bold tnum ${touched ? TONE_TEXT[tone] : 'text-t2'}`}>
+                          {formatValue(field, results[field.id])}
+                        </div>
+                        {field.description && <p className="text-meta text-t3 mt-1">{field.description}</p>}
                       </div>
-                      {field.description && <p className="text-meta text-t3 mt-1">{field.description}</p>}
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div role="status" className="mt-4 bg-s0 border border-b1 rounded-lg p-4">
-                <p className="font-semibold text-t1">This calculator is unavailable</p>
-                <p className="text-row text-t3 mt-1">
-                  {touched
-                    ? "It couldn't work out a result from these settings. Change one back, or reset to the example."
-                    : "It can't work out a result at the moment. The tips and methodology below still apply."}
-                </p>
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              ) : (
+                <div role="status" className="mt-4 bg-s0 border border-b1 rounded-lg p-4">
+                  <p className="font-semibold text-t1">This calculator is unavailable</p>
+                  <p className="text-row text-t3 mt-1">
+                    {touched
+                      ? "It couldn't work out a result from these settings. Change one back, or reset to the example."
+                      : "It can't work out a result at the moment. The tips and methodology below still apply."}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           {interpretation && (
-            <div className="border border-b1 rounded-[12px] p-5 bg-s0">
+            <div className="border border-b1 rounded-[12px] p-5 bg-s0 lg:col-start-1 lg:row-start-2">
               <h3 className="font-mono text-h3 font-semibold text-t1 mb-3">
                 {legendField ? `How to read the ${legendField.label}` : 'How to read your result'}
               </h3>
@@ -405,6 +437,16 @@ export function CalculatorPage({ data, nicheName, proofRoute, funnel }: { data: 
             </div>
           )}
         </div>
+
+        {next && results && mainField && (
+          <NextStepBar
+            step={next}
+            label={mainField.label}
+            value={formatValue(mainField, results[mainField.id])}
+            valueClass={TONE_TEXT[mainField === legendField && activeBand ? activeBand.tone : 'neutral']}
+            hidden={nextInView}
+          />
+        )}
       </div>
 
       {data.educational.tips && data.educational.tips.length > 0 && (

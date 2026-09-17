@@ -2,8 +2,8 @@
 
 import { maskIp } from '@/lib/privacy-mask';
 
-import { useEffect, useState } from 'react';
-import { useReportResult } from './ResultContext';
+import { useEffect, useMemo, useState } from 'react';
+import { useReportResult, type ToolResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import { isIPv4, isIPv6, networkOf } from '@/lib/dns-leak';
@@ -258,30 +258,33 @@ async function fetchPublicIpInfo(): Promise<IpInfo> {
   return ipInfoFromLookup((await res.json()) as IpLookup);
 }
 
+/** What this page reports: the result bus and the console's result card read the same object. */
+function ipResult(ipInfo: IpInfo, webrtc: WebRtcResult | null): ToolResult {
+  const { leaked } = compareWebRtcToServer(webrtc?.publicIPs || [], ipInfo);
+  const where = [ipInfo.city, ipInfo.country].filter(Boolean).join(', ');
+  return {
+    severity: leaked.length ? 'red' : 'info',
+    // The tool can't tell whether a VPN is on, so the headline says what it saw, not "around your VPN".
+    headline: leaked.length ? `WebRTC shows a different IP (${leaked[0]}) from the one sites see` : `Every site sees ${ipInfo.ipv4 || ipInfo.ipv6 || 'your IP'}${where ? ` in ${where}` : ''}`,
+    shareText: leaked.length ? 'My browser shows sites a second IP through WebRTC. Check yours:' : 'Every site I visit sees my IP and location. Check yours:',
+    // stats[0] is the scorecard's big figure: a verdict, not the raw address
+    // (an IPv6 does not fit at 120px, and a privacy brand should not put the
+    // visitor's real IP in an image it asks them to share — see lib/privacy-mask).
+    stats: [
+      { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Visible to sites' },
+      { label: 'IP', value: maskIp(ipInfo.ipv4 || ipInfo.ipv6) },
+      { label: 'Location', value: where || 'unknown' },
+      { label: 'WebRTC IPs', value: String(webrtc?.publicIPs.length ?? 0) },
+    ],
+  };
+}
+
 export function WhatsMyIpTool() {
   const [ipInfo, setIpInfo] = useState<IpInfo | null>(null);
   const [webrtc, setWebrtc] = useState<WebRtcResult | null>(null);
   const report = useReportResult();
-  useEffect(() => {
-    if (!ipInfo) { report(null); return; }
-    const { leaked } = compareWebRtcToServer(webrtc?.publicIPs || [], ipInfo);
-    const where = [ipInfo.city, ipInfo.country].filter(Boolean).join(', ');
-    report({
-      severity: leaked.length ? 'red' : 'info',
-      // The tool can't tell whether a VPN is on, so the headline says what it saw, not "around your VPN".
-      headline: leaked.length ? `WebRTC shows a different IP (${leaked[0]}) from the one sites see` : `Every site sees ${ipInfo.ipv4 || ipInfo.ipv6 || 'your IP'}${where ? ` in ${where}` : ''}`,
-      shareText: leaked.length ? 'My browser shows sites a second IP through WebRTC. Check yours:' : 'Every site I visit sees my IP and location. Check yours:',
-      // stats[0] is the scorecard's big figure: a verdict, not the raw address
-      // (an IPv6 does not fit at 120px, and a privacy brand should not put the
-      // visitor's real IP in an image it asks them to share — see lib/privacy-mask).
-      stats: [
-        { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Visible to sites' },
-        { label: 'IP', value: maskIp(ipInfo.ipv4 || ipInfo.ipv6) },
-        { label: 'Location', value: where || 'unknown' },
-        { label: 'WebRTC IPs', value: String(webrtc?.publicIPs.length ?? 0) },
-      ],
-    });
-  }, [ipInfo, webrtc, report]);
+  const result = useMemo(() => (ipInfo ? ipResult(ipInfo, webrtc) : null), [ipInfo, webrtc]);
+  useEffect(() => { report(result); }, [result, report]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [refreshTick, setRefreshTick] = useState(0);
@@ -311,44 +314,56 @@ export function WhatsMyIpTool() {
     return () => { cancelled = true; };
   }, [refreshTick]);
 
+  // The result answers on page load, so nothing sits above the console: the
+  // result card has to be on screen without a scroll (owner, 2026-09-16).
   return (
     <div className="space-y-6">
-      {/* Refresh button */}
-      <div className="flex items-center justify-between gap-3">
-        <div className="text-sm text-t2">
-          Your public IP, location, and WebRTC leak status.
-        </div>
-        <button
-          onClick={refresh}
-          disabled={loading}
-          className="text-xs px-3 py-1.5 border border-b1 text-t2 hover:text-white hover:border-b2 rounded transition-colors disabled:opacity-50"
-        >
-          {loading ? 'Loading…' : 'Refresh'}
-        </button>
-      </div>
-
+      {/* Holds the console's place while the lookups run, so the card doesn't push the page down when it lands. */}
       {loading && (
-        <div className="bg-s0 border border-b1 rounded-lg p-8 text-center text-t2">
+        <div className="bg-s0 border border-b1 rounded-[16px] min-h-[640px] p-8 text-center text-t2" role="status">
           Looking up your IP and probing for leaks…
         </div>
       )}
 
       {error && !loading && (
-        <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger">{error}</div>
+        <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger flex items-center justify-between gap-3 flex-wrap">
+          {error}
+          <button
+            onClick={refresh}
+            className="text-xs px-3 py-1.5 border border-b1 text-t2 hover:text-white hover:border-b2 rounded transition-colors"
+          >
+            Try again
+          </button>
+        </div>
       )}
 
-      {!loading && !error && ipInfo && (() => {
+      {!loading && !error && ipInfo && result && (() => {
         const comparison = compareWebRtcToServer(webrtc?.publicIPs || [], ipInfo);
         const { leaked, same, sameNetwork, unmatched } = comparison;
         const where = [ipInfo.city, ipInfo.country].filter(Boolean).join(', ');
         return (
         <ConsoleFrame
           engine="whats-my-ip"
-          status={statusFromSeverity(leaked.length ? 'red' : 'info')}
+          status={statusFromSeverity(result.severity)}
           verdict={leaked.length ? 'Leaking' : 'Visible to sites'}
           checks={2}
+          result={result}
+          // Check again, straight under the result card: after turning a VPN on or off, say.
+          actions={
+            <div className="w-full flex items-center justify-between gap-3">
+              <div className="text-sm text-t2">
+                Your public IP, location, and WebRTC leak status.
+              </div>
+              <button
+                onClick={refresh}
+                className="text-xs px-3 py-1.5 border border-b1 text-t2 hover:text-white hover:border-b2 rounded transition-colors"
+              >
+                Refresh
+              </button>
+            </div>
+          }
+          // No "Verdict" tile: the header and the result card already say it.
           statTiles={[
-            { label: 'Verdict', value: leaked.length ? 'Leaking' : 'Visible to sites' },
             { label: 'IP', value: maskIp(ipInfo.ipv4 || ipInfo.ipv6) },
             { label: 'Location', value: where || 'unknown' },
             { label: 'WebRTC IPs', value: webrtc?.publicIPs.length ?? 0 },

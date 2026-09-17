@@ -94,9 +94,12 @@ export const ENGINE_META: Record<string, {
   canonicalTips: string[];
   canonicalMistakes: string[];
   checks?: number;
+  /** The tool answers as the page loads, with no action from the visitor: its page uses a compact hero so the result card is on screen. */
+  resultOnLoad?: boolean;
 }> = {
   'whats-my-ip': {
     figure: null,
+    resultOnLoad: true,
     io: ['Your request, seen by our server', 'Public IP plus a WebRTC probe', 'Exposed address, location, leak verdict'],
     scoring: "There is no numeric score. The verdict is a leak when WebRTC shows a public address that differs from the one our server saw, comparing IPv4 with IPv4 and IPv6 with IPv6 (an IPv6 address on the same home network counts as the same).",
     checks: 2,
@@ -305,6 +308,7 @@ export const ENGINE_META: Record<string, {
   },
   'useragent-analyzer': {
     figure: null,
+    resultOnLoad: true,
     io: ["Your browser's own UA string", 'Browser, OS, engine and device parsing', 'What the string reveals, plus concerns'],
     scoring: "This tool doesn't score a result. It flags amber once three or more privacy concerns are identified in the parsed string.",
     canonicalTips: [

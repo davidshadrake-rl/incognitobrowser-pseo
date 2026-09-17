@@ -115,6 +115,10 @@ describe('playUrl attribution', () => {
     const u = playUrl({ medium: 'cta', campaign: 'whats-my-ip', content: 'vpn-privacy', term: 'tool' });
     expect(u.startsWith('https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser')).toBe(true);
     expect(parsePlayReferrer(u)).toEqual({ utm_source: 'resources', utm_medium: 'cta', utm_campaign: 'whats-my-ip', utm_content: 'vpn-privacy', utm_term: 'tool' });
+    // A result card's button sends the benefit it sold as utm_content; the app team reads these ids as they are.
+    for (const benefit of ['tracker-blocking', 'hides-ad-boxes', 'photo-cleaning']) {
+      expect(parsePlayReferrer(playUrl({ medium: 'funnel', campaign: 'ad-blocker-test', content: benefit, term: 'guide' })).utm_content).toBe(benefit);
+    }
     vi.resetModules(); process.env.NEXT_PUBLIC_TIER = 'pro';
     const pro = await import('../lib/play');
     expect(pro.parsePlayReferrer(pro.playUrl({ medium: 'site', campaign: 'header' })).utm_source).toBe('pro');

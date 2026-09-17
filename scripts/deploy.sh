@@ -39,6 +39,12 @@ site() {  # label, folder, extra build env
   find out -type d -name '_pro_export_placeholder_' -exec rm -rf {} +
   node scripts/audit-links.mjs out --mode static --base "$2"
   npx vitest run tests/client-bundle.test.ts >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
+  # The page guards only grade an export whose marker says what it is; without
+  # it they skipped silently on every deploy. The free site is the one they know.
+  if [ "$2" = /resources ]; then
+    node scripts/write-build-marker.mjs --target static --tier free --base /resources >/dev/null
+    npx vitest run tests/rendered-pages.test.ts tests/link-audit.test.ts >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
+  fi
   cp scripts/site.htaccess out/.htaccess
   echo "$VERSION" > out/version.txt
   echo "== upload $1 -> $WEB_ROOT$2/"

@@ -19,13 +19,64 @@ import { getContentFiles, getContentItem, getGlossaryFiles, getGlossaryItem, isP
 import { getAllSites, isSitePublished } from '../../lib/sites';
 import { getAllNiches, getAllContentTypes } from '../../lib/taxonomy';
 import { PROOF_COPY, proofToolFor } from '../../lib/proof-route';
-import { NICHE_HOOK } from '../../lib/cta-copy';
 import { PRO_ENGINES, tierOfEngine } from '../../lib/tiers';
 
 const ROOT = process.cwd();
 const OUT_DIR = path.join(ROOT, 'funnel-drafts');
 
 import { TOPIC_GROUP, GROUP_PRO, PRO_NAMES, PAIRINGS } from './assemble-data';
+
+/**
+ * The fear that opened this door, one sentence per niche: a hub page's unit
+ * detail for the wording pass. It used to open the old result box's body
+ * (lib/cta-copy.ts), which the result card replaced on 2026-09-16.
+ */
+const NICHE_HOOK: Record<string, string> = {
+  'incognito-mode': 'Incognito mode hides your history from your device, not from the sites, your ISP, or advertisers.',
+  'browser-privacy': 'Your browser is the single biggest source of what sites learn about you.',
+  'ad-tracking': 'Ad networks follow you from site to site to build a profile they sell.',
+  'cookie-management': 'Cookies you never agreed to are set before the consent banner even loads.',
+  'device-fingerprinting': 'Fingerprinting identifies you without cookies, so clearing them changes nothing.',
+  'digital-footprint': 'Every search and every page adds to a footprint you never get to see.',
+  'vpn-privacy': 'A VPN that leaks is worse than none: you feel safe while your ISP still watches.',
+  'password-security': 'One weak password is the way into every account that shares it.',
+  'encrypted-messaging': 'If a message can be read in transit, assume it will be.',
+  'private-search': 'Your search history is the most honest diary you keep, and it is being logged.',
+  'data-brokers': 'Data brokers assemble your address, income and habits from traces you leave online.',
+  'isp-tracking': 'Your ISP sees every domain you visit, encrypted or not.',
+  'location-tracking': 'Location is the one data point that turns an online profile into a physical one.',
+  'public-wifi': 'On public Wi-Fi, everyone on the network is a potential reader.',
+  'phishing': 'Phishing works because the fake page looks right for exactly long enough.',
+  'malware-protection': 'Most malware arrives through a link that looked ordinary.',
+  'email-privacy': 'Marketing emails report back the moment you open them.',
+  'social-media-privacy': 'What you post is public; what you leak in the file is worse.',
+  'online-shopping': 'Shops and their ad partners track what you looked at long after you leave.',
+  'online-banking': 'Banking is the session attackers want most, and the one you most need clean.',
+  'workplace-privacy': 'Your work browser reports more about you than you would tell your manager.',
+  'student-privacy': 'Campus networks and ed-tech tools log a lot more than grades.',
+  'children-safety': 'Children are tracked as aggressively as adults online, often more.',
+  'healthcare-privacy': 'Symptom searches are among the most sensitive things you do online, and ad networks see them.',
+  'dating-privacy': 'A photo\'s hidden data can hand a stranger your home location.',
+  'smart-home-privacy': 'Smart devices phone home constantly, and their dashboards leak like any site.',
+  'webcam-privacy': 'A site with camera permission keeps it until you revoke it.',
+  'ai-privacy': 'AI profilers turn small leaks into confident guesses about who you are.',
+  'cloud-privacy': 'Files in the cloud are only as private as the link and the account that hold them.',
+  'gaming-privacy': 'Gaming platforms fingerprint devices to link accounts, and advertisers ride along.',
+  'gdpr': 'Consent banners are theatre when tracking cookies are set before you click.',
+  'ccpa': '"Do Not Sell" means nothing if the trackers load first.',
+  'us-state-privacy': 'Privacy laws vary by state; trackers do not.',
+  'international-privacy': 'Your data crosses borders faster than the laws that protect it.',
+  'data-breach': 'After a breach, every password you reused is already in a list.',
+  'right-to-forget': 'You can ask to be forgotten, but the trackers are still collecting today.',
+  'privacy-policies': 'A privacy policy is a promise; the cookies are the practice.',
+  'crypto-privacy': 'On a public ledger, one linked address exposes the whole history.',
+  'tor-privacy': 'Tor hides your route, but a fingerprintable browser still names you.',
+  'facial-recognition': 'A photo\'s metadata plus your face is a complete identification.',
+  'drone-surveillance': 'Aerial photos carry the exact GPS of where they were taken.',
+  'browser-extensions': 'Extensions see every page you visit; some sell that.',
+  'journalist-privacy': 'For a source, one leaked IP is the whole story.',
+  'search-history': 'Search history is the profile advertisers pay the most for.',
+};
 
 type PageType = 'home' | 'index' | 'topic-hub' | 'type-hub' | 'tool-hub' | 'guide' | 'checklist' | 'comparison' | 'template' | 'calculator' | 'glossary' | 'tool' | 'pro-tool' | 'report-card' | 'utility';
 

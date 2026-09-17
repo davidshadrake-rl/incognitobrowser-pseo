@@ -175,6 +175,30 @@ function reasonText(r: ProbeResult): string {
   }
 }
 
+/** A finished run as the result bus reads it. The console's result card shows the same object. */
+function toToolResult(network: ProbeResult[], cosmetic: CosmeticResult[]): ToolResult {
+  const blockedIds = network.filter((r) => r.outcome === 'blocked').map((r) => r.bait.id);
+  const score = scoreAdBlocking(blockedIds.length, network.length);
+  const hidden = cosmetic.filter((c) => c.hidden).length;
+  const byCategory = summarizeByCategory(blockedIds, NETWORK_BAITS);
+  const cleanCategories = byCategory.filter((c) => c.total > 0 && c.blocked === c.total).length;
+  return {
+    severity: score.severity,
+    headline: headlineFor(score),
+    detail: verdictFor(score, hidden, cosmetic.length),
+    // A percentage of requests blocked, not a score out of 100.
+    score: score.percent,
+    scoreUnit: '%',
+    stats: [
+      { label: 'Blocked', value: `${score.blocked}/${score.total}` },
+      { label: 'Allowed', value: `${score.allowed}` },
+      { label: 'Elements hidden', value: `${hidden}/${cosmetic.length}` },
+      { label: 'Categories', value: `${cleanCategories}/${byCategory.length} clean` },
+    ],
+    shareText: `${headlineFor(score)}. Check yours:`,
+  };
+}
+
 export function AdBlockerTestTool() {
   const [phase, setPhase] = useState<'idle' | 'running' | 'done'>('idle');
   const [progress, setProgress] = useState(0);
@@ -221,28 +245,7 @@ export function AdBlockerTestTool() {
     setResults(network);
     setCosmetic(cosmeticResults);
     setPhase('done');
-
-    const blockedIds = network.filter((r) => r.outcome === 'blocked').map((r) => r.bait.id);
-    const score = scoreAdBlocking(blockedIds.length, network.length);
-    const hidden = cosmeticResults.filter((c) => c.hidden).length;
-    const byCategory = summarizeByCategory(blockedIds, NETWORK_BAITS);
-    const cleanCategories = byCategory.filter((c) => c.total > 0 && c.blocked === c.total).length;
-    const result: ToolResult = {
-      severity: score.severity,
-      headline: headlineFor(score),
-      detail: verdictFor(score, hidden, cosmeticResults.length),
-      // A percentage of requests blocked, not a score out of 100.
-      score: score.percent,
-      scoreUnit: '%',
-      stats: [
-        { label: 'Blocked', value: `${score.blocked}/${score.total}` },
-        { label: 'Allowed', value: `${score.allowed}` },
-        { label: 'Elements hidden', value: `${hidden}/${cosmeticResults.length}` },
-        { label: 'Categories', value: `${cleanCategories}/${byCategory.length} clean` },
-      ],
-      shareText: `${headlineFor(score)}. Check yours:`,
-    };
-    report(result);
+    report(toToolResult(network, cosmeticResults));
   }, [report]);
 
   const total = NETWORK_BAITS.length;
@@ -299,6 +302,7 @@ export function AdBlockerTestTool() {
           score={score.percent}
           scoreUnit="%"
           gaugeLabel="blocked"
+          result={toToolResult(results, cosmetic)}
           statTiles={[
             { label: 'Blocked', value: `${score.blocked}/${score.total}` },
             { label: 'Allowed', value: score.allowed },
@@ -307,11 +311,9 @@ export function AdBlockerTestTool() {
           ]}
         >
         <>
-          <h2 className="text-lg font-semibold text-white">
-            Blocked {score.blocked} of {score.total} requests
-          </h2>
+          {/* The counts behind the result card's headline, and what they mean */}
           <p className="text-sm text-t2">
-            Cosmetic filtering hid {hidden} of {cosmetic.length} ad elements
+            Blocked {score.blocked} of {score.total} requests. Cosmetic filtering hid {hidden} of {cosmetic.length} ad elements.
           </p>
           <p className="text-sm text-t2">{verdictFor(score, hidden, cosmetic.length)}</p>
 

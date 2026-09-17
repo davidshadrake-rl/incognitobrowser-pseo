@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { useReportResult, severityFromScore, type Severity } from './ResultContext';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useReportResult, severityFromScore, type Severity, type ToolResult } from './ResultContext';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import { Icon } from '@/components/ui/Icon';
 
@@ -311,16 +311,15 @@ export function PasswordStrengthTool() {
   // The console stays mounted while typing, so it is told when the latest analysis ran.
   const [ranAt, setRanAt] = useState(0);
   const report = useReportResult();
-  useEffect(() => {
-    if (!analysis) { report(null); return; }
-    report({
-      severity: severityFromScore(analysis.score),
-      score: analysis.score,
-      headline: `This password would be cracked ${crackPhrase(analysis.crackTime)}`,
-      shareText: `My password would be cracked ${crackPhrase(analysis.crackTime)}. Check yours:`,
-      stats: [{ label: 'Cracked in', value: analysis.crackTime }, { label: 'Strength', value: `${analysis.score}/100` }, { label: 'Entropy', value: `${Math.round(analysis.entropy)} bits` }, { label: 'Length', value: String(analysis.length) }],
-    });
-  }, [analysis, report]);
+  // One object for the result bus and the console's result card.
+  const result = useMemo<ToolResult | null>(() => analysis && {
+    severity: severityFromScore(analysis.score),
+    score: analysis.score,
+    headline: `This password would be cracked ${crackPhrase(analysis.crackTime)}`,
+    shareText: `My password would be cracked ${crackPhrase(analysis.crackTime)}. Check yours:`,
+    stats: [{ label: 'Cracked in', value: analysis.crackTime }, { label: 'Strength', value: `${analysis.score}/100` }, { label: 'Entropy', value: `${Math.round(analysis.entropy)} bits` }, { label: 'Length', value: String(analysis.length) }],
+  }, [analysis]);
+  useEffect(() => { report(result); }, [result, report]);
 
   const handleAnalyze = useCallback((value: string) => {
     setPassword(value);
@@ -360,24 +359,7 @@ export function PasswordStrengthTool() {
         </div>
       </div>
 
-      {/* Results */}
-      {analysis && (
-        <div className={`rounded-lg border p-6 text-center ${panel.box}`} data-cracked-in>
-          <div className="text-xs uppercase tracking-wider text-t3 mb-1">Time an offline attacker needs to crack this password</div>
-          <div className={`text-4xl sm:text-5xl font-bold ${panel.text}`}>{analysis.crackTime}</div>
-          {/* Two sentences: the guessing rate belongs to the crack time, not to the entropy. */}
-          <div className="text-xs text-t2 mt-2 space-y-0.5">
-            <p>The crack time assumes 10 billion guesses a second.</p>
-            <p>
-              {Math.round(analysis.entropy)} bits of entropy
-              {Math.round(analysis.entropy) < Math.round(analysis.rawEntropy)
-                ? ` once the patterns below are discounted (${Math.round(analysis.rawEntropy)} by length alone)`
-                : ''}
-              .
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Results: straight under the input, so the result card is the first thing below the field being typed in. */}
       {analysis && (
         <ConsoleFrame
           engine="password-strength"
@@ -386,14 +368,32 @@ export function PasswordStrengthTool() {
           runAt={ranAt}
           score={analysis.score}
           gaugeLabel="strength"
+          result={result}
           statTiles={[
-            // The crack time is already the headline of the panel above; not repeated here.
+            // The crack time is already the result card's headline and the panel below; not repeated here.
             { label: 'Strength', value: `${analysis.score}/100` },
             { label: 'Entropy', value: `${Math.round(analysis.entropy)} bits` },
             { label: 'Length', value: analysis.length },
           ]}
         >
         <div className="space-y-4">
+          {/* Crack time and what it assumes */}
+          <div className={`rounded-lg border p-6 text-center ${panel.box}`} data-cracked-in>
+            <div className="text-xs uppercase tracking-wider text-t3 mb-1">Time an offline attacker needs to crack this password</div>
+            <div className={`text-4xl sm:text-5xl font-bold ${panel.text}`}>{analysis.crackTime}</div>
+            {/* Two sentences: the guessing rate belongs to the crack time, not to the entropy. */}
+            <div className="text-xs text-t2 mt-2 space-y-0.5">
+              <p>The crack time assumes 10 billion guesses a second.</p>
+              <p>
+                {Math.round(analysis.entropy)} bits of entropy
+                {Math.round(analysis.entropy) < Math.round(analysis.rawEntropy)
+                  ? ` once the patterns below are discounted (${Math.round(analysis.rawEntropy)} by length alone)`
+                  : ''}
+                .
+              </p>
+            </div>
+          </div>
+
           {/* Character breakdown */}
           <div className="bg-s0 border border-b1 rounded-lg p-6">
             <h3 className="text-sm font-semibold text-white mb-3">Character Breakdown</h3>

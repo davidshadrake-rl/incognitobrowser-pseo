@@ -281,15 +281,23 @@ test('whats-my-ip: displays a public IP address', async ({ page }) => {
 // ─────────────────────────────────────────────────────────────────────────
 // Funnel surfaces: the result moment (CTA + scorecard + next steps)
 // ─────────────────────────────────────────────────────────────────────────
-test('funnel: a password result shows the crack-time panel, the result-moment CTA, the scorecard and next steps', async ({ page }) => {
+test('funnel: a password result shows the result card (answer, CTA, scorecard), then the crack-time report, then next steps', async ({ page }) => {
   await page.goto(toolUrl('password-strength'));
   await page.locator('input[type="password"], input[type="text"]').first().fill('password123');
-  await expect(page.locator('[data-cracked-in]')).toBeVisible({ timeout: 10_000 });
+  await expect(page.locator('[data-result-card="password-strength"]')).toBeVisible({ timeout: 10_000 });
   await expect(page.locator('[data-result-cta]')).toBeVisible();
   await expect(page.locator('[data-result-cta]')).toHaveAttribute('data-result-cta', /red|amber/);
   await expect(page.locator('[data-scorecard="password-strength"]')).toBeVisible();
   await expect(page.getByRole('button', { name: /Download PNG/ })).toBeVisible();
+  await expect(page.locator('[data-cracked-in]')).toBeVisible();
   await expect(page.locator('[data-next-steps]')).toBeVisible();
+  // The order it reads in (owner, 2026-09-16): the answer, the CTA and sharing above the long report; next steps after it.
+  // Measured in one pass, since the card may still be scrolling itself into view.
+  const order = ['[data-result-card] .rc-result', '[data-result-cta]', '[data-scorecard="password-strength"]', '.rc-report', '[data-cracked-in]', '[data-next-steps]'];
+  const tops = await page.evaluate((sels) => sels.map((s) => document.querySelector(s)?.getBoundingClientRect().top ?? NaN), order);
+  for (let i = 1; i < order.length; i++) {
+    expect(tops[i - 1], `${order[i - 1]} above ${order[i]}`).toBeLessThan(tops[i]);
+  }
 });
 
 test('funnel: the scorecard renders a real PNG on the device', async ({ page }) => {

@@ -221,17 +221,37 @@ function verdictWord(c: DnsLeakClassification): string {
   return c.severity === 'red' ? 'Leaking' : c.severity === 'green' ? 'No leak' : c.severity === 'amber' ? 'Inconclusive' : 'Baseline';
 }
 
-function severityClasses(s: DnsLeakClassification['severity']): { border: string; text: string } {
+function severityBorder(s: DnsLeakClassification['severity']): string {
   switch (s) {
     case 'red':
-      return { border: 'border-danger/30', text: 'text-danger' };
+      return 'border-danger/30';
     case 'green':
-      return { border: 'border-ok/30', text: 'text-ok' };
+      return 'border-ok/30';
     case 'amber':
-      return { border: 'border-warn/30', text: 'text-warn' };
+      return 'border-warn/30';
     default:
-      return { border: 'border-info/30', text: 'text-info' };
+      return 'border-info/30';
   }
+}
+
+/** What this test reports: the result bus and the console's result card read the same object. */
+function dnsResult(c: DnsLeakClassification, r: ResultResponse, vpnOn: boolean | null): ToolResult {
+  // stats[0] is the scorecard's big figure: a one-word verdict, never the raw
+  // address (IPv6 overflows the card; a real IP has no place in a share image).
+  const stats: ToolResult['stats'] = [
+    { label: 'Verdict', value: verdictWord(c) },
+    { label: 'Public IP', value: maskIp(r.publicIp) },
+    { label: 'Resolvers seen', value: String(r.resolvers.length) },
+    { label: 'Resolver networks', value: c.networks.length ? c.networks.join(', ') : '—' },
+    { label: 'VPN', value: vpnOn ? 'on' : 'off' },
+  ];
+  return {
+    severity: c.severity,
+    headline: c.headline,
+    detail: c.detail,
+    stats,
+    shareText: `${verdictTitle(c)}: ${c.headline}`,
+  };
 }
 
 export function DnsLeakTestTool() {
@@ -304,35 +324,17 @@ export function DnsLeakTestTool() {
     }
   }, []);
 
-  // Result bus: severity red = leaking, amber = inconclusive, green = no leak, info = baseline.
-  useEffect(() => {
-    if (!classification || !result) {
-      report(null);
-      return;
-    }
-    // stats[0] is the scorecard's big figure: a one-word verdict, never the raw
-    // address (IPv6 overflows the card; a real IP has no place in a share image).
-    const stats: ToolResult['stats'] = [
-      { label: 'Verdict', value: verdictWord(classification) },
-      { label: 'Public IP', value: maskIp(result.publicIp) },
-      { label: 'Resolvers seen', value: String(result.resolvers.length) },
-      { label: 'Resolver networks', value: classification.networks.length ? classification.networks.join(', ') : '—' },
-      { label: 'VPN', value: testedWithVpnOn ? 'on' : 'off' },
-    ];
-    report({
-      severity: classification.severity,
-      headline: classification.headline,
-      detail: classification.detail,
-      stats,
-      shareText: `${verdictTitle(classification)}: ${classification.headline}`,
-    });
-  }, [classification, result, testedWithVpnOn, report]);
+  // Result bus: severity red = leaking, amber = inconclusive, green = no leak, info = baseline (a VPN-off run).
+  const toolResult = useMemo(
+    () => (classification && result ? dnsResult(classification, result, testedWithVpnOn) : null),
+    [classification, result, testedWithVpnOn],
+  );
+  useEffect(() => { report(toolResult); }, [toolResult, report]);
 
   const clearBaseline = () => {
     writeBaseline(null);
   };
 
-  const sev = classification ? severityClasses(classification.severity) : null;
   const baselineRange = baseline?.publicIp ? ispRangeOf(baseline.publicIp) : null;
 
   return (
@@ -391,13 +393,14 @@ export function DnsLeakTestTool() {
         <div className="bg-s0 border border-danger/30 rounded-lg p-4 text-sm text-danger">{error}</div>
       )}
 
-      {phase === 'done' && classification && result && sev && (
+      {phase === 'done' && classification && result && toolResult && (
         <ConsoleFrame
           engine="dns-leak-test"
           status={statusFromSeverity(classification.severity)}
           verdict={verdictWord(classification)}
           checks={HOSTNAMES_PER_TEST}
           checksNoun={['test lookup', 'test lookups']}
+          result={toolResult}
           statTiles={[
             { label: 'Verdict', value: verdictTitle(classification) },
             { label: 'Public IP', value: maskIp(result.publicIp) },
@@ -406,12 +409,9 @@ export function DnsLeakTestTool() {
           ]}
         >
         <>
-          {/* Verdict */}
-          <div className={`bg-s0 border ${sev.border} rounded-lg p-6`}>
-            <div className="text-xs uppercase tracking-wider text-t3 mb-2">Verdict</div>
-            <h3 className={`text-lg font-semibold ${sev.text} mb-2`}>{verdictTitle(classification)}</h3>
-            <p className="text-sm text-white">{classification.headline}</p>
-            <p className="mt-2 text-sm text-t2">{classification.detail}</p>
+          {/* What the verdict rests on (the verdict and headline are in the result card above) */}
+          <div className={`bg-s0 border ${severityBorder(classification.severity)} rounded-lg p-6`}>
+            <p className="text-sm text-t2">{classification.detail}</p>
             <p className="mt-3 text-xs text-t3">
               You ran this test with your VPN <strong className="text-white">{testedWithVpnOn ? 'on' : 'off'}</strong>.{' '}
               {classification.verdict === 'baseline'

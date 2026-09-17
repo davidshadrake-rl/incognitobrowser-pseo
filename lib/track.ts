@@ -10,7 +10,7 @@
  */
 import { SCAN_API_BASE } from './scan-client';
 
-export const TRACK_EVENTS = ['tool_run', 'result_shown', 'cta_view', 'cta_click', 'share_click', 'handoff_send', 'next_step_click', 'report_card_view', 'proof_route_click', 'funnel_view', 'funnel_run', 'funnel_click'] as const;
+export const TRACK_EVENTS = ['tool_run', 'result_shown', 'cta_view', 'cta_click', 'share_click', 'handoff_send', 'next_step_click', 'report_card_view', 'proof_route_click', 'funnel_view', 'funnel_run', 'funnel_click', 'result_card_placed'] as const;
 export type TrackEvent = (typeof TRACK_EVENTS)[number];
 
 export interface TrackProps {
@@ -20,6 +20,10 @@ export interface TrackProps {
   target?: 'play' | 'pro-web' | 'email' | 'copy' | 'share' | 'download' | 'checklist' | 'check-yours';
   /** The funnel page it happened on (lib/funnels.ts path); the server keeps only known paths. */
   page?: string;
+  /** The Pro benefit the ask sold (lib/card-copy.ts), so clicks show which promise works. */
+  benefit?: 'tracker-blocking' | 'hides-ad-boxes' | 'photo-cleaning';
+  /** result_card_placed: what bringing the result card on screen did (lib/place-result.ts). */
+  reason?: 'scrolled' | 'in-view' | 'hidden' | 'on-load' | 'own-scroll';
 }
 
 export type Platform = 'android' | 'ios' | 'desktop' | 'other';
@@ -48,7 +52,7 @@ export function track(event: TrackEvent, props: TrackProps = {}, opts: { once?: 
   try {
     if (typeof window === 'undefined') return;
     // The page is part of the key: a visit that moves between funnel pages counts each one.
-    const key = `${event}:${props.tool || ''}:${props.target || ''}:${props.page || ''}`;
+    const key = `${event}:${props.tool || ''}:${props.target || ''}:${props.page || ''}:${props.severity || ''}`;
     if (opts.once) {
       if (sent.has(key)) return;
       sent.add(key);

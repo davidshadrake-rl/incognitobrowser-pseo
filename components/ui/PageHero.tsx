@@ -45,6 +45,7 @@ export function PageHero({
   diagram,
   tier = 'free',
   aside,
+  compact = false,
 }: {
   icon: IconName;
   /** Uppercase eyebrow, e.g. "Browser privacy · analyzer". */
@@ -63,7 +64,27 @@ export function PageHero({
   tier?: Tier;
   /** Pro site: a ProNotice panel instead of the diagram. */
   aside?: ReactNode;
+  /**
+   * Kicker, title and badges only. For a tool that answers on page load
+   * (What's My IP, User Agent Analyzer): the result card has to be on screen
+   * without a scroll (owner, 2026-09-16), so the description moves below.
+   */
+  compact?: boolean;
 }) {
+  if (compact) {
+    return (
+      <section className="relative overflow-hidden border border-b1 rounded-[16px] px-5 py-4 mb-6" style={{ backgroundImage: 'var(--accent-gradient)' }}>
+        <div className="relative min-w-0">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 mb-1.5">
+            <p className="text-kicker uppercase text-t3">{kicker}</p>
+            {badges}
+          </div>
+          <h1 className="font-mono text-[22px] md:text-[26px] leading-[1.2] font-semibold text-t1">{title}</h1>
+          {action}
+        </div>
+      </section>
+    );
+  }
   return (
     <section
       className="relative overflow-hidden grid lg:grid-cols-[1fr_320px] gap-6 border border-b1 rounded-[16px] p-6 mb-8"

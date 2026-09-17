@@ -252,33 +252,26 @@ export function EmailPixelDetectorTool() {
           status={statusFromSeverity(analysis.severity)}
           verdict={sev.label}
           runAt={ranAt}
-          statTiles={analysis.stats}
-        >
-        <div className="space-y-4">
-          {fromExample && (
-            <p className="rounded-md border border-b1 bg-s1 px-3 py-2 text-xs text-t2" data-example-result>
+          // The example reports nothing, but the card still shows its headline: label it straight under the card.
+          result={toToolResult(analysis)}
+          actions={fromExample && (
+            <p className="w-full rounded-md border border-b1 bg-s1 px-3 py-2 text-xs text-t2" data-example-result>
               <span className="font-semibold text-white">Example.</span> This is the built-in sample email, not yours. Paste your own email above to check it.
             </p>
           )}
-          {/* Verdict */}
-          <div>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className={`text-xs uppercase tracking-wide mb-1 ${sev.text}`}>{fromExample ? 'Example' : 'Verdict'} · {sev.label}</div>
-                <h3 className="text-lg font-bold text-white">{analysis.headline}</h3>
-              </div>
-              <Icon name={analysis.severity === 'red' ? 'x' : analysis.severity === 'amber' ? 'warn' : 'check'} size={28} className={sev.text} title={sev.label} />
-            </div>
-            <p className="mt-3 text-xs text-t3">
-              {analysis.hasHeaders
-                ? `Parsed a full message${analysis.htmlParts ? ` with ${analysis.htmlParts} HTML part${analysis.htmlParts === 1 ? '' : 's'}` : ' with no HTML part'}${
-                    analysis.encodings.length ? ` (${analysis.encodings.join(', ')})` : ''
-                  }.`
-                : analysis.hasHtml
-                  ? 'No headers found — analyzed as a bare HTML body.'
-                  : 'No headers or HTML found — analyzed as plain text.'}
-            </p>
-          </div>
+          statTiles={analysis.stats}
+        >
+        <div className="space-y-4">
+          {/* What was parsed (the verdict and headline are in the result card above) */}
+          <p className="text-xs text-t3">
+            {analysis.hasHeaders
+              ? `Parsed a full message${analysis.htmlParts ? ` with ${analysis.htmlParts} HTML part${analysis.htmlParts === 1 ? '' : 's'}` : ' with no HTML part'}${
+                  analysis.encodings.length ? ` (${analysis.encodings.join(', ')})` : ''
+                }.`
+              : analysis.hasHtml
+                ? 'No headers found — analyzed as a bare HTML body.'
+                : 'No headers or HTML found — analyzed as plain text.'}
+          </p>
 
           {/* Tracking pixels */}
           <div className="bg-s0 border border-b1 rounded-lg p-6">

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useReportResult, severityFromScore } from './ResultContext';
+import { useState, useEffect, useMemo } from 'react';
+import { useReportResult, severityFromScore, type ToolResult } from './ResultContext';
 import { ConsoleFrame, statusFromSeverity, type ConsoleGroup } from './ConsoleFrame';
 import type { Status } from '@/components/ui/StatusDot';
 
@@ -197,24 +197,28 @@ export function BrowserPrivacyTool() {
   const [checks, setChecks] = useState<PrivacyCheck[]>([]);
   const [score, setScore] = useState<number | null>(null);
   const report = useReportResult();
-  useEffect(() => {
-    if (score === null) { report(null); return; }
+  // One object for the bus and the console's result card.
+  const result = useMemo<ToolResult | null>(() => {
+    if (score === null) return null;
     const bad = checks.filter((c) => c.status === 'bad').length;
     const warn = checks.filter((c) => c.status === 'warning').length;
-    report({
+    return {
       severity: severityFromScore(score),
       score,
       headline: bad ? `Your browser fails ${bad} of ${checks.length} privacy checks` : warn ? `Your browser passes with ${warn} warnings` : `Your browser passes all ${checks.length} privacy checks`,
       stats: [{ label: 'Score', value: `${score}/100` }, { label: 'Failed', value: String(bad) }, { label: 'Warnings', value: String(warn) }, { label: 'Checks', value: String(checks.length) }],
-    });
-  }, [score, checks, report]);
+    };
+  }, [score, checks]);
+  useEffect(() => { report(result); }, [result, report]);
   const [scanning, setScanning] = useState(false);
   // The console stays mounted across re-runs, so it is told when each run finished.
   const [runAt, setRunAt] = useState(0);
 
   const runAudit = async () => {
     setScanning(true);
-    setChecks([]);
+    // A re-run keeps the last result until the new one replaces it. Clearing the
+    // checks here re-reported the old score over no checks ("passes all 0
+    // privacy checks") in the result card while the new run was going.
 
     // Start async tests in parallel before the synchronous block
     const webrtcPromise = detectWebRtcLeaks();
@@ -448,6 +452,7 @@ export function BrowserPrivacyTool() {
         <ConsoleFrame
           engine="browser-privacy"
           status={statusFromSeverity(severityFromScore(score))}
+          result={result}
           checks={checks.length}
           runAt={runAt || undefined}
           score={score}

@@ -18,7 +18,8 @@ import { useState, type ReactNode } from 'react';
 import { Gauge } from '@/components/ui/Gauge';
 import { StatTile } from '@/components/ui/StatTile';
 import { StatusDot, type Status } from '@/components/ui/StatusDot';
-import type { Severity } from './ResultContext';
+import { ResultCard } from './ResultCard';
+import { useToolResult, type Severity, type ToolResult } from './ResultContext';
 
 export type { Status };
 
@@ -113,6 +114,8 @@ export function ConsoleFrame({
   statTiles,
   groups,
   left,
+  result,
+  actions,
   children,
 }: {
   /** The engine id, e.g. "browser-privacy". The data-console value; the header shows ENGINE_NAME[engine]. */
@@ -144,6 +147,14 @@ export function ConsoleFrame({
   groups?: ConsoleGroup[];
   /** Custom left-column content, replacing the Gauge + tally. */
   left?: ReactNode;
+  /**
+   * The result this console shows: the object the engine reports. Passed so a
+   * built-in example still gets its headline in the result card, although an
+   * example reports nothing and so gets no upgrade ask.
+   */
+  result?: ToolResult | null;
+  /** The free fix the visitor can take right now ("Download clean copy"), shown straight under the result card. */
+  actions?: ReactNode;
   /** The tool's own detailed result markup, rendered after statTiles/groups. */
   children?: ReactNode;
 }) {
@@ -153,6 +164,10 @@ export function ConsoleFrame({
   const ranAt = new Date(runAt ?? mountedAt);
   const time = ranAt.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
   const hasLeftColumn = left !== undefined || typeof score === 'number' || tally !== undefined;
+  // The result card answers first (owner, 2026-09-16: the result, the ask and
+  // sharing sit above the long report); the tool's own report follows.
+  const bus = useToolResult();
+  const hasCard = !!(result ?? bus);
 
   return (
     <section className="console bg-s0 border border-b1 rounded-[16px] overflow-hidden font-mono" data-console={engine}>
@@ -163,8 +178,11 @@ export function ConsoleFrame({
           <span className={VALUE_TEXT[status]}>{verdict ?? VERDICT_WORD[status]}</span>
         </span>
         {typeof checks === 'number' && <span>&middot; {checks} {checks === 1 ? checksNoun[0] : checksNoun[1]}</span>}
-        <time className="ml-auto tnum text-t3" dateTime={ranAt.toISOString()}>Run at {time}</time>
+        <time className="ml-auto tnum text-t3" dateTime={ranAt.toISOString()}><span className="hidden sm:inline">Run at </span>{time}</time>
       </header>
+      {hasCard && <ResultCard result={result} />}
+      {hasCard && <p className="rc-report">Full report</p>}
+      {actions && <div className="rc-free-actions">{actions}</div>}
       <div className={`grid ${hasLeftColumn ? 'md:grid-cols-[200px_1fr]' : 'grid-cols-1'} gap-6 p-5`}>
         {/* Several engines have no single score and no pass/fail tally — a
             generated value or a parsed breakdown is the whole result. Rendering

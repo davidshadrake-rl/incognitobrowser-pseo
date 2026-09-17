@@ -549,6 +549,7 @@ export function CookieAnalyzerTool() {
         <ConsoleFrame
           engine="cookie-analyzer"
           status={statusFromSeverity(urlReport.severity)}
+          result={urlReport.result}
           score={score}
           gaugeLabel={`grade ${grade.letter}`}
           tally={{
@@ -745,6 +746,7 @@ export function CookieAnalyzerTool() {
         <ConsoleFrame
           engine="cookie-analyzer"
           status={statusFromSeverity(listReport.severity)}
+          result={listReport.result}
           score={listReport.score}
           gaugeLabel={`grade ${listReport.grade.letter}`}
           checks={cookies.length}
@@ -758,16 +760,8 @@ export function CookieAnalyzerTool() {
             { label: 'Functional', value: functional.length },
           ]}
         >
-          {cookies.length === 0 ? (
-            <div className="bg-s0 border border-ok/30 rounded-lg p-6 text-center">
-              <div className="text-ok text-lg font-semibold mb-2">No cookies detected</div>
-              <p className="text-sm text-t2">
-                {mode === 'browser'
-                  ? 'This page has no cookies its scripts can read.'
-                  : 'No valid cookies found in the input.'}
-              </p>
-            </div>
-          ) : (
+          {/* No cookies: the result card's headline says so, and there is nothing to list. */}
+          {cookies.length > 0 && (
             <div className="space-y-2">
               {cookies.map((c, i) => (
                 <div key={i} className="bg-s0 border border-b1 rounded-lg p-4">

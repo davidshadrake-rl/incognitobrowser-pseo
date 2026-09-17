@@ -25,13 +25,19 @@ const OUT = path.join(ROOT, 'data', 'funnels.json');
 const CTA_DIR = path.join(ROOT, 'public', 'funnels', 'cta');
 
 interface Step2 { engine: string; heading: string; instruction: string; button: string }
+interface Answer { meaning: string; free?: string; pro: string; button: string }
 interface FunnelV2 {
   v: 2;
   step1: { unitKey: string; label: string; quote: string };
   stakes: string;
   check: { engine: string; button: string };
-  results: Record<string, { meaning: string; pro: string; button: string }>;
+  results: Record<string, Answer>;
 }
+
+/** The result card's words for each result (lib/funnel-types.ts ResultCopy), and nothing else a draft carries. */
+const answers = (results: Record<string, Answer>) =>
+  Object.fromEntries(Object.entries(results ?? {}).map(([sev, { meaning, free, pro, button }]) => [sev, { meaning, ...(free ? { free } : {}), pro, button }]));
+
 interface DraftRecord {
   id: string;
   url: string;
@@ -110,7 +116,7 @@ function main() {
         step1: { label: f.step1.label, quote: f.step1.quote },
         stakes: f.stakes,
         check: { ...f.check, target, query: q.toString() },
-        results: f.results,
+        results: answers(f.results),
       };
       continue;
     }
@@ -146,7 +152,7 @@ function main() {
     if (!f || f.v !== 2 || f.check.engine === 'report-card' || r.type === 'tool' || r.type === 'pro-tool') continue;
     if (!Object.keys(f.results ?? {}).length) continue;
     if (!byEngine.has(f.check.engine)) byEngine.set(f.check.engine, {});
-    byEngine.get(f.check.engine)![r.url] = { type: r.type, topic: r.topic, results: f.results };
+    byEngine.get(f.check.engine)![r.url] = { type: r.type, topic: r.topic, results: answers(f.results) };
   }
   fs.rmSync(CTA_DIR, { recursive: true, force: true });
   fs.mkdirSync(CTA_DIR, { recursive: true });

@@ -14,7 +14,7 @@ import path from 'node:path';
 import zlib from 'node:zlib';
 import { inflatePending, LIMITS, readImageMetadata, summarizeMetadata, type ImageMetadata } from '../lib/exif';
 import { scorecardFigure } from '../lib/scorecard';
-import { ENGINE_COPY } from '../lib/cta-copy';
+import { CARD_COPY } from '../lib/card-copy';
 import { METADATA_VIEWER_READS } from '../components/tools/MetadataViewerTool';
 
 // ───────────────────────────── a small TIFF writer ─────────────────────────────
@@ -525,10 +525,12 @@ describe('the copy says what the viewer reads', () => {
     }
   });
 
-  it('the red CTA line holds for every red result, not only GPS', () => {
-    expect(ENGINE_COPY['metadata-viewer'].red.headline).toBe('This photo carries location or identifying data.');
-    expect(ENGINE_COPY['metadata-viewer'].red.headline).not.toMatch(/where it was taken/);
-    expect(ENGINE_COPY['metadata-viewer'].info.headline).toMatch(/JPEG/);
+  it('the red card line holds for every red result, not only GPS', () => {
+    const red = CARD_COPY['metadata-viewer'].red!.meaning;
+    // Red is GPS or an identifying field, so the line names both.
+    expect(red).toMatch(/where it was taken/);
+    expect(red).toMatch(/point to you or the camera/);
+    expect(CARD_COPY['metadata-viewer'].info!.meaning).toMatch(/JPEG/);
   });
 });
 
@@ -706,10 +708,10 @@ describe('a block that was found and not decoded is never reported as no metadat
     expect(s.headline).toBe('No location, device or time data in the fields this viewer reads');
   });
 
-  it('the green CTA claims only what the viewer reads', () => {
-    const green = ENGINE_COPY['metadata-viewer'].green;
-    expect(green.headline).toBe('No location, device or time data in the fields this viewer reads.');
-    expect(green.headline).not.toMatch(/in this file/);
+  it('the green card line claims only what the viewer reads', () => {
+    const green = CARD_COPY['metadata-viewer'].green!.meaning;
+    expect(green).toMatch(/^The fields this viewer reads hold no location, device or time/);
+    expect(green).not.toMatch(/in this file/);
   });
 });
 

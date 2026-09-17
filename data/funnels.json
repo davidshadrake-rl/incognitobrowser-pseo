@@ -19,19 +19,21 @@
   },
   "results": {
    "red": {
-    "meaning": "More than half loaded, as counted above: this browser is doing little to stop ads and tracking. Sites you open with it can load theirs too.",
-    "pro": "Incognito Browser blocks ads on your Android phone for free. Incognito Pro adds tracker blocking, stopping the hidden scripts that follow you, and hides the empty ad boxes.",
-    "button": "Stop the trackers with Incognito Pro"
+    "meaning": "This browser does little to stop ads and tracking, so the sites you open in it load theirs freely.",
+    "free": "Incognito Browser blocks ads for free on your Android phone.",
+    "pro": "Blocks the hidden tracking scripts that follow you from site to site.",
+    "button": "Block trackers with Pro"
    },
    "amber": {
-    "meaning": "Some were stopped and some weren't, as counted above. Often that means ads are blocked but the tracking behind them isn't.",
-    "pro": "Incognito Pro blocks that tracking part as well: the hidden scripts that follow you from site to site, plus the empty ad boxes a blocker leaves.",
-    "button": "Block the tracking half with Pro"
+    "meaning": "Some got through, and that is often the tracking half: the ads are blocked, the tracking behind them isn't.",
+    "free": "Incognito Browser blocks ads for free on your Android phone.",
+    "pro": "Blocks that tracking half too, on every site you open in Incognito Browser.",
+    "button": "Block the tracking with Pro"
    },
    "green": {
-    "meaning": "Nearly all were stopped, as counted above, so this browser is doing its job. The rest of this site checks what else you give away: your connection, passwords and photos.",
-    "pro": "On Android, Incognito Pro blocks trackers and hides empty ad boxes, and cleans the hidden details out of a whole folder of photos at once.",
-    "button": "Block trackers and clean photos with Pro"
+    "meaning": "This browser does its job here, but the photos you post can still carry the spot where they were taken.",
+    "pro": "Strips the location and other hidden details from a whole folder of photos at once.",
+    "button": "Clean your photos with Pro"
    }
   }
  },
@@ -655,19 +657,22 @@
   },
   "results": {
    "red": {
-    "meaning": "Most of the ad and tracker requests got through, as counted above. On a real site, that's the ad network seeing this visit and adding it to your profile.",
-    "pro": "Incognito Browser blocks ads on its own. Incognito Pro also blocks the trackers that build the profile, and hides the empty ad boxes left behind.",
-    "button": "Block the trackers too with Pro"
+    "meaning": "On a real site, each request that loads is the ad network seeing this visit and adding it to your profile.",
+    "free": "Incognito Browser blocks the ads themselves, free, on Android.",
+    "pro": "Blocks the trackers that build that profile, which blocking ads alone leaves running.",
+    "button": "Block the trackers with Pro"
    },
    "amber": {
-    "meaning": "Your blocker caught some, but a share got through, as counted above. That's often the tracking half: many ad blockers stop the ads and let tracking calls through.",
-    "pro": "Incognito Pro blocks the trackers as well as the ads, and hides the empty ad boxes a blocker leaves behind.",
-    "button": "Close the gap with Pro"
+    "meaning": "Your blocker caught some, but many blockers stop the ads and let the tracking calls behind them through.",
+    "free": "Incognito Browser blocks the ads themselves, free, on Android.",
+    "pro": "Blocks those tracking calls too: the scripts that add each visit to your profile.",
+    "button": "Block the tracking with Pro"
    },
    "green": {
-    "meaning": "This browser stopped nearly all of them. That's this browser only: your other browsers and devices may be letting the same requests through.",
-    "pro": "On Android, Incognito Pro blocks trackers as well as ads, and hides the empty ad boxes.",
-    "button": "Get the same on Android with Pro"
+    "meaning": "That's this browser only: your phone and your other browsers may still feed the same profile.",
+    "free": "Incognito Browser blocks the ads themselves, free, on Android.",
+    "pro": "Blocks the trackers that build ad profiles, in Incognito Browser on your Android phone.",
+    "button": "Block trackers with Pro"
    }
   }
  },
@@ -1591,19 +1596,22 @@
   },
   "results": {
    "red": {
-    "meaning": "A password like that falls in seconds to a guessing program, as shown above. If it's used on more than one account, every one of them opens with it.",
-    "pro": "Fix it with a password manager and a different password per account; our password guides show how. Then Incognito Pro's URL Safety Checker reads a link before you tap it, so you can spot a fake login page first.",
-    "button": "Check links before you log in, with Pro"
+    "meaning": "A guessing program finds a password like that fast, and every account that shares it opens with it.",
+    "free": "Make it longer here, and use it on one account only.",
+    "pro": "Separately, blocks the tracking scripts on the sites you open; it does nothing for your passwords.",
+    "button": "Block trackers with Pro"
    },
    "amber": {
-    "meaning": "That holds out for the time shown above against a guessing program. Make it longer and it holds out far longer: length does more than odd characters.",
-    "pro": "A stronger password still gets typed wherever a link sends you. Incognito Pro's URL Safety Checker reads the link first, so you can spot a fake login page before you use it there.",
-    "button": "Check the link first, with Pro"
+    "meaning": "That holds out for a while, but if it's on more than one account, one leak still opens them all.",
+    "free": "Add a few more characters: length does more than odd symbols.",
+    "pro": "Separately, blocks the tracking scripts that follow you from site to site.",
+    "button": "Block trackers with Pro"
    },
    "green": {
-    "meaning": "That would take a guessing program decades or more, as shown above. The likelier way it gets stolen now is you typing it into a page that only looks like the real login.",
-    "pro": "Incognito Pro's URL Safety Checker reads a link for look-alike brand names, raw addresses and link shorteners before you tap it, so you can keep that password for the real site.",
-    "button": "Check every login link with Pro"
+    "meaning": "Guessing won't break that, so the likelier way in is a leak from one site or a fake login page.",
+    "free": "Keep it to one account, so one leak can't open the rest.",
+    "pro": "Separately, blocks the trackers on the sites you log in to; your password is still up to you.",
+    "button": "Block trackers with Pro"
    }
   }
  },
@@ -8563,14 +8571,16 @@
   },
   "results": {
    "info": {
-    "meaning": "Your browser tells every site its name, version and system, as shown above. That's normal, and on its own it doesn't single you out; combined with screen size and fonts, it can.",
-    "pro": "Agent Cloaking in Incognito Browser changes the browser and device sites are told about. Incognito Pro also blocks trackers.",
-    "button": "Block tracking scripts with Pro"
+    "meaning": "That's normal on its own, but with your screen size and fonts it can help tell you apart without cookies.",
+    "free": "Agent Cloaking in Incognito Browser masks the browser sites see.",
+    "pro": "Separately, blocks the tracking scripts on the sites you open in Incognito Browser.",
+    "button": "Block trackers with Pro"
    },
    "amber": {
-    "meaning": "Your browser announces an old version, as flagged above. Old versions are rarer, so they stand out more, and they also miss security fixes. Update it before anything else.",
-    "pro": "Once it's updated, Agent Cloaking in Incognito Browser changes the browser and device sites are told about, and Incognito Pro blocks trackers on top.",
-    "button": "Add tracker blocking with Pro"
+    "meaning": "That version is out of date, which makes it rarer and easier to pick out, and it misses security fixes.",
+    "free": "Update your browser: it's free and takes one restart.",
+    "pro": "Separately, blocks tracking scripts and pixels (invisible images) on the sites you open in the app.",
+    "button": "Block trackers with Pro"
    }
   }
  },
@@ -12914,19 +12924,21 @@
   },
   "results": {
    "red": {
-    "meaning": "This photo carries hidden details that point to you, listed above: a location, a preview copy of the image, or personal details. Anyone who gets the file can read them.",
-    "pro": "Incognito Pro strips the location and other hidden details from a whole folder of photos at once, so your profile photos go up without them.",
-    "button": "Clean all your photos with Pro"
+    "meaning": "Anyone who gets this file, a match included, can read the details it carries about you.",
+    "free": "Download a clean copy of this photo just below.",
+    "pro": "Strips location and other metadata from a whole folder of photos at once, before they go on a profile.",
+    "button": "Clean every photo with Pro"
    },
    "amber": {
-    "meaning": "No location, but the file still names things about you: the phone or app that made it, when it was taken, or a username, as listed above.",
-    "pro": "Incognito Pro strips these details from a whole folder of photos at once, so a dating profile shows your face and nothing about your phone.",
-    "button": "Strip them from every photo with Pro"
+    "meaning": "No location in this one, but its hidden details can still tell a match your phone, an app or a time.",
+    "free": "Download a clean copy just below, before it goes on your profile.",
+    "pro": "Strips those details from a whole folder of photos at once, before any of them go on a profile.",
+    "button": "Clean the folder with Pro"
    },
    "green": {
-    "meaning": "This file carries no hidden details we could detect. What's left to check is the picture itself: the street signs, house numbers and buildings behind you.",
-    "pro": "Your other photos may not be this clean. Incognito Pro strips location and other hidden details from a whole folder at once, so you don't have to check them one by one.",
-    "button": "Clean the whole folder with Pro"
+    "meaning": "No hidden details we could find, so check the background: street signs, house numbers, landmarks.",
+    "pro": "Strips location and other metadata from the rest of your photos, a whole folder at once.",
+    "button": "Clean the rest with Pro"
    }
   }
  },
@@ -20292,19 +20304,21 @@
   },
   "results": {
    "red": {
-    "meaning": "More than half of those scripts and invisible images loaded, as counted above. On a site that tracks, each one is a line added to the record of what you do.",
-    "pro": "Incognito Pro blocks trackers, those scripts and invisible images, before they load, and hides the empty ad boxes they leave.",
-    "button": "Stop the record-keeping with Pro"
+    "meaning": "On a site that tracks, each script or invisible image that loads adds a line to the record of what you do.",
+    "free": "Incognito Browser's ad blocker stops the ads, free, on Android.",
+    "pro": "Blocks those tracking scripts and pixels (the invisible images) before they can report the visit.",
+    "button": "Block trackers with Pro"
    },
    "amber": {
-    "meaning": "Your browser stopped some, but a share of those scripts and invisible images still loaded, as counted above. Each one still reports the visit.",
-    "pro": "Incognito Pro goes past ad blocking: it blocks tracking scripts and pixels (those invisible images) too, and hides the empty ad boxes.",
-    "button": "Block the rest of them with Pro"
+    "meaning": "Your browser stopped some, but each script or invisible image that still loads reports the visit.",
+    "free": "Incognito Browser's ad blocker stops the ads, free, on Android.",
+    "pro": "Blocks the tracking scripts and pixels (invisible images) that get past a blocker built for ads.",
+    "button": "Block trackers with Pro"
    },
    "green": {
-    "meaning": "Almost none got through here, so this browser keeps little of that record. The apps and browsers on your phone are a separate question.",
-    "pro": "On your Android phone, Incognito Pro blocks trackers and ads, and hides the empty ad boxes.",
-    "button": "Block them on Android with Pro"
+    "meaning": "Few got through here, so this browser keeps that record short; your phone is a separate question.",
+    "pro": "Blocks the scripts and pixels (invisible images) that keep that record, in Incognito Browser on Android.",
+    "button": "Block trackers with Pro"
    }
   }
  },
@@ -23424,19 +23438,20 @@
   },
   "results": {
    "red": {
-    "meaning": "This one scores badly, for the reasons listed above: tracking cookies, trackers or both. On a site you use, that is collected every time you visit.",
-    "pro": "Incognito Browser wipes cookies like these every time you close it. Incognito Pro also blocks trackers before they load, on every site you open in the app, not just this one.",
-    "button": "Block trackers on every site with Pro"
+    "meaning": "On a site you use, what this scan found is collected again every time you visit.",
+    "free": "Incognito Browser wipes cookies like these every time you close it.",
+    "pro": "Blocks the trackers before they load, on every site you open in the app, not just this one.",
+    "button": "Block trackers with Pro"
    },
    "amber": {
-    "meaning": "A middling score, for the reasons listed above. It can be a few trackers, a lot of outside scripts, or missing security settings; the list says which.",
-    "pro": "Where the list shows trackers, Incognito Pro blocks them before they load and hides the empty ad boxes, on every site you open in the app.",
-    "button": "Block what it lists with Pro"
+    "meaning": "A middling score, from tracking, outside scripts or missing security settings; the report says which.",
+    "pro": "Blocks any trackers in that report before they load, on every site you open in the app.",
+    "button": "Block trackers with Pro"
    },
    "green": {
-    "meaning": "A good score: little or no tracking on this check, as listed above. The scan doesn't run the page's scripts, so cookies they set later won't show here.",
-    "pro": "Two in three of the 500 sites we graded aren't this careful. Incognito Pro blocks trackers before they load on every site you open in the app.",
-    "button": "Block trackers everywhere with Pro"
+    "meaning": "A good score, though the scan doesn't run the page's scripts, so cookies they set later won't show.",
+    "pro": "Blocks trackers before they load on the many sites less careful than this one.",
+    "button": "Block trackers with Pro"
    }
   }
  },
@@ -24840,14 +24855,16 @@
   },
   "results": {
    "red": {
-    "meaning": "Your browser is handing sites a second address, different from the one your connection shows. If you're on a VPN, that second address is usually your real one, and any page can read it quietly.",
-    "pro": "Switch JavaScript off in Incognito Browser and no page can read that address at all; sites that need JavaScript won't work while it's off. Incognito Pro also blocks the trackers that follow you between sites.",
-    "button": "Block trackers too with Incognito Pro"
+    "meaning": "If you're on a VPN, that second address is usually your real one, and any page can read it quietly.",
+    "free": "Turn JavaScript off in Incognito Browser to hide it; some sites break.",
+    "pro": "Blocks trackers that follow you between sites, but doesn't change your IP address or include a VPN.",
+    "button": "Block trackers with Pro"
    },
    "info": {
-    "meaning": "No leak: sites see one address, the one your connection shows, along with roughly where you are. Every browser shows sites this much; only a VPN or proxy changes it.",
-    "pro": "Sites follow you with more than your address. Incognito Pro blocks the trackers that do much of the rest, and Incognito Browser wipes cookies when you close it. Neither changes your address: that takes a VPN, which Pro doesn't include.",
-    "button": "Block the trackers with Incognito Pro"
+    "meaning": "No leak: every browser shows sites this one address and rough location, unless a VPN or proxy changes it.",
+    "free": "Incognito Browser wipes cookies and history every time you close it.",
+    "pro": "Blocks the trackers that follow you from site to site, but doesn't change your IP address or include a VPN.",
+    "button": "Block trackers with Pro"
    }
   }
  },
@@ -27298,9 +27315,9 @@
   },
   "results": {
    "green": {
-    "meaning": "Nothing on apple.com's homepage is following you. The trouble is the next site you open, and the one after that.",
-    "pro": "Incognito Pro blocks trackers on the sites that do load them, and hides the empty ad boxes they leave behind.",
-    "button": "Block trackers on the other sites with Pro"
+    "meaning": "Nothing on apple.com's homepage follows you, but two in three of the 500 sites we graded had something that does.",
+    "pro": "Blocks the trackers on the sites that do load them, whenever you open those sites in the app.",
+    "button": "Block trackers with Pro"
    }
   }
  },
@@ -31449,9 +31466,10 @@
   },
   "results": {
    "green": {
-    "meaning": "It gets a B, not an A, mostly because of that one cookie. No ad trackers load on the homepage: here it's the cookie that recognises you.",
-    "pro": "Incognito Browser wipes that cookie every time you close it, so it can't follow you for six months. Incognito Pro also blocks the trackers other sites load.",
-    "button": "Block other sites' trackers with Pro"
+    "meaning": "It's a B, not an A, mostly for NID: one cookie that can recognise this browser for six months.",
+    "free": "Incognito Browser wipes that cookie every time you close it.",
+    "pro": "Blocks the tracking scripts other sites load; it can't stop NID, which Google's own server sets.",
+    "button": "Block trackers with Pro"
    }
   }
  },

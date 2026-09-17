@@ -18,6 +18,8 @@ export interface EventPayload {
   platform?: 'android' | 'ios' | 'desktop' | 'other';
   inApp?: boolean;
   page?: string;
+  benefit?: 'tracker-blocking' | 'hides-ad-boxes' | 'photo-cleaning';
+  reason?: 'scrolled' | 'in-view' | 'hidden' | 'on-load' | 'own-scroll';
 }
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,47}$/;
@@ -35,6 +37,8 @@ export const TOOL_IDS = new Set([
   'report-card',
 ]);
 const PLATFORMS = new Set(['android', 'ios', 'desktop', 'other']);
+const BENEFITS = new Set(['tracker-blocking', 'hides-ad-boxes', 'photo-cleaning']);
+const REASONS = new Set(['scrolled', 'in-view', 'hidden', 'on-load', 'own-scroll']);
 // A page may only name a funnel page: a fixed list (about 1,400), so a counter
 // key can never be minted from free text.
 let funnelPaths: Set<string> | null = null;
@@ -58,6 +62,8 @@ export function validateEvent(input: unknown): Validation {
   if (o.platform !== undefined) { if (!PLATFORMS.has(o.platform as string)) return { ok: false, error: 'bad platform' }; v.platform = o.platform as EventPayload['platform']; }
   if (o.inApp !== undefined) { if (typeof o.inApp !== 'boolean') return { ok: false, error: 'bad inApp' }; v.inApp = o.inApp; }
   if (o.page !== undefined) { if (typeof o.page !== 'string' || !isFunnelPath(o.page)) return { ok: false, error: 'unknown page' }; v.page = o.page; }
+  if (o.benefit !== undefined) { if (!BENEFITS.has(o.benefit as string)) return { ok: false, error: 'bad benefit' }; v.benefit = o.benefit as EventPayload['benefit']; }
+  if (o.reason !== undefined) { if (!REASONS.has(o.reason as string)) return { ok: false, error: 'bad reason' }; v.reason = o.reason as EventPayload['reason']; }
   return { ok: true, value: v };
 }
 
@@ -70,7 +76,9 @@ export function dayOf(d: Date): string {
 export function eventKeys(day: string, v: EventPayload): string[] {
   const p = v.platform || '-';
   const keys = [`evt:${day}:_all`, `evt:${day}:${v.event}`, `evt:${day}:${v.event}:${v.tool || '-'}:${p}`];
-  if (v.target) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:${v.target}`);
+  // The benefit rides on the click's own key, so the count stays bounded (≤7 keys).
+  if (v.target) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:${v.target}${v.benefit ? `:b-${v.benefit}` : ''}`);
+  if (v.reason) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:r-${v.reason}`);
   if (v.severity) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:sev-${v.severity}`);
   if (v.inApp) keys.push(`evt:${day}:_inapp:${v.event}`);
   // Per funnel page: views, runs, results by colour and clicks (scripts/funnels/stats.ts).

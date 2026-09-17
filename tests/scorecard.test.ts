@@ -307,7 +307,8 @@ describe('shareLinkFor — keeps the quiz result, drops everything else', () => 
 
 describe('reportCardLine — "clean" only when the scan found nothing (CTO review 2026-09-10)', () => {
   it('calls an A or B clean only with no trackers and no tracking cookies', () => {
-    expect(reportCardLine('A', 'green', { trackingCookies: 0, trackers: 0 }).headline).toBe('A clean site. Most are not.');
+    // One sentence since it became the result card's meaning (2026-09-16); it was "A clean site. Most are not."
+    expect(reportCardLine('A', 'green', { trackingCookies: 0, trackers: 0 }).headline).toBe('A clean site, which most are not.');
   });
   it('says what still loads on an A or B that tracks (airbnb.com: B, 3 trackers)', () => {
     const line = reportCardLine('B', 'green', { trackingCookies: 0, trackers: 3 });

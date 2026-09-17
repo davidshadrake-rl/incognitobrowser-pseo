@@ -309,6 +309,33 @@ export function ScreenshotLeakCheckerTool() {
           engine="screenshot-leak-checker"
           status={statusFromSeverity(analysis.verdict)}
           verdict={v.label}
+          result={toResult(analysis)}
+          // The free fix, straight under the result card: a clean copy of this one file.
+          actions={
+            <div className="w-full">
+              <div className="flex flex-wrap gap-3 items-center">
+                <button onClick={downloadClean} disabled={cleaning} className="btn-primary text-sm px-4 py-2">
+                  {cleaning ? 'Making the clean copy…' : 'Download clean copy'}
+                </button>
+                <button
+                  onClick={reset}
+                  className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
+                >
+                  Check another file
+                </button>
+              </div>
+              {/* Fallback for browsers that block a download the page starts itself. */}
+              {cleanUrl && (
+                <p className="mt-3 text-xs text-t2">
+                  Clean copy: <span className="font-mono text-white break-all">{cleanName}</span>. If the download did not start,{' '}
+                  <a href={cleanUrl} download={cleanName} className="text-ok underline underline-offset-2">save it here</a>.
+                </p>
+              )}
+              <p className="mt-3 text-xs text-t3">
+                The clean copy is made by drawing the decoded pixels onto a canvas and re-encoding, which drops every metadata block — Exif, XMP, IPTC, PNG text, the embedded thumbnail. PNG stays PNG and lossless. JPEG and WebP are saved as JPEG at quality 92, so they recompress slightly. It is saved as {cleanFileName(analysis.format)}, so the original file name is left behind too.
+              </p>
+            </div>
+          }
           statTiles={[
             { label: 'Leaks', value: String(analysis.counts.leaks) },
             { label: 'GPS', value: analysis.counts.gps ? 'Yes' : 'No' },
@@ -317,10 +344,8 @@ export function ScreenshotLeakCheckerTool() {
           ]}
         >
         <div className="space-y-4">
-          {/* Verdict */}
+          {/* The file (the verdict and headline are in the result card above) */}
           <div>
-            <div className={`text-xs font-semibold uppercase tracking-wide ${v.text}`}>{v.label}</div>
-            <h3 className="mt-1 text-lg font-semibold text-white">{analysis.headline}</h3>
             {fileMeta && (
               <p className="mt-1 text-xs text-t3 font-mono break-all">
                 {fileMeta.name} · {formatBytes(fileMeta.size)} · {analysis.format.toUpperCase()}
@@ -464,30 +489,6 @@ export function ScreenshotLeakCheckerTool() {
             </details>
           )}
 
-          {/* Actions */}
-          <div className="bg-s0 border border-b1 rounded-lg p-4">
-            <div className="flex flex-wrap gap-3 items-center">
-              <button onClick={downloadClean} disabled={cleaning} className="btn-primary text-sm px-4 py-2">
-                {cleaning ? 'Making the clean copy…' : 'Download clean copy'}
-              </button>
-              <button
-                onClick={reset}
-                className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
-              >
-                Check another file
-              </button>
-            </div>
-            {/* Fallback for browsers that block a download the page starts itself. */}
-            {cleanUrl && (
-              <p className="mt-3 text-xs text-t2">
-                Clean copy: <span className="font-mono text-white break-all">{cleanName}</span>. If the download did not start,{' '}
-                <a href={cleanUrl} download={cleanName} className="text-ok underline underline-offset-2">save it here</a>.
-              </p>
-            )}
-            <p className="mt-3 text-xs text-t3">
-              The clean copy is made by drawing the decoded pixels onto a canvas and re-encoding, which drops every metadata block — Exif, XMP, IPTC, PNG text, the embedded thumbnail. PNG stays PNG and lossless. JPEG and WebP are saved as JPEG at quality 92, so they recompress slightly. It is saved as {cleanFileName(analysis.format)}, so the original file name is left behind too.
-            </p>
-          </div>
         </div>
         </ConsoleFrame>
       )}

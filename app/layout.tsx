@@ -62,7 +62,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: IN_APP_BOOT_SCRIPT }} />
         <InAppBridge />
         {/* Header */}
-        <header className="border-b border-b1 bg-black sticky top-0 z-50">
+        <header data-site-header className="border-b border-b1 bg-black sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Below sm the wordmark steps down a size and the gaps close up: the
                 row ran 6px past a 375px screen and 21px past a 360px one. */}

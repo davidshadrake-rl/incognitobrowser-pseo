@@ -5,9 +5,9 @@ import { getAllSites, getSite, getSiblingSites, gradeChange, isSitePublished } f
 import { getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
 import { generateMetadata as genMeta, generateBreadcrumbSchema, absoluteUrl } from '@/lib/seo';
-import { ReportCardFunnel } from '@/components/ReportCardFunnel';
-import { PageFunnel } from '@/components/PageFunnel';
+import { ResultCard } from '@/components/tools/ResultCard';
 import { funnelFor, isV2 } from '@/lib/funnels';
+import { reportCardCopy, resolveCardCopy } from '@/lib/card-copy';
 import { severityFromGrade } from '@/lib/severity';
 import { GRADE_LABEL } from '@/lib/site-grade';
 import { TRACKER_FOR_INLINE } from '@/lib/scanner';
@@ -91,6 +91,20 @@ export default async function SiteReportPage({ params }: PageProps) {
   const otherCookies = scan.cookies.filter((c) => c.category !== 'tracking');
 
   const pageFunnel = funnelFor(`/site/${domain}`);
+  // The grade is the result, known when the page is built. Its answer and ask
+  // are the result card under the title (owner, 2026-09-16: on screen with the
+  // result): the page's own words if it has them, else the scan-aware line.
+  const severity = severityFromGrade(grade.grade);
+  const ownWords = pageFunnel && isV2(pageFunnel) && pageFunnel.results[severity] ? pageFunnel : null;
+  const cardCopy = ownWords
+    ? resolveCardCopy('report-card', severity, ownWords)
+    : reportCardCopy(grade.grade, severity, { trackingCookies: scan.summary.trackingCookies, trackers: scan.summary.totalTrackers, pixels: extraInlinePixels(scan) });
+  const shareStats = [
+    { label: 'Tracking cookies', value: String(scan.summary.trackingCookies) },
+    { label: 'Trackers', value: String(scan.summary.totalTrackers) },
+    { label: 'Third parties', value: String(scan.thirdPartyDomains.length) },
+    { label: 'HTTPS', value: scan.security.isHTTPS ? 'yes' : 'no' },
+  ];
 
   return (
     <article className="max-w-3xl mx-auto">
@@ -100,45 +114,41 @@ export default async function SiteReportPage({ params }: PageProps) {
 
       <header className="mb-8">
         <p className="text-xs uppercase tracking-wider text-t2 mb-2">Website Privacy Report Card · {category.label}</p>
-        <h1 className="text-3xl font-bold text-white mb-3">Does {domain} track you?</h1>
-        <div className="flex items-center gap-5 bg-s0 border border-b1 rounded-lg p-5">
-          <GradeBadge grade={grade.grade} size="xl" />
-          <div>
-            <div className="text-2xl font-semibold text-white">{grade.score} / 100 — {GRADE_LABEL[grade.grade]}</div>
-            <p className="text-t2 mt-1">{grade.headline}</p>
-            <p className="text-xs text-t3 mt-2">
-              Homepage scanned {fmtDate(site.scannedAt)}, first load, no consent clicked.{' '}
-              <Link href="/site/methodology" className="underline hover:text-white">How we grade</Link>
-            </p>
-            {change && (
-              <p className={`text-xs mt-1 ${change.scoreDelta < 0 ? 'text-danger' : 'text-ok'}`}>
-                Changed since {fmtDate(change.since)}: {change.from} → {change.to} ({change.scoreDelta > 0 ? '+' : ''}{change.scoreDelta} points)
-              </p>
-            )}
-          </div>
-        </div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3 break-words">Does {domain} track you?</h1>
+        <section className="console bg-s0 border border-b1 rounded-[16px] overflow-hidden" data-console="report-card">
+          <ResultCard
+            staticCard={{
+              engine: 'report-card',
+              niche: category.niche,
+              severity,
+              figure: `Grade ${grade.grade}`,
+              headline: `${grade.score} / 100 — ${GRADE_LABEL[grade.grade]}`,
+              // The scan summary; the narrowest phones skip it (the itemised list below repeats it) so the button fits.
+              detail: <p className="rc-detail text-t2 text-row mt-2">{grade.headline}</p>,
+              after: (
+                <>
+                  <p>
+                    Homepage scanned {fmtDate(site.scannedAt)}, first load, no consent clicked.{' '}
+                    <Link href="/site/methodology" className="underline hover:text-white">How we grade</Link>
+                    {' · '}
+                    {/* Scanning any other site is the Pro tools section's Cookie & Tracker Scanner (free on the web for now). */}
+                    <a href={proUrlFor('ad-tracking', 'cookie-tracker-scanner')} className="underline hover:text-white">Scan any site: Cookie &amp; Tracker Scanner</a>
+                  </p>
+                  {change && (
+                    <p className={`mt-1 ${change.scoreDelta < 0 ? 'text-danger' : 'text-ok'}`}>
+                      Changed since {fmtDate(change.since)}: {change.from} → {change.to} ({change.scoreDelta > 0 ? '+' : ''}{change.scoreDelta} points)
+                    </p>
+                  )}
+                </>
+              ),
+              copy: cardCopy,
+              page: ownWords ? `/site/${domain}` : undefined,
+              share: { title: `Does ${domain} track you?`, headline: grade.headline, stats: shareStats, url: absoluteUrl(`/site/${domain}`) },
+              term: 'report-card',
+            }}
+          />
+        </section>
       </header>
-
-      {/* The ask, right under the grade (owner, 2026-09-16: near the top, or visitors never see it). */}
-      {pageFunnel && isV2(pageFunnel) && pageFunnel.check.mode === 'card'
-        ? <PageFunnel funnel={pageFunnel} niche={category.niche} cardSeverity={severityFromGrade(grade.grade)} />
-        : <ReportCardFunnel
-            hideShare
-            domain={domain}
-            niche={category.niche}
-            grade={grade.grade}
-            score={grade.score}
-            headline={grade.headline}
-            stats={[
-              { label: 'Tracking cookies', value: String(scan.summary.trackingCookies) },
-              { label: 'Trackers', value: String(scan.summary.totalTrackers) },
-              { label: 'Third parties', value: String(scan.thirdPartyDomains.length) },
-              { label: 'HTTPS', value: scan.security.isHTTPS ? 'yes' : 'no' },
-            ]}
-            pixels={extraInlinePixels(scan)}
-            proUrl={proUrlFor('ad-tracking', 'cookie-tracker-scanner')}
-            pageUrl={absoluteUrl(`/site/${domain}`)}
-          />}
 
       {/* Deductions — the arguable part, itemised */}
       <section className="mb-8">
@@ -244,24 +254,7 @@ export default async function SiteReportPage({ params }: PageProps) {
       </section>
 
 
-      {/* The shareable card stays with the detail; the ask sits under the grade. */}
-      <ReportCardFunnel
-        hideCta
-        domain={domain}
-        niche={category.niche}
-        grade={grade.grade}
-        score={grade.score}
-        headline={grade.headline}
-        stats={[
-          { label: 'Tracking cookies', value: String(scan.summary.trackingCookies) },
-          { label: 'Trackers', value: String(scan.summary.totalTrackers) },
-          { label: 'Third parties', value: String(scan.thirdPartyDomains.length) },
-          { label: 'HTTPS', value: scan.security.isHTTPS ? 'yes' : 'no' },
-        ]}
-        pixels={extraInlinePixels(scan)}
-        proUrl={proUrlFor('ad-tracking', 'cookie-tracker-scanner')}
-        pageUrl={absoluteUrl(`/site/${domain}`)}
-      />
+
 
       {/* Siblings — same category */}
       {siblings.length > 0 && (

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { scanUrl } from '@/lib/scan-client';
-import { useReportResult, type Severity } from './ResultContext';
+import { useReportResult, type Severity, type ToolResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
@@ -158,7 +158,7 @@ export function analyzeURL(urlString: string): URLAnalysis {
   const isShortener = URL_SHORTENERS.has(baseDomain);
   checks++;
   if (isShortener) {
-    risks.push({ severity: 'medium', message: 'URL shortener detected — the destination is hidden. Press "Show where it leads" below to see it.' });
+    risks.push({ severity: 'medium', message: 'URL shortener detected — the destination is hidden. Press "Show where it leads" above to see it.' });
     score -= 10;
     details.push({ label: 'Type', value: 'URL Shortener', safe: false });
   }
@@ -290,23 +290,28 @@ export function urlVerdict(a: URLAnalysis): { word: 'Fail' | 'Warning' | 'Not ve
   return { word: 'Pass', severity: 'green' };
 }
 
+/** What the result bus and the console's result card show for one analysis. */
+function toResult(a: URLAnalysis): ToolResult {
+  const high = a.risks.filter((r) => r.severity === 'high').length;
+  const medium = a.risks.filter((r) => r.severity === 'medium').length;
+  return {
+    // The same rule as the console header, so the CTA and the header agree.
+    severity: urlVerdict(a).severity,
+    score: a.score,
+    // Warning signs are the medium findings, the tally's "Warns"; minor ones are not counted as warnings.
+    headline: a.suspectedImpersonation ? `This link imitates ${a.suspectedImpersonation.brand}` : high ? `This link shows ${high} high-risk phishing sign${high === 1 ? '' : 's'}` : medium ? `This link has ${medium} warning sign${medium === 1 ? '' : 's'}` : `No phishing signs found in this link`,
+    stats: [{ label: 'Safety score', value: `${a.score}/100` }, { label: 'High risk', value: String(high) }, { label: 'Warnings', value: String(medium) }, { label: 'HTTPS', value: a.isHTTPS ? 'yes' : 'no' }],
+  };
+}
+
 export function URLAnalyzerTool() {
   const [url, setUrl] = useState('');
   const [analysis, setAnalysis] = useState<URLAnalysis | null>(null);
+  const result = useMemo(() => (analysis ? toResult(analysis) : null), [analysis]);
   const report = useReportResult();
   useEffect(() => {
-    if (!analysis) { report(null); return; }
-    const high = analysis.risks.filter((r) => r.severity === 'high').length;
-    const medium = analysis.risks.filter((r) => r.severity === 'medium').length;
-    report({
-      // The same rule as the console header, so the CTA and the header agree.
-      severity: urlVerdict(analysis).severity,
-      score: analysis.score,
-      // Warning signs are the medium findings, the tally's "Warns"; minor ones are not counted as warnings.
-      headline: analysis.suspectedImpersonation ? `This link imitates ${analysis.suspectedImpersonation.brand}` : high ? `This link shows ${high} high-risk phishing sign${high === 1 ? '' : 's'}` : medium ? `This link has ${medium} warning sign${medium === 1 ? '' : 's'}` : `No phishing signs found in this link`,
-      stats: [{ label: 'Safety score', value: `${analysis.score}/100` }, { label: 'High risk', value: String(high) }, { label: 'Warnings', value: String(medium) }, { label: 'HTTPS', value: analysis.isHTTPS ? 'yes' : 'no' }],
-    });
-  }, [analysis, report]);
+    report(result);
+  }, [result, report]);
   const [unfurling, setUnfurling] = useState(false);
   const [unfurled, setUnfurled] = useState('');
   const [unfurlError, setUnfurlError] = useState('');
@@ -381,6 +386,24 @@ export function URLAnalyzerTool() {
           runAt={runAt || undefined}
           score={analysis.score}
           gaugeLabel="safety"
+          result={result}
+          // A short link's next step, straight under the result card: see where it leads before opening it.
+          actions={analysis.isShortener ? (
+            <div className="w-full">
+              <button onClick={unfurlShortener} disabled={unfurling} className="btn-primary text-sm px-4 py-2">
+                {unfurling ? 'Checking...' : 'Show where it leads'}
+              </button>
+              <p className="mt-3 text-xs text-t2">
+                See where this short link leads before you open it. Our server opens the link and shows you the address it redirects to.
+              </p>
+              {unfurled && (
+                <div className="mt-3 p-3 bg-s0 border border-b1 rounded text-xs text-ok font-mono break-all">
+                  → {unfurled}
+                </div>
+              )}
+              {unfurlError && <p className="mt-3 text-xs text-danger">{unfurlError}</p>}
+            </div>
+          ) : undefined}
           // Passes are checks that found nothing. Low-severity findings are
           // "Minor": they used to be counted as "Passes", so a link with three
           // minor risks read as passing three checks.
@@ -423,25 +446,6 @@ export function URLAnalyzerTool() {
               <span><span className="inline-block w-2 h-2 bg-danger rounded-full mr-1"></span>Likely malicious</span>
             </div>
           </div>
-
-          {/* Shortener unfurl */}
-          {analysis.isShortener && (
-            <div className="bg-s0 border border-warn/30 rounded-lg p-6">
-              <h3 className="text-sm font-semibold text-warn mb-2">URL Shortener Detected</h3>
-              <p className="text-xs text-t2 mb-3">
-                See where this short link leads before you open it. Our server opens the link and shows you the address it redirects to.
-              </p>
-              <button onClick={unfurlShortener} disabled={unfurling} className="btn-primary text-xs px-3 py-2">
-                {unfurling ? 'Checking...' : 'Show where it leads'}
-              </button>
-              {unfurled && (
-                <div className="mt-3 p-3 bg-s0 rounded text-xs text-ok font-mono break-all">
-                  → {unfurled}
-                </div>
-              )}
-              {unfurlError && <p className="mt-3 text-xs text-danger">{unfurlError}</p>}
-            </div>
-          )}
 
           {/* Details */}
           <div className="bg-s0 border border-b1 rounded-lg p-6">

@@ -23,9 +23,15 @@ export interface PageFunnelV1 {
   step5: { label: string };
 }
 
-/** What one result means for the visitor, what Pro does about it, and the button that asks. */
+/**
+ * What one result means for the visitor, what Pro does about it, and the
+ * button that asks. Shown in the result card (components/tools/ResultCard.tsx);
+ * lib/card-copy.ts has the limits and rules.
+ */
 export interface ResultCopy {
   meaning: string;
+  /** The free fix the visitor can do right now, on this page or in the free app, when there is one. */
+  free?: string;
   pro: string;
   button: string;
 }
@@ -35,7 +41,7 @@ export interface ResultCopy {
  *   inline  a free tool on this deployment: the card links to its page
  *   link    a tool this deployment doesn't build (a Pro tool on the free site)
  *           or one that can't share a page: the card links to it absolutely
- *   page    this IS the tool page: the answer sits under "What to do now"
+ *   page    this IS the tool page: the answer is in the result card
  *   card    a report card: the grade is the result, known when the page is built
  * All but `card` reach the visitor through the same plain card.
  */

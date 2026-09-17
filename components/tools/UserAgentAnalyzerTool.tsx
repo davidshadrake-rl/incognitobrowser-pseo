@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
-import { useReportResult } from './ResultContext';
+import { useReportResult, type ToolResult } from './ResultContext';
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 
@@ -112,6 +112,20 @@ function parseUserAgent(ua: string): UADetails {
   return result;
 }
 
+/**
+ * What the result card shows. Only the visitor's own browser is "your
+ * browser"; a pasted string is named as a user agent, not theirs.
+ */
+function uaResult(d: UADetails, own: boolean): ToolResult {
+  return {
+    severity: d.privacyConcerns.length >= 3 ? 'amber' : 'info',
+    headline: `${own ? 'Your browser announces' : 'This user agent announces'} ${d.browser.name} ${d.browser.version} on ${d.os.name}${d.os.version ? ' ' + d.os.version : ''} to every site`,
+    // stats[0] is the scorecard's big figure — the browser name alone; the
+    // full "Microsoft Edge 128.0.2739.42" string does not fit at 120px.
+    stats: [{ label: 'Browser', value: d.browser.name }, { label: 'Version', value: d.browser.version }, { label: 'OS', value: d.os.name }, { label: 'Uniqueness factors', value: String(d.uniquenessFactors.length) }],
+  };
+}
+
 // navigator.userAgent never changes while the page is open.
 const subscribeNoop = () => () => {};
 
@@ -131,22 +145,14 @@ export function UserAgentAnalyzerTool() {
   const [customRanAt, setCustomRanAt] = useState(0);
   const [hints, setHints] = useState<ClientHints | null>(null);
   const report = useReportResult();
-  // Only the visitor's own browser is their result. A pasted string is someone
-  // else's (or a test value), so it never reaches the CTA or the share card.
-  useEffect(() => {
-    if (!ownDetails) { report(null); return; }
-    const n = ownDetails.uniquenessFactors.length;
-    report({
-      severity: ownDetails.privacyConcerns.length >= 3 ? 'amber' : 'info',
-      headline: `Your browser announces ${ownDetails.browser.name} ${ownDetails.browser.version} on ${ownDetails.os.name}${ownDetails.os.version ? ' ' + ownDetails.os.version : ''} to every site`,
-      // stats[0] is the scorecard's big figure — the browser name alone; the
-      // full "Microsoft Edge 128.0.2739.42" string does not fit at 120px.
-      stats: [{ label: 'Browser', value: ownDetails.browser.name }, { label: 'Version', value: ownDetails.browser.version }, { label: 'OS', value: ownDetails.os.name }, { label: 'Uniqueness factors', value: String(n) }],
-    });
-  }, [ownDetails, report]);
 
   const showingCustom = useCustom && customDetails !== null;
   const details = showingCustom ? customDetails : ownDetails;
+  const result = useMemo(() => (details ? uaResult(details, !showingCustom) : null), [details, showingCustom]);
+  // Only the visitor's own browser is their result. A pasted string is someone
+  // else's (or a test value): the card shows its headline, but nothing is
+  // reported while it is on screen, so it never reaches the upgrade ask or the share card.
+  useEffect(() => { report(showingCustom ? null : result); }, [result, showingCustom, report]);
 
   // Fetch high-entropy Client Hints on mount (Chromium only, async).
   useEffect(() => {
@@ -188,55 +194,24 @@ export function UserAgentAnalyzerTool() {
     }
   };
 
+  // The result answers on page load, so nothing sits above the console: the
+  // result card has to be on screen without a scroll (owner, 2026-09-16).
   return (
     <div className="space-y-6">
-      <div className="bg-s0 border border-b1 rounded-lg p-6">
-        <h3 className="text-sm font-semibold text-white mb-2">Your User Agent</h3>
-        <code className="block bg-s0 p-4 rounded-md text-xs text-t2 font-mono break-all">
-          {ua}
-        </code>
-        <div className="mt-3 flex items-center gap-4">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={useCustom}
-              onChange={(e) => setUseCustom(e.target.checked)}
-              className="accent-white"
-            />
-            <span className="text-xs text-t2">Analyze a different user agent</span>
-          </label>
-        </div>
-        {useCustom && (
-          <div className="mt-3 flex gap-2">
-            <input
-              type="text"
-              value={customUA}
-              onChange={(e) => setCustomUA(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && analyzeCustom()}
-              placeholder="Paste a user agent string..."
-              className="flex-1 px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white placeholder-white/20 font-mono"
-            />
-            <button onClick={analyzeCustom} className="btn-primary px-4 text-sm">Analyze</button>
-          </div>
-        )}
-      </div>
-
-      {showingCustom && (
-        <div>
-          <h3 className="text-sm font-semibold text-white">Analysis of the pasted string</h3>
-          <p className="mt-1 text-xs text-t3">
-            Not your browser. Untick &ldquo;Analyze a different user agent&rdquo; to see your own results again.
-          </p>
-          <code className="mt-2 block text-xs text-t2 font-mono break-all">{customDetails.raw}</code>
+      {/* Before the browser's user agent is read (the server render): hold the console's place, so the card doesn't push the page down when it lands. */}
+      {!details && (
+        <div className="bg-s0 border border-b1 rounded-[16px] min-h-[640px] p-8 text-center text-t2" role="status">
+          Reading your browser&apos;s user agent…
         </div>
       )}
 
-      {details && (
+      {details && result && (
         <ConsoleFrame
           engine="useragent-analyzer"
-          status={statusFromSeverity(details.privacyConcerns.length >= 3 ? 'amber' : 'info')}
+          status={statusFromSeverity(result.severity)}
           // Same console for both analyses; a pasted string's run has its own time.
           runAt={showingCustom ? customRanAt : undefined}
+          result={result}
           statTiles={[
             { label: 'Browser', value: details.browser.name },
             { label: 'Version', value: details.browser.version },
@@ -245,6 +220,48 @@ export function UserAgentAnalyzerTool() {
           ]}
         >
         <>
+          {/* The string itself and the paste box, after the result card (they sat above the console and pushed the card down). */}
+          <div className="bg-s0 border border-b1 rounded-lg p-6 mb-4">
+            <h3 className="text-sm font-semibold text-white mb-2">Your User Agent</h3>
+            <code className="block bg-s0 p-4 rounded-md text-xs text-t2 font-mono break-all">
+              {ua}
+            </code>
+            <div className="mt-3 flex items-center gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={useCustom}
+                  onChange={(e) => setUseCustom(e.target.checked)}
+                  className="accent-white"
+                />
+                <span className="text-xs text-t2">Analyze a different user agent</span>
+              </label>
+            </div>
+            {useCustom && (
+              <div className="mt-3 flex gap-2">
+                <input
+                  type="text"
+                  value={customUA}
+                  onChange={(e) => setCustomUA(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && analyzeCustom()}
+                  placeholder="Paste a user agent string..."
+                  className="flex-1 px-3 py-2 bg-s0 border border-b1 rounded-md text-sm text-white placeholder-white/20 font-mono"
+                />
+                <button onClick={analyzeCustom} className="btn-primary px-4 text-sm">Analyze</button>
+              </div>
+            )}
+          </div>
+
+          {showingCustom && (
+            <div className="mb-4">
+              <h3 className="text-sm font-semibold text-white">Analysis of the pasted string</h3>
+              <p className="mt-1 text-xs text-t3">
+                Not your browser. Untick &ldquo;Analyze a different user agent&rdquo; to see your own results again.
+              </p>
+              <code className="mt-2 block text-xs text-t2 font-mono break-all">{details.raw}</code>
+            </div>
+          )}
+
           {/* Extra parsed detail beyond the glance stats above */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="bg-s0 border border-b1 rounded-lg p-4">

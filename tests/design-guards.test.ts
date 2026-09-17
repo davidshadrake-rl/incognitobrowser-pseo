@@ -168,12 +168,11 @@ describe('(f) gate day: PRO_WEB_GATED=true removes every "free for now"', () => 
     }
   });
 
-  it('composeCta / IN_APP_COPY carry no "free for now" string to gate', async () => {
-    // ProNotice and TierCompare do not exist until PR4; lib/cta-copy carries
-    // no "free for now" copy today, so this asserts the current state and
-    // becomes a real gate check when PR4 adds gated copy there.
-    const src = read('lib/cta-copy.ts');
-    expect(src.toLowerCase()).not.toContain('free for now');
+  it('the result card copy and IN_APP_COPY carry no "free for now" string to gate', async () => {
+    // ProNotice and TierCompare do not exist until PR4; the card's words
+    // carry no "free for now" copy today, so this asserts the current state
+    // and becomes a real gate check when PR4 adds gated copy there.
+    for (const f of ['lib/card-copy.ts', 'lib/cta-copy.ts']) expect(read(f).toLowerCase(), f).not.toContain('free for now');
   });
 });
 

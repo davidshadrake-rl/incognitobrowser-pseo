@@ -52,7 +52,8 @@ describe('ConsoleFrame header', () => {
     const html = renderToStaticMarkup(
       React.createElement(ConsoleFrame, { engine: 'metadata-viewer', status: 'warn', runAt }),
     );
-    expect(header(html)).toMatch(/>Run at [^<]*32/);
+    // "Run at" hides on phones (the strip has no room); the time itself always shows.
+    expect(header(html)).toMatch(/>Run at <\/span>[^<]*32/);
     expect(html).not.toMatch(/local only|via our server/);
   });
 

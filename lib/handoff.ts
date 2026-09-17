@@ -1,5 +1,5 @@
 /**
- * The desktop hand-off message behind "Email me the link" (ResultCta).
+ * The desktop hand-off message behind "Email me the link" (components/UpgradeButtons.tsx).
  *
  * Kept as pure functions so the exact bytes that reach a mail client are
  * unit-tested. Two things broke this on Windows (2026-09-08): bare "\n" line

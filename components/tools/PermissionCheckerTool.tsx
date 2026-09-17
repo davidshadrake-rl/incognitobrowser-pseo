@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { copyText } from '@/lib/clipboard';
 import { useReportResult, type Severity, type ToolResult } from './ResultContext';
 import { ConsoleFrame, statusFromSeverity, type ConsoleRow, type Status } from './ConsoleFrame';
@@ -205,11 +205,13 @@ function CopyAddress({ address }: { address: string }) {
 export function PermissionCheckerTool() {
   const [results, setResults] = useState<PermissionResult[]>([]);
   const report = useReportResult();
-  useEffect(() => {
-    if (!results.length) { report(null); return; }
+  // One object for the result bus and the console's result card.
+  const result = useMemo<ToolResult | null>(() => {
+    if (!results.length) return null;
     const s = summarizePermissions(results);
-    report({ severity: s.severity, headline: s.headline, stats: s.stats });
-  }, [results, report]);
+    return { severity: s.severity, headline: s.headline, stats: s.stats };
+  }, [results]);
+  useEffect(() => { report(result); }, [result, report]);
   const [scanning, setScanning] = useState(false);
   const [scanned, setScanned] = useState(false);
   // The console stays mounted across re-checks, so it is told when each run finished.
@@ -242,6 +244,30 @@ export function PermissionCheckerTool() {
 
   const summary = summarizePermissions(results);
 
+  // How to change a permission. A web page cannot open browser settings, so
+  // the addresses are copy buttons, not links. When this site holds a
+  // permission that needs the visitor's OK, this is the free fix and sits
+  // straight under the result card; otherwise it ends the report.
+  const removeHelp = (
+    <div className="w-full bg-s0 border border-info/30 rounded-lg p-4">
+      <p className="text-sm text-info font-medium mb-2">How to remove a permission</p>
+      <p className="text-xs text-t2 mb-3">
+        Web pages can&apos;t change or open your browser&apos;s settings. Copy the address for your browser, paste it into the address bar and press Enter, then find this site in the list.
+      </p>
+      <ul className="space-y-2 text-xs">
+        {SETTINGS_PATHS.map((p) => (
+          <li key={p.browser} className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="text-t2">{p.browser}:</span>
+            {p.address ? <CopyAddress address={p.address} /> : <span className="text-white">{p.menu}</span>}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-xs text-t3">
+        Faster for one site: click the icon at the left end of the address bar while you are on that site.
+      </p>
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       <div className="bg-s0 border border-b1 rounded-lg p-6 text-center">
@@ -268,6 +294,8 @@ export function PermissionCheckerTool() {
           checks={results.length}
           checksNoun={['permission', 'permissions']}
           runAt={runAt || undefined}
+          result={result}
+          actions={summary.allowed > 0 ? removeHelp : undefined}
           statTiles={summary.stats}
           groups={[
             {
@@ -286,27 +314,7 @@ export function PermissionCheckerTool() {
             },
           ]}
         >
-        <>
-          {/* How to change a permission. A web page cannot open browser
-              settings, so the addresses are copy buttons, not links. */}
-          <div className="bg-s0 border border-info/30 rounded-lg p-4">
-            <p className="text-sm text-info font-medium mb-2">How to remove a permission</p>
-            <p className="text-xs text-t2 mb-3">
-              Web pages can&apos;t change or open your browser&apos;s settings. Copy the address for your browser, paste it into the address bar and press Enter, then find this site in the list.
-            </p>
-            <ul className="space-y-2 text-xs">
-              {SETTINGS_PATHS.map((p) => (
-                <li key={p.browser} className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span className="text-t2">{p.browser}:</span>
-                  {p.address ? <CopyAddress address={p.address} /> : <span className="text-white">{p.menu}</span>}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-3 text-xs text-t3">
-              Faster for one site: click the icon at the left end of the address bar while you are on that site.
-            </p>
-          </div>
-        </>
+          {summary.allowed > 0 ? null : removeHelp}
         </ConsoleFrame>
       )}
     </div>

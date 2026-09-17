@@ -263,7 +263,7 @@ export default function ToolsIndex() {
               })}
             </div>
           </div>
-          {/* A picture of the app, captioned as one, the same way ResultCta shows it. */}
+          {/* A picture of the app, captioned as one. */}
           <figure className="hidden lg:flex flex-col items-center justify-center gap-2" aria-hidden="true">
             <PhoneFrame />
             <figcaption className="text-meta text-t3 text-center">Incognito Pro on Android (illustration)</figcaption>

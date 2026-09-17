@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useReportResult } from './ResultContext';
+import { useReportResult, type ToolResult } from './ResultContext';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import {
   FORMAT_LABEL,
@@ -66,11 +66,15 @@ export function MetadataViewerTool() {
   const [fileFields, setFileFields] = useState<FileField[]>([]);
   // One rule for the console and the result bus: both read this summary.
   const summary = useMemo(() => (meta ? summarizeMetadata(meta) : null), [meta]);
+  // The object reported is also the one the console's result card shows.
+  const result = useMemo<ToolResult | null>(
+    () => (summary ? { severity: summary.severity, headline: summary.headline, stats: summary.stats } : null),
+    [summary],
+  );
   const report = useReportResult();
   useEffect(() => {
-    if (!summary) { report(null); return; }
-    report({ severity: summary.severity, headline: summary.headline, stats: summary.stats });
-  }, [summary, report]);
+    report(result);
+  }, [result, report]);
   const [scanned, setScanned] = useState(false);
   const [imagePreview, setImagePreview] = useState('');
   const [thumbPreview, setThumbPreview] = useState('');
@@ -236,6 +240,31 @@ export function MetadataViewerTool() {
           checks={unread ? undefined : meta.fields.length}
           checksNoun={['field', 'fields']}
           runAt={runAt || undefined}
+          result={result}
+          // The free fix, straight under the result card: a clean copy of this picture.
+          actions={
+            <div className="flex flex-wrap gap-3 items-center">
+              <button onClick={stripMetadata} className="btn-primary text-sm px-4 py-2">
+                Strip metadata &amp; download
+              </button>
+              {summary.hasGps && (
+                <button
+                  onClick={openGpsOnMap}
+                  className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
+                >
+                  View GPS on map
+                </button>
+              )}
+              {stripped && (
+                <span className="text-sm text-t2">
+                  Didn&apos;t download?{' '}
+                  <a href={stripped} download={strippedName} className="text-ok underline underline-offset-4 hover:text-t1">
+                    Save {strippedName}
+                  </a>
+                </span>
+              )}
+            </div>
+          }
           tally={unread || nothingDecoded ? undefined : { fails: summary.high.length, warns: summary.medium.length, passes: summary.low.length }}
           statTiles={
             unread
@@ -299,29 +328,6 @@ export function MetadataViewerTool() {
               </ul>
             </div>
           )}
-
-          {/* Action bar */}
-          <div className="bg-s0 border border-b1 rounded-lg p-4 flex flex-wrap gap-3 items-center">
-            <button onClick={stripMetadata} className="btn-primary text-sm px-4 py-2">
-              Strip metadata &amp; download
-            </button>
-            {summary.hasGps && (
-              <button
-                onClick={openGpsOnMap}
-                className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
-              >
-                View GPS on map
-              </button>
-            )}
-            {stripped && (
-              <span className="text-sm text-t2">
-                Didn&apos;t download?{' '}
-                <a href={stripped} download={strippedName} className="text-ok underline underline-offset-4 hover:text-t1">
-                  Save {strippedName}
-                </a>
-              </span>
-            )}
-          </div>
 
           {meta.blocks.length > 0 && (
             <div className="bg-s0 border border-b1 rounded-lg p-4">

@@ -30,7 +30,7 @@ import {
 import { categorizeCookie as scannerCategorize } from '../lib/scanner';
 import { severityFromGrade, severityFromScore, type Severity } from '../components/tools/ResultContext';
 import { scorecardFigure } from '../lib/scorecard';
-import { composeCta, ENGINE_COPY } from '../lib/cta-copy';
+import { CARD_COPY } from '../lib/card-copy';
 
 const SECURE = { isHTTPS: true, hasCSP: true, hasPermPolicy: true, hasHSTS: true };
 
@@ -137,21 +137,20 @@ describe('one severity rule: the score, through severityFromScore', () => {
   });
 });
 
-describe('the result CTA reads right for any result of its colour', () => {
+describe('the result card reads right for any result of its colour', () => {
+  const words = (s: Severity) => Object.values(CARD_COPY['cookie-analyzer'][s] ?? {}).join(' ');
+
   it('green never calls a site clean: a green result can hold a tracking cookie', () => {
-    const green = ENGINE_COPY['cookie-analyzer'].green;
-    expect(`${green.headline} ${green.body}`).not.toMatch(/\bclean\b/i);
+    expect(words('green')).toBeTruthy();
+    expect(words('green')).not.toMatch(/\bclean\b/i);
   });
 
   it('red and amber make no claim a pasted list or an HTTP-only site would contradict', () => {
-    const { red, amber } = ENGINE_COPY['cookie-analyzer'];
     // A pasted list may have been set after consent; an amber can come from a missing HTTPS alone.
-    expect(red.headline).not.toMatch(/before you (agree|click)/i);
-    expect(amber.headline).not.toMatch(/tracking gets through/i);
-    for (const s of ['red', 'amber', 'green'] as const) {
-      const cta = composeCta('cookie-analyzer', 'ad-tracking', s);
-      expect(cta.body).not.toMatch(/requests like these/);
-    }
+    expect(words('red')).not.toMatch(/before you (agree|click)/i);
+    expect(words('amber')).not.toMatch(/tracking gets through|\btracks you\b/i);
+    // A pasted list has no requests, and a URL scan's red can be trackers with no cookies at all.
+    for (const s of ['red', 'amber', 'green'] as const) expect(words(s)).not.toMatch(/requests like these|cookies like these/);
   });
 });
 

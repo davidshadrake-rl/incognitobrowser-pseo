@@ -224,3 +224,65 @@ details summary::-webkit-details-marker { display: none; }
 .figure { border-top: 2px solid var(--t1); padding-top: .75rem; font-family: var(--font-console); }
 .figure b { display: block; font-size: 3.5rem; line-height: 1; font-weight: 600; letter-spacing: -.02em; color: var(--t1); font-variant-numeric: tabular-nums; }
 .figure span { display: block; margin-top: .375rem; font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--t3); }
+
+/*
+ * Result card (components/tools/ResultCard.tsx). Owner rules, 2026-09-16:
+ * the answer, the upgrade ask and sharing come first, on screen when the
+ * result appears; the tool's long report follows ("Full report"). One brand
+ * colour for the ask, one promise, no device pictures.
+ */
+.rc { border-bottom: 1px solid var(--b1); }
+.rc[data-tone=red] { --tone: var(--danger); --tone-dim: #f8717122; }
+.rc[data-tone=amber] { --tone: var(--warn); --tone-dim: #facc151a; }
+.rc[data-tone=green] { --tone: var(--ok); --tone-dim: #4ade8012; }
+.rc[data-tone=info] { --tone: var(--t2); --tone-dim: #ffffff0a; }
+.rc-result { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 28px; align-items: baseline; padding: 20px 24px 18px; background: radial-gradient(80% 150% at 0 0, var(--tone-dim), transparent 55%); }
+.rc-result:not(:has(.rc-figure)) { grid-template-columns: minmax(0, 1fr); }
+.rc-figure { margin: 0; font: 600 40px/1 var(--font-console); letter-spacing: -.02em; color: var(--tone); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rc-figure[data-long] { font-size: 28px; line-height: 1.1; white-space: normal; max-width: 12ch; }
+.rc-headline { margin: 0; font: 600 18px/1.35 var(--font-console); color: var(--t1); text-wrap: balance; }
+.rc-meaning { margin: 6px 0 0; font: 15px/1.5 var(--font-prose); color: var(--t2); max-width: 68ch; }
+.rc-pro { position: relative; padding: 14px 24px 12px 27px; border-top: 1px solid #41b4f633; background: linear-gradient(90deg, #41b4f614, #41b4f605 60%, transparent); }
+.rc-pro::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--pro); }
+.rc-rows { margin: 0 0 12px; display: grid; gap: 6px; }
+.rc-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.rc-row dt { font: 11px var(--font-console); letter-spacing: .08em; text-transform: uppercase; color: var(--t3); white-space: nowrap; }
+.rc-row dd { margin: 0; font: 15px/1.45 var(--font-prose); color: var(--t2); }
+.rc-row.pro dt { color: var(--pro); }
+.rc-row.pro dd { color: var(--t1); }
+.rc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px; }
+.rc-actions .btn-pro { min-height: 44px; padding: 0 20px; font-size: 15px; }
+.rc-links { display: inline-flex; align-items: center; gap: 10px; font: 13px var(--font-console); color: var(--t3); }
+.rc-links a, .rc-links button { min-height: 40px; display: inline-flex; align-items: center; color: var(--t2); text-decoration: underline; text-underline-offset: 3px; background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+.rc-links a:hover, .rc-links button:hover { color: var(--t1); }
+.rc-proof { margin: 8px 0 0; font: 12px/16px var(--font-console); color: var(--t2); }
+.rc-foot { margin: 2px 0 0; font: 12px/16px var(--font-console); color: var(--t3); }
+.rc-share { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 16px; align-items: center; padding: 14px 24px; border-top: 1px solid var(--b1); }
+.rc-share-thumb { position: relative; width: 100%; }
+.rc-share-title { margin: 0 0 6px; font: 600 13px var(--font-console); color: var(--t1); }
+.rc-share-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+.rc-share-buttons .btn-ghost { min-height: 36px; padding: 0 12px; font-size: 13px; }
+.rc-share [data-manual-save] { grid-column: 1 / -1; }
+.rc-after { padding: 10px 24px 12px; border-top: 1px solid var(--hair); font: 12px/1.5 var(--font-console); color: var(--t3); }
+.rc-report { display: flex; align-items: center; gap: 12px; margin: 0; padding: 16px 20px 0; font: 11px var(--font-console); letter-spacing: .08em; text-transform: uppercase; color: var(--t3); }
+.rc-report::after { content: ""; flex: 1; height: 1px; background: var(--hair); }
+.rc-free-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 20px 0; }
+@media (max-width: 639px) {
+  .rc-result { grid-template-columns: minmax(0, 1fr); padding: 16px; }
+  .rc-figure { font-size: 32px; }
+  .rc-figure[data-long] { font-size: 26px; max-width: none; }
+  .rc-after { padding: 8px 16px 10px; }
+  .rc-headline { font-size: 16px; line-height: 1.4; }
+  .rc-meaning { font-size: 14px; margin-top: 4px; }
+  .rc-pro { padding: 12px 16px 10px 19px; }
+  /* Labels run in before their line, so each row takes its own lines only. */
+  .rc-row { display: block; }
+  .rc-row dt { display: inline; margin-right: 8px; }
+  .rc-row dd { display: inline; font-size: 14px; }
+  .rc-rows { gap: 8px; }
+  .rc-actions { gap: 0 16px; }
+  .rc-actions .btn-pro { width: 100%; padding: 0 12px; }
+  .rc-share { grid-template-columns: 96px minmax(0, 1fr); padding: 12px 16px; gap: 12px; }
+}
+@media (max-width: 399px) { .rc-proof-more, .rc-detail { display: none; } }
+@media print { .rc-pro, .rc-share { display: none; } }

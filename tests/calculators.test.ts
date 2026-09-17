@@ -40,6 +40,9 @@ import {
   shownNumber,
   toneOf,
 } from '../components/CalculatorPage';
+import { NEXT_STEP_LINE, NextStepBar, NextStepBlock, nextStepOf } from '../components/CalculatorNextStep';
+import { funnelFor, type PageFunnelV1, type PageFunnelV2 } from '../lib/funnels';
+import type { ProofRoute } from '../lib/proof-route';
 
 interface CalcInput {
   id: string;
@@ -554,5 +557,96 @@ describe('CalculatorPage', () => {
     const labels = [...html.matchAll(/<label[^>]*for="([^"]+)"/g)].map((m) => m[1]);
     expect(labels.length).toBe(sample.inputs.length);
     for (const id of labels) expect(html).toContain(`id="${id}"`);
+  });
+
+  it('lays the result out to stay on screen on a laptop: sticky under the header, the legend moved beside the settings', () => {
+    // Under the result, the legend made that column taller than the settings
+    // on most calculators (1080px against 837px on ad-tracking at 1280x800),
+    // so a sticky column had nowhere to go.
+    const html = render(sample);
+    const column = html.match(/<div class="([^"]*)"><div class="[^"]*" data-calculator-result=/);
+    expect(column?.[1].split(' ')).toEqual(expect.arrayContaining(['lg:sticky', 'lg:top-20', 'lg:self-start', 'lg:row-span-2']));
+    expect(html).toMatch(/class="[^"]*lg:row-start-2[^"]*"><h3[^>]*>How to read the/);
+  });
+});
+
+describe('the next step at a calculator result', () => {
+  // Owner, 2026-09-16: no upgrade box at a calculator's result (its visitors
+  // are mostly site owners checking compliance, which Pro doesn't do); once
+  // the result is theirs, the way into the page's check is on screen.
+  const route: ProofRoute = { href: '/tools/ad-tracking/ad-blocker-test/', title: 'Ad-Blocker Test', engine: 'ad-blocker-test', sameNiche: true, gives: '', needs: '', button: 'Open the Ad-Blocker Test' };
+  const v1 = (href: string | null): PageFunnelV1 => ({
+    path: '/calculators/x/y', type: 'calculator', topic: 'x',
+    step1: { label: '', quote: '' },
+    step2: { engine: 'ad-blocker-test', heading: 'h', instruction: '', button: 'Test before I answer', href },
+    step3: { red: '', amber: '', green: '' }, step4: { line: '' }, step5: { label: '' },
+  });
+  const v2 = (mode: PageFunnelV2['check']['mode'], href: string | null): PageFunnelV2 => ({
+    v: 2, path: '/calculators/x/y', type: 'calculator', topic: 'x', step1: { label: '', quote: '' }, stakes: 's',
+    check: { engine: 'cookie-analyzer', button: 'Scan your homepage', mode, href }, results: {},
+  });
+
+  it('every calculator has one, into the check its funnel names, with ?from= the calculator', () => {
+    for (const { file } of calculators) {
+      const page = `/calculators/${file.replace(/\.json$/, '')}`;
+      const step = nextStepOf(funnelFor(page), null);
+      expect(step, `${file}: no next step`).not.toBeNull();
+      expect(step!.page, file).toBe(page);
+      expect(new URL(step!.href, 'https://example.com').searchParams.get('from'), file).toBe(page);
+    }
+  });
+
+  it('uses the link and button words the card above the calculator uses, and none where that card shows none', () => {
+    expect(nextStepOf(v1('/tools/ad-tracking/ad-blocker-test/?from=%2Fcalculators%2Fx%2Fy'), route)).toEqual({
+      engine: 'ad-blocker-test', button: 'Test before I answer', href: '/tools/ad-tracking/ad-blocker-test/?from=%2Fcalculators%2Fx%2Fy', page: '/calculators/x/y',
+    });
+    expect(nextStepOf(v2('link', 'https://pro.example/tools/gdpr/scanner/?from=%2Fcalculators%2Fx%2Fy'), null)).toMatchObject({ engine: 'cookie-analyzer', button: 'Scan your homepage' });
+    // A funnel with no link: no card above, so no next step, and never the proof route in its place.
+    expect(nextStepOf(v1(null), route)).toBeNull();
+    expect(nextStepOf(v2('link', null), route)).toBeNull();
+    expect(nextStepOf(v2('page', '/tools/x/y/'), null)).toBeNull();
+    expect(nextStepOf(v2('card', '/site/x/'), null)).toBeNull();
+    // No funnel: the proof route card's link, counted against no funnel page.
+    expect(nextStepOf(null, route)).toEqual({ engine: 'ad-blocker-test', button: 'Open the Ad-Blocker Test', href: route.href });
+    expect(nextStepOf(null, null)).toBeNull();
+  });
+
+  it('is not on the example result, and there is no upgrade box at all', () => {
+    const data = calculators.find((c) => c.file.startsWith('gdpr/'))!.data;
+    const html = renderToStaticMarkup(React.createElement(CalculatorPage, {
+      data, nicheName: 'GDPR', proofRoute: null, funnel: funnelFor('/calculators/gdpr/gdpr-compliance-risk-calculator'),
+    }));
+    expect(html).toContain('data-calculator-result="example"');
+    expect(html).not.toContain('data-next-step');
+    expect(html).not.toMatch(/data-result-cta|btn-pro|play\.google\.com/);
+  });
+
+  const step = nextStepOf(v1('/tools/ad-tracking/ad-blocker-test/?from=%2Fcalculators%2Fx%2Fy'), null)!;
+
+  it('at the top of the result: one line and the button', () => {
+    const html = renderToStaticMarkup(React.createElement(NextStepBlock, { step }));
+    expect(html).toContain(NEXT_STEP_LINE);
+    const links = [...html.matchAll(/<a ([^>]*)>([^<]*)<\/a>/g)];
+    expect(links).toHaveLength(1);
+    const [, attrs, words] = links[0];
+    expect(attrs).toContain('data-next-step="column"');
+    // next/link drops the slash before the query here; the build's trailingSlash setting puts it back.
+    expect(attrs).toMatch(/href="\/tools\/ad-tracking\/ad-blocker-test\/?\?from=%2Fcalculators%2Fx%2Fy"/);
+    expect(words).toBe('Test before I answer\u00a0→');
+  });
+
+  it('the bar: the main figure and the button, sticky at the bottom of the calculator, hidden without moving anything', () => {
+    const bar = (hidden: boolean) => renderToStaticMarkup(React.createElement(NextStepBar, { step, label: 'Risk Score', value: '62/100', valueClass: 'text-danger', hidden }));
+    const shown = bar(false);
+    expect(shown).toContain('data-next-step="bar"');
+    expect(shown).toContain('data-next-step-bar="shown"');
+    expect(shown).toContain('Risk Score');
+    expect(shown).toMatch(/class="[^"]*text-danger[^"]*">62\/100</);
+    expect(shown).toMatch(/class="sticky bottom-0 /);
+    expect(shown).not.toContain('invisible');
+    // visibility, not display: its space is kept, so the page doesn't jump when it appears.
+    expect(bar(true)).toMatch(/data-next-step-bar="hidden"/);
+    expect(bar(true)).toMatch(/class="[^"]*\binvisible\b/);
+    expect(bar(true)).not.toMatch(/class="[^"]*\bhidden\b/);
   });
 });

@@ -29,11 +29,8 @@ const EXAMPLES: { label: string; url: string }[] = [
   },
 ];
 
-const SEVERITY_STYLES: Record<LinkAnalysis['severity'], { border: string; text: string; bg: string; label: string }> = {
-  red: { border: 'border-danger/30', text: 'text-danger', bg: 'bg-danger-dim', label: 'Exposed' },
-  amber: { border: 'border-warn/30', text: 'text-warn', bg: 'bg-warn-dim', label: 'Partial' },
-  green: { border: 'border-ok/30', text: 'text-ok', bg: 'bg-ok-dim', label: 'Clean' },
-};
+/** The console header's verdict word. */
+const VERDICT_LABEL: Record<LinkAnalysis['severity'], string> = { red: 'Exposed', amber: 'Partial', green: 'Clean' };
 
 const CLASS_STYLES: Record<ClassifiedParam['cls'], { pill: string; label: string }> = {
   identity: { pill: 'bg-danger/20 text-danger', label: 'Identity' },
@@ -116,7 +113,6 @@ export function LinkUnwrapperTool() {
 
   const analysis = result && result.ok ? result : null;
   const error = result && !result.ok ? result.error : null;
-  const sev = analysis ? SEVERITY_STYLES[analysis.severity] : null;
 
   return (
     <div className="space-y-6">
@@ -168,26 +164,52 @@ export function LinkUnwrapperTool() {
         </div>
       )}
 
-      {analysis && sev && (
+      {analysis && (
         <ConsoleFrame
           engine="link-unwrapper"
           status={statusFromSeverity(analysis.severity)}
-          verdict={sev.label}
+          verdict={VERDICT_LABEL[analysis.severity]}
           runAt={ranAt}
+          // An example reports nothing, but the card still shows its headline.
+          result={toToolResult(analysis)}
+          // The free fix, straight under the result card: the same link without its trackers.
+          // An example is labelled here, next to the headline it put in the card.
+          actions={
+            <div className="w-full">
+              {fromExample && (
+                <p className="mb-3 rounded-md border border-b1 bg-s1 px-3 py-2 text-xs text-t2" data-example-result>
+                  <span className="font-semibold text-white">Example.</span> This is a built-in sample link, not yours. Paste your own link above to check it.
+                </p>
+              )}
+              <div className="flex flex-wrap gap-3 items-center">
+                <button type="button" onClick={() => copyClean(analysis.cleanUrl)} className="btn-primary text-sm px-4 py-2">
+                  {copied ? 'Copied' : 'Copy clean link'}
+                </button>
+                <a
+                  href={analysis.cleanUrl}
+                  target="_blank"
+                  rel="nofollow noopener noreferrer"
+                  className="text-sm px-4 py-2 border border-b1 rounded text-t2 hover:text-white hover:border-b2"
+                >
+                  Open in a new tab
+                </a>
+              </div>
+              <code className="mt-3 block bg-s1 border border-ok/30 p-3 rounded-md text-xs text-ok font-mono break-all">
+                {analysis.cleanUrl}
+              </code>
+              <p className="mt-3 text-xs text-t2">
+                What changed: removed {analysis.removedCount} tracking{' '}
+                {analysis.removedCount === 1 ? 'parameter' : 'parameters'}, kept {analysis.keptCount}, peeled{' '}
+                {analysis.redirectCount} redirect {analysis.redirectCount === 1 ? 'layer' : 'layers'}.
+                {analysis.charsRemoved > 0 ? ` ${analysis.charsRemoved} characters shorter than what you pasted.` : ' Nothing to strip.'}
+              </p>
+            </div>
+          }
           statTiles={analysis.stats}
         >
         <div className="space-y-4">
-          {fromExample && (
-            <p className="rounded-md border border-b1 bg-s1 px-3 py-2 text-xs text-t2" data-example-result>
-              <span className="font-semibold text-white">Example.</span> This is a built-in sample link, not yours. Paste your own link above to check it.
-            </p>
-          )}
-          {/* Verdict */}
-          <div>
-            <div className={`text-xs uppercase tracking-wide font-semibold ${sev.text} mb-1`}>{fromExample ? `Example · ${sev.label}` : sev.label}</div>
-            <h3 className="text-lg font-bold text-white">{analysis.headline}</h3>
-            <p className="mt-1 text-sm text-t2">{analysis.detail}</p>
-          </div>
+          {/* What the result means for this link (the verdict and headline are in the result card above) */}
+          <p className="text-sm text-t2">{analysis.detail}</p>
 
           {/* Redirect chain */}
           <div className="bg-s0 border border-b1 rounded-lg p-6">
@@ -296,37 +318,6 @@ export function LinkUnwrapperTool() {
                 </table>
               </div>
             )}
-          </div>
-
-          {/* Clean URL */}
-          <div className="bg-s0 border border-ok/30 rounded-lg p-6">
-            <div className="flex items-center justify-between gap-3 mb-2">
-              <h3 className="text-sm font-semibold text-ok">Clean link</h3>
-              <button
-                type="button"
-                onClick={() => copyClean(analysis.cleanUrl)}
-                className="btn-primary text-xs px-3 py-2 min-h-0"
-              >
-                {copied ? 'Copied' : 'Copy'}
-              </button>
-            </div>
-            <code className="block bg-s0 p-4 rounded-md text-xs text-ok font-mono break-all">
-              {analysis.cleanUrl}
-            </code>
-            <p className="mt-3 text-xs text-t2">
-              What changed: removed {analysis.removedCount} tracking{' '}
-              {analysis.removedCount === 1 ? 'parameter' : 'parameters'}, kept {analysis.keptCount}, peeled{' '}
-              {analysis.redirectCount} redirect {analysis.redirectCount === 1 ? 'layer' : 'layers'}.
-              {analysis.charsRemoved > 0 ? ` ${analysis.charsRemoved} characters shorter than what you pasted.` : ' Nothing to strip.'}
-            </p>
-            <a
-              href={analysis.cleanUrl}
-              target="_blank"
-              rel="nofollow noopener noreferrer"
-              className="inline-block mt-3 text-xs text-t2 underline hover:text-white"
-            >
-              Open the clean link in a new tab
-            </a>
           </div>
 
           {/* What this means */}
