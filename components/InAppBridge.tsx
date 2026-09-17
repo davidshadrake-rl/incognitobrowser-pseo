@@ -11,10 +11,11 @@
  * On the open web it does nothing. Renders nothing.
  *
  * The tap's context comes from the link: data-upgrade-from (header, home,
- * result…), data-upgrade-topic, data-upgrade-result, data-upgrade-tool.
+ * result…), data-upgrade-topic, data-upgrade-result, data-upgrade-tool,
+ * data-upgrade-benefit (only the three known values pass).
  */
 import { useEffect } from 'react';
-import { inAppPro, inAppSource, openAppUpgrade } from '@/lib/in-app';
+import { inAppPro, inAppSource, openAppUpgrade, UPGRADE_BENEFITS } from '@/lib/in-app';
 import { PLAY_PACKAGE } from '@/lib/play';
 import { FREE_BASE_URL, PRO_BASE_URL } from '@/lib/tiers';
 
@@ -22,7 +23,8 @@ function isUpgradeLink(a: HTMLAnchorElement): boolean {
   if (a.hasAttribute('data-upgrade')) return true;
   try {
     const u = new URL(a.href);
-    return u.hostname === 'play.google.com' && u.searchParams.get('id') === PLAY_PACKAGE;
+    // The listing itself, not its Data safety or reviews pages.
+    return u.hostname === 'play.google.com' && u.pathname === '/store/apps/details' && u.searchParams.get('id') === PLAY_PACKAGE;
   } catch {
     return false;
   }
@@ -49,6 +51,7 @@ export function InAppBridge() {
           topic: d.upgradeTopic || undefined,
           result: d.upgradeResult || undefined,
           tool: d.upgradeTool || undefined,
+          benefit: d.upgradeBenefit && UPGRADE_BENEFITS.has(d.upgradeBenefit) ? d.upgradeBenefit : undefined,
         });
         if (handled) e.preventDefault();
         return;

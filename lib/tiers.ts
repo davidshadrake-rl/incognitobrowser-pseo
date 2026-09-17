@@ -37,7 +37,7 @@ export const PRO_WEB_GATED = false;
  * Under every upgrade button. The Play listing a button opens is the free
  * Incognito Browser app's and never mentions Pro, so this says where Pro is.
  */
-export const PRO_FOOTNOTE = 'Pro is a subscription inside the free Incognito Browser app. Android only.';
+export const PRO_FOOTNOTE = 'Pro is a subscription in the free Incognito Browser app, billed and cancelled in Google Play. Android only.';
 export const PRO_FREE_FOR_NOW_TITLE = 'Part of the Incognito Pro subscription on Android. Free on the web today.';
 
 /**

@@ -7,7 +7,7 @@
  * components/ResultCta.tsx with a blur-detection fallback.)
  */
 import { describe, expect, it } from 'vitest';
-import { handoffMailBody, handoffMailto, stripHash, pageLinkFor, MAILTO_MAX_LENGTH } from '../lib/handoff';
+import { handoffGmailUrl, handoffMailBody, handoffMailto, stripHash, pageLinkFor, MAILTO_MAX_LENGTH } from '../lib/handoff';
 import { playUrl } from '../lib/play';
 
 const PLAY = playUrl({ medium: 'cta', campaign: 'permission-checker', content: 'children-safety', term: 'tool' });
@@ -25,6 +25,24 @@ describe('handoffMailBody', () => {
     expect(body).toContain(PLAY);
     expect(body).toContain(PAGE);
     expect(body).not.toContain('#result');
+  });
+});
+
+describe('handoffMailBody — says what the Play listing is', () => {
+  it('names the app as free and Pro as an optional subscription with the one outcome offered', () => {
+    const body = handoffMailBody(PLAY, PAGE, 'Blocks tracking scripts and pixels.');
+    expect(body).toMatch(/^Install Incognito Browser \(free\) on your Android phone: /);
+    expect(body).toContain('Incognito Pro, an optional subscription in the app: Blocks tracking scripts and pixels.');
+    expect(body).not.toMatch(/Get Incognito Pro on Google Play/);
+    expect(body.split('\r\n\r\n')).toHaveLength(3);
+  });
+  it('without a benefit, leaves the Pro line out', () => {
+    expect(handoffMailBody(PLAY, PAGE)).not.toContain('Incognito Pro');
+  });
+  it('the Gmail fallback carries the same message', () => {
+    const g = handoffGmailUrl(PLAY, PAGE, 'Blocks tracking scripts and pixels.');
+    expect(g).toMatch(/^https:\/\/mail\.google\.com\/mail\/\?view=cm&fs=1&su=/);
+    expect(decodeURIComponent(g.split('&body=')[1])).toBe(handoffMailBody(PLAY, PAGE, 'Blocks tracking scripts and pixels.'));
   });
 });
 

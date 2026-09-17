@@ -82,6 +82,8 @@ const BANNED: Array<[RegExp, string]> = [
   [/\b(January|February|March|April|May|June|July|August|September|October|November|December)\b|\b20\d\d\b/, 'date'],
   [/\b(safe to|guarantee|compliant|compliance-ready|legitimate|100%)\b/i, 'overclaim word'],
   [/\bfree for now\b/i, '"free for now" belongs to the Pro badge only'],
+  // Pro is only what data/brand.json `pro` lists (owner, 2026-09-16). "The Pro tools site" names a real section; "the deeper privacy tools" sold a bundle Pro doesn't have.
+  [/\b(deeper|advanced) privacy tools\b/i, 'Pro claim brand.json does not back'],
 ];
 /**
  * The results each check can actually return, read from its code on
@@ -115,6 +117,9 @@ const SENTENCES = /[.!?]\s+\S/;
 const POINTS = /\b(above|below)\b/i;
 /** The free app's own features (data/brand.json `features`): a Pro line names one only as free. */
 const FREE_FEATURE = /\bblocks? (?:the )?ads\b|\bad[- ]?block(?:er|ing)\b|\bwipes?\b|\bAgent Cloaking\b|\bJavaScript\b/i;
+/** Words that promise more than Pro's blocking does (research review, 2026-09-16). */
+export const PRO_OVERCLAIM = /\bevery (site|page|tracker)\b|\ball (the )?trackers\b|\bany trackers?\b|\bstill exposed\b/i;
+
 /** Every Pro outcome a line sells, asked of benefitOf clause by clause. */
 const benefitsIn = (pro: string) =>
   new Set(pro.split(/[,;:()]|\b(?:and|plus|as well as)\b/i).map(benefitOf).filter((b): b is NonNullable<typeof b> => !!b));
@@ -174,6 +179,8 @@ function validateV2(r: Rec, f: FunnelV2, errors: string[], warnings: string[], s
     check(`${k}.pro`, pro, { chars: CARD_LIMITS.pro });
     check(`${k}.button`, c.button, { chars: CARD_LIMITS.button });
     if (NAMES_PRO_FIRST.test(pro)) errors.push(`${where}: ${k}.pro starts with Pro's name, which the card already shows; start with the verb: "${pro}"`);
+    // Pro blocks known tracking scripts on the sites opened in the app; it doesn't promise all of them, everywhere.
+    if (PRO_OVERCLAIM.test(pro)) errors.push(`${where}: ${k}.pro overclaims ("every site", "all trackers", "any trackers"): "${pro}"`);
     else if (!PRO_VERB.test(pro)) errors.push(`${where}: ${k}.pro doesn't start with what Pro does (blocks, hides, strips…): "${pro}"`);
     if (WEAK_OPENER.test(pro)) errors.push(`${where}: ${k}.pro opens by talking the reader out of it: "${pro}"`);
     if (UNBACKED.test(pro.replace(VPN_DENIAL, ' '))) errors.push(`${where}: ${k}.pro claims something Pro isn't confirmed to do: "${pro}"`);

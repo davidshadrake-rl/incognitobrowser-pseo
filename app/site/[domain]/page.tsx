@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { getAllSites, getSite, getSiblingSites, gradeChange, isSitePublished } from '@/lib/sites';
 import { getCrossNicheLinks } from '@/lib/content';
 import { getNicheById } from '@/lib/taxonomy';
-import { generateMetadata as genMeta, generateBreadcrumbSchema, absoluteUrl } from '@/lib/seo';
+import { generateMetadata as genMeta, generateBreadcrumbSchema } from '@/lib/seo';
 import { ResultCard } from '@/components/tools/ResultCard';
 import { funnelFor, isV2 } from '@/lib/funnels';
 import { reportCardCopy, resolveCardCopy } from '@/lib/card-copy';
@@ -143,7 +143,9 @@ export default async function SiteReportPage({ params }: PageProps) {
               ),
               copy: cardCopy,
               page: ownWords ? `/site/${domain}` : undefined,
-              share: { title: `Does ${domain} track you?`, headline: grade.headline, stats: shareStats, url: absoluteUrl(`/site/${domain}`) },
+              // No fixed URL: share and the emailed link use the address the visitor is on.
+              // The canonical incognitobrowser.io/resources address redirects to the home page (checked 2026-09-16).
+              share: { title: `Does ${domain} track you?`, headline: grade.headline, stats: shareStats },
               term: 'report-card',
             }}
           />

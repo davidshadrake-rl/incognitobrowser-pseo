@@ -54,7 +54,7 @@ This puts `window.IncognitoBrowserApp` on our origins only. **Don't use `addJava
 The page sends a JSON string:
 
 ```json
-{"v":1,"action":"upgrade","from":"result","topic":"password-security","result":"red","tool":"password-strength","page":"/tools/password-security/password-strength-checker/"}
+{"v":1,"action":"upgrade","from":"result","topic":"password-security","result":"red","tool":"password-strength","benefit":"tracker-blocking","page":"/tools/password-security/password-strength-checker/"}
 ```
 
 | Field | Values |
@@ -63,6 +63,7 @@ The page sends a JSON string:
 | `topic` | the page's topic slug, e.g. `password-security` (not always present) |
 | `result` | the visitor's result: `red`, `amber`, `green` or `info` (only after a check) |
 | `tool` | which check produced it, e.g. `password-strength` (only after a check) |
+| `benefit` | the Pro outcome the page offered: `tracker-blocking`, `hides-ad-boxes` or `photo-cleaning` (only from a result card). Lead the upgrade screen with it; use it for words only, never to grant access |
 | `page` | the page path |
 
 Open the upgrade screen, and keep the fields for attribution if you log upgrade sources.
@@ -70,7 +71,7 @@ Open the upgrade screen, and keep the fields for attribution if you log upgrade 
 **Fallback for app versions without the listener.** If a page was opened with `inapp=1` and finds no `IncognitoBrowserApp` object, it navigates to:
 
 ```
-incognitobrowser://upgrade?from=result&topic=password-security&result=red&tool=password-strength
+incognitobrowser://upgrade?from=result&topic=password-security&result=red&tool=password-strength&benefit=tracker-blocking
 ```
 
 Catch it in `shouldOverrideUrlLoading`, open the upgrade screen, and return `true`. If the app already has a URL scheme, tell us and we'll change one constant (`APP_UPGRADE_URL` in `lib/in-app.ts`).

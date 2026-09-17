@@ -73,6 +73,7 @@ const SEPARATELY: Pick<ResultCopy, 'pro' | 'button'> = { pro: 'Separately, block
 /** Used for any engine or result without its own words. */
 export const DEFAULT_CARD_COPY: ResultCopy = {
   meaning: 'Sites learn more about you than the page shows, and trackers carry it from one site to the next.',
+  free: 'The free app wipes history, cookies and sessions when you close it.',
   ...TRACKERS,
 };
 
@@ -156,11 +157,12 @@ export const CARD_COPY: Record<string, EngineCardCopy> = {
     red: {
       meaning: 'What this scan found can record your visits and link them together, through cookies, trackers or both.',
       free: 'The free app wipes cookies every time you close it.',
-      pro: 'Blocks tracking scripts and pixels before they load, on every site you open in the app.',
+      pro: 'Blocks tracking scripts and pixels before they load, on the sites you open in the app.',
       button: 'Block trackers with Pro',
     },
     amber: {
       meaning: 'Some problems showed up, such as trackers, outside scripts or missing HTTPS, and the report names each one.',
+      free: 'The free app wipes cookies every time you close it.',
       pro: 'Blocks tracking scripts and pixels on the sites you open in the app, whatever they score.',
       button: 'Block trackers with Pro',
     },
@@ -216,6 +218,7 @@ export const CARD_COPY: Record<string, EngineCardCopy> = {
     },
     amber: {
       meaning: 'No tracking pixel, but its links or images can still tell the sender you opened it or clicked.',
+      free: 'Unwrap a tracked link with the free Link Unwrapper before you click.',
       pro: 'Blocks tracking scripts and pixels on the pages these links lead to, if you open them in the app.',
       button: 'Block trackers with Pro',
     },
@@ -231,6 +234,7 @@ export const CARD_COPY: Record<string, EngineCardCopy> = {
   'dns-leak-test': {
     red: {
       meaning: "Some or all of your lookups skip the VPN, so a resolver outside it, often your ISP's, sees the sites you open.",
+      free: "Turn on your VPN app's DNS leak protection, if it has one.",
       pro: "Separately, blocks tracking scripts and pixels, but doesn't change your DNS. Pro doesn't include a VPN.",
       button: 'Block trackers with Pro',
     },
@@ -300,10 +304,12 @@ export const CARD_COPY: Record<string, EngineCardCopy> = {
   'url-analyzer': {
     red: {
       meaning: "This link shows at least one sign common in phishing or unencrypted links, so don't sign in or pay through it.",
+      free: "Type the real site's address yourself and sign in there.",
       ...SEPARATELY,
     },
     amber: {
       meaning: "This link isn't clearly bad or clearly fine, so type the site's address yourself before you sign in.",
+      free: 'Search for the site by name instead of using this link.',
       ...SEPARATELY,
     },
     green: {
@@ -375,11 +381,14 @@ export function reportCardCopy(grade: Grade, severity: Severity, found: { tracki
 }
 
 /** "No data shared with third parties" in the middle of a line. */
-const lowerFirst = (s: string) => s.charAt(0).toLowerCase() + s.slice(1);
 
 /**
  * Social proof, from the Google Play listing only (data/brand.json `play`,
- * with the date it was read; tests/play-proof.test.ts fails when it is more
- * than 90 days old). Visible text, never structured data (brand.json neverClaim).
+ * with the month it was read; tests/play-proof.test.ts fails when it is more
+ * than 90 days old). Visible text, never structured data (brand.json
+ * neverClaim). Data safety is linked, not quoted, so the card doesn't pick
+ * its most flattering line.
  */
-export const PLAY_PROOF = `On Google Play: ★ ${brand.play.rating} · ${brand.play.reviewsLabel} · ${brand.play.downloadsLabel} · ${lowerFirst(brand.play.dataSafety)}`;
+const CHECKED_MONTH = new Date(`${brand.play.checkedOn}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+export const PLAY_PROOF = `Google Play, ${CHECKED_MONTH}: ★ ${brand.play.rating} · ${brand.play.reviewsLabel} · ${brand.play.downloadsLabel}`;
+export const DATA_SAFETY_URL = brand.dataSafety.source;

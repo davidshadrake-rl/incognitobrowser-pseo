@@ -32,10 +32,24 @@ export function pageLinkFor(href: string): string {
   }
 }
 
-export function handoffMailBody(play: string, pageHref: string): string {
-  return `Get Incognito Pro on Google Play: ${play}\r\n\r\nThe check I ran: ${pageLinkFor(pageHref)}`;
+/**
+ * The message. The Play listing it links is the free app's and never names
+ * Pro, so the message says what the visitor will find there: a free app to
+ * install, and Pro as an optional subscription inside it, with the one
+ * outcome the page offered (lib/card-copy.ts PRO_LINE).
+ */
+export function handoffMailBody(play: string, pageHref: string, proLine?: string): string {
+  const lines = [`Install Incognito Browser (free) on your Android phone: ${play}`];
+  if (proLine) lines.push(`Incognito Pro, an optional subscription in the app: ${proLine}`);
+  lines.push(`The check I ran: ${pageLinkFor(pageHref)}`);
+  return lines.join('\r\n\r\n');
 }
 
-export function handoffMailto(play: string, pageHref: string): string {
-  return `mailto:?subject=${encodeURIComponent(HANDOFF_SUBJECT)}&body=${encodeURIComponent(handoffMailBody(play, pageHref))}`;
+export function handoffMailto(play: string, pageHref: string, proLine?: string): string {
+  return `mailto:?subject=${encodeURIComponent(HANDOFF_SUBJECT)}&body=${encodeURIComponent(handoffMailBody(play, pageHref, proLine))}`;
+}
+
+/** The same message as a Gmail compose link, for the fallback when no mail app opened. */
+export function handoffGmailUrl(play: string, pageHref: string, proLine?: string): string {
+  return `https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(HANDOFF_SUBJECT)}&body=${encodeURIComponent(handoffMailBody(play, pageHref, proLine))}`;
 }

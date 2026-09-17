@@ -103,7 +103,12 @@ export interface UpgradeContext {
   result?: string;
   /** The tool (engine id) that produced the result. */
   tool?: string;
+  /** The Pro benefit the page offered: tracker-blocking | hides-ad-boxes | photo-cleaning. For the upgrade screen's words only, never access. */
+  benefit?: string;
 }
+
+/** The only benefit values passed on (lib/card-copy.ts Benefit). */
+export const UPGRADE_BENEFITS = new Set(['tracker-blocking', 'hides-ad-boxes', 'photo-cleaning']);
 
 /**
  * The object the app puts on our pages. Preferred: androidx.webkit
@@ -125,7 +130,7 @@ function appBridge(): AppBridge | null {
 /** The fallback URL for app versions without the JavaScript bridge. */
 export function appUpgradeUrl(ctx: UpgradeContext): string {
   const q = new URLSearchParams();
-  for (const k of ['from', 'topic', 'result', 'tool'] as const) {
+  for (const k of ['from', 'topic', 'result', 'tool', 'benefit'] as const) {
     const v = ctx[k];
     if (v) q.set(k, v);
   }

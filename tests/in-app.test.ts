@@ -8,7 +8,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { appUpgradeUrl, IN_APP_BOOT_SCRIPT, openAppUpgrade, saveImageInApp } from '@/lib/in-app';
+import { appUpgradeUrl, IN_APP_BOOT_SCRIPT, openAppUpgrade, saveImageInApp, UPGRADE_BENEFITS } from '@/lib/in-app';
 
 class FakeElement {
   attrs = new Map<string, string>();
@@ -188,6 +188,26 @@ describe('the upgrade handoff', () => {
     root.setAttribute('data-inapp', 'ua');
     expect(openAppUpgrade(ctx)).toBe(false);
     expect(loc.href).toMatch(/^https:/);
+  });
+
+  it('the benefit the page offered reaches the app, in the message and in the fallback URL', () => {
+    root.setAttribute('data-inapp', 'param');
+    const postMessage = vi.fn();
+    win.IncognitoBrowserApp = { postMessage };
+    expect(openAppUpgrade({ ...ctx, benefit: 'photo-cleaning' })).toBe(true);
+    expect(JSON.parse(postMessage.mock.calls[0][0])).toMatchObject({ benefit: 'photo-cleaning' });
+    expect(appUpgradeUrl({ ...ctx, benefit: 'tracker-blocking' })).toBe('incognitobrowser://upgrade?from=result&topic=ad-tracking&result=amber&tool=ad-blocker-test&benefit=tracker-blocking');
+  });
+
+  it('only the three known benefits are passed on (the bridge filters data-upgrade-benefit)', () => {
+    expect([...UPGRADE_BENEFITS].sort()).toEqual(['hides-ad-boxes', 'photo-cleaning', 'tracker-blocking']);
+    const bridge = fs.readFileSync(path.join(process.cwd(), 'components', 'InAppBridge.tsx'), 'utf-8');
+    expect(bridge).toMatch(/UPGRADE_BENEFITS\.has\(d\.upgradeBenefit\)/);
+  });
+
+  it('only the Play listing itself counts as an upgrade tap, not its Data safety page', () => {
+    const bridge = fs.readFileSync(path.join(process.cwd(), 'components', 'InAppBridge.tsx'), 'utf-8');
+    expect(bridge).toMatch(/u\.pathname === '\/store\/apps\/details'/);
   });
 
   it('the upgrade URL leaves out what the tap does not know', () => {

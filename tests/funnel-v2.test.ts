@@ -23,7 +23,7 @@ const GOOD: FunnelV2 = {
   check: { engine: 'ad-blocker-test', button: 'Test this browser' },
   results: {
     red: { meaning: 'Most of the ad and tracking requests got through, so sites like this can follow you to the next one.', free: 'Incognito Browser blocks ads for free on Android.', pro: 'Blocks the tracking scripts that follow you from site to site.', button: 'Block trackers with Pro' },
-    amber: { meaning: 'Some got through: the ads were stopped, but the tracking calls behind them were not.', pro: 'Blocks those tracking calls too, on every site you open in the app.', button: 'Block the tracking with Pro' },
+    amber: { meaning: 'Some got through: the ads were stopped, but the tracking calls behind them were not.', pro: 'Blocks those tracking calls too, on the sites you open in the app.', button: 'Block the tracking with Pro' },
     green: { meaning: 'This browser stopped nearly all of them, but the photos you post can still say where you took them.', pro: 'Strips location and other hidden details from a whole folder of photos at once.', button: 'Clean your photos with Pro' },
   },
 };

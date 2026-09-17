@@ -21,7 +21,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useResultAsk, useToolResult, type Severity, type ToolResult } from '@/components/tools/ResultContext';
 import { UpgradeButtons } from '@/components/UpgradeButtons';
 import { Scorecard } from '@/components/Scorecard';
-import { resolveCardCopy, PLAY_PROOF, type CardCopy } from '@/lib/card-copy';
+import { DATA_SAFETY_URL, resolveCardCopy, PLAY_PROOF, type CardCopy } from '@/lib/card-copy';
 import { placeResultCard, type PlaceReason } from '@/lib/place-result';
 import { scorecardFigure, VALUE_ONLY_ENGINES } from '@/lib/scorecard';
 import { PRO_FOOTNOTE } from '@/lib/tiers';
@@ -189,8 +189,11 @@ export function ResultCard({ result: shown, staticCard }: { result?: ToolResult 
             pageUrl={staticCard?.share.url}
             onClick={(target) => track('cta_click', { tool: engine, severity, target, page, benefit: copy.benefit })}
           />
-          {/* The data-safety clause drops on the narrowest phones so the button and footnote still fit. */}
-          <p className="rc-proof">{PLAY_PROOF.replace(/ · [^·]*$/, '')}<span className="rc-proof-more">{PLAY_PROOF.match(/ · [^·]*$/)?.[0]}</span></p>
+          {/* The Data safety link drops on the narrowest phones so the button and footnote still fit. */}
+          <p className="rc-proof">
+            {PLAY_PROOF}
+            <span className="rc-proof-more"> · <a href={DATA_SAFETY_URL} target="_blank" rel="noopener" className="underline underline-offset-2 hover:text-t1">Data safety</a></span>
+          </p>
           <p className="rc-foot">{PRO_FOOTNOTE}</p>
         </div>
       )}

@@ -15,10 +15,10 @@
  */
 import { useState, useSyncExternalStore, type ReactNode } from 'react';
 import type { Severity } from '@/components/tools/ResultContext';
-import type { Benefit } from '@/lib/card-copy';
+import { PRO_LINE, type Benefit } from '@/lib/card-copy';
 import { IN_APP_COPY } from '@/lib/cta-copy';
 import { playUrl } from '@/lib/play';
-import { handoffMailBody, handoffMailto } from '@/lib/handoff';
+import { handoffGmailUrl, handoffMailBody, handoffMailto } from '@/lib/handoff';
 import { detectPlatform, isInsideIncognitoApp, type Platform } from '@/lib/track';
 
 export type UpgradeTarget = 'play' | 'email' | 'copy';
@@ -68,8 +68,9 @@ export function UpgradeButtons({ engine, niche, severity, from, content, term, p
   const liveHref = useSyncExternalStore(noSubscribe, hrefNow, serverHref);
   const pageHref = pageUrl || liveHref;
   // See lib/handoff.ts: CRLF body (RFC 6068 — bare "\n" breaks Outlook on Windows), hash stripped.
-  const mailBody = handoffMailBody(play, pageHref);
-  const mailto = handoffMailto(play, pageHref);
+  const proLine = benefit ? PRO_LINE[benefit] : undefined;
+  const mailBody = handoffMailBody(play, pageHref, proLine);
+  const mailto = handoffMailto(play, pageHref, proLine);
 
   const copyLink = async () => {
     onClick?.('copy');
@@ -128,7 +129,11 @@ export function UpgradeButtons({ engine, niche, severity, from, content, term, p
         <div className="mt-3 rounded border border-b1 bg-black/30 p-3" role="status" aria-live="polite" data-mail-fallback>
           <p className="text-xs text-t2 mb-2">No email app opened on this device. Copy the message and send it from your email instead:</p>
           <textarea readOnly value={mailBody} rows={3} onFocus={(e) => e.currentTarget.select()} aria-label="Message to send yourself" className="w-full text-xs font-mono bg-s0 border border-b1 rounded p-2 text-t2" />
-          <button type="button" onClick={copyMessage} className="btn-ghost mt-2 text-xs !px-3 !py-1.5 !min-h-0">{msgCopied ? 'Copied' : 'Copy message'}</button>
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            <button type="button" onClick={copyMessage} className="btn-ghost text-xs !px-3 !py-1.5 !min-h-0">{msgCopied ? 'Copied' : 'Copy message'}</button>
+            {/* Most people with no mail app registered use webmail: open the message there. */}
+            <a href={handoffGmailUrl(play, pageHref, proLine)} target="_blank" rel="noopener" className="text-xs text-t2 underline underline-offset-4 hover:text-t1">Open in Gmail</a>
+          </div>
         </div>
       )}
     </>

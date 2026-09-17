@@ -10,7 +10,7 @@ import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import brand from '../data/brand.json';
-import { PLAY_PROOF } from '../lib/card-copy';
+import { DATA_SAFETY_URL, PLAY_PROOF } from '../lib/card-copy';
 
 const ROOT = path.join(__dirname, '..');
 const DAY = 24 * 60 * 60 * 1000;
@@ -44,15 +44,20 @@ describe('Google Play proof', () => {
     expect(age, 'play.checkedOn is in the future').toBeGreaterThanOrEqual(-1);
   });
 
-  it('PLAY_PROOF is built from those figures, and states nothing else', () => {
-    const { rating, reviewsLabel, downloadsLabel, dataSafety } = brand.play;
-    expect(PLAY_PROOF).toContain(`★ ${rating}`);
-    expect(PLAY_PROOF).toContain(reviewsLabel);
-    expect(PLAY_PROOF).toContain(downloadsLabel);
-    expect(PLAY_PROOF.toLowerCase()).toContain(dataSafety.toLowerCase());
-    // Every number on the line is one of brand.json's.
-    const rest = [rating, reviewsLabel, downloadsLabel].reduce((s, v) => s.replace(v, ''), PLAY_PROOF);
+  it('PLAY_PROOF is built from those figures and the month they were read, and states nothing else', () => {
+    const { rating, reviewsLabel, downloadsLabel, checkedOn } = brand.play;
+    const month = new Date(`${checkedOn}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+    expect(PLAY_PROOF).toBe(`Google Play, ${month}: ★ ${rating} · ${reviewsLabel} · ${downloadsLabel}`);
+    // Every number on the line is one of brand.json's, or the year it was read.
+    const rest = [rating, reviewsLabel, downloadsLabel, month].reduce((s, v) => s.replace(v, ''), PLAY_PROOF);
     expect(rest).not.toMatch(/\d/);
+  });
+
+  it('links Google Play\'s own Data safety page instead of quoting one line of it', () => {
+    expect(DATA_SAFETY_URL).toBe('https://play.google.com/store/apps/datasafety?id=com.androidbull.incognito.browser');
+    expect(PLAY_PROOF.toLowerCase()).not.toContain('third parties');
+    const card = fs.readFileSync(path.join(ROOT, 'components', 'tools', 'ResultCard.tsx'), 'utf-8');
+    expect(card).toMatch(/href=\{DATA_SAFETY_URL\}/);
   });
 
   it('no aggregateRating anywhere in app/, components/ or lib/', () => {
