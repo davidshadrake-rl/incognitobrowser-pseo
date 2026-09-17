@@ -108,20 +108,35 @@ describe('isToolVisible / isToolListed (lib/content) follow the tier', () => {
   });
 });
 
-describe('playUrl attribution', () => {
+describe('playInstallUrl attribution', () => {
+  // The real Play-link logic (lib/play.ts playInstallUrl), tested directly so
+  // it stays correct while DEMO_UPGRADE_URL short-circuits playUrl() below
+  // (owner, 2026-09-17: every upgrade link currently goes to the other
+  // product's staging paywall instead — see that file's header comment for
+  // what stops working meanwhile).
   it('carries source/medium/campaign/content/term in the install referrer, source by tier', async () => {
     vi.resetModules(); delete process.env.NEXT_PUBLIC_TIER;
-    const { playUrl, parsePlayReferrer } = await import('../lib/play');
-    const u = playUrl({ medium: 'cta', campaign: 'whats-my-ip', content: 'vpn-privacy', term: 'tool' });
+    const { playInstallUrl, parsePlayReferrer } = await import('../lib/play');
+    const u = playInstallUrl({ medium: 'cta', campaign: 'whats-my-ip', content: 'vpn-privacy', term: 'tool' });
     expect(u.startsWith('https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser')).toBe(true);
     expect(parsePlayReferrer(u)).toEqual({ utm_source: 'resources', utm_medium: 'cta', utm_campaign: 'whats-my-ip', utm_content: 'vpn-privacy', utm_term: 'tool' });
     // A result card's button sends the benefit it sold as utm_content; the app team reads these ids as they are.
     for (const benefit of ['tracker-blocking', 'hides-ad-boxes', 'photo-cleaning']) {
-      expect(parsePlayReferrer(playUrl({ medium: 'funnel', campaign: 'ad-blocker-test', content: benefit, term: 'guide' })).utm_content).toBe(benefit);
+      expect(parsePlayReferrer(playInstallUrl({ medium: 'funnel', campaign: 'ad-blocker-test', content: benefit, term: 'guide' })).utm_content).toBe(benefit);
     }
     vi.resetModules(); process.env.NEXT_PUBLIC_TIER = 'pro';
     const pro = await import('../lib/play');
-    expect(pro.parsePlayReferrer(pro.playUrl({ medium: 'site', campaign: 'header' })).utm_source).toBe('pro');
+    expect(pro.parsePlayReferrer(pro.playInstallUrl({ medium: 'site', campaign: 'header' })).utm_source).toBe('pro');
     delete process.env.NEXT_PUBLIC_TIER;
+  });
+});
+
+describe('playUrl demo switch', () => {
+  it('while DEMO_UPGRADE_URL is set, every upgrade link goes to the staging paywall instead of Play', async () => {
+    vi.resetModules();
+    const { playUrl, DEMO_UPGRADE_URL } = await import('../lib/play');
+    expect(DEMO_UPGRADE_URL).toBe('https://staging.ufile.io/pricing');
+    expect(playUrl({ medium: 'cta', campaign: 'whats-my-ip' })).toBe(DEMO_UPGRADE_URL);
+    expect(playUrl({ medium: 'site', campaign: 'header' })).toBe(DEMO_UPGRADE_URL);
   });
 });
