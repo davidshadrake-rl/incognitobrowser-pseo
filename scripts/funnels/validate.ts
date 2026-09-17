@@ -158,9 +158,13 @@ function validateV2(r: Rec, f: FunnelV2, errors: string[], warnings: string[], s
   const engine = f.check?.engine ?? '';
   const onItsOwnPage = r.type === 'tool' || r.type === 'pro-tool';
   const linksOut = !onItsOwnPage && (PRO_ENGINES.has(engine) || LINK_OUT_ENGINES.has(engine));
+  // A page with no answers of its own opts into the tool's default words
+  // (lib/card-copy.ts CARD_COPY): the card still answers every result. A page
+  // that writes any answer writes them all.
+  const usesDefaults = !onItsOwnPage && engine !== 'report-card' && Object.keys(f.results ?? {}).length === 0;
   const needed: Severity[] = engine === 'report-card'
     ? [GRADE_SEVERITY[String(r.facts?.grade ?? '')] ?? 'amber']
-    : linksOut
+    : linksOut || usesDefaults
       ? (Object.keys(f.results ?? {}) as Severity[])
       : (ENGINE_RESULTS[engine] ?? ['red', 'amber', 'green']);
   for (const sev of needed) {

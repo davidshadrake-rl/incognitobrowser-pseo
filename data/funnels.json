@@ -346,9 +346,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Two checklists, 38 items. See what your browser sends before item 1",
+   "heading": "Incognito only keeps history off this device. See what your browser still tells each site.",
    "instruction": "Open the User Agent Analyzer in the private window you'd use; nothing to type. It shows the browser, version and OS sent to every site, and any Client Hints scripts can request.",
-   "button": "Read my private window's details",
+   "button": "Show what my browser tells every site",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -1435,9 +1435,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "The security checklist's item 6 is a DNS leak test. Run it here first",
+   "heading": "A leaky VPN feels safe; your provider still sees your sites. Test it, nothing to type.",
    "instruction": "Item 6 of the security checklist asks for a DNS leak test; this one runs on your own connection. Press VPN off first, then VPN on, about 10 seconds each, and read which network answered.",
-   "button": "Run item 6 on my connection",
+   "button": "Test whether my VPN leaks",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -1495,9 +1495,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Section 3 of the policy asks for DNS leak protection. Test the device it covers",
+   "heading": "Before your policy promises no leaks, see if this device's VPN leaks the sites you open.",
    "instruction": "Open this on a work device, connected as staff would be. Run it with the VPN off, then on; about 10 seconds each. The result is evidence for the policy's section 3 or the letter's testing week.",
-   "button": "Test this device's DNS for the policy",
+   "button": "Test this device's VPN for leaks",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -1736,184 +1736,124 @@
   }
  },
  "/topics/encrypted-messaging": {
+  "v": 2,
   "type": "topic-hub",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "The topic",
    "quote": "If a message can be read in transit, assume it will be."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "See what your message looks like to anyone reading it in transit",
-   "instruction": "Type a message and a passphrase into the Text Encryption Tool here and press Encrypt Text. It runs in your browser; copy the scrambled block and send the passphrase another way.",
-   "button": "Encrypt a message",
+  "stakes": "Encryption hides a photo from anyone in the middle, but what's hidden inside the file arrives with it: often the spot it was taken, which phone, when. Not every chat strips that; drop one in and see what yours carries.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check what one photo carries",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=topic-hub"
   },
-  "step3": {
-   "red": "'Decryption failed' means the passphrase is wrong, the block was altered, or another tool made it. AES-GCM can't tell which, so recheck the passphrase first.",
-   "amber": "Copy the block, switch to Decrypt with the same passphrase and your words return, as they would for anyone holding it. Send the passphrase another way.",
-   "green": "Encrypted: the block you copy reads as noise to anyone who intercepts it, and altered, the block won't open. The passphrase is the only way in."
-  },
-  "step4": {
-   "line": "For everyday chats, the free fix is an app that encrypts every chat end to end by default. Encryption covers the trip, not what's inside a file: Incognito Pro's Photo Metadata Viewer lists a photo's GPS, camera and time fields and saves a clean copy to send."
-  },
-  "step5": {
-   "label": "Check what your photos carry before you send them"
-  }
+  "results": {}
  },
  "/guides/encrypted-messaging": {
+  "v": 2,
   "type": "type-hub",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Guides",
    "quote": "If a message can be read in transit, assume it will be."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Encrypt one line by hand, then pick the guide that fits what you saw",
-   "instruction": "Type a short line and a passphrase into the Text Encryption Tool here and press Encrypt Text; seconds, in your browser. Each result below points to one of the three guides.",
-   "button": "Try encrypting a line",
+  "stakes": "Tap Share on a video or post and the link often carries a tag tying whoever opens it to you; encryption doesn't touch that. Paste one from your chats, see which company it reports to, then copy a clean one.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "Check a link from your chats",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=type-hub"
   },
-  "step3": {
-   "red": "Answered 'Decryption failed'? Wrong passphrase, altered block, or another tool made it. The Advanced guide covers identity checks and forward secrecy.",
-   "amber": "Copy the block, Decrypt it and your words come back. The shared secret is the weak spot: step 4 of the Complete Guide to Encrypted Messaging Apps covers safety numbers.",
-   "green": "Encrypted, and unreadable without the passphrase. A chat app can do this for every message; the Beginners guide's first two steps show what to look for."
-  },
-  "step4": {
-   "line": "The guides' fixes are free: an app that encrypts by default, safety numbers, disappearing messages. None of the three covers a photo's hidden fields; Incognito Pro's Photo Metadata Viewer lists a photo's GPS and camera details and saves a clean copy."
-  },
-  "step5": {
-   "label": "Cover the photo step these guides leave out"
-  }
+  "results": {}
  },
  "/checklists/encrypted-messaging": {
+  "v": 2,
   "type": "type-hub",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Checklists",
    "quote": "If a message can be read in transit, assume it will be."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Which item first? Encrypt a line you'd text and see what's at stake",
-   "instruction": "Type a line you'd normally send by SMS, add a passphrase, press Encrypt Text. It runs in your browser. The scrambled block is what an encrypted chat sends; an SMS carries the words as typed.",
-   "button": "Encrypt a line I'd text",
+  "stakes": "The photos you share can carry more than the picture: often the exact spot each was taken and which phone took it, and not every chat strips that. See what yours carries, then save a clean copy to share instead.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo before you share it",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=type-hub"
   },
-  "step3": {
-   "red": "'Decryption failed' covers a wrong passphrase, an altered block or another tool's output. In a chat app, safety numbers show mismatched keys; both lists have that item.",
-   "amber": "Paste the block back under Decrypt and your words return, as for anyone with the passphrase. Next item: 'Disable SMS fallback', so a chat can't slip to plain text.",
-   "green": "Scrambled: nobody reads this without the passphrase. Your chats should do it by default; the security checklist's first critical item asks you to confirm they do."
-  },
-  "step4": {
-   "line": "Most items are free settings. One isn't a setting: 'Implement secure practices for sharing media' says to strip metadata from photos first. Incognito Pro's Photo Metadata Viewer lists each field a photo carries, GPS included, and saves a clean copy."
-  },
-  "step5": {
-   "label": "Do the photo item on your checklist with Pro's viewer"
-  }
+  "results": {}
  },
  "/comparisons/encrypted-messaging": {
+  "v": 2,
   "type": "type-hub",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Comparisons",
    "quote": "If a message can be read in transit, assume it will be."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Before comparing five apps, see what their encryption does to a message",
-   "instruction": "Type a line and a passphrase into the Text Encryption Tool here, then press Encrypt Text. The comparison's first row asks whether each app does this in every chat by default, or only in some.",
-   "button": "See encryption at work",
+  "stakes": "Whichever app wins, links arrive exactly as sent, and a video or post a friend shares can carry a tag that ties your tap back to their account. Paste one and see which company it reports to.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "See who a shared link reports to",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=type-hub"
   },
-  "step3": {
-   "red": "'Decryption failed' shows up for a wrong passphrase, an altered block, or one made elsewhere. Chat apps handle keys for you; safety numbers let you check them.",
-   "amber": "Decrypt the block you copied and it reads as plain text again. Encryption hides the words, not who you talk to or when: the table's second row, metadata protection.",
-   "green": "Encrypted: unreadable on the way without the passphrase. In the comparison's first row, four apps do this by default; Telegram only in Secret Chats."
-  },
-  "step4": {
-   "line": "The free move is to an app that encrypts every chat by default; four of the five compared are free. Not every app strips a photo's hidden fields, and photos sent as files often keep them: Incognito Pro's Photo Metadata Viewer lists GPS, camera and time fields and saves a clean copy."
-  },
-  "step5": {
-   "label": "Check a photo's hidden fields whichever app you choose"
-  }
+  "results": {}
  },
  "/templates/encrypted-messaging": {
+  "v": 2,
   "type": "type-hub",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Templates",
    "quote": "If a message can be read in transit, assume it will be."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Show what an intercepted message looks like, encrypted and not, before you write",
-   "instruction": "Encrypt one line with a passphrase here; it runs in your browser. The before and after makes the request letter's first risk, unencrypted messages that can be intercepted, easy to see.",
-   "button": "Make a before-and-after",
+  "stakes": "You're asking a team or family to change how they message over risks they can't see. Here's one they can: drop in a photo you've messaged and see whether it carries where it was taken; not every chat strips that.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo you could show them",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=type-hub"
   },
-  "step3": {
-   "red": "A 'Decryption failed' answer is a demo in itself: change one character of the block, or of the passphrase, and the example stays locked.",
-   "amber": "Pasted back under Decrypt, the block returns plain words to whoever has the passphrase. The policy template's security section covers app locks and safety numbers.",
-   "green": "Encrypted: the copy is gibberish without the passphrase. Use it as the letter's example, and let the policy template set rules for what gets shared."
-  },
-  "step4": {
-   "line": "Both templates are free to copy. The policy's file-sharing rule could add one line: clear a photo's hidden fields before sharing. Incognito Pro's Photo Metadata Viewer shows GPS, camera and time fields and saves a clean copy, one photo at a time."
-  },
-  "step5": {
-   "label": "Put photo checks into your messaging policy"
-  }
+  "results": {}
  },
  "/calculators/encrypted-messaging": {
+  "v": 2,
   "type": "type-hub",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Calculators",
    "quote": "If a message can be read in transit, assume it will be."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "The calculator's heaviest question is about encryption. See what it means first",
-   "instruction": "Type a line and a passphrase and press Encrypt Text. The calculator's first question, whether your app encrypts chats end to end, can add up to 80 points, more than any other.",
-   "button": "Encrypt a line first",
+  "stakes": "Every photo you send can carry where you were standing when you took it, whatever you meant to share. The calculator can't ask about that, so drop one photo in and see what yours carries.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo you'd send",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=type-hub"
   },
-  "step3": {
-   "red": "'Decryption failed' keeps the block locked. Every extra person holding a key is another way in: the calculator adds 1.5 points per group chat, up to 30.",
-   "amber": "Decrypted, and readable by anyone with the passphrase. Backups work the same way, open to whoever holds the key; the calculator adds 30 points for cloud backup.",
-   "green": "Encrypted: pasted into an unencrypted chat, this block stays unreadable without the passphrase. The calculator still scores the app you use, not this tool."
-  },
-  "step4": {
-   "line": "The biggest drops are free: an app that encrypts every chat by default, and cloud backup off or encrypted. Photos sit outside the score: Incognito Pro's Photo Metadata Viewer lists a photo's GPS and camera fields and saves a clean copy before you send it."
-  },
-  "step5": {
-   "label": "Check the photos the calculator's score leaves out"
-  }
+  "results": {}
  },
  "/topics/private-search": {
   "type": "topic-hub",
@@ -2710,9 +2650,9 @@
   },
   "step2": {
    "engine": "whats-my-ip",
-   "heading": "Do security item 7's last step here: confirm your address changed",
+   "heading": "Each site you open gets an internet address saying roughly where you are. See yours now.",
    "instruction": "Item 7 says to verify your IP changed once the VPN connects. Open this on the public network, VPN off and then on; nothing to type. The address and rough location at the top should switch.",
-   "button": "Verify my address changed",
+   "button": "See where my internet address says I am",
    "target": {
     "niche": "vpn-privacy",
     "slug": "whats-my-ip"
@@ -2890,9 +2830,9 @@
   },
   "step2": {
    "engine": "link-unwrapper",
-   "heading": "Security item 3 says check every link. Try it on one you received",
+   "heading": "An inbox link can say one place and go to another. Paste one; see who it passes through.",
    "instruction": "Paste a link from an email or message in your inbox. It's decoded, never opened: each redirect, the host it points to and any tags, laid out before you decide which item to work on first.",
-   "button": "Check a link from my inbox",
+   "button": "Show who this link passes through",
    "target": {
     "niche": "ad-tracking",
     "slug": "link-unwrapper"
@@ -2950,9 +2890,9 @@
   },
   "step2": {
    "engine": "link-unwrapper",
-   "heading": "The policy's section 2 lists mismatched URLs. Test a link against it",
+   "heading": "Your policy asks people to spot fake links by eye. Paste one; see who it bounces through.",
    "instruction": "Copy a link from a message that claims to come from a company you deal with, and paste it here. Nothing opens; you get the host the link really ends at, to compare with the name in the message.",
-   "button": "Compare a link with its sender",
+   "button": "See who a link bounces through",
    "target": {
     "niche": "ad-tracking",
     "slug": "link-unwrapper"
@@ -3610,9 +3550,9 @@
   },
   "step2": {
    "engine": "link-unwrapper",
-   "heading": "Item 20 of the hardening list is about tracking links in deal alerts. Unwrap one",
+   "heading": "Links in shop emails can carry a code that identifies you. Paste one and see who's told.",
    "instruction": "Paste the link from a deal alert, coupon email or shop newsletter. It's read as text, never opened: you see each redirect it decodes, the store it ends at and the tags that travel with it.",
-   "button": "Unwrap a deal-alert link",
+   "button": "See who a shop link reports to",
    "target": {
     "niche": "ad-tracking",
     "slug": "link-unwrapper"
@@ -5342,184 +5282,124 @@
   }
  },
  "/topics/cloud-privacy": {
+  "v": 2,
   "type": "topic-hub",
   "topic": "cloud-privacy",
   "step1": {
    "label": "The topic",
    "quote": "Files in the cloud are only as private as the link and the account that hold them."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Make one file unreadable before it ever reaches a server",
-   "instruction": "On the tool page, choose a file or type some text, add a passphrase and press Encrypt. It runs in this browser; you get a .enc download or a block of base64 to upload in place of the original.",
-   "button": "Encrypt one file",
+  "stakes": "If your phone backs up photos, each goes up carrying whatever is hidden in the file: often the spot it was taken, the phone, sometimes a tiny uncropped copy. Drop one in and see what went up with it.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo from your camera roll",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=topic-hub"
   },
-  "step3": {
-   "red": "Nothing came back readable: the passphrase differs by a character, the block was altered, or another tool produced it. No provider can restore a file for you here.",
-   "amber": "Decrypted, and plain again on this screen. That is the state anyone holding the passphrase reaches, which is why the passphrase should never travel with the file.",
-   "green": "Encrypted, so what a provider stores is noise. The file's name, its size and the time you uploaded it are still visible, so name the upload plainly."
-  },
-  "step4": {
-   "line": "Free first: upload the encrypted copy instead of the original. Photos are the gap, since an image carries its own camera, time and GPS fields inside the file; on the Pro site, the Photo Metadata Viewer lists those fields for a photo you pick, rates each for risk and saves a clean copy."
-  },
-  "step5": {
-   "label": "Check a photo's fields before it syncs to the cloud"
-  }
+  "results": {}
  },
  "/guides/cloud-privacy": {
+  "v": 2,
   "type": "type-hub",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Guides",
    "quote": "Files in the cloud are only as private as the link and the account that hold them."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Try the hardest step first, then pick your guide",
-   "instruction": "Encrypting one file takes a passphrase and a press on the tool page. If that felt straightforward, the advanced guide is your level; if it did not, the beginners' guide starts further back.",
-   "button": "Try encrypting a file",
+  "stakes": "Unless you encrypt first, your cloud provider can open every photo you back up, and each often carries where it was taken and which phone took it, hidden inside the file. Drop one in and see what yours gives away.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one photo gives away",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=type-hub"
   },
-  "step3": {
-   "red": "It refused to open again. A changed character, a wrong passphrase or another tool's output all end here; the beginners' guide saves file-level encryption for last.",
-   "amber": "You decrypted it back to the original. The passphrase is the entire lock, and the complete guide reaches encryption only after securing the account itself.",
-   "green": "The encrypted copy is ready to upload. The advanced guide opens on exactly this, client-side encryption, then moves to access controls and multi-cloud setups."
-  },
-  "step4": {
-   "line": "Free first: encrypt what is sensitive before it syncs, and turn off location tagging in your camera app. On the Pro site, Incognito Pro's Photo Metadata Viewer lists the fields inside a photo you choose, camera, time and GPS among them, rates each for risk and saves a clean copy to upload."
-  },
-  "step5": {
-   "label": "Add the photo step these cloud guides skip"
-  }
+  "results": {}
  },
  "/checklists/cloud-privacy": {
+  "v": 2,
   "type": "type-hub",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Checklists",
    "quote": "Files in the cloud are only as private as the link and the account that hold them."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Do the encryption item now, in the browser",
-   "instruction": "Encrypting sensitive files before upload is a critical item on one checklist and a high one on the other. The tool page does it: choose a file up to 100 MB, set a passphrase, download the .enc copy, upload that.",
-   "button": "Do this item now",
+  "stakes": "Photos backed up from your phone can carry the exact spot each was taken; together they map your home, workplace and travels for anyone who opens your files. Check one now and save a copy without it.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo and save a clean copy",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=type-hub"
   },
-  "step3": {
-   "red": "The encrypted copy would not open again. Check the passphrase before deleting any original, because this item has no recovery path once the passphrase is gone.",
-   "amber": "It decrypted back byte for byte. That item is done for this file; the sharing and account items above it are not, and both are marked critical too.",
-   "green": "One file is encrypted and ready. Next on the checklists: a unique password, two-factor login and a look at which share links are still live."
-  },
-  "step4": {
-   "line": "Free first: finish the item, upload the .enc copy and keep the passphrase somewhere separate. Photos are that item's blind spot: on the Pro site, the Photo Metadata Viewer lists what one image carries and saves a clean copy, one photo at a time, nothing in the background."
-  },
-  "step5": {
-   "label": "Cover the photo this checklist item leaves plain"
-  }
+  "results": {}
  },
  "/comparisons/cloud-privacy": {
+  "v": 2,
   "type": "type-hub",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Comparisons",
    "quote": "Files in the cloud are only as private as the link and the account that hold them."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Feel what zero-knowledge means before you compare",
-   "instruction": "The tool encrypts a file in this browser under a passphrase only you hold. That is the by-hand version of the first column: two products do it for everything, the other two only in a folder or a desktop app.",
-   "button": "Encrypt a test file",
+  "stakes": "Whichever provider wins, a photo you sync can carry more than the picture: the exact spot it was taken, the phone, the time. Open one and see what it hands over; one file, nothing to type.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one photo hands over",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=type-hub"
   },
-  "step3": {
-   "red": "It did not decrypt. That failure mode is the same at the providers in the table: with client-side encryption there is no key on their side to reset for you.",
-   "amber": "Back to the original file. Note where the unlocking happened, in your own browser, because that is what 'on your device' means in the comparison's first criterion.",
-   "green": "Encrypted here, by hand, one file at a time. The first column does that without the work: on two products for everything, on the other two only in a folder or app."
-  },
-  "step4": {
-   "line": "Free first: encrypt by hand before upload, whichever provider you end up choosing. On the Pro site, the Photo Metadata Viewer covers a file type this table does not discuss: the Viewer lists a photo's camera, time and GPS fields, rates each for risk and saves a clean copy."
-  },
-  "step5": {
-   "label": "See what a photo carries into any of these four"
-  }
+  "results": {}
  },
  "/templates/cloud-privacy": {
+  "v": 2,
   "type": "type-hub",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Templates",
    "quote": "Files in the cloud are only as private as the link and the account that hold them."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "One thing you can settle without waiting for a reply",
-   "instruction": "Both templates put questions to a provider. This tool answers one of them yourself: encrypt a file here under your own passphrase and upload that copy while the letter is still out.",
-   "button": "Encrypt while you wait",
+  "stakes": "Before you write to your provider asking what they hold about you, part of the answer is already in your hands: a photo you uploaded can carry the exact spot it was taken, which phone, when. Open one and look.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check what a photo tells your provider",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=type-hub"
   },
-  "step3": {
-   "red": "It will not decrypt, so upload nothing yet. A wrong passphrase, an altered block and another tool's output all look identical here; check the passphrase first.",
-   "amber": "Decrypted and readable. A provider's reply can describe how files are protected; on this one, the protection is your passphrase and nothing else.",
-   "green": "Your upload copy is unreadable to the provider. The letter can still ask the rest: how long files are kept, what deletion means, and who else gets a copy."
-  },
-  "step4": {
-   "line": "Free first: upload the encrypted copy while the letter is out. For images, Incognito Pro's Photo Metadata Viewer on the Pro site lists each field a photo carries, rates it for risk and saves a clean copy; you pick the photo, one at a time."
-  },
-  "step5": {
-   "label": "Clean a photo's fields before a provider gets it"
-  }
+  "results": {}
  },
  "/calculators/cloud-privacy": {
+  "v": 2,
   "type": "type-hub",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Calculators",
    "quote": "Files in the cloud are only as private as the link and the account that hold them."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "The calculator estimates; this one is a test",
-   "instruction": "The calculator on this hub scores a setup from your answers. The encryption tool takes a real file and a passphrase and hands back the copy you would upload: a thing done, rather than a number.",
-   "button": "Encrypt a real file",
+  "stakes": "Before you estimate how exposed your files are, look at one you already uploaded: a photo can carry the exact spot it was taken and which phone took it; the provider gets both. Open one; nothing to type.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check what one photo carries",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=type-hub"
   },
-  "step3": {
-   "red": "The copy would not reopen. No estimate changes that, since a passphrase you cannot reproduce is a file you cannot read, whatever score the page gives your setup.",
-   "amber": "Decrypted, plain again. Anything you upload unencrypted sits like this on a provider's side, whichever way the calculator's number lands.",
-   "green": "An encrypted copy is ready. The estimate covers the rest of a setup: how much is shared, which accounts hold it, and how those accounts are reached."
-  },
-  "step4": {
-   "line": "Free first: encrypt the files that matter and cut the share links you have forgotten about. On the Pro site, the Photo Metadata Viewer adds the part no estimate covers, the fields inside one photo, camera, capture time and GPS, each rated for risk, with a clean copy saved."
-  },
-  "step5": {
-   "label": "Put a photo through Pro's viewer before upload"
-  }
+  "results": {}
  },
  "/topics/gaming-privacy": {
   "type": "topic-hub",
@@ -6730,9 +6610,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "The letter asks them to delete behavioral data. Score how much you hand out",
+   "heading": "Asking to be forgotten won't stop what your habits give away today. Score them: 12 taps.",
    "instruction": "Section 3 of the request letter lists behavioral data and usage analytics. Answer 12 multiple-choice questions on your browser, cookies, search engine and more; about 2 minutes.",
-   "button": "Score my side of section 3",
+   "button": "Score my habits out of 100",
    "target": {
     "niche": "digital-footprint",
     "slug": "privacy-score-quiz"
@@ -6910,9 +6790,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Write a cookie section that actually lists cookies",
+   "heading": "Your cookie section is a promise. Paste your site's address and list what it really sets.",
    "instruction": "Paste the address of the site the policy or letter is for. Our server fetches one page and returns each cookie the response sets, its category and how long it lasts — the details Section 6 asks you to fill in.",
-   "button": "Fill Section 6 from real data",
+   "button": "List the cookies my site really sets",
    "target": {
     "niche": "privacy-policies",
     "slug": "cookie-tracker-analyzer"
@@ -6940,9 +6820,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "One of the calculator's six inputs can be answered with evidence",
+   "heading": "A policy says 'partners'; the site shows who. Paste its address and count the trackers.",
    "instruction": "Paste the address of the service whose policy you are rating. Our server fetches one page and counts the outside domains and known tracker tags in it. The other five inputs still come from reading the policy.",
-   "button": "Count before I answer input 3",
+   "button": "Count the trackers a site really loads",
    "target": {
     "niche": "privacy-policies",
     "slug": "cookie-tracker-analyzer"
@@ -7930,9 +7810,9 @@
   },
   "step2": {
    "engine": "whats-my-ip",
-   "heading": "Before you work down either list, see the address this browser gives sites",
+   "heading": "A leaked address can expose a source. See the one this browser gives sites, in seconds.",
    "instruction": "Open it in the browser you're hardening, with its VPN on if it runs one. Nothing to type: the address, its rough location and any WebRTC addresses load together in seconds.",
-   "button": "Check before item 1",
+   "button": "See the address every site gets",
    "target": {
     "niche": "vpn-privacy",
     "slug": "whats-my-ip"
@@ -8230,9 +8110,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Check the blocker from step 4 stops tracking scripts, not just ads",
+   "heading": "Sites you read tell ad networks you were there. See how many of 50 get past this browser.",
    "instruction": "Run it now for your starting point, or after installing a blocker in step 4. Use the browser you browse with; it sends 50 harmless test requests from this site in about 5 seconds.",
-   "button": "Test my ad blocker",
+   "button": "Count what gets past this browser",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -8530,9 +8410,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Step 1 is a choice. See which browser you're making it in",
+   "heading": "Sites read your browser, version and device before a page loads. See it, nothing to type.",
    "instruction": "Nothing to type: the User Agent Analyzer names the browser, version, OS and device it detects and flags an outdated version. It reads no privacy setting, so it can't tell you how much that browser collects.",
-   "button": "Name the browser I'm using",
+   "button": "See what my browser tells sites",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -8765,94 +8645,64 @@
   }
  },
  "/guides/cloud-privacy/advanced-cloud-storage-privacy-techniques": {
+  "v": 2,
   "type": "guide",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Step 1 of 7",
    "quote": "Set up encryption that happens on your device before files reach cloud servers, ensuring providers cannot access your data even if they wanted to."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Watch client-side encryption happen, on text you would have synced",
-   "instruction": "Type a note you would otherwise drop straight into your cloud drive, add a passphrase, press Encrypt Text. It runs in this browser. It cannot reach files already in your account, and it is not a vault.",
-   "button": "Encrypt a note before it syncs",
+  "stakes": "The browser you open your cloud files in loads trackers from other sites, each reporting which pages you were on. Before you tighten it, count how many of 50 common ad and tracking requests it lets through; about five seconds.",
+  "check": {
+   "engine": "ad-blocker-test",
+   "button": "Count what this browser lets through",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "ad-blocker-test"
    },
    "query": "topic=cloud-privacy&from=guide"
   },
-  "step3": {
-   "red": "Nothing readable came back from Decrypt: a wrong passphrase, edited text, or a block from another tool. Lose the passphrase and the file is gone - that is the trade.",
-   "amber": "Decrypted, your words returned in full. Anyone holding the passphrase gets the same, so it must not sit in the drive beside the file it opens.",
-   "green": "Encrypted on your own device: that block is all a provider would hold. Cryptomator and the vault apps this step names do the same for whole folders."
-  },
-  "step4": {
-   "line": "Encrypting before upload costs nothing, here or in the vault apps this step names. Encryption hides what is inside a file, not what a photo carries: Incognito Pro's Photo Metadata Viewer lists a photo's GPS, camera and time fields and saves a clean copy to upload instead."
-  },
-  "step5": {
-   "label": "Check a photo's GPS before it reaches the cloud"
-  }
+  "results": {}
  },
  "/guides/cloud-privacy/cloud-storage-privacy-for-beginners": {
+  "v": 2,
   "type": "guide",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Step 7 of 7",
    "quote": "encrypt sensitive files before uploading them to any cloud service, even encrypted ones"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Do step 7 on one file now, before it goes anywhere near Drive",
-   "instruction": "Open the File tab, choose the document you were about to upload, set a passphrase and press Encrypt File. It runs here. It can't reach what is already in your account, and the provider still sees the name and size.",
-   "button": "Encrypt the file I was uploading",
+  "stakes": "Your phone likely backs up photos on its own, and the backup holds more than pictures: many carry the spot you were standing when you took them. Before you move anything, open one and see what it carries.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one of your photos carries",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=guide"
   },
-  "step3": {
-   "red": "Decryption failed: a wrong passphrase, an edited block, or a file another tool made. The tool can't say which, and no one recovers the contents without that passphrase.",
-   "amber": "Decrypted, and the document is back exactly as it was. Do that round trip once before you delete the original: a passphrase you can't reproduce is a file you have lost.",
-   "green": "Encrypted. The .enc file is all the provider ever holds, and it is noise without the passphrase — so store the passphrase somewhere other than that same folder."
-  },
-  "step4": {
-   "line": "Step 6 here is the browser you open cloud files in: the free Incognito Browser app keeps no history and wipes cookies and sessions on exit. Encryption hides a file's contents, not what a photo carries — Incognito Pro's Photo Metadata Viewer lists its GPS and camera fields and saves a clean copy."
-  },
-  "step5": {
-   "label": "See what a photo carries into your cloud folder"
-  }
+  "results": {}
  },
  "/guides/cloud-privacy/complete-guide-to-cloud-storage-privacy": {
+  "v": 2,
   "type": "guide",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Step 2 of 7",
    "quote": "Zero-knowledge encryption means your cloud provider cannot see your files, even if they wanted to."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Be your own zero-knowledge layer for two minutes",
-   "instruction": "Type a paragraph from something you keep in the cloud into the Text Encryption Tool, add a passphrase, press Encrypt Text. What you copy out is what a zero-knowledge provider would hold. It can't audit your provider.",
-   "button": "Show me what the provider would hold",
+  "stakes": "With every photo you upload, your cloud provider can get more than the picture: often the exact spot it was taken, which phone, and when. Open one and see what yours shows them; one file, nothing to type.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what a photo shows your provider",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=guide"
   },
-  "step3": {
-   "red": "It would not open again. The same refusal answers a wrong passphrase and an altered block, and that refusal is the property this whole step is built on.",
-   "amber": "Back to your paragraph, because you are the one holding the key. A company holding only the block cannot do this, whatever its policy page says.",
-   "green": "Scrambled in this tab, before anything leaves the device: that is the client-side half of the client-side versus server-side difference step 2 asks you to learn."
-  },
-  "step4": {
-   "line": "Step 5 adds your own layer before upload; an encrypted archive hides what is in a file, not the fields inside a photo. Incognito Pro's Photo Metadata Viewer lists a photo's location and camera details and saves a clean copy. The free Incognito Browser app opens cloud links in private tabs."
-  },
-  "step5": {
-   "label": "Take the same look inside a photo you sync"
-  }
+  "results": {}
  },
  "/guides/cookie-management/advanced-cookie-management-tracking-prevention-techniques": {
   "type": "guide",
@@ -9665,94 +9515,64 @@
   }
  },
  "/guides/encrypted-messaging/advanced-encrypted-messaging-techniques": {
+  "v": 2,
   "type": "guide",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Step 5 of 7",
    "quote": "ensuring past messages remain secure even if keys are compromised"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "One passphrase, two blocks: this is what forward secrecy is not",
-   "instruction": "Encrypt a short line in the tool on this page, then encrypt a second line with the same passphrase. Both open with that one secret. It runs in your browser and cannot inspect the keys inside your chat app.",
-   "button": "Encrypt two lines, one secret",
+  "stakes": "Encryption hides the words. It does nothing about what a photo you attach may carry: the exact spot it was taken, which phone, when; whether that survives sending depends on the app, so open one and see what's there first.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what a photo carries before sending",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=guide"
   },
-  "step3": {
-   "red": "'Decryption failed', with no reason offered. A safety number changing tells you as little, and step 5's answer is the same either way: check it out of band.",
-   "amber": "Decrypt one block and the other gives way as well. A single secret opens everything it ever wrapped, which is the failure this step asks your app to avoid.",
-   "green": "Two blocks, both shut without that passphrase, both open the moment it leaks. Per-message keys are the difference: an old chat does not reopen with a new key."
-  },
-  "step4": {
-   "line": "Every setting in these steps is free, Registration Lock and Screen Security among them, and none of them reaches inside a photo you send. Incognito Pro's Photo Metadata Viewer lists the GPS, camera and capture-time fields a picture carries, rates each for risk and saves a clean copy to send instead."
-  },
-  "step5": {
-   "label": "Clear a photo's fields before the group sees it"
-  }
+  "results": {}
  },
  "/guides/encrypted-messaging/complete-guide-to-encrypted-messaging": {
+  "v": 2,
   "type": "guide",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Step 1 of 6",
    "quote": "Even the app company cannot decrypt your conversations."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Be the app company for a minute: hold the only key yourself",
-   "instruction": "Type a message you would actually send, and a passphrase, into the tool on this page. The scrambling happens in this browser, so nothing here holds your key. It cannot audit what Signal or WhatsApp keep on their servers.",
-   "button": "Keep the key on my side",
+  "stakes": "Once your chat is encrypted, the words are private; a link someone pastes in can carry tags that report your click to a company outside the chat. Paste one you've received and see who it reports to.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "See who a chat link reports to",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=guide"
   },
-  "step3": {
-   "red": "Wrong passphrase, altered text, or a block made by some other tool: AES-GCM refuses all three with the same message, and this site cannot open it for you either.",
-   "amber": "Your words come back for whoever holds the passphrase, and for nobody else. Step 1 describes that arrangement with an app doing the key handling you just did by hand.",
-   "green": "Scrambled on your device, and this page never saw the passphrase. An app that repeats this for every chat, without a secret to pass around, is what step 2 has you pick."
-  },
-  "step4": {
-   "line": "Choosing an app that encrypts by default costs nothing, and step 1 already warns that screenshots and device backups sit outside the encryption. So does a photo's own contents: Incognito Pro's Photo Metadata Viewer names the GPS, camera and time fields inside the file and saves a clean copy to send."
-  },
-  "step5": {
-   "label": "See what a photo carries past the encryption"
-  }
+  "results": {}
  },
  "/guides/encrypted-messaging/encrypted-messaging-for-beginners": {
+  "v": 2,
   "type": "guide",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Step 1 of 7",
    "quote": "learn the difference between regular messaging and truly secure communication"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "See that difference on your own words, before you choose an app",
-   "instruction": "Take the last thing you sent as an ordinary text message, type it into the tool here with a passphrase, and press Encrypt Text. What comes back is the shape a secure app sends. It changes no setting on your phone.",
-   "button": "Scramble my last text",
+  "stakes": "A photo you send in a chat can carry the exact place you took it. Whether the other person gets that depends on the chat app, not the encryption, so open one and see what's inside; nothing to type.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo before you send it",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=guide"
   },
-  "step3": {
-   "red": "It will not open: one character off in the passphrase and the block stays shut. An ordinary text message has no such step to get wrong, and no such protection either.",
-   "amber": "Pasted back with the passphrase, your sentence returns. The difference is who can do that, one holder of a secret rather than every server the message passes.",
-   "green": "That block is the secure version of your text; the original travelled readable. Step 2 lines up three apps and says which does this in every chat, by default."
-  },
-  "step4": {
-   "line": "The steps here are free settings: an app that encrypts by default, disappearing messages, and the linked-device check in step 7. Photos are the gap they leave. Incognito Pro's Photo Metadata Viewer reads the GPS, device and time fields out of a picture and saves a clean copy for you to send."
-  },
-  "step5": {
-   "label": "Start on photos once the chat app is sorted"
-  }
+  "results": {}
  },
  "/guides/facial-recognition/advanced-facial-recognition-biometric-privacy-techniques": {
   "type": "guide",
@@ -9973,9 +9793,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Start step 5's cookie audit with a scan of your own site",
+   "heading": "Your site may set tracking cookies before anyone accepts. Paste its address to see which.",
    "instruction": "Paste your site's address. Our server fetches it once, never clicking Accept, and sorts each cookie its response sets into tracking, analytics or functional, next to known tracker tags in the HTML.",
-   "button": "Check my site's cookies",
+   "button": "Scan my site's cookies before consent",
    "target": {
     "niche": "gdpr",
     "slug": "cookie-compliance-scanner"
@@ -10025,34 +9845,24 @@
   }
  },
  "/guides/healthcare-privacy/advanced-healthcare-medical-privacy-techniques": {
+  "v": 2,
   "type": "guide",
   "topic": "healthcare-privacy",
   "step1": {
    "label": "Step 7 of 7",
    "quote": "Verify healthcare providers support encrypted email or secure messaging platforms"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "See what you are asking your clinic for, on a line of your own",
-   "instruction": "Type the sort of line you would send your doctor, add a passphrase and press Encrypt Text; it runs in your browser. It cannot test your clinic's portal or its email — it shows what you are asking them for.",
-   "button": "Scramble a note to my doctor",
+  "stakes": "The refill reminders and clinic newsletters in your inbox can carry an invisible image that reports the moment you open them, to a marketing platform you never emailed. Paste one email's source and see whether yours does, and to whom.",
+  "check": {
+   "engine": "email-pixel-detector",
+   "button": "Check a refill reminder for trackers",
    "target": {
-    "niche": "healthcare-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "email-privacy",
+    "slug": "email-tracking-pixel-detector"
    },
    "query": "topic=healthcare-privacy&from=guide"
   },
-  "step3": {
-   "red": "'Decryption failed' came back: wrong passphrase, altered block, or one made by another tool. AES-GCM will not say which, so the shared secret is the weak part.",
-   "amber": "You pasted the block back, decrypted it, and the words returned. Anyone holding that passphrase can do the same, so it travels by a different route to the message.",
-   "green": "'Encrypted with AES-256-GCM.' That block is what a secure messaging portal should be putting on the wire; ordinary email carries the words as you typed them."
-  },
-  "step4": {
-   "line": "Asking a provider for a portal or encrypted email costs nothing. Encryption covers the message, not the reading you did before writing it: the free Incognito Browser on Android wipes history, cookies and sessions on exit, and Incognito Pro's Cookie & Tracker Scanner lists what a health page loads."
-  },
-  "step5": {
-   "label": "Scan the pages you read, not just the notes you send"
-  }
+  "results": {}
  },
  "/guides/healthcare-privacy/complete-guide-to-healthcare-medical-privacy": {
   "type": "guide",
@@ -10333,9 +10143,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Step 7 asks for a leak test. Run one here, on the setup you just changed",
+   "heading": "Your internet provider can see every site you look up. Find out if yours does, no typing.",
    "instruction": "Do this after the router and browser steps, on the machine you changed. Six one-off names are looked up, and whoever asks our nameserver for them is your real resolver. Press the button matching your VPN state.",
-   "button": "Verify the DNS I just changed",
+   "button": "Check who sees the sites I look up",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -10385,94 +10195,64 @@
   }
  },
  "/guides/journalist-privacy/advanced-journalist-whistleblower-privacy-techniques": {
+  "v": 2,
   "type": "guide",
   "topic": "journalist-privacy",
   "step1": {
    "label": "Step 2 of 7",
    "quote": "Set up multiple layers of encrypted communication methods for different security levels and source types."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "One layer you can test now, for a source who has installed nothing",
-   "instruction": "Type a paragraph you would really send a source, add a passphrase, press Encrypt Text; it runs in this browser. Not Signal, not PGP: no keys, no identity check, and it hides the words only, never who you wrote to.",
-   "button": "Encrypt a paragraph for a source",
+  "stakes": "The photo a source sends can give them away: it can carry the exact spot it was taken, the phone's name, the time, hidden inside the file. Drop one in and see what it hands over; nothing to type.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a source's photo for hidden details",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=journalist-privacy&from=guide"
   },
-  "step3": {
-   "red": "It won't open again: a changed character, the wrong passphrase, or a block from some other tool. Which of the three, nothing here can say, so check the passphrase first.",
-   "amber": "Decrypted back into your paragraph, exactly as anyone holding that passphrase would read it. Send the passphrase down the separate channel this step already asks for.",
-   "green": "A block of noise that opens only with the passphrase, and it survives any channel you like. What it hides is the wording. That the two of you spoke at all, it does not."
-  },
-  "step4": {
-   "line": "Signal, ProtonMail and OnionShare, the tools this step names, all have free versions. Encryption covers the words, not the file's own fields: step 3 has you remove EXIF data before sharing, and Incognito Pro's Photo Metadata Viewer lists a photo's GPS, camera and time fields and saves a clean copy."
-  },
-  "step5": {
-   "label": "Do step 3's EXIF line with Pro's viewer"
-  }
+  "results": {}
  },
  "/guides/journalist-privacy/complete-guide-to-journalist-whistleblower-privacy": {
+  "v": 2,
   "type": "guide",
   "topic": "journalist-privacy",
   "step1": {
    "label": "Step 4 of 8",
    "quote": "Never store source names and contact info together"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "The file where a name and a number do sit together: make it unreadable",
-   "instruction": "Open the File tab, choose the contact file you keep for one source, set a passphrase and press Encrypt File. It runs in this tab. It can't find the other copies on your device, and the file name and size still show.",
-   "button": "Encrypt the file that pairs the two",
+  "stakes": "The next pitch you open can carry an invisible image that tells the sender the moment you read it and roughly where you were; so can a note from the subject of your story. Paste one in; see who's told.",
+  "check": {
+   "engine": "email-pixel-detector",
+   "button": "Check an email for hidden tracking",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "email-privacy",
+    "slug": "email-tracking-pixel-detector"
    },
    "query": "topic=journalist-privacy&from=guide"
   },
-  "step3": {
-   "red": "Decrypt handed nothing back: wrong passphrase, an edited block, or a file from another tool. The cipher can't tell those apart, and nor can you afterwards.",
-   "amber": "It opened, and the name sits beside the number again. Do that round trip once: a passphrase you can't reproduce loses the source's details for good.",
-   "green": "Encrypted here on the device. A seized copy is a block of noise, and the pairing this step warns about exists only for whoever holds the passphrase."
-  },
-  "step4": {
-   "line": "Keeping the passphrase off the device that holds the file is free, and so is the round trip above. Encryption hides what a file says, not what a picture records: Incognito Pro's Photo Metadata Viewer lists a source photo's GPS, camera and capture time and saves a clean copy to publish."
-  },
-  "step5": {
-   "label": "Read a source photo's GPS before you publish it"
-  }
+  "results": {}
  },
  "/guides/journalist-privacy/journalist-whistleblower-privacy-for-beginners": {
+  "v": 2,
   "type": "guide",
   "topic": "journalist-privacy",
   "step1": {
    "label": "Step 3 of 7",
    "quote": "Install Signal for encrypted messaging and voice calls"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "For the source who will not install anything, encrypt the words instead",
-   "instruction": "Type the message you were about to send that source in ordinary email, add a passphrase you agreed with them by phone, then press Encrypt Text. This is not Signal: it hides the words, not who you wrote to or when.",
-   "button": "Encrypt the words, not the channel",
+  "stakes": "Sites you read for a story load trackers that note your visit; a blocker only helps if it catches them. Send 50 test requests shaped like them and see what this browser lets through; about five seconds, nothing to type.",
+  "check": {
+   "engine": "ad-blocker-test",
+   "button": "Count what this browser lets through",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "ad-tracking",
+    "slug": "ad-blocker-test"
    },
    "query": "topic=journalist-privacy&from=guide"
   },
-  "step3": {
-   "red": "Nothing came back out. One wrong character in a passphrase reads exactly like a tampered block here, which is why the passphrase is agreed by voice first.",
-   "amber": "Your message reappears in full for anyone who pastes it back with that passphrase. That is the point and the risk: the passphrase must not travel in the same email.",
-   "green": "What you copy into the email is that block of characters. The mail provider, and anyone reading its logs later, holds the block rather than the sentence."
-  },
-  "step4": {
-   "line": "Agreeing a passphrase by voice costs nothing, and the free Incognito Browser app on Android keeps no history and wipes cookies and sessions on exit, which matters on a shared newsroom device. Incognito Pro's Photo Metadata Viewer reads a photo's GPS and capture time and saves a clean copy."
-  },
-  "step5": {
-   "label": "After the words, look inside the photo you attach"
-  }
+  "results": {}
  },
  "/guides/location-tracking/advanced-location-tracking-gps-privacy-techniques": {
   "type": "guide",
@@ -10903,9 +10683,9 @@
   },
   "step2": {
    "engine": "password-strength",
-   "heading": "Twelve characters is step 2's rule. Hold your own password to it",
+   "heading": "At 10 billion guesses a second, how long does your password last? See without sending it.",
    "instruction": "Type the password you use for your email account, or one you built the same way. It is scored in your browser as you type: length, crack time and the patterns that weaken it. It cannot see where else you use it.",
-   "button": "Time my email password",
+   "button": "See how long my password would last",
    "target": {
     "niche": "password-security",
     "slug": "password-strength-checker"
@@ -11683,9 +11463,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "Question 3 asks this outright, then weighs it against eleven others",
+   "heading": "School laptops can be watched. Your own phone is up to you: score your habits out of 100.",
    "instruction": "Take the twelve questions for the personal phone or laptop you browse on out of class, not a school-issued one. Two minutes. Question 3 and the DNS one make the Network bar. Nothing is tested; you answer for yourself.",
-   "button": "Answer for my own device",
+   "button": "Score my habits in 12 questions",
    "target": {
     "niche": "student-privacy",
     "slug": "digital-privacy-quiz"
@@ -11953,9 +11733,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Step 7 wants three checks. This settles the DNS one",
+   "heading": "A VPN can still let your internet provider see the sites you look up. See if yours does.",
    "instruction": "Run it on your own connection with the tunnel down, then again with it up, about 10 seconds each. It reports which network answered six test lookups. It says nothing about your IP address or the kill switch.",
-   "button": "Do the DNS check from step 7",
+   "button": "Check if my VPN leaks site lookups",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -12133,9 +11913,9 @@
   },
   "step2": {
    "engine": "browser-privacy",
-   "heading": "Open the work browser and settle the half of step 3 a test can reach",
+   "heading": "Sites you open at work can recognize this browser. See what gives it away, no typing.",
    "instruction": "Press Run Privacy Audit in the browser on your work machine. It lists the 15 signals every site you open there can read. It cannot see monitoring software on the device, or what the company network records.",
-   "button": "Audit the browser I use at work",
+   "button": "See what my work browser gives away",
    "target": {
     "niche": "workplace-privacy",
     "slug": "browser-privacy-audit"
@@ -12193,9 +11973,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Test item 4: does your ad blocker stop tracking scripts?",
+   "heading": "Sites you read feed an ad profile of you. See how many of 50 trackers your blocker stops.",
    "instruction": "Run it in the browser you're hardening, with your blocker on. It sends 50 harmless test requests from this site; about 5 seconds. DNS filtering from item 14 won't register here.",
-   "button": "Test item 4 now",
+   "button": "Count what my blocker stops",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -12223,9 +12003,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Test whether item 9's filter lists are really switched on",
+   "heading": "Your blocker can't show you what it misses. Count how many of 50 trackers get through.",
    "instruction": "Run it in the browser you're securing, blocker on. The 50 test requests mirror EasyList and EasyPrivacy rules, so a missing list shows up as a leaking group. About 5 seconds.",
-   "button": "Check my filter lists",
+   "button": "Count what my blocker misses",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -12253,9 +12033,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Item 12 covers the app's location. Your uploaded photo carries its own",
+   "heading": "Photos you paste into an AI chat can carry the exact spot they were taken. Check one file.",
    "instruction": "Choose a photo or screenshot you've pasted into an AI chat (PNG, JPEG or WebP). It reads the file's fields — GPS, device, capture time, hidden text — not the picture, and not what the AI company kept.",
-   "button": "Check the photo I fed an AI",
+   "button": "Check a photo for hidden location",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -12343,9 +12123,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Item 15 asks for a comparison. Here is one ruler for both sides",
+   "heading": "You added extensions to block trackers. Count how many of 50 still get through.",
    "instruction": "Press Run in the browser carrying your extensions, then open this page in Firefox with Enhanced Tracking Protection on Strict, or Brave with Shields on, and press Run there. 50 test requests each.",
-   "button": "Score both browsers",
+   "button": "Count what gets past my extensions",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -12373,9 +12153,9 @@
   },
   "step2": {
    "engine": "permission-checker",
-   "heading": "Begin item 6 on this page: what has this site already got?",
+   "heading": "Allow the camera once and your browser may not ask again. See what it lets this site use.",
    "instruction": "Press the button and your browser answers for 11 permissions on this site — camera, microphone, location and eight more — as allowed, blocked or asks first. It speaks for this site only, not the rest.",
-   "button": "Ask my browser about this site",
+   "button": "Check 11 permissions for this site",
    "target": {
     "niche": "children-safety",
     "slug": "permission-checker"
@@ -12403,9 +12183,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Item 13 names three things. Read all three off your own string",
+   "heading": "Each site you open learns your browser, version, system and device. See the line it gets.",
    "instruction": "Nothing to type. The User Agent Analyzer prints the string this browser sends and pulls the browser, version, OS and device out of it. It counts uniqueness factors; it cannot say how rare yours is.",
-   "button": "Print my string and its parts",
+   "button": "See what my browser tells sites",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -12433,9 +12213,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Does item 14's blocker reach the patterns the browser misses?",
+   "heading": "Pages you open load trackers your browser lets through. See how many of 50 get past it.",
    "instruction": "Run it in the browser you're working through this list in, with whatever you installed switched on. 50 harmless test requests from this site, about 5 seconds. None are malicious: they are ad and tracker patterns.",
-   "button": "Measure what I installed",
+   "button": "Count what gets past my browser",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -12463,9 +12243,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Which ad networks is item 4 asking you to opt out of?",
+   "heading": "Sites you read load ad trackers before any opt-out appears. Paste one link and see which.",
    "instruction": "Paste the address of a site you read often. Our server fetches one page as a first visitor, consents to nothing, and lists the known ad and tracking tags in its HTML, the cookies its response sets and outside domains.",
-   "button": "List the networks on that site",
+   "button": "See which trackers a site loads",
    "target": {
     "niche": "ccpa",
     "slug": "cookie-privacy-scanner"
@@ -12493,9 +12273,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Item 1 without asking anyone: what one page hands out on a first visit",
+   "heading": "A site can track you before you click a thing. Paste any link and see which trackers load.",
    "instruction": "Paste a business's address. Our server loads one page as a first-time visitor and scores the cookies that response sets, the known trackers in its HTML and its outside scripts. It never sees the company's records.",
-   "button": "Scan a business before I write",
+   "button": "Scan a site for trackers",
    "target": {
     "niche": "ccpa",
     "slug": "cookie-privacy-scanner"
@@ -12523,9 +12303,9 @@
   },
   "step2": {
    "engine": "permission-checker",
-   "heading": "Item 8 covers the apps. The browser on the same device keeps its own list",
+   "heading": "Sites ask your child for the camera. See if their browser blocks it, asks, or allows it.",
    "instruction": "Open this in the browser your child uses and press Check Permissions. It reports 11 permissions for the site you are on, camera, microphone and location among them. It cannot read the app settings item 8 sends you to.",
-   "button": "Check the browser's side of item 8",
+   "button": "Check 11 permissions in my child's browser",
    "target": {
     "niche": "children-safety",
     "slug": "permission-checker"
@@ -12575,64 +12355,44 @@
   }
  },
  "/checklists/cloud-privacy/cloud-storage-privacy-privacy-hardening-checklist": {
+  "v": 2,
   "type": "checklist",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Item 16 of 21 · medium",
    "quote": "Test by downloading encrypted files to a different device and confirming they can't be opened without your encryption keys or passwords."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Item 16 is a test. Take one file through both halves of it here",
-   "instruction": "Choose Encrypt, then File: something up to 100 MB from the folder you sync, and the passphrase you would really use. You get a .enc copy. Switch to Decrypt and open it again. It runs in this browser, not in your cloud.",
-   "button": "Run item 16 on one file",
+  "stakes": "Your photo backup uploads more than pictures: each photo can carry the exact spot it was taken, hidden inside the file, and across a camera roll that's your home, work and routine. Drop one in and see what yours carries.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo for hidden location",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=checklist"
   },
-  "step3": {
-   "red": "The copy refused to open. A wrong passphrase, an altered file and another tool's output look alike to AES-GCM. This is the failure item 16 goes looking for.",
-   "amber": "Decrypted back to the original, here. Item 16 asks for a second device, so repeat the open on the machine you would actually restore from before you trust the routine.",
-   "green": "Encrypted, and the .enc copy is what goes up. Nothing is verified until you have opened it again, so keep the original until the second half of the test is done."
-  },
-  "step4": {
-   "line": "Every part of this is free: encrypt, upload the .enc copy, keep the passphrase in a password manager. Encryption hides a file's contents and not a picture's own fields, so on the Pro site, Incognito Pro's Photo Metadata Viewer lists what one photo carries and saves a clean copy."
-  },
-  "step5": {
-   "label": "See a photo's own fields before the folder syncs"
-  }
+  "results": {}
  },
  "/checklists/cloud-privacy/cloud-storage-privacy-security-checklist": {
+  "v": 2,
   "type": "checklist",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Item 16 of 21 · high",
    "quote": "Poor key management can make encryption useless if keys are compromised or lost."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "One character off: what a mislaid passphrase actually costs",
-   "instruction": "Encrypt a file you do not need, with any passphrase. Then choose Decrypt and type it back with one character changed. Nothing here stores the passphrase and nothing can recover it: that is the exercise.",
-   "button": "Try it with the wrong passphrase",
+  "stakes": "Anyone who gets into your account or a shared folder gets your photos' hidden extras too: where they were taken, on what phone, when. Drop one in, see what it reveals, and save a clean copy to upload.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo, then save a clean copy",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=checklist"
   },
-  "step3": {
-   "red": "Refused, as it should be. No page, no provider and no support desk gets that file back from here, which is why item 16 puts the passphrase in a manager of its own.",
-   "amber": "It opened, so the passphrase was right, and it is now the only thing standing between this file and anyone holding a copy. Item 16: never in the same cloud account.",
-   "green": "Encrypted and ready to upload. From here the passphrase outranks the file, so back it up somewhere separate before the .enc copy goes near the synced folder."
-  },
-  "step4": {
-   "line": "Item 16 costs nothing to do: the passphrase in a password manager, backed up away from the account you are protecting. What a passphrase cannot hide sits inside the picture, so on the Pro site, Incognito Pro's Photo Metadata Viewer lists a photo's GPS, camera and time fields."
-  },
-  "step5": {
-   "label": "The fields a passphrase cannot hide, inside a photo"
-  }
+  "results": {}
  },
  "/checklists/cookie-management/cookie-management-tracking-prevention-privacy-hardening-checklist": {
   "type": "checklist",
@@ -12643,9 +12403,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Item 12 is a switch. Measure the browser you have against the one you would move to",
+   "heading": "Your browser decides how many trackers reach you. Count how many of 50 get through.",
    "instruction": "Press Run here, then open this page in Firefox or Brave and press Run again. Each pass fires 50 harmless ad and tracker requests from this site, about 5 seconds. It counts blocked requests, not item 12's cookie half.",
-   "button": "Compare two browsers on item 12",
+   "button": "Count how many this browser lets through",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -12673,9 +12433,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Item 21 says verify it. This is the request half of that verification",
+   "heading": "Tracker blocking can be on and still leak. Send 50 test trackers, count what gets past.",
    "instruction": "Press Run in the browser you worked this list through in. Fifty harmless ad and tracker requests go out from this site and the result names the groups that got through, in about 5 seconds. Fingerprinting is not scored.",
-   "button": "Run the test item 21 asks for",
+   "button": "Send 50 test trackers, count the leaks",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -12763,9 +12523,9 @@
   },
   "step2": {
    "engine": "password-strength",
-   "heading": "Item 2 asks for strong and unique. This times the strong half",
+   "heading": "Your password leaked. See how long a new one takes to crack; it never leaves this page.",
    "instruction": "Type the replacement you just set on the breached account, or one built the same way. It is scored as you type: crack time, a score out of 100, and the patterns costing it. It cannot see where else you use it.",
-   "button": "Time my replacement password",
+   "button": "Time my new password before I use it",
    "target": {
     "niche": "data-breach",
     "slug": "password-strength-checker"
@@ -12793,9 +12553,9 @@
   },
   "step2": {
    "engine": "url-analyzer",
-   "heading": "Item 1 without guessing: read the address inside that notification",
+   "heading": "The breach notice may be the scam. Copy its link, don't open it; check for a lookalike.",
    "instruction": "Copy the link out of the notification you received (long-press or right-click, don't open it) and paste it here. The address is read for look-alike brands, raw IPs, shorteners and login words. The page is never fetched.",
-   "button": "Check the link in that notice",
+   "button": "Check that link for a lookalike address",
    "target": {
     "niche": "malware-protection",
     "slug": "url-safety-scanner"
@@ -12853,9 +12613,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "Item 14 in 12 questions: how much are your habits worth to them?",
+   "heading": "Your everyday habits feed the profile brokers sell. 12 questions score them out of 100.",
    "instruction": "Twelve multiple-choice questions about what you use now, browser, search engine, cookies, email and apps, in two minutes. Read the Browsing category, the one item 14 is about. It scores your answers, not your browser.",
-   "button": "Score my browsing habits",
+   "button": "Score my habits in 12 questions",
    "target": {
     "niche": "digital-footprint",
     "slug": "privacy-score-quiz"
@@ -12951,9 +12711,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Item 5, read back to you: the version and OS you are announcing now",
+   "heading": "Every site is told your exact browser and system. See what yours says; nothing to type.",
    "instruction": "Nothing to type. It prints the browser, version, OS and device your browser announced when this page loaded, plus any Client Hints on offer. It reads that one string, not canvas, fonts or screen size.",
-   "button": "Show the version I announce",
+   "button": "Show what my browser tells every site",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -13011,9 +12771,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Item 5's second half, settled here: what is inside the photo",
+   "heading": "Your profile photo is out there. Drop one in and see what it hides: place, device, time.",
    "instruction": "Choose the photo you are about to reverse-search (PNG, JPEG or WebP). It reads the file in the page: GPS coordinates, device details, timestamps, hidden text. Where that photo already appears is the search's job.",
-   "button": "Look inside my profile photo",
+   "button": "Read what one photo hides",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -13041,9 +12801,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "Item 19 is a habit. Score the habits you actually have",
+   "heading": "Your daily habits decide what gets collected on you. 12 questions, one score out of 100.",
    "instruction": "Answer 12 questions about the browser you read this in, your search engine, your cookie habits and your social accounts. Two minutes. It scores the answers you give; it cannot look inside your browser to check them.",
-   "button": "Score my browsing habits",
+   "button": "Score my daily habits out of 100",
    "target": {
     "niche": "digital-footprint",
     "slug": "privacy-score-quiz"
@@ -13071,9 +12831,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Item 18 is about your posts. Start with the last one",
+   "heading": "Your posts can tell a watcher where you were and when. See what your last photo carries.",
    "instruction": "Choose the last photo you posted publicly, a PNG, JPEG or WebP from your own phone, and see the coordinates, device and capture time stored inside the file. It reads the file you pick, not the copy already online.",
-   "button": "Read my last posted photo",
+   "button": "Check my last photo for place and time",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -13161,9 +12921,9 @@
   },
   "step2": {
    "engine": "email-pixel-detector",
-   "heading": "Item 10 says verify. Here is the email to verify it with",
+   "heading": "Emails can carry a hidden image that reports the moment you open them. Check one of yours.",
    "instruction": "Paste the source of an email whose images appeared on their own, from Show original or View source. The detector lists every remote image and pixel it carries. It reads the message, not your mail app's settings.",
-   "button": "List this email's remote images",
+   "button": "Check whether an email reports being opened",
    "target": {
     "niche": "email-privacy",
     "slug": "email-tracking-pixel-detector"
@@ -13183,64 +12943,44 @@
   }
  },
  "/checklists/encrypted-messaging/encrypted-messaging-privacy-hardening-checklist": {
+  "v": 2,
   "type": "checklist",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Item 12 of 21 · high",
    "quote": "Safety number verification ensures you're actually communicating with your intended contact and not a man-in-the-middle attacker."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Item 12 in miniature: one message, one passphrase, one contact",
-   "instruction": "Type a line you would send a friend, add a passphrase, press Encrypt Text. Send them the block, hand over the passphrase face to face. It runs in your browser and never sees your chat app or who gets the passphrase.",
-   "button": "Encrypt a line for one contact",
+  "stakes": "Forward a link into a chat and its tracking tag goes too: whoever made the link records every tap, sometimes tied to you personally. Paste one and see what it carries, then copy a clean version to send.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "Clean a link before you send it",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=checklist"
   },
-  "step3": {
-   "red": "It will not open for them. One character out in the passphrase reads exactly as a stranger's key would, and that mismatch is what a changed safety number announces.",
-   "amber": "It opened, because they had the passphrase character for character. You are trusting whatever channel carried it, which is why item 12 says compare in person.",
-   "green": "The passphrase never travelled through the chat and it still opened. Do the same with the safety number: read it out on a call, then mark the contact verified."
-  },
-  "step4": {
-   "line": "Encryption covers your words, not what a picture carries. Item 20 of this list asks you to clear a photo's metadata before you send it: Incognito Pro's Photo Metadata Viewer lists the GPS, camera and time fields in one and saves a copy without them."
-  },
-  "step5": {
-   "label": "Give item 20's photos the same check"
-  }
+  "results": {}
  },
  "/checklists/encrypted-messaging/encrypted-messaging-security-checklist": {
+  "v": 2,
   "type": "checklist",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Item 1 of 22 · critical",
    "quote": "Only end-to-end encryption ensures your messages can't be read by the service provider, governments, or hackers intercepting data."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Do item 1 by hand once and you know what it is buying",
-   "instruction": "Take a message you would not want a service keeping, add a passphrase, press Encrypt Text. The block you get back is all a server in the middle would hold. It cannot tell you whether your own chat app does this.",
-   "button": "Encrypt one message by hand",
+  "stakes": "Tap a link in an encrypted chat and the tap happens outside the encryption: a link carrying a tracking tag tells whoever made it that you opened it, and when. Paste one and see who it reports to.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "See who a chat link reports to",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=checklist"
   },
-  "step3": {
-   "red": "Nothing came back out. A wrong passphrase, edited text, or a block from another tool all fail the same way here, and the tool cannot say which of the three it was.",
-   "amber": "Your sentence is back in front of you, so whoever holds the passphrase holds the message. An app doing this per conversation keeps that key off its own servers.",
-   "green": "What you copied out is noise, and that is item 1's whole promise: your app producing this for every message without you inventing a passphrase."
-  },
-  "step4": {
-   "line": "Item 1 is a choice of app, and so is item 12's encrypted backup; neither costs anything. The picture you attach is outside both: Incognito Pro's Photo Metadata Viewer reads the GPS, camera and time fields inside it and saves a copy without them."
-  },
-  "step5": {
-   "label": "Read a photo before you attach it"
-  }
+  "results": {}
  },
  "/checklists/facial-recognition/facial-recognition-biometric-privacy-privacy-hardening-checklist": {
   "type": "checklist",
@@ -13251,9 +12991,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Item 1 asks for your face. Check what else is in the file",
+   "heading": "A photo of your face can carry the exact spot it was taken. Check one before you send it.",
    "instruction": "Choose the exact photo you would attach to that opt-out form, PNG, JPEG or WebP, and see the fields stored inside it. It reads the file only: it does not recognise faces and cannot tell you what a company keeps.",
-   "button": "Check the photo I would upload",
+   "button": "Check my photo before I send it",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -13281,9 +13021,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Item 3 in one upload: what is your own photo carrying?",
+   "heading": "Photos you post can carry where they were taken, hidden in the file. Open one and see.",
    "instruction": "Pick a picture of yourself you were about to post (PNG, JPEG or WebP). It reads the file's metadata chunks and lists location, device and personal-data matches. It cannot see the face, only the fields around it.",
-   "button": "Read the fields in my photo",
+   "button": "Open a photo and see what it hides",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -13311,9 +13051,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Item 21 says harden this browser. Put a number on it first",
+   "heading": "Game guides and forums tell ad networks you were there. Count how many of 50 get through.",
    "instruction": "Run it in the browser you open game wikis and key resellers in, with your blocker switched on. It fires 50 harmless tracker-shaped requests from this site and counts what got through. It measures tracking, not malware.",
-   "button": "Score my gaming browser",
+   "button": "Count the trackers this browser stops",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -13371,9 +13111,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Gather evidence for item 6: what does your site place before consent?",
+   "heading": "Your site may set cookies before anyone taps Accept. Scan one page and see what lands.",
    "instruction": "Paste your site's address. Our server fetches the page once with no consent given and lists the cookies its response places, the known tracker tags in its HTML and its security headers.",
-   "button": "Scan my site for item 6",
+   "button": "Scan my site for cookies set before consent",
    "target": {
     "niche": "gdpr",
     "slug": "cookie-compliance-scanner"
@@ -13401,9 +13141,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Bring item 9 a list: which cookies land before consent?",
+   "heading": "Plugins add cookies to your site without telling you. Scan one page and see them named.",
    "instruction": "Paste your site's address. Our server loads one page as a first visitor would, clicks nothing, and lists the cookies its response sets, known trackers in its HTML and outside script domains.",
-   "button": "Scan my site for item 9",
+   "button": "Scan one page of my site for cookies",
    "target": {
     "niche": "gdpr",
     "slug": "cookie-compliance-scanner"
@@ -13431,9 +13171,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Item 20, measured: what stops before your next symptom search?",
+   "heading": "Symptom pages often load trackers that log what you read. See how many of 50 get through.",
    "instruction": "Use the browser you'd look a diagnosis up in, protection switched on as usual. It requests 50 harmless ad and tracker URLs from this site and counts the misses. It tests blocking patterns, not any one medical site.",
-   "button": "Test before my next symptom search",
+   "button": "Count the trackers that get through",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -13453,34 +13193,24 @@
   }
  },
  "/checklists/healthcare-privacy/healthcare-medical-privacy-security-checklist": {
+  "v": 2,
   "type": "checklist",
   "topic": "healthcare-privacy",
   "step1": {
    "label": "Item 17 of 17 · medium",
    "quote": "Regular email and text messages about health matters aren't encrypted and can be accessed by third parties or intercepted during transmission."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Item 17, tried once: send the next one so only they can open it",
-   "instruction": "Paste the message you were about to email your clinic — a result, a dose, a date to remember — choose a passphrase, and copy the block out. Everything happens in this page; it stores nothing and sends nothing.",
-   "button": "Lock this message with a passphrase",
+  "stakes": "Emails from your pharmacy, insurer or clinic can report the moment you open them and roughly where you were, through an invisible image, and log each link you tap. Paste one in and see what it reports back.",
+  "check": {
+   "engine": "email-pixel-detector",
+   "button": "Test a health email for hidden tracking",
    "target": {
-    "niche": "healthcare-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "email-privacy",
+    "slug": "email-tracking-pixel-detector"
    },
    "query": "topic=healthcare-privacy&from=checklist"
   },
-  "step3": {
-   "red": "If the only way to hand over the passphrase is that same inbox, this buys nothing. Item 17's answer is the patient portal, where your provider already holds an account.",
-   "amber": "You have a second channel, a phone call say, but the other side must paste the block back in here to read it. Keep it for the one detail you want out of a mail server.",
-   "green": "Both ends can open it and the passphrase went a different way. Subject line, addresses and send time still travel in the clear for whoever carries the mail."
-  },
-  "step4": {
-   "line": "Encryption here is free and stays free. Pro covers the browsing either side: on Android, Incognito Browser wipes cookies and sessions when you exit, so a portal login won't linger on a shared phone, and Incognito Pro's ad and tracker blocking keeps ad networks off the pages where results appear."
-  },
-  "step5": {
-   "label": "See what Pro covers around a portal login"
-  }
+  "results": {}
  },
  "/checklists/incognito-mode/incognito-mode-privacy-hardening-checklist": {
   "type": "checklist",
@@ -13491,9 +13221,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Test item 5's myth: open this page in a private window",
+   "heading": "A private window still tells sites your browser, version, system and device. See yours.",
    "instruction": "Open a private window, load this page inside it, and read the string your browser hands over. Then compare with a normal window. It parses that string alone — your IP address and the rest are not in it.",
-   "button": "Compare private and normal windows",
+   "button": "See what this browser tells every site",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -13521,9 +13251,9 @@
   },
   "step2": {
    "engine": "permission-checker",
-   "heading": "Item 10 without waiting for a prompt: ask this window now",
+   "heading": "A private window still asks. Tap Allow and a site gets your camera, mic or location.",
    "instruction": "Nothing to type. It asks your browser where this page stands on location, camera, microphone, notifications and more, marking each allowed, blocked or asks first. It answers for this site only, not the next one you open.",
-   "button": "Show this window's permissions",
+   "button": "Check what this browser asks, allows or blocks",
    "target": {
     "niche": "children-safety",
     "slug": "permission-checker"
@@ -13551,9 +13281,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Item 4 begins with a list of recipients. Scan one page for yours",
+   "heading": "Pages pass your visit to companies you never chose. Paste a link and see who gets it.",
    "instruction": "Paste the address of a page on your own site. It loads it and reports the cookies, third-party scripts and tracker signatures it finds, so recipients are named, not assumed. It reads the page, never a contract.",
-   "button": "List this page's third parties",
+   "button": "See who one page hands your visit to",
    "target": {
     "niche": "ad-tracking",
     "slug": "cookie-tracker-scanner"
@@ -13581,9 +13311,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Item 8, tested on one page: what lands before anyone clicks Accept?",
+   "heading": "Cookie banners ask after the page loads. Paste a link: what lands before you click Accept?",
    "instruction": "Paste the address of a site you run. Our server loads one page giving no consent and lists the cookies set and trackers found. It reads that single load, not your banner's wording or which law applies.",
-   "button": "Scan one page before consent",
+   "button": "See what lands before you click Accept",
    "target": {
     "niche": "ad-tracking",
     "slug": "cookie-tracker-scanner"
@@ -13611,9 +13341,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Do item 4 here: six lookups, and we see which resolver answered",
+   "heading": "Hiding sites from your internet provider can quietly fail. Does yours still see them all?",
    "instruction": "Run it on the connection you hardened. Press the VPN-off button first to record who normally answers you, then the VPN-on one; about 10 seconds each. It sees the resolver's network, not whether the hop was encrypted.",
-   "button": "Run item 4 on this connection",
+   "button": "See if your provider still sees every site",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -13641,9 +13371,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Item 1 turns on who answers your lookups. Read that in 10 seconds",
+   "heading": "Until you change a setting, your internet provider sees every site you open. Does yours?",
    "instruction": "Six one-off hostnames go to a nameserver we run, so whichever resolver asks for them is the one you really use. Press the button matching your VPN, off or on. It names the resolver's network, never the sites you visit.",
-   "button": "Show me who resolves for me",
+   "button": "Test this connection in about ten seconds",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -13671,9 +13401,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Item 7 on one file: open a picture you are about to send",
+   "heading": "A photo can carry the exact spot, the device and an uncropped preview. Check one file.",
    "instruction": "Choose an image you would send an editor or publish (PNG, JPEG or WebP). It is read in your browser, not uploaded, and lists any GPS, device or personal fields. Documents and video, also in item 7, it cannot open.",
-   "button": "Read the fields in this image",
+   "button": "Check a photo before you send it",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -13693,34 +13423,24 @@
   }
  },
  "/checklists/journalist-privacy/journalist-whistleblower-privacy-security-checklist": {
+  "v": 2,
   "type": "checklist",
   "topic": "journalist-privacy",
   "step1": {
    "label": "Item 8 of 24 · critical",
    "quote": "Email is easily intercepted without encryption, exposing sources and sensitive information."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Item 8 by hand: see what an intercepted message would hold",
-   "instruction": "Type the paragraph you were going to email a source, plus a passphrase, and press Encrypt Text. It runs in your browser. The envelope still travels in the open: the address you wrote to, the time, the subject line.",
-   "button": "Encrypt one paragraph now",
+  "stakes": "A source photographs a document and sends it over; hidden in the file can be where it was taken, when, and which phone took it, enough to give them away. Open one file and see; nothing leaves your device.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check one photo for hidden location and phone",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=journalist-privacy&from=checklist"
   },
-  "step3": {
-   "red": "It would not decrypt: a wrong passphrase, edited text, or a block from another tool. Nobody gets those words back, your source included.",
-   "amber": "Decrypted to your paragraph again, so anyone holding the passphrase can read it. The passphrase has to travel by some other route than the mail.",
-   "green": "Encrypted. What a mail server or anyone tapping the line holds is a block of noise, which is the state item 8 wants every message in."
-  },
-  "step4": {
-   "line": "Opening one of the encrypted mailboxes item 8 names costs nothing. Ciphertext protects the words and not the files beside them: Incognito Pro's Photo Metadata Viewer lists a photo's GPS, camera and time fields and saves a clean copy to attach instead."
-  },
-  "step5": {
-   "label": "Before you attach a photo, see what Pro reads"
-  }
+  "results": {}
  },
  "/checklists/location-tracking/location-tracking-gps-privacy-privacy-hardening-checklist": {
   "type": "checklist",
@@ -13731,9 +13451,9 @@
   },
   "step2": {
    "engine": "permission-checker",
-   "heading": "Item 12 from the site's side: what does this browser hand over?",
+   "heading": "Sites want your location to profile where you go. See if this browser asks you first.",
    "instruction": "Press Check Permissions in the browser item 12 is about. It asks that browser about 11 permissions for this site, location among them, and answers in a second. Chrome and Edge report the most.",
-   "button": "Check this browser's location answer",
+   "button": "Check this browser's location permission",
    "target": {
     "niche": "location-tracking",
     "slug": "permission-audit"
@@ -13851,9 +13571,9 @@
   },
   "step2": {
    "engine": "password-strength",
-   "heading": "Does your banking password clear item 1's 12-character bar?",
+   "heading": "Leaked passwords get tried at your bank. Type one like yours: how long would it hold?",
    "instruction": "Type your bank password, or one built the same way. It is scored in this page as you type: crack time, strength out of 100, the patterns weakening it. It cannot see whether that password is in a breach dump.",
-   "button": "Time my bank password",
+   "button": "Time a password like your bank's",
    "target": {
     "niche": "online-banking",
     "slug": "password-strength-checker"
@@ -14091,9 +13811,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Item 7's automatic column, on a service whose policy you are reading",
+   "heading": "A site's trackers load before you read its policy. Paste the address and count them.",
    "instruction": "Paste that service's address. Our server loads the page once as a visitor who has agreed to nothing and lists the cookies it sets and the known tracker tags in its HTML. Scripts never run, so fingerprinting is invisible.",
-   "button": "Scan the service in front of me",
+   "button": "Count what a site loads before I consent",
    "target": {
     "niche": "privacy-policies",
     "slug": "cookie-tracker-analyzer"
@@ -14181,9 +13901,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Item 8, measured: what does this browser stop on a page you open?",
+   "heading": "The search is private; the sites you open aren't. See how many of 50 trackers get through.",
    "instruction": "Run it in the browser you search in, protection set however you have it. It fires 50 harmless ad and tracker requests from this page and shows which got through, in about 5 seconds. Router or DNS blocking won't register.",
-   "button": "Measure my tracking protection",
+   "button": "Count what this browser lets through",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -14271,9 +13991,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "Item 15 turned into a score: how much are you still feeding the brokers?",
+   "heading": "Deletions won't hold if data keeps flowing. 12 questions score what you still give away.",
    "instruction": "Twelve multiple-choice questions about your own tools: browser, search engine, passwords, two-factor login, email, messaging, DNS, updates, permissions, cookies, social media, network. It reads no account of yours.",
-   "button": "Score what I am still giving away",
+   "button": "Score what my habits still give away",
    "target": {
     "niche": "digital-footprint",
     "slug": "privacy-score-quiz"
@@ -14301,9 +14021,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Item 1 assumes the broker's page is crowded. Name what is on it",
+   "heading": "The page that lists you can track your visit too. Paste its address; count the trackers.",
    "instruction": "Paste the address of the people-search page that lists you. Our server opens it once, consents to nothing, and reports the cookies set and the tracker scripts found. It reads the page, never your record on it.",
-   "button": "Scan the broker page that lists me",
+   "button": "Scan the page that lists me",
    "target": {
     "niche": "ad-tracking",
     "slug": "cookie-tracker-scanner"
@@ -14331,9 +14051,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Item 21 splits your searching. Do the halves look any different?",
+   "heading": "Each search still names your browser, version and device. See what yours says, no typing.",
    "instruction": "Nothing to type. Open this page in each profile you keep for work, personal and sensitive searches and compare the line it reads back. It parses that one string; which account is signed in is not in it.",
-   "button": "Compare my search profiles",
+   "button": "See what my browser tells every site",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -14421,9 +14141,9 @@
   },
   "step2": {
    "engine": "password-strength",
-   "heading": "Item 8 asks for 15 characters. Time the one you had in mind",
+   "heading": "One router password guards the whole house. Type one like it: see how long it holds out.",
    "instruction": "Type the router admin password you are about to set — or one built the same way, if you would rather not type the real one. It is scored in this page as you type and is not sent anywhere.",
-   "button": "Time my router password",
+   "button": "Time a password like my router's",
    "target": {
     "niche": "data-breach",
     "slug": "password-strength-checker"
@@ -14481,9 +14201,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Item 15 as a number: how many of these get through here?",
+   "heading": "Like buttons on other sites tell the platform you visited. Count what this browser blocks.",
    "instruction": "Run it in the browser you read the news in, with whatever blocking you already have switched on. It fires 50 harmless ad and tracker requests from this site in about 5 seconds; social widgets are one group among them.",
-   "button": "Count what gets through",
+   "button": "Test this browser with 50 requests",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -14511,9 +14231,9 @@
   },
   "step2": {
    "engine": "whats-my-ip",
-   "heading": "One layer of item 20 you can read today, from campus WiFi",
+   "heading": "Sites you open on campus Wi-Fi get the network's address and a rough location. See yours.",
    "instruction": "Open this on the campus network; nothing to type. It shows the address and rough location every site receives from you there, beside any address WebRTC hands out. Cameras and card readers are outside it.",
-   "button": "Show what campus WiFi hands over",
+   "button": "See what campus Wi-Fi hands to sites",
    "target": {
     "niche": "vpn-privacy",
     "slug": "whats-my-ip"
@@ -14541,9 +14261,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Item 7 is about what the campus network sees. Find out who answers your lookups",
+   "heading": "Campus Wi-Fi can see every site you open. Find out who gets that list; nothing to type.",
    "instruction": "Join the campus Wi-Fi and press the VPN-off button. Your browser resolves 6 one-off hostnames and our nameserver records which resolver asked. It sees resolvers, not the sites you open, and not what the campus logs.",
-   "button": "Run it on the campus Wi-Fi",
+   "button": "Find out who sees the sites I open",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -14571,9 +14291,9 @@
   },
   "step2": {
    "engine": "browser-privacy",
-   "heading": "Item 6 hides your screen size there. What does your everyday browser report?",
+   "heading": "Even your screen size helps sites pick you out. Score this browser: 15 checks, no typing.",
    "instruction": "Open this in the browser you use for everything else. 15 checks read what it tells every site, screen size included — the screen it reports, not the window you dragged. It cannot see into the other browser.",
-   "button": "Audit my everyday browser",
+   "button": "Score this browser in 15 checks",
    "target": {
     "niche": "tor-privacy",
     "slug": "browser-fingerprint-test"
@@ -14601,9 +14321,9 @@
   },
   "step2": {
    "engine": "url-analyzer",
-   "heading": "Item 1 says official source only. Read the download link before you click it",
+   "heading": "Fake browser downloads hide behind links that look right. Paste one, see its real address.",
    "instruction": "Paste the exact link you were about to click, not the homepage you meant to reach. It reads the link alone: protocol, host, lookalike spelling, odd top-level domain. It never fetches the file or checks a signature.",
-   "button": "Read this download link",
+   "button": "Check a download link before I click it",
    "target": {
     "niche": "malware-protection",
     "slug": "url-safety-scanner"
@@ -14631,9 +14351,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Item 11 adds technical tools. Put a number on the ones you already run",
+   "heading": "Where the law ends, only your browser is left. Count how many of 50 trackers get past it.",
    "instruction": "Run it in the browser you shop and bank in. It sends 50 harmless ad and tracker requests from this site in about 5 seconds and reports the share your setup stopped. A DNS blocker won't register: requests are same-site.",
-   "button": "Count what my browser stops",
+   "button": "Run the five-second blocker test",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -14661,9 +14381,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Item 3 asks for an inventory. Start with the third parties on your own homepage",
+   "heading": "The outside companies on your homepage see each visitor. Paste its address and name them.",
    "instruction": "Paste your own site's address. Our server fetches it once, with no consent given, and lists the cookies that response sets, known tracker tags in its HTML and the outside script domains. Scripts are never run.",
-   "button": "Scan my own site first",
+   "button": "List the outside companies on my homepage",
    "target": {
     "niche": "ad-tracking",
     "slug": "cookie-tracker-scanner"
@@ -14691,9 +14411,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Item 5 sets the resolver. This shows which one actually answered",
+   "heading": "Even with a VPN, your internet provider can still see the sites you visit. Test your VPN.",
    "instruction": "Run it twice on the connection you use: the VPN-off button first, to record your ISP baseline, then the VPN-on button. Your browser resolves 6 one-off hostnames and our nameserver notes each resolver network.",
-   "button": "Test the tunnel's DNS",
+   "button": "See if my VPN leaks",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -14721,9 +14441,9 @@
   },
   "step2": {
    "engine": "whats-my-ip",
-   "heading": "Item 16 checks where your IP puts you. Here is the address our server saw",
+   "heading": "Each site you open gets your internet address and guesses your city. See what they see.",
    "instruction": "Nothing to type: open it while connected to the server you're testing. It shows the address our server received, the city and network it maps to, and any second address WebRTC offers. The GPS side stays out of reach.",
-   "button": "Show the address sites receive",
+   "button": "Show the address and city sites get",
    "target": {
     "niche": "vpn-privacy",
     "slug": "whats-my-ip"
@@ -14751,9 +14471,9 @@
   },
   "step2": {
    "engine": "permission-checker",
-   "heading": "Item 7 wants camera and microphone on ask-first. Check what your browser says",
+   "heading": "Does your browser ask before a site uses your camera? See its answer for 11 permissions.",
    "instruction": "Press Check Permissions in the browser you take calls in. It reports 11 permissions — camera, microphone and nine more — as allowed, blocked or asks first, for this site alone: not your call site, not a desktop app.",
-   "button": "Check this browser's permissions",
+   "button": "Check my camera and microphone permissions",
    "target": {
     "niche": "webcam-privacy",
     "slug": "permission-checker"
@@ -14781,9 +14501,9 @@
   },
   "step2": {
    "engine": "permission-checker",
-   "heading": "Item 8 says browsers remember. See what this one remembers",
+   "heading": "Give a site your microphone once; the browser may keep it. See what yours lets a site do.",
    "instruction": "Press Check permissions in the browser you join video calls in. For this site it reports camera, microphone and 9 other permissions. It can't see meeting sites you allowed long ago, or the system settings item 7 covers.",
-   "button": "Check this site's camera row",
+   "button": "Check what my browser lets a site do",
    "target": {
     "niche": "webcam-privacy",
     "slug": "permission-checker"
@@ -14841,9 +14561,9 @@
   },
   "step2": {
    "engine": "browser-privacy",
-   "heading": "Do item 24's clear, then see what the browser still reports",
+   "heading": "Clearing history hides where you went, not how your browser describes you. Run 15 checks.",
    "instruction": "Clear history, cookies and cache on your work browser as item 24 says, then press Run Privacy Audit in it. Its 15 rows come from the browser and the machine, never from stored data. What IT keeps is beyond it.",
-   "button": "Run the audit on a cleared browser",
+   "button": "See how this browser describes me",
    "target": {
     "niche": "workplace-privacy",
     "slug": "browser-privacy-audit"
@@ -15073,34 +14793,24 @@
   }
  },
  "/comparisons/cloud-privacy/best-cloud-storage-privacy-tools-compared": {
+  "v": 2,
   "type": "comparison",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Criterion 1 of 6 · 4 products",
    "quote": "Files are encrypted on your device before upload, ensuring the provider cannot access your data"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Do criterion one by hand, once",
-   "instruction": "Encrypt a file on the tool page under a passphrase, then upload the .enc copy anywhere, including a provider with no zero-knowledge column at all. Two minutes and one file is enough.",
-   "button": "Encrypt before upload",
+  "stakes": "Whichever provider you pick, the photos you upload can carry more than the picture: where each was taken, when, and on which phone. Open one photo and see what it holds; nothing leaves your device.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo before you upload it",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=comparison"
   },
-  "step3": {
-   "red": "The .enc copy would not decrypt. Zero-knowledge storage fails the same way in this table's four: no key sits on the provider's side to be reset.",
-   "amber": "Decrypted back on this device. That is the literal reading of 'on your device' in criterion 1, and here it happened in a browser tab rather than a sync client.",
-   "green": "Uploaded, that copy is unreadable to all four products and to a provider without the feature. The trade is doing this by hand for every file you care about."
-  },
-  "step4": {
-   "line": "Free first: your own passphrase, applied before upload, gets you this criterion on any provider. On the Pro site, the Photo Metadata Viewer handles what encryption cannot reach once a photo is decrypted at the far end: camera, time and GPS fields, rated for risk, with a clean copy saved."
-  },
-  "step5": {
-   "label": "Check a photo before it reaches any provider"
-  }
+  "results": {}
  },
  "/comparisons/cookie-management/best-cookie-management-tracking-prevention-tools-compared": {
   "type": "comparison",
@@ -15373,34 +15083,24 @@
   }
  },
  "/comparisons/encrypted-messaging/best-encrypted-messaging-tools-compared": {
+  "v": 2,
   "type": "comparison",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Criterion 1 of 6 · 5 products",
    "quote": "Messages encrypted on sender's device and only decrypted on recipient's device"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Do what the first row describes, by hand: encrypt on your side",
-   "instruction": "Type a line and a passphrase and press Encrypt Text; it happens in your browser, not on our server. That's the sender's-device half; your recipient decrypts with the same passphrase.",
-   "button": "Encrypt on my device",
+  "stakes": "Encryption hides the chat on the way, not what a link inside it does: a forwarded link can carry an ID that reports who tapped it and when, whichever messenger you pick. Paste one and see, without opening it.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "See who one link reports to",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=comparison"
   },
-  "step3": {
-   "red": "Nothing came back, and 'Decryption failed' is all AES-GCM will say. Apps swap keys for you; this tool relies on a passphrase you share yourself.",
-   "amber": "Decrypted, as the recipient's device would. Past this point encryption is done: screenshots, backups and forwards are outside what this row measures.",
-   "green": "Encrypted where you typed it: the block stays unreadable until someone with the passphrase decrypts it. Apps rated excellent here do that without a passphrase to share."
-  },
-  "step4": {
-   "line": "Choosing an app that encrypts every chat by default is free. What the table doesn't score is inside a file: Incognito Pro's Photo Metadata Viewer lists a photo's EXIF fields, such as camera, time and GPS, rates each for risk and saves a clean copy."
-  },
-  "step5": {
-   "label": "Send a clean copy, not the original photo"
-  }
+  "results": {}
  },
  "/comparisons/facial-recognition/best-facial-recognition-biometric-privacy-tools-compared": {
   "type": "comparison",
@@ -15493,34 +15193,24 @@
   }
  },
  "/comparisons/healthcare-privacy/best-healthcare-medical-privacy-tools-compared": {
+  "v": 2,
   "type": "comparison",
   "topic": "healthcare-privacy",
   "step1": {
    "label": "Criterion 1 of 5 · 3 products",
    "quote": "Ensures your medical communications can only be read by you and your intended recipient"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Only you and your recipient: see that promise kept on one medical message",
-   "instruction": "Write a line you might send a doctor or relative, add a passphrase and press Encrypt Text; nothing leaves your browser. What comes out is readable only with that passphrase.",
-   "button": "Encrypt a medical message",
+  "stakes": "Looking up a symptom is itself a health record, and many health pages load ad and tracking requests that report the visit to companies you never chose. Count how many of 50 your browser lets through, in about five seconds.",
+  "check": {
+   "engine": "ad-blocker-test",
+   "button": "Count what this browser lets through",
    "target": {
-    "niche": "healthcare-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "ad-blocker-test"
    },
    "query": "topic=healthcare-privacy&from=comparison"
   },
-  "step3": {
-   "red": "No readable text came back: a wrong passphrase, altered text or another tool's block. Signal and Proton Mail exchange keys for you; here the passphrase is yours to share.",
-   "amber": "Decrypted, as your recipient would see it. For messages about your care, the comparison's tip is your provider's patient portal; Signal doesn't sign HIPAA agreements.",
-   "green": "Encrypted: without the passphrase the block is noise, a mail server included. Proton Mail does this automatically between its users; to other addresses, with a password."
-  },
-  "step4": {
-   "line": "Switching the conversation to an app that encrypts end to end is the free fix here. Encryption covers what you send, not what you read: Incognito Pro's ad and tracker blocking, in the Incognito Browser Android app, stops many trackers before they load on health pages you open."
-  },
-  "step5": {
-   "label": "Protect what you read about health, not only what you send"
-  }
+  "results": {}
  },
  "/comparisons/incognito-mode/best-incognito-mode-tools-compared": {
   "type": "comparison",
@@ -15614,34 +15304,24 @@
   }
  },
  "/comparisons/journalist-privacy/best-journalist-whistleblower-privacy-tools-compared": {
+  "v": 2,
   "type": "comparison",
   "topic": "journalist-privacy",
   "step1": {
    "label": "Criterion 1 of 6 · 4 products",
    "quote": "Messages and files are encrypted so only sender and recipient can read them"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Encrypt a document as this row describes, before it leaves your device",
-   "instruction": "Pick File or Text, set a passphrase and press Encrypt; files up to 100 MB. It runs in this browser, and the recipient opens the result with the same passphrase, sent by another route.",
-   "button": "Encrypt a document",
+  "stakes": "An email from a stranger can report the moment you open it, through an invisible image: proof to them that your address is live and read, before you've decided to reply. Paste one and see whether it reports back.",
+  "check": {
+   "engine": "email-pixel-detector",
+   "button": "Check one email for a silent read receipt",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "email-privacy",
+    "slug": "email-tracking-pixel-detector"
    },
    "query": "topic=journalist-privacy&from=comparison"
   },
-  "step3": {
-   "red": "Refused to open: the passphrase, the file or the tool didn't match. The messaging tools compared handle keys for you; here, one wrong character keeps it locked.",
-   "amber": "Back in plain form after decrypting. The encryption row stops here; the metadata row covers what an encrypted document can't hide, such as who sent it and when.",
-   "green": "Now unreadable without the passphrase, file or text alike. SecureDrop, Signal and Proton Mail score excellent on this row; the one browser in the table, partial."
-  },
-  "step4": {
-   "line": "The free step is sending documents through one of the tools compared rather than plain email. Encryption carries a file's own details along: Incognito Pro's Photo Metadata Viewer lists a photo's EXIF fields, such as GPS and capture time, rates each and saves a clean copy."
-  },
-  "step5": {
-   "label": "Clear a document photo's hidden fields before you encrypt it"
-  }
+  "results": {}
  },
  "/comparisons/location-tracking/best-location-tracking-gps-privacy-tools-compared": {
   "type": "comparison",
@@ -16222,9 +15902,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "See whether pixels and scripts like those in section 2 load in your browser",
+   "heading": "The tracking this policy covers runs on you too. See how many of 50 requests get through.",
    "instruction": "Run it in your own browser, blocker on if you use one. Its 50 harmless requests from this site imitate pixels, beacons and tracking scripts. It can't read cookies. About 5 seconds.",
-   "button": "Test for pixels and scripts",
+   "button": "Count how many of 50 get through",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -16282,9 +15962,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Section 1 lists what training swallows. Read one file before you hand it over",
+   "heading": "A photo you hand a chatbot can quietly carry where it was taken. See what one file holds.",
    "instruction": "Pick the last photo or screenshot you pasted into an AI chatbot. It is read in your browser, not uploaded, and names any GPS location, hidden thumbnail, device details or names in the file. Not what the service kept.",
-   "button": "Read the file I last gave a chatbot",
+   "button": "Check a photo before I upload it",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -16342,9 +16022,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Section 4 names the lists. This counts what they actually stop",
+   "heading": "Your policy will say the extension blocks trackers. Count how many of 50 get through.",
    "instruction": "Press Run in the browser your extension is installed in, with its lists enabled. It fires 50 harmless ad- and tracker-shaped requests from this site and counts what got through, in about 5 seconds. It reads no cookie.",
-   "button": "Score the lists my extension loads",
+   "button": "Count what my extension lets through",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -16402,9 +16082,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Read the first bullet of section 1 off your own browser",
+   "heading": "Every site reads your browser, version and device on arrival. See what yours hands over.",
    "instruction": "Nothing to type. It prints the string this browser announces to every site and splits out browser, version, operating system and device. Cookies, IP address and whatever your server logs sit outside it.",
-   "button": "Print what my browser announces",
+   "button": "See what my browser tells every site",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -16462,9 +16142,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Section 6 lists who you share with. Your homepage already has a list",
+   "heading": "Does your homepage call outside companies before anyone opts out? One link shows who.",
    "instruction": "Paste your own site's address. Our server loads one page as a first-time visitor with no consent given and lists the cookies that response sets, the known tracker tags in the HTML and the outside domains it pulls from.",
-   "button": "List who my homepage calls",
+   "button": "List who my homepage calls first",
    "target": {
     "niche": "ccpa",
     "slug": "cookie-privacy-scanner"
@@ -16574,64 +16254,44 @@
   }
  },
  "/templates/cloud-privacy/cloud-storage-privacy-policy-template": {
+  "v": 2,
   "type": "template",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Section 2 of 6",
    "quote": "All files are encrypted using {{ENCRYPTION_STANDARD}} before upload"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Do the \"before upload\" part by hand, on one paragraph you keep in a drive",
-   "instruction": "Paste a paragraph from a document in your cloud drive, add a passphrase, press Encrypt Text. It works on text, in this browser: it cannot encrypt the file itself, and it cannot test what a provider does on its servers.",
-   "button": "Encrypt a paragraph from my drive",
+  "stakes": "Whatever a policy promises, the photos in your drive can carry their own record: where each was taken, on which phone, even a hidden copy of what you cropped out. Open one of yours and see what's still inside.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one of your photos carries",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=template"
   },
-  "step3": {
-   "red": "Decrypt came back as failed: a wrong passphrase, or a block edited since. Nobody recovers that text, you included, which is what holding the only key costs.",
-   "amber": "Decrypted straight back to your paragraph. Anyone holding the passphrase reads it, so a passphrase kept in the same drive as the files is section 2 with the key taped on.",
-   "green": "Encrypted, and what you would upload is a block of noise. Your paragraph never left this browser, though the file around it still needs a tool that encrypts files."
-  },
-  "step4": {
-   "line": "Section 2 is a promise a policy makes about its servers; a passphrase you never reuse is the part you own, and it costs nothing. Encryption covers a file's contents, not what a picture carries inside: Incognito Pro's Photo Metadata Viewer lists a photo's GPS, camera and time fields before it syncs."
-  },
-  "step5": {
-   "label": "See what your photos carry into the drive"
-  }
+  "results": {}
  },
  "/templates/cloud-privacy/cloud-storage-privacy-request-letter-template": {
+  "v": 2,
   "type": "template",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Section 6 of 7",
    "quote": "What measures are in place to protect my data from unauthorized access?"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "The one answer you do not have to wait for",
-   "instruction": "Section 6 asks the provider how your data is protected. On the tool page you can settle one file yourself: passphrase, Encrypt, upload the .enc copy. No reply required, and nothing leaves the browser.",
-   "button": "Answer it for one file",
+  "stakes": "You're asking them what they hold on you, and part of the answer is already in your hands: any photo you uploaded can carry where it was taken, when, and on which phone. Open one and see before they reply.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one of your uploads carries",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=template"
   },
-  "step3": {
-   "red": "Decryption failed on the copy you made. Before this file goes anywhere, redo it with a passphrase written down somewhere you will still have next year.",
-   "amber": "Decrypted, and plain. That is what anyone reaching an unencrypted file would read, whatever answer comes back to the question in section 6.",
-   "green": "That file is now held by your passphrase rather than by a policy. The letter can still ask what happened to everything you uploaded before today."
-  },
-  "step4": {
-   "line": "Free first: encrypt the file and upload that copy, so the provider holds nothing readable. For photos already up there, the Photo Metadata Viewer on the Pro site lists the fields in the original you still hold, camera, time and GPS, and saves a clean copy to replace it with."
-  },
-  "step5": {
-   "label": "Ask about photos too, then check one yourself"
-  }
+  "results": {}
  },
  "/templates/cookie-management/cookie-management-tracking-prevention-policy-template": {
   "type": "template",
@@ -17092,9 +16752,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Section 4 gives one agency your address. What do your photos give?",
+   "heading": "Photos you share of your home can carry the exact spot, hidden in the file. Check one.",
    "instruction": "Choose a photo of that same property you've posted publicly (PNG, JPEG or WebP). It's read in your browser and lists any GPS fix, embedded thumbnail, device details or personal data inside.",
-   "button": "Check a public photo of the property",
+   "button": "Check a home photo for hidden location",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -17174,64 +16834,44 @@
   }
  },
  "/templates/encrypted-messaging/encrypted-messaging-policy-template": {
+  "v": 2,
   "type": "template",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Section 4 of 7",
    "quote": "Confidential and sensitive information may only be shared through approved encrypted messaging apps with verified contacts."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Encrypt one line this policy would call confidential",
-   "instruction": "Type a line you would otherwise paste into a team chat, add a passphrase and press Encrypt Text; it runs in your browser. It shows encryption doing its job. It cannot test the apps on your approved list.",
-   "button": "Encrypt a confidential line",
+  "stakes": "Screenshots are how confidential chats get out, and the file can carry more than what's on screen: which phone and app made it, when, even a hidden copy of what you cropped out. Open one and see what it holds.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one screenshot still holds",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=template"
   },
-  "step3": {
-   "red": "It would not open again: wrong passphrase, edited text, or another tool's output. A chat app hits that wall when a contact's keys change, which is what verifying catches.",
-   "amber": "It decrypted back into your words, for anyone holding the passphrase. In a chat that is an unverified contact, so the words verified contacts here are doing real work.",
-   "green": "Scrambled, and useless to anyone without the passphrase. That is the baseline section 2's approved list asks for: every message like this, by default, not on request."
-  },
-  "step4": {
-   "line": "Section 4 sends files through those same approved apps, and encryption covers the trip, not what is inside the file. Incognito Pro's Photo Metadata Viewer lists what a photo carries, GPS, camera and timestamp among them, and saves a clean copy before it reaches the group."
-  },
-  "step5": {
-   "label": "Check what a shared file carries before the group does"
-  }
+  "results": {}
  },
  "/templates/encrypted-messaging/encrypted-messaging-request-letter-template": {
+  "v": 2,
   "type": "template",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Section 3 of 7",
    "quote": "Unencrypted messages that can be intercepted"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Put one intercepted line in front of the person who decides",
-   "instruction": "Paste the sentence you would least like a stranger to read into the Text Encryption Tool, add a passphrase and press Encrypt Text; it runs in your browser. It shows what interception yields, not what your app does.",
-   "button": "Scramble a line for the letter",
+  "stakes": "You're arguing that plain email and chat leak, so bring proof: an email can tell its sender the moment you open it, through an invisible image. Paste one in for a yes or no you can quote.",
+  "check": {
+   "engine": "email-pixel-detector",
+   "button": "Check whether one email reports back",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "email-privacy",
+    "slug": "email-tracking-pixel-detector"
    },
    "query": "topic=encrypted-messaging&from=template"
   },
-  "step3": {
-   "red": "The block refused to open: wrong passphrase, or text altered on the way. Worth a line in the letter, since tampering shows up here instead of passing quietly.",
-   "amber": "Your words came back, because you held the passphrase. That is section 3's case: whoever holds the key reads it all, and today that is whoever carries the message.",
-   "green": "Paste that scrambled block into the letter as an exhibit. It is what an interception would yield from the sentence you just typed."
-  },
-  "step4": {
-   "line": "The apps section 4 recommends cost nothing to install, so this letter asks for a decision rather than a budget. None of them touches what a shared photo carries: Incognito Pro's Photo Metadata Viewer lists its GPS, camera and time fields and saves a clean copy to send instead."
-  },
-  "step5": {
-   "label": "Check a photo before it moves to the new app"
-  }
+  "results": {}
  },
  "/templates/facial-recognition/facial-recognition-biometric-privacy-policy-template": {
   "type": "template",
@@ -17302,9 +16942,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Section 1 starts with what a player hands over unasked",
+   "heading": "Before a player types a name, the site knows their browser, system and device. See yours.",
    "instruction": "Nothing to type: the User Agent Analyzer shows the browser, version, OS and device type a visitor's browser sends with every request, before anyone fills in an account form.",
-   "button": "Show the unasked half",
+   "button": "Show what my browser hands a game site",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -17362,9 +17002,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "List the cookies and trackers in your site's first load before you fill in section 5",
+   "heading": "Which cookies and trackers come with your site's first page, before anyone clicks accept?",
    "instruction": "Paste your website's address. Our server fetches the page once, before any consent, and lists cookies from its response by name and type, plus known tracker tags in its HTML. Copy the real names into section 5.",
-   "button": "List my site's cookies",
+   "button": "List my site's cookies and trackers",
    "target": {
     "niche": "gdpr",
     "slug": "cookie-compliance-scanner"
@@ -17444,64 +17084,44 @@
   }
  },
  "/templates/healthcare-privacy/healthcare-medical-privacy-policy-template": {
+  "v": 2,
   "type": "template",
   "topic": "healthcare-privacy",
   "step1": {
    "label": "Section 5 of 8",
    "quote": "Encryption: All data is encrypted both in transit and at rest using industry-standard protocols"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Section 5 promises encryption. Do it once, by hand, to a line of your own",
-   "instruction": "Paste the line you would otherwise email a patient — a result, a dose, an appointment — add a passphrase and press Encrypt Text. It runs in this page and tests nothing about your servers, your mail host or your backups.",
-   "button": "Encrypt one line of a record",
+  "stakes": "A policy like this names who may see your health information. The ad and tracking scripts on many health sites report your visit anyway; count how many of 50 such requests your browser lets through, in about five seconds.",
+  "check": {
+   "engine": "ad-blocker-test",
+   "button": "Count the trackers your browser lets through",
    "target": {
-    "niche": "healthcare-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "ad-blocker-test"
    },
    "query": "topic=healthcare-privacy&from=template"
   },
-  "step3": {
-   "red": "Pasting it back returns an error, so the block was edited or the passphrase differs. A section 5 promise nobody can undo is data loss, not protection.",
-   "amber": "Your line comes back word for word, which also means whoever learns the passphrase reads it. Section 5's access-control bullet is the half this cannot stand in for.",
-   "green": "Unreadable in the clear, readable with the passphrase: that is the 'in transit' half, seen from the patient's side. At rest stays your server team's work."
-  },
-  "step4": {
-   "line": "Encrypting a line here costs nothing. What a policy cannot cover is the browsing around it: Incognito Pro's Cookie & Tracker Scanner lists the trackers a patient-facing page loads on a first visit, and Pro's ad and tracker blocking keeps ad networks off the pages where symptoms get typed."
-  },
-  "step5": {
-   "label": "Scan the health pages your patients open"
-  }
+  "results": {}
  },
  "/templates/healthcare-privacy/healthcare-medical-privacy-request-letter-template": {
+  "v": 2,
   "type": "template",
   "topic": "healthcare-privacy",
   "step1": {
    "label": "Section 5 of 6",
    "quote": "To verify my identity, I am providing: ☐ Copy of government-issued photo ID"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Before your ID details sit in somebody's inbox, see them as ciphertext",
-   "instruction": "Type the identifiers this section makes you hand over — date of birth, member number, record number — plus a passphrase, and press Encrypt Text. It handles typed text only; the photo of your ID is a file it cannot touch.",
-   "button": "Encrypt the identifiers first",
+  "stakes": "This letter asks for a copy of your photo ID. A phone snap of it can carry the exact spot it was taken, often your home; see what yours carries before you attach it, one file, nothing to type.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check the ID photo before you attach it",
    "target": {
-    "niche": "healthcare-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=healthcare-privacy&from=template"
   },
-  "step3": {
-   "red": "Most privacy offices will not paste a block into a decryption tool. Send these details the way they ask instead: portal upload or post, not plain email.",
-   "amber": "They will decrypt it if you read the passphrase down a phone line. Keep that call separate — one channel carrying both is one interception.",
-   "green": "Forwarded around their office, the block still says nothing without the passphrase. The ID photo attached beside it travels exactly as it always did."
-  },
-  "step4": {
-   "line": "Sending the letter is free and the reply is owed to you. On the phone you read that reply on, Incognito Browser keeps no browsing history and wipes cookies and sessions the moment you exit, and Incognito Pro's ad and tracker blocking keeps ad networks out of the pages where you chase it."
-  },
-  "step5": {
-   "label": "See what Pro does on the phone you read the reply on"
-  }
+  "results": {}
  },
  "/templates/incognito-mode/incognito-mode-policy-template": {
   "type": "template",
@@ -17512,9 +17132,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Prove section 2's 'websites visited' clause on one staff laptop",
+   "heading": "A private window still tells sites your browser, system and device. Open one and see.",
    "instruction": "Open a private window on the laptop your staff actually use and load this page inside it. Nothing to type: it parses the string every site receives. It cannot see your network logs, your ISP's records, or the IP address.",
-   "button": "Read what a private window sends",
+   "button": "See what a private window still tells sites",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -17542,9 +17162,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Attach a reading to section 4 rather than only asserting it",
+   "heading": "Asking IT for a private window? Every site still sees your browser, system and device.",
    "instruction": "Open this page in a private window in the browser your letter names, then read the line it parses back. That is what every site receives. What IT's monitoring records sits on their side; no page here can reach it.",
-   "button": "Parse my work browser's string",
+   "button": "Show what my work browser tells sites",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -17632,9 +17252,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Before section 2 is published, see who answers on your own network",
+   "heading": "Your internet provider can see the name of every site you open. Find out if yours does.",
    "instruction": "Run it from a desk on the connection this policy covers. Six one-off hostnames reach our nameserver, so whichever resolver asks for them is the one in use. It names that resolver's network, not the sites anyone opened.",
-   "button": "See who resolves for the office",
+   "button": "See if my provider can see my sites",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -17685,64 +17305,44 @@
   }
  },
  "/templates/journalist-privacy/journalist-whistleblower-privacy-policy-template": {
+  "v": 2,
   "type": "template",
   "topic": "journalist-privacy",
   "step1": {
    "label": "Section 2 of 7",
    "quote": "All source communications use end-to-end encryption"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "The tip that arrives in a plain inbox is the one section 2 misses",
-   "instruction": "Take the reply you were about to type to a source who wrote in by plain email, add a passphrase, and encrypt it here. The words become a block; the address you send to, the subject and the send time stay in the open.",
-   "button": "Encrypt a reply to a source",
+  "stakes": "This policy promises to protect sources, yet the photo a source sends of a document can carry the exact spot it was taken, which phone, and when, hidden in the file. Pick one photo and see what it gives away.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one photo gives away",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=journalist-privacy&from=template"
   },
-  "step3": {
-   "red": "Decryption fails on the way back: an edited block, or a different passphrase. A source who cannot open your reply may not write twice, so rehearse it on yourself.",
-   "amber": "It opens, and the passphrase still has to travel somehow. If that means the same inbox, section 2's encrypted-app bullet is the better route for this one source.",
-   "green": "Ciphertext out, your paragraph back with the passphrase. The words are covered; the file you attach carries its own fields, which no cipher reaches."
-  },
-  "step4": {
-   "line": "Encryption on this page is free and runs in your browser. Attachments are the gap a cipher leaves: Incognito Pro's Photo Metadata Viewer lists the GPS, camera and timestamp fields a source's image carries, and saves a clean copy to publish instead."
-  },
-  "step5": {
-   "label": "See what Pro finds in the attachment"
-  }
+  "results": {}
  },
  "/templates/journalist-privacy/journalist-whistleblower-privacy-request-letter-template": {
+  "v": 2,
   "type": "template",
   "topic": "journalist-privacy",
   "step1": {
    "label": "Section 5 of 7",
    "quote": "Primary Contact: Encrypted email using ProtonMail or similar service"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "A source cannot wait for a new mailbox. Encrypt the words instead",
-   "instruction": "Paste the message you are about to send your source, add a passphrase and press Encrypt Text. The block that comes back travels in any email. It hides the words only: sender, recipient, subject and timing stay visible.",
-   "button": "Encrypt the message first",
+  "stakes": "This letter proposes encrypted email; until the other side agrees, an ordinary email can tell its sender the moment you open it, through an invisible image. Paste the source of one you've received and see whether it does.",
+  "check": {
+   "engine": "email-pixel-detector",
+   "button": "Check an email for a hidden tracking image",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "email-privacy",
+    "slug": "email-tracking-pixel-detector"
    },
    "query": "topic=journalist-privacy&from=template"
   },
-  "step3": {
-   "red": "The test decrypt failed: wrong passphrase, or a block edited after it was made. Agree the passphrase by phone before the first message, never inside the email.",
-   "amber": "It decrypts straight back to your words, which is what anyone holding the passphrase reads. One passphrase used for every source means one slip opens every thread.",
-   "green": "What leaves the outbox is noise, whatever service carries it. Who you wrote to and when still sits in the headers, and that is the part section 3 asks them to protect."
-  },
-  "step4": {
-   "line": "Encryption covers the words, not the trail the research leaves on a shared newsroom machine: on Android the free Incognito Browser keeps no history and wipes cookies and sessions the moment you close it, and Incognito Pro's URL Safety Checker reads an address a source sends you before you open it."
-  },
-  "step5": {
-   "label": "Open a source's link with Pro's checker first"
-  }
+  "results": {}
  },
  "/templates/location-tracking/location-tracking-gps-privacy-policy-template": {
   "type": "template",
@@ -17783,9 +17383,9 @@
   },
   "step2": {
    "engine": "permission-checker",
-   "heading": "The company confirms its side. Check your browser's side now",
+   "heading": "You're asking one company to stop. See if your browser still gives sites your location.",
    "instruction": "Section 5 asks the company to confirm tracking is off on its end. Press Check permissions in the browser you use for the company's site: you'll see what this browser lets this site do, and where its site list is.",
-   "button": "Check my side of section 5",
+   "button": "Check my browser's location permission",
    "target": {
     "niche": "location-tracking",
     "slug": "permission-audit"
@@ -18023,9 +17623,9 @@
   },
   "step2": {
    "engine": "password-strength",
-   "heading": "Section 2's first bullet, tried on the password you reuse at work",
+   "heading": "A password leaked from one site gets tried at work. See how fast one like yours cracks.",
    "instruction": "Type the password you sign into work email with, or one built the same way. It scores in the page as you type and is never sent: crack time, a score out of 100, the patterns behind it. It can't see where else it's used.",
-   "button": "Score my work password",
+   "button": "Test one like my work password",
    "target": {
     "niche": "password-security",
     "slug": "password-strength-checker"
@@ -18113,9 +17713,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Three claims in section 6, checked against your own homepage",
+   "heading": "Your policy says what your cookies do. Paste one link and see what your site really sets.",
    "instruction": "Paste the address of the site this generated policy will sit on. Our server fetches one page, with nothing agreed to, and lists the cookies that response sets by name and type plus the known tracker names in the HTML.",
-   "button": "Scan the site the policy covers",
+   "button": "Scan the site this policy covers",
    "target": {
     "niche": "privacy-policies",
     "slug": "cookie-tracker-analyzer"
@@ -18203,9 +17803,9 @@
   },
   "step2": {
    "engine": "useragent-analyzer",
-   "heading": "Section 3 is about the queries. See what your browser sends with each one",
+   "heading": "Each search also says what browser and device you're on. See exactly what yours says.",
    "instruction": "Nothing to type: the User Agent Analyzer reads the browser you're on, ideally a work one: name, version, OS and any Client Hints. It's the browser section 6 asks IT to configure.",
-   "button": "Read my work browser",
+   "button": "See what my browser tells every site",
    "target": {
     "niche": "gaming-privacy",
     "slug": "useragent-analyzer"
@@ -18833,9 +18433,9 @@
   },
   "step2": {
    "engine": "browser-privacy",
-   "heading": "Section 4 lets people bring their own tools. Grade what those change",
+   "heading": "Your browser describes your device to every site, at work too. See what it gives away.",
    "instruction": "Press Run Privacy Audit on the personal phone or laptop that line is about: 15 checks on what any site reads from that browser, scored out of 100. It sees nothing the company installs.",
-   "button": "Audit my own device",
+   "button": "See what my browser gives away",
    "target": {
     "niche": "workplace-privacy",
     "slug": "browser-privacy-audit"
@@ -18923,9 +18523,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Before you answer input 3, see what a screenshot shares on its own",
+   "heading": "Screenshots you send to AI chats can carry more than you see. Drop one in and look.",
    "instruction": "Choose a screenshot or photo you'd attach to an AI chat (PNG, JPEG or WebP). The check reads it in your browser and lists any location, thumbnail, device details or personal data in the file.",
-   "button": "Check a screenshot first",
+   "button": "Check a screenshot for hidden details",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -18983,9 +18583,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Input 2 records a setting's name. This measures what it stops",
+   "heading": "Don't rate your browser on a guess. Count how many of 50 tracker requests get through.",
    "instruction": "Answer it in the browser you actually browse in. The test fires 50 harmless ad and tracker requests from this site and marks each one blocked or allowed, in about 5 seconds. It reads no cookies and no history.",
-   "button": "Measure this browser, then answer",
+   "button": "Count what my browser lets through",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -19013,9 +18613,9 @@
   },
   "step2": {
    "engine": "cookie-analyzer",
-   "heading": "Rate input 4's handling practices from your own landing page",
+   "heading": "You'll rate your opt-out process. See what your site loads before anyone can opt out.",
    "instruction": "Paste the address a California visitor lands on. Our server fetches it once and reports the cookies in that response and the trackers and outside domains in its HTML. It cannot read your policy or test your opt-out.",
-   "button": "Scan the page they land on",
+   "button": "Scan my landing page for trackers",
    "target": {
     "niche": "ccpa",
     "slug": "cookie-privacy-scanner"
@@ -19065,34 +18665,24 @@
   }
  },
  "/calculators/cloud-privacy/cloud-storage-privacy-risk-calculator": {
+  "v": 2,
   "type": "calculator",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Input 3 of 6",
    "quote": "Do you use any encryption beyond the provider's default? It only lowers your score for files the provider could otherwise open."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Do input 3's second option once, on a file you really keep there",
-   "instruction": "Choose a file from that drive, under 100 MB, type a passphrase and press Encrypt: it runs in your browser with AES-256-GCM and hands back a locked copy. It says nothing about the copies already uploaded.",
-   "button": "Encrypt one file I store there",
+  "stakes": "If your cloud provider can open your files, it can read the part of a photo you never see: the exact spot it was taken, which phone, and when. Pick one photo you keep there and see what it carries.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one stored photo carries",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=calculator"
   },
-  "step3": {
-   "red": "No file came back out: a wrong passphrase, an edited block, or a file some other tool encrypted. A lost passphrase cannot be recovered, so keep it away from the drive.",
-   "amber": "It came back readable, so the round trip works. Encrypting before upload takes 25 points off what a provider that holds the keys adds, and costs nothing.",
-   "green": "You now hold a copy only that passphrase opens. Exposure still floors at 15 when nothing can be read, and sharing adds up to 30 points on top of it."
-  },
-  "step4": {
-   "line": "Free first: encrypt the sensitive files before upload and turn on two-factor login, worth 15 points on its own. The files you share instead of encrypting still carry their own fields: Incognito Pro's Photo Metadata Viewer lists a photo's GPS and camera data and saves a clean copy on one press."
-  },
-  "step5": {
-   "label": "Read a photo's own fields before the next share"
-  }
+  "results": {}
  },
  "/calculators/cookie-management/cookie-management-tracking-prevention-risk-calculator": {
   "type": "calculator",
@@ -19103,9 +18693,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Input 4 counts your tools. This checks what they actually block",
+   "heading": "Ads vanish, so you trust your blocker. Count how many of 50 trackers still get through.",
    "instruction": "Run it in the browser you're answering for, with your ad blocker or privacy extensions on. It sends 50 harmless ad and tracker requests from this site; about 5 seconds.",
-   "button": "Check my tools first",
+   "button": "Count what gets past my blocker",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -19193,9 +18783,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "Input 1 carries the most weight. See where your social settings stand",
+   "heading": "Spam calls often mean brokers sold your number. Score the habits feeding them out of 100.",
    "instruction": "The quiz asks how your profiles are set, from anonymous or private to public with personal details. It's one of 12 multiple-choice questions, with browser and cookies among the rest; about 2 minutes.",
-   "button": "Check my social settings",
+   "button": "Score my habits in 12 questions",
    "target": {
     "niche": "digital-footprint",
     "slug": "privacy-score-quiz"
@@ -19223,9 +18813,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Input 3 is about the picture. This checks the file behind it",
+   "heading": "Cropped a profile photo? The file can still hold the whole shot and where it was taken.",
    "instruction": "Input 3 asks where your pictures appear and what they show. Choose one profile photo (PNG, JPEG or WebP) to see what the file itself hides: GPS location, thumbnail, device details or personal data.",
-   "button": "Check the file behind my photo",
+   "button": "Check what one profile photo carries",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -19283,9 +18873,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "Input 6 is one tick box. The quiz asks about the habits around it",
+   "heading": "Your footprint grows with every login, search and post. Score 12 habits out of 100.",
    "instruction": "Input 6 asks about private browsing only. The quiz's 12 questions add your browser, search engine and cookie handling, plus accounts, email and social media. About 2 minutes.",
-   "button": "Check the habits behind input 6",
+   "button": "Get my score in 12 questions",
    "target": {
     "niche": "digital-footprint",
     "slug": "privacy-score-quiz"
@@ -19313,9 +18903,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Input 3 counts fences and detectors. It has no line for a posted photo",
+   "heading": "A drone over your home starts with finding it. A posted photo can carry the exact spot.",
    "instruction": "Input 3's four options run from nothing to RF detectors and legal notices, and they take up to 30 points off. Choose one photo of the property you're scoring (PNG, JPEG or WebP).",
-   "button": "Check a photo of the place I'm scoring",
+   "button": "Check a photo of my home for location",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -19365,34 +18955,24 @@
   }
  },
  "/calculators/encrypted-messaging/encrypted-messaging-risk-calculator": {
+  "v": 2,
   "type": "calculator",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Input 1 of 6",
    "quote": "End-to-end encryption means only the people in the chat can read it, not the company. Some apps only do it for chats you set up as secret."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Before you answer the first question, see what end-to-end encryption does",
-   "instruction": "Type a message and a passphrase, press Encrypt Text; it runs in your browser. The block you get is what a company's server holds of a chat encrypted end to end: text it can't read.",
-   "button": "Encrypt a test message",
+  "stakes": "End-to-end encryption keeps the company out of your chat, not the people in it. A photo you send can carry the exact spot it was taken, and some apps pass the file on untouched; check one before you send it.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "Check a photo before you send it",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=calculator"
   },
-  "step3": {
-   "red": "Stayed locked, with 'Decryption failed' on screen. The calculator scores 'Not sure' about your app's encryption at 70, close to 'No' at 80.",
-   "amber": "Back in the clear after a decrypt: your words stay wherever they're kept. The calculator adds 20 points if you never use disappearing messages.",
-   "green": "Encrypted: nobody without the passphrase reads it, a company included. In an app that encrypts only secret chats, your ordinary chats don't get this."
-  },
-  "step4": {
-   "line": "Free fix: switch on end-to-end encryption for every chat, or move to an app that does it by default. Encryption keeps the company out, not a photo's hidden fields: Incognito Pro's Photo Metadata Viewer lists GPS and camera details and saves a clean copy."
-  },
-  "step5": {
-   "label": "Check a photo before it goes into any chat"
-  }
+  "results": {}
  },
  "/calculators/facial-recognition/facial-recognition-biometric-privacy-risk-calculator": {
   "type": "calculator",
@@ -19403,9 +18983,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Input 3 counts how often you share. This checks what one shared photo holds",
+   "heading": "A face search puts a name to a public photo. The file can add where you were, and when.",
    "instruction": "Input 3 scores sharing from none to frequent and public, up to 20 points. Choose a photo you've shared (PNG, JPEG or WebP) to see any location, thumbnail, device details or personal data in it.",
-   "button": "Check a photo I've shared",
+   "button": "Check a shared photo for where and when",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -19475,34 +19055,24 @@
   "results": {}
  },
  "/calculators/healthcare-privacy/healthcare-medical-privacy-risk-calculator": {
+  "v": 2,
   "type": "calculator",
   "topic": "healthcare-privacy",
   "step1": {
    "label": "Input 5 of 6",
    "quote": "More sensitive data creates higher privacy risks if breached"
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Tracking symptoms or periods? See what a breach would find in an encrypted note",
-   "instruction": "Type a symptom or medication note, pick a passphrase and press Encrypt Text; it runs in your browser. Anyone who gets only the encrypted block can't read it without the passphrase.",
-   "button": "Encrypt a symptom note",
+  "stakes": "Each symptom you look up can become a health record, kept by the ad and tracking scripts on the page you read it on. Fire 50 test tracking requests at this browser and count what gets through, about five seconds.",
+  "check": {
+   "engine": "ad-blocker-test",
+   "button": "Test this browser against 50 tracking requests",
    "target": {
-    "niche": "healthcare-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "ad-blocker-test"
    },
    "query": "topic=healthcare-privacy&from=calculator"
   },
-  "step3": {
-   "red": "The note didn't come back: wrong passphrase, changed text or another tool's block. A lost passphrase can't be recovered, so keep it apart from the note.",
-   "amber": "Readable again once decrypted. Input 5 scores the kind of data you track: 5 points for basic fitness data, up to 25 for mental health or reproductive data.",
-   "green": "Encrypted: in a breach, this block is all anyone gets without the passphrase. Input 5 still counts what you track; encryption changes what a leak would expose."
-  },
-  "step4": {
-   "line": "Free: keep sensitive notes in an encrypted notes app or offline. The calculator's tip covers your searches too, a browser that blocks trackers; Incognito Pro's ad and tracker blocking, in the Incognito Browser Android app, stops many trackers before they load."
-  },
-  "step5": {
-   "label": "See what tracker blocking stops while you research a condition"
-  }
+  "results": {}
  },
  "/calculators/incognito-mode/incognito-mode-risk-calculator": {
   "type": "calculator",
@@ -19573,9 +19143,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Input 2 asks which resolver you use. See which one answers",
+   "heading": "Someone answers every site name you type and sees the list. Is it your internet provider?",
    "instruction": "Run it on the connection you browse from, at home or on the phone. In about 10 seconds it names the network of the resolvers that answered our test lookups: the provider input 2 asks about. It cannot see the sites.",
-   "button": "Name the resolver answering for me",
+   "button": "Check if my provider sees my site list",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -19663,9 +19233,9 @@
   },
   "step2": {
    "engine": "link-unwrapper",
-   "heading": "Look at one email link before you answer input 4",
+   "heading": "Email links often take a detour before they land. Paste one and see where it really goes.",
    "instruction": "Copy the link from a recent email you didn't ask for and paste it here. Pasting doesn't open it; you see every hop it can decode, the site it ends at and any tracking tags.",
-   "button": "Check an email link",
+   "button": "See where an email link really goes",
    "target": {
     "niche": "ad-tracking",
     "slug": "link-unwrapper"
@@ -19723,9 +19293,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Measure the browser you shop in before you answer input 2",
+   "heading": "Trackers let ads follow you from shop to shop. Count how many of 50 this browser lets in.",
    "instruction": "Open this page in that browser and press Run Ad-Blocker Test. It sends 50 test requests to our own site, a retargeting loader and social pixels among them, and counts what's blocked. About 5 seconds.",
-   "button": "Measure before input 2",
+   "button": "Test the browser I shop in",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -19783,9 +19353,9 @@
   },
   "step2": {
    "engine": "link-unwrapper",
-   "heading": "Input 6 asks if you check URLs. Here's a link check to try first",
+   "heading": "You hover, it looks fine, you click. Paste it first and see every stop before it lands.",
    "instruction": "Copy a link from a recent email and paste it in. It's decoded, not opened: every hop to the host it ends at, plus any tracking tags. Some of that stays out of view in a hover.",
-   "button": "Check a link, then answer input 6",
+   "button": "Paste a link and see every stop",
    "target": {
     "niche": "ad-tracking",
     "slug": "link-unwrapper"
@@ -19843,9 +19413,9 @@
   },
   "step2": {
    "engine": "ad-blocker-test",
-   "heading": "Input 6 asks about blocking. Test what your browser actually stops",
+   "heading": "Private search can't cover the pages you click. Count how many of 50 trackers get through.",
    "instruction": "Press Run in the browser you search with. It fires 50 test requests from our own site, ads, analytics, social pixels and beacons, and marks each blocked or allowed. About 5 seconds.",
-   "button": "Test the browser I search with",
+   "button": "Run the five-second tracker test",
    "target": {
     "niche": "ad-tracking",
     "slug": "ad-blocker-test"
@@ -19903,9 +19473,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "Input 1 weighs data types. The quiz scores the habits that add to them",
+   "heading": "Get one record deleted and your habits make the next. 12 questions score them out of 100.",
    "instruction": "The quiz asks how public your social profiles are, among 12 multiple-choice questions on browser, search, cookies and more. About 2 minutes, with six category bars at the end.",
-   "button": "Score the habits behind input 1",
+   "button": "Score my habits, about two minutes",
    "target": {
     "niche": "digital-footprint",
     "slug": "privacy-score-quiz"
@@ -19933,9 +19503,9 @@
   },
   "step2": {
    "engine": "privacy-quiz",
-   "heading": "Input 2 asks about the engine's policy; the quiz names the engine",
+   "heading": "Big search engines keep every search by default. 12 questions give you a score out of 100.",
    "instruction": "Twelve multiple-choice questions, about 2 minutes. The search question sorts engines across four options by what each one keeps, which is the fact this input wants you to confirm.",
-   "button": "Check my search engine answer",
+   "button": "Score my search engine and 11 habits",
    "target": {
     "niche": "digital-footprint",
     "slug": "privacy-score-quiz"
@@ -19993,9 +19563,9 @@
   },
   "step2": {
    "engine": "screenshot-leak-checker",
-   "heading": "Input 5 asks if you share your location. Your photos may answer too",
+   "heading": "Never share your location? A photo can carry the exact spot it was taken, hidden inside.",
    "instruction": "Choose a photo you took and posted with your phone (PNG, JPEG or WebP). It's read in your browser. If the file holds GPS coordinates, the result shows them as numbers you can paste into a map.",
-   "button": "Look for GPS in a posted photo",
+   "button": "Check one photo for a hidden location",
    "target": {
     "niche": "social-media-privacy",
     "slug": "screenshot-leak-checker"
@@ -20053,9 +19623,9 @@
   },
   "step2": {
    "engine": "whats-my-ip",
-   "heading": "Input 3 asks where you are. This shows where every site thinks you are",
+   "heading": "Each site you open places you on a map. See where, and whether a VPN really hides it.",
    "instruction": "Open it in the browser you use this way; nothing to type. The moment it opens it shows the IP and city sites receive, and any other address WebRTC gives out.",
-   "button": "Show where sites place me",
+   "button": "Show where sites put me, nothing to type",
    "target": {
     "niche": "vpn-privacy",
     "slug": "whats-my-ip"
@@ -20113,9 +19683,9 @@
   },
   "step2": {
    "engine": "dns-leak-test",
-   "heading": "Input 7 asks if your service stops DNS leaks. Test whether yours leak now",
+   "heading": "With a VPN on, your internet provider may still see every site you open. Test yours.",
    "instruction": "Input 7 is about what your service offers. Test your own connection with that service: VPN off first, then on, about 10 seconds each. You'll see which network answered your lookups.",
-   "button": "Test my DNS before input 7",
+   "button": "Test my VPN for leaks, about 10 seconds",
    "target": {
     "niche": "vpn-privacy",
     "slug": "dns-leak-test"
@@ -20143,9 +19713,9 @@
   },
   "step2": {
    "engine": "permission-checker",
-   "heading": "Input 4 is about audits. Here's one site's worth, from your browser",
+   "heading": "One yes and a site can keep your camera. See which permissions it gets without asking.",
    "instruction": "Press Check permissions: your browser reports this site's access to camera, microphone and 9 more. It covers one site in one browser, not the apps input 4 asks about. Takes seconds.",
-   "button": "Run the one-site check",
+   "button": "Check 11 permissions in one click",
    "target": {
     "niche": "webcam-privacy",
     "slug": "permission-checker"
@@ -20173,9 +19743,9 @@
   },
   "step2": {
    "engine": "browser-privacy",
-   "heading": "Run the audit in the work browser you'd use for anything personal",
+   "heading": "Shop or scroll on a work laptop? See the description of that machine every site gets.",
    "instruction": "Press Run Privacy Audit on the work device input 4 asks about. In a few seconds it lists what every site you open there can read; it doesn't see monitoring software.",
-   "button": "Audit before input 4",
+   "button": "Run the 15 checks, nothing to type",
    "target": {
     "niche": "workplace-privacy",
     "slug": "browser-privacy-audit"
@@ -21226,34 +20796,24 @@
   }
  },
  "/glossary/end-to-end-encryption": {
+  "v": 2,
   "type": "glossary",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "The term",
    "quote": "A security method where only the sender and intended recipient can read messages, preventing anyone else, including service providers, from accessing the content."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Be the sender and the recipient: encrypt a line, then open it",
-   "instruction": "Type a line and a passphrase, press Encrypt Text, copy the block, then switch to Decrypt and paste it in. Both ends run in your browser; a chat app does the same with keys it manages for you.",
-   "button": "Encrypt, then decrypt",
+  "stakes": "Encryption covers the message, not where its link takes you: tap one and it can bounce through a link shortener that logs the tap, then land with tracking tags attached. Paste a link and see where it really goes.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "See where a link really goes",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=glossary"
   },
-  "step3": {
-   "red": "Nothing opened: 'Decryption failed' is what a changed passphrase or an altered block gets. In a chat app, a changed safety number warns that keys no longer match.",
-   "amber": "Decrypted at the recipient's end, word for word. The definition stops here: once opened, a message can be screenshotted, backed up or forwarded.",
-   "green": "Encrypted: to anyone in between, service providers included, the copy is unreadable. That's the definition's 'preventing anyone else', done by hand."
-  },
-  "step4": {
-   "line": "End-to-end encryption is free in most major chat apps; check it's on for every chat. Encryption carries a file intact, so a photo arrives with whatever the app left inside: Incognito Pro's Photo Metadata Viewer lists those fields and saves a clean copy."
-  },
-  "step5": {
-   "label": "See what a photo carries once it's decrypted"
-  }
+  "results": {}
  },
  "/glossary/etag-tracking": {
   "type": "glossary",
@@ -21376,34 +20936,24 @@
   }
  },
  "/glossary/gag-order": {
+  "v": 2,
   "type": "glossary",
   "topic": "journalist-privacy",
   "step1": {
    "label": "The term",
    "quote": "A legal directive that prohibits individuals or organizations from disclosing information about government requests for data, investigations, or legal proceedings."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "A gagged provider can't warn you. Encrypt files before they reach one",
-   "instruction": "Choose File, pick a document you keep in cloud storage, set a passphrase and press Encrypt File. It runs in your browser; upload the .enc copy instead of the original.",
-   "button": "Encrypt a file before upload",
+  "stakes": "A gagged provider can hand over your files without telling you, and a file holds more than you put in: a photo can carry exactly where it was taken, which phone, and when. See what one of yours gives away.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See the hidden part of one photo",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=journalist-privacy&from=glossary"
   },
-  "step3": {
-   "red": "Locked for you too: the passphrase is wrong or the file was altered, and there is no reset. Keep the passphrase somewhere the provider can't reach.",
-   "amber": "The original is back after decrypting, byte for byte. Keep that copy on your own device; the page's cloud storage example is about files a provider can read.",
-   "green": "The upload-ready copy can't be read without your passphrase. A provider under a gag order could still hand it over, but not what's inside it."
-  },
-  "step4": {
-   "line": "Free fix: encrypt before you upload and keep the passphrase off the service. Photos keep their own details inside the encryption: Incognito Pro's Photo Metadata Viewer shows which fields a photo carries, GPS included, and saves a clean copy to upload instead."
-  },
-  "step5": {
-   "label": "Clean a photo's fields before it goes to the cloud"
-  }
+  "results": {}
  },
  "/glossary/gdpr": {
   "type": "glossary",
@@ -21496,64 +21046,44 @@
   }
  },
  "/glossary/hipaa": {
+  "v": 2,
   "type": "glossary",
   "topic": "healthcare-privacy",
   "step1": {
    "label": "The term",
    "quote": "The Health Insurance Portability and Accountability Act is a U.S. federal law that protects the privacy and security of individuals' medical information and health records."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "HIPAA binds doctors and insurers, not what you send yourself. Encrypt that",
-   "instruction": "Type a health detail you'd send outside a patient portal, a test result for a relative, say, add a passphrase and press Encrypt Text. It runs in your browser; share the passphrase another way.",
-   "button": "Encrypt a health detail",
+  "stakes": "HIPAA binds your doctor and insurer, not the site where you read about a condition, and that page can load ad and tracking requests that record the visit. Count how many get past your browser, in about five seconds.",
+  "check": {
+   "engine": "ad-blocker-test",
+   "button": "Count what this browser lets through",
    "target": {
-    "niche": "healthcare-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "ad-blocker-test"
    },
    "query": "topic=healthcare-privacy&from=glossary"
   },
-  "step3": {
-   "red": "Still unreadable: the passphrase isn't the one used, or the block lost characters. A covered provider must secure your records; here, the passphrase does that job.",
-   "amber": "Decrypted and readable. HIPAA's duties sit with providers and insurers, not with the relative you forward this to, so choose who gets the passphrase.",
-   "green": "Encrypted: unreadable to anyone without the passphrase. The glossary's doctor's-office example has a practice encrypting patient records; your own copy is now too."
-  },
-  "step4": {
-   "line": "Free: send anything about your care through your provider's patient portal. For the health sites you read, Incognito Pro's ad and tracker blocking, in the Incognito Browser Android app, stops many trackers before they load, and the Pro site's Cookie & Tracker Scanner lists a page's trackers."
-  },
-  "step5": {
-   "label": "Guard the health sites you read, not just your records"
-  }
+  "results": {}
  },
  "/glossary/homomorphic-encryption": {
+  "v": 2,
   "type": "glossary",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "The term",
    "quote": "A cryptographic technique that allows computations to be performed on encrypted data without decrypting it first, maintaining privacy while enabling data processing."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "Ordinary encryption has to be undone before data can be used. Try it",
-   "instruction": "Encrypt a line with a passphrase here, copy the block, then decrypt it. This tool is ordinary AES encryption: to do anything with the text, you open it first, the step homomorphic schemes skip.",
-   "button": "Try ordinary encryption",
+  "stakes": "Ad networks log the pages you read, through small requests each page loads without showing you: the reverse of homomorphic encryption, which uses data without reading it. See how many of 50 your browser lets through, in about five seconds.",
+  "check": {
+   "engine": "ad-blocker-test",
+   "button": "See how many of 50 get through",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "ad-blocker-test"
    },
    "query": "topic=encrypted-messaging&from=glossary"
   },
-  "step3": {
-   "red": "'Decryption failed' and the text stays shut: one wrong character in the passphrase or the block does it. Homomorphic schemes let certain operations on locked data work.",
-   "amber": "Opened, and only then usable: you had to decrypt before reading. Most services still work that way; the schemes this term describes do the math without that step.",
-   "green": "Encrypted: nothing can count, search or sort this text until it's decrypted. Homomorphic encryption would let a service compute on it as it is."
-  },
-  "step4": {
-   "line": "Free fix: switch off location for your camera. Most services still read what you upload as it is, a photo's hidden fields included; Incognito Pro's Photo Metadata Viewer lists a photo's GPS, camera and time fields and saves a clean copy to upload instead."
-  },
-  "step5": {
-   "label": "See the fields a service would read in your photo"
-  }
+  "results": {}
  },
  "/glossary/https": {
   "type": "glossary",
@@ -22428,34 +21958,24 @@
   }
  },
  "/glossary/public-key-cryptography": {
+  "v": 2,
   "type": "glossary",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "The term",
    "quote": "A cryptographic system using two mathematically linked keys: a public key for encryption and a private key for decryption, enabling secure communication without sharing secrets."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "This tool uses one shared passphrase. See why key pairs replaced that",
-   "instruction": "Encrypt a line with a passphrase here, the older way: one secret locks it. Copy the block, switch to Decrypt, and the same secret opens it - the secret your recipient would need too.",
-   "button": "Try the shared-secret way",
+  "stakes": "Many newsletters carry an invisible image that tells the sender the moment you open one; public keys seal an email for one reader, and most of your inbox is unsealed. Paste one email's source and see whether it reports back.",
+  "check": {
+   "engine": "email-pixel-detector",
+   "button": "Check whether an email reports back",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "email-privacy",
+    "slug": "email-tracking-pixel-detector"
    },
    "query": "topic=encrypted-messaging&from=glossary"
   },
-  "step3": {
-   "red": "One character out in the passphrase and 'Decryption failed' is the answer. Chat apps with key pairs let you compare keys through safety numbers instead.",
-   "amber": "Opened with the same passphrase that locked it. With a key pair, opening takes a private key that never leaves the recipient's device.",
-   "green": "Locked with a shared secret. Your recipient needs the passphrase, which you must get to them another way; a public key never needs hiding."
-  },
-  "step4": {
-   "line": "Free fix: for chats, use an app that manages key pairs for you; for a one-off, send the passphrase by a different route than the text. Neither touches a photo's hidden fields: Incognito Pro's Photo Metadata Viewer lists GPS and camera details and saves a clean copy."
-  },
-  "step5": {
-   "label": "Read a photo's hidden fields before it goes out"
-  }
+  "results": {}
  },
  "/glossary/purpose-limitation": {
   "type": "glossary",
@@ -22669,34 +22189,24 @@
   }
  },
  "/glossary/secure-multi-party-computation": {
+  "v": 2,
   "type": "glossary",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "The term",
    "quote": "A cryptographic technique that allows multiple parties to jointly compute a function over their inputs while keeping those inputs private from each other."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "See the building block: data you hand over that others can't read",
-   "instruction": "Encrypt a line with a passphrase in the Text Encryption Tool here. It isn't multi-party computation, only the basic idea under it: what you share stays unreadable without the key.",
-   "button": "Encrypt something to share",
+  "stakes": "Tap a link someone sent you and several services can each learn that you did, before the page opens: the reverse of parties working together and learning nothing extra. Paste one link and see who it passes through.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "See who a link passes through",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=glossary"
   },
-  "step3": {
-   "red": "Sealed still: 'Decryption failed' says the passphrase or the block didn't match, and nothing more. In multi-party schemes each party holds only a share of the data.",
-   "amber": "Decrypted, and the whole input is visible to whoever holds the passphrase. Multi-party computation is designed so no single party ever sees it.",
-   "green": "Encrypted: you can hand this over and keep the words private. Multi-party computation goes further: several parties get one answer without seeing each other's inputs."
-  },
-  "step4": {
-   "line": "The everyday version is free: share the answer, not the raw data, like the one figure asked for instead of a whole screenshot. A photo can share more than you meant; Incognito Pro's Photo Metadata Viewer lists the photo's GPS, camera and time fields and saves a clean copy."
-  },
-  "step5": {
-   "label": "Share a photo without the details you didn't mean to"
-  }
+  "results": {}
  },
  "/glossary/self-sovereign-identity": {
   "type": "glossary",
@@ -23269,34 +22779,24 @@
   }
  },
  "/glossary/warrant-canary": {
+  "v": 2,
   "type": "glossary",
   "topic": "journalist-privacy",
   "step1": {
    "label": "The term",
    "quote": "A public statement regularly updated by a service provider to indicate they have not received secret government requests for user data, such as national security letters or gag orders."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "A canary warns you late. Encrypt what a provider stores before it goes quiet",
-   "instruction": "Type a note or choose a file, set a passphrase and press Encrypt. It runs in this browser, not on our server; store the result with the provider and keep the passphrase yourself.",
-   "button": "Encrypt before I store it",
+  "stakes": "The sender of an email needs no warrant to learn when, where and on what device you opened it, only an invisible image inside the message. Paste one email's source and see what it tells the sender.",
+  "check": {
+   "engine": "email-pixel-detector",
+   "button": "Check if an email reports being opened",
    "target": {
-    "niche": "journalist-privacy",
-    "slug": "secure-text-encryption"
+    "niche": "email-privacy",
+    "slug": "email-tracking-pixel-detector"
    },
    "query": "topic=journalist-privacy&from=glossary"
   },
-  "step3": {
-   "red": "AES-GCM refused it: the passphrase differs, a character changed, or another tool made it. Copy the whole block again and recheck the passphrase.",
-   "amber": "Readable once more on this screen. Decrypt only on your own device: a provider whose canary disappears may be handing over whatever it can read.",
-   "green": "What the provider will hold is unreadable without your passphrase. If its canary stops updating, a secret request gets that, not your words."
-  },
-  "step4": {
-   "line": "Free: keep passphrases away from the service, and check the date on a provider's canary before trusting it with files. Encryption keeps a photo's hidden fields intact, so Incognito Pro's Photo Metadata Viewer lists a photo's EXIF fields and saves a copy without them."
-  },
-  "step5": {
-   "label": "Store clean copies of your photos, not the originals"
-  }
+  "results": {}
  },
  "/glossary/webrtc-leak": {
   "type": "glossary",
@@ -23359,34 +22859,24 @@
   }
  },
  "/glossary/zero-knowledge-proof": {
+  "v": 2,
   "type": "glossary",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "The term",
    "quote": "A cryptographic method that allows one party to prove they know certain information to another party without revealing the actual information itself."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "A zero-knowledge proof reveals nothing extra. Opened, encryption reveals it all",
-   "instruction": "Encrypt a line with a passphrase in the Text Encryption Tool here. Whoever decrypts it sees everything you wrote; a zero-knowledge proof shows only that a claim is true.",
-   "button": "Encrypt a line to compare",
+  "stakes": "A photo you send can carry more than the picture: the exact spot it was taken and a hidden copy of the uncropped original. A zero-knowledge proof reveals nothing extra; pick one of yours and see what it reveals.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what one photo reveals",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=encrypted-messaging&from=glossary"
   },
-  "step3": {
-   "red": "The lock held, and 'Decryption failed' is all you learn: never what the passphrase is, only that something didn't match.",
-   "amber": "Opened in full, the reader now knows everything you wrote. A zero-knowledge proof would let you prove one fact, like being over 21, and nothing else.",
-   "green": "Sealed: nobody without the passphrase learns anything from it. Opened, though, it gives up everything; a zero-knowledge proof never hands over the secret."
-  },
-  "step4": {
-   "line": "The free habit is the proof's idea: send the least that answers the question. A photo sent as proof, of a receipt or an ID, can carry GPS and time too; Incognito Pro's Photo Metadata Viewer lists those fields and saves a clean copy."
-  },
-  "step5": {
-   "label": "Check what a photo proves beyond what you meant"
-  }
+  "results": {}
  },
  "/tools/ad-tracking/ad-blocker-test": {
   "type": "tool",
@@ -25170,34 +24660,24 @@
   }
  },
  "/tools/encrypted-messaging": {
+  "v": 2,
   "type": "tool-hub",
   "topic": "encrypted-messaging",
   "step1": {
    "label": "Tools",
    "quote": "If a message can be read in transit, assume it will be."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "One tool here, and it takes a minute: encrypt what an app won't",
-   "instruction": "For a channel that isn't end-to-end encrypted, like SMS or email, type the text and a passphrase here and press Encrypt Text. Paste the block into that channel; send the passphrase another way.",
-   "button": "Encrypt text for SMS or email",
+  "stakes": "Encryption protects the message, not the tap: a link inside it can bounce you through services that each log the click and pass tracking codes along. Paste one link and see who those codes report to.",
+  "check": {
+   "engine": "link-unwrapper",
+   "button": "Unwrap a link before I tap it",
    "target": {
-    "niche": "encrypted-messaging",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "link-unwrapper"
    },
    "query": "topic=encrypted-messaging&from=tool-hub"
   },
-  "step3": {
-   "red": "Couldn't open it: besides 'Decryption failed' for a wrong passphrase, the tool says plainly if the block is too short or isn't valid base64. Recopy the whole block.",
-   "amber": "Readable again after a decrypt, as it will be for anyone with the passphrase. Use a different passphrase for each person you send to.",
-   "green": "Encrypted: paste it into the text or email, and the carrier or mail server sees a scrambled block in place of your words. The passphrase is what's left to protect."
-  },
-  "step4": {
-   "line": "The lasting free fix is a chat app that encrypts every chat end to end by default. Files you encrypt here keep their contents intact, a photo's hidden fields included: Incognito Pro's Photo Metadata Viewer lists those fields and saves a clean copy first."
-  },
-  "step5": {
-   "label": "Look inside a photo before you encrypt it"
-  }
+  "results": {}
  },
  "/tools/private-search": {
   "type": "tool-hub",
@@ -25620,34 +25100,24 @@
   }
  },
  "/tools/healthcare-privacy": {
+  "v": 2,
   "type": "tool-hub",
   "topic": "healthcare-privacy",
   "step1": {
    "label": "Tools",
    "quote": "Symptom searches are among the most sensitive things you do online, and ad networks see them."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "The one tool here protects what you send, not what you search. Try it on a note",
-   "instruction": "Type something health-related you'd rather not send as plain text, a symptom for a friend, say, add a passphrase and press Encrypt Text. The Medical Data Encryption tool uploads nothing.",
-   "button": "Try the Medical Data Encryption tool",
+  "stakes": "Ad networks see your symptom searches the same way they see everything else: through small requests a page makes without showing you. Count how many of 50 your browser lets through; about five seconds, nothing to type.",
+  "check": {
+   "engine": "ad-blocker-test",
+   "button": "Check how much this browser stops",
    "target": {
-    "niche": "healthcare-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "ad-tracking",
+    "slug": "ad-blocker-test"
    },
    "query": "topic=healthcare-privacy&from=tool-hub"
   },
-  "step3": {
-   "red": "Nothing decrypted: the passphrase doesn't match, or the block isn't whole. Encryption only helps if both ends hold the same passphrase and keep it private.",
-   "amber": "Back in plain words after decrypting, the far end of a message. Your symptom searches never pass through this tool; for those, tracker blocking matters.",
-   "green": "Encrypted, unreadable without the passphrase. That covers a message; what you type into a search engine is outside anything this tool can reach."
-  },
-  "step4": {
-   "line": "For searches, the free step is an engine that doesn't profile you. Incognito Pro's ad and tracker blocking, in the Incognito Browser Android app, stops many trackers before they load on the health pages you go on to open."
-  },
-  "step5": {
-   "label": "Try tracker blocking on the health pages you read"
-  }
+  "results": {}
  },
  "/tools/dating-privacy": {
   "type": "tool-hub",
@@ -25770,34 +25240,24 @@
   }
  },
  "/tools/cloud-privacy": {
+  "v": 2,
   "type": "tool-hub",
   "topic": "cloud-privacy",
   "step1": {
    "label": "Tools",
    "quote": "Files in the cloud are only as private as the link and the account that hold them."
   },
-  "step2": {
-   "engine": "text-encryption",
-   "heading": "This hub's one tool does a single job well",
-   "instruction": "The encryption tool here takes text or a file plus a passphrase and returns the copy you would upload. It runs in your browser, and the passphrase is never stored, so it cannot be recovered.",
-   "button": "Open the hub's encryptor",
+  "stakes": "A share link hands over the whole file, and a photo is only as private as what's inside it: often the exact spot it was taken and which phone took it. Pick one photo and see what it carries.",
+  "check": {
+   "engine": "screenshot-leak-checker",
+   "button": "See what a photo carries before sharing",
    "target": {
-    "niche": "cloud-privacy",
-    "slug": "text-encryption-tool"
+    "niche": "social-media-privacy",
+    "slug": "screenshot-leak-checker"
    },
    "query": "topic=cloud-privacy&from=tool-hub"
   },
-  "step3": {
-   "red": "Nothing decrypted. The passphrase is the only key and there is no reset link, which is the trade for a provider not holding one either.",
-   "amber": "Readable again after decrypting, and only here. Encryption travels with the file; the account it lands in still needs a strong password and two-factor login.",
-   "green": "Encrypted copy ready. What that does not cover: the share link you send, who forwards it, and the plain file names a provider's index still holds."
-  },
-  "step4": {
-   "line": "Free first: encrypt before upload, and let the free Incognito Browser wipe cookies and sessions on close, so the phone you open that cloud account on keeps nothing of the session. On the Pro site, the Photo Metadata Viewer reads a photo's camera, time and GPS fields and saves a clean copy."
-  },
-  "step5": {
-   "label": "The tool this hub lacks: Pro's photo viewer"
-  }
+  "results": {}
  },
  "/tools/gaming-privacy": {
   "type": "tool-hub",
