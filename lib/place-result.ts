@@ -29,7 +29,7 @@ export interface PlaceInput {
   buttonBottom: number;
   /** The text field the visitor is typing in, which must stay in view. */
   typing?: { top: number } | null;
-  /** The Pro band is hidden (a Pro subscriber inside the app): nothing to bring into view. */
+  /** Nothing below the result to bring into view: no upgrade ask AND no free step. */
   bandHidden?: boolean;
 }
 
@@ -78,13 +78,19 @@ function headerBottom(): number {
 
 /** Measure the card and scroll it into place. Returns what it did. */
 export function placeResultCard(card: HTMLElement, typingField?: HTMLElement | null): { delta: number; reason: PlaceReason } {
-  const band = card.querySelector<HTMLElement>('[data-result-cta]');
-  const bandHidden = !band || band.offsetParent === null;
   const rect = (el: Element | null | undefined) => el?.getBoundingClientRect();
   const c = card.getBoundingClientRect();
   const result = rect(card.querySelector('.rc-result')) ?? c;
-  const foot = rect(card.querySelector('.rc-foot')) ?? rect(band) ?? c;
-  const button = rect(card.querySelector('[data-result-cta] .btn-pro')) ?? foot;
+  // Inside the app a subscriber's upgrade ask is hidden, but their free step
+  // is not: the region that must be on screen then ends at the free row
+  // instead of the footnote, and there is no button to keep.
+  const ask = card.querySelector<HTMLElement>('[data-result-cta]');
+  const askShown = !!ask && ask.offsetParent !== null;
+  const free = card.querySelector<HTMLElement>('.rc-rows-free');
+  const freeShown = !!free && free.offsetParent !== null;
+  const bandHidden = !askShown && !freeShown;
+  const foot = (askShown ? rect(card.querySelector('.rc-foot')) ?? rect(ask) : rect(free)) ?? c;
+  const button = (askShown ? rect(card.querySelector('[data-result-cta] .btn-pro')) : undefined) ?? foot;
   const { delta, reason } = placementDelta({
     headerBottom: headerBottom(),
     viewportHeight: window.visualViewport?.height ?? window.innerHeight,

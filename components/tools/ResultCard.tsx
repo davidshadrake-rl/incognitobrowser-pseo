@@ -164,15 +164,23 @@ export function ResultCard({ result: shown, staticCard }: { result?: ToolResult 
       </div>
 
       {copy && (
-        // ib-upgrade: hidden inside the app for someone who already has Pro (lib/in-app.ts); the result above stays.
-        <div className="rc-pro ib-upgrade" data-result-cta={severity} data-benefit={copy.benefit} style={pending ? { visibility: 'hidden' } : undefined}>
-          <dl className="rc-rows">
-            {copy.free && (
+        <div className="rc-pro" style={pending ? { visibility: 'hidden' } : undefined}>
+          {/* The free step belongs to the visitor whether or not they pay for
+              Pro, so it sits OUTSIDE ib-upgrade. It used to be inside, which
+              hid it from a subscriber reading a red result in the app — the
+              one reader guaranteed to be shown a problem and no way to fix it
+              (owner rule: every red or amber offers a free step). */}
+          {copy.free && (
+            <dl className="rc-rows rc-rows-free">
               <div className="rc-row">
                 <dt>Free</dt>
                 <dd>{copy.free}</dd>
               </div>
-            )}
+            </dl>
+          )}
+          {/* ib-upgrade: hidden inside the app for someone who already has Pro (lib/in-app.ts). */}
+          <div className="ib-upgrade" data-result-cta={severity} data-benefit={copy.benefit}>
+          <dl className="rc-rows">
             <div className="rc-row pro">
               <dt>Incognito Pro</dt>
               <dd>{copy.pro}</dd>
@@ -195,6 +203,7 @@ export function ResultCard({ result: shown, staticCard }: { result?: ToolResult 
             <span className="rc-proof-more"> · <a href={DATA_SAFETY_URL} target="_blank" rel="noopener" className="underline underline-offset-2 hover:text-t1">Data safety</a></span>
           </p>
           <p className="rc-foot">{PRO_FOOTNOTE}</p>
+          </div>
         </div>
       )}
 

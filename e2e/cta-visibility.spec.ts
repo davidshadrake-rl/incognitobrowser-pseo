@@ -352,7 +352,11 @@ test.describe('where the card places itself', () => {
     rows.push({ device: 'desktop 1280x800', ua: 'desktop', case: 'behaviour: Pro in the app', kind: 'action', ...m });
     await screenshot(page, 'desktop-1280x800', 'behaviour-pro-in-app');
     await expect(page.locator('[data-result-cta]').first()).toBeHidden();
-    expect([null, 'hidden'], `placed: ${m.placed}`).toContain(m.placed);
+    // Fixed 2026-09-17: the free step used to be inside the hidden wrapper, so
+    // a subscriber got a red result and no fix. It is visible now, and the card
+    // is placed for it — 'hidden' only when there is no free step either.
+    await expect(page.locator('.rc-rows-free').first()).toBeVisible();
+    expect([null, 'hidden', 'scrolled', 'in-view'], `placed: ${m.placed}`).toContain(m.placed);
   });
 
   test('scrolling by hand while the DNS leak test runs: own-scroll', async ({ page }) => {

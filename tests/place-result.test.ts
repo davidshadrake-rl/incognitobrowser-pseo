@@ -9,6 +9,8 @@
  * 12px above the bottom edge.
  */
 import { describe, expect, it } from 'vitest';
+import fs from 'node:fs';
+import path from 'node:path';
 import { PLACE_MARGIN, placementDelta, type PlaceInput } from '../lib/place-result';
 
 const HEADER = 64;
@@ -101,5 +103,50 @@ describe('placementDelta', () => {
     const i = { ...card(700), headerBottom: 0 };
     const { delta } = placementDelta(i);
     expect(after(i.askBottom, delta)).toBe(800 - PLACE_MARGIN);
+  });
+});
+
+/**
+ * Owner rule: every red or amber result offers a free step the visitor can
+ * take now. The free row used to sit inside the element `ib-upgrade` hides
+ * (app/globals.css: html[data-ib-pro] .ib-upgrade { display: none }), so a Pro
+ * subscriber reading a red result inside the app — the one reader guaranteed
+ * to be shown a problem — was shown the problem and no way to fix it, and the
+ * card was never scrolled on screen either. Found 2026-09-17.
+ */
+describe('the free step survives a hidden upgrade ask', () => {
+  const read = (f: string) => fs.readFileSync(path.join(__dirname, '..', f), 'utf-8');
+  const card_ = read('components/tools/ResultCard.tsx');
+
+  it('the free row renders outside the wrapper ib-upgrade hides', () => {
+    expect(card_, 'ib-upgrade must not wrap the whole band').not.toMatch(/className="rc-pro ib-upgrade"/);
+    const free = card_.indexOf('rc-rows-free');
+    const hidden = card_.indexOf('className="ib-upgrade"');
+    expect(free, 'the free row must exist').toBeGreaterThan(-1);
+    expect(hidden, 'the hidden wrapper must exist').toBeGreaterThan(-1);
+    expect(free, 'the free row renders before the hidden wrapper opens').toBeLessThan(hidden);
+  });
+
+  it('data-result-cta rides that wrapper, so hiding the ask hides only the ask', () => {
+    const wrapper = card_.match(/<div className="ib-upgrade"[^>]*>/)?.[0] ?? '';
+    expect(wrapper).toContain('data-result-cta');
+  });
+
+  it('.rc-rows-free comes after .rc-rows — same specificity, so order decides', () => {
+    // Both selectors are (0,1,0). A later .rc-rows margin would silently win.
+    const css = read('app/globals.css').split('\n');
+    const rows = css.map((l, n) => [l, n] as const).filter(([l]) => /^\s*\.rc-rows \{/.test(l)).map(([, n]) => n);
+    const frees = css.map((l, n) => [l, n] as const).filter(([l]) => /^\s*\.rc-rows-free \{/.test(l)).map(([, n]) => n);
+    expect(frees.length, 'one override per .rc-rows declaration').toBe(rows.length);
+    for (let k = 0; k < rows.length; k++) expect(frees[k], `override ${k}`).toBeGreaterThan(rows[k]);
+  });
+
+  it('only a card with no ask AND no free step has nothing to bring into view', () => {
+    expect(placementDelta({ ...card(900), bandHidden: true })).toEqual({ delta: 0, reason: 'hidden' });
+    // Ask hidden, free step showing: askBottom/buttonBottom now end at the free
+    // row, and the card is still scrolled up to it.
+    const subscriber = placementDelta(card(900, { askBottom: 200, buttonBottom: 200 }));
+    expect(subscriber.reason).toBe('scrolled');
+    expect(subscriber.delta).toBeGreaterThan(0);
   });
 });
