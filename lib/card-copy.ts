@@ -155,19 +155,19 @@ export const CARD_COPY: Record<string, EngineCardCopy> = {
   // necessarily set before consent.
   'cookie-analyzer': {
     red: {
-      meaning: 'This site starts recording your visit before you click anything, with tracking cookies, trackers or both.',
+      meaning: 'What this scan found records your visits and can link them together: tracking cookies, trackers or both.',
       free: 'The free app wipes cookies every time you close it.',
       pro: 'Blocks tracking scripts and pixels before they load, on the sites you open in the app.',
       button: 'Block trackers with Pro',
     },
     amber: {
-      meaning: 'This site loads some things that watch visitors, such as trackers or outside scripts; the report names each one.',
+      meaning: 'Something here weakens your privacy: a tracker, an outside script or missing HTTPS; the report names each one.',
       free: 'The free app wipes cookies every time you close it.',
       pro: 'Blocks tracking scripts and pixels on the sites you open in the app, whatever they score.',
       button: 'Block trackers with Pro',
     },
     green: {
-      meaning: 'Little or nothing on this site follows you on a first visit; the report lists anything it did find.',
+      meaning: 'Little or nothing here follows you; the report lists anything it did find.',
       pro: 'Blocks tracking scripts and pixels on the sites that score worse than this one, in the app.',
       button: 'Block trackers with Pro',
     },
