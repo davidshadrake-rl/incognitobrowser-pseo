@@ -29,10 +29,12 @@ describe('handoffMailBody', () => {
 });
 
 describe('handoffMailBody — says what the Play listing is', () => {
-  it('names the app as free and Pro as an optional subscription with the one outcome offered', () => {
+  it('names the app as free and Pro inside it with the one outcome offered, and nothing about billing', () => {
     const body = handoffMailBody(PLAY, PAGE, 'Blocks tracking scripts and pixels.');
     expect(body).toMatch(/^Install Incognito Browser \(free\) on your Android phone: /);
-    expect(body).toContain('Incognito Pro, an optional subscription in the app: Blocks tracking scripts and pixels.');
+    expect(body).toContain('Incognito Pro, inside the app: Blocks tracking scripts and pixels.');
+    // Owner, 2026-09-17: the ask never says how Pro is billed or cancelled.
+    expect(body).not.toMatch(/subscription|billed|cancel|\bper (week|month|year)\b/i);
     expect(body).not.toMatch(/Get Incognito Pro on Google Play/);
     expect(body.split('\r\n\r\n')).toHaveLength(3);
   });

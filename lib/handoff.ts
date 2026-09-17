@@ -35,12 +35,12 @@ export function pageLinkFor(href: string): string {
 /**
  * The message. The Play listing it links is the free app's and never names
  * Pro, so the message says what the visitor will find there: a free app to
- * install, and Pro as an optional subscription inside it, with the one
- * outcome the page offered (lib/card-copy.ts PRO_LINE).
+ * install, and Pro inside it, with the one outcome the page offered
+ * (lib/card-copy.ts PRO_LINE). Nothing about billing (owner, 2026-09-17).
  */
 export function handoffMailBody(play: string, pageHref: string, proLine?: string): string {
   const lines = [`Install Incognito Browser (free) on your Android phone: ${play}`];
-  if (proLine) lines.push(`Incognito Pro, an optional subscription in the app: ${proLine}`);
+  if (proLine) lines.push(`Incognito Pro, inside the app: ${proLine}`);
   lines.push(`The check I ran: ${pageLinkFor(pageHref)}`);
   return lines.join('\r\n\r\n');
 }
