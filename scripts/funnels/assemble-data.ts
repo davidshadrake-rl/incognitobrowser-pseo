@@ -37,7 +37,7 @@ export const PRO_NAMES: Record<string, string> = {
 
 /**
  * Step 2 for the 8 topics no free tool fits — the nearest REAL check, for the
- * owner to approve on the review page. Pro engines here are free for now; on
+ * owner to approve on the review page. Pro engines run on the web today; on
  * gate day these pages need a new step 2, which the review page flags.
  */
 export const PAIRINGS: Record<string, { engine: string; why: string }> = {

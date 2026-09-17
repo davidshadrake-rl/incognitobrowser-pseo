@@ -138,41 +138,30 @@ describe('(e) ICON_PATHS are static, safe SVG markup', () => {
   });
 });
 
-describe('(f) gate day: PRO_WEB_GATED=true removes every "free for now"', () => {
-  afterEach(() => {
-    vi.doUnmock('@/lib/tiers');
+describe('(f) a Pro tool is labelled PRO, never "free for now"', () => {
+  // Owner, 2026-09-17: "I don't want to see Pro free for now. Just label them
+  // PRO as if they have been paid for." The old badge said "free for now",
+  // which told visitors Pro was a label rather than a product. The string is
+  // retired everywhere, and the gate-day switch it hung on went with it.
+  it('Badge variant="pro" renders the PRO block and no free-for-now wording', async () => {
     vi.resetModules();
-  });
-
-  it('Badge variant="pro" says "free for now" today', async () => {
-    vi.resetModules();
-    const { Badge } = await import('../components/ui/Badge');
-    const html = renderToStaticMarkup(React.createElement(Badge, { variant: 'pro' }));
-    expect(html).toContain('PRO');
-    expect(html).toContain('free for now');
-  });
-
-  it('Badge variant="pro" renders no "free for now" once gated', async () => {
-    vi.resetModules();
-    vi.doMock('@/lib/tiers', async (importOriginal) => {
-      const actual = await importOriginal<typeof import('../lib/tiers')>();
-      return { ...actual, PRO_WEB_GATED: true };
-    });
     const { Badge } = await import('../components/ui/Badge');
     const full = renderToStaticMarkup(React.createElement(Badge, { variant: 'pro' }));
     const compact = renderToStaticMarkup(React.createElement(Badge, { variant: 'pro', compact: true }));
     for (const html of [full, compact]) {
-      expect(html.toLowerCase()).not.toContain('free for now');
-      expect(html.toLowerCase()).not.toContain('free on the web today');
-      expect(html).toContain('PRO');
+      expect(html).toContain('>PRO<');
+      expect(html.toLowerCase()).not.toMatch(/free for now|free on the web|free today/);
+      // The tooltip is the one shared definition, which says Pro is the paid tier.
+      expect(html).toContain('paid tier');
     }
+    // Nothing but the PRO block: no second word competing with it.
+    expect(full.replace(/<[^>]*>/g, '').trim()).toBe('PRO');
   });
 
-  it('the result card copy and IN_APP_COPY carry no "free for now" string to gate', async () => {
-    // ProNotice and TierCompare do not exist until PR4; the card's words
-    // carry no "free for now" copy today, so this asserts the current state
-    // and becomes a real gate check when PR4 adds gated copy there.
-    for (const f of ['lib/card-copy.ts', 'lib/cta-copy.ts']) expect(read(f).toLowerCase(), f).not.toContain('free for now');
+  it('no source file brings the string back', () => {
+    for (const f of ['lib/tiers.ts', 'components/ui/Badge.tsx', 'lib/card-copy.ts', 'lib/cta-copy.ts', 'app/tools/page.tsx']) {
+      expect(read(f).toLowerCase(), f).not.toContain('free for now');
+    }
   });
 });
 

@@ -38,8 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const nicheData = getNicheById(niche);
   return genMeta({
     title: `${nicheData?.name ?? niche} Privacy Tools`,
-    // The Pro deployment's hubs list Pro tools, which are not "free" except
-    // through the PRO_WEB_GATED badge, so only the free site says Free here.
+    // Only the free site calls its tools free; the Pro hubs name the tier.
     description: `${IS_PRO_DEPLOYMENT ? 'Incognito Pro privacy tools' : 'Free privacy tools'} tailored to ${nicheData?.name ?? niche}.`,
     path: `/tools/${niche}`,
     type: 'website',

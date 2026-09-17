@@ -250,7 +250,6 @@ export default function ToolsIndex() {
           data-pro-band
         >
           <div className="min-w-0">
-            {/* No "free for now" of its own: each card's Pro badge carries it, and PRO_WEB_GATED removes it there on gate day. */}
             <h2 className="font-mono text-h2 font-semibold text-t1 mb-4">Four Pro tools, on the web</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[...PRO_ENGINES].map(engine => {

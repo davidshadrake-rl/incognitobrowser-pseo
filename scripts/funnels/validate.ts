@@ -81,7 +81,7 @@ const BANNED: Array<[RegExp, string]> = [
   [/\$|€|£|\bper (month|year)\b|\/mo\b|\bpricing\b|\bprice\b/i, 'price'],
   [/\b(January|February|March|April|May|June|July|August|September|October|November|December)\b|\b20\d\d\b/, 'date'],
   [/\b(safe to|guarantee|compliant|compliance-ready|legitimate|100%)\b/i, 'overclaim word'],
-  [/\bfree for now\b/i, '"free for now" belongs to the Pro badge only'],
+  [/\bfree for now\b/i, '"free for now" is retired: a Pro tool is labelled PRO (owner, 2026-09-17)'],
   // Pro is only what data/brand.json `pro` lists (owner, 2026-09-16). "The Pro tools site" names a real section; "the deeper privacy tools" sold a bundle Pro doesn't have.
   [/\b(deeper|advanced) privacy tools\b/i, 'Pro claim brand.json does not back'],
 ];

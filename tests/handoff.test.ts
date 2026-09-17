@@ -79,3 +79,34 @@ describe('pageLinkFor — nothing from the query string reaches the email body',
     expect(pageLinkFor('/relative?x=1#h')).toBe('/relative');
   });
 });
+
+/**
+ * The desktop / iPhone button (components/UpgradeButtons.tsx handoffLabel).
+ *
+ * This is the one upgrade button that reaches a visitor who cannot act on it
+ * where they stand, so it has two jobs: name the platform, so nobody taps
+ * expecting to finish here, and name the outcome they just saw evidence for.
+ * It used to say only "Get Pro on Android", which did the first and dropped
+ * the second (owner, 2026-09-17).
+ */
+describe('handoffLabel', () => {
+  it('names the benefit and the platform, inside the button limit', async () => {
+    const { handoffLabel, HANDOFF_LABEL } = await import('../components/UpgradeButtons');
+    const { CARD_LIMITS, PRO_LINE } = await import('../lib/card-copy');
+    for (const benefit of Object.keys(PRO_LINE)) {
+      const label = handoffLabel(benefit);
+      expect(label, benefit).not.toBe(HANDOFF_LABEL);
+      expect(label, benefit).toMatch(/ on Android$/);
+      expect(label.length, `${benefit}: "${label}"`).toBeLessThanOrEqual(CARD_LIMITS.button);
+      // It never says how Pro is billed, and never names a price (owner, 2026-09-17).
+      expect(label).not.toMatch(/subscri|billed|cancel|trial|\$|\/(week|month|year)/i);
+    }
+  });
+
+  it('falls back to the plain platform label when no benefit reached the button', async () => {
+    const { handoffLabel, HANDOFF_LABEL } = await import('../components/UpgradeButtons');
+    expect(handoffLabel(undefined)).toBe(HANDOFF_LABEL);
+    expect(handoffLabel('not-a-benefit')).toBe(HANDOFF_LABEL);
+    expect(HANDOFF_LABEL).toMatch(/Android/);
+  });
+});

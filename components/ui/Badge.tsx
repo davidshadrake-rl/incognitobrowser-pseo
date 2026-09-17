@@ -9,7 +9,7 @@
  *
  * Server-safe (no hooks) so it renders in both server and client trees.
  */
-import { PRO_DEFINITION, PRO_FREE_FOR_NOW_TITLE, PRO_WEB_GATED } from '@/lib/tiers';
+import { PRO_DEFINITION } from '@/lib/tiers';
 
 export type BadgeVariant = 'free' | 'pro' | 'ok' | 'warn' | 'danger' | 'info' | 'neutral' | 'difficulty' | 'grade';
 
@@ -59,7 +59,7 @@ export function Badge({
   className = '',
 }: {
   variant?: BadgeVariant | string;
-  /** Visible text. Defaults per variant (free "Free tool", pro "free for now" / "Pro tool"). */
+  /** Visible text. Defaults per variant (free "Free tool"; pro is the PRO block alone). */
   label?: string;
   title?: string;
   /** Pro only: render the blue block alone, no label. */
@@ -68,8 +68,12 @@ export function Badge({
 }) {
   const v = resolveBadgeVariant(variant);
   const isPro = v === 'pro';
-  const text = label ?? (isPro ? (PRO_WEB_GATED ? 'Pro tool' : 'free for now') : LABEL[v]);
-  const tip = title ?? (isPro ? (PRO_WEB_GATED ? PRO_DEFINITION : PRO_FREE_FOR_NOW_TITLE) : undefined);
+  // Owner, 2026-09-17: a Pro tool is labelled PRO, like anything else you pay
+  // for. The badge used to hedge that the tool cost nothing on the web yet,
+  // which taught visitors Pro was a label rather than a product, and left the
+  // result card to do the whole job of selling.
+  const text = label ?? (isPro ? undefined : LABEL[v]);
+  const tip = title ?? (isPro ? PRO_DEFINITION : undefined);
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-[4px] border px-1.5 py-0.5 font-mono text-[11px] tracking-[.04em] ${LOOK[v]} ${className}`}

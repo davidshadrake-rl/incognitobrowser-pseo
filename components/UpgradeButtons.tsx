@@ -9,7 +9,7 @@
  *   data-upgrade-* attributes and opens the app's own upgrade screen.
  *
  *   Desktop and iPhone: Incognito Pro is an Android app, so nobody here can
- *   subscribe on the spot. The button says so ("Get Pro on Android") and still
+ *   subscribe on the spot. The button says so ("… on Android") and still
  *   opens Play (which can install to a phone); two quiet links hand the link
  *   over instead: email it to yourself, or copy it.
  */
@@ -35,7 +35,7 @@ interface Props {
   term?: string;
   /** The page URL to put in the emailed hand-off. */
   pageUrl?: string;
-  /** The button's words on Android. Inside the app it is always "Upgrade to Pro"; on other devices "Get Pro on Android". */
+  /** The button's words on Android. Inside the app it is always "Upgrade to Pro"; elsewhere handoffLabel() names the benefit and the platform. */
   label?: string;
   /** The Pro benefit this ask sells (lib/card-copy.ts), for the app's upgrade screen. */
   benefit?: Benefit;
@@ -56,6 +56,22 @@ const serverHref = () => '';
 
 /** The button's words on a device that can't install the app on the spot. */
 export const HANDOFF_LABEL = 'Get Pro on Android';
+/**
+ * The desktop / iPhone button. It has two jobs: say this is an Android thing,
+ * so nobody taps expecting to finish here, and name the outcome the visitor
+ * just saw evidence for. Naming only the product ("Get Pro on Android") did
+ * the first job and dropped the second, so the one button that reaches a
+ * visitor on the wrong device was also the vaguest (owner, 2026-09-17).
+ * All within the 28-character button limit (lib/card-copy.ts CARD_LIMITS).
+ */
+const HANDOFF_BY_BENEFIT: Record<Benefit, string> = {
+  'tracker-blocking': 'Block trackers on Android',
+  'hides-ad-boxes': 'Hide ad boxes on Android',
+  'photo-cleaning': 'Clean photos on Android',
+};
+export function handoffLabel(benefit?: string): string {
+  return (benefit && HANDOFF_BY_BENEFIT[benefit as Benefit]) || HANDOFF_LABEL;
+}
 
 export function UpgradeButtons({ engine, niche, severity, from, content, term, pageUrl, label, benefit, onClick, children }: Props) {
   const platform = useSyncExternalStore(noSubscribe, () => detectPlatform(), serverPlatform);
@@ -113,7 +129,7 @@ export function UpgradeButtons({ engine, niche, severity, from, content, term, p
           data-upgrade-benefit={benefit}
           className="btn-pro"
         >
-          {inApp ? IN_APP_COPY.button : direct ? label ?? 'Get the app, then upgrade to Pro' : HANDOFF_LABEL}
+          {inApp ? IN_APP_COPY.button : direct ? label ?? 'Get the app, then upgrade to Pro' : handoffLabel(benefit)}
         </a>
         {!direct && (
           <span className="rc-links">
