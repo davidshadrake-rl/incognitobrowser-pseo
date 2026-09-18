@@ -34,7 +34,12 @@ npm test --silent >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
 site() {  # label, folder, extra build env
   echo "== build $1"
   rm -rf out .next
-  env NEXT_PUBLIC_FREE_URL="$SITE_ORIGIN/resources" NEXT_PUBLIC_PRO_URL="$SITE_ORIGIN/resources-pro" $3 \
+  # NEXT_PUBLIC_SCAN_API=/api: the seven server routes run as the ib-api
+  # systemd service on 127.0.0.1:3100, reverse-proxied by Apache at /api/
+  # (API-ON-DROPLET.md). Same origin, so no CORS; namespaced under /api so it
+  # can never collide with a WordPress permalink in the same DocumentRoot.
+  env NEXT_PUBLIC_FREE_URL="$SITE_ORIGIN/resources" NEXT_PUBLIC_PRO_URL="$SITE_ORIGIN/resources-pro" \
+    NEXT_PUBLIC_SCAN_API=/api $3 \
     BUILD_TARGET=static BASE_PATH="$2" npx next build >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
   find out -type d -name '_pro_export_placeholder_' -exec rm -rf {} +
   node scripts/audit-links.mjs out --mode static --base "$2"
