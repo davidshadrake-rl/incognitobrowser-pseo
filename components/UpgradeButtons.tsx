@@ -18,6 +18,27 @@ import type { Severity } from '@/components/tools/ResultContext';
 import { PRO_LINE, type Benefit } from '@/lib/card-copy';
 import { IN_APP_COPY } from '@/lib/cta-copy';
 import { playUrl } from '@/lib/play';
+
+/**
+ * DEMO SWITCH (owner, 2026-09-17): every "Get Pro on Android" upgrade button
+ * points at the other product's staging paywall instead of the Play listing,
+ * as a demo of the CTA. Scoped to this file only — the header, footer and
+ * home-hero "install the free app" buttons (app/layout.tsx, app/page.tsx) go
+ * through lib/play.ts playUrl() directly and are never affected by this.
+ * Flip DEMO_UPGRADE_URL back to '' to restore the real upgrade links — that
+ * one line is the whole rollback. While it's set:
+ *   - no install referrer is sent (a non-Play page won't read it), so
+ *     scripts/funnels/stats.ts loses install attribution for every upgrade click;
+ *   - isUpgradeLink() below no longer matches these links (it checks for
+ *     play.google.com/store/apps/details via lib/in-app.ts), so a tap inside
+ *     the app opens this page in the WebView instead of the app's native
+ *     upgrade screen;
+ *   - the footnote under the button ("Pro is part of the free Incognito
+ *     Browser app. Android only.") and the in-app label ("Upgrade to Pro")
+ *     no longer describe where the tap goes.
+ * Do not ship this beyond the agreed demo without revisiting those three.
+ */
+export const DEMO_UPGRADE_URL = 'https://staging.ufile.io/pricing';
 import { handoffGmailUrl, handoffMailBody, handoffMailto } from '@/lib/handoff';
 import { detectPlatform, isInsideIncognitoApp, type Platform } from '@/lib/track';
 
@@ -28,7 +49,7 @@ interface Props {
   niche?: string;
   severity?: Severity;
   /** Where the ask sits. The app's upgrade screen and the Play referrer both get it. */
-  from: 'result' | 'funnel' | 'report-card';
+  from: 'result' | 'funnel' | 'report-card' | 'band';
   /** Play referrer content: the benefit this ask sells, else the niche or "grade-D". */
   content?: string;
   /** Play referrer term: the page type. */
@@ -80,7 +101,7 @@ export function UpgradeButtons({ engine, niche, severity, from, content, term, p
   const [mailFallback, setMailFallback] = useState(false);
   const [msgCopied, setMsgCopied] = useState(false);
 
-  const play = playUrl({ medium: from === 'funnel' ? 'funnel' : 'cta', campaign: engine, content: benefit || content || niche, term });
+  const play = DEMO_UPGRADE_URL || playUrl({ medium: from === 'funnel' ? 'funnel' : 'cta', campaign: engine, content: benefit || content || niche, term });
   const liveHref = useSyncExternalStore(noSubscribe, hrefNow, serverHref);
   const pageHref = pageUrl || liveHref;
   // See lib/handoff.ts: CRLF body (RFC 6068 — bare "\n" breaks Outlook on Windows), hash stripped.
