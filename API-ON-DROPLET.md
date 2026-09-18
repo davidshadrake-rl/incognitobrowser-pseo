@@ -55,6 +55,23 @@ copy of the vhost before editing it.
   `scripts/deploy-prod-bitnami.sh` (a live WordPress/AWS deploy path),
   `CUTOVER-EC2.md`, and the `test:e2e:vercel` npm script.
 
+## Status: done, 2026-09-18
+
+All of the below was carried out and verified on the live droplet. Kept as the
+record of what was changed, and as the procedure to repeat if the box is ever
+rebuilt.
+
+Verified working through Apache after cutover:
+`/api/ip` returns the caller's real address · `/api/challenge` issues a valid
+ALTCHA challenge · `/api/event` returns 202 and Redis holds the counters ·
+What's My IP, and the Cookie & Tracker Scanner in URL mode, both return real
+results in a browser · WordPress and both static sites still serve 200.
+
+**The API is namespaced under `/api/`**, not proxied at the root as originally
+drafted. This DocumentRoot is a WordPress install, and a root-level proxy for
+`/ip`, `/event` or `/stats` would silently shadow any permalink WordPress adds
+at those paths later. One rule instead of six.
+
 ## Steps on the droplet
 
 Run as a user with sudo. Nothing here restarts MySQL or touches WordPress.
@@ -137,23 +154,15 @@ sudo a2enmod proxy proxy_http headers
 sudo cp /etc/apache2/sites-available/<the-vhost>.conf ~/vhost-backup-$(date +%F).conf
 ```
 
-Inside the `:443` vhost, **above** any static aliases:
+Inside the `:443` vhost (`000-default-le-ssl.conf`), before `</VirtualHost>`.
+The trailing slashes strip the prefix, so `/api/challenge` reaches the service
+as `/challenge`:
 
 ```apache
 <IfModule mod_proxy.c>
   ProxyPreserveHost On
-  ProxyPass        /challenge      http://127.0.0.1:3100/challenge
-  ProxyPassReverse /challenge      http://127.0.0.1:3100/challenge
-  ProxyPass        /scan-url       http://127.0.0.1:3100/scan-url
-  ProxyPassReverse /scan-url       http://127.0.0.1:3100/scan-url
-  ProxyPass        /ip             http://127.0.0.1:3100/ip
-  ProxyPassReverse /ip             http://127.0.0.1:3100/ip
-  ProxyPass        /event          http://127.0.0.1:3100/event
-  ProxyPassReverse /event          http://127.0.0.1:3100/event
-  ProxyPass        /dns-leak       http://127.0.0.1:3100/dns-leak
-  ProxyPassReverse /dns-leak       http://127.0.0.1:3100/dns-leak
-  ProxyPass        /stats          http://127.0.0.1:3100/stats
-  ProxyPassReverse /stats          http://127.0.0.1:3100/stats
+  ProxyPass        /api/  http://127.0.0.1:3100/  retry=0 timeout=30
+  ProxyPassReverse /api/  http://127.0.0.1:3100/
 </IfModule>
 ```
 
@@ -183,6 +192,33 @@ results, not a network error.
 `sudo systemctl stop ib-api` and remove the proxy block. The static site keeps
 serving; the three server-backed tools go back to failing. There is no Vercel
 to fall back to once the account is closed, so verify before cutting over.
+
+## Outstanding: the DNS leak test's nameserver
+
+The DNS leak test's **server routes migrated fine** — `/api/dns-leak/start`
+creates its record in the new Redis, and `/api/dns-leak/result` answers. But the
+test reports *"inconclusive — no DNS query reached our nameserver"*, and it will
+keep doing so, because the other half has never existed in DNS:
+
+```
+$ dig +short NS  dnsleak.incognitobrowser.io   # (empty)
+$ dig +short SOA dnsleak.incognitobrowser.io   # (empty)
+$ dig +short NS  incognitobrowser.io           # ns-575.awsdns-07.net. …
+```
+
+The parent zone resolves; the `dnsleak` subdomain has no NS and no SOA, so no
+resolver can ever reach a nameserver for it. **This is pre-existing and not
+caused by the move** — it would have been inconclusive on the old platform too.
+
+To make the test work, all three must be true at once:
+1. `scripts/dnsleak-server.mjs` runs somewhere reachable on UDP 53,
+2. `dnsleak.incognitobrowser.io` is delegated to it with an NS record, and
+3. it writes to the *same* Redis the API reads — now `redis://127.0.0.1:6379`
+   on this droplet, so it most naturally runs here too.
+
+Step 2 means editing DNS for `incognitobrowser.io`, whose nameservers are AWS
+Route 53. That is a DNS record change, not the AWS compute that is off limits —
+but it is the owner's call, so nothing here touches it.
 
 ## What is deliberately not carried over
 
