@@ -12,7 +12,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { ProofRoute, ProofCopy } from '../lib/proof-route';
 
-const PRO_ENGINES = ['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer'];
+const PRO_ENGINES = ['cookie-analyzer', 'browser-privacy', 'metadata-viewer']; // mirror of lib/tiers PRO_ENGINES — url-analyzer moved to free 2026-09-17
 let proofToolFor: (niche: string) => ProofRoute | null;
 let NO_FITTING_TOOL: Set<string>;
 let PROOF_COPY: Record<string, ProofCopy>;

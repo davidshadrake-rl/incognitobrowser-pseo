@@ -12,7 +12,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 type Schema = Record<string, unknown> & { offers?: { '@type': string; price: string; priceCurrency: string } };
 type Generate = (name: string, description: string, url: string, engine?: string) => Schema;
 
-const PRO_ENGINES = ['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer'];
+const PRO_ENGINES = ['cookie-analyzer', 'browser-privacy', 'metadata-viewer']; // mirror of lib/tiers PRO_ENGINES — url-analyzer moved to free 2026-09-17
 const ORIGINAL_TIER = process.env.NEXT_PUBLIC_TIER;
 
 async function load(tier: 'free' | 'pro'): Promise<Generate> {

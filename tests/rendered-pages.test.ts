@@ -479,7 +479,7 @@ describe.skipIf(!HAS_TARGET)('website privacy report cards', () => {
  * The Pro path list is derived from data/ so the guard follows the data.
  */
 describe.skipIf(!HAS_TARGET)('free/Pro split — Pro tools are absent from the free site', () => {
-  const PRO_ENGINES = new Set(['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer']);
+  const PRO_ENGINES = new Set(['cookie-analyzer', 'browser-privacy', 'metadata-viewer']); // mirror of lib/tiers PRO_ENGINES — url-analyzer moved to free 2026-09-17
   const toolsRoot = path.join(process.cwd(), 'data', 'tools');
   const byNiche: Record<string, { slug: string; pro: boolean; published: boolean }[]> = {};
   for (const niche of fs.readdirSync(toolsRoot)) {
@@ -501,9 +501,9 @@ describe.skipIf(!HAS_TARGET)('free/Pro split — Pro tools are absent from the f
   // Same-site hrefs only: absolute links to the Pro deployment are the intended hand-off.
   const sameSiteHref = (p: string) => new RegExp(`href="(?:/resources)?${esc(p)}/?"`);
 
-  it('derives the agreed 22 Pro tool paths and the free ones from data (free grew with the funnel tools)', () => {
-    expect(PRO_PATHS.length).toBe(22);
-    expect(FREE_PATHS.length).toBeGreaterThanOrEqual(24);
+  it('derives the agreed 19 Pro tool paths and the free ones from data (url-analyzer moved free 2026-09-17)', () => {
+    expect(PRO_PATHS.length).toBe(19);
+    expect(FREE_PATHS.length).toBeGreaterThanOrEqual(32);
     // 6 privacy-quiz duplicates are deliberate drafts: built (noindex) but never listed.
     expect(FREE_PATHS.length - FREE_PUBLISHED_PATHS.length).toBe(6);
   });
@@ -649,7 +649,17 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
     expect(r.body).toMatch(/data-scorecard="report-card"/);
     expect(r.body.indexOf('data-scorecard="report-card"')).toBeLessThan(r.body.indexOf('Every point, itemised'));
     expect(r.body).not.toMatch(/\{grade/);
-    expect(r.body).toMatch(/utm_medium%3Dcta[^"]*utm_content%3D(tracker-blocking|hides-ad-boxes|photo-cleaning)[^"]*utm_term%3Dreport-card/);
+    // Owner, 2026-09-17: while components/UpgradeButtons.tsx's DEMO_UPGRADE_URL
+    // is set, the upgrade button goes to the demo paywall instead of Play, so
+    // it carries no referrer — expected and temporary, not a regression.
+    // Assert against the live switch itself, so this reverts for free the
+    // moment the demo is turned off.
+    const { DEMO_UPGRADE_URL } = await import('../components/UpgradeButtons');
+    if (DEMO_UPGRADE_URL) {
+      expect(r.body, 'the upgrade button should point at the demo URL while it is set').toContain(`href="${DEMO_UPGRADE_URL}"`);
+    } else {
+      expect(r.body).toMatch(/utm_medium%3Dcta[^"]*utm_content%3D(tracker-blocking|hides-ad-boxes|photo-cleaning)[^"]*utm_term%3Dreport-card/);
+    }
   });
   it('every Play link on sampled pages carries an attributed referrer and no template residue', async () => {
     for (const route of ['/', '/tools/', ROUTES.publishedGuide, '/site/google.com/']) {
@@ -666,13 +676,14 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
   it('the free tools catalogue points at Incognito Pro for the Pro-only tools and features What\'s My IP', async () => {
     const r = await fetchText('/tools/');
     // DESIGN-SPEC 5.3 (PR2): the single "Incognito Pro →" lede link was
-    // replaced by the Pro band, which hand-lists the four Pro tools with
+    // replaced by the Pro band, which hand-lists the Pro tools with
     // absolute PRO_BASE_URL hrefs (never through the link generators).
     // PR4's guard forbids the old "Incognito Pro →" string outright, so this
-    // now asserts the band and its four cross-deployment tool links.
+    // now asserts the band and its cross-deployment tool links. Three, not
+    // four, since url-analyzer moved to the free tier (owner, 2026-09-17).
     expect(r.body).toMatch(/data-pro-band/);
     const proLinks = new Set((r.body.match(/href="https:\/\/[^"]+\/tools\/[a-z0-9-]+\/[a-z0-9-]+"/g) || []));
-    expect(proLinks.size).toBeGreaterThanOrEqual(4);
+    expect(proLinks.size).toBeGreaterThanOrEqual(3);
     expect(r.body).toMatch(/WebRTC Leak Test/);
   });
   it('the header serves phones: a no-JS menu and an always-visible CTA', async () => {
@@ -746,7 +757,7 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
  * page, not a sample, and would have caught the original gap.
  */
 describe.skipIf(!HAS_TARGET)('every published free tool renders "What to do now"', () => {
-  const PRO_ENGINES = ['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer'];
+  const PRO_ENGINES = ['cookie-analyzer', 'browser-privacy', 'metadata-viewer']; // mirror of lib/tiers PRO_ENGINES — url-analyzer moved to free 2026-09-17
   const toolsRoot = path.join(process.cwd(), 'data', 'tools');
   const publishedFreeTools: string[] = [];
   for (const niche of fs.readdirSync(toolsRoot)) {

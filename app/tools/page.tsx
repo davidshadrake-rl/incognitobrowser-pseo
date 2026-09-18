@@ -9,11 +9,14 @@ import { PageHero } from '@/components/ui/PageHero';
 import { PhoneFrame } from '@/components/ui/PhoneFrame';
 import { PageFunnel } from '@/components/PageFunnel';
 import { funnelFor } from '@/lib/funnels';
+import { UpgradeButtons } from '@/components/UpgradeButtons';
+import { PRO_DEFINITION } from '@/lib/tiers';
+import { PLAY_PROOF, DATA_SAFETY_URL } from '@/lib/card-copy';
 
 export const metadata = genMeta({
   title: IS_PRO_DEPLOYMENT ? 'Pro Privacy Tools' : 'Free Privacy Tools',
   description: IS_PRO_DEPLOYMENT
-    ? 'Pro privacy tools: cookie & tracker scanner, browser privacy audit, URL safety checker and image metadata viewer.'
+    ? 'Pro privacy tools: cookie & tracker scanner, browser privacy audit and image metadata viewer.'
     : 'Free privacy tools: What\'s My IP with WebRTC leak test, password strength checker, secure password generator, hash generator, text encryption, permission checker, user-agent analyzer and a privacy quiz.',
   path: '/tools',
   type: 'website',
@@ -126,7 +129,7 @@ const FEATURED_TOOLS: { engine: string; title: string; blurb: string }[] = [
 
 // The four most-trafficked engines per tier get the 56px instrument-panel treatment.
 const INSTRUMENT_ENGINES = IS_PRO_DEPLOYMENT
-  ? ['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer']
+  ? ['cookie-analyzer', 'browser-privacy', 'metadata-viewer']
   : ['whats-my-ip', 'password-strength', 'dns-leak-test', 'ad-blocker-test'];
 
 export default function ToolsIndex() {
@@ -242,7 +245,26 @@ export default function ToolsIndex() {
         })}
       </div>
 
-      {/* TierCompare goes here in PR4 (DESIGN-SPEC 6.2) */}
+      {IS_PRO_DEPLOYMENT && (
+        // Every other in-body ask on this site waits for a result (owner,
+        // 2026-09-16); this index has no result to wait for, so this is a
+        // standing ask instead — the one exception, not a precedent. No
+        // device image (owner rule): the shared PRO_DEFINITION and the dated
+        // Play proof carry the whole pitch.
+        <div
+          className="relative overflow-hidden bg-s0 border border-b1 rounded-[16px] p-6 mb-16 before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pro ib-upgrade"
+          data-pro-band
+        >
+          <h2 className="font-mono text-h2 font-semibold text-t1 mb-2">What Pro adds in the app</h2>
+          <p className="text-body text-t2 max-w-[62ch] mb-4">{PRO_DEFINITION}</p>
+          <UpgradeButtons engine="cookie-analyzer" from="band" benefit="tracker-blocking" />
+          <p className="rc-proof mt-3">
+            {PLAY_PROOF}
+            <span className="rc-proof-more"> · <a href={DATA_SAFETY_URL} target="_blank" rel="noopener" className="underline underline-offset-2 hover:text-t1">Data safety</a></span>
+          </p>
+        </div>
+      )}
+
 
       {!IS_PRO_DEPLOYMENT && (
         <div
@@ -250,7 +272,7 @@ export default function ToolsIndex() {
           data-pro-band
         >
           <div className="min-w-0">
-            <h2 className="font-mono text-h2 font-semibold text-t1 mb-4">Four Pro tools, on the web</h2>
+            <h2 className="font-mono text-h2 font-semibold text-t1 mb-4">Pro tools, on the web</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {[...PRO_ENGINES].map(engine => {
                 const tool = FEATURED_TOOLS.find(t => t.engine === engine);

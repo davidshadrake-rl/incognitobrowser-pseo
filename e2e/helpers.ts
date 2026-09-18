@@ -35,7 +35,7 @@ export const TOOL_PATHS: Record<string, string> = {
  * and keep it for static-export environments.
  */
 /** Engines that exist only on the Pro deployment (mirror of lib/tiers PRO_ENGINES). */
-export const PRO_ENGINES = new Set(['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer']);
+export const PRO_ENGINES = new Set(['cookie-analyzer', 'browser-privacy', 'metadata-viewer']); // mirror of lib/tiers PRO_ENGINES — url-analyzer moved to free 2026-09-17
 
 /** Pro tools are tested against E2E_PRO_BASE_URL; without it their tests skip. */
 export function hasProTarget(): boolean {

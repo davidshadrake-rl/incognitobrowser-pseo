@@ -2,7 +2,7 @@
  * lib/tiers — Free / Pro split (decided 2026-09-07).
  *
  * Guards:
- *   - exactly the four agreed engines are Pro
+ *   - exactly the three agreed engines are Pro
  *   - the free deployment shows only free engines; the Pro deployment only Pro ones
  *     (2026-09-08: "pro tools are still in the free privacy tools catalogue" → clean split)
  *   - URL defaults are overridable and never trailing-slashed
@@ -18,11 +18,11 @@ async function load(env: Record<string, string | undefined>) {
 }
 afterEach(() => { vi.resetModules(); });
 
-const PRO = ['cookie-analyzer', 'browser-privacy', 'url-analyzer', 'metadata-viewer'];
-const FREE = ['whats-my-ip', 'password-strength', 'password-generator', 'hash-generator', 'useragent-analyzer', 'permission-checker', 'privacy-quiz', 'text-encryption'];
+const PRO = ['cookie-analyzer', 'browser-privacy', 'metadata-viewer'];
+const FREE = ['whats-my-ip', 'password-strength', 'password-generator', 'hash-generator', 'useragent-analyzer', 'permission-checker', 'privacy-quiz', 'text-encryption', 'url-analyzer'];
 
 describe('tierOfEngine', () => {
-  it('marks exactly the four agreed engines as pro', async () => {
+  it('marks exactly the three agreed engines as pro', async () => {
     const { tierOfEngine, PRO_ENGINES } = await load({});
     expect([...PRO_ENGINES].sort()).toEqual([...PRO].sort());
     for (const e of PRO) expect(tierOfEngine(e)).toBe('pro');
@@ -108,35 +108,43 @@ describe('isToolVisible / isToolListed (lib/content) follow the tier', () => {
   });
 });
 
-describe('playInstallUrl attribution', () => {
-  // The real Play-link logic (lib/play.ts playInstallUrl), tested directly so
-  // it stays correct while DEMO_UPGRADE_URL short-circuits playUrl() below
-  // (owner, 2026-09-17: every upgrade link currently goes to the other
-  // product's staging paywall instead — see that file's header comment for
-  // what stops working meanwhile).
+describe('playUrl attribution', () => {
+  // lib/play.ts playUrl() always returns a real Play link. It backs the
+  // header, footer and home-hero "install the free app" buttons directly
+  // (app/layout.tsx, app/page.tsx), so it must never be redirected — the
+  // upgrade-CTA demo switch below lives in components/UpgradeButtons.tsx
+  // instead, precisely so it cannot touch this function (owner, 2026-09-17:
+  // an earlier version of the switch lived here and silently redirected the
+  // free-app install links too — caught before it shipped).
   it('carries source/medium/campaign/content/term in the install referrer, source by tier', async () => {
     vi.resetModules(); delete process.env.NEXT_PUBLIC_TIER;
-    const { playInstallUrl, parsePlayReferrer } = await import('../lib/play');
-    const u = playInstallUrl({ medium: 'cta', campaign: 'whats-my-ip', content: 'vpn-privacy', term: 'tool' });
+    const { playUrl, parsePlayReferrer } = await import('../lib/play');
+    const u = playUrl({ medium: 'cta', campaign: 'whats-my-ip', content: 'vpn-privacy', term: 'tool' });
     expect(u.startsWith('https://play.google.com/store/apps/details?id=com.androidbull.incognito.browser')).toBe(true);
     expect(parsePlayReferrer(u)).toEqual({ utm_source: 'resources', utm_medium: 'cta', utm_campaign: 'whats-my-ip', utm_content: 'vpn-privacy', utm_term: 'tool' });
     // A result card's button sends the benefit it sold as utm_content; the app team reads these ids as they are.
     for (const benefit of ['tracker-blocking', 'hides-ad-boxes', 'photo-cleaning']) {
-      expect(parsePlayReferrer(playInstallUrl({ medium: 'funnel', campaign: 'ad-blocker-test', content: benefit, term: 'guide' })).utm_content).toBe(benefit);
+      expect(parsePlayReferrer(playUrl({ medium: 'funnel', campaign: 'ad-blocker-test', content: benefit, term: 'guide' })).utm_content).toBe(benefit);
     }
     vi.resetModules(); process.env.NEXT_PUBLIC_TIER = 'pro';
     const pro = await import('../lib/play');
-    expect(pro.parsePlayReferrer(pro.playInstallUrl({ medium: 'site', campaign: 'header' })).utm_source).toBe('pro');
+    expect(pro.parsePlayReferrer(pro.playUrl({ medium: 'site', campaign: 'header' })).utm_source).toBe('pro');
     delete process.env.NEXT_PUBLIC_TIER;
+  });
+
+  it('is never redirected by the UpgradeButtons demo switch', async () => {
+    // Two separate modules, deliberately: importing UpgradeButtons (a 'use
+    // client' component) must not change what playUrl() itself returns.
+    await import('../components/UpgradeButtons');
+    const { playUrl } = await import('../lib/play');
+    expect(playUrl({ medium: 'site', campaign: 'header' })).toMatch(/^https:\/\/play\.google\.com\/store\/apps\/details/);
   });
 });
 
-describe('playUrl demo switch', () => {
-  it('while DEMO_UPGRADE_URL is set, every upgrade link goes to the staging paywall instead of Play', async () => {
+describe('UpgradeButtons demo switch', () => {
+  it('while DEMO_UPGRADE_URL is set, only the upgrade CTA is redirected — never lib/play.ts playUrl()', async () => {
     vi.resetModules();
-    const { playUrl, DEMO_UPGRADE_URL } = await import('../lib/play');
+    const { DEMO_UPGRADE_URL } = await import('../components/UpgradeButtons');
     expect(DEMO_UPGRADE_URL).toBe('https://staging.ufile.io/pricing');
-    expect(playUrl({ medium: 'cta', campaign: 'whats-my-ip' })).toBe(DEMO_UPGRADE_URL);
-    expect(playUrl({ medium: 'site', campaign: 'header' })).toBe(DEMO_UPGRADE_URL);
   });
 });

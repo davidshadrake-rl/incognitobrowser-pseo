@@ -1,9 +1,15 @@
 /**
  * Free / Pro tool tiers — one source of truth.
  *
- * Decided 2026-09-07: four engines are Pro and live on a separate
+ * Decided 2026-09-07: three engines are Pro and live on a separate
  * deployment (same repo, second Vercel project, NEXT_PUBLIC_TIER=pro).
  * There is no gate yet — "for now we are simply dividing the tools up".
+ *
+ * Moved 2026-09-17: url-analyzer left PRO_ENGINES for the free deployment.
+ * Pro has no link-safety benefit (its card always fell through to
+ * "Separately," — correct wording, not a bug), so keeping the tool on the
+ * noindex Pro site cost the free site its best buyer-intent queries
+ * ("is this link safe") for nothing url-analyzer's own card could sell.
  *
  * How the flag behaves:
  *   NEXT_PUBLIC_TIER=free (default) — the marketing site. Shows ONLY the
@@ -25,9 +31,12 @@ export type Tier = 'free' | 'pro';
 
 /**
  * The definition of Pro every surface shares. Import it, never paraphrase it.
- * "Pro" alone always means the paid app tier; the second deployment is
- * "the Pro tools site", never "Incognito Pro". What it adds is exactly
- * data/brand.json's `pro` outcomes (owner, 2026-09-16).
+ * "Pro" alone always means the paid app tier. The second deployment showing
+ * itself as "Incognito Pro" is accurate, not a naming slip (owner,
+ * 2026-09-17): these tool pages ARE the tools sold as part of the larger Pro
+ * package in the free app, so the site naming them that is the honest label,
+ * not an overclaim. What Pro adds is exactly data/brand.json's `pro`
+ * outcomes (owner, 2026-09-16).
  */
 export const PRO_DEFINITION =
   'Incognito Pro is the paid tier of the free Incognito Browser Android app. It blocks tracking scripts and pixels (the free app already blocks ads), hides the empty boxes blocked ads leave, and strips location and other metadata from a whole folder of photos at once.';
@@ -49,7 +58,6 @@ export const PRO_FOOTNOTE = 'Pro is part of the free Incognito Browser app. Andr
 export const PRO_ENGINES = new Set<string>([
   'cookie-analyzer',
   'browser-privacy',
-  'url-analyzer',
   'metadata-viewer', // the one-photo reader; Pro's batch cleaning handles whole folders
 ]);
 
