@@ -302,12 +302,34 @@ export async function rateLimit(
 
 /**
  * Extract client IP from request headers.
- * Checks Cloudflare/standard proxy headers.
+ *
+ * Takes the RIGHTMOST X-Forwarded-For entry, not the leftmost, and this is the
+ * whole security property of the function: every value in that header except
+ * the last was supplied by someone upstream of our own proxy, which means by
+ * the client. Apache's mod_proxy_http APPENDS the real peer address rather
+ * than replacing the header, so a request sent with
+ * `X-Forwarded-For: 1.2.3.4` arrives as `1.2.3.4, <real peer>`. Reading the
+ * leftmost entry therefore returned an attacker-chosen string, and since this
+ * function is what buckets the rate limiter (getIpBucket below), every per-IP
+ * limit could be bypassed by rotating one header — verified against the live
+ * host on 2026-09-18 and fixed the same day.
+ *
+ * The deployment this is written for has exactly ONE trusted proxy (Apache on
+ * the same droplet, API-ON-DROPLET.md), so the last entry is the only one it
+ * wrote itself. That vhost also strips the client-supplied variants, so this
+ * is deliberately belt and braces: either control alone closes the hole, and
+ * losing one — a restored vhost backup, a rebuilt box — must not silently
+ * reopen it.
+ *
+ * cf-connecting-ip / x-real-ip are read only when no X-Forwarded-For exists.
+ * Nothing upstream sets them today; they are equally forgeable and equally
+ * stripped at the proxy.
  */
 export function getClientIP(headers: Headers): string {
   const xForwardedFor = headers.get('x-forwarded-for');
   if (xForwardedFor) {
-    return xForwardedFor.split(',')[0].trim();
+    const hops = xForwardedFor.split(',').map((h) => h.trim()).filter(Boolean);
+    if (hops.length) return hops[hops.length - 1];
   }
   const cfConnecting = headers.get('cf-connecting-ip');
   if (cfConnecting) return cfConnecting;

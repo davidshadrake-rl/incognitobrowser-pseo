@@ -161,9 +161,32 @@ as `/challenge`:
 ```apache
 <IfModule mod_proxy.c>
   ProxyPreserveHost On
+  # REQUIRED, not optional. The app derives the rate-limiting client IP from
+  # these headers. mod_proxy_http APPENDS the real peer to X-Forwarded-For
+  # rather than replacing it, so without these four lines a request carrying
+  # `X-Forwarded-For: 1.2.3.4` arrives as `1.2.3.4, <real peer>` and a forged
+  # value can win. Verified exploitable against this host on 2026-09-18 —
+  # every per-IP limit was bypassable by rotating one header — and fixed the
+  # same day, here and in lib/rate-limit.ts (which now reads the LAST hop).
+  # Either control closes it alone; keep both, so restoring an old vhost
+  # backup cannot silently reopen it.
+  RequestHeader unset X-Forwarded-For
+  RequestHeader unset CF-Connecting-IP
+  RequestHeader unset X-Real-IP
+  RequestHeader unset True-Client-IP
   ProxyPass        /api/  http://127.0.0.1:3100/  retry=0 timeout=30
   ProxyPassReverse /api/  http://127.0.0.1:3100/
 </IfModule>
+```
+
+Check it after any vhost change, using the fact that `/api/ip` echoes back
+whatever the app believes the client IP to be:
+
+```bash
+curl -sk -X POST https://206-189-186-34.nip.io/api/ip \
+  -H 'content-type: application/json' -H 'origin: https://206-189-186-34.nip.io' \
+  -H 'x-forwarded-for: 1.2.3.4' -d '{}'
+# must report your real address, never 1.2.3.4
 ```
 
 ```bash

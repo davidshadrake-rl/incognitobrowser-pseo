@@ -36,14 +36,17 @@ afterEach(() => {
 });
 
 describe('POST /ip', () => {
-  it('returns the first x-forwarded-for hop as the client IP (v4)', async () => {
+  // The LAST hop, not the first: everything before it is client-supplied and
+  // forgeable (lib/rate-limit.ts getClientIP, corrected 2026-09-18). Here the
+  // real peer as our proxy saw it is 10.0.0.1; 203.0.113.9 is what the caller
+  // claimed. The tool must report what we observed, not what it was told.
+  it('returns the last x-forwarded-for hop as the client IP (v4)', async () => {
     const { POST } = await loadRoute();
     const res = await POST(req({ 'x-forwarded-for': '203.0.113.9, 10.0.0.1' }));
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.ip).toBe('203.0.113.9');
+    expect(body.ip).toBe('10.0.0.1');
     expect(body.version).toBe('v4');
-    expect(body.local).toBe(false);
   });
 
   it('detects IPv6', async () => {

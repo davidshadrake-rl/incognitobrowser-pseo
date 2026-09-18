@@ -130,9 +130,13 @@ describe('IP Extraction', () => {
     return new Headers(obj);
   }
 
-  it('extracts IP from X-Forwarded-For (first entry)', () => {
+  // Was "(first entry)", asserting the leftmost value — which is the entry a
+  // client can forge. This test encoded the bypass as correct behaviour and
+  // would have failed anyone fixing it. Corrected 2026-09-18: the last hop is
+  // the only one our own proxy wrote (lib/rate-limit.ts getClientIP).
+  it('extracts IP from X-Forwarded-For (last entry, the one our proxy wrote)', () => {
     const headers = makeHeaders({ 'x-forwarded-for': '1.2.3.4, 5.6.7.8, 9.10.11.12' });
-    expect(getClientIP(headers)).toBe('1.2.3.4');
+    expect(getClientIP(headers)).toBe('9.10.11.12');
   });
 
   it('extracts IP from cf-connecting-ip', () => {
@@ -157,5 +161,44 @@ describe('IP Extraction', () => {
       'x-real-ip': '3.3.3.3',
     });
     expect(getClientIP(headers)).toBe('1.1.1.1');
+  });
+});
+
+/**
+ * getClientIP and the forged-header bypass (found and fixed 2026-09-18).
+ *
+ * This function buckets the rate limiter, so whatever it returns is the unit
+ * of "per IP". Apache appends the real peer to X-Forwarded-For instead of
+ * replacing it, so every entry but the last is client-controlled. Reading the
+ * leftmost entry let anyone reset their own limit by rotating one header —
+ * confirmed against the live host before the fix.
+ */
+describe('getClientIP cannot be steered by a forged header', () => {
+  const h = (init: Record<string, string>) => new Headers(init);
+
+  it('takes the last hop, which is the only one our own proxy wrote', async () => {
+    const { getClientIP } = await import('../lib/rate-limit');
+    // What Apache produces when the client sent a forged value.
+    expect(getClientIP(h({ 'x-forwarded-for': '1.2.3.4, 203.0.113.7' }))).toBe('203.0.113.7');
+    // A whole forged chain still cannot push the real peer out of last place.
+    expect(getClientIP(h({ 'x-forwarded-for': '1.1.1.1, 2.2.2.2, 3.3.3.3, 203.0.113.7' }))).toBe('203.0.113.7');
+  });
+
+  it('is unchanged for the ordinary single-hop case', async () => {
+    const { getClientIP } = await import('../lib/rate-limit');
+    expect(getClientIP(h({ 'x-forwarded-for': '203.0.113.7' }))).toBe('203.0.113.7');
+  });
+
+  it('two attackers rotating headers still share one bucket', async () => {
+    const { getClientIP, getIpBucket } = await import('../lib/rate-limit');
+    const a = getIpBucket(getClientIP(h({ 'x-forwarded-for': '9.9.9.9, 203.0.113.7' })));
+    const b = getIpBucket(getClientIP(h({ 'x-forwarded-for': '8.8.8.8, 203.0.113.7' })));
+    expect(a).toBe(b);
+  });
+
+  it('falls back only when no X-Forwarded-For is present at all', async () => {
+    const { getClientIP } = await import('../lib/rate-limit');
+    expect(getClientIP(h({ 'cf-connecting-ip': '203.0.113.9' }))).toBe('203.0.113.9');
+    expect(getClientIP(h({}))).toBe('unknown');
   });
 });
