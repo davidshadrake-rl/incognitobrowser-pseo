@@ -1,19 +1,19 @@
 /**
  * Tuning knobs for the security stack, configurable via env vars.
  *
- * Centralized so we can adjust everything from the Vercel dashboard during
+ * Centralized so we can adjust everything from the service environment during
  * an incident — no code change, no rebuild required.
  *
  * ## Panic mode (under attack)
  *
- * Set these in Vercel → Settings → Environment Variables, then redeploy:
+ * Set these in /etc/ib-api.env, then restart ib-api:
  *
  *   SCAN_RATE_LIMIT=2           # was 10, now 2 reqs/min/IP
  *   CHALLENGE_RATE_LIMIT=5      # was 30, now 5
  *   POW_MAX_NUMBER=1000000      # was 100k, now 1M (10x more CPU per request)
  *   MAX_BODY_SIZE_MB=1          # was 5, now 1 (less amplification)
  *
- * Vercel redeploys take ~60s. Effect: each abuse request now costs the
+ * A service restart takes a few seconds. Effect: each abuse request now costs the
  * attacker ~2s of CPU instead of 200ms, only 2 requests/min get through
  * per IP, and outbound bandwidth per scan is capped at 1MB.
  *

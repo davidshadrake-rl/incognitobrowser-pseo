@@ -23,11 +23,11 @@ import {
  *   1. POST /dns-leak/start → { id, hostnames[] } (server records the public IP)
  *   2. Make the browser resolve every hostname. Two resolution paths, in
  *      parallel, each capped at 4 s:
- *        - fetch('https://<host>/p.gif', { mode: 'no-cors' }) — on the Vercel
+ *        - fetch('https://<host>/p.gif', { mode: 'no-cors' }) — on the server
  *          deploy the CSP connect-src blocks this before any lookup happens,
  *          so it fails instantly there; kept for deploys with a looser CSP.
  *        - new Image().src — img-src allows https:, so this is the path that
- *          actually triggers the DNS lookup on Vercel.
+ *          actually triggers the DNS lookup server-side.
  *      The requests are EXPECTED to fail (nothing listens on 443 at the
  *      droplet). Only the DNS lookup matters: whichever resolver asks our
  *      authoritative nameserver is the resolver the visitor really uses.

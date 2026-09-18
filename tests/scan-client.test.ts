@@ -44,8 +44,8 @@ describe('SCAN_API_BASE', () => {
     expect(m.SCAN_API_BASE).not.toMatch(/incognitobrowser\.io/);
   });
   it('honours an explicit NEXT_PUBLIC_SCAN_API (static export)', async () => {
-    const m = await load('https://incognitobrowser-pseo.vercel.app');
-    expect(m.SCAN_API_BASE).toBe('https://incognitobrowser-pseo.vercel.app');
+    const m = await load('https://206-189-186-34.nip.io/resources');
+    expect(m.SCAN_API_BASE).toBe('https://206-189-186-34.nip.io/resources');
   });
 });
 

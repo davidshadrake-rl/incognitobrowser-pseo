@@ -11,7 +11,7 @@ import { handoffGmailUrl, handoffMailBody, handoffMailto, stripHash, pageLinkFor
 import { playUrl } from '../lib/play';
 
 const PLAY = playUrl({ medium: 'cta', campaign: 'permission-checker', content: 'children-safety', term: 'tool' });
-const PAGE = 'https://incognitobrowser-pseo.vercel.app/tools/children-safety/permission-checker';
+const PAGE = 'https://206-189-186-34.nip.io/resources/tools/children-safety/permission-checker';
 
 describe('handoffMailBody', () => {
   it('uses CRLF line breaks only — never a bare \\n (RFC 6068 §5; Outlook on Windows drops the body otherwise)', () => {

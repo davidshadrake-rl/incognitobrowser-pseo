@@ -2,7 +2,7 @@
  * Free / Pro tool tiers — one source of truth.
  *
  * Decided 2026-09-07: three engines are Pro and live on a separate
- * deployment (same repo, second Vercel project, NEXT_PUBLIC_TIER=pro).
+ * deployment (same repo, second static build, NEXT_PUBLIC_TIER=pro).
  * There is no gate yet — "for now we are simply dividing the tools up".
  *
  * Moved 2026-09-17: url-analyzer left PRO_ENGINES for the free deployment.
@@ -71,21 +71,19 @@ export const IS_PRO_DEPLOYMENT = TIER === 'pro';
 
 /**
  * Where the Pro deployment lives — the free site links Pro-engine pages here.
- * Default is the LIVE host. pro.incognitobrowser.io has no DNS yet; when it
- * does, set NEXT_PUBLIC_PRO_URL (or change this default) — never default to
- * a host that does not resolve, or every free→Pro link ships dead.
+ * The droplet is the only deploy target (owner, 2026-09-18: the previous
+ * hosting platform is being removed entirely). scripts/deploy.sh passes SITE_ORIGIN; this default is the live
+ * droplet so a build without the env var still links somewhere that resolves.
  */
 export const PRO_BASE_URL: string =
-  process.env.NEXT_PUBLIC_PRO_URL?.replace(/\/$/, '') || 'https://incognitobrowser-pro.vercel.app';
+  process.env.NEXT_PUBLIC_PRO_URL?.replace(/\/$/, '') || 'https://206-189-186-34.nip.io/resources-pro';
 
 /**
- * Where the free marketing site lives — the Pro deployment links back here.
- * Default is the LIVE host: incognitobrowser.io/resources currently 301s to
- * the WordPress home page (the static bundle is not deployed there yet).
- * Set NEXT_PUBLIC_FREE_URL when it is.
+ * Where the free site lives — the Pro deployment links back here. Same rule as
+ * PRO_BASE_URL: the droplet, and nothing else (owner, 2026-09-18).
  */
 export const FREE_BASE_URL: string =
-  process.env.NEXT_PUBLIC_FREE_URL?.replace(/\/$/, '') || 'https://incognitobrowser-pseo.vercel.app';
+  process.env.NEXT_PUBLIC_FREE_URL?.replace(/\/$/, '') || 'https://206-189-186-34.nip.io/resources';
 
 /**
  * Should this deployment render, list, or link a given engine's tool pages?

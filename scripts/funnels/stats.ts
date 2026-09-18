@@ -13,7 +13,7 @@
  * doesn't carry them. No person is ever counted, only events on a page.
  *
  * Usage:
- *   STATS_TOKEN=… npx tsx scripts/funnels/stats.ts [--days 14] [--base https://incognitobrowser-pseo.vercel.app] [--worst 40] [--min-views 20]
+ *   STATS_TOKEN=… npx tsx scripts/funnels/stats.ts [--days 14] [--base https://206-189-186-34.nip.io] [--worst 40] [--min-views 20]
  *
  * Prints one row per page, worst run-to-click first among pages with enough
  * views to judge (the ones to rewrite next), then clicks by benefit and card
@@ -25,7 +25,7 @@ const arg = (name: string, fallback: string) => {
   return i >= 0 && args[i + 1] ? args[i + 1] : fallback;
 };
 const DAYS = Number(arg('days', '14'));
-const BASE = arg('base', 'https://incognitobrowser-pseo.vercel.app').replace(/\/$/, '');
+const BASE = arg('base', 'https://206-189-186-34.nip.io').replace(/\/$/, '');
 const WORST = Number(arg('worst', '40'));
 const MIN_VIEWS = Number(arg('min-views', '20'));
 const CSV = args.includes('--csv');
@@ -37,7 +37,7 @@ interface Row { page: string; views: number; runs: number; results: number; clic
 
 async function day(d: string): Promise<Record<string, number>> {
   const token = process.env.STATS_TOKEN;
-  if (!token) throw new Error('Set STATS_TOKEN (the same value the Vercel project has).');
+  if (!token) throw new Error('Set STATS_TOKEN (the same value /etc/ib-api.env has).');
   const res = await fetch(`${BASE}/stats`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },

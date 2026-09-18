@@ -8,7 +8,7 @@
  *   minimally (so delegation checks pass), everything else NOERROR/empty —
  *   and, when the name carries a test id (`<n>.<12-char id>.<zone>`), RPUSHes
  *   { resolverIp, ts, qname } onto `dnsleak:seen:<id>` (EXPIRE 600) so the
- *   Vercel route /dns-leak/result can read back which resolver asked.
+ *   The /dns-leak/result route can read back which resolver asked.
  *   Queries outside the zone get REFUSED — this is not a recursive resolver.
  *   All wire-format logic comes from lib/dns-leak.ts (shared with the routes).
  *
@@ -29,7 +29,7 @@
  *   DNSLEAK_BIND   0.0.0.0                              (an IPv6 literal switches the socket to udp6)
  *   DNSLEAK_TTL    1                                    TTL for A answers (0 or 1 keeps test names uncached)
  *   DNSLEAK_LOG    1 to log every query (resolver IP, qname, qtype) to stdout
- *   REDIS_URL      the SAME Redis the Vercel routes use (copy REDIS_URL from the Vercel project env)
+ *   REDIS_URL      the SAME Redis the API routes use (REDIS_URL in /etc/ib-api.env)
  *
  * DELEGATION — one-time, at the DNS provider that hosts incognitobrowser.io
  *   1. Glue A record:     ns1.dnsleak.incognitobrowser.io   A    <droplet IP>

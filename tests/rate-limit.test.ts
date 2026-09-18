@@ -1,7 +1,7 @@
 /**
  * Rate Limiting Tests
  *
- * These tests run without Vercel KV env vars set, so the limiter falls back
+ * These tests run without Redis env vars set, so the limiter falls back
  * to in-memory mode. That's intentional — KV behavior is exercised in
  * production; here we verify the algorithm + headers + edge cases work the
  * same in both modes (they share the same buildHeaders helper and result

@@ -222,20 +222,20 @@ export function ipInfoFromLookup(d: IpLookup): IpInfo {
  *
  * Previously this hit api.ipify.org + ipapi.co directly, which (a) shipped
  * every visitor's IP to two third parties from a privacy tool, and (b) was
- * blocked by our CSP connect-src on the Vercel build, so the tool timed out.
+ * blocked by our CSP connect-src on the server build, so the tool timed out.
  *
  * /ip answers from the inbound request headers only (x-forwarded-for + the
- * geo headers Vercel attaches) — no outbound call, no external dependency.
+ * geo headers the proxy attaches) — no outbound call, no external dependency.
  * ISP/ASN are intentionally not provided (would need an external database);
  * the UI is conditional on those fields so they simply don't render.
  *
  * API base resolution (shared convention with the cookie scanner):
- *   - server-mode / Vercel: '' → same-origin. No env var, no CORS.
+ *   - server mode: '' → same-origin. No env var, no CORS.
  *   - static export (droplet / WordPress): NEXT_PUBLIC_SCAN_API, defaulted
- *     in next.config.ts to the Vercel API host for BUILD_TARGET=static.
+ *     in next.config.ts to the API host for BUILD_TARGET=static.
  * Never fall back to a hardcoded hostname — the old default
  * ('https://api.incognitobrowser.io') doesn't resolve and silently broke
- * both tools on Vercel.
+ * both tools.
  */
 const API_BASE = process.env.NEXT_PUBLIC_SCAN_API ?? '';
 

@@ -180,7 +180,7 @@ export function baitScriptSource(id: string): string {
 
 /**
  * The static export is served under /resources (WordPress-layered deploy);
- * server-mode deploys (Vercel, the Pro site, local dev) serve from the root.
+ * server-mode deploys (the API service, local dev) serve from the root.
  * Resolved from the page's own pathname so one bundle works in both.
  */
 export function basePathFrom(pathname: string): string {

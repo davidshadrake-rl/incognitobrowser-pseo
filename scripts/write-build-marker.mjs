@@ -6,7 +6,7 @@
  *   node scripts/write-build-marker.mjs --target static --tier free --base /resources
  *
  * Why: tests/rendered-pages.test.ts and tests/link-audit.test.ts run whenever
- * out/ exists. `npm run build` (Vercel, the deploy script) runs vitest FIRST,
+ * out/ exists. `npm run build` (the deploy script) runs vitest FIRST,
  * so a leftover out/ from a different tier, a failed run, or an iCloud
  * conflict copy was silently graded with the free site's expectations —
  * 63 spurious failures in one case, and "passes" on a stale build in

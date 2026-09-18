@@ -5,7 +5,7 @@
  * incognitobrowser.io family if unset, so production keeps working even if the
  * env var is forgotten during a deploy.
  *
- * For test/staging domains, set ALLOWED_ORIGINS on Vercel to something like:
+ * For test/staging domains, set ALLOWED_ORIGINS on the API service to e.g.:
  *   "https://incognitobrowser.io,https://www.incognitobrowser.io,https://lightshapesallthings.info,http://206.189.186.34"
  *
  * IMPORTANT — Origin can be spoofed by non-browser clients. This list is one
@@ -43,14 +43,14 @@ export function _resetOriginCacheForTests() {
  *
  * Two ways to be allowed:
  *   1. Same-origin: the Origin's host equals the request's own Host. The
- *      Vercel server-mode deploy serves pages AND the API from one host,
+ *      the server-mode API serves pages AND the API from one host,
  *      so a page calling its own API is inherently trusted. Without this,
  *      the deployed site could not call itself unless someone remembered
  *      to add its own hostname to ALLOWED_ORIGINS — which is exactly how
  *      production shipped with the cookie scanner and /ip returning 403.
  *   2. Allowlisted: in ALLOWED_ORIGINS (or the default set). This is what
  *      genuinely cross-origin callers need — the static droplet/WordPress
- *      build calls the Vercel API from a different host.
+ *      build calls the API from a different host.
  *
  * `requestHost` is `request.headers.get('host')`. Pass it from every route.
  * Comparing `URL.host` to the Host header keeps ports in the comparison.

@@ -35,9 +35,9 @@ const OUT_DIR = path.join(process.cwd(), 'out');
 /**
  * This suite verifies BUILD OUTPUT, so it can only run after a build
  * (or against a live URL). The `build` npm script runs `vitest run`
- * BEFORE `next build`, so on a clean CI/Vercel checkout there is no
+ * BEFORE `next build`, so on a clean checkout there is no
  * `out/` yet. We must SKIP in that case — never throw — or every
- * Vercel deploy fails before it compiles (this is what broke prod).
+ * the deploy fails before it compiles (this is what broke prod).
  */
 /**
  * A local out/ is only graded when its marker (scripts/write-build-marker.mjs)
@@ -78,10 +78,10 @@ const ROUTES = {
 };
 
 // Add /resources prefix when running against the static-export deploys
-// (droplet, WordPress). Local dev + Vercel serve at root.
+// (the droplet). Local dev serves at root.
 function prefix(p: string): string {
   if (!IS_LIVE) return p;
-  if (/localhost|vercel\.app/i.test(LIVE_BASE)) return p;
+  if (/localhost/i.test(LIVE_BASE)) return p;
   // Routes that exist at site root regardless of basePath:
   if (p === '/robots.txt' || p === '/sitemap.xml') {
     return '/resources' + p;
@@ -111,7 +111,7 @@ beforeAll(() => {
   if (!HAS_TARGET) {
     // Skipped via describe.skipIf below; this is informational only.
     // Do NOT throw here — a throw fails `vitest run`, which fails the
-    // Vercel build before `next build` ever runs.
+    // deploy-time test run before `next build` ever runs.
     console.warn(
       '[rendered-pages] no out/ and no PAGES_TEST_BASE_URL — skipping. Run after a static build or set PAGES_TEST_BASE_URL.'
     );

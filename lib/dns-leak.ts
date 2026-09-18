@@ -2,7 +2,7 @@
  * DNS leak test — pure, framework-free logic shared by four consumers:
  *
  *   - components/tools/DnsLeakTestTool.tsx  (browser)  — hostnames, classification
- *   - app/dns-leak/{start,result}/route.ts  (Vercel)   — id generation/validation,
+ *   - app/dns-leak/{start,result}/route.ts  (server)   — id generation/validation,
  *                                                        observation summarising
  *   - scripts/dnsleak-server.mjs            (droplet)  — DNS wire-format parse/build
  *   - scripts/dnsleak-check.mjs             (anywhere) — query build / response parse

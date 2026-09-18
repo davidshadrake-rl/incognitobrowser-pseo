@@ -38,6 +38,10 @@ site() {  # label, folder, extra build env
     BUILD_TARGET=static BASE_PATH="$2" npx next build >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
   find out -type d -name '_pro_export_placeholder_' -exec rm -rf {} +
   node scripts/audit-links.mjs out --mode static --base "$2"
+  # audit-links only checks same-site hrefs; an absolute URL baked into a JS
+  # chunk would sail past it. The old hosting platform is gone (2026-09-18)
+  # and its hostnames will stop resolving, so shipping one is a silent outage.
+  ! grep -rqi "vercel\.app" out || { echo "a vercel.app URL is in the $1 build — see API-ON-DROPLET.md" >&2; exit 1; }
   npx vitest run tests/client-bundle.test.ts >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
   # The page guards only grade an export whose marker says what it is; without
   # it they skipped silently on every deploy. The free site is the one they know.

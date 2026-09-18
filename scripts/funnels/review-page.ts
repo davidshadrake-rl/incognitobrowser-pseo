@@ -43,8 +43,8 @@ const pages = all
   }));
 const noFunnel = all.filter((r) => r.noFunnel).map((r) => ({ id: r.id, key: r.id.replace(/\./g, '_'), url: r.url, why: r.noFunnel }));
 const pairings = Object.entries(PAIRINGS).map(([topic, p]) => ({ topic, engine: p.engine, why: p.why, pages: all.filter((r) => r.topic === topic && r.check?.engine === p.engine).length }));
-const LIVE = 'https://incognitobrowser-pseo.vercel.app';
-const PRO_LIVE = 'https://incognitobrowser-pro.vercel.app';
+const LIVE = 'https://206-189-186-34.nip.io/resources';
+const PRO_LIVE = 'https://206-189-186-34.nip.io/resources-pro';
 const data = JSON.stringify({ pages, noFunnel, pairings, live: LIVE, proLive: PRO_LIVE, total: all.length }).replace(/</g, '\\u003c');
 
 const html = `<title>Per-Page Funnel Review</title>

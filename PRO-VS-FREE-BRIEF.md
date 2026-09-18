@@ -20,7 +20,7 @@ The split is mechanically sound: free builds 1,330 pages with 24 free tools and 
 
 ## Fixed (14 confirmed findings, all shipped in 495024a)
 
-1. Dead `pro.incognitobrowser.io` / `incognitobrowser.io/resources` defaults → now point at live Vercel hosts.
+1. Dead `pro.incognitobrowser.io` / `incognitobrowser.io/resources` defaults → now point at the live droplet.
 2. Literal `{grade.grade}` in 500 report-card Play links → real template values.
 3. Free `/tools` page described Pro-only tools → tier-aware copy.
 4. What's My IP missing from the featured grid → added.
@@ -34,7 +34,7 @@ The split is mechanically sound: free builds 1,330 pages with 24 free tools and 
 
 ## Still open — needs a decision or infra
 
-- **Redis not provisioned.** Rate limiting is per-instance in-memory on both projects; the new `/event` counters are silently discarded without `REDIS_URL`. (Checked into Vercel dashboard 2026-09-08: old free-tier Redis instance is dead/uninstalled; new instances start at $8/mo. Held pending your decision.)
+- **Redis**: now installed on the droplet; see API-ON-DROPLET.md.
 - **SSRF guard is lexical only** — no DNS resolution check, so some private-IP-resolving hostnames could reach the fetch. Pre-existing, not a Pro regression.
 - **`ALLOWED_ORIGINS` unset on Pro** — falls back to the default allowlist, which includes the free site's origin.
 - **22 retired free tool URLs have no redirects** (404 instead of 301) if anything indexed the old paths.

@@ -152,7 +152,7 @@ Until a Pro feature actually ships, its panel shows a generic download CTA. **On
 | Decision | Call | Where it lives |
 |---|---|---|
 | Pro **tools** | cookie-analyzer, browser-privacy, url-analyzer, metadata-viewer | `lib/tiers.ts` PRO_ENGINES; `tier` on each tool JSON |
-| Pro **shape** | separate deployment, same repo, second Vercel project, `NEXT_PUBLIC_TIER=pro` | `lib/tiers.ts`; Pro build renders only the 22 Pro tool pages, noindex sitewide, no sitemap, robots disallow |
+| Pro **shape** | separate deployment, same repo, second static build, `NEXT_PUBLIC_TIER=pro` | `lib/tiers.ts`; Pro build renders only the 22 Pro tool pages, noindex sitewide, no sitemap, robots disallow |
 | Free site | free engines only — Pro-engine tool pages are not built, not in the sitemap, and never linked (2026-09-08: clean split); report cards link "Scan any URL with Incognito Pro →" | `app/tools/[niche]/[slug]/client.tsx` |
 | Gate | **later** — "for now we are simply dividing the tools up" | n/a |
 | Pro promises on free pages | specific only for Leak Monitor (ships with VPN); generic elsewhere | copy, not yet encoded |
@@ -162,11 +162,10 @@ Until a Pro feature actually ships, its panel shows a generic download CTA. **On
 ## State of the material as of this session
 
 Fixed today, all committed:
-- Vercel builds were failing since May 18 (my rendered-pages test threw on a clean checkout) — fixed, deploys flowing again.
 - Every tool recommended Brave (competitor) — 39 instances removed.
 - Cookie scanner falsely labeled "100% client-side" — now honest, data-driven badge.
 - **Scrub regression:** product erased from 30 of its own comparison tables + 3 calculator dropdowns — restored; scrub + audit hardened with `PRESERVE_PATH` so it can't recur.
 
 Still open:
-- Cookie scanner returns CORS "Network error" until `ALLOWED_ORIGINS` on the Vercel project includes the calling domains (dashboard: Settings → Environment Variables, then redeploy).
+- Cookie scanner returns CORS "Network error" until `ALLOWED_ORIGINS` on the droplet API service includes the calling domains (see API-ON-DROPLET.md).
 - 48 doorway-duplicate pages remain drafted (intentional, R2). 16 checklists / 24 guides / 8 calculators in that set.

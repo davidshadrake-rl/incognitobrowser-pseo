@@ -56,9 +56,9 @@ describe('cross-deployment URLs', () => {
   it('has sane defaults and builds a Pro tool URL without /resources', async () => {
     const { PRO_BASE_URL, FREE_BASE_URL, proUrlFor } = await load({});
     // Defaults must be hosts that RESOLVE today (audit 2026-09-08: the old pro.incognitobrowser.io default shipped 502 dead links).
-    expect(PRO_BASE_URL).toBe('https://incognitobrowser-pro.vercel.app');
-    expect(FREE_BASE_URL).toBe('https://incognitobrowser-pseo.vercel.app');
-    expect(proUrlFor('ad-tracking', 'cookie-tracker-scanner')).toBe('https://incognitobrowser-pro.vercel.app/tools/ad-tracking/cookie-tracker-scanner');
+    expect(PRO_BASE_URL).toBe('https://206-189-186-34.nip.io/resources-pro');
+    expect(FREE_BASE_URL).toBe('https://206-189-186-34.nip.io/resources');
+    expect(proUrlFor('ad-tracking', 'cookie-tracker-scanner')).toBe('https://206-189-186-34.nip.io/resources-pro/tools/ad-tracking/cookie-tracker-scanner');
   });
   it('honours overrides and strips a trailing slash', async () => {
     const { PRO_BASE_URL, FREE_BASE_URL } = await load({ NEXT_PUBLIC_PRO_URL: 'https://pro.example/', NEXT_PUBLIC_FREE_URL: 'https://free.example/x/' });

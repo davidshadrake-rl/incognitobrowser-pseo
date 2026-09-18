@@ -207,7 +207,7 @@ export function drawScorecard(ctx: CanvasRenderingContext2D, spec: ScorecardSpec
 
   // footer — "Check yours free" is fixed and short; the URL gets whatever
   // width is left after it, with a gutter, so a long path (a real one
-  // reported live: "incognitobrowser-pseo.vercel.app/tools/children-safety/
+  // reported live: "206-189-186-34.nip.io/resources/tools/children-safety/
   // permission-checker") shrinks/truncates instead of running into it.
   const FOOTER_LABEL = 'Check yours free';
   ctx.font = `400 22px ${FONT}`;

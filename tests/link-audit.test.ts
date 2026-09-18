@@ -6,7 +6,7 @@
  * page that moved to the other deployment, a hub that lost all its items, a
  * typo in a generated path — all show up here as a dangling target.
  *
- * Skips when out/ is absent (Vercel runs vitest before next build). The Pro
+ * Skips when out/ is absent (the deploy script runs vitest before next build). The Pro
  * build is audited by the same script in the release chain:
  *   node scripts/audit-links.mjs <pro .next/server/app> --mode server
  */

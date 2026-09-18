@@ -9,11 +9,11 @@
  * in production. Any tool that needs the scanner goes through here.
  *
  * API base resolution:
- *   - server mode / Vercel:  ''  → same-origin. No env var, no CORS.
+ *   - server mode:  ''  → same-origin. No env var, no CORS.
  *   - static export (droplet / WordPress): NEXT_PUBLIC_SCAN_API, defaulted in
- *     next.config.ts to the Vercel API host for BUILD_TARGET=static.
+ *     next.config.ts to the API host for BUILD_TARGET=static.
  *   Never a hardcoded hostname fallback — the old 'https://api.incognitobrowser.io'
- *   default doesn't resolve and broke every tool that used it on Vercel.
+ *   default doesn't resolve and broke every tool that used it in production.
  *
  * No React in here; callers pass an optional onStatus callback for UI.
  */

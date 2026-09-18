@@ -2,11 +2,11 @@ import type { NextConfig } from "next";
 
 // Dual-target build:
 //   BUILD_TARGET=static → fully static export for WordPress (incognitobrowser.io/resources/)
-//   default              → server mode for Vercel (api.incognitobrowser.io/scan-url)
+//   default              → server mode (the API service)
 //
 // Static export disables API route handlers that rely on Request (POST /scan-url),
 // so the scanner must ship via the server build. Keeping both in one repo lets the
-// static pages still call the Vercel API by absolute URL.
+// static pages still call the API by absolute URL.
 const isStatic = process.env.BUILD_TARGET === "static";
 
 // basePath defaults to /resources for the WordPress-layered static deploy,
@@ -17,7 +17,7 @@ const explicitBasePath = process.env.BASE_PATH;
 const basePath =
   explicitBasePath !== undefined ? explicitBasePath : (isStatic ? "/resources" : "");
 
-// Security headers applied to every response from the Vercel deploy (API +
+// Security headers applied to every response from the server deploy (API +
 // server-rendered pages). For the static export deploy, equivalent headers
 // must be configured on the host (see HEADERS-WP.md for the .htaccess version
 // to put on the WordPress server).
@@ -27,15 +27,15 @@ const basePath =
 //     inlines hydration scripts and some bundled deps use eval. Moving to a
 //     nonce-based CSP would be the next-level hardening but isn't trivial
 //     with the App Router's current architecture.
-//   - connect-src whitelists the API host so the cookie scanner can call
-//     /scan-url; allows the Vercel preview URL too for staging.
+//   - connect-src is 'self' only: the API is served from this same origin,
+//     reverse-proxied to the Node service on the droplet (owner, 2026-09-18:
+//     the old hosting platform is gone, so there is no cross-origin API host).
 //   - frame-ancestors 'none' kills clickjacking regardless of X-Frame-Options.
 //   - object-src 'none' blocks Flash/legacy plugin-based attacks.
 //   - upgrade-insecure-requests forces any http:// asset references to https.
 //
-// HSTS only enables once we're on the real production domain. Vercel's default
-// *.vercel.app domain auto-HSTS, but we set it explicitly to keep behavior
-// consistent across environments.
+// HSTS only enables once we're on the real production domain; we set it
+// explicitly to keep behavior consistent across environments.
 const IS_PRO = process.env.NEXT_PUBLIC_TIER === "pro";
 
 const SECURITY_HEADERS = [
@@ -49,7 +49,7 @@ const SECURITY_HEADERS = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
-      "connect-src 'self' https://incognitobrowser-pseo.vercel.app",
+      "connect-src 'self'",
       "frame-ancestors 'none'",
       "form-action 'self'",
       "base-uri 'self'",
@@ -90,16 +90,16 @@ const SECURITY_HEADERS = [
 ];
 
 const nextConfig: NextConfig = {
-  // Client-side API base for the cookie scanner + What's My IP.
-  //   server mode (Vercel): "" → same-origin, no env var, no CORS.
-  //   static export (droplet/WordPress): the Vercel API host, cross-origin.
-  // An explicit NEXT_PUBLIC_SCAN_API always wins. Never default to a hostname
-  // that might not exist — the old 'api.incognitobrowser.io' fallback didn't
-  // resolve and silently broke both tools in production.
+  // Client-side API base for the cookie scanner, What's My IP and the DNS
+  // leak test. Empty means same-origin, which is now true in both modes: the
+  // droplet's Apache reverse-proxies /challenge, /scan-url, /ip, /event and
+  // /dns-leak/* to the Node service on the same host (owner, 2026-09-18).
+  // An explicit NEXT_PUBLIC_SCAN_API still wins, for
+  // pointing a local build at a staging API. Never default to a hostname that
+  // might not exist — an old 'api.incognitobrowser.io' fallback didn't resolve
+  // and silently broke both tools in production.
   env: {
-    NEXT_PUBLIC_SCAN_API:
-      process.env.NEXT_PUBLIC_SCAN_API ??
-      (isStatic ? "https://incognitobrowser-pseo.vercel.app" : ""),
+    NEXT_PUBLIC_SCAN_API: process.env.NEXT_PUBLIC_SCAN_API ?? "",
   },
   // Pin Turbopack to this project's directory. Without this, Next.js 16 walks
   // up the filesystem looking for a lockfile and may pick a parent directory's
@@ -120,7 +120,7 @@ const nextConfig: NextConfig = {
   },
   // headers() is a no-op when output: "export" is set (there's no server to
   // attach them). For static deploys, see HEADERS-WP.md for the .htaccess
-  // equivalent. For Vercel server deploys, these apply to every response.
+  // equivalent. For server deploys, these apply to every response.
   async headers() {
     if (isStatic) return [];
     // Same list as SECURITY_HEADERS' Permissions-Policy, but the features the

@@ -5,21 +5,25 @@
  * from the browser. Two problems:
  *   1. A privacy tool was shipping every visitor's IP to two third parties.
  *   2. Our own CSP (`connect-src 'self' …`) correctly blocks those hosts on
- *      the Vercel server-mode build, so the tool silently timed out there.
+ *      the server-mode build, so the tool silently timed out there.
  *
  * This route answers from data we already have on the inbound request — no
  * outbound call, no external dependency:
  *   - IP:  x-forwarded-for / x-real-ip (via getClientIP, same as the other routes)
- *   - Geo: the x-vercel-ip-* headers Vercel attaches to every request
- *          (city, region, country, timezone). Absent on localhost/droplet →
- *          fields come back null and the UI hides them.
+ *   - Geo: x-geo-* request headers, if the front-end web server sets them.
+ *          Vendor-neutral by design (owner, 2026-09-18: the old hosting
+ *          platform and its per-request geo headers are gone). Nothing on
+ *          the droplet populates these today, so every geo field comes back
+ *          null and the UI hides them — the tool's IP answer is unaffected.
+ *          To light them up later, have Apache set x-geo-country / -city /
+ *          -region / -timezone from a GeoIP module.
  *
  * Deliberately NOT returned: ISP / ASN. That needs an external IP→ASN database.
  * The tool's UI is already conditional on those fields.
  *
  * Why POST: Next.js 16 `output: "export"` rejects non-static GET handlers;
  * POST handlers are excluded from the static export (see challenge/route.ts).
- * The static droplet build calls this cross-origin on the Vercel API, so the
+ * The static droplet build calls this cross-origin on the API, so the
  * caller's origin must be in ALLOWED_ORIGINS.
  *
  * Cache-Control is no-store. This response is per-visitor PII; it must never
@@ -52,7 +56,7 @@ export interface IpResponse {
 function decodeHeader(h: Headers, name: string): string | null {
   const v = h.get(name);
   if (!v) return null;
-  // Vercel URL-encodes these (e.g. "Culver%20City").
+  // A proxy may URL-encode these (e.g. "Culver%20City").
   try { return decodeURIComponent(v); } catch { return v; }
 }
 
@@ -69,16 +73,16 @@ export function buildIpResponse(headers: Headers): IpResponse {
   const raw = getClientIP(headers);
   const hasIp = !!raw && raw !== 'unknown' && raw !== '::1' && raw !== '127.0.0.1';
   const ip = hasIp ? raw : '127.0.0.1';
-  const countryCode = decodeHeader(headers, 'x-vercel-ip-country');
+  const countryCode = decodeHeader(headers, 'x-geo-country');
   return {
     ip,
     version: ip.includes(':') ? 'v6' : 'v4',
     local: !hasIp,
-    city: decodeHeader(headers, 'x-vercel-ip-city'),
-    region: decodeHeader(headers, 'x-vercel-ip-country-region'),
+    city: decodeHeader(headers, 'x-geo-city'),
+    region: decodeHeader(headers, 'x-geo-region'),
     country: countryName(countryCode),
     countryCode,
-    timezone: decodeHeader(headers, 'x-vercel-ip-timezone'),
+    timezone: decodeHeader(headers, 'x-geo-timezone'),
   };
 }
 

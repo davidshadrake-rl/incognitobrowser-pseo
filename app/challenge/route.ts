@@ -8,7 +8,7 @@
  * handlers that aren't marked `force-static`. Our challenge IS dynamic (random
  * salt each call), so static is wrong. POST handlers are silently excluded
  * from static export, which is what we want — the static droplet build skips
- * this route, the Vercel server build still serves it.
+ * this route, the server build still serves it.
  *
  * The body is unused; client can send `{}` or empty.
  *

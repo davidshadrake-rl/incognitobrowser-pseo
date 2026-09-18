@@ -138,10 +138,10 @@ describe('drawScorecard — footer URL never runs into "Check yours free"', () =
     const ctx = new FakeCtx();
     drawScorecard(ctx as unknown as CanvasRenderingContext2D, {
       ...BASE,
-      url: 'https://incognitobrowser-pseo.vercel.app/tools/children-safety/permission-checker',
+      url: 'https://206-189-186-34.nip.io/resources/tools/children-safety/permission-checker',
     });
     const label = ctx.calls.find((c) => c.text === 'Check yours free');
-    const url = ctx.calls.find((c) => c.text.startsWith('incognitobrowser-pseo'));
+    const url = ctx.calls.find((c) => c.text.startsWith('206-189-186-34'));
     expect(label).toBeTruthy();
     expect(url).toBeTruthy();
     // URL is drawn left-aligned from x=64; the label is drawn right-aligned ending at x=W-64.

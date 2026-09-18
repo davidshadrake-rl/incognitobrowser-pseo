@@ -4,7 +4,7 @@
  * POST, not GET: Next 16 with `output: 'export'` rejects GET route handlers
  * that are not force-static, and these counts are inherently dynamic. POST
  * handlers are silently excluded from the static export, which is what we
- * want — the droplet/WordPress build has no server, the Vercel build serves
+ * want — the droplet/WordPress build has no server, the server build serves
  * it. Same reasoning as /challenge.
  *
  * Protected by STATS_TOKEN (Authorization: Bearer …). Unset token → 404, so

@@ -7,15 +7,15 @@
  *
  * Why this matters:
  *   The previous in-memory implementation was leaky under concurrent load on
- *   Vercel's multi-instance runtime — verified empirically. 30 parallel
- *   requests from one IP got 0/30 rate-limited because Vercel scaled fresh
+ *   a multi-instance serverless runtime — verified empirically. 30 parallel
+ *   requests from one IP got 0/30 rate-limited because the platform scaled fresh
  *   instances, each starting with a fresh counter. Distributed Redis makes
  *   the counter shared across all instances, so the limit is enforced
  *   globally regardless of how many functions are warm.
  *
- * Why ioredis (vs @vercel/kv):
- *   The new "Vercel Redis" marketplace product exposes only `REDIS_URL`
- *   (RESP protocol), not the REST API that `@vercel/kv` requires. `ioredis`
+ * Why ioredis:
+ *   That managed Redis product exposed only `REDIS_URL`
+ *   (RESP protocol), not a REST API. `ioredis`
  *   speaks the Redis protocol directly. Bonus: this is provider-agnostic —
  *   any standard Redis (Upstash, Render, AWS ElastiCache, self-hosted) works
  *   without code changes.
@@ -42,7 +42,7 @@
  *
  * Failure modes:
  *   - Redis unreachable / slow: fail open to in-memory + log. Tradeoff: brief
- *     leak windows during Redis outages; Vercel observability will alert on
+ *     leak windows during Redis outages; log monitoring should alert on
  *     the elevated error rate. Better than denying service to legit users.
  */
 
@@ -302,7 +302,7 @@ export async function rateLimit(
 
 /**
  * Extract client IP from request headers.
- * Checks Vercel/Cloudflare/standard proxy headers.
+ * Checks Cloudflare/standard proxy headers.
  */
 export function getClientIP(headers: Headers): string {
   const xForwardedFor = headers.get('x-forwarded-for');

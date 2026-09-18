@@ -2,8 +2,8 @@
 /**
  * Live security regression for a deployed instance (free or Pro).
  *
- *   node scripts/security-smoke.mjs https://incognitobrowser-pro.vercel.app --pro
- *   node scripts/security-smoke.mjs https://incognitobrowser-pseo.vercel.app --free
+ *   node scripts/security-smoke.mjs https://206-189-186-34.nip.io/resources-pro --pro
+ *   node scripts/security-smoke.mjs https://206-189-186-34.nip.io/resources --free
  *
  * Re-runs, against a LIVE deployment, the properties the unit suites pin in
  * source (tests/api-security, cors-security, ssrf-protection, rate-limit,

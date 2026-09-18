@@ -7,7 +7,7 @@
  * same lib/scanner.ts code the public /scan-url API uses, grades it with
  * lib/site-grade.ts, and writes data/sites/<host>.json.
  *
- * Runs on a dev machine, not on Vercel: results are committed so builds
+ * Runs on a dev machine, not on the server: results are committed so builds
  * are deterministic and the site never scans at request time.
  *
  * Re-run monthly. If a previous result exists, the prior summary+grade is

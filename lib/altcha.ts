@@ -27,7 +27,7 @@
  *        - SHA-256(salt + number) === the challenge implied by the signature
  *
  *   Replay protection: short TTL (default 90s) + the salt is random per challenge.
- *   We do NOT keep a nonce cache because Vercel runs many instances; that would
+ *   We do NOT keep a nonce cache because a serverless platform runs many instances; that would
  *   require Redis. The TTL window + rate limit makes replays not worth the effort.
  */
 

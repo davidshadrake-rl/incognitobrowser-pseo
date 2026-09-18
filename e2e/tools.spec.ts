@@ -212,7 +212,7 @@ test('permission-checker: shows status for at least camera and microphone', asyn
 });
 
 // ─────────────────────────────────────────────────────────────────────────
-// 9. Cookie & Tracker Scanner (talks to Vercel API)
+// 9. Cookie & Tracker Scanner (talks to the API)
 // ─────────────────────────────────────────────────────────────────────────
 test('cookie-analyzer: scans example.com and renders the result panel', async ({ page }) => {
   test.skip(!hasProTarget(), 'Pro engine — lives on the Pro deployment only; set E2E_PRO_BASE_URL.');
@@ -226,7 +226,7 @@ test('cookie-analyzer: scans example.com and renders the result panel', async ({
   // PoW solve + API call + render — give it generous time.
   // Assert on RESULT-PANEL-ONLY text. The previous regex (/cookies|trackers|…/)
   // matched the page's static "How This Tool Works" copy, so this test passed
-  // on Vercel while the scan itself was failing with a 403 from a dead API host.
+  // live while the scan itself was failing with a 403 from a dead API host.
   // "Total Cookies" / "No cookies detected" only render after a completed scan.
   await expect(
     page.getByText(/^Total Cookies$|^No cookies detected$/).first(),

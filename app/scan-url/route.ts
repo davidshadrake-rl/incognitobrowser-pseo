@@ -23,7 +23,7 @@ import {
 import { isBlockedHostname, readCappedText, analyzeScan } from '@/lib/scanner';
 
 // Input length limits — sourced from lib/tuning.ts so they can be tweaked
-// via Vercel env vars without a redeploy. See SECURITY-DEPLOY.md for panic-mode
+// via the service environment without a rebuild. See API-ON-DROPLET.md for panic-mode
 // values to set during an active incident.
 const MAX_URL_LENGTH = TUNING_MAX_URL_LENGTH;
 const MAX_BODY_SIZE = TUNING_MAX_BODY_SIZE;

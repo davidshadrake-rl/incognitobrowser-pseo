@@ -29,7 +29,7 @@ export const TOOL_PATHS: Record<string, string> = {
 /**
  * The /resources/ basePath only applies to static-export deploys
  * (WordPress / Cloudflare Pages / the DO droplet). Server-mode deploys
- * (Vercel + local Next dev) don't use basePath — their pages live at root.
+ * (local Next dev, and the droplet's API service) don't use basePath — their pages live at root.
  *
  * To target the right URL we strip /resources/ for server-mode environments
  * and keep it for static-export environments.
@@ -44,7 +44,7 @@ export function hasProTarget(): boolean {
 
 function isServerModeBase(baseUrl: string): boolean {
   const b = baseUrl.toLowerCase();
-  return !b || b.includes('localhost') || b.includes('127.0.0.1') || b.includes('vercel.app');
+  return !b || b.includes('localhost') || b.includes('127.0.0.1');
 }
 
 export function toolUrl(engine: keyof typeof TOOL_PATHS): string {
@@ -58,7 +58,7 @@ export function toolUrl(engine: keyof typeof TOOL_PATHS): string {
     return proBase + (isServerModeBase(proBase) ? path.replace(/^\/resources/, '') : path);
   }
 
-  // Server-mode environments (no basePath applied): local dev + Vercel deploys
+  // Server-mode environments (no basePath applied): local dev
   return isServerModeBase(process.env.E2E_BASE_URL || '') ? path.replace(/^\/resources/, '') : path;
 }
 
