@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { lookup as dnsLookupCb } from 'node:dns';
+import { promisify } from 'node:util';
 import { rateLimit, getClientIP, getIpBucket, getRedisClient } from '@/lib/rate-limit';
 import { parseAltchaAuthHeader, verifySolution } from '@/lib/altcha';
 import { corsHeadersFor, isOriginAllowed } from '@/lib/origin';
@@ -21,6 +23,9 @@ import {
 // two can give the same site different grades. Validation, fetch policy and
 // error handling stay here.
 import { isBlockedHostname, readCappedText, analyzeScan } from '@/lib/scanner';
+
+/** Resolve a hostname to every address it points at, so the SSRF check can judge them. */
+const dnsLookup = promisify(dnsLookupCb);
 
 // Input length limits — sourced from lib/tuning.ts so they can be tweaked
 // via the service environment without a rebuild. See API-ON-DROPLET.md for panic-mode
@@ -146,6 +151,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Only standard web ports (80, 443, 8080, 8443) are supported.' },
         { status: 400, headers: allHeaders }
+      );
+    }
+
+    // The hostname checks above are string comparisons, so a name that merely
+    // RESOLVES somewhere private walks straight past them: 169-254-169-254.nip.io
+    // reaches the cloud metadata service, 127-0-0-1.nip.io reaches this droplet's
+    // own localhost, and 2130706433 / 0x7f.0.0.1 are the same address written in
+    // decimal and hex. Verified against the real check on 2026-09-18; all four
+    // returned ALLOWED. The port allowlist keeps Redis and MySQL out of reach,
+    // but metadata and the co-hosted WordPress both answer on port 80.
+    //
+    // So resolve the name first and judge the ADDRESSES, not the text. A public
+    // site that resolves into private space is misconfigured or hostile; there
+    // is no legitimate scan target behind this check.
+    try {
+      const resolved = await dnsLookup(parsedUrl.hostname, { all: true });
+      const blocked = resolved.filter((r) => isBlockedHostname(r.address));
+      if (blocked.length) {
+        return NextResponse.json(
+          { error: 'Cannot scan private IP addresses, localhost, or internal networks.' },
+          { status: 400, headers: allHeaders }
+        );
+      }
+      if (!resolved.length) {
+        return NextResponse.json(
+          { error: 'Failed to reach this URL. The site may be down or blocking requests.' },
+          { status: 502, headers: allHeaders }
+        );
+      }
+    } catch {
+      // A name that does not resolve cannot be scanned either way.
+      return NextResponse.json(
+        { error: 'Failed to reach this URL. The site may be down or blocking requests.' },
+        { status: 502, headers: allHeaders }
       );
     }
 
