@@ -19,6 +19,8 @@ const ROOT = path.join(__dirname, '..');
 const DIRS = ['app', 'components', 'lib', 'scripts', 'tests', 'e2e'];
 /** This guard names the platform in order to ban it; it cannot police itself. */
 const SELF = path.join('tests', 'no-vercel.test.ts');
+/** A line that exists to BAN the hostname is not a dependency on it. Mark it. */
+const ALLOW = 'no-vercel-guard';
 const EXTS = new Set(['.ts', '.tsx', '.mjs', '.js', '.sh', '.json', '.css']);
 
 function walk(dir: string): string[] {
@@ -39,7 +41,7 @@ describe('no Vercel dependency anywhere that runs', () => {
       if (!fs.existsSync(full) || f === SELF) return [];
       return fs.readFileSync(full, 'utf-8').split('\n')
         .map((line, i) => ({ line, n: i + 1 }))
-        .filter(({ line }) => /vercel/i.test(line))
+        .filter(({ line }) => /vercel/i.test(line) && !line.includes(ALLOW))
         .map(({ line, n }) => `${f}:${n}: ${line.trim().slice(0, 120)}`);
     });
     expect(hits).toEqual([]);
