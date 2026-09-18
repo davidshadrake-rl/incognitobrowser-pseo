@@ -4,6 +4,8 @@ import { useState, useEffect, useMemo } from 'react';
 import { useReportResult, severityFromScore, type ToolResult } from './ResultContext';
 import { ConsoleFrame, statusFromSeverity, type ConsoleGroup } from './ConsoleFrame';
 import type { Status } from '@/components/ui/StatusDot';
+import { useUpgradeGate } from '@/components/useUpgradeGate';
+import { GATE_COPY } from '@/lib/card-copy';
 
 /**
  * Canvas-fingerprint probe string. The emoji is deliberate: colour-font
@@ -213,6 +215,14 @@ export function BrowserPrivacyTool() {
   const [scanning, setScanning] = useState(false);
   // The console stays mounted across re-runs, so it is told when each run finished.
   const [runAt, setRunAt] = useState(0);
+  // Owner, 2026-09-18: the first audit is always free; running it again in
+  // the same visit is Pro's territory. Never persisted — a reload is a
+  // genuine free reset, not a fake one.
+  const { guard: guardRerun, overlay: rerunGate } = useUpgradeGate({
+    engine: 'browser-privacy',
+    gate: 'browser-privacy-rerun',
+    ...GATE_COPY['browser-privacy-rerun'],
+  });
 
   const runAudit = async () => {
     setScanning(true);
@@ -440,13 +450,14 @@ export function BrowserPrivacyTool() {
           Run {BROWSER_PRIVACY_CHECKS.length} checks on what your browser shows every site you visit: tracking settings, fingerprinting signals and the IP address WebRTC exposes.
         </p>
         <button
-          onClick={runAudit}
+          onClick={runAt > 0 ? guardRerun(runAudit) : runAudit}
           disabled={scanning}
           className="btn-primary px-8 py-3"
         >
           {scanning ? 'Scanning...' : 'Run Privacy Audit'}
         </button>
       </div>
+      {rerunGate}
 
       {score !== null && (
         <ConsoleFrame

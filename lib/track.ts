@@ -10,7 +10,7 @@
  */
 import { SCAN_API_BASE } from './scan-client';
 
-export const TRACK_EVENTS = ['tool_run', 'result_shown', 'cta_view', 'cta_click', 'share_click', 'handoff_send', 'next_step_click', 'report_card_view', 'proof_route_click', 'funnel_view', 'funnel_run', 'funnel_click', 'result_card_placed'] as const;
+export const TRACK_EVENTS = ['tool_run', 'result_shown', 'cta_view', 'cta_click', 'share_click', 'handoff_send', 'next_step_click', 'report_card_view', 'proof_route_click', 'funnel_view', 'funnel_run', 'funnel_click', 'result_card_placed', 'gate_shown', 'gate_dismissed', 'gate_click'] as const;
 export type TrackEvent = (typeof TRACK_EVENTS)[number];
 
 export interface TrackProps {
@@ -24,6 +24,8 @@ export interface TrackProps {
   benefit?: 'tracker-blocking' | 'hides-ad-boxes' | 'photo-cleaning';
   /** result_card_placed: what bringing the result card on screen did (lib/place-result.ts). */
   reason?: 'scrolled' | 'in-view' | 'hidden' | 'on-load' | 'own-scroll';
+  /** gate_shown / gate_dismissed / gate_click: which restricted action was attempted (lib/card-copy.ts GATE_COPY). */
+  gate?: 'cookie-csv-export' | 'browser-privacy-rerun' | 'metadata-multi-file';
 }
 
 export type Platform = 'android' | 'ios' | 'desktop' | 'other';

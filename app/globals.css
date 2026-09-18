@@ -288,3 +288,27 @@ details summary::-webkit-details-marker { display: none; }
 }
 @media (max-width: 399px) { .rc-proof-more, .rc-detail { display: none; } }
 @media print { .rc-pro, .rc-share { display: none; } }
+
+/* Upgrade gate overlay (components/ui/UpgradeOverlay.tsx, components/useUpgradeGate.tsx).
+   The panel reuses .rc-pro/.rc-rows/.rc-row/.rc-proof/.rc-foot for its content;
+   only the modal chrome below is new. z-60: clears both existing z-50 uses
+   (the sticky header and the mobile-nav dropdown, app/layout.tsx). */
+.ug-scrim { position: fixed; inset: 0; z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; background: #000000cc; }
+.ug-panel {
+  position: relative; width: 100%; max-width: 420px; max-height: calc(100vh - 40px); overflow-y: auto;
+  background: linear-gradient(90deg, #41b4f614, #41b4f605 60%, transparent), var(--s0);
+  border: 1px solid var(--b1); border-radius: var(--radius-card);
+  padding: 32px 24px 20px 27px;
+}
+.ug-panel::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--pro); border-top-left-radius: inherit; border-bottom-left-radius: inherit; }
+.ug-headline { margin: 0 0 8px; font: 600 18px/1.35 var(--font-console); color: var(--t1); }
+.ug-body { margin: 0 0 16px; font: 15px/1.5 var(--font-prose); color: var(--t2); max-width: 40ch; }
+.ug-close { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; color: var(--t3); font-size: 20px; line-height: 1; cursor: pointer; }
+.ug-close:hover { color: var(--t1); }
+@media (prefers-reduced-motion: no-preference) {
+  .ug-scrim { animation: ug-fade .15s ease-out; }
+  .ug-panel { animation: ug-rise .15s ease-out; }
+}
+@keyframes ug-fade { from { opacity: 0; } }
+@keyframes ug-rise { from { opacity: 0; transform: translateY(8px) scale(.98); } }
+@media (max-width: 479px) { .ug-panel { padding: 28px 16px 16px 19px; } }

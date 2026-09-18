@@ -25,6 +25,7 @@ import {
   CARD_COPY,
   CARD_LIMITS,
   DEFAULT_CARD_COPY,
+  GATE_COPY,
   PRO_LINE,
   reportCardCopy,
   type Benefit,
@@ -261,3 +262,27 @@ const DEFAULT_BUTTON: Record<Benefit, string> = {
   'hides-ad-boxes': 'Hide empty ad boxes with Pro',
   'photo-cleaning': 'Clean whole folders with Pro',
 };
+
+/**
+ * Gate copy (lib/card-copy.ts GATE_COPY, owner 2026-09-18): the words shown
+ * when a visitor attempts one of the three restricted actions on the Pro
+ * tools. Reuses the exact same `problems()` checks as every other Pro line
+ * on the site — a gate can never say more than the result card already
+ * says — mapping `stake` onto `meaning` since it plays the same role.
+ */
+describe('gate copy (lib/card-copy.ts GATE_COPY)', () => {
+  for (const [action, gate] of Object.entries(GATE_COPY)) {
+    it(`${action}: holds to the same rules as every other Pro line`, () => {
+      const entry: Entry = {
+        where: `GATE_COPY['${action}']`,
+        engine: '',
+        severity: 'red',
+        copy: { meaning: gate.stake, free: gate.free, pro: gate.pro, button: gate.button },
+      };
+      expect(problems(entry, true)).toEqual([]);
+      expect(gate.headline.trim(), 'headline is empty').not.toBe('');
+      expect(gate.headline.length, `headline is ${gate.headline.length} characters (max ${CARD_LIMITS.headline})`).toBeLessThanOrEqual(CARD_LIMITS.headline);
+      expect(benefitOf(gate.pro), `${action}'s pro line sells a different benefit than it declares`).toBe(gate.benefit);
+    });
+  }
+});

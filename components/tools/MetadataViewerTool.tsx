@@ -12,6 +12,8 @@ import {
   type ImageMetadata,
   type MetaField,
 } from '@/lib/exif';
+import { useUpgradeGate } from '@/components/useUpgradeGate';
+import { GATE_COPY } from '@/lib/card-copy';
 
 /**
  * What this viewer reads, in the words the page shows. It must match
@@ -84,6 +86,16 @@ export function MetadataViewerTool() {
   const [runAt, setRunAt] = useState(0);
   // Reading is async (compressed PNG text is inflated); a newer file wins over a slower, older read.
   const readSeq = useRef(0);
+  // Owner, 2026-09-18: one photo at a time is always free — Pro's batch
+  // cleaning (a whole folder at once) happens in the app, not on this page,
+  // so picking more than one file here just explains that rather than
+  // unlocking anything on the web itself.
+  const { guard: guardBatch, overlay: batchGate } = useUpgradeGate({
+    engine: 'metadata-viewer',
+    gate: 'metadata-multi-file',
+    ...GATE_COPY['metadata-multi-file'],
+  });
+  const noteBatchAttempt = guardBatch(() => {});
 
   // Revoke object URLs on unmount or replacement. One effect per URL: a shared
   // effect's cleanup revoked the live preview every time a clean copy was made.
@@ -92,8 +104,11 @@ export function MetadataViewerTool() {
   useEffect(() => () => { if (stripped) URL.revokeObjectURL(stripped); }, [stripped]);
 
   const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const picked = e.target.files;
+    const file = picked?.[0];
     if (!file) return;
+    // Picking more than one at once is the gated gesture; file 1 still reads free below.
+    if (picked.length > 1) noteBatchAttempt();
     if (file.size > 50 * 1024 * 1024) {
       alert('File too large. Maximum size is 50MB.');
       return;
@@ -223,6 +238,7 @@ export function MetadataViewerTool() {
         <input
           id="metadata-file"
           type="file"
+          multiple
           accept="image/*,.heic,.heif,.avif,.tif,.tiff"
           onChange={handleFile}
           className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
@@ -379,6 +395,7 @@ export function MetadataViewerTool() {
         </>
         </ConsoleFrame>
       )}
+      {batchGate}
     </div>
   );
 }

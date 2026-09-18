@@ -40,8 +40,8 @@ const FOOT = '.rc-foot';
 const SHARE = '[data-scorecard]';
 const REPORT = '.rc-report';
 
-/** How the result arrives: after the visitor's own action, on page load, at the end of the quiz, built into the page, or a calculator's next step. */
-type Kind = 'action' | 'on-load' | 'quiz' | 'report-card' | 'calculator';
+/** How the result arrives: after the visitor's own action, on page load, at the end of the quiz, built into the page, a calculator's next step, or a Pro-tools gate overlay. */
+type Kind = 'action' | 'on-load' | 'quiz' | 'report-card' | 'calculator' | 'gate';
 
 interface Run { label?: string; kind?: Kind; run: (page: Page) => Promise<void>; timeout?: number }
 interface Case { name: string; url: string; kind: Kind; run: (page: Page) => Promise<void>; timeout: number }
@@ -127,6 +127,34 @@ const RUN: Record<string, Run[]> = {
 
 const TOOL_PAGES: Array<{ site: 'free' | 'pro'; path: string; engine: string }> = JSON.parse(fs.readFileSync(path.join(FIX, 'tool-pages.json'), 'utf-8'));
 
+/**
+ * The three Pro-tools gates (owner, 2026-09-18): a secondary action beyond
+ * the core free result is restricted, and attempting it opens the overlay
+ * (components/ui/UpgradeOverlay.tsx). Each `run` gets a real result first,
+ * as a visitor would, then attempts the gated action.
+ */
+const GATE_RUN: Record<string, () => (p: Page) => Promise<void>> = {
+  'cookie-csv-export': () => async (p) => {
+    await p.locator('input[type="url"], input[type="text"]').first().fill('https://example.com');
+    await p.getByRole('button', { name: 'Scan', exact: true }).click();
+    await p.locator(CARD).first().waitFor({ state: 'attached', timeout: 30_000 });
+    await p.getByRole('button', { name: 'Export CSV', exact: true }).click();
+  },
+  'browser-privacy-rerun': () => async (p) => {
+    const run = () => p.getByRole('button', { name: /run privacy audit/i }).first().click();
+    await run();
+    await p.locator(CARD).first().waitFor({ state: 'attached', timeout: 30_000 });
+    await run(); // the second click in the same visit is the gated one
+  },
+  'metadata-multi-file': () => async (p) => {
+    const input = p.locator('input[type="file"]').first();
+    await input.evaluate((el) => el.scrollIntoView({ block: 'nearest' }));
+    await input.setInputFiles([path.join(FIX, 'sample-gps.jpg'), path.join(FIX, 'sample.png')]);
+  },
+};
+const GATE_ENGINE: Record<string, string> = { 'cookie-csv-export': 'cookie-analyzer', 'browser-privacy-rerun': 'browser-privacy', 'metadata-multi-file': 'metadata-viewer' };
+const GATE_URL = (engine: string) => `${PRO}${TOOL_PAGES.find((t) => t.site === 'pro' && t.engine === engine)!.path}/`;
+
 /** One published report card per grade, A to F (first by file name), besides the two with their own words. */
 function reportCards(): Array<{ grade: string; domain: string }> {
   const own = new Set(['google.com', 'apple.com']);
@@ -159,6 +187,13 @@ const CASES: Case[] = [
   // A calculator's answer is a next step: change a setting so the result is "Your result".
   { name: 'calculator (GDPR risk)', url: `${FREE}/calculators/gdpr/gdpr-compliance-risk-calculator/`, kind: 'calculator', run: changeSetting, timeout: 10_000 },
   { name: 'calculator (browser privacy risk)', url: `${FREE}/calculators/browser-privacy/browser-privacy-risk-calculator/`, kind: 'calculator', run: changeSetting, timeout: 10_000 },
+  ...Object.entries(GATE_RUN).map(([gate, run]) => ({
+    name: `gate: ${gate}`,
+    url: GATE_URL(GATE_ENGINE[gate]),
+    kind: 'gate' as const,
+    run: run(),
+    timeout: 30_000,
+  })),
 ];
 
 const { userAgent: ANDROID_UA, isMobile, hasTouch, deviceScaleFactor } = devices['Pixel 7'];
@@ -303,6 +338,42 @@ async function checkNextStep(page: Page, device: Device, c: Case) {
   expect(shown, `${at}: a next-step button fully on screen and tappable (found: ${JSON.stringify(steps)})`).not.toBeNull();
 }
 
+/** Where the gate overlay's own dialog and button sit, mirroring measureCard for [data-result-cta]. */
+function measureOverlay(page: Page) {
+  return page.evaluate(() => {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const inside = (r: DOMRect | undefined) => !!r && r.width > 0 && r.height > 0 && r.top >= -0.5 && r.left >= -0.5 && r.bottom <= vh + 0.5 && r.right <= vw + 0.5;
+    const nameOf = (el: Element | null) => (el ? `${el.tagName.toLowerCase()}${typeof el.className === 'string' && el.className.trim() ? `.${el.className.trim().split(/\s+/).slice(0, 2).join('.')}` : ''}` : 'nothing');
+    const panel = document.querySelector('.ug-panel[data-upgrade-gate]');
+    const button = panel?.querySelector('.btn-pro');
+    const b = button?.getBoundingClientRect();
+    const at = b ? document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2) : null;
+    return {
+      viewport: `${vw}x${vh}`,
+      open: !!panel,
+      gate: panel?.getAttribute('data-upgrade-gate') ?? null,
+      buttonInside: inside(b),
+      buttonHit: !!button && !!at && (at === button || button.contains(at)),
+      hitBy: button && at && at !== button && !button.contains(at) ? nameOf(at) : null,
+    };
+  });
+}
+
+/** The gate overlay opens on the attempted action, its own button is fully on screen and tappable — the "magic moment" rule extended to a gate, since the visitor already committed to an action and got interrupted. */
+async function checkGate(page: Page, device: Device, c: Case) {
+  await page.locator('.ug-panel[data-upgrade-gate]').first().waitFor({ state: 'attached', timeout: c.timeout });
+  await frames(page);
+  const m = await measureOverlay(page);
+  rows.push({ device: device.label, ua: device.ua, case: c.name, kind: c.kind, url: c.url, ...m });
+  await screenshot(page, device.slug, c.name);
+
+  const at = `${c.name} @ ${device.label}`;
+  expect(m.open, `${at}: the gate overlay opened`).toBe(true);
+  expect(m.buttonInside, `${at}: the overlay's own upgrade button fully on screen`).toBe(true);
+  expect(m.buttonHit, `${at}: a tap at the overlay button's centre lands on it, not on ${m.hitBy}`).toBe(true);
+}
+
 for (const device of DEVICES) {
   test.describe(device.label, () => {
     test.use(device.use);
@@ -312,6 +383,7 @@ for (const device of DEVICES) {
         await page.goto(c.url);
         await c.run(page);
         if (c.kind === 'calculator') await checkNextStep(page, device, c);
+        else if (c.kind === 'gate') await checkGate(page, device, c);
         else await checkCard(page, device, c);
       });
     }
@@ -374,6 +446,64 @@ test.describe('where the card places itself', () => {
     // The test needs the DNS API; a local build may have none, so no result there is reported, not fatal.
     check(!found, found, 'DNS leak test: a result card appeared (needs the DNS API)');
     if (found) await expect(card).toHaveAttribute('data-result-placed', 'own-scroll');
+  });
+});
+
+test.describe('the upgrade gate overlay', () => {
+  test.use({ ...DESKTOP, viewport: { width: 1280, height: 800 } });
+
+  // browser-privacy's audit is fully client-side (no scan API), so these
+  // dismissal/bypass mechanics — identical for every gate, since all three
+  // share the one UpgradeOverlay component — are verifiable without a live
+  // backend. cookie-csv-export and metadata-multi-file use the same code
+  // path (components/useUpgradeGate.tsx); see the "gate: cookie-csv-export"
+  // case above for that one verified against a live deploy instead.
+  const openBrowserPrivacyGate = async (page: Page) => {
+    await page.goto(GATE_URL('browser-privacy'));
+    const run = () => page.getByRole('button', { name: /run privacy audit/i }).first().click();
+    await run();
+    await page.locator(CARD).first().waitFor({ state: 'attached', timeout: 30_000 });
+    return page.getByRole('button', { name: /run privacy audit/i }).first();
+  };
+
+  test('a Pro subscriber inside the app: no overlay, and the gated action actually runs', async ({ page }) => {
+    await page.addInitScript(() => {
+      try { sessionStorage.setItem('ib-inapp', '1'); sessionStorage.setItem('ib-pro', '1'); } catch { /* storage blocked */ }
+      document.documentElement?.setAttribute('data-ib-pro', '');
+    });
+    const rerunButton = await openBrowserPrivacyGate(page);
+    await expect(page.locator('html')).toHaveAttribute('data-ib-pro', '');
+    // Assert the positive case, not just "no dialog": a regression that silently
+    // blocks a subscriber from the action entirely would pass a no-dialog-only check.
+    await rerunButton.click();
+    await expect(page.getByRole('button', { name: /scanning/i })).toBeVisible();
+    await expect(page.locator('.ug-panel[data-upgrade-gate]')).toHaveCount(0);
+  });
+
+  test('Escape closes the overlay and returns focus to the button that opened it', async ({ page }) => {
+    const rerunButton = await openBrowserPrivacyGate(page);
+    await rerunButton.click();
+    await page.locator('.ug-panel[data-upgrade-gate]').waitFor({ state: 'attached', timeout: 5_000 });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('.ug-panel[data-upgrade-gate]')).toHaveCount(0);
+    await expect(rerunButton).toBeFocused();
+  });
+
+  test('clicking the backdrop closes the overlay', async ({ page }) => {
+    const rerunButton = await openBrowserPrivacyGate(page);
+    await rerunButton.click();
+    const scrim = page.locator('.ug-scrim');
+    await scrim.waitFor({ state: 'attached', timeout: 5_000 });
+    await scrim.click({ position: { x: 5, y: 5 } }); // the scrim's own corner, well outside the centred panel
+    await expect(page.locator('.ug-panel[data-upgrade-gate]')).toHaveCount(0);
+  });
+
+  test('the close button closes the overlay', async ({ page }) => {
+    const rerunButton = await openBrowserPrivacyGate(page);
+    await rerunButton.click();
+    await page.locator('.ug-panel[data-upgrade-gate]').waitFor({ state: 'attached', timeout: 5_000 });
+    await page.getByRole('button', { name: 'Close' }).click();
+    await expect(page.locator('.ug-panel[data-upgrade-gate]')).toHaveCount(0);
   });
 });
 

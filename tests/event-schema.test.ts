@@ -119,3 +119,14 @@ describe('TOOL_IDS matches the engine registry', () => {
     for (const id of TOOL_IDS) if (id !== 'report-card') expect(registered.has(id), id).toBe(true);
   });
 });
+
+describe('GATE_IDS matches GATE_COPY', () => {
+  it('every gate a component can show is an allowed counter key, and no other', async () => {
+    const { GATE_IDS } = await import('../lib/event-schema');
+    const { GATE_COPY } = await import('../lib/card-copy');
+    const declared = new Set(Object.keys(GATE_COPY));
+    expect(declared.size).toBeGreaterThan(0);
+    for (const id of declared) expect(GATE_IDS.has(id), id).toBe(true);
+    for (const id of GATE_IDS) expect(declared.has(id), id).toBe(true);
+  });
+});

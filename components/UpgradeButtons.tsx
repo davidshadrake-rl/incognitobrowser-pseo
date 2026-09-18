@@ -49,7 +49,7 @@ interface Props {
   niche?: string;
   severity?: Severity;
   /** Where the ask sits. The app's upgrade screen and the Play referrer both get it. */
-  from: 'result' | 'funnel' | 'report-card' | 'band';
+  from: 'result' | 'funnel' | 'report-card' | 'band' | 'gate';
   /** Play referrer content: the benefit this ask sells, else the niche or "grade-D". */
   content?: string;
   /** Play referrer term: the page type. */
@@ -101,7 +101,7 @@ export function UpgradeButtons({ engine, niche, severity, from, content, term, p
   const [mailFallback, setMailFallback] = useState(false);
   const [msgCopied, setMsgCopied] = useState(false);
 
-  const play = DEMO_UPGRADE_URL || playUrl({ medium: from === 'funnel' ? 'funnel' : 'cta', campaign: engine, content: benefit || content || niche, term });
+  const play = DEMO_UPGRADE_URL || playUrl({ medium: from === 'funnel' ? 'funnel' : from === 'gate' ? 'gate' : 'cta', campaign: engine, content: benefit || content || niche, term });
   const liveHref = useSyncExternalStore(noSubscribe, hrefNow, serverHref);
   const pageHref = pageUrl || liveHref;
   // See lib/handoff.ts: CRLF body (RFC 6068 — bare "\n" breaks Outlook on Windows), hash stripped.

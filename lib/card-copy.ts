@@ -392,3 +392,54 @@ export function reportCardCopy(grade: Grade, severity: Severity, found: { tracki
 const CHECKED_MONTH = new Date(`${brand.play.checkedOn}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
 export const PLAY_PROOF = `Google Play, ${CHECKED_MONTH}: ★ ${brand.play.rating} · ${brand.play.reviewsLabel} · ${brand.play.downloadsLabel}`;
 export const DATA_SAFETY_URL = brand.dataSafety.source;
+
+/**
+ * Gate copy (owner, 2026-09-18): a secondary action on each Pro tool that
+ * genuinely restricts something — not the core free result, which every
+ * engine always delivers in full. Each headline/stake/free/pro/button holds
+ * to the same limits as CARD_LIMITS; the Pro line is always PRO_LINE
+ * verbatim, so a gate can never claim more than the result card already
+ * claims (tests/gate-copy.test.ts).
+ */
+export type GateAction = 'cookie-csv-export' | 'browser-privacy-rerun' | 'metadata-multi-file';
+
+export interface GateCopy {
+  /** Within CARD_LIMITS.headline (90 chars) — a budget every card reserves but none has used until now. */
+  headline: string;
+  /** Within CARD_LIMITS.meaning (120 chars), one sentence, grounded in the action just attempted. */
+  stake: string;
+  /** Within CARD_LIMITS.free (70 chars): the true, always-available free alternative. */
+  free: string;
+  /** Within CARD_LIMITS.pro (110 chars): one of PRO_LINE's values, verbatim. */
+  pro: string;
+  /** Within CARD_LIMITS.button (28 chars): an existing validated button string. */
+  button: string;
+  benefit: Benefit;
+}
+
+export const GATE_COPY: Record<GateAction, GateCopy> = {
+  'cookie-csv-export': {
+    headline: "CSV export isn't part of the free scanner",
+    stake: 'Every cookie and tracker this scan found is already listed on this page — CSV just isn\'t free to download.',
+    free: 'Read every finding above, or scan another page — both stay free.',
+    pro: PRO_LINE['tracker-blocking'],
+    button: 'Block trackers with Pro',
+    benefit: 'tracker-blocking',
+  },
+  'browser-privacy-rerun': {
+    headline: 'This audit already ran once this visit',
+    stake: "This browser's full audit already ran once this visit; running it again is the part that's gated.",
+    free: 'Reload this page to run the audit again, free, any time.',
+    pro: 'Blocks the tracking scripts and pixels that follow you from site to site in the app.',
+    button: 'Block trackers with Pro',
+    benefit: 'tracker-blocking',
+  },
+  'metadata-multi-file': {
+    headline: 'One photo at a time is free',
+    stake: 'This reader checks one photo at a time; picking more than one at once is the part that needs Pro.',
+    free: 'Check them here one at a time — free, no limit.',
+    pro: PRO_LINE['photo-cleaning'],
+    button: 'Clean whole folders with Pro',
+    benefit: 'photo-cleaning',
+  },
+};

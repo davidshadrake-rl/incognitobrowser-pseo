@@ -7,6 +7,8 @@ import { useReportResult, severityFromScore, type Severity, type ToolResult } fr
 import { Icon } from '@/components/ui/Icon';
 import { ConsoleFrame, statusFromSeverity } from './ConsoleFrame';
 import type { Grade } from '@/lib/site-grade';
+import { useUpgradeGate } from '@/components/useUpgradeGate';
+import { GATE_COPY } from '@/lib/card-copy';
 
 export interface CookieInfo {
   name: string;
@@ -283,6 +285,13 @@ export function CookieAnalyzerTool() {
   const [scanStatus, setScanStatus] = useState<'' | 'verifying' | 'solving' | 'scanning'>('');
   const [urlResult, setUrlResult] = useState<URLScanResult | null>(null);
   const report = useReportResult();
+  // CSV export is Pro's territory on this tool (owner, 2026-09-18): the scan
+  // itself always stays free and full; only the download is gated.
+  const { guard: guardExport, overlay: exportGate } = useUpgradeGate({
+    engine: 'cookie-analyzer',
+    gate: 'cookie-csv-export',
+    ...GATE_COPY['cookie-csv-export'],
+  });
   // One report per view, built by the same functions the consoles below read,
   // so the CTA, the scorecard and the console always give the same verdict.
   const urlReport = useMemo(() => (urlResult ? urlScanReport(urlResult) : null), [urlResult]);
@@ -648,7 +657,7 @@ export function CookieAnalyzerTool() {
               </p>
             </div>
             <button
-              onClick={() => downloadCsv(urlResult)}
+              onClick={guardExport(() => downloadCsv(urlResult))}
               className="text-sm px-4 py-2 border border-b1 rounded text-white hover:bg-white/5 shrink-0"
             >
               Export CSV
@@ -786,6 +795,7 @@ export function CookieAnalyzerTool() {
           )}
         </ConsoleFrame>
       )}
+      {exportGate}
     </div>
   );
 }

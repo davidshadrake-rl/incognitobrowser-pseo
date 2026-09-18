@@ -20,6 +20,7 @@ export interface EventPayload {
   page?: string;
   benefit?: 'tracker-blocking' | 'hides-ad-boxes' | 'photo-cleaning';
   reason?: 'scrolled' | 'in-view' | 'hidden' | 'on-load' | 'own-scroll';
+  gate?: 'cookie-csv-export' | 'browser-privacy-rerun' | 'metadata-multi-file';
 }
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,47}$/;
@@ -36,6 +37,9 @@ export const TOOL_IDS = new Set([
   'useragent-analyzer', 'whats-my-ip',
   'report-card',
 ]);
+// The three restricted actions a gate can name (lib/card-copy.ts GATE_COPY).
+// Kept in step the same way TOOL_IDS is (guarded by tests/event-schema.test.ts).
+export const GATE_IDS = new Set(['cookie-csv-export', 'browser-privacy-rerun', 'metadata-multi-file']);
 const PLATFORMS = new Set(['android', 'ios', 'desktop', 'other']);
 const BENEFITS = new Set(['tracker-blocking', 'hides-ad-boxes', 'photo-cleaning']);
 const REASONS = new Set(['scrolled', 'in-view', 'hidden', 'on-load', 'own-scroll']);
@@ -64,6 +68,7 @@ export function validateEvent(input: unknown): Validation {
   if (o.page !== undefined) { if (typeof o.page !== 'string' || !isFunnelPath(o.page)) return { ok: false, error: 'unknown page' }; v.page = o.page; }
   if (o.benefit !== undefined) { if (!BENEFITS.has(o.benefit as string)) return { ok: false, error: 'bad benefit' }; v.benefit = o.benefit as EventPayload['benefit']; }
   if (o.reason !== undefined) { if (!REASONS.has(o.reason as string)) return { ok: false, error: 'bad reason' }; v.reason = o.reason as EventPayload['reason']; }
+  if (o.gate !== undefined) { if (!GATE_IDS.has(o.gate as string)) return { ok: false, error: 'bad gate' }; v.gate = o.gate as EventPayload['gate']; }
   return { ok: true, value: v };
 }
 
@@ -79,6 +84,7 @@ export function eventKeys(day: string, v: EventPayload): string[] {
   // The benefit rides on the click's own key, so the count stays bounded (≤7 keys).
   if (v.target) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:${v.target}${v.benefit ? `:b-${v.benefit}` : ''}`);
   if (v.reason) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:r-${v.reason}`);
+  if (v.gate) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:gate-${v.gate}`);
   if (v.severity) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:sev-${v.severity}`);
   if (v.inApp) keys.push(`evt:${day}:_inapp:${v.event}`);
   // Per funnel page: views, runs, results by colour and clicks (scripts/funnels/stats.ts).

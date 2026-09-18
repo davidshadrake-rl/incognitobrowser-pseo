@@ -28,7 +28,7 @@ export const PLAY_PACKAGE = 'com.androidbull.incognito.browser';
 
 export interface PlayLinkOpts {
   source?: 'resources' | 'pro';
-  medium: 'site' | 'tool' | 'report-card' | 'scorecard' | 'cta' | 'handoff' | 'funnel';
+  medium: 'site' | 'tool' | 'report-card' | 'scorecard' | 'cta' | 'handoff' | 'funnel' | 'gate';
   campaign: string;
   content?: string;
   /** Which page TYPE earned the click (tool | report-card | guide | checklist …): the only way to learn which content converts. */
