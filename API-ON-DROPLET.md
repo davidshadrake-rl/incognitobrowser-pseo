@@ -339,6 +339,31 @@ function, with a comment claiming it was not exported — it was. The copy had
 drifted, so the suite reported all green straight through both holes above.
 It now imports the real one. Never re-inline it.
 
+### Known gap: DNS rebinding
+
+The route resolves the hostname, judges the addresses, and then calls `fetch`,
+which resolves it **again**. A name whose record flips between the two — a
+public address for our check, a private one for the fetch — still gets through.
+Narrow (it needs an attacker-controlled domain on a very low TTL and a won
+race) but real, and the payoff is the fetched body being returned to the caller.
+
+Closing it means pinning the connection to the address that was actually
+checked. Two ways, neither free, so it is left for a decision rather than done
+quietly:
+
+1. Add `undici` as a direct dependency and give `fetch` a `dispatcher` whose
+   `connect.lookup` returns only the verified address. Small code change, but a
+   new production dependency.
+2. Rewrite the fetch on `node:https` with an agent-level `lookup` — no new
+   dependency, everything is built in — but it means reimplementing header,
+   redirect and capped-body handling that currently works and is well covered.
+
+Until then the blast radius is bounded by what is already in place: the port
+allowlist (80/443/8080/8443), `redirect: 'manual'`, and `BLOCKED_TARGET_HOSTS`.
+
+Also not done: a per-day scan counter in the `/event` keyspace. Scan volume is
+visible in `api.log` meanwhile.
+
 ## What is deliberately not carried over
 
 - **The Vercel WAF / firewall rules** from the old `OPS-RUNBOOK.md`. Apache has
