@@ -48,7 +48,14 @@ echo "   routes present: challenge scan-url ip event stats dns-leak"
 echo "== upload -> $TARGET:$REMOTE"
 # .npmrc ships too: it sets ignore-scripts, and the remote npm ci below reads it
 # from $REMOTE because that is the working directory. See the file for why.
-rsync -az --delete -e "$SSH" .next/            "$TARGET:$REMOTE/.next/"
+# --exclude cache/: .next/cache is Turbopack's LOCAL build cache and the
+# production server does not need it. It also had a live ANTHROPIC_API_KEY
+# from .env sitting in it verbatim (found 2026-09-19 by the suite's
+# secret-known-value-in-build-output check, which blocked this very deploy).
+# The key had not reached the droplet yet, but this line is what would have
+# carried it there — a build cache is not an artifact, and shipping one moves
+# whatever the build happened to touch.
+rsync -az --delete --exclude 'cache/' -e "$SSH" .next/  "$TARGET:$REMOTE/.next/"
 rsync -az          -e "$SSH" next.config.ts package.json package-lock.json .npmrc "$TARGET:$REMOTE/"
 rsync -az --delete -e "$SSH" public/           "$TARGET:$REMOTE/public/"
 
