@@ -40,7 +40,20 @@ if ! grep -q 'resources-pro/ - \[L\]' "$HT"; then
   sed -i '0,/RewriteRule \^resources\/ - \[L\]/s//RewriteRule ^resources\/ - [L]\n  RewriteRule ^resources-pro\/ - [L]/' "$HT"
 fi
 a2enmod -q headers expires >/dev/null 2>&1 || true
-cp "$HT" "$HT.bak.$(date +%s)"
+# Backups go OUTSIDE the web root, and only the last 10 are kept.
+#
+# This used to write "$HT.bak.<epoch>" next to the file, i.e. into
+# /var/www/html — a directory Apache serves. 18 copies of the server's
+# .htaccess had accumulated there, each one a map of the rewrite rules, the
+# header policy and the paths behind them. They answer 403 on THIS box only
+# because a dotfile deny was added on 2026-09-19; on a host that has not had
+# that rule applied yet they are readable, and this script is what would put
+# them there. A config backup is not site content and does not belong in a
+# directory whose entire job is to hand files to strangers.
+BACKUP_DIR=/root/htaccess-backups
+mkdir -p "$BACKUP_DIR" && chmod 700 "$BACKUP_DIR"
+cp "$HT" "$BACKUP_DIR/htaccess.$(date +%s)"
+ls -1t "$BACKUP_DIR"/htaccess.* 2>/dev/null | tail -n +11 | xargs -r rm -f
 python3 - "$HT" /tmp/pseo-htaccess-block.conf <<'PY'
 import re, sys
 ht, blk = sys.argv[1], sys.argv[2]

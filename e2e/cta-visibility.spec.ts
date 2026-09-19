@@ -405,13 +405,18 @@ test.describe('where the card places itself', () => {
   });
 
   test('a Pro subscriber inside the app: no ask, and the card places nothing', async ({ page }) => {
-    // How the app says so (lib/in-app.ts): the flags it keeps for the tab, so the boot script marks <html data-ib-pro>.
+    // How the app really says so (lib/in-app.ts). The tab flags alone are NOT
+    // enough any more, and that is deliberate: since 2026-09-19 data-ib-pro
+    // needs `source && pro && (bridged || named)`, because `?pro=1` is text in
+    // a URL and one shared link used to hide every upgrade ask and open all
+    // three gates for the whole tab on the open web. So this injects the thing
+    // only the app can provide — the window.IncognitoBrowserApp bridge object.
     await page.addInitScript(() => {
       try {
         sessionStorage.setItem('ib-inapp', '1');
         sessionStorage.setItem('ib-pro', '1');
       } catch { /* storage blocked */ }
-      document.documentElement?.setAttribute('data-ib-pro', '');
+      (window as unknown as { IncognitoBrowserApp?: unknown }).IncognitoBrowserApp = {};
     });
     await page.goto(`${FREE}/tools/data-breach/password-strength-checker/`);
     await expect(page.locator('html')).toHaveAttribute('data-ib-pro', '');
@@ -469,7 +474,8 @@ test.describe('the upgrade gate overlay', () => {
   test('a Pro subscriber inside the app: no overlay, and the gated action actually runs', async ({ page }) => {
     await page.addInitScript(() => {
       try { sessionStorage.setItem('ib-inapp', '1'); sessionStorage.setItem('ib-pro', '1'); } catch { /* storage blocked */ }
-      document.documentElement?.setAttribute('data-ib-pro', '');
+      // The bridge object, not a URL flag — see the note on the card test above.
+      (window as unknown as { IncognitoBrowserApp?: unknown }).IncognitoBrowserApp = {};
     });
     const rerunButton = await openBrowserPrivacyGate(page);
     await expect(page.locator('html')).toHaveAttribute('data-ib-pro', '');
