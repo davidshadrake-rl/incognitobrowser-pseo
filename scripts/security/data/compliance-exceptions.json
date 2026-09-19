@@ -1,0 +1,26 @@
+{
+  "_comment": "Temporary departures from a compliance rule, each with a named owner and an END DATE. Nothing is listed here by a tool or by an agent: an entry is a person deciding, in writing, to accept a risk until a date. An expired entry fails the same way an undeclared one does, which is the entire point — a demo that cannot expire is not a demo, it is the product.",
+
+  "_upgradeDestinations": "Where an upgrade CTA may point other than Google Play or the app's own incognitobrowser://upgrade. Read by cmp-upgrade-cta-destination. These pages render inside the Android app's WebView (IN-APP-BRIDGE.md), so a purchase CTA for a digital good that leaves Play Billing is a Play policy question as well as a truthfulness one: the footnote under the button says 'Pro is part of the free Incognito Browser app', and that has to keep describing where the tap goes. Fields: host, owner, reason, expires (ISO date, inclusive).",
+  "upgradeDestinations": [
+    {
+      "host": "staging.ufile.io",
+      "owner": "owner",
+      "reason": "Deliberate product decision, 2026-09-17: every 'Get Pro on Android' CTA points at the paywall page of another Radius Labs product, as a live demo of that checkout. Instructed in so many words ('make all Get Pro on Android CTAs land here', 'we are using this paywall page from our other product as a demo for the CTA in this case'). It is NOT a mistake and NOT a vulnerability — two separate reviewers flagged it as one, which is why it is written down here. The single switch is DEMO_UPGRADE_URL in components/UpgradeButtons.tsx; clearing it restores the attributed Play links everywhere at once.",
+      "expires": "2026-12-18",
+      "_expiresNote": "90 days from the decision, chosen by the suite, NOT by the owner. The date is the part that needs confirming: it exists so a demo cannot quietly become the shipped product. On that date this check fails until someone either extends it or clears the switch."
+    }
+  ],
+
+  "_overrides": "Temporary switches in the source — a constant flipped to change behaviour for a demo or an incident. Read by cmp-override-is-revertible. Fields: constant, file, neutralValue (what 'off' is), owner, reason, expires (ISO date, inclusive).",
+  "overrides": [
+    {
+      "constant": "DEMO_UPGRADE_URL",
+      "file": "components/UpgradeButtons.tsx",
+      "neutralValue": "",
+      "owner": "owner",
+      "reason": "The one switch behind the staging.ufile.io demo above. Kept here as well as in upgradeDestinations because the two checks ask different questions: one asks where the rendered links GO, the other asks whether the switch can still be turned OFF. That second question was not idle — a test used to pin this constant to the demo value, so performing the rollback the code documents as 'one line' failed the suite and blocked the deploy (fixed 2026-09-19).",
+      "expires": "2026-12-18"
+    }
+  ]
+}

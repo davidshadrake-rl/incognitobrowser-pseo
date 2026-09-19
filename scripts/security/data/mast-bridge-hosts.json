@@ -1,0 +1,19 @@
+{
+  "_comment": [
+    "Origins IN-APP-BRIDGE.md is allowed to hand the Android app, on top of the",
+    "ones derived from lib/tiers.ts (FREE_BASE_URL / PRO_BASE_URL). Everything",
+    "here is a host we control and intend to serve the pages from. Adding an",
+    "entry is a deliberate act: it grants window.IncognitoBrowserApp — and with",
+    "it openUpgrade() and saveImage() — to every page on that origin, inside a",
+    "privacy browser's WebView, until the app team ships a release that changes",
+    "it. Nothing that is being released, parked, or served by a third party",
+    "belongs here.",
+    "mast-bridge-origin-allowlist reads this file."
+  ],
+  "extraOrigins": [
+    {
+      "origin": "https://incognitobrowser.io",
+      "reason": "The hostname the sites are moving to. IN-APP-BRIDGE.md:11 keeps it in the app's allowlist for the cutover so the swap does not need a second app release. Registered to us and not serving the pages yet."
+    }
+  ]
+}

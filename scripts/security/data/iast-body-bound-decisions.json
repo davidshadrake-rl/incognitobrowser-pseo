@@ -1,0 +1,23 @@
+{
+  "_readme": [
+    "Routes whose owner has DECIDED to accept an unbounded chunked request body,",
+    "with the compensating control that makes it acceptable written down.",
+    "",
+    "Shipped empty on purpose. iast-request-body-read-after-size-check observes",
+    "that every body-reading route buffers a whole Content-Length-less POST",
+    "before refusing it, because the checks are `if (content-length > cap)` and",
+    "then `await request.text()`. The Apache <If \"%{HTTP:Content-Length} -gt",
+    "1048576\"> block in API-ON-DROPLET.md cannot cover that case: a chunked",
+    "request carries no Content-Length for the expression to match, so the",
+    "expression is false and the request is proxied.",
+    "",
+    "Adding an entry here silences the finding for one route. That is a real",
+    "decision about a 768M-capped service on a box whose OOM killer takes MySQL",
+    "and WordPress with it, so it is written down rather than absorbed: name the",
+    "control that actually bounds it, and who decided.",
+    "",
+    "The alternative fix is to read the body as a stream and abort past the cap",
+    "instead of awaiting request.text()."
+  ],
+  "accepted": []
+}

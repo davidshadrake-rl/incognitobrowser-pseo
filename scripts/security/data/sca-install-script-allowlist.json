@@ -1,0 +1,57 @@
+{
+  "_readme": [
+    "Every package in package-lock.json that declares an install script, reviewed once and",
+    "pinned here so a NEW one cannot arrive unnoticed inside 280KB of lockfile diff.",
+    "",
+    "Why this matters on this repo specifically: scripts/deploy-api.sh runs `npm ci` on the",
+    "droplet as www-data, on the box that also serves the team's WordPress and MySQL. A",
+    "postinstall in the production closure is arbitrary code execution as the web user,",
+    "there. That is the whole npm supply-chain attack shape, and you do not have to be",
+    "compromised for it to land — only something you transitively depend on.",
+    "",
+    "Two mitigations are in place today (.npmrc ignore-scripts=true, and an explicit",
+    "--ignore-scripts on the remote npm ci) and the check asserts both, because this",
+    "allowlist is what is left if either one is removed.",
+    "",
+    "`inProdClosure` is recorded, not just the name. A package moving from dev-only into the",
+    "production closure changes WHO runs its script and on WHICH machine, which is a change",
+    "worth seeing even though the package itself was already known."
+  ],
+  "reviewed": "2026-09-18",
+  "allowed": [
+    {
+      "path": "node_modules/esbuild",
+      "name": "esbuild",
+      "inProdClosure": true,
+      "why": "postinstall (node install.js) swaps the JS bin shim for the native binary. lib/main.js resolves @esbuild/<platform> at runtime without it. In the production closure only because tsx is misfiled in package.json dependencies — see sca-prod-dep-placement; fixing that removes esbuild from the droplet entirely."
+    },
+    {
+      "path": "node_modules/sharp",
+      "name": "sharp",
+      "inProdClosure": true,
+      "why": "install/check.js only builds from source when a global libvips is present. Since 0.33 sharp loads @img/sharp-<platform>/sharp.node directly. Unreachable anyway with images.unoptimized: true."
+    },
+    {
+      "path": "node_modules/fsevents",
+      "name": "fsevents",
+      "inProdClosure": true,
+      "why": "macOS-only optional dependency, irrelevant on the Linux droplet. Native build step only."
+    },
+    {
+      "path": "node_modules/unrs-resolver",
+      "name": "unrs-resolver",
+      "inProdClosure": false,
+      "why": "dev-only, via eslint-config-next. Loads @unrs/resolver-binding-<platform> at runtime; the postinstall is a convenience."
+    },
+    {
+      "path": "node_modules/playwright/node_modules/fsevents",
+      "name": "fsevents",
+      "inProdClosure": false,
+      "why": "dev-only copy under playwright. Same macOS watcher as the top-level entry."
+    }
+  ],
+  "guards": {
+    "npmrcIgnoreScripts": "ignore-scripts=true must stay in .npmrc — it is rsync'd to /opt/ib-api and covers a hand-run npm ci on the droplet.",
+    "deployIgnoreScripts": "scripts/deploy-api.sh must keep passing --ignore-scripts to the remote npm ci, so the protection does not depend on .npmrc having arrived intact."
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "_comment": [
+    "What the droplet's posture is SUPPOSED to be. There is no Terraform, no",
+    "Ansible and no container image anywhere in this repo — the box was built by",
+    "hand and by scripts/droplet-server-config.sh — so this file is the closest",
+    "thing to a declared infrastructure state that exists. The cnast checks read",
+    "the live box read-only and diff against it, so drift produces a reviewable",
+    "diff instead of a judgement call at 2am.",
+    "",
+    "Change a value here only when the INTENT changes. Never edit it to match what",
+    "the box happens to be doing — that turns the whole discipline into a mirror.",
+    "Every entry carries the runbook line that justifies it."
+  ],
+
+  "sockets": {
+    "_source": "API-ON-DROPLET.md:94 (Redis binds 127.0.0.1) and :135 (ib-api -H 127.0.0.1)",
+    "publicPortsAllowed": [22, 80, 443],
+    "mustBeLoopbackOnly": [
+      { "port": 3100, "what": "ib-api — public would bypass the Apache body cap, the header stripping and the no-IP logging all at once" },
+      { "port": 6379, "what": "Redis — no password on this box, so a public bind is a full compromise" },
+      { "port": 3306, "what": "MySQL — the team's WordPress database" },
+      { "port": 33060, "what": "MySQL X protocol, same database" }
+    ],
+    "knownLoopbackPorts": [53, 3100, 3306, 6379, 33060],
+    "_knownLoopbackNote": "53 is systemd-resolved on 127.0.0.53/127.0.0.54. A loopback port not in this list is reported as info, not as a failure — new local services are normal; new PUBLIC ones are not."
+  },
+
+  "ufw": {
+    "_source": "API-ON-DROPLET.md:284 — 'Default deny inbound', the backstop for the bind-address assumption above",
+    "mustBeActive": true,
+    "defaultIncoming": "deny",
+    "allowedPorts": [22, 80, 443]
+  },
+
+  "sshd": {
+    "_source": ".secrets sets DEPLOY_USER=root, consumed by scripts/deploy.sh — so root login cannot be 'no' without changing the deploy",
+    "expect": {
+      "permitrootlogin": "prohibit-password",
+      "passwordauthentication": "no",
+      "kbdinteractiveauthentication": "no",
+      "permitemptypasswords": "no"
+    }
+  },
+
+  "unit": {
+    "_source": "API-ON-DROPLET.md:125-143 (the unit) and :283 (the limits.conf drop-in)",
+    "sandbox": {
+      "ProtectSystemAcceptable": ["strict", "full"],
+      "PrivateTmp": "yes",
+      "NoNewPrivileges": "yes",
+      "readWritePathsMustNotTouch": ["/var/www", "/etc", "/home", "/root"]
+    },
+    "ceilings": {
+      "MemoryMax": "805306368",
+      "MemorySwapMax": "0",
+      "CPUQuotaPerSecUSec": "1s",
+      "TasksMax": "256",
+      "LimitNOFILE": "8192",
+      "StartLimitBurst": "5",
+      "StartLimitIntervalUSec": "5min",
+      "heapFlag": "--max-old-space-size=448",
+      "dropInMustInclude": "ib-api.service.d/limits.conf"
+    }
+  },
+
+  "paths": {
+    "_source": "scripts/deploy.sh:133, scripts/deploy-api.sh:95, scripts/droplet-server-config.sh:30-31 all chown -R www-data:www-data",
+    "_intent": "Static files and a service's own code never need to be writable by the web server uid. Read is enough. www-data is also the WordPress PHP uid on this box.",
+    "roots": [
+      { "path": "/var/www/html/resources", "owner": "root", "group": "www-data", "mode": "755" },
+      { "path": "/var/www/html/resources-pro", "owner": "root", "group": "www-data", "mode": "755" },
+      { "path": "/opt/ib-api", "owner": "root", "group": "www-data", "mode": "755" }
+    ],
+    "envFile": { "path": "/etc/ib-api.env", "owner": "root", "maxMode": "640", "preferredGroup": "root" }
+  },
+
+  "apache": {
+    "_source": "API-ON-DROPLET.md:170-194 and scripts/droplet-htaccess.conf",
+    "managedBlockBegin": "# BEGIN pseo-security-headers",
+    "managedBlockEnd": "# END pseo-security-headers",
+    "backupFileWarnThreshold": 6,
+    "proxyVhostMustContain": [
+      "RequestHeader unset X-Forwarded-For",
+      "RequestHeader unset CF-Connecting-IP",
+      "RequestHeader unset X-Real-IP",
+      "RequestHeader unset True-Client-IP"
+    ],
+    "bodyCapPattern": "%{HTTP:Content-Length} -gt 1048576",
+    "noIpLogDirectives": [
+      "SetEnvIf Request_URI \"^/api/\" ib_api",
+      "LogFormat \"%{%Y-%m-%dT%H:%M:%S}t \\\"%r\\\" %>s %b %Dus\" ib_api_noip",
+      "CustomLog ${APACHE_LOG_DIR}/api.log ib_api_noip env=ib_api"
+    ]
+  },
+
+  "patching": {
+    "_source": "no patching cadence is documented anywhere in this repo; this file is the first statement of one",
+    "securityUpdatesFailAt": 5,
+    "rebootRequiredIsFinding": true,
+    "unattendedUpgradesMustBeEnabled": true
+  },
+
+  "disk": {
+    "_source": "API-ON-DROPLET.md:288 — 'A flood filling the disk between nightly rotations. A full disk takes MySQL down.'",
+    "maxUsedPercent": 85,
+    "maxInodeUsedPercent": 85,
+    "logrotateTimer": "logrotate.timer",
+    "logrotateMaxsizeRequired": true
+  },
+
+  "certbot": {
+    "_source": "reviewer: the cert is the lagging indicator, the renewal timer is the leading one",
+    "timer": "certbot.timer",
+    "mustBeEnabled": true,
+    "maxDaysSinceLastTrigger": 3
+  }
+}

@@ -17,8 +17,24 @@ const ROOT = path.join(__dirname, '..');
 // data/ is excluded on purpose: vercel.com is one of the 500 scanned sites,
 // so its report card and funnel legitimately name it as a third-party website.
 const DIRS = ['app', 'components', 'lib', 'scripts', 'tests', 'e2e'];
-/** This guard names the platform in order to ban it; it cannot police itself. */
+/**
+ * Files that name the platform in order to REFUSE it, and so cannot be policed
+ * by a rule against naming it.
+ *
+ * This guard itself, plus scripts/security/checks/ — the security suite's own
+ * detectors. Several of them exist specifically to catch a live Vercel
+ * reference (cnast-apache-drift reads the deployed Apache config,
+ * mast-bridge-origin-allowlist reads the WebView origin allowlist handed to the
+ * Android team), and they have to spell the hostname out to match on it.
+ *
+ * This is an exemption for the DETECTORS, not a hole: those checks grade the
+ * live server and the shipped contract, which is more than this file can reach
+ * from the source tree. Both found real stale references on 2026-09-19 that
+ * this guard had missed for weeks.
+ */
 const SELF = path.join('tests', 'no-vercel.test.ts');
+const SELF_DIRS = [path.join('scripts', 'security', 'checks')];
+const isSelf = (f: string) => f === SELF || SELF_DIRS.some((d) => f.startsWith(d + path.sep));
 /** A line that exists to BAN the hostname is not a dependency on it. Mark it. */
 const ALLOW = 'no-vercel-guard';
 // .conf and .htaccess earn their place here the hard way: the live CSP is set
@@ -43,7 +59,7 @@ describe('no Vercel dependency anywhere that runs', () => {
     const files = [...DIRS.flatMap(walk), 'next.config.ts', 'package.json'];
     const hits = files.flatMap((f) => {
       const full = path.join(ROOT, f);
-      if (!fs.existsSync(full) || f === SELF) return [];
+      if (!fs.existsSync(full) || isSelf(f)) return [];
       return fs.readFileSync(full, 'utf-8').split('\n')
         .map((line, i) => ({ line, n: i + 1 }))
         .filter(({ line }) => /vercel/i.test(line) && !line.includes(ALLOW))

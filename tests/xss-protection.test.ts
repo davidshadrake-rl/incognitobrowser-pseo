@@ -157,12 +157,18 @@ describe('XSS - No Unescaped User Input in Rendered HTML', () => {
 
   for (const file of clientComponents) {
     it(`${path.basename(file)} does not use dangerouslySetInnerHTML`, () => {
-      try {
-        const content = readFile(file);
-        expect(content).not.toContain('dangerouslySetInnerHTML');
-      } catch {
-        // File might not exist, skip
-      }
+      // No try/catch. It used to wrap both lines "in case the file moved",
+      // which also swallowed the expect() — because a failing expect THROWS,
+      // and the catch turned that into a pass. All eleven of these assertions
+      // were inert: the guard would have reported green with the sink present.
+      // (Checked when this was found on 2026-09-19: none of the files had it,
+      // so nothing was being hidden — but nothing was being graded either.)
+      //
+      // A moved file is now a failure too, and should be: this list is the
+      // definition of which components are covered, so a stale entry means the
+      // real component is unguarded.
+      expect(fs.existsSync(path.join(PROJECT_ROOT, file)), `${file} is listed here but does not exist — this assertion is no longer covering anything`).toBe(true);
+      expect(readFile(file)).not.toContain('dangerouslySetInnerHTML');
     });
   }
 });

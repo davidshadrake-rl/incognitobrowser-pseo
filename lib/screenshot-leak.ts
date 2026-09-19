@@ -141,7 +141,22 @@ function indexOfNul(b: Uint8Array, from = 0): number {
   return -1;
 }
 
+/**
+ * How many metadata fields one image may contribute.
+ *
+ * A real photo has tens. The number is attacker-controlled — PNG tEXt chunks
+ * and EXIF tags are just key/value pairs anyone can pack a file with — and
+ * every per-field pass downstream pays for each one. The Set-based dedup in
+ * assess() removes today's quadratic term; this cap is what stops the next
+ * per-field scanner quietly re-introducing it.
+ *
+ * Reached only by a deliberately padded file, so it is not surfaced to the
+ * visitor as an error: they still get the report for the first 512 fields.
+ */
+const MAX_FIELDS = 512;
+
 function pushField(out: RawExtraction, key: string, value: string, source: string): void {
+  if (out.fields.length >= MAX_FIELDS) return;
   const v = clean(value);
   if (!v) return;
   out.fields.push({ key, value: v, source });
@@ -506,9 +521,21 @@ function parseTiff(input: Uint8Array, source: string, out: RawExtraction): void 
 
 const XMP_PNG_KEY = 'XML:com.adobe.xmp';
 
+/**
+ * Chunks one PNG may contribute before the walk stops.
+ *
+ * A zero-length chunk advances `off` by only 12 bytes, so a megabyte of them
+ * is ~87,000 iterations — cheap per chunk, but it is the multiplier every
+ * later per-field pass is measured against. MAX_FIELDS bounds what is kept;
+ * this bounds what is looked at.
+ */
+const MAX_PNG_CHUNKS = 4096;
+
 function parsePng(b: Uint8Array, out: RawExtraction): void {
   let off = 8;
+  let chunks = 0;
   while (off + 8 <= b.length) {
+    if (++chunks > MAX_PNG_CHUNKS) break;
     const len = u32be(b, off);
     const type = latin1(b, off + 4, off + 8);
     const dataStart = off + 8;
@@ -795,9 +822,16 @@ function digitsOnly(s: string): string {
 /** Scan one string for personal data. Exported for tests. */
 export function scanPii(text: string, source: string): PiiHit[] {
   const hits: PiiHit[] = [];
+  // Same quadratic dedup as assess()'s addPii, for the same reason — one long
+  // field with many distinct matches re-scans the whole hit list per match.
+  const seen = new Set<string>();
   const add = (kind: PiiKind, value: string) => {
     const v = value.trim();
-    if (v && !hits.some((h) => h.kind === kind && h.value === v)) hits.push({ kind, value: v, source });
+    if (!v) return;
+    const key = `${kind}\n${v}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    hits.push({ kind, value: v, source });
   };
   if (!text) return hits;
   let m: RegExpExecArray | null;
@@ -901,8 +935,20 @@ function fmtCoord(n: number): string {
 
 export function assess(raw: RawExtraction): ScreenshotAnalysis {
   const pii: PiiHit[] = [];
+  // Set, not pii.some(). The linear scan made this quadratic in the number of
+  // distinct hits, and the input is attacker-chosen: a PNG's tEXt chunks are
+  // just key/value pairs anyone can pack a file with. Measured before the fix
+  // — 16 metadata fields 33 ms, 64 fields 447 ms: 13.6x the time for 4x the
+  // input, extrapolating to ~23 s for a file under a megabyte, with the tab
+  // frozen for all of it because this runs in the visitor's browser.
+  const seenPii = new Set<string>();
   const addPii = (list: PiiHit[]) => {
-    for (const h of list) if (!pii.some((p) => p.kind === h.kind && p.value === h.value)) pii.push(h);
+    for (const h of list) {
+      const key = `${h.kind}\n${h.value}`;
+      if (seenPii.has(key)) continue;
+      seenPii.add(key);
+      pii.push(h);
+    }
   };
 
   addPii(scanPii(raw.fileName, 'file name'));

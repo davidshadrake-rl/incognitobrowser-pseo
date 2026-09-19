@@ -1,0 +1,245 @@
+{
+  "_readme": [
+    "Signed-off, EXPIRING justifications for advisories that npm audit reports against the",
+    "production dependency closure but that cannot be reached in this system.",
+    "",
+    "Read this before adding an entry:",
+    "",
+    "1. A suppression is not 'this does not worry me'. It is a claim that a specific fact",
+    "   about this codebase makes the advisory unreachable. That fact is the `premise`, and",
+    "   scripts/security/checks/sca-suppression-premises.mjs re-asserts every one of them on",
+    "   every commit. If the premise stops holding, the suppression is voided loudly and the",
+    "   advisory is live again. A suppression with a premise nothing can assert is worthless,",
+    "   which is why an unknown premise key is itself a finding.",
+    "2. `expires` is mandatory and is enforced. Ninety days is the default. Nothing gets",
+    "   buried permanently; someone re-reads the reasoning while it is still cheap to change",
+    "   their mind about it.",
+    "3. A suppression that matches no live advisory is also a finding. A stale waiver is a",
+    "   loaded gun pointed at a future re-introduction of the same advisory.",
+    "",
+    "What is deliberately NOT suppressed, and why the gate is red on day one:",
+    "the React Server Component denial-of-service family (GHSA-q4gf-8mx6-v5v3,",
+    "GHSA-8h8q-6873-q5fj, GHSA-mg66-mrh9-m8jx) and the RSC cache-poisoning / cache-confusion",
+    "family (GHSA-vfv6-92ff-j949, GHSA-wfc6-r584-vfw7, GHSA-68g3-v927-f742,",
+    "GHSA-4633-3j49-mh5q). ib-api runs `next start` and serves RSC responses for real, so",
+    "those are reachable. They are fixed by next 16.3.5. A gate that was green the day it",
+    "shipped would have proved nothing."
+  ],
+  "defaultExpiryDays": 90,
+  "premises": {
+    "no-proxy-or-middleware": "There is no middleware.* or proxy.* file at the repo root, app/ or src/. Next 16 renamed middleware to proxy, so both names count. The Origin allowlist is implemented inside the route handlers, which is exactly the thing someone would be tempted to move into a proxy file.",
+    "no-server-actions": "No 'use server' directive exists anywhere under app/, lib/ or components/. Every mutation on this site goes through an ordinary route handler under app/.",
+    "images-unoptimized": "next.config.ts sets images: { unoptimized: true }, so the Image Optimization API is never mounted and sharp/libvips is never invoked. sharp is an optional dependency of next that nothing calls.",
+    "no-rewrites-or-i18n": "next.config.ts declares no rewrites, no i18n and no cacheComponents.",
+    "no-csp-nonce": "No nonce is generated or placed in any Content-Security-Policy, in next.config.ts, in the Apache .conf/.htaccess that sets the CSP for the static sites, or in app/layout.tsx. The policy is script-src 'self'.",
+    "no-before-interactive": "No next/script uses strategy=\"beforeInteractive\".",
+    "linux-host": "The only deploy target is the Ubuntu droplet, driven by systemd (scripts/deploy-api.sh uses systemctl; API-ON-DROPLET.md's unit is ExecStart=/usr/bin/node node_modules/.bin/next start). Nothing here runs on Windows.",
+    "no-websocket-upgrades": "ib-api is plain `next start` behind an Apache reverse proxy that forwards /api/ only. There is no custom server file and no ws/socket.io/engine.io package in the production closure, so there is no WebSocket upgrade path to abuse.",
+    "build-time-only": "The package executes only during `next build`, on a developer laptop. It is not a direct entry in package.json dependencies and is imported by nothing under app/, lib/ or components/. It is in the production closure only because npm resolves it as a transitive dependency of next; no deployed artifact loads it. (The static sites are plain files on Apache; ib-api serves prebuilt routes.)"
+  },
+  "suppressions": [
+    {
+      "ghsa": "GHSA-26hh-7cqf-hhc6",
+      "package": "next",
+      "premise": "no-proxy-or-middleware",
+      "reason": "Middleware/Proxy bypass via segment-prefetch routes. There is no proxy or middleware layer to bypass; authorisation on this site is nothing, by design, and the Origin gate lives in the route handlers themselves.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-267c-6grr-h53f",
+      "package": "next",
+      "premise": "no-proxy-or-middleware",
+      "reason": "The original segment-prefetch Middleware/Proxy bypass. Same reasoning as GHSA-26hh-7cqf-hhc6.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-492v-c6pp-mqqv",
+      "package": "next",
+      "premise": "no-proxy-or-middleware",
+      "reason": "Middleware/Proxy bypass through dynamic route parameter injection. No proxy layer exists.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-36qx-fr4f-26g5",
+      "package": "next",
+      "premise": "no-proxy-or-middleware",
+      "reason": "Pages Router + i18n Middleware bypass. This app is App Router only and declares no i18n, and there is no middleware.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-6gpp-xcg3-4w24",
+      "package": "next",
+      "premise": "no-proxy-or-middleware",
+      "reason": "Middleware bypass with Turbopack and a single locale. No middleware, no locales.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-3g8h-86w9-wvmq",
+      "package": "next",
+      "premise": "no-proxy-or-middleware",
+      "reason": "Middleware/Proxy redirects can be cache-poisoned. There are no proxy redirects.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-m99w-x7hq-7vfj",
+      "package": "next",
+      "premise": "no-server-actions",
+      "reason": "Denial of Service in App Router Server Actions. No Server Action exists; the tools POST to route handlers, which have their own bounded bodies and rate limits.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-89xv-2m56-2m9x",
+      "package": "next",
+      "premise": "no-server-actions",
+      "reason": "SSRF in Server Actions on custom servers. No Server Actions and no custom server. The one place this app does fetch attacker-supplied URLs is /api/scan-url, which has its own SSRF guard and its own checks in this suite.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-4c39-4ccg-62r3",
+      "package": "next",
+      "premise": "no-server-actions",
+      "reason": "Unbounded Server Action payload in the Edge runtime. No Server Actions, and nothing here runs on the Edge runtime.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-955p-x3mx-jcvp",
+      "package": "next",
+      "premise": "no-server-actions",
+      "reason": "Unauthenticated disclosure of internal Server Function endpoints. There are no Server Functions to disclose.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-2xp9-vwfh-vxw4",
+      "package": "next",
+      "premise": "images-unoptimized",
+      "reason": "Unauthenticated RCE in the Image Optimization API via AVIF. npm calls this critical and it is the loudest line in the audit, but /_next/image is never mounted with images.unoptimized set, so there is no endpoint to reach. This is the single suppression most worth re-reading when it expires.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-h64f-5h5j-jqjh",
+      "package": "next",
+      "premise": "images-unoptimized",
+      "reason": "Denial of Service in the Image Optimization API. Same: the API is not mounted.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-q8wf-6r8g-63ch",
+      "package": "next",
+      "premise": "images-unoptimized",
+      "reason": "Denial of Service in the Image Optimization API using SVGs. Same: the API is not mounted.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-f88m-g3jw-g9cj",
+      "package": "sharp",
+      "premise": "images-unoptimized",
+      "reason": "sharp inherits four libvips CVEs. sharp is an optional dependency of next whose only caller is the Image Optimization API, which is off. It is installed on the droplet and never loaded.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-rgj7-g3m4-5g8c",
+      "package": "sharp",
+      "premise": "images-unoptimized",
+      "reason": "sharp inherits two libheif advisories. Same reasoning as GHSA-f88m-g3jw-g9cj.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-c4j6-fc7j-m34r",
+      "package": "next",
+      "premise": "no-websocket-upgrades",
+      "reason": "SSRF in applications using WebSocket upgrades. ib-api is plain `next start` on 127.0.0.1:3100 behind an Apache reverse proxy that forwards /api/ only, with no upgrade handling, no custom server file and no ws/socket.io/engine.io package in the tree. There is no upgrade path to reach. Note this is the one place the system does fetch attacker-supplied URLs for real — /api/scan-url — and that has its own SSRF guard with its own checks in this suite; this advisory is about a different code path.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-ffhc-5mcf-pf4q",
+      "package": "next",
+      "premise": "no-csp-nonce",
+      "reason": "XSS in App Router applications using CSP nonces. This app's CSP is script-src 'self' with no nonce anywhere, on either the Next side or the Apache side.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-gx5p-jg67-6x7h",
+      "package": "next",
+      "premise": "no-before-interactive",
+      "reason": "XSS in beforeInteractive scripts with untrusted input. No script uses that strategy, and no third-party script is loaded at all.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-p9j2-gv94-2wf4",
+      "package": "next",
+      "premise": "no-rewrites-or-i18n",
+      "reason": "SSRF in rewrites via an attacker-controlled destination hostname. next.config.ts declares no rewrites.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-p293-qw3h-jr36",
+      "package": "next",
+      "premise": "linux-host",
+      "reason": "Unauthenticated RCE on Windows-hosted servers. The only host is an Ubuntu droplet. npm reports this as critical and it is the other reason `npm audit` says 'critical' here; it is not reachable on Linux.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-g7r4-m6w7-qqqr",
+      "package": "esbuild",
+      "premise": "linux-host",
+      "reason": "Arbitrary file read when running the esbuild DEVELOPMENT SERVER on Windows. Nothing runs esbuild's dev server, and nothing here runs on Windows. esbuild is only in the production closure because tsx is misfiled in dependencies — see the sca-prod-dep-placement finding, which is the real fix.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-6g55-p6wh-862q",
+      "package": "postcss",
+      "premise": "build-time-only",
+      "reason": "Arbitrary file read via attacker-controlled sourceMappingURL in CSS comments. postcss runs during `next build` on a laptop, over CSS this repo wrote. No deployed process parses CSS.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-r28c-9q8g-f849",
+      "package": "postcss",
+      "premise": "build-time-only",
+      "reason": "Path traversal in previous-source-map auto-loading. Same build-time-only reasoning as GHSA-6g55-p6wh-862q.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-fxqj-rqcc-2cmp",
+      "package": "postcss",
+      "premise": "build-time-only",
+      "reason": "Incomplete fix of GHSA-6g55-p6wh-862q. Same build-time-only reasoning.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-qx2v-qp2m-jg93",
+      "package": "postcss",
+      "premise": "build-time-only",
+      "reason": "XSS via an unescaped </style> in stringify output. Build-time only, over first-party CSS.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-28wg-ghj8-5hjv",
+      "package": "nanoid",
+      "premise": "build-time-only",
+      "reason": "Non-secure generators can loop indefinitely with a negative size. nanoid is pulled in by postcss and runs only during the build.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-2v37-7h3g-55p8",
+      "package": "nanoid",
+      "premise": "build-time-only",
+      "reason": "Custom generators can loop indefinitely when size is zero. Build-time only, and no size here is attacker-controlled.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-xwg4-73v4-xw9w",
+      "package": "nanoid",
+      "premise": "build-time-only",
+      "reason": "Integer overflow or wraparound. Build-time only.",
+      "expires": "2026-12-17"
+    },
+    {
+      "ghsa": "GHSA-w5vr-8v7q-w6rv",
+      "package": "baseline-browser-mapping",
+      "premise": "build-time-only",
+      "reason": "Process termination on invalid input. It is browserslist data consulted during the build; the only input is this repo's own browserslist config.",
+      "expires": "2026-12-17"
+    }
+  ]
+}

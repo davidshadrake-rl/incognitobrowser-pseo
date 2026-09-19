@@ -37,10 +37,22 @@ import { SEVERITIES } from './lib/harness.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const argv = process.argv.slice(2);
+/**
+ * Accepts BOTH `--json=path` and `--json path`.
+ *
+ * It only took the `=` form at first, so `--json reports/x.json` parsed as the
+ * boolean true and the path became a stray argument — the run worked, printed
+ * its summary, and silently wrote no report. install-schedule.sh uses the space
+ * form, so every scheduled run would have produced nothing to read, which is
+ * precisely the quiet nothing-happened failure this suite exists to catch.
+ */
 const flag = (name, dflt = null) => {
-  const hit = argv.find((a) => a === `--${name}` || a.startsWith(`--${name}=`));
-  if (!hit) return dflt;
-  return hit.includes('=') ? hit.slice(hit.indexOf('=') + 1) : true;
+  const i = argv.findIndex((a) => a === `--${name}` || a.startsWith(`--${name}=`));
+  if (i === -1) return dflt;
+  const hit = argv[i];
+  if (hit.includes('=')) return hit.slice(hit.indexOf('=') + 1);
+  const next = argv[i + 1];
+  return next && !next.startsWith('--') ? next : true;
 };
 const list = (name) => String(flag(name, '') || '').split(',').map((s) => s.trim()).filter(Boolean);
 

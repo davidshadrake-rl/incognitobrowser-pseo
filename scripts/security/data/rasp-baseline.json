@@ -1,0 +1,81 @@
+{
+  "_comment": [
+    "Expectations for the RASP (runtime self-observation) checks. These are the",
+    "values API-ON-DROPLET.md records as deployed; the checks compare the LIVE box",
+    "against them and name the property that drifted.",
+    "",
+    "This file holds expectations only. Observed run-to-run state (the last",
+    "NRestarts, the canary timings) is written to rasp-runtime-state.json next to",
+    "it, so a nightly run never rewrites the thing it is grading itself against."
+  ],
+
+  "systemd": {
+    "_source": "API-ON-DROPLET.md:283 — /etc/systemd/system/ib-api.service.d/limits.conf",
+    "MemoryMax": "805306368",
+    "MemorySwapMax": "0",
+    "CPUQuotaPerSecUSec": "1s",
+    "TasksMax": "256",
+    "LimitNOFILE": "8192",
+    "Restart": "always",
+    "RestartUSec": "5s",
+    "heapCapMustContain": "--max-old-space-size=448"
+  },
+
+  "env": {
+    "_source": "lib/tuning.ts — the floors below are the ones whose zero hangs or disarms the service",
+    "_note": "Only these numeric knobs are read off the box. Secret-valued variables are reported as present/absent and by length, never by value.",
+    "floors": {
+      "POW_MAX_NUMBER": { "min": 1000, "max": 10000000 },
+      "POW_TTL_SECONDS": { "min": 1, "max": 600 },
+      "SCAN_RATE_LIMIT": { "min": 1 },
+      "SCAN_RATE_WINDOW_MS": { "min": 1000 },
+      "CHALLENGE_RATE_LIMIT": { "min": 1 },
+      "CHALLENGE_RATE_WINDOW_MS": { "min": 1000 },
+      "MAX_IN_FLIGHT_SCANS": { "min": 1 },
+      "MAX_URL_LENGTH": { "min": 64 },
+      "MAX_BODY_SIZE_MB": { "min": 1 },
+      "FETCH_TIMEOUT_MS": { "min": 1000, "max": 30000 }
+    },
+    "requiredSecrets": [
+      { "name": "ALTCHA_HMAC_KEY", "minLength": 32, "why": "lib/altcha.ts:76-81 throws without it and /challenge becomes a 503 for everyone" },
+      { "name": "REDIS_URL", "minLength": 8, "why": "its absence silently disables PoW single-use, the shared rate limiter and /event counting" }
+    ]
+  },
+
+  "redis": {
+    "_source": "API-ON-DROPLET.md:89 — maxmemory 256mb, maxmemory-policy allkeys-lru",
+    "maxmemoryPolicy": "allkeys-lru",
+    "maxmemoryBytes": 268435456,
+    "usedMemoryWarnRatio": 0.8
+  },
+
+  "host": {
+    "_source": "API-ON-DROPLET.md:284-288",
+    "ufwMustBeActive": true,
+    "logrotateTimer": "logrotate.timer",
+    "logrotateMaxIntervalSeconds": 7200,
+    "diskMinFreePercent": 15,
+    "diskMinFreeMB": 2048
+  },
+
+  "canary": {
+    "_source": "scripts/deploy-api.sh:102-105 — the same three paths, checked nightly instead of only at deploy time",
+    "paths": ["/", "/resources/", "/resources-pro/tools/"],
+    "slowFactor": 3,
+    "floorMs": 400,
+    "_medianNote": "Seeded 2026-09-19 from three healthy runs against the live box (all 200). WordPress at / is the variable one (451/915ms), the two static trees are steady at ~350/~300ms. Re-seed from rasp-runtime-state.json if the box or its content changes shape.",
+    "medianMs": {
+      "/": 600,
+      "/resources/": 350,
+      "/resources-pro/tools/": 300
+    }
+  },
+
+  "apache": {
+    "_source": "API-ON-DROPLET.md:285, 291-298 — the vhost <If Content-Length -gt 1048576> block",
+    "bodyCapBytes": 1048576,
+    "_probePathNote": "relative to ctx.apiBase, which is already <origin>/api",
+    "probePath": "/ip",
+    "refusedStatuses": [403, 413]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "_comment": [
+    "The seven API routes, each with the gates its POST handler is expected to run before it",
+    "touches the request body or the network. A route on disk that is not named here fails:",
+    "a new endpoint must be written down by a person, not discovered by a scanner that then",
+    "has nothing to compare it against.",
+    "",
+    "`gates` are asserted to appear EARLIER IN THE HANDLER than the first body read and any",
+    "outbound fetch. They are all plain early-returning `if`s in the source, with nothing",
+    "structural holding them in place, which is exactly why the ordering is pinned here.",
+    "",
+    "`bodyCap` is true when the handler buffers a body and therefore needs its own",
+    "content-length check — the Apache `<If \"%{HTTP:Content-Length} -gt 1048576\">` rule",
+    "(API-ON-DROPLET.md:180) matches on a header that a chunked request simply omits, and",
+    "the runbook records that LimitRequestBody and RewriteRule are both inert behind",
+    "ProxyPass, so that directive is the only perimeter outside the handler."
+  ],
+  "routes": [
+    {
+      "path": "app/challenge/route.ts",
+      "endpoint": "POST /challenge",
+      "gates": ["origin", "rateLimit"],
+      "bodyCap": false,
+      "note": "Issues an ALTCHA challenge. No body is read."
+    },
+    {
+      "path": "app/scan-url/route.ts",
+      "endpoint": "POST /scan-url",
+      "gates": ["origin", "rateLimit", "pow", "powReplay"],
+      "bodyCap": true,
+      "note": "The one route that makes an outbound fetch. If any gate moves below `await request.text()` or below fetch(targetUrl), this endpoint becomes a free unauthenticated fetch proxy on the box that also serves the team's WordPress."
+    },
+    {
+      "path": "app/ip/route.ts",
+      "endpoint": "POST /ip",
+      "gates": ["origin", "rateLimit"],
+      "bodyCap": false,
+      "note": "Reflects the caller's own address from headers. No body is read."
+    },
+    {
+      "path": "app/dns-leak/start/route.ts",
+      "endpoint": "POST /dns-leak/start",
+      "gates": ["origin", "rateLimit"],
+      "bodyCap": false,
+      "note": "Mints a test id. No body is read."
+    },
+    {
+      "path": "app/dns-leak/result/route.ts",
+      "endpoint": "POST /dns-leak/result",
+      "gates": ["origin", "rateLimit"],
+      "bodyCap": true,
+      "note": "Reads a JSON body carrying the test id."
+    },
+    {
+      "path": "app/event/route.ts",
+      "endpoint": "POST /event",
+      "gates": ["origin", "rateLimit"],
+      "bodyCap": true,
+      "note": "Analytics counters. The first route to get an in-process body bound; the other three copied it."
+    },
+    {
+      "path": "app/stats/route.ts",
+      "endpoint": "POST /stats",
+      "gates": ["rateLimit"],
+      "bodyCap": true,
+      "note": "DELIBERATELY has no origin gate: it is called with a bearer STATS_TOKEN by the owner and by ops tooling, not from a browser, so an Origin allowlist would only lock out curl. The rate limit still comes first, because a bearer check with no limit is a free brute-force target. An unset STATS_TOKEN makes the route 404."
+    }
+  ]
+}

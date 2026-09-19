@@ -1,0 +1,17 @@
+{
+  "_comment": "GDPR/UK GDPR Art. 13 is a notice-at-collection duty: a tool that sends something to our server has to say so, in the tool, at the moment of the send. Not in a policy three clicks away. cmp-collection-notice-present requires every tool that talks to /api/ to render one of the strings registered here. Registering a string is not a formality — read it and ask whether a visitor would feel misled after reading it and then learning what the request carries.",
+  "_matching": "`file` is the tool component. `must` is a distinctive substring of the disclosure it renders; the check fails if that substring is no longer in the file, which is what stops a refactor from quietly deleting the sentence.",
+  "_notice": "The site-wide notice route is separate: the check requires a page under app/ whose route contains 'privacy' and which the footer links from every built page. It does not exist yet — see the finding.",
+  "tools": [
+    {
+      "file": "components/tools/CookieAnalyzerTool.tsx",
+      "sends": "the URL you type, to /scan-url; our server then loads that page",
+      "must": "The site sees a visit from our server."
+    },
+    {
+      "file": "components/tools/URLAnalyzerTool.tsx",
+      "sends": "the short link you paste, to /scan-url, to be followed server-side",
+      "must": "Our server opens the link and shows you the address it redirects to."
+    }
+  ]
+}

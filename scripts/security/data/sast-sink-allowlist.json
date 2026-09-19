@@ -1,0 +1,36 @@
+{
+  "_comment": [
+    "Every dynamic-code and raw-HTML sink that ships to a browser, named and justified.",
+    "An entry is a promise about a specific file: the sink is there, someone looked at it,",
+    "and here is why it is allowed to stay. sast-dynamic-code-sinks fails on a sink that is",
+    "not listed AND on a listed entry whose file no longer contains that sink, because an",
+    "allowlist nobody prunes is how a check quietly stops checking. Line numbers are",
+    "evidence, not part of the match — they are allowed to drift."
+  ],
+  "entries": [
+    {
+      "file": "components/CalculatorPage.tsx",
+      "sink": "new Function(",
+      "line": 102,
+      "reason": "The only eval-class sink in the product. It executes the `formula` string from data/calculators/**.json, which scripts/generate-content.ts writes with the Anthropic SDK. It is also the reason next.config.ts must keep script-src 'unsafe-eval' sitewide, so a SECOND entry here is not free — it entrenches that directive. tests/calculators.test.ts pins the formulas for determinism; the identifiers they may name are not pinned anywhere."
+    },
+    {
+      "file": "app/layout.tsx",
+      "sink": "dangerouslySetInnerHTML",
+      "line": 62,
+      "reason": "IN_APP_BOOT_SCRIPT, a compile-time constant from lib/in-app.ts. No interpolation, no runtime input."
+    },
+    {
+      "file": "components/ui/Icon.tsx",
+      "sink": "dangerouslySetInnerHTML",
+      "line": 87,
+      "reason": "ICON_PATHS[name] is a static literal from that same file, and the only interpolated value, `title`, goes through escapeXml. tests/xss-protection.test.ts:113 pins both halves verbatim."
+    },
+    {
+      "file": "components/seo/JsonLd.tsx",
+      "sink": "dangerouslySetInnerHTML",
+      "line": 8,
+      "reason": "JSON-LD built from repo-controlled content, with `<` replaced before it is written so the payload cannot close the <script>. tests/xss-protection.test.ts:56 pins the replace."
+    }
+  ]
+}

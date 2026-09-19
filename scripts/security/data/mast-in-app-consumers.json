@@ -1,0 +1,31 @@
+{
+  "_comment": [
+    "Two deliberately short allowlists. Both exist so that adding a consumer is",
+    "an act someone has to justify in a review, instead of a line that slides in",
+    "and is discovered during an incident.",
+    "mast-pro-flag-grants-no-access and mast-save-image-caller-allowlist read this."
+  ],
+  "proFlagConsumers": [
+    {
+      "path": "lib/in-app.ts",
+      "role": "definer",
+      "reason": "Sets <html data-ib-pro> in the boot script and reads it back in inAppPro(). The guard that makes the mark mean something — the app's own bridge object or a user agent that names it, never ?pro=1 alone — lives here."
+    },
+    {
+      "path": "components/useUpgradeGate.tsx",
+      "role": "gate",
+      "reason": "shouldGate() reads inAppPro() to decide whether the upgrade overlay appears before a Pro tool action runs. This is the one consumer where the flag decides whether something RUNS rather than what it says, which is why the gated actions are all client-side reformatting of data the visitor already has — see pentest-gate-inventory, which grades that separately."
+    },
+    {
+      "path": "components/InAppBridge.tsx",
+      "role": "copy-only",
+      "reason": "Carries the flag across a free <-> Pro link at click time (u.searchParams.set('pro','1')) so a subscriber crossing between the two builds does not lose it. Wording and continuity only."
+    }
+  ],
+  "saveImageCallers": [
+    {
+      "path": "components/Scorecard.tsx",
+      "reason": "Scorecard.download() hands the app a canvas the page drew itself, at the fixed SCORECARD_W x SCORECARD_H, because the app's download manager rejects the blob: URL a normal download uses. The bytes are ours, the filename is derived from the tool title, and the size is bounded by the canvas."
+    }
+  ]
+}

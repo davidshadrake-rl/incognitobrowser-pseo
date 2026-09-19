@@ -1,0 +1,43 @@
+{
+  "_comment": [
+    "The Content-Security-Policy that next.config.ts is expected to build, directive by",
+    "directive, as an exact set of sources per directive.",
+    "",
+    "This file exists because the repo has already shipped a CSP regression, this week:",
+    "commit ffa99bc, 'fix(security): the live CSP still allowed two soon-to-be-strangers'",
+    "domains'. The guard that was supposed to catch it never opened the file that sets the",
+    "policy. So this is an exact-set comparison, not a 'does it contain' one — a directive",
+    "that GAINS a source fails just as loudly as one that loses a source.",
+    "",
+    "script-src keeps 'unsafe-eval' because components/CalculatorPage.tsx:102 executes",
+    "generated formula strings with new Function(). That is the single reason, it is the",
+    "reason sast-dynamic-code-sinks refuses a second eval-class sink, and if that call ever",
+    "goes then 'unsafe-eval' should go with it — which is a change to this file, made by a",
+    "person, not a drift nobody notices.",
+    "",
+    "This pins the SOURCE. The headers actually served are a separate question with a",
+    "separate answer: the static export deploy gets them from Apache/.htaccess, and",
+    "scripts/security-smoke.mjs already probes the live ones."
+  ],
+  "directives": {
+    "default-src": ["'self'"],
+    "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+    "style-src": ["'self'", "'unsafe-inline'"],
+    "img-src": ["'self'", "data:", "blob:", "https:"],
+    "font-src": ["'self'", "data:"],
+    "connect-src": ["'self'"],
+    "frame-ancestors": ["'none'"],
+    "form-action": ["'self'"],
+    "base-uri": ["'self'"],
+    "object-src": ["'none'"],
+    "upgrade-insecure-requests": []
+  },
+  "requiredHeaders": {
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Cross-Origin-Opener-Policy": "same-origin"
+  },
+  "unsafeEvalAllowedIn": ["script-src"]
+}

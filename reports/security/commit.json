@@ -1,0 +1,746 @@
+{
+  "target": "https://206-189-186-34.nip.io",
+  "cadences": [
+    "every-commit"
+  ],
+  "only": [],
+  "optIn": [],
+  "failOn": "high",
+  "strict": false,
+  "counts": {
+    "checks": 48,
+    "findings": 15,
+    "skipped": 1,
+    "errored": 0,
+    "critical": 0,
+    "high": 0,
+    "medium": 9,
+    "low": 4,
+    "info": 2
+  },
+  "withheld": [],
+  "results": [
+    {
+      "id": "api-control-order",
+      "discipline": "api",
+      "cadence": "every-commit",
+      "describe": "Origin, rate limit, proof-of-work, body parse and the outbound fetch still run in that order.",
+      "file": "api-control-order.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "low",
+          "title": "The protocol allowlist is unreachable for any scheme that does not start with the letters \"http\"",
+          "detail": "app/scan-url/route.ts:200 does `new URL(url.startsWith(\"http\") ? url : `https://${url}`)`. A `file:` URL does not start with \"http\", so it is rewritten into `https://file:///etc/passwd` — an https URL whose hostname is the word \"file\". The `[\"http:\",\"https:\"]` check four lines later then sees \"https:\" and passes. The scheme was not rejected; it was renamed into a hostname, and that single-label hostname is handed to the resolver. On a host with a DNS search suffix a single label is not nothing, and the check that was supposed to stop this never ran. The resolve-then-judge guard below still refuses a private answer, which is why this is low rather than an SSRF.",
+          "evidence": "POST /scan-url {\"url\":\"file:///etc/passwd\"} with a valid proof-of-work => 200; resolver was asked for [\"file\"]; 1 outbound request(s) made",
+          "remediation": "Parse the URL once with no rewrite, and only prepend https:// when the string contains no \"://\" at all. Then the protocol allowlist sees the real scheme.",
+          "file": "app/scan-url/route.ts",
+          "line": 200
+        }
+      ],
+      "checked": 10,
+      "ms": 2832
+    },
+    {
+      "id": "api-error-shape",
+      "discipline": "api",
+      "cadence": "every-commit",
+      "describe": "Error bodies carry a fixed string and nothing else, and /ip reflects no unbounded caller input.",
+      "file": "api-error-shape.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "low",
+          "title": "/ip reflects unbounded caller-supplied geo headers back in its response",
+          "detail": "app/ip/route.ts decodeHeader() returns x-geo-city / -region / -country / -timezone verbatim, with no length bound. Nothing on the droplet sets these and the vhost strips only the four IP headers, so in production every value here is the caller's own input coming back. It is self-inflicted and the response is no-store, so there is no victim other than the sender — but the same buildIpResponse also answers /dns-leak/start, and countryCode is handed to Intl.DisplayNames, so an unbounded string is being carried further than it needs to be.",
+          "evidence": "POST /ip with x-geo-city: \"A\"×4096 => 200 with city length 4096",
+          "remediation": "Bound each geo field to something a place name fits in (64-128 characters) inside decodeHeader, and drop values that exceed it rather than truncating into a half-name. Adding x-geo-* to the vhost's RequestHeader unset list would close it at the proxy too.",
+          "file": "app/ip/route.ts",
+          "line": 56
+        },
+        {
+          "severity": "info",
+          "title": "getRedisDiagnostic is dead code whose comment invites someone to wire it up",
+          "detail": "lib/rate-limit.ts:66 exports getRedisDiagnostic() and documents it as \"surfaced via response headers\". It has no caller anywhere in app/ or lib/. Guarding a dead hazard with a test is the cheaper-looking option that leaves the hazard in the tree: the next person to debug a Redis problem finds an exported helper whose comment tells them to put its output in a response.",
+          "evidence": "scanned 82 .ts/.tsx files under app/ and lib/; getRedisDiagnostic( appears at no call site",
+          "remediation": "Delete the export. getRedisStatus() covers the one thing a route legitimately needs to know.",
+          "file": "lib/rate-limit.ts",
+          "line": 66
+        }
+      ],
+      "checked": 35,
+      "ms": 0
+    },
+    {
+      "id": "api-method-matrix",
+      "discipline": "api",
+      "cadence": "every-commit",
+      "describe": "No API route module exports an HTTP verb beyond POST and OPTIONS.",
+      "file": "api-method-matrix.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 7,
+      "ms": 0
+    },
+    {
+      "id": "api-origin-host-spoof",
+      "discipline": "api",
+      "cadence": "every-commit",
+      "describe": "A client-supplied Host cannot satisfy the Origin allowlist on any of the six gated routes.",
+      "file": "api-origin-host-spoof.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "low",
+          "title": "The Origin gate accepts any origin whose host matches the client-supplied Host header",
+          "detail": "Apache runs ProxyPreserveHost On, so the Host header reaching Node is written by the caller. lib/origin.ts treats Origin.host === Host as same-origin and allows it, so a caller sets both to the same fabricated value and is inside. The allowlist is never consulted. The routes still refuse a foreign Origin sent with the REAL Host, which is why the source-grep tests and the live smoke both report green: they only ever send the real Host. Proof-of-work, rate limiting and the SSRF guards are unaffected — this is the outermost filter, not the load-bearing one, hence low. Note the responses also mirror the fabricated origin into Access-Control-Allow-Origin, which is harmless only because a browser cannot set Host.",
+          "evidence": "isOriginAllowed(\"https://evil.example\", \"evil.example\") => true (expected false) | isOriginAllowed(\"https://evil.example:8443\", \"evil.example:8443\") => true (expected false) | POST /challenge with Origin: https://evil.example + Host: evil.example => 200, Access-Control-Allow-Origin: https://evil.example | POST /scan-url with Origin: https://evil.example + Host: evil.example => 401, Access-Control-Allow-Origin: https://evil.example | POST /ip with Origin: https://evil.example + Host: evil.example => 200, Access-Control-Allow-Origin: https://evil.example | POST /event with Origin: https://evil.example + Host: evil.example => 400, Access-Control-Allow-Origin: https://evil.example | POST /dns-leak/start with Origin: https://evil.example + Host: evil.example => 200, Access-Control-Allow-Origin: https://evil.example | POST /dns-leak/result with Origin: https://evil.example + Host: evil.example => 400, Access-Control-Allow-Origin: https://evil.example",
+          "remediation": "Drop the same-origin shortcut in isOriginAllowed and rely on the allowlist alone. That change MUST land with ALLOWED_ORIGINS containing the API's own origin (https://206-189-186-34.nip.io — already recorded at API-ON-DROPLET.md:115), or the site stops being able to call itself. Gate the deploy on scripts/security-smoke.mjs section B, which is the canary for exactly that.",
+          "file": "lib/origin.ts",
+          "line": 62
+        }
+      ],
+      "checked": 12,
+      "ms": 0
+    },
+    {
+      "id": "api-pow-forgery-matrix",
+      "discipline": "api",
+      "cadence": "every-commit",
+      "describe": "Proof-of-work tokens cannot be extended, re-pointed at another challenge, truncated or re-typed.",
+      "file": "api-pow-forgery-matrix.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 11,
+      "ms": 0
+    },
+    {
+      "id": "api-replay-fail-closed",
+      "discipline": "api",
+      "cadence": "every-commit",
+      "describe": "A solved proof-of-work buys exactly one scan even when the replay store is unreachable.",
+      "file": "api-replay-fail-closed.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 6,
+      "ms": 0
+    },
+    {
+      "id": "api-stats-authz",
+      "discipline": "api",
+      "cadence": "every-commit",
+      "describe": "/stats refuses every near-miss bearer, never emits CORS headers, and bounds its day parameter and body.",
+      "file": "api-stats-authz.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 12,
+      "ms": 0
+    },
+    {
+      "id": "deploy-credential-hygiene",
+      "discipline": "cnast",
+      "cadence": "every-commit",
+      "describe": "The root deploy credential on this machine — .secrets and the ssh key it names — is 0600, encrypted at rest, and outside the repo.",
+      "file": "cnast-deploy-credential-hygiene.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "The root deploy key has no passphrase",
+          "detail": "At rest it is a plain root credential for the production box. The realistic path here is not a stolen laptop — it is this repo: a malicious postinstall during `npm ci` reads ~/.ssh and has root on the box that serves the team's WordPress. A passphrase plus ssh-agent costs one prompt per session and makes the file useless on its own.",
+          "evidence": "/Users/davidshadrake/.ssh/id_ed25519: OpenSSH private key with cipher \"none\" (read from the first 512 bytes; no key material is reproduced here)",
+          "remediation": "ssh-keygen -p -f /Users/davidshadrake/.ssh/id_ed25519 to add a passphrase, then ssh-add it once per session. Better still, issue a non-root deploy user with a narrower authorized_keys command.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 4,
+      "ms": 1
+    },
+    {
+      "id": "cmp-csp-committed-no-foreign-origin",
+      "discipline": "compliance",
+      "cadence": "every-commit",
+      "describe": "The CSP in scripts/droplet-htaccess.conf names no third-party origin in any fetch directive — the check that would have caught the two dead platform hosts that sat in connect-src for three weeks.",
+      "file": "compliance-csp.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 11,
+      "ms": 1
+    },
+    {
+      "id": "cmp-collection-notice-present",
+      "discipline": "compliance",
+      "cadence": "every-commit",
+      "describe": "A privacy notice page exists and is linked from every built page, and every tool that sends something to the API discloses what it sends (GDPR Art. 13 notice at collection).",
+      "file": "compliance-notice.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "No privacy notice page exists on either site",
+          "detail": "The API receives the visitor's IP on /ip, /scan-url and /event, and lib/dns-leak-store.ts persists their full public IP in Redis for 600 seconds. GDPR/UK GDPR Art. 13 requires that to be disclosed at the point of collection, and these sites are globally reachable and specifically address EU readers. There is nowhere on either site that says what is collected, why, for how long, or who runs it. This is not a hard fix — one page and one footer link — and it is the only clearly binding compliance duty on this project that is currently unmet.",
+          "evidence": "searched 28 page routes under app/ for a privacy/privacy-notice/privacy-policy route: none found\nthe nearest thing is app/site/methodology/page.tsx, which explains how OTHER sites are scanned, not what we collect",
+          "remediation": "Add app/privacy/page.tsx covering: the public IP received by /ip, /scan-url, /event and /dns-leak/start; the 600-second Redis retention in lib/dns-leak-store.ts; the counters behind /stats; that there are no cookies and no third-party loads; and who the controller is. Then link it from the footer in app/layout.tsx.",
+          "file": "app/layout.tsx",
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "Tool sends data to the server with no registered disclosure: components/tools/DnsLeakTestTool.tsx",
+          "detail": "This component calls the scan API, so something leaves the visitor's browser and reaches our server — at minimum their IP, and usually a URL they typed. Nothing in the tool tells them that. GDPR Art. 13 wants the disclosure where the collection happens, and it is also simply what this product says it stands for.",
+          "evidence": "components/tools/DnsLeakTestTool.tsx matches 3 API-dependency pattern(s) and has no entry in scripts/security/data/compliance-disclosures.json",
+          "remediation": "Render one sentence near the control that starts the request, saying what is sent and what the server does with it — CookieAnalyzerTool.tsx's \"Scan has our server load the page… The site sees a visit from our server.\" is the model. Then register it in compliance-disclosures.json.",
+          "file": "components/tools/DnsLeakTestTool.tsx",
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "Tool sends data to the server with no registered disclosure: components/tools/WhatsMyIpTool.tsx",
+          "detail": "This component calls the scan API, so something leaves the visitor's browser and reaches our server — at minimum their IP, and usually a URL they typed. Nothing in the tool tells them that. GDPR Art. 13 wants the disclosure where the collection happens, and it is also simply what this product says it stands for.",
+          "evidence": "components/tools/WhatsMyIpTool.tsx matches 2 API-dependency pattern(s) and has no entry in scripts/security/data/compliance-disclosures.json",
+          "remediation": "Render one sentence near the control that starts the request, saying what is sent and what the server does with it — CookieAnalyzerTool.tsx's \"Scan has our server load the page… The site sees a visit from our server.\" is the model. Then register it in compliance-disclosures.json.",
+          "file": "components/tools/WhatsMyIpTool.tsx",
+          "line": null
+        }
+      ],
+      "checked": 5,
+      "ms": 7
+    },
+    {
+      "id": "cmp-no-cookies-unlisted-storage",
+      "discipline": "compliance",
+      "cadence": "every-commit",
+      "describe": "No route sets a cookie, and every localStorage/sessionStorage key carries a written \"strictly necessary\" justification — the two facts that keep this site consent-exempt.",
+      "file": "compliance-storage.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 143,
+      "ms": 57
+    },
+    {
+      "id": "cmp-no-third-party-subresources",
+      "discipline": "compliance",
+      "cadence": "every-commit",
+      "describe": "No third-party script, stylesheet, image, iframe or font in the built export — the property that keeps the site consent-exempt and stops a tracking pixel img-src would allow.",
+      "file": "compliance-subresources.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 54,
+      "ms": 38
+    },
+    {
+      "id": "cmp-upgrade-cta-destination",
+      "discipline": "compliance",
+      "cadence": "every-commit",
+      "describe": "Every upgrade CTA in the built pages resolves to Google Play or the app's own upgrade screen, or to a declared exception with a named owner and an end date.",
+      "file": "compliance-upgrade-cta.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 43,
+      "ms": 9
+    },
+    {
+      "id": "cmp-override-is-revertible",
+      "discipline": "compliance",
+      "cadence": "every-commit",
+      "describe": "A temporary override can actually be turned off: it is declared with an owner and an end date, and no test pins its current value where the rollback would break.",
+      "file": "compliance-upgrade-cta.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 1,
+      "ms": 28
+    },
+    {
+      "id": "iast-origin-gate-forgeable-header-pair",
+      "discipline": "iast",
+      "cadence": "every-commit",
+      "describe": "Calls every route with a self-consistent forged Origin/Host pair and records which ones the allowlist lets through.",
+      "file": "iast-origin-gate.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "low",
+          "title": "The Origin allowlist is satisfied by a header pair the caller supplies",
+          "detail": "isOriginAllowed returns true whenever the Origin host equals the Host header, and with ProxyPreserveHost On the caller controls both. curl -H \"Origin: https://evil.example\" -H \"Host: evil.example\" is inside the gate on every route without knowing any allowlisted origin. Nothing here needs fixing for browsers — CORS still protects them — but the gate must not be counted as one of three layers against scripted abuse. The proof-of-work is the only layer that costs a script anything, which makes every finding about the PoW claim worth more than it looks.",
+          "evidence": "/challenge: Origin https://evil.example.test + Host evil.example.test → HTTP 200 (not 403) ; /scan-url: Origin https://evil.example.test + Host evil.example.test → HTTP 401 (not 403) ; /ip: Origin https://evil.example.test + Host evil.example.test → HTTP 200 (not 403) ; /dns-leak/start: Origin https://evil.example.test + Host evil.example.test → HTTP 200 (not 403) ; /dns-leak/result: Origin https://evil.example.test + Host evil.example.test → HTTP 400 (not 403) ; /event: Origin https://evil.example.test + Host evil.example.test → HTTP 400 (not 403)",
+          "remediation": "Either accept and document it (the current position — see the comment in lib/origin.ts), or compare against a configured canonical host instead of the request Host header.",
+          "file": "lib/origin.ts",
+          "line": 62
+        }
+      ],
+      "checked": 6,
+      "ms": 503
+    },
+    {
+      "id": "iast-pow-replay-claim-observed",
+      "discipline": "iast",
+      "cadence": "every-commit",
+      "describe": "Runs /scan-url against an instrumented Redis and asserts the single-use claim is written, replays are refused, and a sick store fails closed.",
+      "file": "iast-pow-replay-claim.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 5,
+      "ms": 0
+    },
+    {
+      "id": "iast-request-body-read-after-size-check",
+      "discipline": "iast",
+      "cadence": "every-commit",
+      "describe": "Posts a 2 MiB chunked body to every route and counts the bytes each one pulled before answering.",
+      "file": "iast-request-body-bounds.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "4 routes buffer an entire chunked request body before refusing it",
+          "detail": "A POST with no Content-Length is read in full and only then measured against a cap of a few hundred bytes. The Apache <If \"%{HTTP:Content-Length} -gt 1048576\"> block cannot stop it — the expression is false when the header is absent — so nothing bounds the allocation but the service's own memory ceiling. The cheapest one is /dns-leak/result: origin + 100/min — the cheapest unauthenticated allocation path in the service. Repeated concurrently this is a memory-exhaustion path on a 768M-capped process sharing a box with MySQL and WordPress.",
+          "evidence": "/event (cap 2048 bytes, gate: origin + 120/min) → HTTP 413 after pulling 2097152 of 2097152 bytes ; /dns-leak/result (cap 512 bytes, gate: origin + 100/min — the cheapest unauthenticated allocation path in the service) → HTTP 413 after pulling 2097152 of 2097152 bytes ; /scan-url (cap 3072 bytes, gate: origin + proof-of-work + 10/min) → HTTP 413 after pulling 2097152 of 2097152 bytes ; /stats (cap 512 bytes, gate: bearer STATS_TOKEN, checked before the body) → HTTP 413 after pulling 2097152 of 2097152 bytes",
+          "remediation": "Either read the body as a stream and abort past the cap instead of awaiting request.text(), or record the decision and its compensating control in scripts/security/data/iast-body-bound-decisions.json.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 10,
+      "ms": 1
+    },
+    {
+      "id": "iast-no-outbound-before-ssrf-verdict",
+      "discipline": "iast",
+      "cadence": "every-commit",
+      "describe": "Drives the resolve-then-judge SSRF branch with a stubbed resolver and asserts no socket was opened for any blocked target.",
+      "file": "iast-scan-url-outbound.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 12,
+      "ms": 0
+    },
+    {
+      "id": "iast-fetch-target-and-redirect-policy",
+      "discipline": "iast",
+      "cadence": "every-commit",
+      "describe": "Records the one allowed scan fetch: that it targets the host that was judged, and that redirects are still manual.",
+      "file": "iast-scan-url-outbound.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 2,
+      "ms": 0
+    },
+    {
+      "id": "mast-boot-script-shipped-intact",
+      "discipline": "mast",
+      "cadence": "every-commit",
+      "describe": "The inline in-app boot script in the built HTML still runs, marks the page, strips the app's flags from the address bar, and refuses a bare ?pro=1.",
+      "file": "mast-boot-script-shipped-intact.mjs",
+      "needsOptIn": false,
+      "state": "skipped",
+      "reason": "out/ has no .build-marker.json — refusing to grade an export that cannot say which build it is (run scripts/write-build-marker.mjs after the export)",
+      "findings": [],
+      "checked": 0,
+      "ms": 0
+    },
+    {
+      "id": "mast-bridge-origin-allowlist",
+      "discipline": "mast",
+      "cadence": "every-commit",
+      "describe": "Every origin the WebView bridge contract hands the Android app is one lib/tiers.ts still serves from, and none is a subdomain someone else can re-register.",
+      "file": "mast-bridge-origin-allowlist.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 7,
+      "ms": 2
+    },
+    {
+      "id": "mast-pro-flag-grants-no-access",
+      "discipline": "mast",
+      "cadence": "every-commit",
+      "describe": "The app's visitor-supplied pro flag is read by an allowlisted set of modules only, and no page we build publishes a link that carries it.",
+      "file": "mast-pro-flag-grants-no-access.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 147,
+      "ms": 16
+    },
+    {
+      "id": "mast-save-image-caller-allowlist",
+      "discipline": "mast",
+      "cadence": "every-commit",
+      "describe": "saveImageInApp — the only path from this codebase to a native MediaStore write — is called from the one component we have reviewed for it.",
+      "file": "mast-save-image-caller-allowlist.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 144,
+      "ms": 10
+    },
+    {
+      "id": "event-key-cardinality-bound",
+      "discipline": "pentest",
+      "cadence": "every-commit",
+      "describe": "Every payload field that reaches a Redis key name in eventKeys() is constrained by a finite Set, not by a slug regex — and the fan-out cap and TTL are still in source.",
+      "file": "pentest-event-key-cardinality.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 11,
+      "ms": 2
+    },
+    {
+      "id": "gate-inventory-vs-url-settable-pro",
+      "discipline": "pentest",
+      "cadence": "every-commit",
+      "describe": "No upgrade gate guards anything that costs the server work or returns data the free tier does not hold, and the Pro signal still needs more than a query parameter.",
+      "file": "pentest-gate-inventory.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 4,
+      "ms": 3
+    },
+    {
+      "id": "inapp-bridge-origin-allowlist",
+      "discipline": "pentest",
+      "cadence": "every-commit",
+      "describe": "The origin allowlists that live in documents — the WebView bridge set and the copy-paste CSP blocks — name only origins this project still controls, and do name the live one.",
+      "file": "pentest-inapp-bridge-origins.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 7,
+      "ms": 2
+    },
+    {
+      "id": "pow-before-ratelimit-order",
+      "discipline": "pentest",
+      "cadence": "every-commit",
+      "describe": "Unverified requests cannot spend the shared /24 rate-limit budget: the proof-of-work is checked before the limiter, or unverified traffic is charged to its own bucket.",
+      "file": "pentest-pow-before-ratelimit.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "app/scan-url/route.ts spends the rate-limit budget before checking the proof-of-work",
+          "detail": "rateLimit() runs at line 90 and verifySolution() only at line 104, so a request carrying no solution at all still decrements the counter before it is refused. Because getIpBucket() collapses to a /24, one host can spend the allowance of everyone behind the same prefix at no CPU cost — which is precisely what the proof-of-work exists to prevent. Guarding the scan budget: 10/min per /24, and each scan holds a socket, a response buffer and an Apache worker.",
+          "evidence": "app/scan-url/route.ts: rateLimit( at line 90, verifySolution( at line 104; no separate unverified bucket name found in the file",
+          "remediation": "Verify the proof-of-work first (it is a local HMAC compare, far cheaper than the scan it guards), or charge unverified requests to their own tighter bucket so they cannot touch the real one.",
+          "file": "app/scan-url/route.ts",
+          "line": 90
+        },
+        {
+          "severity": "info",
+          "title": "app/challenge/route.ts rate-limits without any proof-of-work in front of it",
+          "detail": "Every caller, solved or not, spends the challenge budget: 30/min per /24, which is what a real visitor needs to get a token at all. There is no puzzle on this route to put first, so the only lever is the size of the budget and the width of the bucket.",
+          "evidence": "app/challenge/route.ts:73 rateLimit( … ) with no verifySolution( in the file",
+          "remediation": "Keep the budget deliberately sized for this, and revisit if abuse shows up: a /24 bucket means one host spends a whole network's allowance.",
+          "file": "app/challenge/route.ts",
+          "line": 73
+        }
+      ],
+      "checked": 2,
+      "ms": 0
+    },
+    {
+      "id": "upgrade-cta-destination",
+      "discipline": "pentest",
+      "cadence": "every-commit",
+      "describe": "Every upgrade CTA in the built sites resolves to the Play listing for our own package — asserted by destination, never by comparing a constant to itself.",
+      "file": "pentest-upgrade-cta-destination.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 45,
+      "ms": 20
+    },
+    {
+      "id": "rasp-tuning-bounds-unit",
+      "discipline": "rasp",
+      "cadence": "every-commit",
+      "describe": "Every tuning knob whose zero hangs or disarms the service still declares a floor, and the challenge loop is still bounded.",
+      "file": "rasp-tuning-bounds-unit.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 8,
+      "ms": 0
+    },
+    {
+      "id": "sast-csp-source-pin",
+      "discipline": "sast",
+      "cadence": "every-commit",
+      "describe": "Compares the CSP and the fixed security headers declared in next.config.ts against an exact expected set, offline, so a directive cannot gain or lose a source unnoticed.",
+      "file": "sast-csp-source-pin.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 17,
+      "ms": 1
+    },
+    {
+      "id": "sast-dynamic-code-sinks",
+      "discipline": "sast",
+      "cadence": "every-commit",
+      "describe": "Sweeps app/, lib/ and components/ for eval-class and raw-HTML sinks and fails any that is not named, with a reason, in scripts/security/data/sast-sink-allowlist.json.",
+      "file": "sast-dynamic-code-sinks.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 179,
+      "ms": 87
+    },
+    {
+      "id": "sast-redos-time-budget",
+      "discipline": "sast",
+      "cadence": "every-commit",
+      "describe": "Times the real scanner, screenshot-leak, email and link engines on hostile input at their real size caps, and fails a regex or an algorithm that goes superlinear.",
+      "file": "sast-redos-time-budget.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 107,
+      "ms": 497
+    },
+    {
+      "id": "sast-route-guard-order",
+      "discipline": "sast",
+      "cadence": "every-commit",
+      "describe": "Asserts the origin gate, the rate limit and (on /scan-url) the proof-of-work and its single-use claim all run before the handler reads a body or makes an outbound fetch.",
+      "file": "sast-route-guards.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 15,
+      "ms": 5
+    },
+    {
+      "id": "sast-request-body-bound",
+      "discipline": "sast",
+      "cadence": "every-commit",
+      "describe": "Asserts every route handler that buffers a request body checks content-length against a numeric cap first, and re-checks the length after reading.",
+      "file": "sast-route-guards.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 7,
+      "ms": 5
+    },
+    {
+      "id": "sast-fs-path-from-params",
+      "discipline": "sast",
+      "cadence": "every-commit",
+      "describe": "Asserts every dynamic page route pre-renders a fixed set of params, and that lib/content.ts validates each segment before joining it onto DATA_DIR.",
+      "file": "sast-route-guards.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 19,
+      "ms": 6
+    },
+    {
+      "id": "sast-test-assertions-not-vacuous",
+      "discipline": "sast",
+      "cadence": "every-commit",
+      "describe": "Finds tests whose assertions can silently not run — an expect() inside a try with a swallowing catch, or a hardcoded file path that no longer resolves.",
+      "file": "sast-test-assertions-not-vacuous.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "Assertion can be silently skipped: tests/xss-protection.test.ts",
+          "detail": "The expect() in this try block never runs if anything above it throws — a renamed file, a changed export, a parse error — and the test still passes. That is the exact shape that let tests/ssrf-protection.test.ts stay green through two live SSRF bypasses.",
+          "evidence": "tests/xss-protection.test.ts:160  try { … catch body is empty (original comment: \"// File might not exist, skip\")",
+          "remediation": "Assert the precondition instead of swallowing it: read the file outside the try and `expect(existsSync(p), `${p} is gone — this test is no longer checking anything`).toBe(true)`, or let the read throw and fail the test.",
+          "file": "tests/xss-protection.test.ts",
+          "line": 160
+        }
+      ],
+      "checked": 104,
+      "ms": 52
+    },
+    {
+      "id": "sast-untrusted-href-gate",
+      "discipline": "sast",
+      "cadence": "every-commit",
+      "describe": "Feeds javascript:/data:/vbscript:/file: payloads through the real link-unwrapper and email-pixel decoders and fails if any non-http string surfaces as something the UI renders into an href or src.",
+      "file": "sast-untrusted-href-gate.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 59,
+      "ms": 2
+    },
+    {
+      "id": "sca-install-script-allowlist",
+      "discipline": "sca",
+      "cadence": "every-commit",
+      "describe": "A package gaining a postinstall runs as www-data on the WordPress box; every install script in the lockfile must be on the reviewed list.",
+      "file": "sca-install-script-allowlist.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 12,
+      "ms": 5
+    },
+    {
+      "id": "sca-lockfile-pinning-drift",
+      "discipline": "sca",
+      "cadence": "every-commit",
+      "describe": "Every lockfile entry still resolves to the public registry with a sha512 integrity hash — no forks, tarballs or local paths.",
+      "file": "sca-lockfile-pinning-drift.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 525,
+      "ms": 1
+    },
+    {
+      "id": "sca-no-unpinned-third-party-in-output",
+      "discipline": "sca",
+      "cadence": "every-commit",
+      "describe": "Third-party JS pasted into the static export never reaches package-lock.json; this reads the built HTML and chunks instead.",
+      "file": "sca-no-unpinned-third-party-in-output.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 123,
+      "ms": 26
+    },
+    {
+      "id": "sca-prod-dep-placement",
+      "discipline": "sca",
+      "cadence": "every-commit",
+      "describe": "`dependencies` is what npm ci --omit=dev puts on the droplet; anything there that only the build uses inflates the production attack surface.",
+      "file": "sca-prod-dep-placement.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "@anthropic-ai/sdk is in dependencies but nothing that ships imports it",
+          "detail": "scripts/deploy-api.sh runs `npm ci --omit=dev`, so this package and its whole subtree are installed on the production droplet — next to a service that fetches attacker-supplied URLs — to support code that only ever runs on a laptop.",
+          "evidence": "package.json dependencies[\"@anthropic-ai/sdk\"] = \"^0.80.0\". No import, require, dynamic import or CSS @import of it under app/, lib/, components/. Referenced instead at: scripts/generate-content.ts:18.",
+          "remediation": "Move @anthropic-ai/sdk to devDependencies. That shrinks the production closure and takes its transitive install-script surface off the droplet with it.",
+          "file": "package.json",
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "tsx is in dependencies but nothing that ships imports it",
+          "detail": "scripts/deploy-api.sh runs `npm ci --omit=dev`, so this package and its whole subtree are installed on the production droplet — next to a service that fetches attacker-supplied URLs — to support code that only ever runs on a laptop.",
+          "evidence": "package.json dependencies[\"tsx\"] = \"^4.21.0\". No import, require, dynamic import or CSS @import of it under app/, lib/, components/. Referenced instead at: npm run generate, npm run generate:dry.",
+          "remediation": "Move tsx to devDependencies. That shrinks the production closure and takes its transitive install-script surface off the droplet with it.",
+          "file": "package.json",
+          "line": null
+        }
+      ],
+      "checked": 8,
+      "ms": 85
+    },
+    {
+      "id": "sca-suppression-premises",
+      "discipline": "sca",
+      "cadence": "every-commit",
+      "describe": "Every advisory suppression names a fact about this codebase; this re-checks each fact and names the GHSAs a broken one re-activates.",
+      "file": "sca-suppression-premises.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 40,
+      "ms": 69
+    },
+    {
+      "id": "secret-known-value-in-build-output",
+      "discipline": "secrets",
+      "cadence": "every-commit",
+      "describe": "No real secret value from .env or .secrets appears anywhere in out/ or .next/ before those are rsynced to production.",
+      "file": "secrets-build-output.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 15260,
+      "ms": 2360
+    },
+    {
+      "id": "secret-history-incremental-scan",
+      "discipline": "secrets",
+      "cadence": "every-commit",
+      "describe": "Sweeps every blob in git history for credential-shaped strings — a secret removed in a later commit is still published.",
+      "file": "secrets-history.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 10686,
+      "ms": 948
+    },
+    {
+      "id": "secret-nextconfig-env-allowlist",
+      "discipline": "secrets",
+      "cadence": "every-commit",
+      "describe": "next.config.ts `env:` inlines its values into the client bundle; every key there must be NEXT_PUBLIC_.",
+      "file": "secrets-repo-hygiene.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 1,
+      "ms": 0
+    },
+    {
+      "id": "secret-gitignore-and-tracking-enforcement",
+      "discipline": "secrets",
+      "cadence": "every-commit",
+      "describe": ".env and .secrets stay git-ignored, and no credential-shaped file is tracked.",
+      "file": "secrets-repo-hygiene.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 1431,
+      "ms": 43
+    },
+    {
+      "id": "secret-sourcemap-guard",
+      "discipline": "secrets",
+      "cadence": "every-commit",
+      "describe": "The static export ships no source maps, and next.config.ts does not turn them on.",
+      "file": "secrets-repo-hygiene.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 608,
+      "ms": 3
+    },
+    {
+      "id": "secret-prerendered-env-interpolation",
+      "discipline": "secrets",
+      "cadence": "every-commit",
+      "describe": "No page, layout or component reads a non-public env var — BUILD_TARGET=static bakes those into published HTML.",
+      "file": "secrets-repo-hygiene.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 94,
+      "ms": 5
+    }
+  ]
+}

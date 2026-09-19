@@ -1,0 +1,34 @@
+{
+  "_why": "Four routes answer a Redis outage four DIFFERENT ways, on purpose. Nothing in tests/ records that, so a well-meaning refactor that harmonises them is invisible — and harmonising /scan-url to /event's fail-open is precisely the defect that shipped on 2026-09-18 and was reported as closed while still open. Each row is the answer the route's own header comment promises. Change a row here only when the route's documented posture actually changes, and say why in the note.",
+  "_conditions": "REDIS_URL points at a closed loopback port, so getRedisStatus() is 'backoff': Redis is EXPECTED and unreachable. This is not the same as REDIS_URL being unset ('disabled'), which is documented local-dev degradation and is covered by the control row in the check.",
+  "rows": [
+    {
+      "route": "scan-url",
+      "expectStatus": 503,
+      "expectReason": "replay-store-unavailable",
+      "failsOpen": false,
+      "note": "MUST fail closed. The single-use claim IS the replay control, so anyone who can knock Redis over — including by flooding it — would otherwise also switch off single-use, and one solved token buys unlimited scans for its whole 90s life. Redis is on localhost; if it is down the tool is degraded anyway, so refusing is honest rather than costly."
+    },
+    {
+      "route": "event",
+      "expectStatus": 202,
+      "expectBody": { "ok": true, "stored": false },
+      "failsOpen": true,
+      "note": "Fails open on purpose. These are cookieless click counters; a page must never wait on analytics, and losing a count costs nothing. 'stored: false' is the honest part — it does not claim to have stored anything."
+    },
+    {
+      "route": "dns-leak/start",
+      "expectStatus": 200,
+      "expectStorage": "none",
+      "failsOpen": true,
+      "note": "The id is still issued so the browser can run its probes, and storage:'none' tells the UI to show 'backend not configured' rather than a verdict it cannot support. No security control depends on this write."
+    },
+    {
+      "route": "stats",
+      "expectStatus": 200,
+      "expectStorage": "none",
+      "failsOpen": true,
+      "note": "Owner-facing. Returning counts:{} with storage:'none' is how the owner can tell an outage from a genuinely quiet day; a bare zero would lie. The bearer check has already run by this point, so nothing is exposed."
+    }
+  ]
+}

@@ -1,5 +1,15 @@
 # Security Headers for the WordPress `/resources/` Static Deploy
 
+> **The `connect-src` here is `'self'` alone — take it from this file, not from
+> an older revision.** These blocks used to also allow `api.incognitobrowser.io`
+> and a `*.vercel.app` host. The API is now same-origin (Apache reverse-proxies
+> it at `/api/`, see API-ON-DROPLET.md), so neither is needed. The Vercel one is
+> the dangerous half: that platform was removed on 2026-09-18 and its account is
+> being closed, and a released `*.vercel.app` subdomain can be registered by any
+> other Vercel user — so the old policy names an origin a stranger may come to
+> own as a permitted fetch destination.
+
+
 Next.js's `headers()` config doesn't apply to the static export (`output: "export"`)
 because there's no Next server in front of the files. The WordPress/Apache
 host has to set the headers itself.
@@ -39,7 +49,7 @@ exception:
         # Content-Security-Policy: defense in depth against XSS and injection
         # Same policy as the API. unsafe-inline + unsafe-eval needed for Next.js
         # hydration; tighten to nonces in a future hardening pass.
-        Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://api.incognitobrowser.io https://incognitobrowser-pseo.vercel.app; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
+        Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests"
 
     </FilesMatch>
 </IfModule>
@@ -102,7 +112,7 @@ location ^~ /resources/ {
     add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
     add_header Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(self), sync-xhr=(), usb=(), interest-cohort=()" always;
     add_header Cross-Origin-Opener-Policy "same-origin" always;
-    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://api.incognitobrowser.io https://incognitobrowser-pseo.vercel.app; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests" always;
 
     # Long-cache immutable Next.js assets
     location ~* ^/resources/_next/static/ {

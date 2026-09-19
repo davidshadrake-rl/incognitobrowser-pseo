@@ -1,0 +1,27 @@
+{
+  "_comment": "Every browser-storage write the site makes, with the reason it is 'strictly necessary' under ePrivacy Art. 5(3) and so owes no consent banner. cmp-no-cookies-unlisted-storage fails on any write that is not listed here. Adding an entry is a deliberate act: write the justification in the visitor's terms, not the developer's. Anything for analytics, personalisation or advertising is NOT strictly necessary, and listing it here does not make it so — it needs a consent decision instead.",
+  "_matching": "`where` is the source file. `call` is the setItem call site as the scanner sees it: the literal key, or the key EXPRESSION when the key is computed. `keys` is the concrete key or key shape that reaches the browser, for a human reading this later.",
+  "writes": [
+    {
+      "where": "components/ChecklistPage.tsx",
+      "call": "key",
+      "keys": ["checklist-<niche>-<slug>"],
+      "storage": "localStorage",
+      "justification": "The visitor's own tick marks on the checklist they are reading. It is the feature: without it, closing the tab throws away the work they just did. Never read by us, never sent anywhere."
+    },
+    {
+      "where": "components/tools/DnsLeakTestTool.tsx",
+      "call": "BASELINE_KEY",
+      "keys": ["ib-dnsleak-baseline"],
+      "storage": "localStorage",
+      "justification": "The VPN-off baseline (public IP + resolver IPs) the VPN-on run is compared against. The test cannot report a leak without it, and keeping it on the device rather than on our server is the privacy-preserving option."
+    },
+    {
+      "where": "lib/in-app.ts",
+      "call": "k",
+      "keys": ["ib-inapp", "ib-pro"],
+      "storage": "sessionStorage",
+      "justification": "Remembers, for this tab only, that the page was opened inside the Incognito Browser app and whether the visitor already has Pro, so the app's own upgrade screen is used and a paying subscriber is not shown a page of upgrade asks. Session-scoped, no identifier, no profile."
+    }
+  ]
+}
