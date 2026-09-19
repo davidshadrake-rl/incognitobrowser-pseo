@@ -76,8 +76,26 @@ export default check({
       throw new Skip(`out/ marker says target=${JSON.stringify(marker.target)}; this check grades the static export the droplet serves`);
     }
 
-    const present = PAGES.filter((p) => existsSync(join(out, p)));
-    if (!present.length) throw new Skip(`out/ has none of ${PAGES.join(', ')} — nothing to extract a boot script from`);
+    /**
+     * The PRO export's root index.html is not a page, so it is not graded.
+     *
+     * scripts/droplet-htaccess.conf sends `^resources-pro/?$` to
+     * /resources-pro/tools/ with a 302 (verified live 2026-09-19: the root
+     * answers 302, never 200), so what sits at that path is an RSC shell no
+     * browser renders and no WebView ever boots. It legitimately carries no
+     * boot script, and grading it reported a medium on every single run —
+     * noise that teaches people to skim past this check's output.
+     *
+     * Narrow on purpose. The FREE root IS a real page — it answers 200 with
+     * the 1073-character boot script in it — and is still graded, as is
+     * tools/index.html in both tiers. Only the one path the server redirects
+     * away from is excluded, and only in the tier where it is a shell.
+     */
+    const SHELL_IN_PRO = new Set(['index.html']);
+    const gradable = marker.tier === 'pro' ? PAGES.filter((p) => !SHELL_IN_PRO.has(p)) : PAGES;
+
+    const present = gradable.filter((p) => existsSync(join(out, p)));
+    if (!present.length) throw new Skip(`out/ has none of ${gradable.join(', ')} — nothing to extract a boot script from`);
 
     const findings = [];
     let checked = 0;

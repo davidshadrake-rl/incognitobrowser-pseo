@@ -64,7 +64,24 @@ export function buildContext(opts = {}) {
    * one unreachable URL cannot abort a whole check — the check decides whether
    * "unreachable" is a finding or a skip.
    */
-  const http = async (url, init = {}) => {
+  /**
+   * Connection-level failures that mean "the socket was no good", not "the
+   * server said no". These are retried once, on a fresh connection.
+   *
+   * Node's global fetch pools keep-alive sockets. Apache closes an idle one
+   * after KeepAliveTimeout (5s by default), and a run like this one leaves
+   * long gaps between requests to the same origin while the ssh-based checks
+   * work. undici then hands out a socket the server has already closed and the
+   * request fails in about a millisecond with UND_ERR_SOCKET.
+   *
+   * That was not theoretical: secret-published-dotfile-probe SKIPPED on every
+   * full run and passed 3/3 in isolation, so a live check silently graded
+   * nothing whenever it ran with the others — reported as "unreachable", which
+   * reads like the site being down rather than a bug in this file.
+   */
+  const RETRYABLE = new Set(['UND_ERR_SOCKET', 'ECONNRESET', 'EPIPE', 'ECONNABORTED']);
+
+  const httpOnce = async (url, init = {}) => {
     const ac = new AbortController();
     const t = setTimeout(() => ac.abort(), init.timeoutMs || 15_000);
     try {
@@ -74,10 +91,40 @@ export function buildContext(opts = {}) {
       try { json = JSON.parse(text); } catch { /* not json */ }
       return { ok: true, status: res.status, headers: res.headers, text, json, url };
     } catch (err) {
-      return { ok: false, status: 0, headers: new Headers(), text: '', json: null, url, error: String(err && err.message || err) };
+      // Unwrap the cause. undici reports every transport failure as the string
+      // "fetch failed" and puts the actual reason — ECONNRESET, ECONNREFUSED,
+      // UND_ERR_CONNECT_TIMEOUT, a TLS alert — on err.cause. A check that
+      // skips with "unreachable: fetch failed" tells whoever reads the report
+      // nothing they can act on, which is how a blind spot stays a blind spot.
+      const cause = err && err.cause;
+      const detail = cause ? ` (${cause.code || ''}${cause.code && cause.message ? ': ' : ''}${cause.message || ''})`.trim() : '';
+      const aborted = err && err.name === 'AbortError';
+      return {
+        ok: false, status: 0, headers: new Headers(), text: '', json: null, url,
+        error: aborted
+          ? `timed out after ${init.timeoutMs || 15_000}ms`
+          : `${String(err && err.message || err)}${detail}`,
+        code: (cause && cause.code) || (aborted ? 'ETIMEDOUT' : null),
+      };
     } finally {
       clearTimeout(t);
     }
+  };
+
+  /**
+   * One retry on a dead pooled socket, then report honestly.
+   *
+   * Deliberately ONE retry and only for the transport codes above: a check
+   * that retries a real refusal would turn a finding into a pass, which is the
+   * opposite of the point. Everything else — a 403, a timeout, a TLS
+   * rejection — is returned first time as the result it is.
+   */
+  const http = async (url, init = {}) => {
+    const first = await httpOnce(url, init);
+    if (first.ok || !RETRYABLE.has(first.code)) return first;
+    const again = await httpOnce(url, init);
+    if (again.ok) return again;
+    return { ...again, error: `${again.error} (retried once after ${first.code})` };
   };
 
   return {

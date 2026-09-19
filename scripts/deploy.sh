@@ -117,10 +117,23 @@ site() {  # label, folder, extra build env
   ! grep -rqi "vercel\.app" out || { echo "a vercel.app URL is in the $1 build — see API-ON-DROPLET.md" >&2; exit 1; }  # no-vercel-guard: names the host in order to refuse it
   npx vitest run tests/client-bundle.test.ts >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
   # The page guards only grade an export whose marker says what it is; without
-  # it they skipped silently on every deploy. The free site is the one they know.
+  # it they skipped silently on every deploy.
+  #
+  # BOTH tiers get a marker now, not just the free one. The Pro build runs
+  # second and wipes out/, so after every deploy out/ was a Pro export with no
+  # marker at all — and three security checks that grade the built artifact
+  # (mast-boot-script-shipped-intact among them) skipped for that reason alone,
+  # every single run. An unmarked export is not safer than a marked one; it is
+  # just one nothing can grade.
+  #
+  # Writing a pro marker cannot confuse the free-site guards: tests/rendered-pages.test.ts
+  # requires tier "free" AND basePath "/resources" before it grades anything,
+  # which is precisely what the marker is for.
   if [ "$2" = /resources ]; then
     node scripts/write-build-marker.mjs --target static --tier free --base /resources >/dev/null
     npx vitest run tests/rendered-pages.test.ts tests/link-audit.test.ts >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
+  else
+    node scripts/write-build-marker.mjs --target static --tier pro --base "$2" >/dev/null
   fi
   cp scripts/site.htaccess out/.htaccess
   echo "$VERSION" > out/version.txt
