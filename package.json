@@ -24,7 +24,8 @@
     "postbuild:static": "vitest run tests/rendered-pages.test.ts tests/link-audit.test.ts && node scripts/audit-links.mjs out --mode static --base /resources",
     "security:smoke": "node scripts/security-smoke.mjs",
     "audit:links": "node scripts/audit-links.mjs",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/deploy.sh",
+    "deploy:api": "./scripts/deploy-api.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.80.0",

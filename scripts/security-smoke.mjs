@@ -11,9 +11,19 @@
  * port/length limits, rate limit, the /ip route and the security headers.
  * It solves the PoW itself, so it exercises the real path, not a mock.
  *
- * Budget: ≤4 /challenge calls and ~20 /scan-url POSTs — inside the per-IP
- * limits (30/min, 10/min). Re-running within a minute skews the rate-limit
- * section; wait 60s between runs. Exit 1 on any FAIL.
+ * A solved proof-of-work token is single-use, so every scan takes a fresh
+ * challenge. That puts the run past the 10/min per-IP scan limit on purpose:
+ * it pauses ~62s when the window fills rather than dropping cases, so expect
+ * two to three minutes. Re-running immediately skews the rate-limit section.
+ * Exit 1 on any FAIL.
+ *
+ * Since 2026-09-18 the pages and the API no longer share a base: the sites are
+ * static under /resources and /resources-pro, the API is proxied at /api
+ * (API-ON-DROPLET.md). Pass both — the first argument is the site, --api is
+ * the API. --api defaults to the site base, which is the pre-split layout.
+ *
+ *   node scripts/security-smoke.mjs https://206-189-186-34.nip.io/resources \
+ *     --free --api https://206-189-186-34.nip.io/api
  */
 import { createHash } from 'node:crypto';
 
@@ -21,6 +31,11 @@ const base = (process.argv[2] || '').replace(/\/$/, '');
 if (!/^https?:\/\//.test(base)) { console.error('usage: security-smoke.mjs <https://base> [--pro|--free]'); process.exit(2); }
 const isPro = process.argv.includes('--pro');
 const isFree = process.argv.includes('--free');
+// Where the seven server routes live. Separate from the page base since the
+// API moved behind Apache at /api; defaults to the page base for older layouts.
+const apiIdx = process.argv.indexOf('--api');
+const api = (apiIdx > -1 ? (process.argv[apiIdx + 1] || '') : base).replace(/\/$/, '');
+if (!/^https?:\/\//.test(api)) { console.error('--api needs a full URL'); process.exit(2); }
 const ORIGIN = new URL(base).origin;
 const EVIL = 'https://evil.example';
 
@@ -32,7 +47,7 @@ const req = async (path, { method = 'GET', origin, headers = {}, body, redirect 
   const h = { ...headers };
   if (origin) h['Origin'] = origin;
   if (body !== undefined) h['Content-Type'] = 'application/json';
-  const res = await fetch(base + path, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body), redirect });
+  const res = await fetch(api + path, { method, headers: h, body: body === undefined ? undefined : JSON.stringify(body), redirect });
   let json = null; let text = '';
   try { text = await res.text(); json = JSON.parse(text); } catch { /* not json */ }
   return { status: res.status, headers: res.headers, json, text };
@@ -43,6 +58,27 @@ const solve = (salt, challenge, maxnumber) => {
     if (createHash('sha256').update(salt + n).digest('hex') === challenge) return n;
   }
   return -1;
+};
+
+/**
+ * A challenge fetched and solved, as an Authorization header value.
+ *
+ * One per scan, because a solved token is single-use: app/scan-url/route.ts
+ * claims it with SET NX and refuses the second use. This script used to solve
+ * once and reuse the same token for every SSRF case, which against a live
+ * instance with Redis meant case 1 was graded and cases 2..n came back 401
+ * "replayed" — reported as FAILs that looked like the SSRF guard had broken.
+ * Challenges are cheap and separately limited (30/min vs the scan's 10/min).
+ */
+const freshToken = async () => {
+  const c = await req('/challenge', { method: 'POST', origin: ORIGIN, body: {} });
+  if (c.status !== 200) return null;
+  const number = solve(c.json.salt, c.json.challenge, c.json.maxnumber ?? 100000);
+  if (number < 0) return null;
+  return 'Altcha ' + Buffer.from(JSON.stringify({
+    algorithm: c.json.algorithm || 'SHA-256', salt: c.json.salt, number,
+    signature: c.json.signature, expires: c.json.expires,
+  })).toString('base64');
 };
 
 console.log(`security-smoke → ${base} (${isPro ? 'pro' : isFree ? 'free' : 'generic'})`);
@@ -98,19 +134,50 @@ let token = null;
     const tampered = (() => { const j = JSON.parse(Buffer.from(token.slice(7), 'base64').toString()); j.number += 1; return 'Altcha ' + Buffer.from(JSON.stringify(j)).toString('base64'); })();
     const bad = await req('/scan-url', { method: 'POST', origin: ORIGIN, headers: { Authorization: tampered }, body: { url: 'https://example.com' } });
     ok(bad.status === 401 && bad.json?.reason === 'sig_mismatch', 'tampered PoW → 401 sig_mismatch', `${bad.status} ${bad.json?.reason}`);
-    const A = { Authorization: token };
+    // A solved token buys exactly one scan.
+    const once = await freshToken();
+    const first = await req('/scan-url', { method: 'POST', origin: ORIGIN, headers: { Authorization: once }, body: { url: 'http://10.0.0.1/' } });
+    ok(first.status === 400, 'blocked: RFC1918 → 400', `${first.status} ${first.json?.error?.slice(0, 60) || ''}`);
+    const again = await req('/scan-url', { method: 'POST', origin: ORIGIN, headers: { Authorization: once }, body: { url: 'https://example.com/' } });
+    ok(again.status === 401 && again.json?.reason === 'replayed', 'a solved PoW token is single-use → 401 replayed', `${again.status} ${again.json?.reason}`);
+
+    // One fresh token per scan, and a pause if the per-IP window fills — the
+    // list below is longer than the 10/min budget on purpose, because each of
+    // these was a real bypass at some point and none should be dropped to
+    // save a minute.
+    const scanFresh = async (url) => {
+      let r;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        const t = await freshToken();
+        r = await req('/scan-url', { method: 'POST', origin: ORIGIN, headers: t ? { Authorization: t } : {}, body: { url } });
+        if (r.status !== 429) return r;
+        info('per-IP scan window full, waiting for it to reset', '62s');
+        await new Promise((res) => setTimeout(res, 62_000));
+      }
+      return r;
+    };
+
     const ssrf = [
       ['http://169.254.169.254/latest/meta-data/', 'AWS metadata IP'],
       ['http://localhost:8080/', 'localhost'],
-      ['http://10.0.0.1/', 'RFC1918'],
       ['https://example.com:8081/', 'non-standard port'],
       ['https://example.com/' + 'a'.repeat(2100), 'URL over 2048 chars'],
+      // Found allowed against the real guard on 2026-09-18. WHATWG URL parsing
+      // rewrites ::ffff:127.0.0.1 into the hex form below by itself, so this is
+      // the spelling that actually arrives — from a typed URL and from a
+      // hostile AAAA record alike.
+      ['http://[::ffff:7f00:1]/', 'loopback as IPv4-mapped IPv6'],
+      ['http://[::ffff:a9fe:a9fe]/', 'metadata as IPv4-mapped IPv6'],
+      ['http://localhost./', 'localhost with a trailing dot'],
+      ['http://239.255.255.250/', 'multicast (SSDP)'],
+      // Scanning ourselves is free self-amplification (lib/tuning.ts).
+      ['http://206.189.186.34/', 'this droplet itself'],
     ];
     for (const [u, label] of ssrf) {
-      const r = await req('/scan-url', { method: 'POST', origin: ORIGIN, headers: A, body: { url: u } });
+      const r = await scanFresh(u);
       ok(r.status === 400, `blocked: ${label} → 400`, `${r.status} ${r.json?.error?.slice(0, 60) || ''}`);
     }
-    const real = await req('/scan-url', { method: 'POST', origin: ORIGIN, headers: A, body: { url: 'https://example.com/' } });
+    const real = await scanFresh('https://example.com/');
     ok(real.status === 200 && real.json?.summary && Array.isArray(real.json?.cookies), 'real scan of example.com with valid PoW → 200 + summary', `${real.status} ${real.json?.error || `cookies=${real.json?.summary?.totalCookies} trackers=${real.json?.summary?.totalTrackers}`}`);
     ok(real.headers.get('x-content-type-options') === 'nosniff' && /DENY/i.test(real.headers.get('x-frame-options') || ''), 'API responses carry nosniff + X-Frame-Options DENY');
     ok((real.headers.get('vary') || '').toLowerCase().includes('origin'), 'API responses Vary: Origin');
@@ -169,7 +236,11 @@ if (isFree) {
   ok(robots.status === 200 && /Allow:\s*\//.test(robots.text) && /Sitemap:/.test(robots.text), 'Free robots.txt allows + names the sitemap');
   const sm = await fetch(base + '/sitemap.xml', { redirect: 'follow' });
   ok(sm.status === 200, 'Free sitemap 200', String(sm.status));
-  for (const p of ['/tools/ad-tracking/cookie-tracker-scanner', '/tools/browser-privacy/browser-privacy-audit', '/tools/phishing/url-safety-checker', '/tools/dating-privacy/image-metadata-checker']) {
+  // The three engines in lib/tiers.ts PRO_ENGINES. url-safety-checker used to
+  // be here and was deliberately moved to the free site on 2026-09-17 —
+  // Pro has no link-safety benefit to sell, so keeping it behind the noindex
+  // Pro site cost the free site its best buyer-intent queries for nothing.
+  for (const p of ['/tools/ad-tracking/cookie-tracker-scanner', '/tools/browser-privacy/browser-privacy-audit', '/tools/dating-privacy/image-metadata-checker']) {
     const r = await fetch(base + p, { redirect: 'follow' });
     ok(r.status === 404, `Free ${p} (Pro-only tool) → 404`, String(r.status));
   }
