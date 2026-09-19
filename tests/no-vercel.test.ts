@@ -21,7 +21,12 @@ const DIRS = ['app', 'components', 'lib', 'scripts', 'tests', 'e2e'];
 const SELF = path.join('tests', 'no-vercel.test.ts');
 /** A line that exists to BAN the hostname is not a dependency on it. Mark it. */
 const ALLOW = 'no-vercel-guard';
-const EXTS = new Set(['.ts', '.tsx', '.mjs', '.js', '.sh', '.json', '.css']);
+// .conf and .htaccess earn their place here the hard way: the live CSP is set
+// by scripts/droplet-htaccess.conf, and because that extension was missing this
+// guard walked straight past two vercel.app hosts in connect-src and reported
+// green for weeks. Anything that can reach the server is in scope, not just
+// what the bundler compiles.
+const EXTS = new Set(['.ts', '.tsx', '.mjs', '.js', '.sh', '.json', '.css', '.conf', '.htaccess', '.yml', '.yaml']);
 
 function walk(dir: string): string[] {
   const abs = path.join(ROOT, dir);
@@ -59,5 +64,19 @@ describe('no Vercel dependency anywhere that runs', () => {
     // which Apache reverse-proxies to the Node service (API-ON-DROPLET.md).
     expect(cfg).toMatch(/NEXT_PUBLIC_SCAN_API:\s*process\.env\.NEXT_PUBLIC_SCAN_API\s*\?\?\s*""/);
     expect(cfg).toContain('"connect-src \'self\'"');
+  });
+
+  it('the CSP the browser actually gets is the tight one', () => {
+    // next.config.ts is NOT the header a visitor receives. A static export runs
+    // no Next.js server, so headers() never executes; Apache serves the files
+    // and scripts/droplet-htaccess.conf supplies the policy. Asserting only the
+    // former is how two vercel.app hosts sat in the live connect-src while this
+    // suite reported green — grade the artifact that ships.
+    const conf = fs.readFileSync(path.join(ROOT, 'scripts/droplet-htaccess.conf'), 'utf-8');
+    const csp = /Header always set Content-Security-Policy "([^"]+)"/.exec(conf);
+    expect(csp, 'no CSP header in droplet-htaccess.conf').not.toBeNull();
+    const connect = /connect-src ([^;]+)/.exec(csp![1]);
+    expect(connect, 'no connect-src in the deployed CSP').not.toBeNull();
+    expect(connect![1].trim()).toBe("'self'");
   });
 });
