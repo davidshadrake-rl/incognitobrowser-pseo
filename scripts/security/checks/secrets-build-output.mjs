@@ -106,7 +106,14 @@ export default check({
    * only out/ to read, or nothing, and nothing means SKIP rather than a pass.
    */
   async run(ctx) {
-    const env = parseEnvFile(join(ctx.repoRoot, '.env'));
+    // .env AND .env.generate. The key that made this check fire on 2026-09-19
+    // lived in .env, which Next auto-loads into every build — that is how it
+    // ended up verbatim in .next/cache/turbopack, on a path scripts/deploy-api.sh
+    // used to rsync to the droplet. The fix moved it to .env.generate, a name
+    // Next does not load. If this check only ever read '.env' it would then have
+    // SKIPPED, and the fix would have looked like the problem disappearing.
+    // Any .env* the repo ignores can hold a real value, so all of them are read.
+    const env = { ...parseEnvFile(join(ctx.repoRoot, '.env')), ...parseEnvFile(join(ctx.repoRoot, '.env.generate')), ...parseEnvFile(join(ctx.repoRoot, '.env.local')) };
     const secrets = parseEnvFile(join(ctx.repoRoot, '.secrets'));
 
     const needles = [];

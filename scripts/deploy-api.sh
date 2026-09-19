@@ -93,7 +93,13 @@ if [ "$SHIPPED_LOCK" != "$INSTALLED_LOCK" ] || [ "$HAVE_MODULES" != yes ]; then
   # runs as www-data on the box that also serves WordPress and MySQL, and the
   # protection should not depend on a config file having arrived intact.
   $SSH "$TARGET" "rm -f $INSTALLED_MARKER"
-  $SSH "$TARGET" "cd $REMOTE && sudo -u www-data env HOME=/tmp npm ci --omit=dev --ignore-scripts"
+  # As root, not www-data. The tree is root:www-data 750 so that a WordPress
+  # compromise cannot rewrite the API's own code (see the chown below), which
+  # also means www-data can no longer write node_modules — the install failed
+  # with EACCES on the first deploy after that change. www-data only ever reads
+  # here, so root is the correct installer. --ignore-scripts keeps this from
+  # being a lifecycle-script foothold despite the higher privilege.
+  $SSH "$TARGET" "cd $REMOTE && env HOME=/tmp npm ci --omit=dev --ignore-scripts"
   $SSH "$TARGET" "printf '%s\n' '$SHIPPED_LOCK' > $INSTALLED_MARKER"
 else
   echo "   dependencies unchanged since the last successful install"
