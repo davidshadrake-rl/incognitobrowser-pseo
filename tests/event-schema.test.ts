@@ -75,17 +75,38 @@ describe('eventKeys', () => {
     const click = eventKeys('2026-09-16', { event: 'cta_click', tool: 'ad-blocker-test', severity: 'red', target: 'play', platform: 'android', inApp: true, page, benefit: 'tracker-blocking' });
     expect(click.length).toBeLessThanOrEqual(7);
     expect(click).toContain('evt:2026-09-16:cta_click:ad-blocker-test:android:play:b-tracker-blocking');
-    expect(click).toContain(`evt:2026-09-16:page:cta_click:${page}:sev-red:play`);
+    // Page key carries neither the target nor the severity for a click. Both
+    // suffixes were dropped on 2026-09-18 to bound Redis key cardinality —
+    // pages x events x severities x targets was ~630,000 keys/day. Nothing
+    // read either: scripts/funnels/stats.ts captures the target in group 4 of
+    // its page regex and never uses it, and reads severity only for
+    // result_shown. Per-target and per-benefit clicks live on the tool key,
+    // asserted on the line above.
+    expect(click).toContain(`evt:2026-09-16:page:cta_click:${page}`);
+    expect(click).not.toContain(`evt:2026-09-16:page:cta_click:${page}:sev-red:play`);
+    // Severity still rides along for result_shown, the one event that reads it.
+    expect(eventKeys('2026-09-16', { event: 'result_shown', tool: 'ad-blocker-test', severity: 'red', page }))
+      .toContain(`evt:2026-09-16:page:result_shown:${page}:sev-red`);
     const placed = eventKeys('2026-09-16', { event: 'result_card_placed', tool: 'ad-blocker-test', severity: 'red', platform: 'ios', inApp: true, page, reason: 'own-scroll' });
     expect(placed.length).toBeLessThanOrEqual(7);
     expect(placed).toContain('evt:2026-09-16:result_card_placed:ad-blocker-test:ios:r-own-scroll');
-    expect(placed).toContain(`evt:2026-09-16:page:result_card_placed:${page}:sev-red`);
+    // Same rule: no severity on a page key that is not result_shown. This one
+    // is not read at all — scripts/funnels/stats.ts's page regex only matches
+    // funnel_view|funnel_run|result_shown|cta_click|funnel_click — so the
+    // colour was minting keys nobody ever looked at.
+    expect(placed).toContain(`evt:2026-09-16:page:result_card_placed:${page}`);
+    expect(placed).not.toContain(`evt:2026-09-16:page:result_card_placed:${page}:sev-red`);
     // No benefit, no suffix: older click keys keep their shape.
     expect(eventKeys('2026-09-16', { event: 'cta_click', tool: 'ad-blocker-test', target: 'email' })).toContain('evt:2026-09-16:cta_click:ad-blocker-test:-:email');
   });
-  it('day buckets are UTC dates and the TTL is about 400 days', () => {
+  it('day buckets are UTC dates and the TTL is about a month', () => {
     expect(dayOf(new Date('2026-09-08T23:59:59Z'))).toBe('2026-09-08');
-    expect(EVENT_TTL_SECONDS).toBe(400 * 86400);
+    // Was 400 days, cut to 35 on 2026-09-18: a year of every counter bucket
+    // at once against a 256 MB allkeys-lru Redis meant a burst of new keys
+    // would evict real ones. scripts/funnels/stats.ts looks back 14 days by
+    // default, so nothing reads past this.
+    expect(EVENT_TTL_SECONDS).toBe(35 * 86400);
+    expect(EVENT_TTL_SECONDS).toBeGreaterThan(14 * 86400);
   });
 });
 

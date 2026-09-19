@@ -127,10 +127,17 @@ describe('per-page funnel events', () => {
     expect(validateEvent({ event: 'funnel_view', page: 42 })).toEqual({ ok: false, error: 'unknown page' });
   });
 
-  it('count views, runs, results by colour and clicks by target, per page', () => {
+  it('count views, runs and clicks per page, and results by colour', () => {
+    // A page click is one bucket. The :sev-:target suffixes came off on
+    // 2026-09-18 to bound Redis key cardinality (lib/event-schema.ts eventKeys);
+    // stats.ts never read either for a click, and the per-target and
+    // per-benefit breakdown is kept on the tool key instead.
     const keys = eventKeys('2026-09-16', { event: 'funnel_click', tool: 'ad-blocker-test', severity: 'red', target: 'play', platform: 'android', page });
-    expect(keys).toContain(`evt:2026-09-16:page:funnel_click:${page}:sev-red:play`);
+    expect(keys).toContain(`evt:2026-09-16:page:funnel_click:${page}`);
     expect(keys.length).toBeLessThanOrEqual(7);
+    // Colour is still counted per page for the one event that reports it.
+    expect(eventKeys('2026-09-16', { event: 'result_shown', tool: 'ad-blocker-test', severity: 'red', page }))
+      .toContain(`evt:2026-09-16:page:result_shown:${page}:sev-red`);
   });
 });
 

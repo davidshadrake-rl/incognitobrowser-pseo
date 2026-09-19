@@ -421,8 +421,33 @@ export function categorizeCookie(cookieStr: string) {
 }
 
 // SSRF Protection: block private/reserved IPs and cloud metadata endpoints
+/**
+ * An IPv4-mapped IPv6 address as its plain dotted quad, or null if it is not one.
+ *
+ * The dotted spelling a person would type (`::ffff:127.0.0.1`) never survives
+ * URL parsing: WHATWG normalises it to hex, so `new URL('http://[::ffff:127.0.0.1]/')`
+ * has hostname `[::ffff:7f00:1]`. Both spellings are handled here, and the hex
+ * one is the one that matters — see the note in isBlockedHostname.
+ */
+function mappedIPv4(ip: string): string | null {
+  // Either the compressed `::ffff:` prefix or the fully written-out form.
+  const m = /^(?:::ffff:|0{1,4}(?::0{1,4}){4}:ffff:)(.+)$/i.exec(ip);
+  if (!m) return null;
+  const rest = m[1];
+  if (/^\d{1,3}(?:\.\d{1,3}){3}$/.test(rest)) return rest;
+  const hex = /^([0-9a-f]{1,4}):([0-9a-f]{1,4})$/i.exec(rest);
+  if (!hex) return null;
+  const hi = parseInt(hex[1], 16);
+  const lo = parseInt(hex[2], 16);
+  return `${hi >> 8}.${hi & 255}.${lo >> 8}.${lo & 255}`;
+}
+
 export function isBlockedHostname(hostname: string): boolean {
-  const lower = hostname.toLowerCase();
+  // A trailing dot is legal in DNS and names the same host: `localhost.`
+  // resolves exactly like `localhost`, but an equality test against
+  // 'localhost' misses it. Verified ALLOWED by this function before the
+  // 2026-09-18 fix, for both `localhost.` and `metadata.google.internal.`.
+  const lower = hostname.toLowerCase().replace(/\.+$/, '');
 
   // Block localhost variants
   if (lower === 'localhost' || lower === 'localhost.localdomain') return true;
@@ -434,8 +459,17 @@ export function isBlockedHostname(hostname: string): boolean {
   // Strip IPv6 brackets
   const ip = lower.replace(/^\[/, '').replace(/\]$/, '');
 
-  // Handle IPv4-mapped IPv6
-  const v4 = ip.startsWith('::ffff:') ? ip.slice(7) : ip;
+  // IPv4-mapped IPv6. This used to be `ip.slice(7)`, which on the hex form
+  // URL parsing actually produces (`::ffff:7f00:1`) yielded "7f00:1" — matching
+  // no IPv4 pattern, so it was ALLOWED. Verified on 2026-09-18 against this
+  // exported function: `[::ffff:7f00:1]` (loopback) and `[::ffff:a9fe:a9fe]`
+  // (169.254.169.254, cloud metadata) both passed.
+  //
+  // This is not only a typed-URL problem. dns.lookup returns addresses in the
+  // same mapped form, so a hostile name publishing such an AAAA record would
+  // walk straight past the resolve-then-judge step in app/scan-url/route.ts,
+  // which judges resolved addresses with exactly this function.
+  const v4 = mappedIPv4(ip) ?? ip;
 
   // Block IPv4 private/reserved ranges
   const blockedIPv4 = [
@@ -447,8 +481,15 @@ export function isBlockedHostname(hostname: string): boolean {
     /^0\./,                            // Current network
     /^100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\./,  // Carrier-grade NAT
     /^192\.0\.0\./,                    // IETF protocol assignments
+    /^192\.0\.2\./,                    // TEST-NET-1
+    /^198\.51\.100\./,                 // TEST-NET-2
+    /^203\.0\.113\./,                  // TEST-NET-3
+    /^192\.88\.99\./,                  // 6to4 relay anycast
     /^198\.1[89]\./,                   // Benchmarking
-    /^255\.255\.255\.255$/,            // Broadcast
+    // 224.0.0.0/4 multicast (SSDP and friends) and 240.0.0.0/4 reserved.
+    // Octets stop at 255, so this covers 224-255 and subsumes the old
+    // 255.255.255.255-only broadcast rule.
+    /^(22[4-9]|2[3-5]\d)\./,
   ];
   if (blockedIPv4.some(r => r.test(v4))) return true;
 
@@ -460,6 +501,9 @@ export function isBlockedHostname(hostname: string): boolean {
     /^fe80:/i,         // Link-local
     /^ff[0-9a-f]{2}:/i,  // Multicast
     /^::$/,            // Unspecified
+    /^2002:/i,         // 6to4 — embeds an arbitrary IPv4, private ones included
+    /^64:ff9b:/i,      // NAT64 well-known prefix — same
+    /^100:/i,          // Discard-only
   ];
   if (blockedIPv6.some(r => r.test(ip))) return true;
 

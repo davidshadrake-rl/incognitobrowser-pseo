@@ -13,6 +13,8 @@ import {
   MAX_SCRIPT_MATCHES as TUNING_MAX_SCRIPT_MATCHES,
   MAX_THIRD_PARTY_DOMAINS as TUNING_MAX_THIRD_PARTY_DOMAINS,
   FETCH_TIMEOUT_MS,
+  MAX_IN_FLIGHT_SCANS,
+  BLOCKED_TARGET_HOSTS,
 } from '@/lib/tuning';
 
 // Tracker patterns, cookie classifier, SSRF guard, capped reader and the
@@ -46,6 +48,12 @@ export async function OPTIONS(request: NextRequest) {
 
 // Rate limit — values from lib/tuning.ts. Defaults: 10 reqs per 60s per IP.
 const RATE_LIMIT_CONFIG = { limit: SCAN_RATE_LIMIT, windowMs: SCAN_RATE_WINDOW_MS };
+
+// Scans running right now, process-wide. The per-IP limiter caps one visitor;
+// this caps everyone at once, which is the shape a botnet or a viral link
+// actually takes. One process serves this app (systemd ib-api), so a plain
+// module-level counter is the whole mechanism — no shared store needed.
+let inFlightScans = 0;
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
@@ -102,13 +110,23 @@ export async function POST(request: NextRequest) {
   // Redis the 90 s TTL + rate limit remain the only replay bound.
   const redis = getRedisClient();
   if (redis && solution) {
+    let fresh: string | null;
     try {
-      const fresh = await redis.set(`pow:${solution.signature}`, '1', 'EX', 120, 'NX');
-      if (fresh === null) {
-        return NextResponse.json({ error: 'This proof-of-work token was already used. Request a new challenge.', reason: 'replayed' }, { status: 401, headers: allHeaders });
-      }
+      fresh = await redis.set(`pow:${solution.signature}`, '1', 'EX', 120, 'NX');
     } catch {
-      /* Redis hiccup: fall through to the TTL bound rather than fail the scan */
+      // Fail CLOSED. This used to swallow the error and carry on, which made
+      // the replay check an attacker-removable control: whoever can make Redis
+      // stop answering — including by flooding it — also switches off
+      // single-use, and one solved proof-of-work then buys unlimited scans for
+      // its whole 90 s life. Redis is on localhost; if it is down the tool is
+      // degraded anyway, so refusing is honest rather than costly.
+      return NextResponse.json(
+        { error: 'Scanning is briefly unavailable. Please try again in a moment.', reason: 'replay-store-unavailable' },
+        { status: 503, headers: { ...allHeaders, 'Retry-After': '5' } },
+      );
+    }
+    if (fresh === null) {
+      return NextResponse.json({ error: 'This proof-of-work token was already used. Request a new challenge.', reason: 'replayed' }, { status: 401, headers: allHeaders });
     }
   }
 
@@ -137,8 +155,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Only HTTP/HTTPS URLs are supported' }, { status: 400, headers: allHeaders });
     }
 
-    // SSRF Protection: block private/internal networks
-    if (isBlockedHostname(parsedUrl.hostname)) {
+    // SSRF Protection: block private/internal networks, plus any host named in
+    // BLOCKED_TARGET_HOSTS (by default this droplet itself — see lib/tuning.ts).
+    const hostKey = parsedUrl.hostname.toLowerCase().replace(/\.+$/, '');
+    if (isBlockedHostname(parsedUrl.hostname) || BLOCKED_TARGET_HOSTS.has(hostKey)) {
       return NextResponse.json(
         { error: 'Cannot scan private IP addresses, localhost, or internal networks.' },
         { status: 400, headers: allHeaders }
@@ -167,7 +187,9 @@ export async function POST(request: NextRequest) {
     // is no legitimate scan target behind this check.
     try {
       const resolved = await dnsLookup(parsedUrl.hostname, { all: true });
-      const blocked = resolved.filter((r) => isBlockedHostname(r.address));
+      const blocked = resolved.filter(
+        (r) => isBlockedHostname(r.address) || BLOCKED_TARGET_HOSTS.has(r.address.toLowerCase()),
+      );
       if (blocked.length) {
         return NextResponse.json(
           { error: 'Cannot scan private IP addresses, localhost, or internal networks.' },
@@ -190,54 +212,90 @@ export async function POST(request: NextRequest) {
 
     const targetUrl = parsedUrl.href;
 
-    // Fetch the URL with a timeout
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
-
-    let response: Response;
-    try {
-      response = await fetch(targetUrl, {
-        signal: controller.signal,
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-          'Accept-Language': 'en-US,en;q=0.5',
-        },
-        redirect: 'manual',  // Don't auto-follow redirects (SSRF prevention)
-      });
-    } catch (err) {
-      clearTimeout(timeout);
-      const message = err instanceof Error && err.name === 'AbortError'
-        ? 'Request timed out (10s). The site may be slow or blocking automated requests.'
-        : 'Failed to reach this URL. The site may be down or blocking requests.';
-      return NextResponse.json({ error: message }, { status: 502, headers: allHeaders });
-    }
-    clearTimeout(timeout);
-
-    // Reject redirect responses — with redirect:'manual' the body is empty/opaque,
-    // and silently "scanning" an unfollowed redirect would give misleading results.
-    // The Location header could also target an internal host we already blocked.
-    if (response.status >= 300 && response.status < 400) {
-      const location = response.headers.get('location') || '';
+    // Global concurrency ceiling. Everything above is cheap string work; from
+    // here on a request owns a socket and a buffer, so this is the point worth
+    // refusing at. Checked and claimed in the same synchronous step — there is
+    // no await between them, so the count cannot be raced past the cap.
+    if (inFlightScans >= MAX_IN_FLIGHT_SCANS) {
       return NextResponse.json(
-        {
-          error: `This URL redirects (HTTP ${response.status}). Please scan the final destination directly.`,
-          redirectTo: location.slice(0, 500) || null,
-        },
-        { status: 400, headers: allHeaders }
+        { error: 'Too many scans running right now. Please try again in a moment.' },
+        { status: 503, headers: { ...allHeaders, 'Retry-After': '5' } },
       );
     }
+    inFlightScans++;
 
-    // Read HTML body for script analysis — capped to MAX_BODY_SIZE to prevent
-    // memory exhaustion from malicious or huge target pages.
-    const html = await readCappedText(response, MAX_BODY_SIZE);
+    try {
+      // One deadline covering the whole exchange, headers AND body.
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+      const timedOut = () => controller.signal.aborted;
+      const seconds = Math.round(FETCH_TIMEOUT_MS / 1000);
 
-    const result = analyzeScan(targetUrl, parsedUrl, response, html, {
-      maxCookies: MAX_COOKIES,
-      maxScriptMatches: MAX_SCRIPT_MATCHES,
-      maxThirdPartyDomains: MAX_THIRD_PARTY_DOMAINS,
-    });
-    return NextResponse.json(result, { headers: allHeaders });
+      try {
+        let response: Response;
+        try {
+          response = await fetch(targetUrl, {
+            signal: controller.signal,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+              'Accept-Language': 'en-US,en;q=0.5',
+            },
+            redirect: 'manual',  // Don't auto-follow redirects (SSRF prevention)
+          });
+        } catch (err) {
+          const message = err instanceof Error && err.name === 'AbortError'
+            ? `Request timed out (${seconds}s). The site may be slow or blocking automated requests.`
+            : 'Failed to reach this URL. The site may be down or blocking requests.';
+          return NextResponse.json({ error: message }, { status: 502, headers: allHeaders });
+        }
+
+        // Reject redirect responses — with redirect:'manual' the body is empty/opaque,
+        // and silently "scanning" an unfollowed redirect would give misleading results.
+        // The Location header could also target an internal host we already blocked.
+        if (response.status >= 300 && response.status < 400) {
+          const location = response.headers.get('location') || '';
+          return NextResponse.json(
+            {
+              error: `This URL redirects (HTTP ${response.status}). Please scan the final destination directly.`,
+              redirectTo: location.slice(0, 500) || null,
+            },
+            { status: 400, headers: allHeaders }
+          );
+        }
+
+        // Read HTML body for script analysis — capped to MAX_BODY_SIZE to prevent
+        // memory exhaustion from malicious or huge target pages.
+        //
+        // The timeout is still armed here, deliberately. It used to be cleared
+        // the moment the headers landed, which left the body read unbounded in
+        // time: a target that answers instantly and then dribbles bytes forever
+        // held a scan slot, a socket and an Apache worker indefinitely, and the
+        // byte cap never fired because the bytes never arrived. Aborting the
+        // controller also errors this stream, so the deadline now covers the
+        // slow-body case that the cap alone cannot.
+        let html: string;
+        try {
+          html = await readCappedText(response, MAX_BODY_SIZE);
+        } catch (err) {
+          const message = timedOut() || (err instanceof Error && err.name === 'AbortError')
+            ? `Request timed out (${seconds}s). The site started responding but never finished sending the page.`
+            : 'Failed to read this page. The site may have closed the connection early.';
+          return NextResponse.json({ error: message }, { status: 502, headers: allHeaders });
+        }
+
+        const result = analyzeScan(targetUrl, parsedUrl, response, html, {
+          maxCookies: MAX_COOKIES,
+          maxScriptMatches: MAX_SCRIPT_MATCHES,
+          maxThirdPartyDomains: MAX_THIRD_PARTY_DOMAINS,
+        });
+        return NextResponse.json(result, { headers: allHeaders });
+      } finally {
+        clearTimeout(timeout);
+      }
+    } finally {
+      inFlightScans--;
+    }
   } catch (err) {
     const errorType = err instanceof Error ? err.constructor.name : 'Unknown';
     console.error(`Scan error (${errorType}): ${err instanceof Error ? err.message : 'unknown'}`);

@@ -88,8 +88,33 @@ export function eventKeys(day: string, v: EventPayload): string[] {
   if (v.severity) keys.push(`evt:${day}:${v.event}:${v.tool || '-'}:${p}:sev-${v.severity}`);
   if (v.inApp) keys.push(`evt:${day}:_inapp:${v.event}`);
   // Per funnel page: views, runs, results by colour and clicks (scripts/funnels/stats.ts).
-  if (v.page) keys.push(`evt:${day}:page:${v.event}:${v.page}${v.severity ? `:sev-${v.severity}` : ''}${v.target ? `:${v.target}` : ''}`);
+  //
+  // Key cardinality is the thing to watch here, because every distinct key is a
+  // separate Redis entry held for EVENT_TTL_SECONDS. With the severity and
+  // target suffixes both free to vary this read
+  //   ~1,400 pages x 10 events x 5 severities x 9 targets = ~630,000 keys/day.
+  // Two bounds, neither of which costs a number anyone reads:
+  //   - the target suffix is gone. scripts/funnels/stats.ts captures it in
+  //     group 4 of its page regex and never reads it; page clicks are counted
+  //     in one bucket, and the per-target breakdown lives on the tool key.
+  //   - severity rides along only for result_shown, the one event whose
+  //     colour that script actually uses (its `bySeverity` row).
+  // ~21,000 keys/day, thirty times fewer, with the same read-out.
+  if (v.page) {
+    const sev = v.severity && v.event === 'result_shown' ? `:sev-${v.severity}` : '';
+    keys.push(`evt:${day}:page:${v.event}:${v.page}${sev}`);
+  }
   return keys.slice(0, 7);
 }
 
-export const EVENT_TTL_SECONDS = 400 * 24 * 3600;
+/**
+ * How long a counter lives. 35 days.
+ *
+ * This was 400 days, which sized the keyspace at roughly a year of every
+ * bucket at once against a 256 MB Redis with allkeys-lru — so a burst of new
+ * keys would have started evicting real counters to make room for itself.
+ * Nothing reads back that far: scripts/funnels/stats.ts defaults to a rolling
+ * window measured in days, and the funnel decisions it feeds are made weekly.
+ * 35 days keeps a full month plus a margin for comparing like with like.
+ */
+export const EVENT_TTL_SECONDS = 35 * 24 * 3600;

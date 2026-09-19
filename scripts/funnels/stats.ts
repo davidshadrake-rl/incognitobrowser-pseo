@@ -6,11 +6,14 @@
  *   evt:<day>:page:funnel_view:<path>                            the entry card was seen (components/ToolEntryCard.tsx)
  *   evt:<day>:page:funnel_run:<path>                             its button was pressed
  *   evt:<day>:page:result_shown:<path>:sev-<colour>
- *   evt:<day>:page:cta_click:<path>:sev-<colour>:<target>        the result card's upgrade button (funnel_click on older days)
+ *   evt:<day>:page:cta_click:<path>                              the result card's upgrade button (funnel_click on older days)
  *   evt:<day>:cta_click:<tool>:<platform>:<target>:b-<benefit>   which Pro benefit the clicked ask sold
  *   evt:<day>:result_card_placed:<tool>:<platform>:r-<reason>    what bringing the result card on screen did (lib/place-result.ts)
- * The benefit and the reason are counted per tool, not per page: the page key
- * doesn't carry them. No person is ever counted, only events on a page.
+ * The benefit, the reason and the click target are counted per tool, not per
+ * page: the page key doesn't carry them, which is what keeps the number of
+ * counter keys bounded (lib/event-schema.ts eventKeys). Severity rides on the
+ * page key for result_shown only — the one event whose colour is read below.
+ * No person is ever counted, only events on a page.
  *
  * Usage:
  *   STATS_TOKEN=… npx tsx scripts/funnels/stats.ts [--days 14] [--base https://206-189-186-34.nip.io] [--worst 40] [--min-views 20]

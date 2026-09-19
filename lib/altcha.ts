@@ -26,9 +26,17 @@
  *        - expires hasn't elapsed
  *        - SHA-256(salt + number) === the challenge implied by the signature
  *
- *   Replay protection: short TTL (default 90s) + the salt is random per challenge.
- *   We do NOT keep a nonce cache because a serverless platform runs many instances; that would
- *   require Redis. The TTL window + rate limit makes replays not worth the effort.
+ *   Replay protection: a solved token is single-use. app/scan-url/route.ts
+ *   claims it with SET NX on the signature (key `pow:<signature>`) and refuses
+ *   a second scan with the same one. If that store cannot be reached the route
+ *   fails closed with 503 rather than serving the scan, so the check is not
+ *   something an attacker can switch off by knocking Redis over.
+ *
+ *   This paragraph used to say the opposite — that no nonce cache was kept,
+ *   because "a serverless platform runs many instances". That platform is gone
+ *   (API-ON-DROPLET.md, 2026-09-18): one Node process, Redis on localhost.
+ *   The short TTL (default 90s) and the random per-challenge salt still apply,
+ *   and are what bounds a token that is issued but never spent.
  */
 
 import { createHmac, randomBytes, createHash } from 'node:crypto';

@@ -32,6 +32,16 @@ export async function POST(request: NextRequest) {
   Object.assign(headers, rl.headers);
   if (!rl.allowed) return NextResponse.json({ error: 'Too many events.' }, { status: 429, headers });
 
+  // Check the declared length BEFORE buffering. Reading first and measuring
+  // afterwards meant the whole body was already in memory by the time it was
+  // judged too large, so the 2 KB cap bounded what was accepted but not what
+  // was allocated — a flood of 10 MB bodies would each have been held in full
+  // and only then refused. Content-Length can lie, so the post-read check
+  // stays as the one that actually binds.
+  const declared = Number(request.headers.get('content-length'));
+  if (Number.isFinite(declared) && declared > MAX_BODY) {
+    return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
+  }
   const text = await request.text();
   if (text.length > MAX_BODY) return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
   let parsed: unknown;

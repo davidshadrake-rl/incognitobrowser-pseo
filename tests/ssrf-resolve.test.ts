@@ -42,7 +42,12 @@ describe('the scan route resolves before it fetches', () => {
   it('looks the hostname up and checks the addresses, not just the string', () => {
     const src = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'app/scan-url/route.ts'), 'utf-8');
     expect(src).toContain('dnsLookup(parsedUrl.hostname');
-    expect(src).toMatch(/resolved\.filter\(\(r\) => isBlockedHostname\(r\.address\)\)/);
+    // Matched loosely on purpose: what must hold is that every RESOLVED
+    // address is judged, not that the filter is spelled a particular way. The
+    // previous form pinned the exact one-line source and broke the moment the
+    // same check also consulted BLOCKED_TARGET_HOSTS.
+    expect(src).toMatch(/resolved\.filter\(/);
+    expect(src).toMatch(/isBlockedHostname\(r\.address\)/);
     // and it must still refuse to follow redirects, or the check is re-openable
     expect(src).toContain("redirect: 'manual'");
   });

@@ -36,16 +36,31 @@ export async function POST(request: NextRequest) {
   const redis = getRedisClient();
   if (!redis) return NextResponse.json({ day, counts: {}, storage: 'none' }, { headers });
 
+  // Hard ceiling on how much one call may collect. The loop SCANs a whole
+  // day's keyspace and holds every key and count in memory to answer, so its
+  // cost is set by however many keys exist — which is not a number this route
+  // controls. eventKeys() bounds normal days to roughly 21,000, so 20,000 here
+  // is a stop for an abnormal one, not a limit anyone meets. The response says
+  // when it truncated rather than quietly returning a short answer.
+  const MAX_KEYS = 20_000;
   const counts: Record<string, number> = {};
   let cursor = '0';
+  let collected = 0;
+  let truncated = false;
   do {
     const [next, keys] = await redis.scan(cursor, 'MATCH', `evt:${day}:*`, 'COUNT', 500);
     cursor = next;
     if (keys.length) {
-      const vals = await redis.mget(...keys);
-      keys.forEach((k, i) => { counts[k.slice(`evt:${day}:`.length)] = Number(vals[i] || 0); });
+      const room = MAX_KEYS - collected;
+      const take = keys.length > room ? keys.slice(0, room) : keys;
+      if (take.length) {
+        const vals = await redis.mget(...take);
+        take.forEach((k, i) => { counts[k.slice(`evt:${day}:`.length)] = Number(vals[i] || 0); });
+        collected += take.length;
+      }
+      if (keys.length > room) { truncated = true; break; }
     }
   } while (cursor !== '0');
   const sorted = Object.fromEntries(Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)));
-  return NextResponse.json({ day, counts: sorted, storage: 'redis' }, { headers });
+  return NextResponse.json({ day, counts: sorted, storage: 'redis', ...(truncated ? { truncated: true, limit: MAX_KEYS } : {}) }, { headers });
 }

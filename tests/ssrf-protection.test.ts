@@ -12,44 +12,14 @@
 
 import { describe, it, expect } from 'vitest';
 
-// Import the blocking function by reading the route source
-// Since the function is not exported, we test it indirectly by extracting the logic
-function isBlockedHostname(hostname: string): boolean {
-  const lower = hostname.toLowerCase();
-
-  if (lower === 'localhost' || lower === 'localhost.localdomain') return true;
-  if (lower === 'metadata.google.internal') return true;
-  if (lower === 'metadata.google.com') return true;
-
-  const ip = lower.replace(/^\[/, '').replace(/\]$/, '');
-  const v4 = ip.startsWith('::ffff:') ? ip.slice(7) : ip;
-
-  const blockedIPv4 = [
-    /^127\./,
-    /^10\./,
-    /^172\.(1[6-9]|2[0-9]|3[01])\./,
-    /^192\.168\./,
-    /^169\.254\./,
-    /^0\./,
-    /^100\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\./,
-    /^192\.0\.0\./,
-    /^198\.1[89]\./,
-    /^255\.255\.255\.255$/,
-  ];
-  if (blockedIPv4.some(r => r.test(v4))) return true;
-
-  const blockedIPv6 = [
-    /^::1$/,
-    /^fc[0-9a-f]{2}:/i,
-    /^fd[0-9a-f]{2}:/i,
-    /^fe80:/i,
-    /^ff[0-9a-f]{2}:/i,
-    /^::$/,
-  ];
-  if (blockedIPv6.some(r => r.test(ip))) return true;
-
-  return false;
-}
+// The REAL guard, imported. This file used to carry a hand-copied replica of
+// the implementation, with a comment claiming the function was not exported —
+// it is, and has been. The copy silently drifted from the original, so every
+// case below graded a function that does not run in production: the suite
+// stayed green straight through the IPv4-mapped-IPv6 and trailing-dot
+// bypasses found on 2026-09-18 (see the regression block at the foot of this
+// file). Never re-inline it; a test that grades a copy grades nothing.
+import { isBlockedHostname } from '@/lib/scanner';
 
 describe('SSRF Protection - Localhost/Loopback', () => {
   it('blocks localhost', () => {
@@ -184,5 +154,46 @@ describe('SSRF Protection - Allows Public IPs', () => {
   it('allows normal domains', () => {
     expect(isBlockedHostname('example.com')).toBe(false);
     expect(isBlockedHostname('incognitobrowser.io')).toBe(false);
+  });
+});
+
+// Each case below was verified ALLOWED by the real function on 2026-09-18,
+// while this suite reported all green against its inlined copy.
+describe('SSRF Protection - bypasses found 2026-09-18', () => {
+  // WHATWG URL rewrites ::ffff:127.0.0.1 to ::ffff:7f00:1, so the hex form is
+  // the one that actually arrives — from a typed URL and from dns.lookup alike.
+  it('blocks IPv4-mapped IPv6 written in hex', () => {
+    expect(isBlockedHostname('[::ffff:7f00:1]')).toBe(true);      // 127.0.0.1
+    expect(isBlockedHostname('::ffff:7f00:1')).toBe(true);
+    expect(isBlockedHostname('[::ffff:a9fe:a9fe]')).toBe(true);   // 169.254.169.254
+    expect(isBlockedHostname('0:0:0:0:0:ffff:7f00:1')).toBe(true); // uncompressed
+  });
+
+  it('blocks names with a trailing dot', () => {
+    expect(isBlockedHostname('localhost.')).toBe(true);
+    expect(isBlockedHostname('metadata.google.internal.')).toBe(true);
+    expect(isBlockedHostname('LOCALHOST.')).toBe(true);
+  });
+
+  it('blocks multicast and reserved space', () => {
+    expect(isBlockedHostname('224.0.0.1')).toBe(true);
+    expect(isBlockedHostname('239.255.255.250')).toBe(true);  // SSDP
+    expect(isBlockedHostname('240.0.0.1')).toBe(true);
+  });
+
+  it('blocks 6to4, NAT64 and documentation ranges', () => {
+    expect(isBlockedHostname('192.88.99.1')).toBe(true);
+    expect(isBlockedHostname('2002:7f00:1::1')).toBe(true);
+    expect(isBlockedHostname('64:ff9b::7f00:1')).toBe(true);
+    expect(isBlockedHostname('192.0.2.1')).toBe(true);
+    expect(isBlockedHostname('198.51.100.1')).toBe(true);
+    expect(isBlockedHostname('203.0.113.1')).toBe(true);
+  });
+
+  // The widened rules must not start refusing real scan targets.
+  it('still allows ordinary public addresses', () => {
+    for (const h of ['example.com', 'apnews.com', '8.8.8.8', '1.1.1.1', '93.184.216.34', '100.128.0.1', '172.32.0.1']) {
+      expect(isBlockedHostname(h), h).toBe(false);
+    }
   });
 });

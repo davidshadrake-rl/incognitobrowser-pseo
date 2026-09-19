@@ -63,6 +63,34 @@ export const MAX_THIRD_PARTY_DOMAINS = intEnv('MAX_THIRD_PARTY_DOMAINS', 50);
 /** Fetch timeout in ms for the scanned URL. Default: 10_000. */
 export const FETCH_TIMEOUT_MS = intEnv('FETCH_TIMEOUT_MS', 10_000);
 
+/**
+ * How many scans may be in flight at once, across all callers. Default: 20.
+ *
+ * The per-IP rate limit bounds one visitor; it does nothing about a thousand
+ * visitors, or a botnet with a thousand addresses. Each scan holds a socket, a
+ * response buffer up to MAX_BODY_SIZE and an Apache worker for its whole life,
+ * so without a global ceiling the memory cost of a flood is unbounded. Past
+ * the cap the route answers 503 immediately rather than queueing, because a
+ * queue under flood just converts a fast rejection into a slow one.
+ */
+export const MAX_IN_FLIGHT_SCANS = intEnv('MAX_IN_FLIGHT_SCANS', 20);
+
+/**
+ * Hosts the scanner refuses outright, beyond the private-range guard.
+ *
+ * Defaults to this project's own droplet. Scanning ourselves is free
+ * self-amplification — one inbound request becomes two, one of which skips the
+ * rate limiter because it arrives from our own address — and it can reach
+ * vhosts on that address that were never meant to be a scan target.
+ * Override with BLOCKED_TARGET_HOSTS as a comma-separated list.
+ */
+export const BLOCKED_TARGET_HOSTS: ReadonlySet<string> = new Set(
+  (process.env.BLOCKED_TARGET_HOSTS ?? '206.189.186.34')
+    .split(',')
+    .map((s) => s.trim().toLowerCase().replace(/\.+$/, ''))
+    .filter(Boolean),
+);
+
 // -----------------------------------------------------------------------
 // /challenge
 // -----------------------------------------------------------------------
