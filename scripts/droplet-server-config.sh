@@ -27,12 +27,14 @@ rm -f /tmp/pseo-htaccess-block.conf
 ssh $SSH_OPTS "$HOST" bash -s <<'REMOTE'
 set -euo pipefail
 HT=/var/www/html/.htaccess
-[ -d /var/www/html/resources ] && chown -R www-data:www-data /var/www/html/resources
-[ -d /var/www/html/resources-pro ] && chown -R www-data:www-data /var/www/html/resources-pro
+# root:www-data: www-data is the WordPress uid on this box and only needs to
+# read these. See the note in scripts/deploy.sh.
+[ -d /var/www/html/resources ] && chown -R root:www-data /var/www/html/resources
+[ -d /var/www/html/resources-pro ] && chown -R root:www-data /var/www/html/resources-pro
 for d in /var/www/html/resources /var/www/html/resources-pro; do
   [ -d "$d" ] || continue
-  find "$d" -type d -exec chmod 755 {} \;
-  find "$d" -type f -exec chmod 644 {} \;
+  find "$d" -type d -exec chmod 750 {} \;
+  find "$d" -type f -exec chmod 640 {} \;
 done
 if ! grep -q 'resources-pro/ - \[L\]' "$HT"; then
   sed -i '0,/RewriteRule \^resources\/ - \[L\]/s//RewriteRule ^resources\/ - [L]\n  RewriteRule ^resources-pro\/ - [L]/' "$HT"

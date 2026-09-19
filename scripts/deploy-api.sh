@@ -92,7 +92,16 @@ else
   echo "   dependencies unchanged since the last successful install"
 fi
 
-$SSH "$TARGET" "chown -R www-data:www-data $REMOTE && systemctl restart ib-api"
+# root:www-data 750/640, NOT www-data:www-data.
+#
+# Apache serves WordPress PHP as www-data on this same box, so anything that
+# uid can write, a WordPress compromise can rewrite: 1,400 static pages to
+# inject script into, and /opt/ib-api to replace the API with. www-data only
+# ever READS these trees — writes arrive by rsync as root — so it does not need
+# to own them. Found live on 2026-09-19 by the security suite
+# (cnast webroot-ownership-shared-fate); it re-checks this every night.
+# .next/cache is the one exception: the service may write cache entries there.
+$SSH "$TARGET" "chown -R root:www-data $REMOTE && find $REMOTE -type d -exec chmod 750 {} + && find $REMOTE -type f -exec chmod 640 {} + && mkdir -p $REMOTE/.next/cache && chown -R www-data:www-data $REMOTE/.next/cache && systemctl restart ib-api"
 sleep 5
 $SSH "$TARGET" "systemctl is-active ib-api" | sed 's/^/   ib-api: /'
 

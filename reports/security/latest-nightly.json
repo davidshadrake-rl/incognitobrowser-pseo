@@ -1,0 +1,923 @@
+{
+  "target": "https://206-189-186-34.nip.io",
+  "cadences": [
+    "nightly"
+  ],
+  "only": [],
+  "optIn": [],
+  "failOn": "high",
+  "strict": false,
+  "counts": {
+    "checks": 44,
+    "findings": 39,
+    "skipped": 0,
+    "errored": 0,
+    "critical": 0,
+    "high": 11,
+    "medium": 14,
+    "low": 4,
+    "info": 10
+  },
+  "withheld": [
+    "secret-published-dotfile-probe"
+  ],
+  "results": [
+    {
+      "id": "live-dnsleak-contract",
+      "discipline": "api",
+      "cadence": "nightly",
+      "describe": "Both /dns-leak routes gate on Origin, validate the test id, and do not distinguish an unknown id from an unpolled one.",
+      "file": "api-live-dnsleak-contract.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "/dns-leak/result buffers and parses a body well past its own 512-byte cap",
+          "detail": "app/dns-leak/result/route.ts:74-82 checks Content-Length before buffering and the buffered length after, because Content-Length can lie. Neither fired. The whole body this route needs is {\"id\":\"<12 chars>\"}. If the source in this repository does refuse it — the in-process check api-error-shape says it does — then the running build is older than the source, and every other cap added in the same round is suspect too.",
+          "evidence": "POST https://206-189-186-34.nip.io/api/dns-leak/result with a ~1011-byte body (cap 512) => 400 {\"error\":\"Invalid test id.\"}",
+          "remediation": "Redeploy the API and confirm the build actually rebuilt (scripts/deploy-api.sh must run npm ci). Then re-run: this probe must answer 413.",
+          "file": "app/dns-leak/result/route.ts",
+          "line": 74
+        }
+      ],
+      "checked": 10,
+      "ms": 6283
+    },
+    {
+      "id": "live-preflight-no-leak",
+      "discipline": "api",
+      "cadence": "nightly",
+      "describe": "Preflights give a foreign origin no ACAO, mirror the real origin exactly, and never allow credentials.",
+      "file": "api-live-preflight-no-leak.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 12,
+      "ms": 3707
+    },
+    {
+      "id": "live-xff-spoof-rejected",
+      "discipline": "api",
+      "cadence": "nightly",
+      "describe": "The live API derives the rate-limiting client IP from the proxy, not from a header the caller sent.",
+      "file": "api-live-xff-spoof.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 4,
+      "ms": 1008
+    },
+    {
+      "id": "apache-managed-block-drift",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "The live .htaccess managed block still matches scripts/droplet-htaccess.conf, the vhost still strips forged client-IP headers and caps bodies, and the config still parses.",
+      "file": "cnast-apache-drift.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "The live managed block has 4 missing and 0 unexpected directive(s)",
+          "detail": "The server copy is not the source. Whatever the difference is today, the mechanism is the one that let the CSP go on naming two soon-to-be-strangers' domains for three weeks: this file is edited in the repo and applied by a separate script that is easy to forget. scripts/deploy.sh refuses to deploy while these differ, so a deploy is currently blocked too.",
+          "evidence": "MISSING from the box:\n    RewriteCond %{REQUEST_URI} ^/resources(-pro)?/\n    RewriteCond %{REQUEST_URI} !(^|/)\\.well-known/\n    RewriteCond %{REQUEST_URI} (^|/)\\.\n    RewriteRule ^ - [F,L]",
+          "remediation": "Run scripts/droplet-server-config.sh to re-splice the block, then re-run this check.",
+          "file": "scripts/droplet-htaccess.conf",
+          "line": null
+        },
+        {
+          "severity": "low",
+          "title": "17 .htaccess.bak.* copies are sitting in the web root",
+          "detail": "droplet-server-config.sh writes one on every run and removes none. Each is a complete old security-header block, one `cp` away from being the live one — including versions whose CSP named two origins that will become registerable by strangers. They are also in a directory Apache serves, and only the stock `.ht*` rule keeps them from being fetched.",
+          "evidence": "ls -1 /var/www/html/.htaccess.bak.* | wc -l → 17 (warn at 6)",
+          "remediation": "Keep the newest one or two and delete the rest; better, have droplet-server-config.sh write them outside the DocumentRoot.",
+          "file": "scripts/droplet-server-config.sh",
+          "line": 41
+        }
+      ],
+      "checked": 8,
+      "ms": 6902
+    },
+    {
+      "id": "api-log-no-ip",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "Every vhost that proxies /api/ still logs those requests without the client address — the \"we count clicks, not people\" promise, as config.",
+      "file": "cnast-api-log-no-ip.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "info",
+          "title": "Graded 1 vhost(s) that proxy /api/",
+          "detail": "Vhosts that do not proxy /api/ are deliberately out of scope — their logging is the team's WordPress configuration, which this project has no authority over.",
+          "evidence": "sites-enabled proxying /api/: /etc/apache2/sites-enabled/000-default-le-ssl.conf; all enabled: 000-default-le-ssl.conf, 000-default.conf",
+          "remediation": "",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 5,
+      "ms": 1
+    },
+    {
+      "id": "disk-and-logrotate-headroom",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "The root filesystem has bytes and inodes to spare, and log rotation is still bounded by size — the pair that stops an API flood from taking MySQL down.",
+      "file": "cnast-disk-logrotate.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "info",
+          "title": "/var/log/apache2 is 3 MB",
+          "detail": "Context for the headroom numbers above. A sudden jump here is what a flood looks like from the disk's point of view, and it is the first place to look when / starts filling.",
+          "evidence": "du -sm /var/log/apache2 → 3\t/var/log/apache2",
+          "remediation": "",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 4,
+      "ms": 0
+    },
+    {
+      "id": "env-secret-file-perms",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "/etc/ib-api.env is not readable beyond root — and the standing fact that www-data, the WordPress uid, can read it.",
+      "file": "cnast-env-file-perms.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "/etc/ib-api.env is readable by the www-data group — the same uid as the team's WordPress",
+          "detail": "This is the current, intended arrangement and not a regression: the systemd unit runs as www-data and has to read the file. It is graded as a standing warning because the cost is real — any file-read bug in the co-hosted WordPress yields both secrets — and because a warning is what keeps the fix on the table. systemd LoadCredential= (or a dedicated ib-api uid) removes www-data from the picture without changing how the service starts.",
+          "evidence": "stat -c '%n %U %G %a' /etc/ib-api.env → root www-data 640",
+          "remediation": "Move the two secrets to systemd credentials: LoadCredential=ib-api-env:/etc/ib-api.env with the file 0600 root:root, or give ib-api its own uid and chown the file to it.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 3,
+      "ms": 1
+    },
+    {
+      "id": "listening-socket-baseline",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "Redis, MySQL and the Node API still bind loopback only, and nothing unexpected answers on a public address.",
+      "file": "cnast-listening-sockets.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 7,
+      "ms": 0
+    },
+    {
+      "id": "os-security-patch-backlog",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "Pending SECURITY updates, a pending reboot, and whether unattended-upgrades is still enabled on the one box that exists.",
+      "file": "cnast-patch-backlog.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "1 pending security update",
+          "detail": "There is one box and no staging. A security update sitting here is sitting on the team's WordPress and MySQL as much as on our tools. Threshold for high is 5.",
+          "evidence": "/usr/lib/update-notifier/apt-check --human-readable → Expanded Security Maintenance for Applications is not enabled. |  | 61 updates can be applied immediately. | 1 of these updates is a standard security update. | To see these additional updates run: apt list --upgradable |  | Enable ESM Apps to receive additional future security updates. | See https: (of 61 updates total)",
+          "remediation": "apt-get update && apt-get upgrade, at a time when a brief Apache/MySQL restart is acceptable. Check `apt list --upgradable` first for anything that restarts the database.",
+          "file": null,
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "The box is running code it no longer has on disk — a reboot is pending",
+          "detail": "Something (usually a kernel or a core library) has been upgraded and the running processes still hold the old version. Until the reboot, the patch that was applied is not in effect, so the apt state reads clean while the vulnerability is still live. On a single host with no failover this needs a scheduled window, not a nightly surprise.",
+          "evidence": "test -f /var/run/reboot-required → REBOOT_REQUIRED",
+          "remediation": "Schedule a reboot. Confirm ib-api, apache2, mysql and redis-server are all enabled first (api-unit-resource-ceilings grades that for ib-api).",
+          "file": null,
+          "line": null
+        },
+        {
+          "severity": "info",
+          "title": "Host: Ubuntu 24.04.3 LTS · kernel 6.8.0-71-generic",
+          "detail": "Reported every night so an approaching LTS end-of-life is visible long before it is urgent. Not graded — the upgrade is a scheduled project, not a nightly failure.",
+          "evidence": "lsb_release -ds; uname -r → Ubuntu 24.04.3 LTS | 6.8.0-71-generic",
+          "remediation": "",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 3,
+      "ms": 0
+    },
+    {
+      "id": "sshd-exposure",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "sshd still refuses passwords and permits root by key only — the pair that keeps the one internet-facing management port out of reach of a credential-stuffing run.",
+      "file": "cnast-sshd.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "PermitRootLogin is yes, not prohibit-password",
+          "detail": "Not exploitable as it stands: password and keyboard-interactive authentication are both off, so root is reachable by key only in practice. What it costs is the second layer. The whole protection now rests on one directive in a file that package upgrades and cloud-init both write to — restore password authentication by accident and root becomes guessable in the same moment, with nothing else to stop it. `prohibit-password` makes that impossible rather than merely unlikely.",
+          "evidence": "sshd -T → permitrootlogin yes, passwordauthentication no, kbdinteractiveauthentication no",
+          "remediation": "PermitRootLogin prohibit-password. Deploys keep working: .secrets uses key authentication as root already, and prohibit-password permits exactly that.",
+          "file": null,
+          "line": null
+        },
+        {
+          "severity": "info",
+          "title": "fail2ban: inactive / not-found",
+          "detail": "Reported, never graded. With password authentication off, fail2ban mostly trims log noise rather than closing a path in, and a nightly line recommending software nobody decided to install is how a suite gets muted.",
+          "evidence": "systemctl is-active fail2ban; systemctl is-enabled fail2ban → inactive / not-found; sshd port 22",
+          "remediation": "",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 4,
+      "ms": 1
+    },
+    {
+      "id": "tls-posture",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "The live cert covers the served host with real runway, TLS 1.2 is accepted, and certbot.timer is still firing — the leading indicator nothing in this repo watches.",
+      "file": "cnast-tls-posture.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 4,
+      "ms": 1255
+    },
+    {
+      "id": "ufw-default-deny",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "ufw is active, denies inbound by default, and allows exactly the ports the baseline declares.",
+      "file": "cnast-ufw.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 8,
+      "ms": 2
+    },
+    {
+      "id": "api-unit-resource-ceilings",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "The limits.conf drop-in is still the source of ib-api's memory/CPU/task ceilings, and the crash-loop brake is still set.",
+      "file": "cnast-unit-ceilings.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 10,
+      "ms": 0
+    },
+    {
+      "id": "api-unit-sandbox-props",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "The ib-api unit still confines the URL-fetching service to its own directory, so a compromise cannot write a webshell into the team's WordPress root.",
+      "file": "cnast-unit-sandbox.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "info",
+          "title": "ib-api runs as www-data, the same uid as Apache and WordPress PHP",
+          "detail": "Recorded here as context for the sandbox properties above. The durable fix is a dedicated uid (or DynamicUser= with LoadCredential= for /etc/ib-api.env), which would also take www-data out of the picture for the secrets file. Graded by webroot-ownership-shared-fate and env-secret-file-perms, not here.",
+          "evidence": "systemctl show ib-api -p User → User=www-data",
+          "remediation": "",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 5,
+      "ms": 0
+    },
+    {
+      "id": "webroot-ownership-shared-fate",
+      "discipline": "cnast",
+      "cadence": "nightly",
+      "describe": "Our static pages and the API's code are not owned or writable by www-data — the same uid the team's WordPress runs as.",
+      "file": "cnast-webroot-ownership.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "/var/www/html/resources is owned by www-data — the WordPress uid can rewrite it",
+          "detail": "These pages are served with script-src 'self' 'unsafe-inline'. A file-write bug in the co-hosted WordPress — a plugin upload flaw is the usual one — therefore becomes stored script execution on a privacy product, with no bug of our own involved.",
+          "evidence": "stat -c '%n %U %G %a' /var/www/html/resources → www-data www-data 755 (expected root www-data 755)",
+          "remediation": "Change the three deploy chowns to root:www-data (scripts/deploy.sh:133, scripts/deploy-api.sh:95, scripts/droplet-server-config.sh:30-31) and run: chown -R root:www-data /var/www/html/resources. Apache only needs read.",
+          "file": "scripts/deploy.sh",
+          "line": 133
+        },
+        {
+          "severity": "high",
+          "title": "/var/www/html/resources-pro is owned by www-data — the WordPress uid can rewrite it",
+          "detail": "These pages are served with script-src 'self' 'unsafe-inline'. A file-write bug in the co-hosted WordPress — a plugin upload flaw is the usual one — therefore becomes stored script execution on a privacy product, with no bug of our own involved.",
+          "evidence": "stat -c '%n %U %G %a' /var/www/html/resources-pro → www-data www-data 755 (expected root www-data 755)",
+          "remediation": "Change the three deploy chowns to root:www-data (scripts/deploy.sh:133, scripts/deploy-api.sh:95, scripts/droplet-server-config.sh:30-31) and run: chown -R root:www-data /var/www/html/resources-pro. Apache only needs read.",
+          "file": "scripts/deploy.sh",
+          "line": 133
+        },
+        {
+          "severity": "high",
+          "title": "/opt/ib-api is owned by www-data — the WordPress uid can rewrite it",
+          "detail": "This is the API's own code. A file-write bug anywhere in the co-hosted WordPress rewrites .next/server/app/*/route.js, and systemd executes it on the next restart. The service that fetches attacker-supplied URLs is the worst possible thing to leave writable by another application.",
+          "evidence": "stat -c '%n %U %G %a' /opt/ib-api → www-data www-data 755 (expected root www-data 755)",
+          "remediation": "Change the three deploy chowns to root:www-data (scripts/deploy.sh:133, scripts/deploy-api.sh:95, scripts/droplet-server-config.sh:30-31) and run: chown -R root:www-data /opt/ib-api. Apache only needs read.",
+          "file": "scripts/deploy.sh",
+          "line": 133
+        },
+        {
+          "severity": "medium",
+          "title": "2 file(s) in the served trees are group- or world-writable",
+          "detail": "Separate from ownership: even with root as the owner, a group-writable file under a tree whose group is www-data is writable by the web user. rsync preserves the mode bits from the machine that built the files, which is the usual way these arrive.",
+          "evidence": "find /var/www/html/resources /var/www/html/resources-pro /opt/ib-api -xdev -maxdepth 2 \\( -perm -g+w -o -perm -o+w \\) → 2 hit(s):\n-rw-rw-r-- www-data:www-data /opt/ib-api/.next/next-server.js.nft.json\n-rw-rw-r-- www-data:www-data /opt/ib-api/.next/next-minimal-server.js.nft.json",
+          "remediation": "Add --chmod=D755,F644 to the deploy rsyncs, or run: find <root> -type f -exec chmod 644 {} \\; -o -type d -exec chmod 755 {} \\;",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 4,
+      "ms": 0
+    },
+    {
+      "id": "cmp-live-csp-matches-committed",
+      "discipline": "compliance",
+      "cadence": "nightly",
+      "describe": "The CSP the browser actually receives, on both tiers, matches scripts/droplet-htaccess.conf directive for directive — not merely \"a CSP is present\", which is all the live smoke test asserts.",
+      "file": "compliance-csp.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 2,
+      "ms": 1241
+    },
+    {
+      "id": "cmp-live-build-provenance",
+      "discipline": "compliance",
+      "cadence": "nightly",
+      "describe": "The export on the droplet is a known, committed, on-main build — so the source-level content guards are describing the pages people actually read.",
+      "file": "compliance-provenance.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 2,
+      "ms": 1100
+    },
+    {
+      "id": "cmp-tier-surfaces-distinct",
+      "discipline": "compliance",
+      "cadence": "nightly",
+      "describe": "The Pro folder holds a real Pro build, not a second copy of the free site — which version.txt cannot tell you, because both tiers are stamped from one variable.",
+      "file": "compliance-provenance.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 2,
+      "ms": 660
+    },
+    {
+      "id": "dast-api-method-matrix",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "All seven API routes refuse every verb but their own, and no response body discloses the droplet's filesystem layout or plumbing.",
+      "file": "dast-api-method-matrix.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 45,
+      "ms": 19343
+    },
+    {
+      "id": "dast-error-leakage-malformed",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "Garbage input to every route (bad JSON, null, wrong content-type, a lying Content-Length) returns a small JSON error, never a stack trace or a filesystem path.",
+      "file": "dast-error-leakage-malformed.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 38,
+      "ms": 18970
+    },
+    {
+      "id": "dast-exposed-files",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "Dotfiles, config, backups and source maps under the two site roots and the shared web root are not served.",
+      "file": "dast-exposed-files.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "/resources/.build-marker.json is served",
+          "detail": "The dotfile deny is not in force for this path. scripts/site.htaccess ships `RedirectMatch 403 \"(^|/)\\.(?!well-known/)\"` inside every site folder and the managed block carries the same deny as a rewrite — one of them is not applying. That rule is the only thing standing between a stray .env or .git in out/ and the internet, and rsync --delete ships whatever is in out/.",
+          "evidence": "HEAD https://206-189-186-34.nip.io/resources/.build-marker.json → 200, content-type application/json, 112 bytes\n  body starts: { \"target\": \"static\", \"tier\": \"free\", \"basePath\": \"/resources\", \"builtAt\": \"2026-09-18T21:35:16.215Z\" } ",
+          "remediation": "Work out why the deny is not applying (AllowOverride on /var/www/html, or the managed block being stale), then re-run scripts/droplet-server-config.sh and redeploy so scripts/site.htaccess lands in both site roots. Verify with: curl -sk -o /dev/null -w \"%{http_code}\" https://206-189-186-34.nip.io/resources/.build-marker.json → expect 403.",
+          "file": "scripts/site.htaccess",
+          "line": null
+        }
+      ],
+      "checked": 34,
+      "ms": 27392
+    },
+    {
+      "id": "dast-header-parity",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "Every security header the repo declares is served live, with the exact declared value, on pages, tool pages, the Pro site, a hashed asset and the API.",
+      "file": "dast-header-parity.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 57,
+      "ms": 2944
+    },
+    {
+      "id": "dast-host-header-and-redirect",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "Plain http redirects to the configured https host, and a forged Host / X-Forwarded-Host cannot redirect a visitor somewhere else.",
+      "file": "dast-host-header-and-redirect.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "info",
+          "title": "Known and accepted: a scripted client can satisfy the origin gate with a matching forged Host and Origin",
+          "detail": "isOriginAllowed() returns true when the Origin's host equals the request's Host header, which is what lets the deployed site call its own API without anyone remembering to add its hostname to ALLOWED_ORIGINS. A non-browser client can send both. It grants nothing curl does not already have by naming an allowed Origin directly, and no browser can be made to do it. Recorded so it is a known property rather than a discovery.",
+          "evidence": "lib/origin.ts, isOriginAllowed(): `if (new URL(origin).host === requestHost) return true;`",
+          "remediation": "No action. If the API ever gains an action worth protecting from scripted callers, the proof-of-work and rate limits are the layers that do it — not the Origin header, which any non-browser client sets freely.",
+          "file": "lib/origin.ts",
+          "line": 62
+        }
+      ],
+      "checked": 12,
+      "ms": 3178
+    },
+    {
+      "id": "dast-internal-ports-closed",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "The Node service on 3100 and Redis on 6379 are not reachable from the public internet, which the runbook asserts and nothing else tests.",
+      "file": "dast-internal-ports-closed.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 2,
+      "ms": 12010
+    },
+    {
+      "id": "dast-no-directory-listing",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "Directories that have no index page answer 403/404 rather than an Apache-generated file listing.",
+      "file": "dast-no-directory-listing.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 16,
+      "ms": 5101
+    },
+    {
+      "id": "dast-origin-gate-coverage",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "Live proof that /event and both /dns-leak routes refuse a foreign Origin and a missing Origin — the three routes security-smoke.mjs never probes.",
+      "file": "dast-origin-gate-coverage.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 12,
+      "ms": 1759
+    },
+    {
+      "id": "dast-tls-posture",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "The live certificate verifies, covers the served hostname, has more than 21 days left, and TLS 1.0/1.1 are refused.",
+      "file": "dast-tls-posture.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 6,
+      "ms": 1471
+    },
+    {
+      "id": "dast-wordpress-untouched",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "The co-tenant WordPress at the shared web root is not receiving our noindex header, our CSP, or our 404 page.",
+      "file": "dast-wordpress-untouched.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 7,
+      "ms": 1481
+    },
+    {
+      "id": "dast-xff-spoof-guard",
+      "discipline": "dast",
+      "cadence": "nightly",
+      "describe": "A client-address header supplied by the caller does not become the IP the API rate-limits on.",
+      "file": "dast-xff-spoof-guard.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 4,
+      "ms": 1923
+    },
+    {
+      "id": "mast-live-inapp-page-probe",
+      "discipline": "mast",
+      "cadence": "nightly",
+      "describe": "The live free site and a live Pro tool page serve an in-app boot script that runs, strips the app's flags from the address bar, and refuses a bare ?pro=1.",
+      "file": "mast-live-inapp-page-probe.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "The shipped boot script acts on ?pro=1 from a bare URL (GET https://206-189-186-34.nip.io/resources/)",
+          "detail": "A plain Chrome user agent and no bridge object: this window is not the app by any measure, and the page still marked the visitor as a Pro subscriber. Any link with ?inapp=1&pro=1 hides every upgrade ask and opens the three Pro tool gates for the rest of that tab. IN-APP-BRIDGE.md:26 and lib/in-app.ts:21 both state the opposite rule.",
+          "evidence": "GET https://206-189-186-34.nip.io/resources/: ?inapp=1&pro=1 with userAgent \"Chrome/128.0 Mobile Safari\" and no window.IncognitoBrowserApp set <html data-ib-pro>",
+          "remediation": "This build predates the confirmation guard in lib/in-app.ts (`if (source && pro && (bridged || named))`). Rebuild and redeploy both sites.",
+          "file": null,
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "The shipped boot script acts on ?pro=1 from a bare URL (GET https://206-189-186-34.nip.io/resources-pro/tools/)",
+          "detail": "A plain Chrome user agent and no bridge object: this window is not the app by any measure, and the page still marked the visitor as a Pro subscriber. Any link with ?inapp=1&pro=1 hides every upgrade ask and opens the three Pro tool gates for the rest of that tab. IN-APP-BRIDGE.md:26 and lib/in-app.ts:21 both state the opposite rule.",
+          "evidence": "GET https://206-189-186-34.nip.io/resources-pro/tools/: ?inapp=1&pro=1 with userAgent \"Chrome/128.0 Mobile Safari\" and no window.IncognitoBrowserApp set <html data-ib-pro>",
+          "remediation": "This build predates the confirmation guard in lib/in-app.ts (`if (source && pro && (bridged || named))`). Rebuild and redeploy both sites.",
+          "file": null,
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "The shipped boot script acts on ?pro=1 from a bare URL (GET https://206-189-186-34.nip.io/resources-pro/tools/ad-tracking/cookie-tracker-scanner/)",
+          "detail": "A plain Chrome user agent and no bridge object: this window is not the app by any measure, and the page still marked the visitor as a Pro subscriber. Any link with ?inapp=1&pro=1 hides every upgrade ask and opens the three Pro tool gates for the rest of that tab. IN-APP-BRIDGE.md:26 and lib/in-app.ts:21 both state the opposite rule.",
+          "evidence": "GET https://206-189-186-34.nip.io/resources-pro/tools/ad-tracking/cookie-tracker-scanner/: ?inapp=1&pro=1 with userAgent \"Chrome/128.0 Mobile Safari\" and no window.IncognitoBrowserApp set <html data-ib-pro>",
+          "remediation": "This build predates the confirmation guard in lib/in-app.ts (`if (source && pro && (bridged || named))`). Rebuild and redeploy both sites.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 18,
+      "ms": 1025
+    },
+    {
+      "id": "pow-cost-floor",
+      "discipline": "pentest",
+      "cadence": "nightly",
+      "describe": "A live /challenge still hands out a proof-of-work drawn from at least the documented 100k search space — the one control that makes scripted abuse cost anything.",
+      "file": "pentest-pow-cost-floor.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 2,
+      "ms": 314
+    },
+    {
+      "id": "stats-bearer-posture",
+      "discipline": "pentest",
+      "cadence": "nightly",
+      "describe": "/stats refuses everything except the exact bearer, is actually configured on the live box, and its token is not in the git tree.",
+      "file": "pentest-stats-bearer-posture.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "info",
+          "title": "The positive /stats leg did not run: no STATS_TOKEN in this environment",
+          "detail": "The route refuses anonymous and wrong-bearer requests, which is half the property. That the REAL token still works — that the owner can actually read the funnel — was not verified by this run.",
+          "evidence": "STATS_TOKEN unset (checked process.env); https://206-189-186-34.nip.io/api/stats answered 401 anonymously and 401 to a wrong bearer",
+          "remediation": "Run the nightly cadence with STATS_TOKEN exported to grade the positive leg and the git-tree leg.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 2,
+      "ms": 498
+    },
+    {
+      "id": "upgrade-cta-destination-live",
+      "discipline": "pentest",
+      "cadence": "nightly",
+      "describe": "The upgrade CTAs the droplet is serving right now still resolve to our own Play listing — catches a fix that never reached the box.",
+      "file": "pentest-upgrade-cta-destination-live.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "LIVE: upgrade CTA (from=\"band\") does not go to the Play listing",
+          "detail": "This is what a visitor is being served right now, not what a local build produces. Every buyer-intent click on this page leaves for this destination.",
+          "evidence": "https://206-189-186-34.nip.io/resources-pro/ (HTTP 200) href=https://staging.ufile.io/pricing — host is staging.ufile.io, not play.google.com",
+          "remediation": "Rebuild with DEMO_UPGRADE_URL cleared AND redeploy; confirm the served HTML changed, not just the local out/.",
+          "file": null,
+          "line": null
+        },
+        {
+          "severity": "high",
+          "title": "LIVE: upgrade CTA (from=\"band\") does not go to the Play listing",
+          "detail": "This is what a visitor is being served right now, not what a local build produces. Every buyer-intent click on this page leaves for this destination.",
+          "evidence": "https://206-189-186-34.nip.io/resources-pro/tools (HTTP 200) href=https://staging.ufile.io/pricing — host is staging.ufile.io, not play.google.com",
+          "remediation": "Rebuild with DEMO_UPGRADE_URL cleared AND redeploy; confirm the served HTML changed, not just the local out/.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 10,
+      "ms": 3654
+    },
+    {
+      "id": "xff-bucket-integrity",
+      "discipline": "pentest",
+      "cadence": "nightly",
+      "describe": "A caller cannot move its own rate-limit bucket by sending X-Forwarded-For, cf-connecting-ip or x-real-ip at the live host.",
+      "file": "pentest-xff-bucket-integrity.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 3,
+      "ms": 999
+    },
+    {
+      "id": "rasp-apache-body-cap",
+      "discipline": "rasp",
+      "cadence": "nightly",
+      "describe": "The vhost still refuses >1 MiB bodies to /api/ before proxying them into the 768M-capped Node process.",
+      "file": "rasp-apache-body-cap.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 2,
+      "ms": 1510
+    },
+    {
+      "id": "rasp-env-floors",
+      "discipline": "rasp",
+      "cadence": "nightly",
+      "describe": "The live /etc/ib-api.env holds usable tuning values and the two secrets whose absence breaks or disarms the API.",
+      "file": "rasp-env-floors.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 3,
+      "ms": 3830
+    },
+    {
+      "id": "rasp-host-guardrails",
+      "discipline": "rasp",
+      "cadence": "nightly",
+      "describe": "ufw is still up, logrotate still runs hourly, and the disk still has room — the three host controls that keep MySQL alive.",
+      "file": "rasp-host-guardrails.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 4,
+      "ms": 3174
+    },
+    {
+      "id": "rasp-redis-eviction",
+      "discipline": "rasp",
+      "cadence": "nightly",
+      "describe": "Redis is not evicting keys — an eviction silently turns single-use proof-of-work back into replayable proof-of-work.",
+      "file": "rasp-redis-eviction.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "medium",
+          "title": "Redis maxmemory-policy is noeviction, expected allkeys-lru",
+          "detail": "noeviction is not simply \"worse\" than the documented allkeys-lru — it fails the other way. Nothing evicts a pow: key behind the app’s back, so single-use proof-of-work stays honest; instead, once memory is full every write is refused, /scan-url takes its fail-closed 503 path and /event silently stops counting. Either way the deployed behaviour is no longer what the runbook says, so whoever reads it during an incident will predict the wrong failure.",
+          "evidence": "redis-cli config get maxmemory-policy → noeviction (API-ON-DROPLET.md:89 sets allkeys-lru)",
+          "remediation": "Reconcile /etc/redis/redis.conf with API-ON-DROPLET.md, or update the runbook if the change was deliberate.",
+          "file": null,
+          "line": null
+        },
+        {
+          "severity": "high",
+          "title": "Redis has no maxmemory limit at all (maxmemory=0)",
+          "detail": "API-ON-DROPLET.md:89 records a 256 MB cap, and the memory budget for this box is written around it (MySQL ~1.5G, Apache+PHP ~1G, Redis 256M, ib-api 768M). With no cap Redis grows until the kernel OOM killer chooses something to kill — which is the collateral-damage outcome the systemd ceilings on ib-api exist to prevent, arriving by a route nothing was watching.",
+          "evidence": "redis-cli config get maxmemory → 0 (unlimited); used_memory=1224744; expected 268435456 per API-ON-DROPLET.md:89",
+          "remediation": "redis-cli config set maxmemory 256mb and persist it in /etc/redis/redis.conf, or update the runbook if running uncapped was a deliberate decision.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 3,
+      "ms": 3043
+    },
+    {
+      "id": "rasp-restart-oom-watch",
+      "discipline": "rasp",
+      "cadence": "nightly",
+      "describe": "ib-api restart count, OOM kills on the box, and the Redis fallback line — the three runtime events nothing currently records.",
+      "file": "rasp-restart-oom-watch.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 4,
+      "ms": 3110
+    },
+    {
+      "id": "rasp-stats-runtime-telemetry",
+      "discipline": "rasp",
+      "cadence": "nightly",
+      "describe": "Runtime health of the Redis-backed controls is reachable and healthy — the diagnostic is wired up, and the live instance says Redis is really there.",
+      "file": "rasp-stats-runtime-telemetry.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "getRedisDiagnostic() is exported and never called — the API cannot report whether its own controls are on",
+          "detail": "REDIS_URL going missing or wrong in /etc/ib-api.env disables proof-of-work single-use, the shared rate limiter and /event counting, all three at once, with every response still 200. The function written to surface that is dead code, so nothing inside or outside the process can see it happen.",
+          "evidence": "lib/rate-limit.ts:94 defines getRedisDiagnostic(); grep across app/ lib/ finds 0 call sites, and app/stats/route.ts does not mention it.",
+          "remediation": "Add a `runtime` block to the POST handler in app/stats/route.ts: { ...getRedisDiagnostic(), inFlightScans, uptimeSec: process.uptime(), pid }. Keep lastError behind STATS_TOKEN — it can carry a connection string.",
+          "file": "lib/rate-limit.ts",
+          "line": 94
+        },
+        {
+          "severity": "low",
+          "title": "The rate limiter computes which backend served a request, then throws it away",
+          "detail": "RateLimitResult documents `backend` as being surfaced to callers, but buildHeaders discards it. A silent fall from Redis to a per-process Map is therefore invisible in the response as well as in the logs — the two places anyone would look.",
+          "evidence": "lib/rate-limit.ts:179 is `void backend;`, while the docstring above RateLimitResult.backend says it is surfaced. Both are in the same file.",
+          "remediation": "Either emit the header (X-RateLimit-Backend) or correct the docstring. Emitting it is more useful: it makes the fallback observable from any response.",
+          "file": "lib/rate-limit.ts",
+          "line": 179
+        },
+        {
+          "severity": "info",
+          "title": "The live half of this check did not run: no STATS_TOKEN",
+          "detail": "The source findings above stand, but the deployed instance was not asked whether Redis is currently configured for it.",
+          "evidence": "ctx.statsToken is null; target would have been POST https://206-189-186-34.nip.io/api/stats",
+          "remediation": "Add STATS_TOKEN to .secrets (the same value as in /etc/ib-api.env) or export it before the run.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 2,
+      "ms": 3
+    },
+    {
+      "id": "rasp-systemd-envelope",
+      "discipline": "rasp",
+      "cadence": "nightly",
+      "describe": "The memory/CPU/task ceilings that stop an API flood from OOM-killing the team’s MySQL are still loaded on ib-api.",
+      "file": "rasp-systemd-envelope.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 9,
+      "ms": 3050
+    },
+    {
+      "id": "rasp-wordpress-collateral-canary",
+      "discipline": "rasp",
+      "cadence": "nightly",
+      "describe": "The co-hosted WordPress and both static sites still answer, and are not quietly getting slow.",
+      "file": "rasp-wordpress-collateral-canary.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "info",
+          "title": "/ needed a second attempt",
+          "detail": "The first connection failed and the retry succeeded. Recorded rather than hidden: one-off transport failures are usually a stale pooled socket, but a pattern of them is not.",
+          "evidence": "GET https://206-189-186-34.nip.io/ → first attempt \"fetch failed\", retry 200 in 905ms",
+          "remediation": "No action unless this appears on consecutive nights.",
+          "file": null,
+          "line": null
+        }
+      ],
+      "checked": 3,
+      "ms": 2300
+    },
+    {
+      "id": "sca-registry-attestations",
+      "discipline": "sca",
+      "cadence": "nightly",
+      "describe": "npm audit signatures still verifies the installed tree against the registry keys — an INVALID signature means the tarball is not what npm published.",
+      "file": "sca-lockfile-pinning-drift.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [],
+      "checked": 416,
+      "ms": 9021
+    },
+    {
+      "id": "sca-prod-path-audit",
+      "discipline": "sca",
+      "cadence": "nightly",
+      "describe": "Advisories against the --omit=dev closure that ib-api actually runs, minus expiring, premise-backed justifications.",
+      "file": "sca-prod-path-audit.mjs",
+      "needsOptIn": false,
+      "state": "ran",
+      "findings": [
+        {
+          "severity": "high",
+          "title": "Unjustified high advisory on production code: next GHSA-q4gf-8mx6-v5v3",
+          "detail": "Next.js has a Denial of Service with Server Components. next is in the --omit=dev closure, so scripts/deploy-api.sh installs it on the droplet and ib-api can load it. No entry in sca-suppressions.json claims it is unreachable.",
+          "evidence": "npm audit --omit=dev --json: GHSA-q4gf-8mx6-v5v3 (high) on next >=16.0.0-beta.0 <16.2.3 — https://github.com/advisories/GHSA-q4gf-8mx6-v5v3. Fix: next@16.3.5.",
+          "remediation": "Upgrade (next@16.3.5), or add a scripts/security/data/sca-suppressions.json entry with a premise this suite can assert and an expiry date.",
+          "file": "package-lock.json",
+          "line": null
+        },
+        {
+          "severity": "high",
+          "title": "Unjustified high advisory on production code: next GHSA-8h8q-6873-q5fj",
+          "detail": "Next.js Vulnerable to Denial of Service with Server Components. next is in the --omit=dev closure, so scripts/deploy-api.sh installs it on the droplet and ib-api can load it. No entry in sca-suppressions.json claims it is unreachable.",
+          "evidence": "npm audit --omit=dev --json: GHSA-8h8q-6873-q5fj (high) on next >=16.0.0 <16.2.5 — https://github.com/advisories/GHSA-8h8q-6873-q5fj. Fix: next@16.3.5.",
+          "remediation": "Upgrade (next@16.3.5), or add a scripts/security/data/sca-suppressions.json entry with a premise this suite can assert and an expiry date.",
+          "file": "package-lock.json",
+          "line": null
+        },
+        {
+          "severity": "low",
+          "title": "Unjustified low advisory on production code: next GHSA-vfv6-92ff-j949",
+          "detail": "Next.js vulnerable to cache poisoning via collisions in React Server Component cache-busting. next is in the --omit=dev closure, so scripts/deploy-api.sh installs it on the droplet and ib-api can load it. No entry in sca-suppressions.json claims it is unreachable.",
+          "evidence": "npm audit --omit=dev --json: GHSA-vfv6-92ff-j949 (low) on next >=16.0.0 <16.2.5 — https://github.com/advisories/GHSA-vfv6-92ff-j949. Fix: next@16.3.5.",
+          "remediation": "Upgrade (next@16.3.5), or add a scripts/security/data/sca-suppressions.json entry with a premise this suite can assert and an expiry date.",
+          "file": "package-lock.json",
+          "line": null
+        },
+        {
+          "severity": "high",
+          "title": "Unjustified high advisory on production code: next GHSA-mg66-mrh9-m8jx",
+          "detail": "Next.js vulnerable to Denial of Service via connection exhaustion in applications using Cache Components. next is in the --omit=dev closure, so scripts/deploy-api.sh installs it on the droplet and ib-api can load it. No entry in sca-suppressions.json claims it is unreachable.",
+          "evidence": "npm audit --omit=dev --json: GHSA-mg66-mrh9-m8jx (high) on next >=16.0.0 <16.2.5 — https://github.com/advisories/GHSA-mg66-mrh9-m8jx. Fix: next@16.3.5.",
+          "remediation": "Upgrade (next@16.3.5), or add a scripts/security/data/sca-suppressions.json entry with a premise this suite can assert and an expiry date.",
+          "file": "package-lock.json",
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "Unjustified moderate advisory on production code: next GHSA-wfc6-r584-vfw7",
+          "detail": "Next.js vulnerable to cache poisoning in React Server Component responses. next is in the --omit=dev closure, so scripts/deploy-api.sh installs it on the droplet and ib-api can load it. No entry in sca-suppressions.json claims it is unreachable.",
+          "evidence": "npm audit --omit=dev --json: GHSA-wfc6-r584-vfw7 (moderate) on next >=16.0.0 <16.2.5 — https://github.com/advisories/GHSA-wfc6-r584-vfw7. Fix: next@16.3.5.",
+          "remediation": "Upgrade (next@16.3.5), or add a scripts/security/data/sca-suppressions.json entry with a premise this suite can assert and an expiry date.",
+          "file": "package-lock.json",
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "Unjustified moderate advisory on production code: next GHSA-68g3-v927-f742",
+          "detail": "Next.js: Cache confusion of response bodies for requests with bodies. next is in the --omit=dev closure, so scripts/deploy-api.sh installs it on the droplet and ib-api can load it. No entry in sca-suppressions.json claims it is unreachable.",
+          "evidence": "npm audit --omit=dev --json: GHSA-68g3-v927-f742 (moderate) on next >=16.0.0 <16.2.11 — https://github.com/advisories/GHSA-68g3-v927-f742. Fix: next@16.3.5.",
+          "remediation": "Upgrade (next@16.3.5), or add a scripts/security/data/sca-suppressions.json entry with a premise this suite can assert and an expiry date.",
+          "file": "package-lock.json",
+          "line": null
+        },
+        {
+          "severity": "medium",
+          "title": "Unjustified moderate advisory on production code: next GHSA-4633-3j49-mh5q",
+          "detail": "Next.js: Cache confusion of response bodies for requests with bodies containing invalid UTF-8 byte sequences. next is in the --omit=dev closure, so scripts/deploy-api.sh installs it on the droplet and ib-api can load it. No entry in sca-suppressions.json claims it is unreachable.",
+          "evidence": "npm audit --omit=dev --json: GHSA-4633-3j49-mh5q (moderate) on next >=16.0.0 <16.2.11 — https://github.com/advisories/GHSA-4633-3j49-mh5q. Fix: next@16.3.5.",
+          "remediation": "Upgrade (next@16.3.5), or add a scripts/security/data/sca-suppressions.json entry with a premise this suite can assert and an expiry date.",
+          "file": "package-lock.json",
+          "line": null
+        },
+        {
+          "severity": "low",
+          "title": "Stale suppression: GHSA-g7r4-m6w7-qqqr (esbuild) matches no live advisory",
+          "detail": "Nothing in the production closure reports this any more, so the waiver is dead weight — and dead weight that would pre-approve the same GHSA if a future version reintroduced it.",
+          "evidence": "sca-suppressions.json lists GHSA-g7r4-m6w7-qqqr for esbuild; npm audit --omit=dev reports 35 advisories and none of them is GHSA-g7r4-m6w7-qqqr.",
+          "remediation": "Delete the entry.",
+          "file": "scripts/security/data/sca-suppressions.json",
+          "line": null
+        },
+        {
+          "severity": "info",
+          "title": "18 advisories in dev-only packages (laptop risk, never deployed)",
+          "detail": "These are in the tree `npm ci --omit=dev` leaves behind, so they do not reach the droplet. Listed because \"not production\" is not the same as \"not real\" — they run on the machine that holds the deploy key.",
+          "evidence": "GHSA-5474-4w2j-mq4c moderate @anthropic-ai/sdk: Claude SDK for TypeScript: Memory Tool Path Validation Allows Sandbox Escape to Sibling Directories | GHSA-p7fg-763f-g4gf moderate @anthropic-ai/sdk: Claude SDK for TypeScript has Insecure Default File Permissions in Local Filesystem Memory Tool | GHSA-4x5r-pxfx-6jf8 low @babel/core: @babel/core: Arbitrary File Read via sourceMappingURL Comment | GHSA-p498-v437-472g moderate @humanfs/node: humanfs: Recursive copy follows symlinked files and copies data from outside the source tree | GHSA-82fw-gwwq-j7x9 moderate @vitest/mocker: Vitest: Path Traversal / Arbitrary File Read via @vitest/mocker Redirect Mock | GHSA-jxxr-4gwj-5jf2 moderate brace-expansion: brace-expansion: Large numeric range defeats documented `max` DoS protection | GHSA-3jxr-9vmj-r5cp high brace-expansion: brace-expansion: DoS via exponential-time expansion of consecutive non-expanding {} groups | GHSA-mh99-v99m-4gvg high brace-expansion: brace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash | GHSA-rgw5-rvv9-x895 high brace-expansion: brace-expansion: DoS via unbounded intermediate arrays, bypassing the CVE-2026-14257 mitigation | GHSA-c83g-rgw3-j3cx high browserslist: Browserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM | GHSA-73wf-gq98-2v4g high browserslist: Browserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats)",
+          "remediation": "npm audit fix on a branch when convenient. Severities present: moderate, low, high.",
+          "file": "package.json",
+          "line": null
+        }
+      ],
+      "checked": 82,
+      "ms": 8473
+    }
+  ]
+}

@@ -130,7 +130,15 @@ site() {  # label, folder, extra build env
 
 site "free site" /resources ""
 site "Pro site" /resources-pro "NEXT_PUBLIC_TIER=pro"
-$SSH "$TARGET" "chown -R www-data:www-data $WEB_ROOT/resources $WEB_ROOT/resources-pro"
+# root:www-data 750/640, NOT www-data:www-data.
+#
+# Apache serves WordPress PHP as www-data on this same box, so anything that
+# uid can write, a WordPress compromise can rewrite: 1,400 static pages to
+# inject script into, and /opt/ib-api to replace the API with. www-data only
+# ever READS these trees — writes arrive by rsync as root — so it does not need
+# to own them. Found live on 2026-09-19 by the security suite
+# (cnast webroot-ownership-shared-fate); it re-checks this every night.
+$SSH "$TARGET" "chown -R root:www-data $WEB_ROOT/resources $WEB_ROOT/resources-pro && find $WEB_ROOT/resources $WEB_ROOT/resources-pro -type d -exec chmod 750 {} + && find $WEB_ROOT/resources $WEB_ROOT/resources-pro -type f -exec chmod 640 {} +"
 rm -f "$LOG"
 
 echo

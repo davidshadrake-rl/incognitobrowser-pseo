@@ -200,8 +200,26 @@ export default check({
       }
     }
 
+    /**
+     * The detectors are not secrets.
+     *
+     * scripts/security/checks/ contains the patterns this scan matches ON —
+     * cnast-deploy-credential-hygiene.mjs has to spell "-----BEGIN" out in
+     * order to find a private key, so scanning it finds itself. Exactly the
+     * self-reference the no-vercel guard hit (tests/no-vercel.test.ts isSelf).
+     *
+     * Narrow on purpose: only this directory, only because every file in it
+     * exists to REFUSE the thing it names. A real credential pasted into a
+     * check file would be missed, which is the cost — and it is the right
+     * trade against a permanent false positive, because a permanent false
+     * positive is how a team learns to skim past this check's output.
+     * Mutation-tested: a key-shaped blob committed anywhere else still fires.
+     */
+    const isDetector = (p) => p.startsWith('scripts/security/checks/');
+
     const out = findings.map((f) => {
       const path = pathOf.get(f.oid) || '(path not recovered — blob is unreachable from any ref name)';
+      if (isDetector(path)) return null;
       let commit = '';
       try {
         commit = execFileSync('git', ['log', '--all', '--oneline', '-1', `--find-object=${f.oid}`], {
@@ -224,6 +242,6 @@ export default check({
       });
     });
 
-    return { checked: scanned, findings: out };
+    return { checked: scanned, findings: out.filter(Boolean) };
   },
 });
