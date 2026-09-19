@@ -48,3 +48,13 @@ out*/
 
 # Droplet login for scripts/deploy.sh. Never commit.
 .secrets
+
+# Observed run-to-run state for the RASP checks: last restart count, last
+# evicted-key count, last canary timings. It changes on every run by design.
+# The EXPECTATIONS it is graded against live in rasp-baseline.json, which IS
+# committed — keeping the two apart is what stops a nightly run quietly
+# rewriting the thing it is supposed to be failing against.
+scripts/security/data/rasp-runtime-state.json
+
+# Security suite reports: machine-generated, name live hosts and findings.
+reports/
