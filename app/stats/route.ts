@@ -13,7 +13,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
-import { getRedisClient, rateLimit, getClientIP, getIpBucket } from '@/lib/rate-limit';
+import { getRedisClient, rateLimit, getClientIP, getIpBucket, getRedisDiagnostic } from '@/lib/rate-limit';
 import { dayOf } from '@/lib/event-schema';
 
 export async function POST(request: NextRequest) {
@@ -48,8 +48,26 @@ export async function POST(request: NextRequest) {
   try { body = JSON.parse(text); } catch { /* empty body is fine */ }
   const day = (body as { day?: string })?.day || dayOf(new Date());
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return NextResponse.json({ error: 'day must be YYYY-MM-DD' }, { status: 400, headers });
+  /**
+   * Whether the controls are actually ON right now, not whether the code that
+   * implements them exists.
+   *
+   * getRedisDiagnostic() was exported and called from nowhere — dead code with
+   * a docstring inviting someone to wire it up. That mattered more than it
+   * looked: the proof-of-work single-use check is skipped when the Redis
+   * client is null, and getRedisClient() returns null for ten seconds after
+   * ANY Redis error. So the control can be off while every page still serves
+   * and every test still passes, and nothing anywhere said so. This is the
+   * read-out that would have shown it — status 'backoff' means the replay
+   * check is currently refusing scans; 'disabled' means it is not enforcing.
+   *
+   * Behind STATS_TOKEN with the rest of this route: lastError can carry a
+   * connection string, and in-flight counts are a load signal.
+   */
+  const runtime = { ...getRedisDiagnostic(), uptimeSec: Math.round(process.uptime()) };
+
   const redis = getRedisClient();
-  if (!redis) return NextResponse.json({ day, counts: {}, storage: 'none' }, { headers });
+  if (!redis) return NextResponse.json({ day, counts: {}, storage: 'none', runtime }, { headers });
 
   // Hard ceiling on how much one call may collect. The loop SCANs a whole
   // day's keyspace and holds every key and count in memory to answer, so its
@@ -77,5 +95,5 @@ export async function POST(request: NextRequest) {
     }
   } while (cursor !== '0');
   const sorted = Object.fromEntries(Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)));
-  return NextResponse.json({ day, counts: sorted, storage: 'redis', ...(truncated ? { truncated: true, limit: MAX_KEYS } : {}) }, { headers });
+  return NextResponse.json({ day, counts: sorted, storage: 'redis', runtime, ...(truncated ? { truncated: true, limit: MAX_KEYS } : {}) }, { headers });
 }
