@@ -2,17 +2,30 @@
 
 For the Android app team. It covers what the privacy pages already do when they open inside the app, and the three things the app needs to do. The web side shipped in `lib/in-app.ts`, `components/InAppBridge.tsx` and `components/Scorecard.tsx`, and is tested in `tests/in-app.test.ts`.
 
+## Changed 2026-09-18 — the origin allowlist in section 2 must ship
+
+**This is a security change, not a docs tidy-up. If you have already written the listener, change it before your next release.**
+
+Earlier versions of this document told you to allow `https://incognitobrowser-pseo.vercel.app` and `https://incognitobrowser-pro.vercel.app`. **Remove both.** We took the sites off Vercel on 2026-09-18 and the account is being closed. A released `*.vercel.app` subdomain can be registered by anyone else, so an app that still trusts those origins is trusting `postMessage` from whoever claims the name next — inside a WebView that opens the native upgrade flow on what that page sends.
+
+Neither origin ever served the live pages anyway, and the host that does was missing from the list, so the old allowlist was both too permissive and non-functional. The live origin today is `https://206-189-186-34.nip.io` (the free pages at `/resources`, the Pro pages at `/resources-pro`). `https://incognitobrowser.io` stays in the list for the cutover; it is not serving the pages yet.
+
+Two things about that origin you should know before you ship it, because they are yours to judge:
+
+- **nip.io is third-party wildcard DNS.** `206-189-186-34.nip.io` resolves to 206.189.186.34 because a service we do not run answers for every `<ip>.nip.io` name. Origin matching is exact — scheme, host, port — so no other `*.nip.io` name matches this entry, and **never** write a wildcard like `https://*.nip.io`: that would trust an origin for every IP address on the internet. The real exposure is that our identity on that name depends on someone else's DNS: whoever answers for `nip.io` can point the name elsewhere and pass the domain validation that issues a certificate for it. Treat this entry as temporary. It goes away when `incognitobrowser.io` serves the pages, and that swap needs an app release, so keep the list somewhere you can change quickly.
+- **An origin is a host, not a directory.** The same droplet serves other things on that host, including the team's WordPress. `addWebMessageListener` injects the bridge into *every* page on an allowed origin, not just `/resources` and `/resources-pro`, so anything that can get script onto that host can call `openUpgrade` and `saveImage`. Keep the native side defensive: treat the message as untrusted input (it is), parse it strictly, and use `from`, `topic`, `result`, `tool` and `benefit` for wording and attribution only — never to grant anything. We are asking for the sites to get their own hostname; until then this is the honest picture.
+
 ## 1. Tell the page it is in the app
 
 The app spoofs its user agent, so the page can't tell from that. The app says so itself:
 
-- Add `inapp=1` to the URL whenever the app opens one of our pages. Our hosts are `incognitobrowser-pseo.vercel.app` (free), `incognitobrowser-pro.vercel.app` (Pro tools), and `incognitobrowser.io/resources` once it goes live.
+- Add `inapp=1` to the URL whenever the app opens one of our pages. Our host is `206-189-186-34.nip.io` — the free pages at `/resources`, the Pro tools at `/resources-pro` — and `incognitobrowser.io/resources` once it goes live.
 - Also add `pro=1` when the user has an active Incognito Pro subscription.
 - The page keeps both flags for the rest of the tab and removes them from the address bar, so a link the user copies or shares never carries them. `inapp=0` and `pro=0` switch them off. Links between the free and Pro sites carry the flags across.
 - **Only send `inapp=1` once the app handles the upgrade handoff in section 2.** The flag tells the page it may hand upgrades to the app.
-- `pro=1` only changes wording. Anyone can type it, so never use it to grant anything.
+- `pro=1` only changes wording. Anyone can type it, so never use it to grant anything. **Since 2026-09-18 the page holds itself to that too:** `pro=1` is remembered for the tab but only acted on once the page can see your bridge object (or a user agent that names the app), because a parameter that anyone can put in a link was switching every upgrade ask off for whoever opened it. Send it with `inapp=1` as before; with the section 2 listener in place nothing changes for you. On a build that injects the bridge later than our first script, the page looks again for a second, and any later tap confirms it.
 - **The bridge itself also counts.** If the page finds `window.IncognitoBrowserApp` (section 2) it treats that as proof it is inside the app, even with no `inapp=1` and a spoofed user agent, because only the app's own WebView can put that object on our pages. That covers a page the user reached by a link rather than from one of the app's own tiles. Send `inapp=1` anyway: it is what carries `pro=1`, and it is the only signal that survives an app build whose bridge is not yet injected when the page's first script runs.
-- **We do not fingerprint the WebView.** The user agent is the last resort, and on its own it changes wording only.
+- **We do not fingerprint the WebView.** The user agent is the last resort: on its own it changes wording only, and upgrade links stay ordinary Play links. It counts for one more thing since 2026-09-18 — a user agent that names the app can vouch for a `pro=1` the app sent, because a link cannot choose the user agent the way it can choose a query parameter. If your build spoofs the user agent, as it does today, nothing here applies to you.
 
 What changes on the page inside the app:
 
@@ -34,10 +47,12 @@ When someone taps **Upgrade to Pro** on a page, open the app's own upgrade scree
 WebViewCompat.addWebMessageListener(
     webView,
     "IncognitoBrowserApp",
+    // Exact origins only. See the 2026-09-18 note at the top before you edit
+    // this set: the two vercel.app hosts that used to be here must not come
+    // back, and no wildcard belongs here either.
     setOf(
+        "https://206-189-186-34.nip.io",
         "https://incognitobrowser.io",
-        "https://incognitobrowser-pseo.vercel.app",
-        "https://incognitobrowser-pro.vercel.app",
     ),
 ) { _, message, sourceOrigin, isMainFrame, _ ->
     if (!isMainFrame) return@addWebMessageListener
@@ -106,8 +121,8 @@ The tools measure the browser they run in, and they give the app the same result
 
 ## 5. How to test
 
-1. Open `https://incognitobrowser-pseo.vercel.app/tools/password-security/password-strength-checker/?inapp=1`. The header says **Get Pro**. Type any password, then tap **Upgrade to Pro** in the panel below the result. The upgrade screen should open with `from=result`, `topic=password-security` and a `result`.
-2. Add `&pro=1`. The header button and the upgrade panel should be gone.
+1. Open `https://206-189-186-34.nip.io/resources/tools/password-security/password-strength-checker/?inapp=1`. The header says **Get Pro**. Type any password, then tap **Upgrade to Pro** in the panel below the result. The upgrade screen should open with `from=result`, `topic=password-security` and a `result`.
+2. Add `&pro=1`. The header button and the upgrade panel should be gone. If they are still there, the page cannot see the bridge: check the origin allowlist in section 2 — the same URL in Chrome is *supposed* to keep showing the upgrade asks now.
 3. Tap **Save image** under the scorecard. The image should save. Without the listener, the image appears to press and hold.
 4. On mobile data, open `/tools/vpn-privacy/whats-my-ip/?inapp=1`. It should not say "Leaking" for two addresses from the same carrier.
 5. Share or copy the page link from the app. The link should not contain `inapp=1`.

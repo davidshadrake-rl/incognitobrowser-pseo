@@ -1,5 +1,41 @@
 # Shipped inside each uploaded site folder by scripts/deploy.sh.
 #
+# Hidden files. Ubuntu's stock Apache config denies only `.ht*`, so every other
+# dotfile in a web root is served as plain text: a stray .env, a .git directory,
+# an editor swap file, a .secrets someone copied in while debugging. Nothing is
+# exposed today, but only because those files do not happen to be here — rsync
+# --delete copies whatever is in out/, and "we didn't put one there" is not a
+# rule. This is the rule. It lives here rather than in the shared root
+# .htaccess so it ships with every deploy instead of waiting for someone to
+# remember scripts/droplet-server-config.sh.
+#
+# /.well-known/ is exempt: ACME writes the certificate-renewal challenge under
+# it, and a renewal that fails takes the site dark behind its own two-year
+# HSTS. (The live challenge path is the shared web root's, above these folders,
+# so this rule would not see it anyway — the exemption is here so that stays
+# true if a site folder ever becomes a document root of its own.)
+#
+# One dotfile really is published here: .build-marker.json, written into out/
+# by scripts/write-build-marker.mjs so the page guards know what they are
+# grading. It is denied along with the rest, and that breaks nothing — the two
+# suites that read it (tests/rendered-pages, tests/link-audit) read it off disk
+# before the upload, never over HTTP, and version.txt is the file that says
+# what is live to anyone asking from outside.
+#
+# 403, not 404: the match is on the URL shape, never on what is on disk, so it
+# answers the same whether or not the file exists and tells an attacker nothing
+# — the same way the stock `.ht*` rule already behaves.
+#
+# RedirectMatch rather than RewriteRule, deliberately: switching RewriteEngine
+# on in a per-directory .htaccess makes Apache drop the parent's rewrite rules
+# for this whole tree, which would silently kill the plain-http -> https
+# redirect and the Pro shell redirects that live in the shared root block
+# (scripts/droplet-htaccess.conf). mod_alias merges instead of replacing.
+# The root block carries the same deny as a backstop, written as a rewrite
+# because that file already runs a rewrite engine; the two are not a copy-paste
+# to be tidied into one.
+RedirectMatch 403 "(^|/)\.(?!well-known/)"
+
 # Cache busting. CSS and JS under _next/static are named after their contents,
 # so a changed file gets a new name; they're cached for a year (set higher up).
 # Everything else here — the pages, data files, images — is "no-cache": the

@@ -27,8 +27,14 @@ class FakeStorage {
 
 const CHROME_UA = 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0 Mobile Safari/537.36';
 
-/** Load a page at `href` in a fake tab and run the boot script. */
-function boot(href: string, opts: { storage?: FakeStorage; ua?: string; bridge?: unknown } = {}) {
+/**
+ * Load a page at `href` in a fake tab and run the boot script.
+ *
+ * `timers` gives the fake window a setTimeout, which the boot script uses to
+ * keep looking for a bridge injected after it ran. It is opt-in so the other
+ * cases leave no timer chain running behind them.
+ */
+function boot(href: string, opts: { storage?: FakeStorage; ua?: string; bridge?: unknown; timers?: boolean } = {}) {
   const root = new FakeElement();
   const storage = opts.storage ?? new FakeStorage();
   const w = {
@@ -37,6 +43,7 @@ function boot(href: string, opts: { storage?: FakeStorage; ua?: string; bridge?:
     sessionStorage: storage,
     IncognitoBrowserApp: opts.bridge,
     navigator: { userAgent: opts.ua ?? CHROME_UA },
+    setTimeout: opts.timers ? (fn: () => void, ms: number) => setTimeout(fn, ms) : undefined,
     history: { state: null, replaceState: vi.fn((_s: unknown, _t: string, url: string) => { w.location.href = new URL(url, href).href; }) },
   };
   new Function('window', IN_APP_BOOT_SCRIPT)(w);
@@ -58,11 +65,55 @@ describe('the boot script: ?inapp=1 marks the page and the tab', () => {
   });
 
   it('the next page in the same tab needs no parameter', () => {
-    const first = boot('https://example.test/?inapp=1&pro=1');
-    const next = boot('https://example.test/guides/', { storage: first.storage });
+    // Updated 2026-09-18: this used to boot both pages with no bridge and
+    // still expect data-ib-pro, which encoded the bug — `?inapp=1&pro=1` alone
+    // hid every upgrade ask and opened all three gates for the rest of the
+    // tab, on the open web, for anyone who opened a crafted or shared link.
+    // The app the parameters claim to come from always puts its bridge object
+    // on the page, so a real in-app tab looks like this one; what the
+    // assertion should have been checking is that the flags survive the
+    // navigation, and they still do.
+    const bridge = { postMessage: () => {} };
+    const first = boot('https://example.test/?inapp=1&pro=1', { bridge });
+    expect(first.root.hasAttribute('data-ib-pro')).toBe(true);
+    const next = boot('https://example.test/guides/', { storage: first.storage, bridge });
     expect(next.root.getAttribute('data-inapp')).toBe('param');
     expect(next.root.hasAttribute('data-ib-pro')).toBe(true);
     expect(next.w.history.replaceState).not.toHaveBeenCalled();
+  });
+
+  it('?inapp=1&pro=1 in a link proves nothing on its own', () => {
+    // The whole upgrade funnel hangs off data-ib-pro: app/globals.css hides
+    // every .ib-upgrade band on it and components/useUpgradeGate.tsx skips all
+    // three gates on it. Until 2026-09-18 a link carrying these two parameters
+    // switched that off for the rest of the tab, in any browser. The claim is
+    // still kept for the tab, in case the app's bridge turns up late.
+    const { root, storage } = boot('https://example.test/tools/x/?inapp=1&pro=1');
+    expect(root.hasAttribute('data-ib-pro')).toBe(false);
+    expect(storage.getItem('ib-pro')).toBe('1');
+    // Nor does it come back on the next page of that tab.
+    expect(boot('https://example.test/guides/', { storage }).root.hasAttribute('data-ib-pro')).toBe(false);
+  });
+
+  it('the app itself vouches for pro=1: its bridge, or a user agent that names it', () => {
+    expect(boot('https://example.test/?inapp=1&pro=1', { bridge: { postMessage: () => {} } }).root.hasAttribute('data-ib-pro')).toBe(true);
+    expect(boot('https://example.test/?inapp=1&pro=1', { ua: `${CHROME_UA} IncognitoBrowser/5.2` }).root.hasAttribute('data-ib-pro')).toBe(true);
+  });
+
+  it('a bridge that appears after the page loaded still confirms a stored pro=1', async () => {
+    // androidx.webkit injects at document creation, but an older build may be
+    // later than our inline script. The boot script keeps looking for a
+    // second, so a subscriber is not left reading a page of upgrade asks.
+    vi.useFakeTimers();
+    try {
+      const { root, w } = boot('https://example.test/?inapp=1&pro=1', { timers: true });
+      expect(root.hasAttribute('data-ib-pro')).toBe(false);
+      w.IncognitoBrowserApp = { postMessage: () => {} };
+      await vi.advanceTimersByTimeAsync(300);
+      expect(root.hasAttribute('data-ib-pro')).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('inapp=0 turns it off again', () => {

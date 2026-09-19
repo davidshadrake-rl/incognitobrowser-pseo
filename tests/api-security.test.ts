@@ -307,3 +307,84 @@ describe('client wiring', () => {
     expect(src).toContain('NEXT_PUBLIC_SCAN_API');
   });
 });
+
+describe('Altcha challenge generation cannot spin', () => {
+  // POW_MAX_NUMBER=0 in /etc/ib-api.env made createChallenge's rejection
+  // sampling compute `Math.floor(0x100000000 / 0) * 0`, which is NaN, so
+  // `r < bound` was never true and the loop never exited. This runs on the one
+  // thread that serves the whole API, so a single env typo did not slow
+  // /challenge down — it stopped every endpoint answering at all.
+  //
+  // Note for whoever sees this hang rather than fail: a regression here does
+  // not produce a red test, it wedges the run. That is the same symptom the
+  // production bug had, and there is no way to assert "terminates" from inside
+  // the thread it would block.
+  it('a zero search space falls back to a usable one instead of looping', async () => {
+    const { createChallenge } = await import('../lib/altcha');
+    const challenge = createChallenge(0, 60);
+    expect(challenge.maxnumber).toBeGreaterThan(0);
+    expect(challenge.challenge).toHaveLength(64);
+  });
+
+  it('a non-integer or unsafe search space falls back too', async () => {
+    const { createChallenge } = await import('../lib/altcha');
+    // parseInt('99999999999999999999') is 1e20 — not NaN, not negative, and it
+    // made `Math.floor(0x100000000 / 1e20) * 1e20` exactly 0, which is the same
+    // never-terminating loop by a different route.
+    for (const bad of [0, -1, NaN, 1.5, 1e20, Infinity]) {
+      const challenge = createChallenge(bad, 60);
+      expect(challenge.maxnumber).toBeGreaterThan(0);
+      expect(Number.isSafeInteger(challenge.maxnumber)).toBe(true);
+    }
+  });
+
+  it('clamps the search space to what verifySolution will accept', async () => {
+    const { createChallenge, verifySolution } = await import('../lib/altcha');
+    // verifySolution refuses any number above 10_000_000, so a challenge
+    // advertising a wider range is one whose correct answer we would reject.
+    const challenge = createChallenge(50_000_000, 60);
+    expect(challenge.maxnumber).toBe(10_000_000);
+    expect(verifySolution({ ...challenge, number: challenge.maxnumber }).valid).toBe(false);
+  });
+
+  it('advertises the range the secret number was actually drawn from', async () => {
+    const { createChallenge } = await import('../lib/altcha');
+    // The client brute-forces `maxnumber`. If we clamp internally but report
+    // the caller's number, the puzzle is unsolvable for everybody.
+    const challenge = createChallenge(0, 60);
+    const { createHash: h } = await import('node:crypto');
+    let solved = -1;
+    for (let n = 0; n <= challenge.maxnumber; n++) {
+      if (h('sha256').update(challenge.salt + n).digest('hex') === challenge.challenge) {
+        solved = n;
+        break;
+      }
+    }
+    expect(solved).toBeGreaterThanOrEqual(0);
+  });
+
+  it('clamps the TTL to what verifySolution will accept', async () => {
+    const { createChallenge, verifySolution } = await import('../lib/altcha');
+    const now = Math.floor(Date.now() / 1000);
+    const challenge = createChallenge(100, 100_000);
+    expect(challenge.expires - now).toBeLessThanOrEqual(600);
+    // And the clamped token still verifies rather than tripping expires_too_far.
+    const { createHash: h } = await import('node:crypto');
+    let solved = 0;
+    for (let n = 0; n <= challenge.maxnumber; n++) {
+      if (h('sha256').update(challenge.salt + n).digest('hex') === challenge.challenge) {
+        solved = n;
+        break;
+      }
+    }
+    expect(verifySolution({ ...challenge, number: solved }).valid).toBe(true);
+  });
+
+  it('a zero or negative TTL does not issue an already-expired token', async () => {
+    const { createChallenge } = await import('../lib/altcha');
+    const now = Math.floor(Date.now() / 1000);
+    for (const bad of [0, -5, NaN]) {
+      expect(createChallenge(100, bad).expires).toBeGreaterThan(now);
+    }
+  });
+});

@@ -100,3 +100,60 @@ describe('API Input Validation - Request Body Type Check', () => {
     expect(routeSource).toContain('!url');
   });
 });
+
+describe('Content lookups cannot be walked out of data/ (path traversal)', () => {
+  /**
+   * lib/content.ts builds a filesystem path out of caller-supplied segments and
+   * reads it. path.join normalises '..' as it goes, so a segment of '../../..'
+   * resolves outside data/ with the '.json' suffix as the only remaining
+   * constraint. Every caller today is build-time and passes route params from a
+   * fixed generateStaticParams, so this was never reachable — it is defence in
+   * depth for the first refactor that hands one of these functions a value from
+   * a request, because that refactor will not come and read this file.
+   */
+  it('getContentItem refuses traversal segments', async () => {
+    const { getContentItem } = await import('../lib/content');
+    expect(getContentItem('guides', '..', '..', 'package')).toBeNull();
+    expect(getContentItem('guides', '../../..', 'package')).toBeNull();
+    expect(getContentItem('..', 'package')).toBeNull();
+    expect(getContentItem('guides', 'x/../../../package')).toBeNull();
+    expect(getContentItem('guides', 'niche', 'slug\0.png')).toBeNull();
+  });
+
+  it('getGlossaryItem refuses them too', async () => {
+    const { getGlossaryItem } = await import('../lib/content');
+    expect(getGlossaryItem('../../package')).toBeNull();
+    expect(getGlossaryItem('..')).toBeNull();
+    expect(getGlossaryItem('')).toBeNull();
+  });
+
+  it('getContentFiles refuses them too', async () => {
+    const { getContentFiles } = await import('../lib/content');
+    expect(getContentFiles('..')).toEqual([]);
+    expect(getContentFiles('guides', '../../..')).toEqual([]);
+  });
+
+  it('every slug the site actually ships still resolves', async () => {
+    // The guard is worthless if it also rejects real content, and the content
+    // build is the thing that would notice last. Walk the real tree.
+    const { getContentFiles, getContentItem } = await import('../lib/content');
+    let checked = 0;
+    for (const type of ['guides', 'checklists', 'comparisons', 'tools', 'templates', 'calculators']) {
+      const files = getContentFiles(type);
+      expect(files.length, type).toBeGreaterThan(0);
+      for (const file of files) {
+        const [niche, slug] = file.split('/');
+        expect(getContentItem(type, niche, slug), file).not.toBeNull();
+        checked++;
+      }
+    }
+    expect(checked).toBeGreaterThan(400);
+  });
+
+  it('every glossary term still resolves', async () => {
+    const { getGlossaryFiles, getGlossaryItem } = await import('../lib/content');
+    const terms = getGlossaryFiles();
+    expect(terms.length).toBeGreaterThan(0);
+    for (const term of terms) expect(getGlossaryItem(term), term).not.toBeNull();
+  });
+});

@@ -141,10 +141,95 @@ describe('playUrl attribution', () => {
   });
 });
 
+/**
+ * The upgrade-CTA demo switch (components/UpgradeButtons.tsx DEMO_UPGRADE_URL).
+ *
+ * This block used to be one assertion, `expect(DEMO_UPGRADE_URL).toBe(
+ * 'https://staging.ufile.io/pricing')`, and that assertion was guarding the
+ * wrong thing. The file it guards documents the rollback as "flip
+ * DEMO_UPGRADE_URL back to '' — that one line is the whole rollback", and both
+ * `npm run build` and scripts/deploy-api.sh run `vitest run` before they build
+ * or deploy. So performing the documented one-line rollback failed the suite
+ * and blocked the deploy: the guard made the demo impossible to turn off, and
+ * whoever turned it off under pressure would have had to edit a test to ship.
+ *
+ * Which position the switch is in is an owner decision that changes day to
+ * day; it is not something a test should hold down. What a test can hold down
+ * is the property the demo was scoped on: ONE switch decides where every
+ * upgrade ask goes, in either position, and no other route to the paywall
+ * opens up beside it. These tests pass whether the demo URL is set or empty.
+ */
 describe('UpgradeButtons demo switch', () => {
-  it('while DEMO_UPGRADE_URL is set, only the upgrade CTA is redirected — never lib/play.ts playUrl()', async () => {
+  /** An anchor tag's href as the browser sees it, entities and all. */
+  const hrefOf = (tag: string): string => (/\bhref="([^"]*)"/.exec(tag)?.[1] ?? '').replace(/&amp;/g, '&');
+
+  /** Every upgrade CTA rendered in `html`, read off the anchor's own tag. */
+  const upgradeHrefs = (html: string): string[] =>
+    [...html.matchAll(/<a\b[^>]*\bdata-upgrade-from=[^>]*>/g)].map((m) => hrefOf(m[0]));
+
+  const PLAY_CTA = /^https:\/\/play\.google\.com\/store\/apps\/details\?id=[^"]*referrer=utm_source%3D(resources|pro)%26utm_medium%3D/;
+
+  /**
+   * The switch's current value as a plain string. DEMO_UPGRADE_URL is a const,
+   * so TypeScript gives it the literal type of whatever is set today and calls
+   * a comparison with the other position dead code (TS2367) — which is exactly
+   * how the old one-position assertion felt correct while it was blocking the
+   * rollback. Reading it as a string keeps both branches below compilable in
+   * either position.
+   */
+  const demoSwitch = async (): Promise<string> => (await import('../components/UpgradeButtons')).DEMO_UPGRADE_URL;
+
+  it('has two positions and nothing in between: an absolute https URL, or empty', async () => {
     vi.resetModules();
-    const { DEMO_UPGRADE_URL } = await import('../components/UpgradeButtons');
-    expect(DEMO_UPGRADE_URL).toBe('https://staging.ufile.io/pricing');
+    const demo = await demoSwitch();
+    expect(typeof demo).toBe('string');
+    // A relative or http:// value would send the ask somewhere the comment in
+    // UpgradeButtons.tsx does not describe, and would not be a demo paywall.
+    if (demo !== '') expect(demo).toMatch(/^https:\/\/\S+$/);
+  });
+
+  it('every upgrade button follows the one switch, wherever the ask sits', async () => {
+    vi.resetModules();
+    const React = (await import('react')).default;
+    const { renderToStaticMarkup } = await import('react-dom/server');
+    const { DEMO_UPGRADE_URL, UpgradeButtons } = await import('../components/UpgradeButtons');
+
+    // One ask per place an ask appears (the `from` values UpgradeButtons takes),
+    // so a surface that quietly built its own link would show up here.
+    const hrefs = (['result', 'funnel', 'report-card', 'band', 'gate'] as const).flatMap((from) =>
+      upgradeHrefs(renderToStaticMarkup(React.createElement(UpgradeButtons, {
+        engine: 'cookie-analyzer', from, benefit: 'tracker-blocking', term: 'report-card', pageUrl: 'https://example.com/site/cnn.com/',
+      }))),
+    );
+    expect(hrefs.length).toBe(5);
+
+    if (DEMO_UPGRADE_URL) {
+      // While the demo is on, all five are the same one value — no surface
+      // keeps a Play link of its own, and none invents a different paywall.
+      expect(new Set(hrefs)).toEqual(new Set([DEMO_UPGRADE_URL]));
+    } else {
+      // Rolled back: every ask is an attributed Play link again (the `from`
+      // value picks the medium, so these differ from one another).
+      for (const href of hrefs) expect(href).toMatch(PLAY_CTA);
+    }
+  });
+
+  it('the desktop hand-off sends the same link the button does', async () => {
+    // "Email me the link" and "Copy app link" hand over `play`, the same value
+    // the button uses. If the switch ever reached the button but not these,
+    // a visitor on a laptop would be mailed a different destination.
+    vi.resetModules();
+    const React = (await import('react')).default;
+    const { renderToStaticMarkup } = await import('react-dom/server');
+    const { DEMO_UPGRADE_URL, UpgradeButtons } = await import('../components/UpgradeButtons');
+    const html = renderToStaticMarkup(React.createElement(UpgradeButtons, {
+      engine: 'cookie-analyzer', from: 'result', benefit: 'tracker-blocking', pageUrl: 'https://example.com/site/cnn.com/',
+    }));
+    const [button] = upgradeHrefs(html);
+    const mailto = hrefOf(/<a\b[^>]*href="mailto:[^>]*>/.exec(html)?.[0] ?? '');
+    expect(button).toBeTruthy();
+    expect(decodeURIComponent(mailto)).toContain(button);
+    if (DEMO_UPGRADE_URL) expect(button).toBe(DEMO_UPGRADE_URL);
+    else expect(button).toMatch(PLAY_CTA);
   });
 });

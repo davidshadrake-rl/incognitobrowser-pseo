@@ -513,3 +513,74 @@ describe('verdict ladder', () => {
     expect(txt.headline).toBe('This screenshot leaks hidden text metadata');
   });
 });
+
+describe('PII scanning is linear in input length (ReDoS)', () => {
+  // RE_EMAIL's local part used to be an unbounded `+` to the left of the '@'.
+  // With /g the engine restarts at every offset and re-consumes the whole run
+  // before failing, which is O(n²): 50,000 characters of 'a' took 5.4 seconds
+  // on the machine this was found on and 200,000 took 66. scanPii runs in the
+  // visitor's browser on metadata lifted out of an uploaded image, so one
+  // padded XMP field froze the tab. Bounding the quantifiers took 200,000
+  // characters to 41 ms.
+  //
+  // The bound below is deliberately ~25x the measured cost of the fixed
+  // version (about 80 ms for all the patterns together on this input) so CI on
+  // slower or contended hardware does not flake, while still being two orders
+  // of magnitude under the broken version. A regression to any unbounded
+  // quantifier blows straight through it.
+  const BUDGET_MS = 2000;
+
+  it('200,000 characters of local-part filler finish well inside the budget', () => {
+    const hostile = 'a'.repeat(200_000);
+    const started = Date.now();
+    expect(scanPii(hostile, 't')).toHaveLength(0);
+    expect(Date.now() - started).toBeLessThan(BUDGET_MS);
+  });
+
+  it('a long run either side of an @ finishes too', () => {
+    // The nastier shape: the local part matches, so the engine commits before
+    // failing on the missing TLD.
+    const hostile = 'a'.repeat(100_000) + '@' + 'b'.repeat(100_000);
+    const started = Date.now();
+    expect(scanPii(hostile, 't')).toHaveLength(0);
+    expect(Date.now() - started).toBeLessThan(BUDGET_MS);
+  });
+
+  it('other hostile shapes stay fast too', () => {
+    // One per remaining regex: digit runs and separators (card, phone, IBAN),
+    // repeated near-miss address words, coordinate-like decimals, '@' runs and
+    // a long home-path segment.
+    const shapes = [
+      '1'.repeat(150_000),
+      '1 '.repeat(75_000),
+      '1-'.repeat(75_000),
+      'AB12' + ' A'.repeat(75_000),
+      '+' + '1.'.repeat(75_000),
+      '1 ' + 'aaaa '.repeat(30_000),
+      ('a1.' + '5'.repeat(500)).repeat(300),
+      '@'.repeat(150_000),
+      '/Users/' + 'a'.repeat(150_000),
+    ];
+    for (const s of shapes) {
+      const started = Date.now();
+      scanPii(s, 't');
+      expect(Date.now() - started, s.slice(0, 12)).toBeLessThan(BUDGET_MS);
+    }
+  });
+
+  it('still finds a real address after the bounds were added', () => {
+    // The bounds are RFC 5321's (local part 64, label 63, domain 255) plus the
+    // longest TLD in the root zone, so no address a person could actually own
+    // stopped matching.
+    const long = `${'a'.repeat(64)}@${'b'.repeat(63)}.example.co.uk`;
+    expect(scanPii(long, 't').map((h) => h.value)).toContain(long);
+    // Past the RFC limit the hit is the last 64 characters of the local part
+    // rather than the whole run. That is the right trade for this tool: it
+    // still tells the visitor an address is in the file, which is the warning
+    // they came for, and nothing that a mail server would deliver to is lost.
+    const tooLong = `${'a'.repeat(65)}@example.com`;
+    expect(scanPii(tooLong, 't').map((h) => h.value)).toEqual([
+      `${'a'.repeat(64)}@example.com`,
+    ]);
+  });
+});

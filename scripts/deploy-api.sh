@@ -46,15 +46,50 @@ done
 echo "   routes present: challenge scan-url ip event stats dns-leak"
 
 echo "== upload -> $TARGET:$REMOTE"
-BEFORE="$($SSH "$TARGET" "md5sum $REMOTE/package-lock.json 2>/dev/null | cut -d' ' -f1" || true)"
+# .npmrc ships too: it sets ignore-scripts, and the remote npm ci below reads it
+# from $REMOTE because that is the working directory. See the file for why.
 rsync -az --delete -e "$SSH" .next/            "$TARGET:$REMOTE/.next/"
-rsync -az          -e "$SSH" next.config.ts package.json package-lock.json "$TARGET:$REMOTE/"
+rsync -az          -e "$SSH" next.config.ts package.json package-lock.json .npmrc "$TARGET:$REMOTE/"
 rsync -az --delete -e "$SSH" public/           "$TARGET:$REMOTE/public/"
-AFTER="$($SSH "$TARGET" "md5sum $REMOTE/package-lock.json | cut -d' ' -f1")"
 
-if [ "$BEFORE" != "$AFTER" ]; then
-  echo "== dependencies changed, reinstalling"
-  $SSH "$TARGET" "cd $REMOTE && sudo -u www-data env HOME=/tmp npm ci --omit=dev"
+# The reinstall gate. This used to md5 the remote lockfile BEFORE the rsync and
+# again AFTER it, and reinstall when the two differed. That reads as correct and
+# fails open. `set -euo pipefail` is in force, so a single failed `npm ci` — a
+# registry 503, a network blip, a full disk — aborts the script AFTER the new
+# lockfile has already been written over the old one on the droplet. From then
+# on every run computes BEFORE == AFTER, concludes nothing changed, and never
+# reinstalls again. Production keeps running on a node_modules that does not
+# match its lockfile, indefinitely, while deploys carry on reporting success.
+#
+# So the decision is not derived from what the rsync did. It hangs off a marker
+# holding the md5 of the lockfile that was last SUCCESSFULLY installed, written
+# only once npm ci has exited 0. A failed install leaves the marker stale or
+# absent, which is exactly the state that makes the next run try again.
+#
+# (First run after this change: the marker does not exist yet, so one reinstall
+# happens regardless of whether dependencies changed. That is intended — it is
+# also what re-does the install with scripts disabled.)
+INSTALLED_MARKER="$REMOTE/.npm-ci-installed.md5"
+SHIPPED_LOCK="$($SSH "$TARGET" "md5sum $REMOTE/package-lock.json | cut -d' ' -f1")"
+INSTALLED_LOCK="$($SSH "$TARGET" "cat $INSTALLED_MARKER 2>/dev/null || true")"
+# node_modules itself can go missing without the lockfile changing — a wiped
+# directory, a half-finished manual fix — and the marker alone would not notice.
+HAVE_MODULES="$($SSH "$TARGET" "[ -d $REMOTE/node_modules ] && echo yes || echo no")"
+
+if [ "$SHIPPED_LOCK" != "$INSTALLED_LOCK" ] || [ "$HAVE_MODULES" != yes ]; then
+  echo "== node_modules is not known-installed at this lockfile, reinstalling"
+  # Three separate ssh calls, deliberately. Clearing the marker first means that
+  # if npm ci fails, set -e stops the script with the marker already gone, and
+  # the next deploy is guaranteed to retry.
+  #
+  # --ignore-scripts belongs here as well as in the shipped .npmrc: this install
+  # runs as www-data on the box that also serves WordPress and MySQL, and the
+  # protection should not depend on a config file having arrived intact.
+  $SSH "$TARGET" "rm -f $INSTALLED_MARKER"
+  $SSH "$TARGET" "cd $REMOTE && sudo -u www-data env HOME=/tmp npm ci --omit=dev --ignore-scripts"
+  $SSH "$TARGET" "printf '%s\n' '$SHIPPED_LOCK' > $INSTALLED_MARKER"
+else
+  echo "   dependencies unchanged since the last successful install"
 fi
 
 $SSH "$TARGET" "chown -R www-data:www-data $REMOTE && systemctl restart ib-api"

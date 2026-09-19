@@ -20,6 +20,18 @@
  *   data-ib-pro         the app says this user already has Pro, so upgrade
  *                       asks are hidden. Copy only, never access.
  *
+ * data-ib-pro is the one mark a URL alone cannot set. `?inapp=1&pro=1` used to
+ * be enough, and because app/globals.css hides every `.ib-upgrade` band on it
+ * and components/useUpgradeGate.tsx skips all three gates on it, any link with
+ * those two parameters switched the whole upgrade funnel off for the rest of
+ * that tab — a shared or crafted link was a self-inflicted funnel outage, on
+ * the open web, where nobody is in the app at all. The claim is still read
+ * from the URL and kept for the tab, but it is only acted on once something
+ * the app alone can produce agrees: its bridge object, which its WebView puts
+ * on our origins only, or a user agent that names it. Nothing paid is behind
+ * these gates, so this is about not trusting a query parameter for something
+ * security-shaped, and about keeping the funnel up.
+ *
  * app/globals.css swaps labels on those attributes (.ib-web-only,
  * .ib-app-only, .ib-upgrade). components/InAppBridge.tsx hands upgrade clicks
  * to the app, and components/Scorecard.tsx hands it the scorecard image.
@@ -48,20 +60,42 @@ export function bootInApp(w: Window): void {
     const put = (k: string, on: boolean) => {
       try { if (store) { if (on) store.setItem(k, '1'); else store.removeItem(k); } } catch { /* storage blocked */ }
     };
+    const onBridge = () => {
+      const b = (w as unknown as { IncognitoBrowserApp?: unknown }).IncognitoBrowserApp;
+      return typeof b === 'object' && b !== null;
+    };
     let fromApp = get('ib-inapp') === '1';
     let pro = get('ib-pro') === '1';
     if (q.has('inapp')) { fromApp = yes(q.get('inapp')); put('ib-inapp', fromApp); }
     if (q.has('pro')) { pro = yes(q.get('pro')); put('ib-pro', pro); }
-    const bridged = typeof (w as unknown as { IncognitoBrowserApp?: unknown }).IncognitoBrowserApp === 'object'
-      && (w as unknown as { IncognitoBrowserApp?: unknown }).IncognitoBrowserApp !== null;
-    const source = fromApp ? 'param' : bridged ? 'bridge' : /incognito ?browser/i.test(w.navigator.userAgent) ? 'ua' : '';
+    const bridged = onBridge();
+    const named = /incognito ?browser/i.test(w.navigator.userAgent);
+    const source = fromApp ? 'param' : bridged ? 'bridge' : named ? 'ua' : '';
     if (source) root.setAttribute('data-inapp', source); else root.removeAttribute('data-inapp');
-    if (source && pro) root.setAttribute('data-ib-pro', ''); else root.removeAttribute('data-ib-pro');
+    // The app alone can put its bridge on our origins, and a link cannot
+    // choose the user agent either. `?pro=1` is text in a URL, so on its own
+    // it now marks nothing: without this, one shared link hid every upgrade
+    // ask and opened all three gates for the whole tab on the open web.
+    if (source && pro && (bridged || named)) root.setAttribute('data-ib-pro', ''); else root.removeAttribute('data-ib-pro');
     if (q.has('inapp') || q.has('pro')) {
       q.delete('inapp');
       q.delete('pro');
       const rest = q.toString();
       w.history.replaceState(w.history.state, '', url.pathname + (rest ? '?' + rest : '') + url.hash);
+    }
+    // An app build that injects its bridge after this script runs is the one
+    // case where `?inapp=1` really is all we have (IN-APP-BRIDGE.md, section
+    // 1). Look again for a second, so a subscriber on such a build does not
+    // sit reading a page of upgrade asks for something they already bought.
+    // Outside the app nothing ever appears, so this grace costs nothing.
+    if (pro && fromApp && !bridged && !named && typeof w.setTimeout === 'function') {
+      let tries = 0;
+      const again = () => {
+        if (onBridge()) { root.setAttribute('data-ib-pro', ''); return; }
+        tries = tries + 1;
+        if (tries < 10) w.setTimeout(again, 100);
+      };
+      w.setTimeout(again, 100);
     }
   } catch {
     /* never affect the page */
@@ -71,24 +105,50 @@ export function bootInApp(w: Window): void {
 export const IN_APP_BOOT_SCRIPT = `(${bootInApp.toString()})(window);`;
 
 /**
+ * The app's `pro=1` claim, kept for the tab by the boot script, applied only
+ * now that the bridge has confirmed we really are in the app. This is where a
+ * build that injects its bridge late catches up if the boot script's own
+ * one-second grace already gave up.
+ */
+function confirmStoredPro(): void {
+  const root = document.documentElement;
+  if (root.hasAttribute('data-ib-pro')) return;
+  try {
+    if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('ib-pro') === '1') {
+      root.setAttribute('data-ib-pro', '');
+    }
+  } catch {
+    /* storage blocked */
+  }
+}
+
+/**
  * How this page knows it is in the app, or null on the open web (and on the
  * server). The boot script settles it before the first paint; this also
  * catches a bridge injected after that (androidx.webkit adds its object when
  * a document is created, but an older app build may inject later), and marks
- * <html> so the label CSS follows.
+ * <html> so the label CSS follows. Finding the bridge is also what confirms
+ * the app's `pro=1`: the boot script keeps that claim but does not act on it
+ * while nothing but a URL parameter vouches for it.
  */
 export function inAppSource(): InAppSource | null {
   if (typeof document === 'undefined') return null;
   const v = document.documentElement.getAttribute('data-inapp');
-  if (v === 'param' || v === 'bridge' || v === 'ua') return v;
   if (appBridge()) {
+    confirmStoredPro();
+    if (v === 'param') return 'param';
     document.documentElement.setAttribute('data-inapp', 'bridge');
     return 'bridge';
   }
+  if (v === 'param' || v === 'bridge' || v === 'ua') return v;
   return null;
 }
 
-/** The app says this user already has Incognito Pro. */
+/**
+ * The app says this user already has Incognito Pro, and the app itself has
+ * been confirmed — the boot script only marks <html data-ib-pro> when the
+ * bridge or the user agent backs the claim up, never on `?pro=1` alone.
+ */
 export function inAppPro(): boolean {
   return typeof document !== 'undefined' && document.documentElement.hasAttribute('data-ib-pro');
 }

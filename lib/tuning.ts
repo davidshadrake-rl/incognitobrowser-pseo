@@ -26,11 +26,48 @@
  * patterns of abuse or legitimate users hitting limits.
  */
 
-function intEnv(name: string, defaultValue: number): number {
+/**
+ * Read an integer env var, falling back to the default when it is absent or
+ * nonsense.
+ *
+ * `min` and `max` are the interesting part. The old validation was
+ * `if (Number.isNaN(parsed) || parsed < 0) return defaultValue`, which accepts
+ * zero and accepts values past Number.MAX_SAFE_INTEGER. Both broke
+ * createChallenge: POW_MAX_NUMBER=0 made its rejection-sampling bound
+ * `Infinity * 0` = NaN, and POW_MAX_NUMBER=99999999999999999999 made it 0.
+ * Either way `r < bound` was never true and the loop never terminated — one
+ * env typo took /challenge into a spin that blocks Node's single thread, so
+ * the whole API stopped answering. A value out of range is a misconfiguration,
+ * and the safe reading of a misconfiguration is the default, not the typo.
+ *
+ * Which knobs may be zero is decided per knob below, not blanket-ly:
+ *   - A pure ceiling on how much of a response we collect (cookies, script
+ *     matches, third-party domains, URL length, body size) may be 0. Zero
+ *     there means "collect nothing" / "accept nothing", which fails closed and
+ *     is a coherent thing for an operator to ask for during an incident.
+ *   - Anything a loop, a timeout or a division depends on may not be. Zero
+ *     there either spins (POW_MAX_NUMBER), disables the control while looking
+ *     enabled (a 0 ms rate-limit window makes every key a fresh window, so the
+ *     limiter counts to 1 forever and fails OPEN), or aborts every request
+ *     before it starts (FETCH_TIMEOUT_MS).
+ */
+function intEnv(
+  name: string,
+  defaultValue: number,
+  min = 0,
+  max = Number.MAX_SAFE_INTEGER,
+): number {
   const raw = process.env[name];
   if (!raw) return defaultValue;
   const parsed = parseInt(raw, 10);
-  if (Number.isNaN(parsed) || parsed < 0) return defaultValue;
+  if (!Number.isSafeInteger(parsed) || parsed < min || parsed > max) {
+    // Loud, because a silent fallback is how a panic-mode typo survives an
+    // incident: the operator sets the value, restarts, and sees no change.
+    console.warn(
+      `[tuning] ${name}=${JSON.stringify(raw)} is not an integer in [${min}, ${max}]; using ${defaultValue}`,
+    );
+    return defaultValue;
+  }
   return parsed;
 }
 
@@ -38,11 +75,16 @@ function intEnv(name: string, defaultValue: number): number {
 // /scan-url
 // -----------------------------------------------------------------------
 
-/** Max requests per window per rate-limit key (IP bucket). Default: 10. */
+/** Max requests per window per rate-limit key (IP bucket). Default: 10.
+ *  0 is allowed and means "refuse every scan" — a deliberate kill switch. */
 export const SCAN_RATE_LIMIT = intEnv('SCAN_RATE_LIMIT', 10);
 
-/** Rate-limit window in ms. Default: 60_000 (1 minute). */
-export const SCAN_RATE_WINDOW_MS = intEnv('SCAN_RATE_WINDOW_MS', 60_000);
+/** Rate-limit window in ms. Default: 60_000 (1 minute).
+ *  Floored at 1000: the Redis limiter keys on floor(now / windowMs) and sets
+ *  the TTL in whole seconds, so a window under a second cannot be expressed —
+ *  and a window of 0 makes every request its own window, which turns the
+ *  limiter off while still reporting limits in its headers. */
+export const SCAN_RATE_WINDOW_MS = intEnv('SCAN_RATE_WINDOW_MS', 60_000, 1000);
 
 /** Max URL length the API will accept. Default: 2048. */
 export const MAX_URL_LENGTH = intEnv('MAX_URL_LENGTH', 2048);
@@ -60,8 +102,11 @@ export const MAX_SCRIPT_MATCHES = intEnv('MAX_SCRIPT_MATCHES', 500);
 /** Max third-party domains returned in the response. Default: 50. */
 export const MAX_THIRD_PARTY_DOMAINS = intEnv('MAX_THIRD_PARTY_DOMAINS', 50);
 
-/** Fetch timeout in ms for the scanned URL. Default: 10_000. */
-export const FETCH_TIMEOUT_MS = intEnv('FETCH_TIMEOUT_MS', 10_000);
+/** Fetch timeout in ms for the scanned URL. Default: 10_000.
+ *  Range 100–120_000: 0 aborts every scan before the connection opens, and an
+ *  arbitrarily large value holds a socket, a response buffer and one of the
+ *  MAX_IN_FLIGHT_SCANS slots for as long as a hostile target cares to stall. */
+export const FETCH_TIMEOUT_MS = intEnv('FETCH_TIMEOUT_MS', 10_000, 100, 120_000);
 
 /**
  * How many scans may be in flight at once, across all callers. Default: 20.
@@ -73,7 +118,7 @@ export const FETCH_TIMEOUT_MS = intEnv('FETCH_TIMEOUT_MS', 10_000);
  * the cap the route answers 503 immediately rather than queueing, because a
  * queue under flood just converts a fast rejection into a slow one.
  */
-export const MAX_IN_FLIGHT_SCANS = intEnv('MAX_IN_FLIGHT_SCANS', 20);
+export const MAX_IN_FLIGHT_SCANS = intEnv('MAX_IN_FLIGHT_SCANS', 20, 1);
 
 /**
  * Hosts the scanner refuses outright, beyond the private-range guard.
@@ -95,15 +140,31 @@ export const BLOCKED_TARGET_HOSTS: ReadonlySet<string> = new Set(
 // /challenge
 // -----------------------------------------------------------------------
 
-/** Max challenge requests per window per IP. Default: 30. */
+/** Max challenge requests per window per IP. Default: 30.
+ *  0 is allowed and means "issue no challenges", which stops scans too. */
 export const CHALLENGE_RATE_LIMIT = intEnv('CHALLENGE_RATE_LIMIT', 30);
 
-/** Challenge rate-limit window in ms. Default: 60_000 (1 minute). */
-export const CHALLENGE_RATE_WINDOW_MS = intEnv('CHALLENGE_RATE_WINDOW_MS', 60_000);
+/** Challenge rate-limit window in ms. Default: 60_000 (1 minute).
+ *  Floored at 1000 for the same reason as SCAN_RATE_WINDOW_MS. */
+export const CHALLENGE_RATE_WINDOW_MS = intEnv('CHALLENGE_RATE_WINDOW_MS', 60_000, 1000);
 
-/** Search space for the proof-of-work. Higher = more CPU per request.
- *  100k ≈ 50–300ms on phones. 1M ≈ 0.5–3s. Default: 100_000. */
-export const POW_MAX_NUMBER = intEnv('POW_MAX_NUMBER', 100_000);
+/**
+ * Search space for the proof-of-work. Higher = more CPU per request.
+ * 100k ≈ 50–300ms on phones. 1M ≈ 0.5–3s. Default: 100_000.
+ *
+ * Range 1–10_000_000. The floor is what keeps createChallenge's rejection
+ * sampling terminating: at 0 the bound is NaN and the loop spins forever on
+ * the one thread that serves the whole API. The ceiling is verifySolution's —
+ * it refuses any `number` above 10_000_000, so a larger search space would
+ * issue challenges whose correct answer can never be accepted.
+ */
+export const POW_MAX_NUMBER = intEnv('POW_MAX_NUMBER', 100_000, 1, 10_000_000);
 
-/** How long the challenge token stays valid. Default: 90 seconds. */
-export const POW_TTL_SECONDS = intEnv('POW_TTL_SECONDS', 90);
+/**
+ * How long the challenge token stays valid. Default: 90 seconds.
+ *
+ * Range 1–600. At 0 every challenge is already expired when it is handed out.
+ * Above 600 it exceeds verifySolution's `expires > now + 600` guard, so again
+ * the server would issue tokens it will then refuse.
+ */
+export const POW_TTL_SECONDS = intEnv('POW_TTL_SECONDS', 90, 1, 600);

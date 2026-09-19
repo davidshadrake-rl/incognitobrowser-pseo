@@ -104,7 +104,38 @@ describe('XSS - Icon Rendering Uses Static SVG (components/ui/Icon)', () => {
     expect(values.length).toBeGreaterThan(30);
     for (const v of values) expect(v).toMatch(/^[<>a-zA-Z0-9 ="'./,-]+$/);
     // dangerouslySetInnerHTML receives ICON_PATHS[name] (a keyed static literal) and an optional <title>, never props data.
-    expect(content).toMatch(/dangerouslySetInnerHTML=\{\{ __html: \(title \? `<title>\$\{title\}<\/title>` : ''\) \+ ICON_PATHS\[name\] \}\}/);
+    //
+    // This assertion used to pin the literal source `<title>${title}</title>`,
+    // which is exactly the bug: it froze the raw interpolation of an ordinary
+    // string prop into innerHTML as the expected shape, so escaping the prop
+    // would have looked like the regression. The property worth pinning is
+    // that the title goes through escapeXml, not what the template reads.
+    expect(content).toMatch(/__html:.*escapeXml\(title\).*ICON_PATHS\[name\]/);
+    expect(content).not.toMatch(/`<title>\$\{title\}<\/title>`/);
+  });
+
+  it('a title containing markup is escaped, not injected', async () => {
+    // Every caller passes a literal today, so this is about the next one: a
+    // title wired through from content or a query param must not be able to
+    // close the <title> element and open a <script>.
+    const React = (await import('react')).default;
+    const { renderToStaticMarkup } = await import('react-dom/server');
+    const { Icon } = await import('../components/ui/Icon');
+    const html = renderToStaticMarkup(
+      React.createElement(Icon, { name: 'lock', title: '</title><script>alert(1)</script>' }),
+    );
+    expect(html).not.toContain('<script>');
+    expect(html).toContain('&lt;/title&gt;&lt;script&gt;');
+  });
+
+  it('escapes ampersands so the title stays well-formed XML', async () => {
+    const React = (await import('react')).default;
+    const { renderToStaticMarkup } = await import('react-dom/server');
+    const { Icon } = await import('../components/ui/Icon');
+    const html = renderToStaticMarkup(
+      React.createElement(Icon, { name: 'lock', title: 'Tom & Jerry' }),
+    );
+    expect(html).toContain('Tom &amp; Jerry');
   });
 });
 

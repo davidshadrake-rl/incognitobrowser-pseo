@@ -13,6 +13,10 @@
 # Cache busting: CSS/JS files are named after their contents, so changed ones
 # get new names; the pages and data are served "no-cache" (scripts/site.htaccess,
 # uploaded with each site). version.txt in each site says what's live.
+#
+# Before anything else it checks that the security headers live on the droplet
+# still match scripts/droplet-htaccess.conf, and refuses to deploy if they do
+# not — see the long note above htaccess_check below.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -26,6 +30,70 @@ SSH="ssh -i $DEPLOY_SSH_KEY -o IdentitiesOnly=yes"
 TARGET="$DEPLOY_USER@$DEPLOY_HOST"
 VERSION="$(git rev-parse --short HEAD)$(git diff --quiet HEAD || echo '+uncommitted') built $(date -u +%Y-%m-%dT%H:%MZ)"
 LOG="$(mktemp)"
+
+# == the managed .htaccess block ==
+#
+# Security headers, Options -Indexes, the HTTPS redirect and the Pro shell
+# redirects all live in scripts/droplet-htaccess.conf, which is spliced into
+# the SHARED $WEB_ROOT/.htaccess by scripts/droplet-server-config.sh. A deploy
+# does NOT write that file, on purpose: it is also the other site's .htaccess
+# on this droplet, and a routine content push must never rewrite another
+# application's rewrite rules while nobody is watching.
+#
+# The cost of that separation is drift, and drift is not theoretical here. The
+# live CSP went on allowing two origins from the old hosting platform for three
+# weeks after the repo stopped naming them, because editing the .conf changes
+# nothing until someone remembers to run the other script. Every deploy in
+# those three weeks reported success and shipped none of it.
+#
+# So the deploy refuses to pretend: it reads the block that is actually live,
+# compares it to the one in the repo, and stops if they differ. Verification
+# rather than an automatic edit, and rather than moving the headers into the
+# per-site scripts/site.htaccess — that would ship them with each deploy, but
+# it would also leave two files defining the same headers during and after the
+# move, and one CSP in two places is how this bug was born.
+#
+# Checked before the build so a drifted deploy costs seconds, not minutes.
+htaccess_check() {
+  if [ -n "${DEPLOY_SKIP_HTACCESS_CHECK:-}" ]; then
+    echo "!! DEPLOY_SKIP_HTACCESS_CHECK set: shipping without checking the live security headers." >&2
+    echo "!! Whatever is on the server stays on the server. Run scripts/droplet-server-config.sh." >&2
+    return 0
+  fi
+  echo "== check live .htaccess block"
+  local want live https_host
+  # Same substitution droplet-server-config.sh does, so an identical block
+  # compares equal (a raw-IP https URL has no certificate, hence the hostname).
+  https_host="${SITE_ORIGIN#https://}"
+  want="$(sed "s/__HTTPS_HOST__/${https_host}/g" scripts/droplet-htaccess.conf)"
+  # sed exits 0 whether or not the range matched, so a non-zero status here is
+  # ssh or the file being unreadable — never "the block is gone". Say which,
+  # because "MISSING" for what is really a dropped connection sends whoever is
+  # deploying off to re-run the server script for no reason.
+  if ! live="$($SSH "$TARGET" "sed -n '/^# BEGIN pseo-security-headers\$/,/^# END pseo-security-headers\$/p' $WEB_ROOT/.htaccess")"; then
+    echo "Could not read $WEB_ROOT/.htaccess on $TARGET over ssh — check the host and DEPLOY_SSH_KEY." >&2
+    exit 1
+  fi
+  if [ "$live" = "$want" ]; then
+    echo "   live block matches scripts/droplet-htaccess.conf"
+    return 0
+  fi
+  if [ -z "$live" ]; then
+    echo "The managed block is MISSING from $WEB_ROOT/.htaccess." >&2
+    echo "The sites are being served with no security headers at all." >&2
+  else
+    echo "The live $WEB_ROOT/.htaccess block does NOT match scripts/droplet-htaccess.conf." >&2
+    echo "Left = live on the droplet, right = this repo:" >&2
+    diff -u <(printf '%s\n' "$live") <(printf '%s\n' "$want") >&2 || true
+  fi
+  echo >&2
+  echo "Deploy stopped. Uploading pages now would ship the content and silently" >&2
+  echo "leave the headers as they are — the exact failure this check exists for." >&2
+  echo "Apply the block, then deploy:   ./scripts/droplet-server-config.sh" >&2
+  echo "To ship anyway (headers unchanged): DEPLOY_SKIP_HTACCESS_CHECK=1 ./scripts/deploy.sh" >&2
+  exit 1
+}
+htaccess_check
 
 echo "== tests"
 rm -rf out .next

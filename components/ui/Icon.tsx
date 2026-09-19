@@ -10,7 +10,28 @@ import type { Family } from '@/lib/visuals';
  * Path strings are static literals from this file only; dangerouslySetInnerHTML
  * never receives data. tests/design-guards.test.ts asserts every value matches
  * /^[<>a-zA-Z0-9 ="'./,-]+$/.
+ *
+ * The `title` prop is the exception: it is an ordinary string that any caller
+ * can pass, and it used to be interpolated into that same innerHTML raw. Every
+ * caller today passes a literal, so nothing was exploitable — but this is a
+ * loaded gun aimed at whoever first wires a title through from content or a
+ * query param, and that person would have no reason to look here. escapeXml
+ * below closes it; tests/xss-protection.test.ts pins the escaping.
  */
+
+/**
+ * Minimal XML escape for text that goes inside an SVG <title> element.
+ *
+ * & and < are what let a string break out of element content and start a new
+ * tag; > is escaped as well because an unescaped one in text content is
+ * ill-formed XML, and Satori parses this markup as XML, not as HTML.
+ */
+function escapeXml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 export const ICON_PATHS = {
   // engines
   'globe':   '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
@@ -63,7 +84,7 @@ export function Icon({ name, size = 24, className = '', title, ...rest }: { name
       fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round"
       aria-hidden={title ? undefined : true} role={title ? 'img' : undefined}
       className={`shrink-0 ${className}`}
-      dangerouslySetInnerHTML={{ __html: (title ? `<title>${title}</title>` : '') + ICON_PATHS[name] }}
+      dangerouslySetInnerHTML={{ __html: (title ? `<title>${escapeXml(title)}</title>` : '') + ICON_PATHS[name] }}
       {...rest}
     />
   );

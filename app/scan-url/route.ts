@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { lookup as dnsLookupCb } from 'node:dns';
 import { promisify } from 'node:util';
-import { rateLimit, getClientIP, getIpBucket, getRedisClient } from '@/lib/rate-limit';
+import { rateLimit, getClientIP, getIpBucket, getRedisClient, getRedisStatus } from '@/lib/rate-limit';
 import { parseAltchaAuthHeader, verifySolution } from '@/lib/altcha';
 import { corsHeadersFor, isOriginAllowed } from '@/lib/origin';
 import {
@@ -34,6 +34,13 @@ const dnsLookup = promisify(dnsLookupCb);
 // values to set during an active incident.
 const MAX_URL_LENGTH = TUNING_MAX_URL_LENGTH;
 const MAX_BODY_SIZE = TUNING_MAX_BODY_SIZE;
+
+// Cap on the REQUEST body we accept, as distinct from MAX_BODY_SIZE above,
+// which caps the scanned page we fetch. The only thing a caller sends is
+// { "url": "…" }, so the URL cap plus a kilobyte of slack for the JSON
+// wrapper, whitespace and multi-byte characters is already generous. It
+// tracks MAX_URL_LENGTH so the env knob keeps moving both together.
+const MAX_REQUEST_BODY = MAX_URL_LENGTH + 1024;
 const MAX_COOKIES = TUNING_MAX_COOKIES;
 const MAX_SCRIPT_MATCHES = TUNING_MAX_SCRIPT_MATCHES;
 const MAX_THIRD_PARTY_DOMAINS = TUNING_MAX_THIRD_PARTY_DOMAINS;
@@ -109,6 +116,27 @@ export async function POST(request: NextRequest) {
   // (SET NX on the signature for the token's remaining lifetime). Without
   // Redis the 90 s TTL + rate limit remain the only replay bound.
   const redis = getRedisClient();
+  if (solution && !redis && getRedisStatus() === 'backoff') {
+    // Redis is CONFIGURED but currently unreachable. Fail closed.
+    //
+    // This is the path the 2026-09-18 fix missed, and it is the likelier of
+    // the two by far. getRedisClient() does not throw when Redis is sick — it
+    // RETURNS NULL, for CLIENT_RETRY_DELAY_MS (10s) after any error. The guard
+    // was `if (redis && solution)`, so a null client skipped the whole
+    // single-use claim: no error, no 503, scan served. One induced Redis blip
+    // therefore bought a ten-second window in which a single solved
+    // proof-of-work could be replayed without limit, which is exactly the
+    // attacker-removable control the try/catch below was added to prevent.
+    // Found by the security suite's adversarial pass, three reviewers
+    // independently, after this was reported as closed.
+    //
+    // 'disabled' (REDIS_URL unset) deliberately still falls through: that is
+    // local dev and the documented degradation, not a production failure.
+    return NextResponse.json(
+      { error: 'Scanning is briefly unavailable. Please try again in a moment.', reason: 'replay-store-unavailable' },
+      { status: 503, headers: { ...allHeaders, 'Retry-After': '5' } },
+    );
+  }
   if (redis && solution) {
     let fresh: string | null;
     try {
@@ -131,7 +159,31 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { url } = await request.json();
+    // Bound the body BEFORE buffering it, the way /event does. Parsing first
+    // and measuring the parsed URL afterwards meant MAX_URL_LENGTH bounded
+    // what was accepted but not what was allocated: a 10 MB body was held in
+    // full and only then refused, so a flood cost us the memory regardless.
+    // The Apache cap does not cover this — it matches on the Content-Length
+    // header, and a chunked request carries no length to match. Content-Length
+    // can also lie, so the post-read check below is the one that binds; the
+    // header check just stops us paying for the obvious case.
+    const declared = Number(request.headers.get('content-length'));
+    if (Number.isFinite(declared) && declared > MAX_REQUEST_BODY) {
+      return NextResponse.json({ error: 'Request body is too large.' }, { status: 413, headers: allHeaders });
+    }
+    const raw = await request.text();
+    if (raw.length > MAX_REQUEST_BODY) {
+      return NextResponse.json({ error: 'Request body is too large.' }, { status: 413, headers: allHeaders });
+    }
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      // Was a 500 via the outer catch, which logged and reported an internal
+      // error for what is plainly a bad request.
+      return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400, headers: allHeaders });
+    }
+    const url = (parsed as { url?: unknown } | null)?.url;
 
     if (!url || typeof url !== 'string') {
       return NextResponse.json({ error: 'URL is required' }, { status: 400, headers: allHeaders });

@@ -62,16 +62,46 @@ let _clientFailedAt: number | null = null;
 let _lastClientError: string | null = null;
 const CLIENT_RETRY_DELAY_MS = 10_000; // After a failure, wait 10s before retrying Redis
 
-/** Diagnostic info surfaced via response headers. Remove once Redis is verified. */
+/**
+ * Why a caller got null from getRedisClient(), which is NOT one situation.
+ *
+ * 'disabled'  REDIS_URL is unset. Redis was never meant to be here — local dev,
+ *             or a deployment that knowingly runs without it. Callers may
+ *             degrade, and that degradation is documented.
+ * 'backoff'   REDIS_URL IS set, so Redis is expected, but the client is in its
+ *             CLIENT_RETRY_DELAY_MS window after an error. This is a FAILURE,
+ *             not a configuration, and a security control must not quietly
+ *             treat it as one.
+ * 'ready'     A client should be obtainable.
+ *
+ * This exists because collapsing the first two into a bare `null` is what made
+ * the proof-of-work single-use check fail OPEN. app/scan-url/route.ts guarded
+ * the claim with `if (redis && solution)`, so a null client skipped the check
+ * entirely — no error, no 503, scan served. getClient() returns null for ten
+ * seconds after ANY Redis error, so one induced blip bought a window in which
+ * a single solved token could be replayed without limit. The try/catch added
+ * on 2026-09-18 only ever covered the throw path, which is the rarer one.
+ */
+export type RedisStatus = 'disabled' | 'backoff' | 'ready';
+
+export function getRedisStatus(): RedisStatus {
+  if (!process.env.REDIS_URL) return 'disabled';
+  if (_clientFailedAt && Date.now() - _clientFailedAt < CLIENT_RETRY_DELAY_MS) return 'backoff';
+  return 'ready';
+}
+
+/** Diagnostic info: URL configured, last error seen, whether a client exists. */
 export function getRedisDiagnostic(): {
   redisUrlSet: boolean;
   lastError: string | null;
   hasClient: boolean;
+  status: RedisStatus;
 } {
   return {
     redisUrlSet: Boolean(process.env.REDIS_URL),
     lastError: _lastClientError,
     hasClient: _client !== null,
+    status: getRedisStatus(),
   };
 }
 

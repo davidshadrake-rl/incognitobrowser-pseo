@@ -374,6 +374,34 @@ describe.skipIf(!HAS_TARGET)('every published article from a sample list has the
   }
 });
 
+/**
+ * A calculator whose output is somebody else's decision about the visitor has
+ * to say so on the page. The GDPR one maps eight dropdowns to a euro fine band
+ * ("€1M - €10M", "Up to €20M or 4% of revenue") — a regulator's number — and
+ * shipped with nothing beside it saying where that number does and does not
+ * come from. components/CalculatorPage.tsx now prints the calculator's own
+ * `disclaimer` inside the result panel.
+ */
+describe.skipIf(!HAS_TARGET)('calculators that put a legal or money figure on a business', () => {
+  it('the GDPR fine range carries its disclaimer, with the figure rather than at the foot of the page', async () => {
+    const route = '/calculators/gdpr/gdpr-compliance-risk-calculator/';
+    const r = await fetchText(route);
+    expect(r.status, `${route} must exist — update this route if the page was renamed`).not.toBe(404);
+    expect(r.ok).toBe(true);
+    expect(r.body).toContain('Potential Fine Range');
+    expect(r.body).toContain('data-calculator-disclaimer');
+    expect(r.body).toMatch(/not legal advice/i);
+    // Order in the HTML: the fine band, the disclaimer, then the legend and
+    // the rest of the page. A caveat below the legend is read after the
+    // number has already landed, which is the thing being fixed.
+    const fine = r.body.indexOf('Potential Fine Range');
+    const note = r.body.indexOf('data-calculator-disclaimer');
+    const legend = r.body.indexOf('How to read the');
+    expect(note).toBeGreaterThan(fine);
+    expect(legend, 'the legend should follow the result panel').toBeGreaterThan(note);
+  });
+});
+
 describe.skipIf(!HAS_TARGET)('editorial standards page', () => {
   it('exists, is indexable, and names no person', async () => {
     const r = await fetchText('/editorial-standards/');
@@ -660,6 +688,49 @@ describe.skipIf(!HAS_TARGET)('funnel surfaces', () => {
     } else {
       expect(r.body).toMatch(/utm_medium%3Dcta[^"]*utm_content%3D(tracker-blocking|hides-ad-boxes|photo-cleaning)[^"]*utm_term%3Dreport-card/);
     }
+  });
+  it('every upgrade CTA in the build follows the one demo switch — no page keeps a link of its own', async () => {
+    // The point of DEMO_UPGRADE_URL being one exported constant is that one
+    // edit moves every upgrade ask and one edit moves them all back. A page
+    // that had built its own paywall link would still look right on its own
+    // and would survive the rollback, so this reads the switch and then holds
+    // every rendered ask to it, in whichever position it is in.
+    //
+    // Deliberately not `expect(DEMO_UPGRADE_URL).toBe(<one URL>)`: the sibling
+    // guard in tests/tiers.test.ts was written that way and made the rollback
+    // documented in UpgradeButtons.tsx ("that one line is the whole rollback")
+    // fail the suite, which blocks `npm run build` and scripts/deploy-api.sh.
+    const { DEMO_UPGRADE_URL } = await import('../components/UpgradeButtons');
+    let found = 0;
+    for (const route of ['/site/cnn.com/', '/site/google.com/', ROUTES.home, ROUTES.publishedGuide, ROUTES.publishedChecklist]) {
+      const r = await fetchText(route);
+      expect(r.ok, route).toBe(true);
+      // ONLY the surfaces components/UpgradeButtons.tsx renders — its `from`
+      // union at UpgradeButtons.tsx:52 is exactly these five values.
+      //
+      // Matching every data-upgrade-from anchor instead would sweep in the
+      // global header (app/layout.tsx:113,131) and the home hero
+      // (app/page.tsx:68), which carry the same attribute but build their href
+      // from lib/play.ts playUrl() directly and are deliberately OUTSIDE the
+      // demo switch. Asserting those equal DEMO_UPGRADE_URL fails on real
+      // exported HTML — and invisibly, because this block is
+      // describe.skipIf(!HAS_TARGET) and only runs after scripts/deploy.sh
+      // writes the build marker, i.e. mid-deploy, with `|| exit 1`.
+      const asks = r.body.match(/<a\b[^>]*\bdata-upgrade-from="(?:result|funnel|report-card|band|gate)"[^>]*>/g) || [];
+      found += asks.length;
+      for (const a of asks) {
+        const href = (/\bhref="([^"]*)"/.exec(a)?.[1] ?? '').replace(/&amp;/g, '&');
+        if (DEMO_UPGRADE_URL) {
+          expect(href, `${route}: upgrade CTA should follow the demo switch`).toBe(DEMO_UPGRADE_URL);
+        } else {
+          expect(href, `${route}: upgrade CTA should be an attributed Play link`)
+            .toMatch(/^https:\/\/play\.google\.com\/store\/apps\/details\?id=[^"]*referrer=utm_source%3D(resources|pro)%26utm_medium%3D/);
+        }
+      }
+    }
+    // Report cards carry the ask, so a build with none of them has lost the
+    // surface this test is about rather than passing it.
+    expect(found, 'no upgrade CTA found on any sampled page').toBeGreaterThan(0);
   });
   it('every Play link on sampled pages carries an attributed referrer and no template residue', async () => {
     for (const route of ['/', '/tools/', ROUTES.publishedGuide, '/site/google.com/']) {

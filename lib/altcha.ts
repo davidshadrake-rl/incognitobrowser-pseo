@@ -45,6 +45,33 @@ const ALGORITHM = 'SHA-256';
 const DEFAULT_MAX_NUMBER = 100_000;
 const DEFAULT_TTL_SECONDS = 90;
 
+/**
+ * Hard ceiling on the search space, matching verifySolution's own `number`
+ * check below. A challenge issued above this is one whose correct answer the
+ * verifier would reject.
+ */
+const MAX_SEARCH_SPACE = 10_000_000;
+
+/**
+ * Draws before the rejection-sampling loop gives up and takes the modulo.
+ *
+ * With a correctly computed bound the rejection probability per draw is under
+ * 1/2, so reaching 64 is around a 1-in-2^64 event and the fallback's modulo
+ * bias never shows up in practice. It exists so that no arithmetic mistake or
+ * unexpected `maxnumber` can turn this into a loop that never exits: this runs
+ * on the single thread that serves the whole API, so a spin here is not a slow
+ * endpoint, it is a dead server. That is exactly what POW_MAX_NUMBER=0 did —
+ * `Math.floor(0x100000000 / 0) * 0` is NaN, and `r < NaN` is never true.
+ */
+const MAX_SAMPLING_DRAWS = 64;
+
+/**
+ * Ceiling on a challenge's lifetime, matching verifySolution's
+ * `expires > now + 600` guard. Past it we would sign a token the verifier
+ * treats as "expires too far in the future" and refuse.
+ */
+const MAX_TTL_SECONDS = 600;
+
 export interface Challenge {
   algorithm: 'SHA-256';
   salt: string;
@@ -95,20 +122,35 @@ export function createChallenge(
   const secret = getSecret();
   const saltBytes = randomBytes(12);
   const salt = saltBytes.toString('hex');
-  // Pick a random secret number in [0, maxnumber). The client has to find it.
-  // Using rejection sampling to avoid modulo bias.
-  let secretNumber: number;
+  // Clamp before any arithmetic depends on it. lib/tuning.ts already refuses a
+  // POW_MAX_NUMBER outside [1, 10_000_000], but this function is exported and
+  // takes the number from its caller, so it does not get to assume that.
+  const span =
+    Number.isSafeInteger(maxnumber) && maxnumber >= 1
+      ? Math.min(maxnumber, MAX_SEARCH_SPACE)
+      : DEFAULT_MAX_NUMBER;
+  // Pick a random secret number in [0, span). The client has to find it.
+  // Using rejection sampling to avoid modulo bias, bounded so it always exits.
+  let secretNumber = 0;
   {
-    const bound = Math.floor(0x100000000 / maxnumber) * maxnumber;
-    while (true) {
+    const bound = Math.floor(0x100000000 / span) * span;
+    for (let draw = 0; draw < MAX_SAMPLING_DRAWS; draw++) {
       const r = randomBytes(4).readUInt32BE(0);
-      if (r < bound) { secretNumber = r % maxnumber; break; }
+      secretNumber = r % span;
+      if (r < bound) break;
     }
   }
   const challenge = sha256Hex(salt + secretNumber);
-  const expires = Math.floor(Date.now() / 1000) + ttlSeconds;
+  const ttl =
+    Number.isSafeInteger(ttlSeconds) && ttlSeconds >= 1
+      ? Math.min(ttlSeconds, MAX_TTL_SECONDS)
+      : DEFAULT_TTL_SECONDS;
+  const expires = Math.floor(Date.now() / 1000) + ttl;
   const signature = hmacHex(secret, `${challenge}|${expires}|${salt}`);
-  return { algorithm: ALGORITHM, salt, challenge, maxnumber, signature, expires };
+  // `span`, not the caller's `maxnumber`: the client brute-forces the range we
+  // advertise, so advertising a range the secret number was not drawn from
+  // hands out a challenge nobody can solve.
+  return { algorithm: ALGORITHM, salt, challenge, maxnumber: span, signature, expires };
 }
 
 export interface VerifyResult {
@@ -126,7 +168,7 @@ export function verifySolution(solution: unknown): VerifyResult {
   const s = solution as Record<string, unknown>;
   if (s.algorithm !== ALGORITHM) return { valid: false, reason: 'bad_algorithm' };
   if (typeof s.salt !== 'string' || s.salt.length > 64) return { valid: false, reason: 'bad_salt' };
-  if (typeof s.number !== 'number' || s.number < 0 || s.number > 10_000_000)
+  if (typeof s.number !== 'number' || s.number < 0 || s.number > MAX_SEARCH_SPACE)
     return { valid: false, reason: 'bad_number' };
   if (typeof s.signature !== 'string' || s.signature.length !== 64)
     return { valid: false, reason: 'bad_signature' };
@@ -134,8 +176,11 @@ export function verifySolution(solution: unknown): VerifyResult {
 
   const now = Math.floor(Date.now() / 1000);
   if (s.expires < now) return { valid: false, reason: 'expired' };
-  // Allow up to 5 min clock skew on the future side
-  if (s.expires > now + 600) return { valid: false, reason: 'expires_too_far' };
+  // Allow up to 10 minutes on the future side — the longest TTL createChallenge
+  // will sign (MAX_TTL_SECONDS) plus whatever clock skew is left over. The
+  // comment here used to say 5 minutes while the code said 600 seconds; the
+  // code is the contract createChallenge clamps against, so the prose moved.
+  if (s.expires > now + MAX_TTL_SECONDS) return { valid: false, reason: 'expires_too_far' };
 
   // Reconstruct the challenge the client claims to have solved
   const candidateChallenge = sha256Hex(s.salt + s.number);

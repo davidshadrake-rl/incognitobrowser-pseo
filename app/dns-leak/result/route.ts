@@ -24,6 +24,11 @@ const RESULT_RATE_LIMIT_CONFIG = { limit: 100, windowMs: 60_000 };
 
 const NO_STORE = { 'Cache-Control': 'no-store, private', Vary: 'Origin' };
 
+// The whole body is { "id": "<12 chars>" }. 512 bytes is already far more
+// than that needs; the number exists to stop a flood being buffered, not to
+// discriminate between plausible bodies.
+const MAX_BODY = 512;
+
 export interface DnsLeakResultResponse {
   id: string;
   publicIp: string | null;
@@ -61,9 +66,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Too many requests.' }, { status: 429, headers });
   }
 
+  // Bound the body BEFORE buffering it, the same way /event does. This route
+  // read the whole request into memory to pull out a 12-character id, with no
+  // size check anywhere — so a 10 MB body was held in full and only then found
+  // to be nonsense. The Apache cap does not save us: it matches on the
+  // Content-Length header, and a chunked request carries no length to match.
+  // Content-Length can lie too, so the post-read check is the one that binds.
+  const declared = Number(request.headers.get('content-length'));
+  if (Number.isFinite(declared) && declared > MAX_BODY) {
+    return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
+  }
+  const text = await request.text();
+  if (text.length > MAX_BODY) {
+    return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
+  }
   let id: unknown;
   try {
-    const body = (await request.json()) as { id?: unknown } | null;
+    const body = JSON.parse(text) as { id?: unknown } | null;
     id = body?.id;
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400, headers });

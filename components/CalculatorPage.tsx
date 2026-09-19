@@ -51,6 +51,16 @@ interface CalculatorData {
   inputs: CalcInput[];
   outputFields: OutputField[];
   formula: string;
+  /**
+   * One plain sentence or two printed with the result, for a calculator whose
+   * output reads like somebody else's decision about the visitor. The GDPR
+   * one prints a euro fine band ("€1M - €10M", "Up to €20M or 4% of revenue"),
+   * which is a regulator's number, arrived at here from eight dropdowns and
+   * shown with nothing saying so. Any calculator that puts a legal or money
+   * figure on a business can set this; it is the calculator's own words, not
+   * a stock line, because what the number leaves out differs each time.
+   */
+  disclaimer?: string;
   educational: {
     methodology?: string;
     tips?: string[];
@@ -410,6 +420,15 @@ export function CalculatorPage({ data, nicheName, proofRoute, funnel }: { data: 
                       : "It can't work out a result at the moment. The tips and methodology below still apply."}
                   </p>
                 </div>
+              )}
+              {/* With the figures, not under the methodology. The reason for
+                  the line is that the number reads like a verdict, and a
+                  caveat further down the page is read after the number has
+                  landed. Only when there is a result to caveat. */}
+              {results && data.disclaimer && (
+                <p className="text-meta text-t3 mt-4 pt-3 border-t border-b1" data-calculator-disclaimer>
+                  {data.disclaimer}
+                </p>
               )}
             </div>
           </div>

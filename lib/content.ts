@@ -7,6 +7,30 @@ import glossaryNicheMap from '@/data/glossary-niche-map.json';
 const DATA_DIR = path.join(process.cwd(), 'data');
 
 /**
+ * What a path segment may look like before it is joined onto DATA_DIR.
+ *
+ * Every content lookup in this file builds a filesystem path out of segments
+ * its caller supplies, and path.join normalises '..' as it goes — so a segment
+ * of '../../..' walks straight out of DATA_DIR, with the '.json' suffix the
+ * only thing left standing between the caller and an arbitrary file read.
+ * Today every caller is build-time and passes route params that came from a
+ * fixed generateStaticParams, so nothing untrusted reaches here. This is
+ * defence in depth for the refactor that changes that — an on-demand route, a
+ * search box, an API handler — because that refactor will not think to look in
+ * here.
+ *
+ * All 1,062 slugs under data/ that these functions read are lowercase words
+ * joined by hyphens; the class below is deliberately a little wider than that
+ * so an underscore or a capital in a future filename is not a mystery bug, and
+ * still admits no separator, no dot and no traversal.
+ */
+const SAFE_SEGMENT = /^[A-Za-z0-9_-]+$/;
+
+function safeSegments(segments: string[]): boolean {
+  return segments.length > 0 && segments.every((s) => SAFE_SEGMENT.test(s));
+}
+
+/**
  * Editorial gate. A page is only indexable when:
  *   editorial.status === 'published' AND author has a real name.
  *
@@ -60,6 +84,10 @@ export function isPublished(item: EditableContent | null | undefined): boolean {
 }
 
 export function getContentFiles(contentType: string, niche?: string): string[] {
+  // Same guard as getContentItem: this also joins caller segments onto
+  // DATA_DIR, and readdirSync on an escaped path would list a directory
+  // outside the content tree.
+  if (!safeSegments(niche === undefined ? [contentType] : [contentType, niche])) return [];
   const dir = niche
     ? path.join(DATA_DIR, contentType, niche)
     : path.join(DATA_DIR, contentType);
@@ -89,6 +117,10 @@ export function getContentFiles(contentType: string, niche?: string): string[] {
 }
 
 export function getContentItem<T>(contentType: string, ...pathParts: string[]): T | null {
+  // A segment that is not a plain slug cannot name a file we ship, so treating
+  // it the same as a missing file keeps the contract ("null when absent")
+  // rather than adding a throw that every call site would have to learn about.
+  if (!safeSegments([contentType, ...pathParts])) return null;
   const filePath = path.join(DATA_DIR, contentType, ...pathParts) + '.json';
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, 'utf-8');
@@ -226,6 +258,10 @@ export function getGlossaryFiles(): string[] {
 }
 
 export function getGlossaryItem<T>(slug: string): T | null {
+  // Same shape as getContentItem, same guard: `slug` is a route param, and
+  // path.join would happily resolve '../tools/…' or '../../package' out of the
+  // glossary directory.
+  if (!safeSegments([slug])) return null;
   const filePath = path.join(DATA_DIR, 'glossary', `${slug}.json`);
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, 'utf-8');
