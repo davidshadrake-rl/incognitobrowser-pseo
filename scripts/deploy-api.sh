@@ -114,7 +114,13 @@ fi
 # to own them. Found live on 2026-09-19 by the security suite
 # (cnast webroot-ownership-shared-fate); it re-checks this every night.
 # .next/cache is the one exception: the service may write cache entries there.
-$SSH "$TARGET" "chown -R root:www-data $REMOTE && find $REMOTE -type d -exec chmod 750 {} + && find $REMOTE -type f -exec chmod 640 {} + && mkdir -p $REMOTE/.next/cache && chown -R www-data:www-data $REMOTE/.next/cache && systemctl restart ib-api"
+# root:ib-api, NOT root:www-data. The API runs as its own user because
+# www-data is the WordPress uid on this box, and /etc/ib-api.env holds
+# ALTCHA_HMAC_KEY — the secret that signs every proof-of-work challenge.
+# Anything www-data can read, a WordPress compromise can read, and that key
+# turns the abuse-resistance layer off. Changed 2026-09-21; a deploy that
+# chowns this back to www-data silently restores the chain.
+$SSH "$TARGET" "chown -R root:ib-api $REMOTE && find $REMOTE -type d -exec chmod 750 {} + && find $REMOTE -type f -exec chmod 640 {} + && mkdir -p $REMOTE/.next/cache && chown -R ib-api:ib-api $REMOTE/.next/cache && systemctl restart ib-api"
 sleep 5
 $SSH "$TARGET" "systemctl is-active ib-api" | sed 's/^/   ib-api: /'
 

@@ -104,7 +104,29 @@ npm ci --omit=dev
 npm run build          # server mode: do NOT set BUILD_TARGET=static
 ```
 
-`/etc/ib-api.env`, readable only by root and www-data:
+**The service runs as its own `ib-api` uid, NOT as www-data.** Create it first:
+
+```bash
+sudo useradd --system --no-create-home --shell /usr/sbin/nologin ib-api
+sudo chown -R root:ib-api /opt/ib-api
+sudo find /opt/ib-api -type d -exec chmod 750 {} + && sudo find /opt/ib-api -type f -exec chmod 640 {} +
+sudo mkdir -p /opt/ib-api/.next/cache && sudo chown -R ib-api:ib-api /opt/ib-api/.next/cache
+```
+
+This is the single most load-bearing permission on the box, and it is not
+obvious. www-data is the uid Apache runs the co-hosted WordPress PHP as. While
+the service shared that uid, `/etc/ib-api.env` was readable by www-data — and
+that file holds `ALTCHA_HMAC_KEY`, the HMAC secret that signs every
+proof-of-work challenge. Anyone who reads it can mint unlimited valid tokens,
+which switches the whole abuse-resistance layer off, plus `STATS_TOKEN`.
+
+So the chain was: any file-read or code-execution bug in WordPress → www-data →
+both secrets → unlimited scanning. The tools code was never the weak link in
+it; the shared uid was. Split on 2026-09-21 while preparing for an authorised
+penetration test. `scripts/deploy-api.sh` chowns to `root:ib-api` and will not
+put it back.
+
+`/etc/ib-api.env`, readable only by root and the ib-api group:
 
 ```ini
 PORT=3100
@@ -129,7 +151,8 @@ After=network.target redis-server.service
 
 [Service]
 Type=simple
-User=www-data
+User=ib-api
+Group=ib-api
 WorkingDirectory=/opt/ib-api
 EnvironmentFile=/etc/ib-api.env
 ExecStart=/usr/bin/node node_modules/.bin/next start -p 3100 -H 127.0.0.1

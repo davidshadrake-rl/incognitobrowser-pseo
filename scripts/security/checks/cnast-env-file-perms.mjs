@@ -92,13 +92,46 @@ export default check({
 
     checked++;
     if (groupBits !== 0 && group !== want.preferredGroup) {
-      findings.push(finding({
-        severity: 'medium',
-        title: `${want.path} is readable by the ${group} group — the same uid as the team's WordPress`,
-        detail: 'This is the current, intended arrangement and not a regression: the systemd unit runs as www-data and has to read the file. It is graded as a standing warning because the cost is real — any file-read bug in the co-hosted WordPress yields both secrets — and because a warning is what keeps the fix on the table. systemd LoadCredential= (or a dedicated ib-api uid) removes www-data from the picture without changing how the service starts.',
-        evidence: `stat -c '%n %U %G %a' ${want.path} → ${owner} ${group} ${mode}`,
-        remediation: 'Move the two secrets to systemd credentials: LoadCredential=ib-api-env:/etc/ib-api.env with the file 0600 root:root, or give ib-api its own uid and chown the file to it.',
-      }));
+      // WHICH group matters, and this used to assume the answer.
+      //
+      // It reported "readable by the <group> group — the same uid as the
+      // team's WordPress" for ANY group that was not root. After the service
+      // was given its own uid on 2026-09-21 that sentence became false: the
+      // group was ib-api, which is not the WordPress uid and is the whole
+      // point of the change. A check that keeps printing the old risk after it
+      // has been fixed teaches people that its findings are decorative.
+      //
+      // So compare against the uid Apache actually runs WordPress PHP as,
+      // rather than against "not root".
+      const unit = section(ctx, sections, 'UNIT');
+      const svcUser = (/^User=(.*)$/m.exec(unit || '') || [, ''])[1].trim();
+      const WORDPRESS_UID = 'www-data';
+
+      if (group === WORDPRESS_UID) {
+        findings.push(finding({
+          severity: 'medium',
+          title: `${want.path} is readable by ${WORDPRESS_UID} — the uid the co-hosted WordPress runs as`,
+          detail: 'ALTCHA_HMAC_KEY signs every proof-of-work challenge, so whoever holds it can mint unlimited valid tokens and the abuse-resistance layer stops meaning anything. Any file-read bug in the co-hosted WordPress yields it, plus STATS_TOKEN. The fix is to stop sharing the uid.',
+          evidence: `stat -c '%n %U %G %a' ${want.path} → ${owner} ${group} ${mode}; ib-api runs as ${svcUser || '(unread)'}`,
+          remediation: 'Give the service its own uid and chown the file to it (systemd drop-in User=/Group=), or move both secrets to systemd credentials: LoadCredential=ib-api-env:/etc/ib-api.env with the file 0600 root:root.',
+        }));
+      } else if (svcUser && group === svcUser) {
+        findings.push(finding({
+          severity: 'info',
+          title: `${want.path} is readable by ${group}, the service's own group — the intended arrangement`,
+          detail: `The service runs as ${svcUser}, which is not the WordPress uid, so a file-read bug in the co-hosted WordPress no longer yields ALTCHA_HMAC_KEY or STATS_TOKEN. This is reported rather than silent because the secrets are still on disk in a readable file: systemd credentials would remove even this, and the note is what keeps that on the table.`,
+          evidence: `stat -c '%n %U %G %a' ${want.path} → ${owner} ${group} ${mode}; ib-api runs as ${svcUser}`,
+          remediation: 'Optional hardening: LoadCredential=ib-api-env:/etc/ib-api.env with the file 0600 root:root.',
+        }));
+      } else {
+        findings.push(finding({
+          severity: 'medium',
+          title: `${want.path} is group-readable by ${group}, which is neither root nor the service's own user`,
+          detail: `The service runs as ${svcUser || '(could not read User= from the unit)'}, so this group does not need to read the file. Every extra reader of ALTCHA_HMAC_KEY is another way to mint unlimited proof-of-work tokens.`,
+          evidence: `stat -c '%n %U %G %a' ${want.path} → ${owner} ${group} ${mode}; ib-api runs as ${svcUser || '(unread)'}`,
+          remediation: `chown root:${svcUser || 'root'} ${want.path} && chmod 640 ${want.path}`,
+        }));
+      }
     }
 
     return { findings, checked };
