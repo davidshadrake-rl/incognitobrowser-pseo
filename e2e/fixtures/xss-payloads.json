@@ -1,0 +1,129 @@
+{
+  "$comment": [
+    "Hostile strings for e2e/pro-xss.spec.ts. One place to review every payload the",
+    "browser tests push through the cookie scanner's rendering path.",
+    "",
+    "WHY THIS FILE EXISTS. tests/xss-protection.test.ts and",
+    "scripts/security/checks/sast-dynamic-code-sinks.mjs read the SOURCE and assert",
+    "that no component hands scan data to dangerouslySetInnerHTML. That is a real",
+    "guard, but it cannot say what a RUNNING page does with a hostile value: React",
+    "escaping, a stray title=, an href, a third-party widget, or a future refactor",
+    "are all outside a grep's reach. pro-xss.spec.ts renders these payloads in a",
+    "real Chromium and checks the DOM that came out.",
+    "",
+    "THE MARKER. Every payload tries to reach `window.__xss`. Two shapes are used:",
+    "  - `window.__xss=1`, wherever an `=` is legal in the sink;",
+    "  - `__xssFlag()`, a function the spec installs with addInitScript, for sinks",
+    "    where an `=` would be eaten before it ever reaches the renderer (a cookie",
+    "    NAME: document.cookie and lib parseCookieList both split a name on `=`).",
+    "Either one setting window.__xss is a failure.",
+    "",
+    "EXPECTED TEXT. `expect` lists the substrings that MUST still be readable in the",
+    "result panel after rendering. The full literal, angle brackets and all, is the",
+    "discriminator: if a payload were injected as markup instead of escaped, the",
+    "element's textContent would hold the tag's inner text and NOT `<script>`/`<img`.",
+    "Silently dropping the value is a failure too — this tool is an audit, and an",
+    "auditor who cannot see the hostile cookie name cannot report it.",
+    "",
+    "WHERE `expect` IS SPLIT. The Paste box's parser (components/tools/",
+    "CookieAnalyzerTool.tsx parseCookieList) splits input on `[;\\n]` and then on the",
+    "first `=`, so one pasted payload legitimately lands in several elements. Those",
+    "entries list the pieces, not the whole string."
+  ],
+
+  "marker": "window.__xss",
+  "flagFunction": "__xssFlag",
+
+  "scan": {
+    "$comment": "Fields of the /api/scan-url response body. The spec fulfils the request with page.route() — no real scan, no load on the droplet. Sink line numbers are components/tools/CookieAnalyzerTool.tsx as of 2026-09-21.",
+
+    "url": {
+      "sink": "line 642 — <p ...>{urlResult.url}</p>, and urlScanReport() feeds new URL(url).hostname into the result-card headline",
+      "value": "https://xss.example/search?q=\"><script>window.__xss=1</script>&ok=1",
+      "expect": ["https://xss.example/search?q=\"><script>window.__xss=1</script>&ok=1"]
+    },
+    "cookieName": {
+      "sink": "line 740 — <code ...>{c.cookieName}</code>",
+      "value": "\"><img src=x onerror=window.__xss=1>",
+      "expect": ["\"><img src=x onerror=window.__xss=1>"]
+    },
+    "cookieDomain": {
+      "sink": "line 768 — <span ...>{c.domain}</span>; also fed to isThirdParty()",
+      "value": "<b onmouseover=window.__xss=1>.ads.xss.example</b>",
+      "expect": ["<b onmouseover=window.__xss=1>.ads.xss.example</b>"]
+    },
+    "cookieDescription": {
+      "sink": "line 750 — <p ...>{c.description}</p>",
+      "value": "<script>window.__xss=1</script> Cross-site advertising identifier.",
+      "expect": ["<script>window.__xss=1</script> Cross-site advertising identifier."]
+    },
+    "cookieSameSite": {
+      "sink": "line 764 — SameSite: {c.sameSite} (the value is also .toLowerCase()'d to pick a colour)",
+      "value": "<svg onload=window.__xss=1>None",
+      "expect": ["<svg onload=window.__xss=1>None"]
+    },
+    "trackerName": {
+      "sink": "line 700 — <div ...>{t.name}</div>",
+      "value": "<script>window.__xss=1</script>",
+      "expect": ["<script>window.__xss=1</script>"]
+    },
+    "trackerCategory": {
+      "sink": "line 696 — <span className={getCategoryColor(t.category)}>{t.category}</span>",
+      "value": "<i onmouseover=window.__xss=1>tracking</i>",
+      "expect": ["<i onmouseover=window.__xss=1>tracking</i>"]
+    },
+    "trackerDescription": {
+      "sink": "line 701 — <p ...>{t.description}</p>",
+      "value": "<img src=x onerror=window.__xss=1>",
+      "expect": ["<img src=x onerror=window.__xss=1>"]
+    },
+    "inlineTracker": {
+      "sink": "line 709 — <span ...>{t}</span> over urlResult.inlineTrackers",
+      "value": "<script>window.__xss=1</script>",
+      "expect": ["<script>window.__xss=1</script>"]
+    },
+    "thirdPartyDomain": {
+      "sink": "line 792 — <span ...>{domain}</span> over urlResult.thirdPartyDomains",
+      "value": "<svg/onload=window.__xss=1>cdn.xss.example",
+      "expect": ["<svg/onload=window.__xss=1>cdn.xss.example"]
+    }
+  },
+
+  "paste": {
+    "$comment": "Typed straight into the Paste textarea. No network at all — parseCookieList runs in the page. Split expectations are the parser's doing, not a sanitiser's.",
+
+    "quoteBreakout": {
+      "sink": "lines 843/853/856 — {c.name}, {c.description}, {c.value}",
+      "value": "\";<script>window.__xss=1</script>",
+      "note": "parseCookieList splits on ';' then on the first '=': piece 1 is the cookie named '\"', piece 2 becomes name '<script>window.__xss' with value '1</script>'.",
+      "expect": ["<script>window.__xss", "1</script>"]
+    },
+    "multiline": {
+      "sink": "lines 843/856 — {c.name} and {c.value}, one row per line",
+      "value": "_ga=GA1.2.3.4\n\"><img src=x onerror=window.__xss=1>\n</textarea><script>__xssFlag()</script>\nevil_value=<script>window.__xss=1</script>",
+      "note": "Line 2 splits into name '\"><img src' + value 'x onerror=window.__xss=1>'. Line 3 carries no '=' so the whole tag stays the cookie name. Line 4 keeps the whole tag as the value.",
+      "expect": [
+        "\"><img src",
+        "x onerror=window.__xss=1>",
+        "</textarea><script>__xssFlag()</script>",
+        "<script>window.__xss=1</script>"
+      ]
+    }
+  },
+
+  "thisPage": {
+    "$comment": "Written with document.cookie before clicking Scan Cookies, so the payload arrives the way a hostile first-party cookie really would. Chromium's cookie parser was checked empirically: it keeps < > \" / and spaces, and treats the FIRST '=' as the name/value separator — hence the name payload carries no '='.",
+
+    "cookieName": {
+      "sink": "line 843 — <code ...>{c.name}</code>",
+      "value": "\"><script>__xssFlag()</script>",
+      "expect": ["\"><script>__xssFlag()</script>"]
+    },
+    "cookieValue": {
+      "sink": "line 856 — the value row",
+      "name": "ib_xss_probe",
+      "value": "\"><img src=x onerror=window.__xss=1>",
+      "expect": ["\"><img src=x onerror=window.__xss=1>"]
+    }
+  }
+}

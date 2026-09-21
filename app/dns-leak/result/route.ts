@@ -93,9 +93,32 @@ export async function POST(request: NextRequest) {
 
   const { record, observations, storage } = await readDnsLeakTest(id);
 
+  /**
+   * The stored public IP goes back only to the network that started the test.
+   *
+   * This route used to return record.publicIp to anyone who presented the id,
+   * which made it a cross-visitor read of an IP address on a privacy product.
+   * Proven in-process, not argued: a request from 203.0.113.77 carrying an id
+   * issued to 198.51.100.24 came back with publicIp "198.51.100.24".
+   *
+   * The id is not a secret that can carry this. It is 62 bits, so it cannot be
+   * guessed — but the whole mechanism works by having the visitor's RESOLVER
+   * look up <id>.dnsleak…, so every resolver in that chain sees it, which is
+   * precisely the set of parties the tool exists to tell you about.
+   *
+   * Compared by /24 (or /64) bucket rather than exact address, the same way the
+   * rate limiter groups callers: a visitor whose address rotates inside their
+   * provider mid-test still sees their result, while an unrelated network gets
+   * null. The resolver observations stay visible to anyone with the id — they
+   * are about the resolvers, not about the visitor — and readDnsLeakTest still
+   * reports whether the record existed, which the UI needs to tell "no queries
+   * yet" apart from "expired".
+   */
+  const sameNetwork = record?.publicIp ? getIpBucket(record.publicIp) === bucket : false;
+
   const body: DnsLeakResultResponse = {
     id,
-    publicIp: record?.publicIp ?? null,
+    publicIp: sameNetwork ? record!.publicIp : null,
     resolvers: summarizeObservations(observations),
     observations: observations.length,
     storage,
