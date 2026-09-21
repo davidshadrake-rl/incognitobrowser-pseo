@@ -29,6 +29,9 @@
     "security:all": "node scripts/security/run.mjs --all --json reports/security/latest-all.json",
     "security:strict": "node scripts/security/run.mjs --all --strict --fail-on=medium --json reports/security/latest-strict.json",
     "security:schedule": "./scripts/security/install-schedule.sh",
+    "test:all": "./scripts/test-all.sh",
+    "test:all:offline": "./scripts/test-all.sh --offline",
+    "test:all:e2e": "./scripts/test-all.sh --e2e",
     "audit:links": "node scripts/audit-links.mjs",
     "deploy": "bash scripts/deploy.sh",
     "deploy:api": "./scripts/deploy-api.sh"

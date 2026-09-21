@@ -246,6 +246,124 @@ export function cookieListReport(cookies: CookieInfo[], mode: 'browser' | 'paste
   };
 }
 
+// Extract the registrable domain from a URL (rough — no PSL lookup in-browser).
+function getBaseDomain(hostname: string) {
+  const parts = hostname.toLowerCase().split('.');
+  return parts.length > 2 ? parts.slice(-2).join('.') : hostname.toLowerCase();
+}
+
+// True when a cookie's Domain attribute doesn't belong to the scanned site.
+function isThirdParty(cookieDomain: string | undefined, siteUrl: string) {
+  if (!cookieDomain) return false;
+  try {
+    const siteHost = new URL(siteUrl).hostname;
+    const siteBase = getBaseDomain(siteHost);
+    const cookieBase = getBaseDomain(cookieDomain.replace(/^\./, ''));
+    return cookieBase !== siteBase;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * One CSV cell.
+ *
+ * Two separate jobs, and the second one was missing until 2026-09-21:
+ *
+ *  1. CSV quoting. Everything is quoted and inner quotes are doubled, so a
+ *     comma, a quote or a stray delimiter cannot shift the columns.
+ *  2. Formula neutralisation. Excel, Sheets and LibreOffice evaluate a cell
+ *     that starts `=`, `+`, `-`, `@`, a tab or a carriage return the moment the
+ *     file is opened — `=cmd|'/c calc'!A0` is the classic DDE payload. The
+ *     names in this file come from the SCANNED SITE: it chooses its own cookie
+ *     names, so it chooses the contents of these cells. The person opening the
+ *     export is an auditor pointing this tool at a site they already distrust,
+ *     which is exactly the wrong pair of facts to leave together. A leading
+ *     apostrophe makes the spreadsheet treat the cell as text; the apostrophe
+ *     is not part of the value and is not displayed.
+ *
+ * CR and LF inside a value are flattened to a space as well. A quoted newline
+ * is legal RFC 4180, but it makes one logical row span several physical lines,
+ * and half the tools that eat these files split on \n.
+ */
+const CSV_FORMULA_START = /^[\t\r\n]|^\s*[=+\-@]/;
+
+export function csvCell(value: string | null | undefined): string {
+  const raw = value == null ? '' : String(value);
+  const flat = raw.replace(/\r\n|[\r\n]/g, ' ');
+  const body = CSV_FORMULA_START.test(raw) ? `'${flat}` : flat;
+  return `"${body.replace(/"/g, '""')}"`;
+}
+
+/** The columns, in order. NOTE: no cookie value column — see buildCookieCsv. */
+export const COOKIE_CSV_COLUMNS = [
+  'Type', 'Name', 'Category', 'Risk', 'Third-Party', 'Secure', 'HttpOnly', 'SameSite', 'Domain', 'Description',
+] as const;
+
+/**
+ * The exported CSV, as text.
+ *
+ * It writes c.cookieName and never c.value or c.raw. A cookie's value is
+ * whatever the scanned site set — a session token, an identifier, a signed
+ * blob — and it is of no use in a privacy audit, so it does not leave this
+ * browser in a file someone will mail around.
+ */
+export function buildCookieCsv(result: Pick<URLScanResult, 'url' | 'cookies' | 'trackers' | 'thirdPartyDomains'>): string {
+  const rows: string[] = [COOKIE_CSV_COLUMNS.map(csvCell).join(',')];
+  for (const c of result.cookies) {
+    rows.push([
+      'cookie',
+      c.cookieName,
+      c.category,
+      c.risk,
+      isThirdParty(c.domain, result.url) ? 'yes' : 'no',
+      c.secure ? 'yes' : 'no',
+      c.httpOnly ? 'yes' : 'no',
+      c.sameSite,
+      c.domain || '',
+      c.description,
+    ].map(csvCell).join(','));
+  }
+  for (const t of result.trackers) {
+    rows.push([
+      'tracker',
+      t.name,
+      t.category,
+      t.risk,
+      'yes',
+      '', '', '', '',
+      t.description,
+    ].map(csvCell).join(','));
+  }
+  for (const d of result.thirdPartyDomains) {
+    rows.push(['third-party-script', d, '', '', 'yes', '', '', '', d, ''].map(csvCell).join(','));
+  }
+  return rows.join('\n');
+}
+
+/**
+ * The download's filename.
+ *
+ * new URL().hostname is not safe to drop into a filename as it comes: an IPv6
+ * host arrives bracketed (`[2001:db8::1]`), a non-special scheme can leave the
+ * case and odd characters alone, and result.url is a string the visitor typed.
+ * Unicode hosts are already punycoded by the URL parser, so they are ASCII by
+ * the time we see them, but everything else gets folded to [a-z0-9.-] anyway.
+ */
+export function cookieCsvFilename(url: string): string {
+  let host = '';
+  try { host = new URL(url).hostname; } catch { host = ''; }
+  const safe = host
+    .toLowerCase()
+    .replace(/^\[|\]$/g, '')
+    .replace(/[^a-z0-9.-]+/g, '-')
+    .replace(/-{2,}/g, '-')
+    .replace(/^[-.]+|[-.]+$/g, '')
+    .slice(0, 80)
+    .replace(/[-.]+$/g, '');
+  return `${safe || 'scan'}-cookie-scan.csv`;
+}
+
 function getCategoryColor(cat: string) {
   switch (cat) {
     case 'tracking': return 'text-danger bg-danger-dim';
@@ -362,65 +480,12 @@ export function CookieAnalyzerTool() {
   const analytics = cookies.filter(c => c.category === 'analytics');
   const functional = cookies.filter(c => c.category === 'functional');
 
-  // Extract the registrable domain from a URL (rough — no PSL lookup in-browser).
-  const getBaseDomain = (hostname: string) => {
-    const parts = hostname.toLowerCase().split('.');
-    return parts.length > 2 ? parts.slice(-2).join('.') : hostname.toLowerCase();
-  };
-
-  // True when a cookie's Domain attribute doesn't belong to the scanned site.
-  const isThirdParty = (cookieDomain: string | undefined, siteUrl: string) => {
-    if (!cookieDomain) return false;
-    try {
-      const siteHost = new URL(siteUrl).hostname;
-      const siteBase = getBaseDomain(siteHost);
-      const cookieBase = getBaseDomain(cookieDomain.replace(/^\./, ''));
-      return cookieBase !== siteBase;
-    } catch {
-      return false;
-    }
-  };
-
   const downloadCsv = (result: URLScanResult) => {
-    const escape = (s: string) => `"${s.replace(/"/g, '""')}"`;
-    const rows: string[] = [
-      ['Type', 'Name', 'Category', 'Risk', 'Third-Party', 'Secure', 'HttpOnly', 'SameSite', 'Domain', 'Description'].map(escape).join(','),
-    ];
-    for (const c of result.cookies) {
-      rows.push([
-        'cookie',
-        c.cookieName,
-        c.category,
-        c.risk,
-        isThirdParty(c.domain, result.url) ? 'yes' : 'no',
-        c.secure ? 'yes' : 'no',
-        c.httpOnly ? 'yes' : 'no',
-        c.sameSite,
-        c.domain || '',
-        c.description,
-      ].map(escape).join(','));
-    }
-    for (const t of result.trackers) {
-      rows.push([
-        'tracker',
-        t.name,
-        t.category,
-        t.risk,
-        'yes',
-        '', '', '', '',
-        t.description,
-      ].map(escape).join(','));
-    }
-    for (const d of result.thirdPartyDomains) {
-      rows.push(['third-party-script', d, '', '', 'yes', '', '', '', d, ''].map(escape).join(','));
-    }
-    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const blob = new Blob([buildCookieCsv(result)], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    let host = 'scan';
-    try { host = new URL(result.url).hostname; } catch {}
-    a.download = `${host}-cookie-scan.csv`;
+    a.download = cookieCsvFilename(result.url);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
