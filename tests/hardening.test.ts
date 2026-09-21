@@ -15,7 +15,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { MAX_IN_FLIGHT_SCANS, BLOCKED_TARGET_HOSTS, FETCH_TIMEOUT_MS } from '../lib/tuning';
+import { MAX_IN_FLIGHT_SCANS, MAX_IN_FLIGHT_PER_BUCKET, BLOCKED_TARGET_HOSTS, FETCH_TIMEOUT_MS } from '../lib/tuning';
 import { EVENT_TTL_SECONDS, eventKeys } from '../lib/event-schema';
 
 const src = (p: string) => readFileSync(join(__dirname, '..', p), 'utf-8');
@@ -57,6 +57,22 @@ describe('scan-url: a flood cannot outgrow the box', () => {
     expect(route).toContain('replay-store-unavailable');
     expect(route).toMatch(/status: 503/);
     expect(route).not.toMatch(/fall through to the TTL bound rather than fail the scan/);
+  });
+
+  it('caps how many slots ONE network can hold, not just the total', () => {
+    // Measured 2026-09-21: a scan takes ~790ms typically but can stall for the
+    // whole FETCH_TIMEOUT_MS against a server the caller controls. Holding all
+    // 20 global slots therefore needs only ~4 new scans/sec — about 12% of one
+    // core in proof-of-work — and while they are held everyone else drops to
+    // ~4 scans/sec. The per-IP rate limit was the only thing in the way, and
+    // ~24 distinct /24 ranges beat it.
+    expect(route).toContain('inFlightByBucket');
+    expect(route).toMatch(/if \(bucketInFlight >= MAX_IN_FLIGHT_PER_BUCKET\)/);
+    // Released, and the key DELETED at zero — a Map keyed on caller-supplied
+    // network is otherwise a slow leak whose size the caller chooses.
+    expect(route).toContain('inFlightByBucket.delete(bucket)');
+    expect(MAX_IN_FLIGHT_PER_BUCKET).toBeGreaterThan(0);
+    expect(MAX_IN_FLIGHT_PER_BUCKET).toBeLessThan(MAX_IN_FLIGHT_SCANS);
   });
 
   it('refuses to scan the host it runs on', () => {

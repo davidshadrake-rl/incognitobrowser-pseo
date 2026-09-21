@@ -14,6 +14,7 @@ import {
   MAX_THIRD_PARTY_DOMAINS as TUNING_MAX_THIRD_PARTY_DOMAINS,
   FETCH_TIMEOUT_MS,
   MAX_IN_FLIGHT_SCANS,
+  MAX_IN_FLIGHT_PER_BUCKET,
   BLOCKED_TARGET_HOSTS,
 } from '@/lib/tuning';
 
@@ -61,6 +62,31 @@ const RATE_LIMIT_CONFIG = { limit: SCAN_RATE_LIMIT, windowMs: SCAN_RATE_WINDOW_M
 // actually takes. One process serves this app (systemd ib-api), so a plain
 // module-level counter is the whole mechanism — no shared store needed.
 let inFlightScans = 0;
+
+/**
+ * Scans in flight per rate-limit bucket, so one network cannot hold every slot.
+ *
+ * Measured on 2026-09-21: a typical scan takes 790ms, so 20 global slots give
+ * about 25 scans/sec. But FETCH_TIMEOUT_MS is 5s, and a scan aimed at a server
+ * the caller controls can stall for all of it. Holding all 20 slots therefore
+ * needs only 4 new scans/sec — roughly 12% of one core in proof-of-work — and
+ * while they are held, throughput for everyone else drops to 4 scans/sec.
+ *
+ * The per-IP rate limit was the only thing standing in the way, and at 10/min
+ * per /24 it takes about 24 distinct ranges to beat. A botnet or a single cloud
+ * account has that.
+ *
+ * A per-bucket ceiling changes the arithmetic: one range can hold at most
+ * MAX_IN_FLIGHT_PER_BUCKET slots, so denying the whole service needs
+ * MAX_IN_FLIGHT_SCANS / MAX_IN_FLIGHT_PER_BUCKET distinct ranges AND enough
+ * rate-limit budget in each. It does not make it impossible — nothing here
+ * does — it raises the price and keeps one noisy network from crowding out
+ * everyone else, which is the common case and not always malicious.
+ *
+ * The map is pruned to zero entries on release: a Map keyed on caller-supplied
+ * network would otherwise be its own slow memory leak.
+ */
+const inFlightByBucket = new Map<string, number>();
 
 export async function POST(request: NextRequest) {
   const origin = request.headers.get('origin');
@@ -268,6 +294,13 @@ export async function POST(request: NextRequest) {
     // here on a request owns a socket and a buffer, so this is the point worth
     // refusing at. Checked and claimed in the same synchronous step — there is
     // no await between them, so the count cannot be raced past the cap.
+    const bucketInFlight = inFlightByBucket.get(bucket) ?? 0;
+    if (bucketInFlight >= MAX_IN_FLIGHT_PER_BUCKET) {
+      return NextResponse.json(
+        { error: 'Too many scans running from your network right now. Please try again in a moment.' },
+        { status: 503, headers: { ...allHeaders, 'Retry-After': '5' } },
+      );
+    }
     if (inFlightScans >= MAX_IN_FLIGHT_SCANS) {
       return NextResponse.json(
         { error: 'Too many scans running right now. Please try again in a moment.' },
@@ -275,6 +308,7 @@ export async function POST(request: NextRequest) {
       );
     }
     inFlightScans++;
+    inFlightByBucket.set(bucket, bucketInFlight + 1);
 
     try {
       // One deadline covering the whole exchange, headers AND body.
@@ -347,6 +381,11 @@ export async function POST(request: NextRequest) {
       }
     } finally {
       inFlightScans--;
+      const left = (inFlightByBucket.get(bucket) ?? 1) - 1;
+      // Delete at zero. Keeping the key would grow this map by one entry per
+      // network that ever scanned — a leak an attacker chooses the size of.
+      if (left > 0) inFlightByBucket.set(bucket, left);
+      else inFlightByBucket.delete(bucket);
     }
   } catch (err) {
     const errorType = err instanceof Error ? err.constructor.name : 'Unknown';

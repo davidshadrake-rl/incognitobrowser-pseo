@@ -29,6 +29,7 @@
     "security:all": "node scripts/security/run.mjs --all --json reports/security/latest-all.json",
     "security:strict": "node scripts/security/run.mjs --all --strict --fail-on=medium --json reports/security/latest-strict.json",
     "security:schedule": "./scripts/security/install-schedule.sh",
+    "capacity": "node --experimental-strip-types --max-old-space-size=448 scripts/security/capacity.mjs",
     "test:all": "./scripts/test-all.sh",
     "test:all:offline": "./scripts/test-all.sh --offline",
     "test:all:e2e": "./scripts/test-all.sh --e2e",

@@ -121,6 +121,22 @@ export const FETCH_TIMEOUT_MS = intEnv('FETCH_TIMEOUT_MS', 10_000, 100, 120_000)
 export const MAX_IN_FLIGHT_SCANS = intEnv('MAX_IN_FLIGHT_SCANS', 20, 1);
 
 /**
+ * How many of those slots ONE rate-limit bucket may hold. Default: 2.
+ *
+ * The global cap alone does not stop one network taking every slot. Measured
+ * 2026-09-21: a scan takes ~790ms typically but may stall for the full
+ * FETCH_TIMEOUT_MS against a server the caller controls, so ~4 new scans/sec
+ * holds all 20 — about 12% of one core in proof-of-work — and everyone else
+ * drops to 4 scans/sec while they are held.
+ *
+ * At 2, denying the service needs at least 10 distinct networks with rate-limit
+ * budget in each, instead of a single one. It also keeps one busy office or
+ * carrier NAT from crowding out the rest, which is the commoner and entirely
+ * innocent version of the same thing.
+ */
+export const MAX_IN_FLIGHT_PER_BUCKET = intEnv('MAX_IN_FLIGHT_PER_BUCKET', 2, 1);
+
+/**
  * Hosts the scanner refuses outright, beyond the private-range guard.
  *
  * Defaults to this project's own droplet. Scanning ourselves is free
