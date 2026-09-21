@@ -59,6 +59,26 @@ describe('scan-url: a flood cannot outgrow the box', () => {
     expect(route).not.toMatch(/fall through to the TTL bound rather than fail the scan/);
   });
 
+  it('rejects a foreign scheme BEFORE the convenience rewrite', () => {
+    // The rewrite lets a visitor type "example.com". Applied to a string that
+    // already has a scheme it produced a single-label hostname that sailed past
+    // the protocol allowlist, because the protocol really was https::
+    //   file:///etc/passwd -> https://file:///etc/passwd -> hostname "file"
+    // A single label reaches the resolver, and on a host with a DNS search
+    // suffix "file" can resolve to file.<search-domain> — an internal machine.
+    // Found by auditing the owner's own S6 item, which this contradicted.
+    expect(route).toContain('const scheme =');
+    expect(route).toContain('Only HTTP/HTTPS URLs are supported');
+    // The rejection must sit BEFORE the rewrite, or it decides nothing.
+    const rejectAt = route.indexOf('!/^https?$/i.test(scheme[1])');
+    const rewriteAt = route.indexOf('new URL(scheme ?');
+    expect(rejectAt, 'the scheme rejection is gone').toBeGreaterThan(-1);
+    expect(rewriteAt, 'the rewrite is gone').toBeGreaterThan(-1);
+    expect(rejectAt).toBeLessThan(rewriteAt);
+    // And the old shape must not come back.
+    expect(route).not.toContain("url.startsWith('http') ? url :");
+  });
+
   it('caps how many slots ONE network can hold, not just the total', () => {
     // Measured 2026-09-21: a scan takes ~790ms typically but can stall for the
     // whole FETCH_TIMEOUT_MS against a server the caller controls. Holding all

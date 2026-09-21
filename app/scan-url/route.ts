@@ -223,7 +223,35 @@ export async function POST(request: NextRequest) {
     // Validate URL format
     let parsedUrl: URL;
     try {
-      parsedUrl = new URL(url.startsWith('http') ? url : `https://${url}`);
+      /**
+       * Reject a foreign scheme BEFORE the convenience rewrite, not after.
+       *
+       * The rewrite exists so a visitor can type "example.com". It used to test
+       * the raw string with startsWith on the four letters h-t-t-p and prepend
+       * a scheme otherwise, which does something surprising to a string that
+       * already HAS a scheme:
+       *
+       *   file:///etc/passwd   ->  https://file:///etc/passwd   -> hostname "file"
+       *   gopher://x/1         ->  https://gopher://x/1         -> hostname "gopher"
+       *   dict://x:11211/      ->  https://dict://x:11211/      -> hostname "dict"
+       *
+       * The protocol allowlist below then passes, because the protocol really is
+       * https: — and a SINGLE-LABEL hostname goes to the resolver. On a host with
+       * a DNS search suffix that is not nothing, "file" can resolve to
+       * file.<search-domain>, an internal machine. This droplet has `search .`
+       * so it NXDOMAINs today, but a corporate host is exactly where a search
+       * suffix exists, and this code is being considered for one.
+       *
+       * Also note `startsWith('http')` matched "httpfoo://" and "https-evil.com".
+       */
+      const scheme = /^([a-zA-Z][a-zA-Z0-9+.-]*):/.exec(url.trim());
+      if (scheme && !/^https?$/i.test(scheme[1])) {
+        return NextResponse.json(
+          { error: 'Only HTTP/HTTPS URLs are supported' },
+          { status: 400, headers: allHeaders },
+        );
+      }
+      parsedUrl = new URL(scheme ? url.trim() : `https://${url.trim()}`);
     } catch {
       return NextResponse.json({ error: 'Invalid URL format' }, { status: 400, headers: allHeaders });
     }
