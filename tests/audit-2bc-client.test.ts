@@ -235,6 +235,13 @@ function localImportSpecifiers(text: string): string[] {
     out.push(m[2]);
   }
   for (const m of text.matchAll(/\bimport\s*['"]([^'"]+)['"]/g)) out.push(m[1]);
+  // Dynamic import() and require() are followed too. The second-pass verifier
+  // pulled the first pass's lib/cookie-peek.ts in with
+  // `void import('@/lib/cookie-peek').then(...)` and the scan above — static
+  // imports only — stayed green. Lazy-loading a helper is an idiom of this
+  // codebase (lib/scan-client.ts does `await import('js-sha256')`), so it is
+  // not obfuscation; it is the most ordinary way a read could move.
+  for (const m of text.matchAll(/\b(?:import|require)\s*\(\s*['"]([^'"]+)['"]\s*\)/g)) out.push(m[1]);
   return out.filter((s) => s.startsWith('@/') || s.startsWith('./') || s.startsWith('../'));
 }
 
@@ -316,7 +323,7 @@ describe('P1 — only cookies on the current host appear', () => {
     }
   });
 
-  it('the import scan skips packages and type-only imports, and follows both alias and relative paths', () => {
+  it('the import scan skips packages and type-only imports, and follows static, dynamic and require() paths', () => {
     // A detector self-test, on a sample: the guard above is only as wide as
     // this function's reach.
     const sample = [
@@ -326,8 +333,12 @@ describe('P1 — only cookies on the current host appear', () => {
       "import { Icon, type Family } from './Icon';",
       "export { x } from '../lib/x';",
       "import './styles.css';",
+      "const m = await import('@/lib/lazy-helper');",
+      "void import('./also-lazy').then((x) => x.run());",
+      "const r = require('../lib/cjs-helper');",
+      "const pkg = await import('js-sha256');",
     ].join('\n');
-    expect(localImportSpecifiers(sample)).toEqual(['@/lib/scan-client', './Icon', '../lib/x', './styles.css']);
+    expect(localImportSpecifiers(sample)).toEqual(['@/lib/scan-client', './Icon', '../lib/x', './styles.css', '@/lib/lazy-helper', './also-lazy', '../lib/cjs-helper']);
     expect(COMPONENT_IMPORTS, 'import type is followed — the skip is not working').not.toContain('lib/site-grade.ts');
     expect(COMPONENT_IMPORTS.length).toBeGreaterThanOrEqual(5);
   });

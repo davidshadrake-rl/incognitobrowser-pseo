@@ -39,7 +39,7 @@
  * matters. See API-ON-DROPLET.md. Treat this function as defence in depth
  * behind that, never as the control itself.
  */
-import { BLOCKED_TARGET_HOSTS } from './tuning';
+import { BLOCKED_TARGET_HOSTS, reportConfigProblem } from './tuning';
 
 /** Exactly four dotted decimal octets, no leading zeros, each 0-255. */
 function parseIPv4(s: string): number | null {
@@ -214,7 +214,9 @@ const PREFIX_LENGTH = /^(0|[1-9]\d{0,2})$/;
  *   2001:db8:aa::/48        an IPv6 range
  *   intranet.corp.example   a hostname, matched exactly (no suffix match)
  *
- * Anything else is dropped and reported with console.warn. Loud, for the same
+ * Anything else is dropped and reported through lib/tuning's config reporter
+ * — never console directly; this file is held to zero console references so
+ * no scan material can ever be logged from it. Loud, for the same
  * reason intEnv's fallback is loud: the failure mode of a typo here is that a
  * corp range the operator believes is refused is quietly fetched, and nothing
  * in the request path would ever say so. A malformed entry is dropped on its
@@ -222,14 +224,17 @@ const PREFIX_LENGTH = /^(0|[1-9]\d{0,2})$/;
  * hostname, which is what a naive split would do with "20.30.40.0/33" — an
  * entry that matches nothing at all while looking configured.
  */
-export function compileBlockedTargets(entries: Iterable<string>): BlockedTargets {
+export function compileBlockedTargets(
+  entries: Iterable<string>,
+  report: (message: string) => void = reportConfigProblem,
+): BlockedTargets {
   const hostnames = new Set<string>();
   const v4: Array<readonly [number, number]> = [];
   const v6: Array<readonly [number[], number]> = [];
   const rejected: string[] = [];
   const reject = (entry: string, why: string) => {
     rejected.push(entry);
-    console.warn(`[tuning] BLOCKED_TARGET_HOSTS entry ${JSON.stringify(entry)} ignored: ${why}`);
+    report(`BLOCKED_TARGET_HOSTS entry ${JSON.stringify(entry)} ignored: ${why}`);
   };
 
   for (const raw of entries) {

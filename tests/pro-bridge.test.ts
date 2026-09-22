@@ -316,7 +316,7 @@ describe('the bridge origin allowlist: FREE_BASE_URL and PRO_BASE_URL must move 
 
   async function tiers(env: Record<string, string | undefined>) {
     vi.resetModules();
-    for (const k of ['NEXT_PUBLIC_TIER', 'NEXT_PUBLIC_PRO_URL', 'NEXT_PUBLIC_FREE_URL']) delete process.env[k];
+    for (const k of ['NEXT_PUBLIC_TIER', 'NEXT_PUBLIC_PRO_URL', 'NEXT_PUBLIC_FREE_URL', 'NEXT_PUBLIC_SITE_ORIGIN']) delete process.env[k];
     for (const [k, v] of Object.entries(env)) if (v !== undefined) process.env[k] = v;
     return import('@/lib/tiers');
   }
@@ -338,21 +338,40 @@ describe('the bridge origin allowlist: FREE_BASE_URL and PRO_BASE_URL must move 
   });
 
   /**
-   * THE COUPLING IS ONE ENVIRONMENT VARIABLE DEEP. lib/tiers.ts reads
-   * NEXT_PUBLIC_FREE_URL and NEXT_PUBLIC_PRO_URL independently, so the two
-   * origins agreeing in source proves nothing about a company deploy. This
-   * demonstrates the drift rather than asserting it away.
+   * THE COUPLING USED TO BE ONE ENVIRONMENT VARIABLE DEEP. lib/tiers.ts read
+   * NEXT_PUBLIC_FREE_URL and NEXT_PUBLIC_PRO_URL independently, so one variable
+   * produced a Pro site the installed app had no bridge on. Since 2026-09-22
+   * the pair is derived from NEXT_PUBLIC_SITE_ORIGIN, and setting exactly one
+   * of the pair is refused at module load rather than silently decoupling.
+   * This block used to DEMONSTRATE the drift; it now asserts the refusal, and
+   * keeps the hazard assertion for the one case that is still allowed — both
+   * set, to different hosts — because that case is a deliberate act, not a typo.
    */
-  it('setting one of the two environment variables decouples them, and the app allowlist cannot follow', async () => {
-    const { FREE_BASE_URL, PRO_BASE_URL } = await tiers({ NEXT_PUBLIC_PRO_URL: 'https://pro.incognitobrowser.io' });
+  it('setting ONE of the two environment variables is refused at module load', async () => {
+    await expect(tiers({ NEXT_PUBLIC_PRO_URL: 'https://pro.incognitobrowser.io' })).rejects.toThrow(/must be set together/);
+    await expect(tiers({ NEXT_PUBLIC_FREE_URL: 'https://free.incognitobrowser.io' })).rejects.toThrow(/must be set together/);
+  });
+
+  it('NEXT_PUBLIC_SITE_ORIGIN derives both tiers from one origin', async () => {
+    const { FREE_BASE_URL, PRO_BASE_URL } = await tiers({ NEXT_PUBLIC_SITE_ORIGIN: 'https://tiers-probe.example' });
+    expect(FREE_BASE_URL).toBe('https://tiers-probe.example/resources');
+    expect(PRO_BASE_URL).toBe('https://tiers-probe.example/resources-pro');
+  });
+
+  it('setting BOTH to different hosts is allowed, decouples them, and the app allowlist cannot follow', async () => {
+    // The default free origin is the one the shipped app allowlists; keep it
+    // and move only Pro, which is the shape a cutover mistake would take.
+    const base = await tiers({});
+    const { FREE_BASE_URL, PRO_BASE_URL } = await tiers({
+      NEXT_PUBLIC_FREE_URL: base.FREE_BASE_URL,
+      NEXT_PUBLIC_PRO_URL: 'https://pro.incognitobrowser.io/resources-pro',
+    });
     expect(new URL(FREE_BASE_URL).origin).not.toBe(new URL(PRO_BASE_URL).origin);
     // With two origins, SISTER_ORIGINS holds both and the rewriter's
     // same-origin short-circuit stops firing: every link from one site to the
     // other starts getting ?inapp=1&pro=1 appended inside the app. That is only
     // safe while BOTH origins are ours and BOTH are in the app's allowlist —
-    // and the allowlist is a fixed list inside a shipped APK. This asserts the
-    // hazard, not a hypothetical: one environment variable produces a Pro site
-    // the installed app has no bridge on and no way to learn about.
+    // and the allowlist is a fixed list inside a shipped APK.
     const listed = bridgeAllowlist();
     expect(listed).toContain(new URL(FREE_BASE_URL).origin);
     expect(

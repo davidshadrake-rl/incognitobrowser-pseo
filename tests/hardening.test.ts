@@ -240,6 +240,30 @@ describe('tuning: a bad env value falls back instead of breaking a control', () 
     }
   }
 
+  it('a malformed BLOCKED_TARGET_HOSTS entry is reported out loud, and the rest of the list still holds', async () => {
+    // The compile lives in lib/net-address.ts, which is held to zero console
+    // references (tests/audit-6-company.test.ts) — so the warning goes through
+    // lib/tuning's reportConfigProblem. This checks the whole path: a bad
+    // entry is named at load, the good entry beside it is still refused, and
+    // the bad one is not quietly reinterpreted as a hostname that matches
+    // nothing while looking configured.
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const previous = process.env.BLOCKED_TARGET_HOSTS;
+    process.env.BLOCKED_TARGET_HOSTS = '20.30.40.0/33,206.189.186.34';
+    vi.resetModules();
+    try {
+      const m = await import('../lib/net-address');
+      expect(warn.mock.calls.map((c) => String(c[0])).join('\n')).toMatch(/BLOCKED_TARGET_HOSTS entry "20\.30\.40\.0\/33" ignored/);
+      expect(m.matchesBlockedTarget('206.189.186.34')).toBe(true);
+      expect(m.matchesBlockedTarget('20.30.40.7')).toBe(false);
+    } finally {
+      if (previous === undefined) delete process.env.BLOCKED_TARGET_HOSTS;
+      else process.env.BLOCKED_TARGET_HOSTS = previous;
+      warn.mockRestore();
+      vi.resetModules();
+    }
+  });
+
   it('POW_MAX_NUMBER=0 does not reach createChallenge', async () => {
     // `Math.floor(0x100000000 / 0) * 0` is NaN, so the rejection-sampling loop
     // in lib/altcha.ts never exits. /challenge stops answering, and because

@@ -137,6 +137,18 @@ export const MAX_IN_FLIGHT_SCANS = intEnv('MAX_IN_FLIGHT_SCANS', 20, 1);
 export const MAX_IN_FLIGHT_PER_BUCKET = intEnv('MAX_IN_FLIGHT_PER_BUCKET', 2, 1);
 
 /**
+ * Where a configuration problem is said out loud. lib/net-address.ts reports a
+ * malformed BLOCKED_TARGET_HOSTS entry through this rather than calling console
+ * itself: that file handles raw scan material and is held to ZERO console
+ * references by tests/audit-6-company.test.ts, because the natural place for
+ * a "debug" line that leaks every scanned Set-Cookie is exactly there. Config
+ * belongs to this file, and this file is already loud (see intEnv).
+ */
+export function reportConfigProblem(message: string): void {
+  console.warn(`[tuning] ${message}`);
+}
+
+/**
  * Hosts and ranges the scanner refuses outright, beyond the private-range guard.
  *
  * Defaults to this project's own droplet. Scanning ourselves is free
