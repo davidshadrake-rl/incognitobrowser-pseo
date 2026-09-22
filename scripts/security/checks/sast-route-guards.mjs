@@ -55,7 +55,14 @@ const GATE_PATTERNS = {
 };
 
 const WORK_PATTERNS = {
-  'the request body is read': /await\s+request\s*\.\s*(?:json|text|formData|arrayBuffer|blob)\s*\(/,
+  // Two ways to read a body: the Web API directly, or lib/request-body.ts's
+  // capped reader. The second is the ONLY sanctioned one since 2026-09-22 —
+  // the direct calls buffer without limit, and a chunked request skips the
+  // Content-Length pre-check this file used to insist on, so that pattern was
+  // the bug. Both are matched here so a route reading either way counts as
+  // "buffers a body"; which one it used decides what is asserted next.
+  'the request body is read': /await\s+(?:request\s*\.\s*(?:json|text|formData|arrayBuffer|blob)|readCappedRequestText)\s*\(/,
+  'the request body is read unbounded': /await\s+request\s*\.\s*(?:json|text|formData|arrayBuffer|blob)\s*\(/,
   'an outbound fetch is made': /(^|[^.\w$])fetch\s*\(/,
 };
 
@@ -237,6 +244,33 @@ const bodyBound = check({
       }
       if (!buffers) continue;
 
+      // Read through the capped helper: the bound lives inside
+      // readCappedRequestText, which stops pulling at the cap and cancels the
+      // stream, so the two assertions below (Content-Length before, .length
+      // after) do not apply — they describe the OLD pattern, which was
+      // unbounded on a chunked request. What must hold instead is that the
+      // handler does not ALSO read the body the unbounded way somewhere else.
+      const rawReadAt = firstAt(handler, new RegExp(WORK_PATTERNS['the request body is read unbounded'].source, 'g'));
+      const viaCappedHelper = rawReadAt !== readAt;
+      if (viaCappedHelper) {
+        if (rawReadAt !== Infinity) {
+          findings.push(finding({
+            severity: 'medium',
+            title: `${decl ? decl.endpoint : rel} reads the body through the capped helper AND directly`,
+            detail: 'The capped read bounds what it reads; the direct call next to it does not. Whichever runs second either fails (body already consumed) or, if it runs first, buffers without limit — a chunked request carries no Content-Length and request.text() has no cap.',
+            evidence: `${rel}:${lineAt(src, rawReadAt)}  ${lineText(src, rawReadAt).slice(0, 120)}`,
+            remediation: 'Remove the direct request.text()/json() call; readCappedRequestText is the only sanctioned body read (lib/request-body.ts).',
+            file: rel,
+            line: lineAt(src, rawReadAt),
+          }));
+        }
+        continue;
+      }
+
+      // Direct, unbounded read. This is no longer an acceptable shape at all —
+      // tests/request-body-cap.test.ts bans it on every route — so the two
+      // assertions below are a floor for a route that slipped past that, not
+      // a sanctioned pattern.
       // The declared-length check has to come BEFORE the read, and has to
       // compare against a number rather than merely mention the header.
       //
@@ -261,7 +295,7 @@ const bodyBound = check({
           title: `${decl ? decl.endpoint : rel} buffers a request body with no declared-length check first`,
           detail: 'The only bound outside the handler is the Apache `<If "%{HTTP:Content-Length} -gt 1048576">` rule (API-ON-DROPLET.md:180), which matches on a header a chunked-transfer request simply omits. The runbook records that LimitRequestBody and RewriteRule are both inert behind ProxyPass, so that one directive is the entire perimeter — and it is not in this process.',
           evidence: `${rel}:${lineAt(src, readAt)}  ${lineText(src, readAt).slice(0, 120)}  — ${clAt === Infinity ? 'no content-length comparison against a numeric cap found in the handler' : `the content-length check is at line ${lineAt(src, clAt)}, after the read`}.`,
-          remediation: 'Copy the eight lines already in app/event/route.ts:41-48: a MAX_BODY constant, a Number(request.headers.get(\'content-length\')) comparison before the read, and a text.length comparison after it.',
+          remediation: 'Do not add a Content-Length check — that was the pattern that failed. Read through readCappedRequestText (lib/request-body.ts), which stops pulling at the cap; every route does since 2026-09-22.',
           file: rel,
           line: lineAt(src, readAt),
         }));
@@ -272,7 +306,7 @@ const bodyBound = check({
           title: `${decl ? decl.endpoint : rel} does not re-check the body length after reading it`,
           detail: 'Content-Length is a claim the client makes. A chunked request carries none, and a lying one is trivial, so the check that actually binds is the one on the string that came back.',
           evidence: `${rel}:${lineAt(src, readAt)}  ${lineText(src, readAt).slice(0, 120)}  — ${postAt === Infinity ? 'no `.length > cap` comparison found after the read' : `the only length comparison is at line ${lineAt(src, postAt)}, before the read`}.`,
-          remediation: 'Add `if (text.length > MAX_BODY) return 413` immediately after the read, as app/event/route.ts:46 does.',
+          remediation: 'A post-read length check binds what is ACCEPTED, not what is ALLOCATED — the body is already resident when it runs. Read through readCappedRequestText (lib/request-body.ts) instead.',
           file: rel,
           line: lineAt(src, readAt),
         }));

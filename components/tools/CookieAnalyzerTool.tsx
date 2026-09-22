@@ -98,15 +98,37 @@ export function categorizeCookie(name: string, value: string): CookieInfo {
   return { name, value, category: 'unknown', risk: 'medium', description: 'Unknown cookie — could be functional or tracking' };
 }
 
+/**
+ * Pieces past this are dropped, not parsed. The textarea had no cap at any
+ * layer — not on the element, not here, not on what renders — so a large paste
+ * was a way to freeze your own tab. Pieces rather than characters, so the
+ * limit means the same thing whether the paste is one line or one per line.
+ */
+export const MAX_PASTED_COOKIES = 2000;
+/** Bytes the paste box accepts at all. 64 KB is thousands of real cookies. */
+export const MAX_PASTE_CHARS = 64 * 1024;
+
+/**
+ * Attribute names from RFC 6265 §4.1.1. The box's own label invites a
+ * Set-Cookie line from DevTools, and "id=abc; Domain=x; Path=/; Secure;
+ * HttpOnly" used to be reported as five cookies, four of them named Domain,
+ * Path, Secure and HttpOnly. Only pieces AFTER the first are eligible — a
+ * cookie genuinely named "path" as the first piece is still a cookie.
+ */
+const COOKIE_ATTRIBUTES = new Set(['domain', 'path', 'expires', 'max-age', 'secure', 'httponly', 'samesite', 'partitioned', 'priority']);
+
 /** "a=1; b=2" or one cookie per line -> categorised cookies. Blank pieces ("a=1;;") are not cookies. */
 export function parseCookieList(input: string): CookieInfo[] {
   return input
+    .slice(0, MAX_PASTE_CHARS)
     .split(/[;\n]/)
     .map((c) => {
       const [name, ...rest] = c.trim().split('=');
       return { name: name.trim(), value: rest.join('=').trim() };
     })
     .filter((c) => c.name)
+    .filter((c, i) => i === 0 || !COOKIE_ATTRIBUTES.has(c.name.toLowerCase()))
+    .slice(0, MAX_PASTED_COOKIES)
     .map((c) => categorizeCookie(c.name, c.value));
 }
 
@@ -598,6 +620,7 @@ export function CookieAnalyzerTool() {
             <textarea
               value={customInput}
               onChange={(e) => setCustomInput(e.target.value)}
+              maxLength={MAX_PASTE_CHARS}
               placeholder="_ga=GA1.2.123; _fbp=fb.1.123; session=abc123"
               rows={4}
               className="w-full px-4 py-3 bg-s0 border border-b1 rounded-md text-white placeholder-white/20 font-mono text-sm mb-3"

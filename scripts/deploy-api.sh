@@ -132,6 +132,10 @@ ORIGIN="-H origin:$SITE_ORIGIN -H content-type:application/json"
 [ "$(code -X POST "$SITE_ORIGIN/api/ip" $ORIGIN -d '{}')" = 200 ] || { echo "   FAIL /api/ip"; fail=1; }
 # shellcheck disable=SC2086
 [ "$(code -X POST "$SITE_ORIGIN/api/challenge" $ORIGIN -d '{}')" = 200 ] || { echo "   FAIL /api/challenge"; fail=1; }
+# The origin allowlist, exercised, not assumed: a foreign Origin must be 403.
+# Both probes above send the right Origin, so a build that shipped with the
+# allowlist emptied would pass them and open the API to every site.
+[ "$(code -X POST "$SITE_ORIGIN/api/challenge" -H origin:https://origin-probe.invalid -H content-type:application/json -d '{}')" = 403 ] || { echo "   FAIL origin allowlist: a foreign Origin was not refused"; fail=1; }
 # The co-hosted WordPress and both static sites must be untouched by this.
 for u in / /resources/ /resources-pro/tools/; do
   [ "$(code "$SITE_ORIGIN$u")" = 200 ] || { echo "   FAIL $u"; fail=1; }

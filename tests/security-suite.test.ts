@@ -68,6 +68,20 @@ for (const c of checks) {
 const show = (f: Finding & { check?: string }) =>
   `  [${f.severity}] ${f.check ? f.check + ': ' : ''}${f.title}\n      ${f.file ? f.file + ' — ' : ''}${String(f.evidence).replace(/\n/g, ' ').slice(0, 300)}`;
 
+// Medium findings are computed on this path and were DISCARDED here without
+// being printed: the blocking test below filters to high/critical, and nothing
+// else on `npm test` looked at them. `npm run security` prints them, but the
+// one command everybody runs — deploy.sh's `npm test` — did not. Found by the
+// 2026-09-22 audit pass (E2). They still do not block; they are now visible.
+{
+  const medium = outcomes
+    .flatMap((o) => o.findings.map((f) => ({ ...f, check: o.id })))
+    .filter((f) => f.severity === 'medium');
+  if (medium.length) {
+    console.warn(`\n${medium.length} medium security finding(s) — reported, not blocking:\n${medium.map(show).join('\n')}\n`);
+  }
+}
+
 describe('security suite (every-commit cadence)', () => {
   it('there are checks to run at all', () => {
     // If a refactor moves or empties scripts/security/checks/, this suite would

@@ -101,41 +101,81 @@ describe('pro_bridge_saveImage_filename_and_mime — the two values that reach a
    * The native side may or may not reject these. That is not observable here
    * and is not asserted.
    */
-  describe('GAP: the web side validates neither value', () => {
-    it('a path-traversal filename crosses the bridge unchanged', async () => {
+  /**
+   * These were pinned as the CURRENT behaviour until 2026-09-22 — a traversal
+   * name, an .apk name, a text/html Blob and the JavascriptInterface path all
+   * crossed the bridge untouched — so the gap could not be forgotten.
+   * safeImageFilename() landed; they are refusals now, and a refusal means the
+   * bridge receives NOTHING, not a repaired value.
+   */
+  describe('the web side validates both values, and refuses rather than repairs', () => {
+    it('a path-traversal filename never reaches the bridge', async () => {
       env.root.setAttribute('data-inapp', 'param');
       const bridge = recorder();
       env.win.IncognitoBrowserApp = bridge;
-      expect(await saveImageInApp(png(), '../../Download/evil.html')).toBe(true);
-      expect(bridge.messages[0]).toMatchObject({ action: 'saveImage', filename: '../../Download/evil.html' });
-      // Nothing stripped the directory segments, and nothing required an image extension.
-      expect(String(bridge.messages[0].filename)).toContain('..');
+      expect(await saveImageInApp(png(), '../../Download/evil.png')).toBe(false);
+      expect(bridge.messages).toEqual([]);
     });
 
-    it('an .apk filename crosses the bridge unchanged', async () => {
+    it('a non-image extension never reaches the bridge, whatever the MIME says', async () => {
       env.root.setAttribute('data-inapp', 'param');
       const bridge = recorder();
       env.win.IncognitoBrowserApp = bridge;
-      expect(await saveImageInApp(png(), 'update.apk')).toBe(true);
-      expect(bridge.messages[0]).toMatchObject({ filename: 'update.apk' });
+      expect(await saveImageInApp(png(), 'update.apk')).toBe(false);
+      expect(await saveImageInApp(png(), 'card.png.apk')).toBe(false);
+      expect(bridge.messages).toEqual([]);
     });
 
-    it('the MIME type is whatever the Blob carried — no image/png|jpeg|webp allowlist', async () => {
+    it('a Blob outside image/png|jpeg|webp is refused even with an image name', async () => {
       env.root.setAttribute('data-inapp', 'param');
       const bridge = recorder();
       env.win.IncognitoBrowserApp = bridge;
       const html = new Blob(['<script>'], { type: 'text/html' });
-      expect(await saveImageInApp(html, 'card.png')).toBe(true);
-      expect(bridge.messages[0]).toMatchObject({ mime: 'text/html' });
+      expect(await saveImageInApp(html, 'card.png')).toBe(false);
+      const svg = new Blob(['<svg onload=alert(1)>'], { type: 'image/svg+xml' });
+      expect(await saveImageInApp(svg, 'card.svg')).toBe(false);
+      expect(bridge.messages).toEqual([]);
     });
 
-    it('the addJavascriptInterface path is the same: (base64, filename, mime), unchecked', async () => {
+    it('the extension must match the MIME, both ways', async () => {
+      env.root.setAttribute('data-inapp', 'param');
+      const bridge = recorder();
+      env.win.IncognitoBrowserApp = bridge;
+      expect(await saveImageInApp(png(), 'card.jpg')).toBe(false);
+      const jpeg = new Blob([new Uint8Array([255, 216])], { type: 'image/jpeg' });
+      expect(await saveImageInApp(jpeg, 'card.png')).toBe(false);
+      expect(await saveImageInApp(jpeg, 'card.jpeg')).toBe(true);
+      expect(bridge.messages).toHaveLength(1);
+      expect(bridge.messages[0]).toMatchObject({ filename: 'card.jpeg', mime: 'image/jpeg' });
+    });
+
+    it('the addJavascriptInterface path is held to the same rule', async () => {
       env.root.setAttribute('data-inapp', 'param');
       const bridge = { saveImage: vi.fn() };
       env.win.IncognitoBrowserApp = bridge;
       const jpeg = new Blob([new Uint8Array([255, 216])], { type: 'image/jpeg' });
-      expect(await saveImageInApp(jpeg, '../evil.apk')).toBe(true);
-      expect(bridge.saveImage).toHaveBeenCalledWith('/9g=', '../evil.apk', 'image/jpeg');
+      expect(await saveImageInApp(jpeg, '../evil.apk')).toBe(false);
+      expect(bridge.saveImage).not.toHaveBeenCalled();
+      expect(await saveImageInApp(jpeg, 'evil.jpg')).toBe(true);
+      expect(bridge.saveImage).toHaveBeenCalledWith('/9g=', 'evil.jpg', 'image/jpeg');
+    });
+
+    it('control characters, dotfiles, empty and overlong names are refused', async () => {
+      env.root.setAttribute('data-inapp', 'param');
+      const bridge = recorder();
+      env.win.IncognitoBrowserApp = bridge;
+      for (const bad of ['a\u0000b.png', 'a\nb.png', '.hidden.png', '', 'x'.repeat(130) + '.png']) {
+        expect(await saveImageInApp(png(), bad), JSON.stringify(bad)).toBe(false);
+      }
+      expect(bridge.messages).toEqual([]);
+    });
+
+    it('a directory prefix is not repaired into a safe name — it is refused', async () => {
+      env.root.setAttribute('data-inapp', 'param');
+      const bridge = recorder();
+      env.win.IncognitoBrowserApp = bridge;
+      expect(await saveImageInApp(png(), 'Download/evil.png')).toBe(false);
+      expect(bridge.messages).toEqual([]);
     });
   });
 

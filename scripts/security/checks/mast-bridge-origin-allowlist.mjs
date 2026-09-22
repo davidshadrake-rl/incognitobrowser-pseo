@@ -99,10 +99,15 @@ export default check({
         let origin;
         try { origin = new URL(raw).origin; } catch { continue; }
         checked++;
-        if (allowed.has(origin)) continue;
+        // The re-registerable test runs BEFORE the allowlist short-circuit. It
+        // used to run after, which exempted anything declared in
+        // scripts/security/data/mast-bridge-hosts.json from the one test that
+        // caught the vercel.app hosts — so one JSON edit could re-grant a
+        // subdomain someone else can claim, and this check would say nothing.
+        const reReg = RE_REGISTERABLE.test(origin);
+        if (allowed.has(origin) && !reReg) continue;
         if (RETIRING.test(prose)) continue;  // the document is deleting it, not granting it
         const n = i + 1;
-        const reReg = RE_REGISTERABLE.test(origin);
         findings.push(finding({
           severity: reReg ? 'high' : 'medium', file: DOC, line: n,
           title: reReg

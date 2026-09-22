@@ -239,6 +239,10 @@ const notServerAuth = check({
   requires: [],
   describe: 'States, in the report, that <html data-ib-pro> is a UX gate and not authorisation: /api/scan-url performs no entitlement check, so an internal deployment needs SSO or network ACLs in front of /resources-pro AND /api.',
   async run(ctx) {
+    // Demo host: reported, non-blocking. Company host: high, which
+    // tests/security-suite.test.ts blocks on, so `npm test` inside deploy.sh
+    // fails before anything is built. Red exactly when it matters.
+    const target = resolveTarget(ctx);
     const appDir = join(ctx.repoRoot, 'app');
     if (!existsSync(appDir)) throw new Skip('no app/ directory — there are no routes to grade');
     const routes = walk(appDir, (n) => n === 'route.ts' || n === 'route.tsx');
@@ -270,7 +274,7 @@ const notServerAuth = check({
         /corsHeadersFor\s*\(/.test(scanSrc) ? 'corsHeadersFor() (origin gate)' : null,
       ].filter(Boolean);
       findings.push(finding({
-        severity: 'medium', file: SCAN_ROUTE,
+        severity: target.company ? 'high' : 'medium', file: SCAN_ROUTE,
         title: 'data-ib-pro is a UX gate, not authorisation — /api/scan-url has no entitlement check at all',
         detail:
           'The paid control on this product is entirely client-side: lib/in-app.ts sets <html data-ib-pro>, components/useUpgradeGate.tsx reads it, and that is the whole mechanism. A scripted client — curl, a copied fetch() out of devtools, anything that is not a browser running our page — calls /api/scan-url with no attribute anywhere in the request and is served exactly like a subscriber, because there is nothing in the request that could carry the claim and nothing in the route that would read it. '
@@ -297,7 +301,7 @@ const notServerAuth = check({
       const uaAccepted = /\/incognito \?browser\/i/.test(inApp);
       if (acceptsAnyObject || uaAccepted) {
         findings.push(finding({
-          severity: 'info', file: IN_APP,
+          severity: target.company ? 'high' : 'info', file: IN_APP,
           title: 'Any script running in our origin can self-grant the Pro mark (accepted, because the mark grants nothing)',
           detail:
             'bootInApp() accepts the app\'s claim when window.IncognitoBrowserApp is any object, or when the user agent matches /incognito ?browser/i. Both are things only the real app can produce IN A REAL BROWSER TAB — but neither is unforgeable on the open web: a page script in our origin (an injected script, a compromised dependency, a devtools paste) can set window.IncognitoBrowserApp = { postMessage(){} } before the boot script runs and be treated as a subscriber for the rest of that tab. '

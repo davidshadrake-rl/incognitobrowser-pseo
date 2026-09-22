@@ -263,6 +263,19 @@ export async function POST(request: NextRequest) {
     // SSRF Protection: block private/internal networks, plus any host named in
     // BLOCKED_TARGET_HOSTS (by default this droplet itself — see lib/tuning.ts).
     const hostKey = parsedUrl.hostname.toLowerCase().replace(/\.+$/, '');
+    // A name with no dot is not a public website. {"url":"intranet"} becomes
+    // https://intranet by the convenience rewrite above and goes to dns.lookup
+    // as typed, where the host's search suffix decides what it means — on a
+    // company box that is intranet.corp.example. The scheme fix closed the
+    // path by which file:/gopher: BECAME a single label; this closes the
+    // direct one. Bracketed IPv6 literals have no dot and are judged by
+    // address below, so they pass here.
+    if (!hostKey.includes('.') && !hostKey.startsWith('[')) {
+      return NextResponse.json(
+        { error: 'Enter a full website address, like example.com.' },
+        { status: 400, headers: allHeaders }
+      );
+    }
     if (isBlockedHostname(parsedUrl.hostname) || BLOCKED_TARGET_HOSTS.has(hostKey)) {
       return NextResponse.json(
         { error: 'Cannot scan private IP addresses, localhost, or internal networks.' },

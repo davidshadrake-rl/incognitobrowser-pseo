@@ -31,9 +31,19 @@ interface FileField {
   warning?: string;
 }
 
-/** "IMG_4471.HEIC" -> "IMG_4471-clean.jpg": the clean copy is always re-encoded as JPEG. */
-function cleanFileName(file: File): string {
-  return file.name.replace(/\.[^.]+$/, '') + '-clean.jpg';
+/**
+ * "IMG_4471.HEIC" -> "IMG_4471-clean.jpg": the clean copy is always re-encoded as JPEG.
+ *
+ * The path is stripped first. A File's name is whatever the picker or a drop
+ * event handed over, and "../../Download/evil.html" used to come out as
+ * "../../Download/evil-clean.jpg" — the extension rebuilt, the directory walk
+ * left intact — and go straight into a.download and, in the app, into the
+ * bridge's saveImage filename. Browsers sanitise a.download themselves; the
+ * native side is whatever the app does with it, so it is not left to chance.
+ */
+export function cleanFileName(file: File): string {
+  const base = (file.name.split(/[\\/]/).pop() || 'image').replace(/^\.+/, '');
+  return (base.replace(/\.[^.]+$/, '') || 'image') + '-clean.jpg';
 }
 
 function getPrivacyColor(privacy: string) {

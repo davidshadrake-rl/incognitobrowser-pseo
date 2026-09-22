@@ -249,20 +249,56 @@ export function blobToDataUrl(blob: Blob): Promise<string> {
   });
 }
 
+/** The only things the bridge will ask the app to write. */
+const ALLOWED_IMAGE_MIME: Record<string, RegExp> = {
+  'image/png': /\.png$/i,
+  'image/jpeg': /\.jpe?g$/i,
+  'image/webp': /\.webp$/i,
+};
+
+/**
+ * The filename the app is allowed to receive, or null to refuse.
+ *
+ * Everything past the bridge is a MediaStore write by native code, and until
+ * 2026-09-22 both values crossed unchecked: a traversal path as the name, and
+ * whatever type the Blob carried — a text/html Blob crossed as text/html — as
+ * the MIME. tests/pro-bridge.test.ts pinned that as the current behaviour so
+ * it could not be forgotten; those tests are refusals now.
+ *
+ * Refuse, never repair. A name that had to be rewritten to be safe was not
+ * produced by the one caller this module has (components/Scorecard.tsx, held
+ * to that by mast-save-image-caller-allowlist), so it came from somewhere
+ * that should not be handing names to the app at all.
+ */
+export function safeImageFilename(filename: string, mime: string): string | null {
+  const ext = ALLOWED_IMAGE_MIME[mime];
+  if (!ext) return null;
+  const base = filename.split(/[\\/]/).pop() ?? '';
+  if (!base || base.length > 120) return null;
+  if (base.includes('..') || base.startsWith('.')) return null;
+  // eslint-disable-next-line no-control-regex
+  if (/[\u0000-\u001f\u007f]/.test(base)) return null;
+  if (!ext.test(base)) return null;
+  return base;
+}
+
 /**
  * Hand an image to the app to save. The app's download manager takes http(s)
  * links only, so the `blob:` link a normal download uses fails there
- * ("Invalid URL: blob"). Returns false when the app has no bridge for it.
+ * ("Invalid URL: blob"). Returns false when the app has no bridge for it, and
+ * false — sending nothing — when either value fails safeImageFilename().
  */
 export async function saveImageInApp(blob: Blob, filename: string): Promise<boolean> {
   if (!inAppSource()) return false;
   const b = appBridge();
   if (!b || (typeof b.postMessage !== 'function' && typeof b.saveImage !== 'function')) return false;
   const mime = blob.type || 'image/png';
+  const name = safeImageFilename(filename, mime);
+  if (!name) return false;
   try {
     const base64 = await blobToBase64(blob);
-    if (typeof b.postMessage === 'function') b.postMessage(JSON.stringify({ v: 1, action: 'saveImage', filename, mime, base64 }));
-    else b.saveImage!(base64, filename, mime);
+    if (typeof b.postMessage === 'function') b.postMessage(JSON.stringify({ v: 1, action: 'saveImage', filename: name, mime, base64 }));
+    else b.saveImage!(base64, name, mime);
     return true;
   } catch {
     return false;
