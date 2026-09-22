@@ -47,7 +47,13 @@ describe('the scan route resolves before it fetches', () => {
     // previous form pinned the exact one-line source and broke the moment the
     // same check also consulted BLOCKED_TARGET_HOSTS.
     expect(src).toMatch(/resolved\.filter\(/);
-    expect(src).toMatch(/isBlockedHostname\(r\.address\)/);
+    // The resolved addresses are judged by the ALLOWLIST. This used to assert
+    // isBlockedHostname(r.address); a denylist passes anything it does not
+    // recognise, which is how four bypasses got through. Asserting the
+    // allowlist here means a refactor back to the denylist fails this test
+    // rather than silently reopening the class.
+    expect(src).toMatch(/!isPublicUnicastAddress\(r\.address\)/);
+    expect(src).not.toMatch(/isBlockedHostname\(r\.address\)/);
     // and it must still refuse to follow redirects, or the check is re-openable
     expect(src).toContain("redirect: 'manual'");
   });

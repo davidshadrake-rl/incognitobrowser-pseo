@@ -128,14 +128,16 @@ describe('event: the counter keyspace is bounded', () => {
     expect(page[0]).not.toMatch(/sev-|:play$/);
   });
 
-  it('checks the declared body size before buffering it', () => {
+  it('caps the body as it streams, rather than checking a header and then buffering', () => {
+    // This test used to assert the ordering "read Content-Length, THEN call
+    // request.text()", and passed for as long as that pattern existed. The
+    // pattern was the bug: a chunked request sends no Content-Length, so the
+    // pre-check was skipped rather than triggered, and request.text() behind
+    // it is unbounded. 300MB went resident on a 448MB heap from one
+    // unauthenticated POST to this route. The ordering was never the control.
     const route = src('app/event/route.ts');
-    const declaredAt = route.indexOf("request.headers.get('content-length')");
-    const readAt = route.indexOf('await request.text()');
-    expect(declaredAt).toBeGreaterThan(-1);
-    expect(declaredAt).toBeLessThan(readAt);
-    // The post-read check stays: Content-Length can lie.
-    expect(route).toMatch(/text\.length > MAX_BODY/);
+    expect(route).toContain('readCappedRequestText');
+    expect(route).not.toMatch(/await request\.text\(\)/);
   });
 });
 

@@ -9,6 +9,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { corsHeadersFor, isOriginAllowed } from '@/lib/origin';
+import { readCappedRequestText } from '@/lib/request-body';
 import { rateLimit, getClientIP, getIpBucket, getRedisClient } from '@/lib/rate-limit';
 import { validateEvent, eventKeys, dayOf, EVENT_TTL_SECONDS } from '@/lib/event-schema';
 
@@ -32,18 +33,14 @@ export async function POST(request: NextRequest) {
   Object.assign(headers, rl.headers);
   if (!rl.allowed) return NextResponse.json({ error: 'Too many events.' }, { status: 429, headers });
 
-  // Check the declared length BEFORE buffering. Reading first and measuring
-  // afterwards meant the whole body was already in memory by the time it was
-  // judged too large, so the 2 KB cap bounded what was accepted but not what
-  // was allocated — a flood of 10 MB bodies would each have been held in full
-  // and only then refused. Content-Length can lie, so the post-read check
-  // stays as the one that actually binds.
-  const declared = Number(request.headers.get('content-length'));
-  if (Number.isFinite(declared) && declared > MAX_BODY) {
-    return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
-  }
-  const text = await request.text();
-  if (text.length > MAX_BODY) return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
+  // Read through the streaming cap, never request.text(). The previous version
+  // pre-checked Content-Length and then buffered without limit, which a chunked
+  // request skips entirely — there is no Content-Length to check, so 300MB
+  // arrived on a 448MB heap and this route needs no proof-of-work to reach.
+  // See lib/request-body.ts.
+  const body = await readCappedRequestText(request, MAX_BODY);
+  if (!body.ok) return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
+  const text = body.text;
   let parsed: unknown;
   try { parsed = JSON.parse(text); } catch { return NextResponse.json({ error: 'Invalid JSON.' }, { status: 400, headers }); }
   const v = validateEvent(parsed);

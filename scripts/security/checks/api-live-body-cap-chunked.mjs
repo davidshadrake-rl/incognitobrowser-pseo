@@ -1,69 +1,86 @@
 /**
- * Oversized bodies must be refused even without a Content-Length (live, opt-in).
+ * Does the live API stop READING an oversized chunked body, or drain it first?
  *
- * The body cap in front of the API is an Apache condition:
- *   <If "%{HTTP:Content-Length} -gt 1048576 && %{REQUEST_URI} =~ m#^/api/#">
- * A chunked request carries NO Content-Length, so that condition has nothing
- * to compare and cannot fire. The runbook already records that LimitRequestBody
- * is inert for proxied requests and that a 1.5 MB POST reached Node, so the
- * gap is documented rather than theoretical.
+ * ## What this check got wrong before, and why it is worth writing down
  *
- * Behind it, the app-side caps landed on 2026-09-18 — /event, /scan-url,
- * /stats and /dns-leak/result each check Content-Length and then re-check the
- * buffered length, because Content-Length can lie. This check asks the one
- * question those in-process tests cannot: what does the LIVE stack do when no
- * length is declared at all. /dns-leak/result is the target because its cap is
- * the smallest (512 bytes) and it fetches nothing.
+ * The previous version found the right fact and drew the wrong conclusion. It
+ * established that the Apache cap cannot fire on a chunked request — true,
+ * `<If "%{HTTP:Content-Length} -gt ...">` has nothing to compare — then sent
+ * 1.1 MB, received a 413 from Node, and graded the result `low` with the
+ * sentence "The app-side caps are what actually bind today and they are
+ * correct."
  *
- * WHAT COUNTS AS A PASS, and why the answer is nuanced rather than a status
- * code: a 403 means Apache refused it; a 413 means Node buffered it and then
- * refused. Both are refusals, but they cost different amounts, and a 413 that
- * arrives only after the whole 1.1 MB crossed the wire tells you the megabyte
- * was paid for. The check reports the distinction rather than flattening it.
- * A 200 or a 400 means nothing stopped it.
+ * They were not correct. The app-side cap was:
  *
- * GATED, and it stays gated. This is the only check in the API set that sends
- * real volume, the box has 2 vCPU, and it also serves the team's WordPress and
- * MySQL. It is never in the scheduled run:
+ *     const declared = Number(request.headers.get('content-length'));
+ *     if (declared > MAX_BODY) return 413;   // skipped: chunked sends none
+ *     const text = await request.text();     // unbounded
+ *     if (text.length > MAX_BODY) return 413; // after the fact
  *
- *     node scripts/security/run.mjs --only=live-body-cap-chunked --opt-in=live-body-cap-chunked
+ * A 413 came back, so the check called it a refusal and stopped. But the 413
+ * arrives AFTER `request.text()` has buffered whatever was sent. At 1.1 MB
+ * that is survivable, which is exactly why probing with 1.1 MB produced a
+ * reassuring answer. At 300 MB, against the 448 MB heap the service runs with,
+ * it is an OOM from a single unauthenticated request — measured in process on
+ * 2026-09-21, heap 7 MB -> 305 MB.
  *
- * Run it after any vhost change, which is the only time its answer can have
- * changed.
+ * The lesson is about the probe, not the route: a size chosen to be polite
+ * cannot distinguish "refused" from "refused too late". So this version does
+ * not grade the status code. It counts how many bytes the server was willing
+ * to ACCEPT before answering, which separates the two directly.
+ *
+ * ## Why it is now safe to run on a schedule
+ *
+ * It was gated because it sent real volume at a 2 vCPU box that also serves
+ * the team's WordPress. With a streaming cap in place the server stops reading
+ * at the cap and resets, so the probe offers a large body and almost none of
+ * it crosses the wire. If the cap is ever removed the probe does become
+ * expensive — which is the one case where it should be, and it is bounded at
+ * MAX_OFFER below.
  */
 import { check, finding, Skip } from '../lib/harness.mjs';
 
-const TARGET_BYTES = 1_100_000;
+/**
+ * Offered, not sent. A correct server reads ~512 bytes of this and resets.
+ * Deliberately larger than any plausible route cap and far smaller than the
+ * heap, so a failing server is embarrassed rather than damaged.
+ */
+const MAX_OFFER = 24 * 1024 * 1024;
+/** Above the largest route cap (2 KB on /event) with room to spare. */
+const ACCEPTABLE_ACCEPTED_BYTES = 256 * 1024;
 
 export default check({
   id: 'live-body-cap-chunked',
   discipline: 'api',
-  cadence: 'on-demand',
-  severity: 'medium',
+  cadence: 'nightly',
+  severity: 'critical',
   safeAgainstProd: true,
-  needsOptIn: true,
+  needsOptIn: false,
   requires: ['network'],
-  describe: 'A chunked 1.1 MB POST with no Content-Length is refused rather than buffered in full.',
+  describe: 'A chunked body with no Content-Length stops being READ at the cap, rather than being drained and refused afterwards.',
   async run(ctx) {
     const findings = [];
     let checked = 0;
 
-    // A stream body makes undici send Transfer-Encoding: chunked with no
-    // Content-Length, which is the whole point — a declared length would be
-    // caught by the Apache <If> and would grade the wrong control.
-    const chunk = 'a'.repeat(64 * 1024);
-    let sent = 0;
+    // /dns-leak/result: smallest cap (512 bytes), fetches nothing, needs no
+    // proof-of-work — which is also what made it the cheapest way in.
+    const target = `${ctx.apiBase}/dns-leak/result`;
+
+    // Count what the producer is actually asked for. This is the measurement:
+    // a streaming cap stops pulling, an unbounded read drains to the end.
+    const state = { produced: 0, closed: false };
+    const chunk = new TextEncoder().encode('a'.repeat(64 * 1024));
     const body = new ReadableStream({
-      pull(controller) {
-        if (sent === 0) { controller.enqueue(new TextEncoder().encode('{"id":"')); sent += 7; }
-        if (sent >= TARGET_BYTES) { controller.enqueue(new TextEncoder().encode('"}')); controller.close(); return; }
-        controller.enqueue(new TextEncoder().encode(chunk));
-        sent += chunk.length;
+      start(c) { c.enqueue(new TextEncoder().encode('{"id":"')); state.produced += 7; },
+      pull(c) {
+        if (state.produced >= MAX_OFFER) { state.closed = true; return c.close(); }
+        state.produced += chunk.length;
+        c.enqueue(chunk);
       },
     });
 
     const started = Date.now();
-    const res = await ctx.http(`${ctx.apiBase}/dns-leak/result`, {
+    const res = await ctx.http(target, {
       method: 'POST',
       headers: { 'content-type': 'application/json', origin: ctx.origin },
       body,
@@ -71,81 +88,47 @@ export default check({
       timeoutMs: 30_000,
     });
     const ms = Date.now() - started;
+    const accepted = state.produced;
     checked += 1;
 
-    if (!res.ok) {
-      // A connection reset mid-upload IS a refusal — the server stopped
-      // reading. Report it as the observation it is rather than as a failure
-      // to test, but do not call it a clean pass either.
-      if (/reset|EPIPE|aborted|socket hang up/i.test(res.error || '')) {
-        return { findings, checked };
-      }
-      throw new Skip(`the chunked upload did not complete against ${ctx.apiBase}/dns-leak/result: ${res.error}`);
+    // A reset mid-upload is the SERVER STOPPING READING, which is the pass
+    // condition here, not a failure to test. Grade it on bytes like any other.
+    const reset = !res.ok && /reset|EPIPE|aborted|socket hang up/i.test(res.error || '');
+    if (!res.ok && !reset) {
+      throw new Skip(`the chunked upload did not complete against ${target}: ${res.error}`);
     }
 
-    if (res.status !== 403 && res.status !== 413) {
-      // WHICH cap is missing changes what you go and fix, so ask. A 1 KB body
-      // with an honest Content-Length is twice the route's 512-byte limit and
-      // well under Apache's 1 MB one. If THAT is refused, only the chunked
-      // path is open and the gap is in the vhost. If it is accepted too, the
-      // route has no cap at all in the running build — which, when the repo
-      // source plainly has one, means the box is running older code.
-      const declared = await ctx.http(`${ctx.apiBase}/dns-leak/result`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', origin: ctx.origin },
-        body: JSON.stringify({ id: 'a'.repeat(1000) }),
-        timeoutMs: 15_000,
-      });
-      checked += 1;
-      const appCapMissing = declared.ok && declared.status !== 413;
+    const status = res.ok ? res.status : 'connection reset';
+    const refused = reset || res.status === 403 || res.status === 413;
 
-      // And a CONTROL on a different route, so the finding names the right
-      // thing. /event's 2 KB cap predates the 2026-09-18 round of fixes. If
-      // /event refuses and /dns-leak/result does not, the running build is
-      // simply missing the newer caps — which is a deploy problem, not an
-      // Apache one and not a design one.
-      const control = await ctx.http(`${ctx.apiBase}/event`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', origin: ctx.origin },
-        body: JSON.stringify({ event: 'tool_run', tool: 'whats-my-ip', pad: 'x'.repeat(3000) }),
-        timeoutMs: 15_000,
-      });
-      checked += 1;
-      const controlNote = control.ok
-        ? (control.status === 413
-          ? '/event refuses a 3 KB body with 413, so the older app-side caps ARE deployed and Apache is not the difference'
-          : `/event answered ${control.status} for a 3 KB body, so no app-side cap is deployed anywhere`)
-        : `/event control failed: ${control.error}`;
-
+    if (accepted > ACCEPTABLE_ACCEPTED_BYTES) {
       findings.push(finding({
-        severity: appCapMissing ? 'high' : 'medium',
-        title: appCapMissing
-          ? 'The deployed /dns-leak/result has no request-body cap at all'
-          : 'A 1.1 MB chunked body with no Content-Length was accepted by the live API',
-        detail: appCapMissing
-          ? 'Neither cap is refusing on this route. A 1 KB body — twice its documented 512-byte limit, and far below Apache\'s 1 MB condition — was buffered, parsed and answered on its merits, and so was a 1.1 MB chunked one. app/dns-leak/result/route.ts:74-82 in this repository contains both the Content-Length precheck and the post-read check, and the in-process check api-error-shape confirms they fire against this source. So the running build is not this source. The control probe says which: see the evidence. On a 2 vCPU box that also serves the team\'s WordPress and MySQL, an unbounded buffered body is the cheapest denial of service available, and this route needs twelve characters.'
-          : 'The Apache cap matches on the Content-Length header, and a chunked request carries none, so it cannot fire. The app-side cap does refuse a declared oversize body, so the gap is specifically the chunked path at the proxy.',
-        evidence: `POST ${ctx.apiBase}/dns-leak/result chunked, no Content-Length, ~${TARGET_BYTES} bytes => ${res.status} in ${ms}ms ${JSON.stringify(res.json || res.text).slice(0, 110)} · the same route with a declared Content-Length of ~1011 bytes (cap is 512) => ${declared.ok ? declared.status : `failed: ${declared.error}`} ${JSON.stringify(declared.json || declared.text).slice(0, 80)} · control: ${controlNote}`,
-        remediation: appCapMissing
-          ? 'Redeploy the API and confirm the build actually rebuilt: scripts/deploy-api.sh must run npm ci and the resulting .next must be newer than the source. Then re-run this check; the declared-length probe must answer 413.'
-          : 'Add a chunked-aware limit at the proxy, or accept that the app-side cap is the only one on this path and keep it small.',
+        severity: 'critical',
+        title: refused
+          ? `The live API drained ${(accepted / 1048576).toFixed(1)} MB before refusing it`
+          : `The live API accepted a ${(accepted / 1048576).toFixed(1)} MB chunked body`,
+        detail:
+          'The status code is not the question. This route caps the body at 512 bytes, so anything past roughly that should never be read at all. Bytes the server accepts are bytes it has allocated, and the service runs with --max-old-space-size=448: a body large enough to cross that is an out-of-memory kill from one request, on a route that requires no proof-of-work. systemd restarts the process, and a loop keeps it restarting. ' +
+          (refused
+            ? 'A 413 here means the refusal came after the buffering, which is the failure mode this check exists to tell apart from a real cap.'
+            : 'Nothing refused it at all.') +
+          ' Apache cannot cover this: its cap matches on Content-Length, and a chunked request does not send one, so the condition is skipped rather than triggered.',
+        evidence: `POST ${target} chunked, no Content-Length, offered ${MAX_OFFER} bytes => ${status} after ${ms}ms; the server accepted ${accepted} bytes before answering (a capped route should accept under ${ACCEPTABLE_ACCEPTED_BYTES})`,
+        remediation:
+          'Read request bodies through readCappedRequestText (lib/request-body.ts), never request.text() or request.json(). It stops pulling at the cap and cancels the stream. tests/request-body-cap.test.ts and the route guard in the same file keep it that way.',
         file: 'app/dns-leak/result/route.ts',
         line: 74,
       }));
       return { findings, checked };
     }
 
-    // Refused. Which layer, and at what cost, is worth saying out loud: a 413
-    // after the whole body crossed the wire means the megabyte was paid for,
-    // and that is a different posture from Apache refusing at the front door.
-    if (res.status === 413 && ms > 2_000) {
+    if (!refused) {
       findings.push(finding({
-        severity: 'low',
-        title: 'The chunked body was refused only after the whole 1.1 MB had been received',
-        detail:
-          'A 413 is a refusal, so nothing is exposed — but it came from Node, after the request crossed Apache and was buffered. The front-door cap cannot help here because it matches on a header a chunked request does not send. That is acceptable at 512 bytes per route; it is worth knowing that the only defence against a chunked flood is the Node process itself.',
-        evidence: `POST ${ctx.apiBase}/dns-leak/result, chunked, ~${TARGET_BYTES} bytes => ${res.status} after ${ms}ms`,
-        remediation: 'Optional: add a chunked-aware limit at the proxy (mod_reqtimeout body rate, or a length cap that also matches Transfer-Encoding). The app-side caps are what actually bind today and they are correct.',
+        severity: 'high',
+        title: 'A chunked body was neither capped nor refused',
+        detail: `The server accepted only ${accepted} bytes, so memory is not at risk, but it answered ${status} rather than refusing an over-cap body. Something is truncating the request before the route sees it, and whatever that is has not been identified — an unexplained pass is not a pass.`,
+        evidence: `POST ${target} chunked => ${status} after ${ms}ms, ${accepted} bytes accepted`,
+        remediation: 'Identify what closed the stream. If it is a proxy timeout rather than the body cap, the cap is still untested on this path.',
         file: 'API-ON-DROPLET.md',
         line: 180,
       }));

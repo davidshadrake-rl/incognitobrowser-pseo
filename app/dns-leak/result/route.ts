@@ -15,6 +15,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit, getClientIP, getIpBucket } from '@/lib/rate-limit';
+import { readCappedRequestText } from '@/lib/request-body';
 import { corsHeadersFor, isOriginAllowed } from '@/lib/origin';
 import { isValidTestId, summarizeObservations, type ResolverSummary } from '@/lib/dns-leak';
 import { readDnsLeakTest } from '@/lib/dns-leak-store';
@@ -66,23 +67,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Too many requests.' }, { status: 429, headers });
   }
 
-  // Bound the body BEFORE buffering it, the same way /event does. This route
-  // read the whole request into memory to pull out a 12-character id, with no
-  // size check anywhere — so a 10 MB body was held in full and only then found
-  // to be nonsense. The Apache cap does not save us: it matches on the
-  // Content-Length header, and a chunked request carries no length to match.
-  // Content-Length can lie too, so the post-read check is the one that binds.
-  const declared = Number(request.headers.get('content-length'));
-  if (Number.isFinite(declared) && declared > MAX_BODY) {
-    return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
-  }
-  const text = await request.text();
-  if (text.length > MAX_BODY) {
+  // Bound the body BEFORE buffering it. This route read the whole request into
+  // memory to pull out a 12-character id, with no size check anywhere.
+  //
+  // The fix that followed — pre-check Content-Length, then read, then measure —
+  // did not hold either, and the comment that used to sit here said the
+  // post-read check "is the one that binds". It binds what is ACCEPTED, not
+  // what is ALLOCATED, and a chunked request sends no Content-Length at all, so
+  // the pre-check was skipped rather than triggered and the unbounded read ran.
+  // Measured 2026-09-21: 300MB resident on a 448MB heap, one request, no
+  // proof-of-work on this route. lib/request-body.ts has the detail.
+  const capped = await readCappedRequestText(request, MAX_BODY);
+  if (!capped.ok) {
     return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
   }
   let id: unknown;
   try {
-    const body = JSON.parse(text) as { id?: unknown } | null;
+    const body = JSON.parse(capped.text) as { id?: unknown } | null;
     id = body?.id;
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400, headers });

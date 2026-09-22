@@ -13,6 +13,7 @@
  */
 import { NextRequest, NextResponse } from 'next/server';
 import { timingSafeEqual } from 'node:crypto';
+import { readCappedRequestText } from '@/lib/request-body';
 import { getRedisClient, rateLimit, getClientIP, getIpBucket, getRedisDiagnostic } from '@/lib/rate-limit';
 import { dayOf } from '@/lib/event-schema';
 
@@ -33,19 +34,17 @@ export async function POST(request: NextRequest) {
   // field here is an optional 'YYYY-MM-DD', but the read was unbounded, so a
   // 10 MB body was held in full and only then ignored. The Apache cap does not
   // cover it — that matches on the Content-Length header, and a chunked
-  // request carries no length to match. Content-Length can lie as well, hence
-  // the post-read check; 512 bytes is enormous for one date string.
+  // request carries no length to match, which is the same reason the old
+  // Content-Length pre-check here was skipped rather than triggered by a
+  // chunked body, leaving an unbounded read behind it. 512 bytes is enormous
+  // for one date string. See lib/request-body.ts.
   const MAX_BODY = 512;
-  const declared = Number(request.headers.get('content-length'));
-  if (Number.isFinite(declared) && declared > MAX_BODY) {
-    return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
-  }
-  const text = await request.text();
-  if (text.length > MAX_BODY) return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
+  const capped = await readCappedRequestText(request, MAX_BODY);
+  if (!capped.ok) return NextResponse.json({ error: 'Body too large.' }, { status: 413, headers });
   let body: unknown = {};
   // An absent or unparseable body still means "today", as it always has —
   // callers post this route with no body at all.
-  try { body = JSON.parse(text); } catch { /* empty body is fine */ }
+  try { body = JSON.parse(capped.text); } catch { /* empty body is fine */ }
   const day = (body as { day?: string })?.day || dayOf(new Date());
   if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return NextResponse.json({ error: 'day must be YYYY-MM-DD' }, { status: 400, headers });
   /**

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { lookup as dnsLookupCb } from 'node:dns';
+import { readCappedRequestText } from '@/lib/request-body';
 import { promisify } from 'node:util';
 import { rateLimit, getClientIP, getIpBucket, getRedisClient, getRedisStatus } from '@/lib/rate-limit';
 import { parseAltchaAuthHeader, verifySolution } from '@/lib/altcha';
@@ -26,6 +27,7 @@ import {
 // two can give the same site different grades. Validation, fetch policy and
 // error handling stay here.
 import { isBlockedHostname, readCappedText, analyzeScan } from '@/lib/scanner';
+import { isPublicUnicastAddress } from '@/lib/net-address';
 
 /** Resolve a hostname to every address it points at, so the SSRF check can judge them. */
 const dnsLookup = promisify(dnsLookupCb);
@@ -185,22 +187,19 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    // Bound the body BEFORE buffering it, the way /event does. Parsing first
-    // and measuring the parsed URL afterwards meant MAX_URL_LENGTH bounded
-    // what was accepted but not what was allocated: a 10 MB body was held in
-    // full and only then refused, so a flood cost us the memory regardless.
-    // The Apache cap does not cover this — it matches on the Content-Length
-    // header, and a chunked request carries no length to match. Content-Length
-    // can also lie, so the post-read check below is the one that binds; the
-    // header check just stops us paying for the obvious case.
-    const declared = Number(request.headers.get('content-length'));
-    if (Number.isFinite(declared) && declared > MAX_REQUEST_BODY) {
+    // Bound the body BEFORE buffering it. The comment that used to sit here
+    // spotted that Apache's cap cannot see a chunked request, then concluded
+    // "the post-read check below is the one that binds" — which was the wrong
+    // conclusion from the right observation. A post-read check binds what is
+    // ACCEPTED; the memory is already spent by the time it runs. Reaching this
+    // line costs a valid proof-of-work (~27ms), so it was the least exposed of
+    // the four, but it read without limit exactly as the others did.
+    // lib/request-body.ts has the measurement.
+    const capped = await readCappedRequestText(request, MAX_REQUEST_BODY);
+    if (!capped.ok) {
       return NextResponse.json({ error: 'Request body is too large.' }, { status: 413, headers: allHeaders });
     }
-    const raw = await request.text();
-    if (raw.length > MAX_REQUEST_BODY) {
-      return NextResponse.json({ error: 'Request body is too large.' }, { status: 413, headers: allHeaders });
-    }
+    const raw = capped.text;
     let parsed: unknown;
     try {
       parsed = JSON.parse(raw);
@@ -291,10 +290,23 @@ export async function POST(request: NextRequest) {
     // So resolve the name first and judge the ADDRESSES, not the text. A public
     // site that resolves into private space is misconfigured or hostile; there
     // is no legitimate scan target behind this check.
+    //
+    // The addresses are judged by an ALLOWLIST — isPublicUnicastAddress, which
+    // refuses anything that is not canonical public unicast — and no longer by
+    // isBlockedHostname, which refuses only what it recognises and therefore
+    // allowed four different bypasses in a week. The difference is what
+    // happens to a form nobody anticipated: the denylist fetched it.
+    //
+    // A concrete one, found 2026-09-21: `https://[::127.0.0.1]/` is loopback,
+    // and isBlockedHostname says allowed. It is not exploitable today only
+    // because new URL() rewrites it to `[::7f00:1]` and the BRACKETED string
+    // is what goes to dns.lookup, which then fails to resolve. The control
+    // that actually stopped it was a bracket. lib/net-address.ts refuses the
+    // address on its merits instead.
     try {
       const resolved = await dnsLookup(parsedUrl.hostname, { all: true });
       const blocked = resolved.filter(
-        (r) => isBlockedHostname(r.address) || BLOCKED_TARGET_HOSTS.has(r.address.toLowerCase()),
+        (r) => !isPublicUnicastAddress(r.address) || BLOCKED_TARGET_HOSTS.has(r.address.toLowerCase()),
       );
       if (blocked.length) {
         return NextResponse.json(
