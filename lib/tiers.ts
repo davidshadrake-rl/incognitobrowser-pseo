@@ -70,20 +70,68 @@ export const TIER: Tier = process.env.NEXT_PUBLIC_TIER === 'pro' ? 'pro' : 'free
 export const IS_PRO_DEPLOYMENT = TIER === 'pro';
 
 /**
- * Where the Pro deployment lives — the free site links Pro-engine pages here.
- * The droplet is the only deploy target (owner, 2026-09-18: the previous
- * hosting platform is being removed entirely). scripts/deploy.sh passes SITE_ORIGIN; this default is the live
- * droplet so a build without the env var still links somewhere that resolves.
+ * Where the two deployments live. The free site links Pro-engine pages at the
+ * Pro base; the Pro deployment links back to the free base. The droplet is the
+ * only deploy target (owner, 2026-09-18: the previous hosting platform is
+ * being removed entirely), and the defaults below are the live droplet so a
+ * build with no env var at all still links somewhere that resolves.
+ *
+ * ONE HOST, ENFORCED HERE AND NOT ONLY IN THE DEPLOY SCRIPT. These two used to
+ * read NEXT_PUBLIC_PRO_URL and NEXT_PUBLIC_FREE_URL as two independent
+ * variables, and the only thing keeping them on one host was scripts/deploy.sh
+ * setting both from $SITE_ORIGIN. Any other build path — `npm run
+ * build:static`, a company CI job, a laptop — could move one and leave the
+ * other behind, and nothing would fail. That is not cosmetic drift:
+ * components/InAppBridge.tsx derives SISTER_ORIGINS from exactly these two
+ * constants and, inside the app, appends ?inapp=1&pro=1 to every link into
+ * either origin. With the pair split, the app-session flags are decorated onto
+ * links into a host the installed APK has no bridge on, or that is no longer
+ * ours (audit 2026-09-21, gap B6).
+ *
+ * So the pair is DERIVED from one value, NEXT_PUBLIC_SITE_ORIGIN:
+ * `${origin}/resources` and `${origin}/resources-pro`, the two folders
+ * scripts/deploy.sh uploads to. NEXT_PUBLIC_PRO_URL / NEXT_PUBLIC_FREE_URL
+ * remain as an explicit override for a layout that is not those two folders,
+ * but only as a PAIR: exactly one of them set is the half-moved state this
+ * exists to refuse, and it throws here, at module load, so the build fails
+ * instead of shipping it. A value that is not an absolute http(s) URL throws
+ * for the same reason — SISTER_ORIGINS silently drops anything new URL()
+ * cannot parse, so a scheme-less value would not error, it would switch the
+ * in-app link rewriter off.
+ *
+ * Every read below is a direct `process.env.NEXT_PUBLIC_*` property access on
+ * purpose: Next inlines those at build time and ONLY those (node_modules/next/
+ * dist/docs/01-app/02-guides/environment-variables.md — a dynamic lookup such
+ * as process.env[name] is not inlined), and these constants are imported by
+ * client components, so the browser sees whatever was inlined.
  */
-export const PRO_BASE_URL: string =
-  process.env.NEXT_PUBLIC_PRO_URL?.replace(/\/$/, '') || 'https://206-189-186-34.nip.io/resources-pro';
+function urlEnv(name: string, raw: string | undefined): string {
+  const v = (raw ?? '').trim().replace(/\/$/, '');
+  if (v && !/^https?:\/\/[^/\s]+/i.test(v)) {
+    throw new Error(`lib/tiers: ${name} must be an absolute http(s) URL, got "${v}"`);
+  }
+  return v;
+}
+const SITE_ORIGIN = urlEnv('NEXT_PUBLIC_SITE_ORIGIN', process.env.NEXT_PUBLIC_SITE_ORIGIN);
+const PRO_URL_OVERRIDE = urlEnv('NEXT_PUBLIC_PRO_URL', process.env.NEXT_PUBLIC_PRO_URL);
+const FREE_URL_OVERRIDE = urlEnv('NEXT_PUBLIC_FREE_URL', process.env.NEXT_PUBLIC_FREE_URL);
 
-/**
- * Where the free site lives — the Pro deployment links back here. Same rule as
- * PRO_BASE_URL: the droplet, and nothing else (owner, 2026-09-18).
- */
+if (!!PRO_URL_OVERRIDE !== !!FREE_URL_OVERRIDE) {
+  const set = PRO_URL_OVERRIDE ? 'NEXT_PUBLIC_PRO_URL' : 'NEXT_PUBLIC_FREE_URL';
+  const missing = PRO_URL_OVERRIDE ? 'NEXT_PUBLIC_FREE_URL' : 'NEXT_PUBLIC_PRO_URL';
+  throw new Error(
+    `lib/tiers: NEXT_PUBLIC_PRO_URL and NEXT_PUBLIC_FREE_URL must be set together or not at all — ` +
+      `${set} is set and ${missing} is not. The free and Pro sites have to live on one host ` +
+      `(the in-app bridge trusts both as siblings), so a half-moved pair is refused at build time. ` +
+      `Set NEXT_PUBLIC_SITE_ORIGIN to derive both from one origin, or set both explicitly.`,
+  );
+}
+
+export const PRO_BASE_URL: string =
+  PRO_URL_OVERRIDE || (SITE_ORIGIN && `${SITE_ORIGIN}/resources-pro`) || 'https://206-189-186-34.nip.io/resources-pro';
+
 export const FREE_BASE_URL: string =
-  process.env.NEXT_PUBLIC_FREE_URL?.replace(/\/$/, '') || 'https://206-189-186-34.nip.io/resources';
+  FREE_URL_OVERRIDE || (SITE_ORIGIN && `${SITE_ORIGIN}/resources`) || 'https://206-189-186-34.nip.io/resources';
 
 /**
  * Should this deployment render, list, or link a given engine's tool pages?

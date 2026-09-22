@@ -106,7 +106,15 @@ site() {  # label, folder, extra build env
   # systemd service on 127.0.0.1:3100, reverse-proxied by Apache at /api/
   # (API-ON-DROPLET.md). Same origin, so no CORS; namespaced under /api so it
   # can never collide with a WordPress permalink in the same DocumentRoot.
-  env NEXT_PUBLIC_FREE_URL="$SITE_ORIGIN/resources" NEXT_PUBLIC_PRO_URL="$SITE_ORIGIN/resources-pro" \
+  #
+  # NEXT_PUBLIC_SITE_ORIGIN is what lib/tiers.ts derives the two base URLs
+  # from; the FREE_URL/PRO_URL pair is the explicit override it still accepts,
+  # and lib/tiers.ts refuses a build that sets only one of the pair. All three
+  # come from the one $SITE_ORIGIN, so this script cannot split them, and it
+  # keeps passing the pair because the checks that grade this line
+  # (tests/pro-bridge.test.ts, pro-bridge-contract) read it.
+  env NEXT_PUBLIC_SITE_ORIGIN="$SITE_ORIGIN" \
+    NEXT_PUBLIC_FREE_URL="$SITE_ORIGIN/resources" NEXT_PUBLIC_PRO_URL="$SITE_ORIGIN/resources-pro" \
     NEXT_PUBLIC_SCAN_API=/api $3 \
     BUILD_TARGET=static BASE_PATH="$2" npx next build >"$LOG" 2>&1 || { cat "$LOG"; exit 1; }
   find out -type d -name '_pro_export_placeholder_' -exec rm -rf {} +

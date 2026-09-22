@@ -25,22 +25,28 @@
  *     branches. This repo has shipped a guard that matched its own explanatory
  *     comment twice; this is the same failure shape in the one document the
  *     Android team copies code out of. Everything below strips Kotlin comments
- *     before it asserts, with a self-test on the stripper, because a stripper
- *     that ate the `https://` in the origins would make these vacuous in the
- *     other direction.
+ *     before it asserts. The stripper has NO self-test on purpose: the first
+ *     version had one, and its only input was a string literal in this file,
+ *     so no edit to any source file could make it fail — a test that cannot
+ *     fail is deleted, not kept (verifier, 2026-09-21). What keeps the
+ *     stripper honest instead is source: the B6 closure test requires every
+ *     tier origin from lib/tiers.ts to survive stripping and come out of the
+ *     contract's setOf, so a stripper that ate the `https://` inside a string
+ *     literal fails there, against real input.
  *
- *  3. THE RE-REGISTERABLE-HOST RULE IS BYPASSED BY A JSON EDIT.
- *     mast-bridge-origin-allowlist.mjs tests `allowed.has(origin)` BEFORE it
- *     tests RE_REGISTERABLE, and `allowed` includes everything in
- *     scripts/security/data/mast-bridge-hosts.json. inapp-bridge-origin-
- *     allowlist.mjs only knows the word "vercel" (DEAD_PLATFORM = /\bvercel\b/i).  (no-vercel-guard: this file detects the host, it does not depend on it)
- *     So adding `https://<anything>.pages.dev` — or .netlify.app, .github.io,
- *     .onrender.com — to that JSON and to the document is ONE repo edit that
- *     hands `window.IncognitoBrowserApp`, and with it saveImage()'s native
- *     MediaStore write, to a subdomain that goes back into a public pool when
- *     it is released. Both checks and the existing test pass on that edit. The
- *     Vercel incident this whole file descends from was exactly that host  (no-vercel-guard: this file detects the host, it does not depend on it)
- *     class; only the one word was ever pinned.
+ *  3. THE RE-REGISTERABLE-HOST RULE WAS BYPASSED BY A JSON EDIT. When this
+ *     file was written, mast-bridge-origin-allowlist.mjs tested
+ *     `allowed.has(origin)` BEFORE it tested RE_REGISTERABLE, and `allowed`
+ *     included everything in scripts/security/data/mast-bridge-hosts.json —
+ *     so adding `https://<anything>.pages.dev` to that JSON and to the
+ *     document was ONE repo edit that handed `window.IncognitoBrowserApp`, and
+ *     with it saveImage()'s native MediaStore write, to a subdomain that goes
+ *     back into a public pool when it is released, with both checks green.
+ *     That ordering was fixed in 4deb62d the same day; the check's own list is
+ *     still seven suffixes, and inapp-bridge-origin-allowlist.mjs still knows
+ *     only the word "vercel" (DEAD_PLATFORM = /\bvercel\b/i).  (no-vercel-guard: this file detects the host, it does not depend on it)
+ *     The B6 block below keeps the wider suffix list, and its header says
+ *     exactly how far that list reaches — it is not far.
  *
  * WHAT THIS FILE CANNOT DO, said plainly rather than graded green. There is no
  * APK and no Android source in this repo. Every assertion here is about the
@@ -79,7 +85,8 @@ const HOSTS_JSON = 'scripts/security/data/mast-bridge-hosts.json';
 // case: the origins in the allowlist are `"https://…"` string literals, so the
 // naive /\/\/.*$/ that works on TypeScript would delete the allowlist itself
 // and leave every assertion below passing over an empty string. This walks the
-// source instead, tracking string literals, and there is a self-test for it.
+// source instead, tracking string literals. It is exercised only against the
+// real document — see header note 2 for why there is no literal self-test.
 // ---------------------------------------------------------------------------
 function stripKotlinComments(src: string): string {
   let out = '';
@@ -143,27 +150,6 @@ function listenerSnippet(): string {
 // B1. The bridge is injected by the origin-scoped API, and by nothing else.
 // ---------------------------------------------------------------------------
 describe('B1 — the injection mechanism, not just the origin strings', () => {
-  it('the stripper takes the comments and leaves the https:// origins alone', () => {
-    // If this ever fails the wrong way — by eating the origins — every other
-    // assertion in this file would pass over an empty string. The two traps
-    // are a `//` inside a string literal and an escaped quote before one.
-    const sample = [
-      'setOf(',
-      '    // remove the vercel hosts',  // no-vercel-guard: names the host in order to refuse it
-      '    "https://206-189-186-34.nip.io",  // the live one',
-      '    "https://incognitobrowser.io",',
-      ')  /* block */',
-      'val q = "a \\" // not a comment"',
-    ].join('\n');
-    const stripped = stripKotlinComments(sample);
-    expect(stripped).toContain('"https://206-189-186-34.nip.io"');
-    expect(stripped).toContain('"https://incognitobrowser.io"');
-    expect(stripped).toContain('"a \\" // not a comment"');
-    expect(stripped).not.toContain('remove the vercel hosts');  // no-vercel-guard: names the host in order to refuse it
-    expect(stripped).not.toContain('the live one');
-    expect(stripped).not.toContain('block');
-  });
-
   it('the contract registers the bridge with WebViewCompat.addWebMessageListener, with the origin set as its argument', () => {
     // THIS IS THE ASSERTION THAT WAS MISSING. addWebMessageListener takes an
     // allowed-origin set and injects the object into those origins only.
@@ -422,20 +408,39 @@ describe('B2, B3 — the filename and the MIME type: containment at the call sit
 });
 
 // ---------------------------------------------------------------------------
-// B6 (and the B5 scope caveat). Who can be granted the bridge, and how cheaply.
+// B6 (and the B5 scope caveat). What gates the bridge allowlist, and what does
+// not — stated at the width it actually has.
 // ---------------------------------------------------------------------------
-describe('B6 — an origin needs more than a JSON edit to be handed the bridge', () => {
+describe('B6 — what gates the bridge allowlist, and what does not', () => {
   /**
-   * Shared-suffix hosting: the subdomain is not registered to anyone, it is
-   * ALLOCATED, and it returns to a public pool when the account is closed.
-   * That is precisely what happened here — the allowlist named two
-   * *.vercel.app hosts while the Vercel account was being closed. The checks  (no-vercel-guard: this file detects the host, it does not depend on it)
-   * that came out of that incident pin the single word "vercel"  (no-vercel-guard: this file detects the host, it does not depend on it)
-   * (inapp-bridge-origin-allowlist.mjs DEAD_PLATFORM), and the other one tests
-   * membership of the declared list BEFORE it tests re-registerability
-   * (mast-bridge-origin-allowlist.mjs: `if (allowed.has(origin)) continue;`
-   * precedes `RE_REGISTERABLE.test(origin)`). Every other host class on this
-   * list is therefore one JSON entry away from being allowlisted silently.
+   * THE ONE CLOSED-WORLD GATE is the last test in this block, and its twin in
+   * tests/pro-bridge.test.ts: every origin the contract's setOf hands the app
+   * is a tier origin (lib/tiers.ts) or a declared extra in
+   * scripts/security/data/mast-bridge-hosts.json, and nothing else. That gate
+   * is exactly one JSON edit wide, by design — the JSON file IS the review
+   * step, and the second test here grades what an entry in it has to look
+   * like. Nothing in this repository can tell a host we own from a host we do
+   * not; that judgement is why the file demands a written reason, and it is a
+   * human's to make. The first pass's header for this block claimed an origin
+   * "needs more than a JSON edit". It does not, and the verifier proved it:
+   * https://incognitobrowser-pro.deno.dev, https://ibpro-abc123-uc.a.run.app
+   * and https://paywall.some-vendor.example, each declared with a plausible
+   * reason, passed this block 16/16 and mast-bridge-origin-allowlist with
+   * findings 0.
+   *
+   * RE_REGISTERABLE below is NOT a second closed-world gate. It is an
+   * enumeration of 21 shared-hosting suffixes — hosts where a subdomain is
+   * ALLOCATED rather than registered and returns to a public pool when the
+   * account closes, which is precisely what the 2026-09-18 incident was: two
+   * *.vercel.app names in the allowlist while that account was being closed.  (no-vercel-guard: this file detects the host, it does not depend on it)
+   * What it catches: an origin on any of those 21 suffixes, wherever it
+   * appears — tier origin, declared extra, or bare setOf entry — including a
+   * declared extra, which the security check exempted from its own (7-suffix)
+   * test until 4deb62d. What it does not catch: deno.dev, *.a.run.app, any
+   * suffix that is not on the list, and any plain third-party domain. Against
+   * those it is silent, and the only thing that fires is the closed-world gate
+   * above, which fires only if the JSON was not also edited. The other check
+   * in this area, inapp-bridge-origin-allowlist.mjs, still knows one word.
    */
   const RE_REGISTERABLE = /(^|\.)(vercel\.app|netlify\.app|netlify\.com|pages\.dev|workers\.dev|github\.io|gitlab\.io|herokuapp\.com|onrender\.com|surge\.sh|web\.app|firebaseapp\.com|fly\.dev|glitch\.me|repl\.co|replit\.app|azurewebsites\.net|amplifyapp\.com|ngrok\.io|ngrok-free\.app|trycloudflare\.com)$/i;  // no-vercel-guard: names the host in order to refuse it
 
@@ -450,13 +455,37 @@ describe('B6 — an origin needs more than a JSON edit to be handed the bridge',
    */
   const WILDCARD_DNS = /(^|\.)(nip\.io|sslip\.io|xip\.io|traefik\.me|localtest\.me|lvh\.me)$/i;
 
-  /** The origins the contract hands the app, read as live Kotlin. */
+  /**
+   * The origins the contract hands the app, read as live Kotlin: the UNION of
+   * every setOf( … ) in the fence, and a refusal of any origin literal that
+   * is outside one.
+   *
+   * The first version was `/setOf\(([\s\S]*?)\)/.exec(snippet)` — one match,
+   * the first setOf, and stop. Kotlin sets add with `+`, so
+   *     setOf("https://206-189-186-34.nip.io", …) + setOf("https://partner-paywall.example"),
+   * is a valid registration that hands a third party the bridge, and it left
+   * this file 16/16, tests/pro-bridge.test.ts 25/25 and only a non-blocking
+   * medium from mast-bridge-origin-allowlist (verifier mutation V14,
+   * 2026-09-21). Every B6 assertion read the same first-block-only extractor,
+   * so all of them were blind to the second block at once. What the app is
+   * told to trust is the whole expression, so the whole expression is graded:
+   * every setOf, and — because `+ listOf(…)`, `hashSetOf(…)` or a bare string
+   * appended with `+` would dodge a setOf-only reader just as well — every
+   * scheme-qualified string literal in the live Kotlin has to be inside one.
+   */
   function allowlistOrigins(): string[] {
-    const setOf = /setOf\(([\s\S]*?)\)/.exec(listenerSnippet());
-    expect(setOf, `${DOC} §2 has no setOf( … ) allowlist`).not.toBeNull();
-    const raw = [...setOf![1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);
+    const snippet = listenerSnippet();
+    const blocks = [...snippet.matchAll(/setOf\(([\s\S]*?)\)/g)];
+    expect(blocks.length, `${DOC} §2 has no setOf( … ) allowlist`).toBeGreaterThan(0);
+    const raw = blocks.flatMap((b) => [...b[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]));
     expect(raw.length, 'the bridge allowlist is empty once commented-out entries stop counting').toBeGreaterThan(0);
-    return raw;
+    for (const literal of [...snippet.matchAll(/"(https?:\/\/[^"]*)"/g)].map((m) => m[1])) {
+      expect(
+        raw,
+        `${literal} is an origin literal in the live Kotlin of ${DOC} §2 that is not inside any setOf( … ) — it reaches the app by a route this extractor does not read, and nothing below would grade it`,
+      ).toContain(literal);
+    }
+    return [...new Set(raw)];
   }
 
   /** FREE_BASE_URL / PRO_BASE_URL defaults, read from source so no env var can move them. */
@@ -471,10 +500,11 @@ describe('B6 — an origin needs more than a JSON edit to be handed the bridge',
     return out;
   }
 
-  it('no origin the contract hands the app sits on a host somebody else can be allocated', () => {
-    // The existing rule knows one word. This one knows the host class, and it
-    // covers the declared extras too — the file that currently short-circuits
-    // the rule it is supposed to be gated by.
+  it('no origin in the contract or the declared extras is on one of the 21 enumerated shared-hosting suffixes', () => {
+    // An enumeration, not a host-class oracle: see the header. It reaches the
+    // declared extras as well as the document, which is the one thing the
+    // security check did not do when this was written; it does not reach any
+    // suffix that is not in the list.
     const extras: Array<{ origin: string; reason?: string }> = JSON.parse(read(HOSTS_JSON)).extraOrigins || [];
     const everything = [...allowlistOrigins(), ...extras.map((e) => e.origin)];
     expect(everything.length).toBeGreaterThan(0);
@@ -532,15 +562,30 @@ describe('B6 — an origin needs more than a JSON edit to be handed the bridge',
     }
   });
 
-  it('the allowlist is still the tier origins plus the declared extras, and nothing else', () => {
-    // The same closure tests/pro-bridge.test.ts makes, repeated here only
-    // because the assertions above depend on it: if an origin could be in the
+  it('the allowlist is the tier origins plus the declared extras, and nothing else — across every setOf', () => {
+    // The closure tests/pro-bridge.test.ts makes, repeated here because the
+    // assertions above depend on it and because this one reads the union of
+    // every setOf block rather than the first: if an origin could be in the
     // document without being in either list, grading the two lists would miss
-    // it entirely.
+    // it entirely. This is THE gate (header); everything else in this block
+    // is narrower.
     const extras: string[] = (JSON.parse(read(HOSTS_JSON)).extraOrigins || []).map((e: { origin: string }) => e.origin);
-    const allowed = new Set([...tierOrigins(), ...extras]);
-    for (const raw of allowlistOrigins()) {
-      expect([...allowed], `${raw} is handed the bridge by ${DOC} but is neither a tier origin nor a declared extra`).toContain(new URL(raw).origin);
+    const tiers = tierOrigins();
+    const allowed = new Set([...tiers, ...extras]);
+    const contract = allowlistOrigins().map((raw) => {
+      try { return new URL(raw).origin; } catch { throw new Error(`"${raw}" is in the bridge allowlist and is not a parseable origin`); }
+    });
+    for (const origin of contract) {
+      expect([...allowed], `${origin} is handed the bridge by ${DOC} but is neither a tier origin nor a declared extra`).toContain(origin);
+    }
+    // And the other direction, from source: the origins lib/tiers.ts serves
+    // the pages from are all in the contract. A contract that omits the live
+    // origin injects no bridge where the pages actually are (the 2026-09-18
+    // allowlist was "both too permissive and non-functional"), and it is also
+    // what keeps the comment stripper honest — a stripper that ate the
+    // `https://` inside the string literals could not produce these.
+    for (const origin of tiers) {
+      expect(contract, `${origin} is a tier origin in lib/tiers.ts but ${DOC} §2 does not hand the app a bridge there`).toContain(origin);
     }
   });
 });

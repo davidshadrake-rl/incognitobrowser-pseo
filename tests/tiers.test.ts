@@ -6,13 +6,17 @@
  *   - the free deployment shows only free engines; the Pro deployment only Pro ones
  *     (2026-09-08: "pro tools are still in the free privacy tools catalogue" → clean split)
  *   - URL defaults are overridable and never trailing-slashed
+ *   - the two base URLs come from ONE host: derived from NEXT_PUBLIC_SITE_ORIGIN,
+ *     or an explicit pair, and half a pair fails the build (2026-09-21, below)
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';
 
+const URL_ENV = ['NEXT_PUBLIC_SITE_ORIGIN', 'NEXT_PUBLIC_PRO_URL', 'NEXT_PUBLIC_FREE_URL'];
+
 async function load(env: Record<string, string | undefined>) {
   vi.resetModules();
-  for (const k of ['NEXT_PUBLIC_TIER', 'NEXT_PUBLIC_PRO_URL', 'NEXT_PUBLIC_FREE_URL']) delete process.env[k];
+  for (const k of ['NEXT_PUBLIC_TIER', ...URL_ENV]) delete process.env[k];
   for (const [k, v] of Object.entries(env)) if (v !== undefined) process.env[k] = v;
   return import('../lib/tiers');
 }
@@ -64,6 +68,105 @@ describe('cross-deployment URLs', () => {
     const { PRO_BASE_URL, FREE_BASE_URL } = await load({ NEXT_PUBLIC_PRO_URL: 'https://pro.example/', NEXT_PUBLIC_FREE_URL: 'https://free.example/x/' });
     expect(PRO_BASE_URL).toBe('https://pro.example');
     expect(FREE_BASE_URL).toBe('https://free.example/x');
+  });
+});
+
+/**
+ * The two base URLs are one host, and the module refuses to be built otherwise.
+ *
+ * Until 2026-09-21 lib/tiers.ts read NEXT_PUBLIC_PRO_URL and NEXT_PUBLIC_FREE_URL
+ * as two unrelated variables. The only thing keeping the free site and the Pro
+ * site on one host was scripts/deploy.sh setting both from $SITE_ORIGIN — a
+ * coupling that lived in a shell script, so `npm run build:static`, a company
+ * CI job or anyone building by hand could set one, forget the other, and ship
+ * a split pair with every test green. The split is not cosmetic:
+ * components/InAppBridge.tsx builds SISTER_ORIGINS from exactly these two
+ * constants and, inside the Android app, appends ?inapp=1&pro=1 to every link
+ * whose origin is in that set. A half-moved pair decorates the app-session
+ * flags onto links into a host the installed APK has no bridge on, or that is
+ * no longer ours (audit gap B6, tests/pro-bridge.test.ts demonstrates the
+ * drift). The module now derives both from NEXT_PUBLIC_SITE_ORIGIN, accepts
+ * the old pair only together, and throws at module load on half a pair — so
+ * the failure is a build error, which is the only place this repo can put it
+ * (the app's allowlist is inside a shipped APK).
+ */
+describe('one host for both sites: derived from NEXT_PUBLIC_SITE_ORIGIN, or an explicit pair, never half a pair', () => {
+  it('derives both base URLs from NEXT_PUBLIC_SITE_ORIGIN, as the two folders deploy.sh uploads to', async () => {
+    const { PRO_BASE_URL, FREE_BASE_URL, proUrlFor } = await load({ NEXT_PUBLIC_SITE_ORIGIN: 'https://company.example/' });
+    expect(FREE_BASE_URL).toBe('https://company.example/resources');
+    expect(PRO_BASE_URL).toBe('https://company.example/resources-pro');
+    expect(new URL(FREE_BASE_URL).origin).toBe(new URL(PRO_BASE_URL).origin);
+    expect(proUrlFor('ad-tracking', 'cookie-tracker-scanner')).toBe('https://company.example/resources-pro/tools/ad-tracking/cookie-tracker-scanner');
+  });
+
+  it('an explicit pair wins over the derived one — the override is the whole pair, or nothing', async () => {
+    // scripts/deploy.sh passes all three from one $SITE_ORIGIN, so there they
+    // agree; this is what happens when they do not, and the answer has to be
+    // "the explicit pair", not one of each.
+    const { PRO_BASE_URL, FREE_BASE_URL } = await load({
+      NEXT_PUBLIC_SITE_ORIGIN: 'https://derived.example',
+      NEXT_PUBLIC_PRO_URL: 'https://explicit.example/pro',
+      NEXT_PUBLIC_FREE_URL: 'https://explicit.example/free',
+    });
+    expect(PRO_BASE_URL).toBe('https://explicit.example/pro');
+    expect(FREE_BASE_URL).toBe('https://explicit.example/free');
+  });
+
+  it('exactly one of the pair set throws at module load, and the message names the missing half', async () => {
+    // Both directions, because the guard is a comparison and a comparison can
+    // be rewritten into a one-sided check without anything else noticing.
+    await expect(load({ NEXT_PUBLIC_PRO_URL: 'https://pro.example' })).rejects.toThrow(
+      /NEXT_PUBLIC_PRO_URL and NEXT_PUBLIC_FREE_URL must be set together[\s\S]*NEXT_PUBLIC_FREE_URL is not/,
+    );
+    await expect(load({ NEXT_PUBLIC_FREE_URL: 'https://free.example/resources' })).rejects.toThrow(
+      /NEXT_PUBLIC_PRO_URL and NEXT_PUBLIC_FREE_URL must be set together[\s\S]*NEXT_PUBLIC_PRO_URL is not/,
+    );
+    // And NEXT_PUBLIC_SITE_ORIGIN does not paper over it: a derived value for
+    // the missing half would be exactly the split pair this exists to refuse.
+    await expect(load({ NEXT_PUBLIC_SITE_ORIGIN: 'https://company.example', NEXT_PUBLIC_PRO_URL: 'https://pro.example' })).rejects.toThrow(
+      /must be set together/,
+    );
+  });
+
+  it('an empty string is unset, not a value — a shell that exports an empty pair gets the defaults, an empty half is still half', async () => {
+    const both = await load({ NEXT_PUBLIC_PRO_URL: '', NEXT_PUBLIC_FREE_URL: '' });
+    expect(both.PRO_BASE_URL).toBe('https://206-189-186-34.nip.io/resources-pro');
+    expect(both.FREE_BASE_URL).toBe('https://206-189-186-34.nip.io/resources');
+    await expect(load({ NEXT_PUBLIC_PRO_URL: '', NEXT_PUBLIC_FREE_URL: 'https://free.example/resources' })).rejects.toThrow(/must be set together/);
+  });
+
+  it('a value that is not an absolute http(s) URL throws instead of switching the in-app link rewriter off', async () => {
+    // components/InAppBridge.tsx wraps new URL(base) in a try/catch and drops
+    // what does not parse. A scheme-less NEXT_PUBLIC_SITE_ORIGIN would
+    // therefore not error anywhere: SISTER_ORIGINS would be empty, every
+    // cross-site link would be relative garbage, and the build would say OK.
+    await expect(load({ NEXT_PUBLIC_SITE_ORIGIN: '206-189-186-34.nip.io' })).rejects.toThrow(/NEXT_PUBLIC_SITE_ORIGIN must be an absolute http\(s\) URL/);
+    await expect(load({ NEXT_PUBLIC_PRO_URL: '/resources-pro', NEXT_PUBLIC_FREE_URL: 'https://free.example/resources' })).rejects.toThrow(/NEXT_PUBLIC_PRO_URL must be an absolute http\(s\) URL/);
+  });
+
+  it('every read is a direct process.env.NEXT_PUBLIC_* property access, which is the only form Next inlines into the client bundle', () => {
+    // node_modules/next/dist/docs/01-app/02-guides/environment-variables.md:
+    // `process.env[name]` and `const env = process.env; env.X` are NOT inlined.
+    // These constants are imported by client components; a refactor to a
+    // loop over names would leave the browser reading undefined and every
+    // deployment silently on the droplet default.
+    const src = fs.readFileSync('lib/tiers.ts', 'utf-8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
+    for (const name of URL_ENV) {
+      expect(src, `lib/tiers.ts no longer reads process.env.${name} as a direct property access`).toContain(`process.env.${name}`);
+    }
+    expect(src, 'lib/tiers.ts reads process.env dynamically — Next will not inline that').not.toMatch(/process\.env\s*\[/);
+  });
+
+  it('scripts/deploy.sh passes NEXT_PUBLIC_SITE_ORIGIN from the same $SITE_ORIGIN the pair comes from', () => {
+    // tests/pro-bridge.test.ts already holds the pair to one variable. This
+    // holds the derivation source to the same one, so the three values the
+    // deploy bakes in cannot disagree with each other by construction.
+    const deploy = fs.readFileSync('scripts/deploy.sh', 'utf-8').replace(/^[ \t]*#.*$/gm, '');
+    const origin = /NEXT_PUBLIC_SITE_ORIGIN="?\$\{?([A-Z_]+)\}?"?/.exec(deploy);
+    const free = /NEXT_PUBLIC_FREE_URL="?\$\{?([A-Z_]+)\}?/.exec(deploy);
+    expect(origin, 'scripts/deploy.sh no longer passes NEXT_PUBLIC_SITE_ORIGIN — a build there falls back to the pair alone, and any other build path to the droplet default').not.toBeNull();
+    expect(free).not.toBeNull();
+    expect(origin![1], 'NEXT_PUBLIC_SITE_ORIGIN and the FREE/PRO pair come from different shell variables').toBe(free![1]);
   });
 });
 
