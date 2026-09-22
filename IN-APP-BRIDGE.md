@@ -103,6 +103,10 @@ Catch it in `shouldOverrideUrlLoading`, open the upgrade screen, and return `tru
 
 The image is around 100–200 KB. Decode it, save it with MediaStore (Pictures or Downloads), and confirm with a toast.
 
+**What the web side guarantees about `filename` and `mime` (since 2026-09-22).** Before sending, the page runs both values through `safeImageFilename()` in `lib/in-app.ts` and sends **nothing** if either fails: `mime` must be one of `image/png`, `image/jpeg`, `image/webp`; `filename` must be a bare name (any `/` or `\` refuses the whole thing — it is not trimmed to a basename), at most 120 characters, no `..`, no leading dot, no control characters, and its extension must match the MIME (`.png` / `.jpg` `.jpeg` / `.webp`). The only production caller is the scorecard, which builds `privacy-scorecard-<slug>.png`.
+
+**What the app must still do.** Treat the message as untrusted anyway — anything with script on an allowed origin can post one (section 2's note). Enforce the same rules natively before the MediaStore write: reject a path separator or `..`, reject a MIME outside those three, derive the extension from the MIME you decoded rather than from the name, and cap the decoded size (a few MB is generous; the real image is under 1 MB). The web-side check is there so a bug in the page cannot reach you; it is not a reason to trust the page.
+
 **b) Support `blob:` downloads in general.** Any site's generated download fails in the app today, not just ours. The usual fix: when `DownloadListener.onDownloadStart` gets a `blob:` URL, run a script in that page (`evaluateJavascript`) that fetches the blob and returns its bytes to the app. One way is over a `WebMessageChannel` port the app posts to the page, which leaves no global object behind for sites to detect. Handle `data:` URLs too.
 
 Until (a) ships, the page shows the image with "To save it, press and hold the image, or take a screenshot." Press-and-hold only works if the app's long-press menu can save a `data:` image, so (b) matters too.

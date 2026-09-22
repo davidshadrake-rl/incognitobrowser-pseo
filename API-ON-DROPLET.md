@@ -304,7 +304,8 @@ Nothing below is a WAF or a CDN. Both were considered and are the owner's call.
 | Control | What it stops |
 |---|---|
 | `systemd` ceilings (`/etc/systemd/system/ib-api.service.d/limits.conf`) | The API eating the whole box. `MemoryMax=768M`, `MemorySwapMax=0`, `CPUQuota=100%` (one core of two), `TasksMax=256`, `LimitNOFILE=8192`, Node heap `--max-old-space-size=448`. Without these, an overloaded tools service grows until the kernel picks a victim — and it picks MySQL, so WordPress goes down and does not come back on its own. `RestartSec=5` + `StartLimitBurst=5`/`300s` stops a crash-loop from becoming its own load. |
-| `ufw` | Anything reaching a port that is not 22, 80 or 443. Redis, MySQL and the Node service all bind localhost already; this is what keeps that true if one of them is ever misconfigured. Default deny inbound. |
+| ~~`ufw`~~ **not installed** | This row used to claim a default-deny inbound firewall. The nightly suite (`ufw-default-deny`) found on 2026-09-22 that `ufw` is not on the box at all — `command not found`. What keeps Redis (6379), MySQL and the Node service (3100) off the public interface is only that each binds localhost, which `dast-internal-ports-closed` confirms nightly from outside. Installing a host firewall is an owner decision (it needs 22/tcp allowed first or the session locks itself out): `apt-get install ufw && ufw allow 22/tcp && ufw allow 80,443/tcp && ufw --force enable`. |
+| **Per-process egress chain** `IB_API_EGRESS` (`scripts/droplet-egress-lockdown.sh`, applied 2026-09-22) | The scanner reaching the private network. The droplet is on a DigitalOcean VPC — `eth0 10.10.0.5/16`, `eth1 10.116.0.2/20` — and every code-level SSRF guard sits upstream of a `fetch()` that resolves the name a second time. The kernel refuses packets from uid 999 (ib-api) to RFC 1918, link-local, CGNAT, multicast and the metadata address, while keeping systemd-resolved (127.0.0.53:53) and Redis (127.0.0.1:6379) open. Rule one is `-m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT`: without it the API cannot answer Apache and every route is 503 — which is exactly what the first application did, for about three minutes, while `--verify` reported all clear because it probed five outbound connections and no inbound one. `--verify` now POSTs to `/api/ip` first. `rasp-egress-lockdown` asserts the live table nightly, not the saved file. |
 | Apache `<If "%{HTTP:Content-Length} -gt 1048576">` | Oversized bodies, refused before proxying. |
 | `ProxyPass … timeout=10` | A slow target pinning an Apache worker after the answer can no longer arrive. Workers are the real ceiling: `mpm_event` allows 150. |
 | `mod_reqtimeout` (already enabled) | Slowloris. `header=20-40,minrate=500`, `body=10,minrate=500`. |
@@ -330,7 +331,7 @@ normal body. Do not "restore" the tidier-looking directives.
 | `BLOCKED_TARGET_HOSTS` (defaults to this droplet) | Scanning ourselves: free self-amplification, one inbound request becoming two, the second skipping the rate limiter because it arrives from our own address. |
 | Bounded counter keys + 35-day TTL | The `/event` keyspace. The page key carried severity and target, so pages × events × severities × targets was ~630,000 keys/day held for 400 days, against a 256 MB `allkeys-lru` Redis — a burst would have evicted real counters to make room for itself. Now ~21,000/day for 35 days, with the same read-out. |
 | `/stats` key ceiling (20,000, reports `truncated`) | One call collecting a whole abnormal day into memory to answer. |
-| `/event` Content-Length check before buffering | 10 MB bodies being held in full and only then refused for exceeding 2 KB. |
+| **`readCappedRequestText`** on every POST route (`lib/request-body.ts`, 2026-09-22) | The pattern this row used to describe — check `Content-Length`, then `request.text()`, then re-check the length — was the bug. A chunked request sends no `Content-Length`, so the pre-check was *skipped*, and `request.text()` is unbounded: 300 MB went resident on the 448 MB heap from one request, no proof-of-work needed on three of the four routes, systemd restarting the service in a loop. The streaming reader stops pulling at the cap and cancels. Verified on the box: 200 MB offered straight at Node costs it 128 KB and is refused in under a second. `request.text()` / `request.json()` are banned in route handlers by `tests/request-body-cap.test.ts`; `rasp-api-body-cap-process` measures VmRSS next to the process nightly, because from outside Apache — which drains the client regardless — a buffering route and a streaming one are indistinguishable. |
 
 Redis holds only our `evt:` keys — **WordPress does not share it** (no
 `object-cache.php` drop-in, no `redis` in `wp-config.php`, checked 2026-09-18),
@@ -362,27 +363,47 @@ function, with a comment claiming it was not exported — it was. The copy had
 drifted, so the suite reported all green straight through both holes above.
 It now imports the real one. Never re-inline it.
 
-### Known gap: DNS rebinding
+### The guard is an allowlist now (2026-09-22)
+
+Four bypasses in a week, all the same shape — a form the regexes did not
+anticipate, therefore allowed — is what a denylist produces. The resolved
+addresses are now judged by `isPublicUnicastAddress()` in `lib/net-address.ts`:
+integer parsing, the full IANA special-purpose registry, IPv6 global unicast
+is `2000::/3` and nothing else, and anything that does not parse canonically is
+**refused rather than fetched**. The differential test names what the denylist
+was approving, including `::127.0.0.1` (IPv4-compatible loopback) and Teredo
+`2001::/32`, which embeds an IPv4 exactly as the 6to4 prefix the denylist did
+block. `::127.0.0.1` was not exploitable — WHATWG rewrites it to `[::7f00:1]`
+and the *bracketed* string went to `dns.lookup`, which failed — but the control
+that stopped it was a bracket. Single-label hostnames (`intranet`) are refused
+before the resolver, because on a company box the search suffix decides what
+they mean. `isBlockedHostname` remains for the pre-resolution name checks.
+
+### DNS rebinding: closed at the network layer, 2026-09-22
 
 The route resolves the hostname, judges the addresses, and then calls `fetch`,
 which resolves it **again**. A name whose record flips between the two — a
-public address for our check, a private one for the fetch — still gets through.
-Narrow (it needs an attacker-controlled domain on a very low TTL and a won
-race) but real, and the payoff is the fetched body being returned to the caller.
+public address for our check, a private one for the fetch — walked past every
+code-level guard, because what was judged was not what got connected to.
 
-Closing it means pinning the connection to the address that was actually
-checked. Two ways, neither free, so it is left for a decision rather than done
-quietly:
+It is closed by the `IB_API_EGRESS` chain above, not by code: the rebind
+resolves into the VPC, `fetch()` connects, and the packet is refused on the way
+out of the host. Parser bugs and the resolve-twice race stop mattering for
+private targets. Two code-level alternatives were costed here before (an
+`undici` dispatcher with a pinned `connect.lookup`; a `node:https` rewrite with
+an agent-level `lookup`). Neither is needed for the private case now, and
+neither would help the remaining one:
 
-1. Add `undici` as a direct dependency and give `fetch` a `dispatcher` whose
-   `connect.lookup` returns only the verified address. Small code change, but a
-   new production dependency.
-2. Rewrite the fetch on `node:https` with an agent-level `lookup` — no new
-   dependency, everything is built in — but it means reimplementing header,
-   redirect and capped-body handling that currently works and is well covered.
+**What is NOT closed, and cannot be at this layer:** an internal service that
+lives on a *public* address. It is public unicast, the allowlist allows it, the
+kernel routes it, and pinning would pin to it. If the company runs something
+sensitive on a public IP, it needs authentication or the VPC; the scanner
+cannot tell it from any other website. `BLOCKED_TARGET_HOSTS` can name such
+hosts explicitly (CIDR support is in progress), which is a list, not a
+guarantee.
 
-Until then the blast radius is bounded by what is already in place: the port
-allowlist (80/443/8080/8443), `redirect: 'manual'`, and `BLOCKED_TARGET_HOSTS`.
+Still in place underneath: the port allowlist (80/443/8080/8443),
+`redirect: 'manual'`, and `BLOCKED_TARGET_HOSTS`.
 
 Also not done: a per-day scan counter in the `/event` keyspace. Scan volume is
 visible in `api.log` meanwhile.
