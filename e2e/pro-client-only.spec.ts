@@ -33,7 +33,11 @@
  * The four tests:
  *   1. Paste mode           — the strictest one: the sentinel is never a cookie
  *                             on this origin, so NOTHING may carry it anywhere.
- *   2. This Page mode       — document.cookie, plus the page's HttpOnly claim.
+ *   2. This Page mode       — document.cookie, plus the page's HttpOnly claim,
+ *                             plus a cookie planted for ANOTHER host that must
+ *                             never appear: "only cookies on the current host"
+ *                             is decided by the browser's jar, and a real jar
+ *                             is the only place it can be asserted.
  *   3. Metadata viewer      — a real JPEG, sentinel inside the bytes AND in the
  *                             file name; no multipart request may exist at all.
  *   4. THE CONTROL          — the scanner's "Scan a URL" mode, which SHOULD
@@ -42,7 +46,11 @@
  *                             pass while proving nothing at all. It exercises
  *                             all four fields the detector reads — URL, header,
  *                             request body and sendBeacon Blob body — and is
- *                             the most important test in the file.
+ *                             the most important test in the file. It also
+ *                             asserts the browser itself never requested the
+ *                             scanned host: the scan happens on our server,
+ *                             and a tool that embedded the target to read its
+ *                             cookies would have had to load it here.
  *
  * PRODUCTION SAFETY: exactly ONE real scan happens in this file, in test 4,
  * against https://example.com. Tests 1-3 must make no server call by design,
@@ -84,6 +92,13 @@ function proToolUrl(engine: 'cookie-analyzer' | 'metadata-viewer'): string {
 
 const ORIGIN = new URL(RAW_BASE).origin;
 const HOSTNAME = new URL(RAW_BASE).hostname;
+/**
+ * A host this suite never visits, for a cookie that must never appear in the
+ * This Page result. `.example` is reserved (RFC 2606) so it cannot be ours, a
+ * CDN's, or anyone's. It is only ever a name in the cookie jar; no request is
+ * made to it.
+ */
+const FOREIGN_HOST = 'ib-e2e-foreign-host.example';
 
 /** A fresh token per run, so a hit can only have come from this test's input. */
 function sentinel(label: string): string {
@@ -497,13 +512,27 @@ test('this-page mode: document.cookie is read locally, HttpOnly cookies are excl
   test.setTimeout(90_000);
   const jsSecret = sentinel('THISPAGE');
   const httpOnlySecret = sentinel('HTTPONLY');
+  const foreignSecret = sentinel('FOREIGNHOST');
   const wire = new Wire(context, page);
   await wire.arm(page);
 
-  // Planted before navigation so the page is served with it: a cookie the page
-  // CANNOT read. The tool's copy promises these do not appear; a tool that
-  // silently omitted them would look identical on screen, so the cookie is
-  // asserted to be really there and really unreadable before the tool runs.
+  // Two cookies planted before navigation, so the page is served with both in
+  // the jar.
+  //
+  // The first is a cookie on THIS host the page CANNOT read. The tool's copy
+  // promises these do not appear; a tool that silently omitted them would look
+  // identical on screen, so the cookie is asserted to be really there and
+  // really unreadable before the tool runs.
+  //
+  // The second is a cookie on ANOTHER host entirely. "Only cookies on the
+  // current host appear" is not a property of the tool: it reads
+  // document.cookie, and the browser's jar (RFC 6265 §5.4) decides what that
+  // string holds. No source guard can assert it — tests/audit-2bc-client.test.ts
+  // says so in its header — and the only honest test is to put a cookie for
+  // some other host into the same jar and watch the tool never show it. Unlike
+  // the HttpOnly probe it is script-readable on its own host, so if it shows up
+  // here the jar was scoped wrong or the tool read something other than this
+  // document's cookie string.
   await context.addCookies([
     {
       name: 'ib_e2e_httponly_probe',
@@ -514,6 +543,15 @@ test('this-page mode: document.cookie is read locally, HttpOnly cookies are excl
       secure: HTTPS,
       sameSite: 'Lax',
     },
+    {
+      name: 'ib_e2e_foreign_probe',
+      value: foreignSecret,
+      domain: FOREIGN_HOST,
+      path: '/',
+      httpOnly: false,
+      secure: false,
+      sameSite: 'Lax',
+    },
   ]);
 
   await openTool(page, proToolUrl('cookie-analyzer'));
@@ -521,6 +559,18 @@ test('this-page mode: document.cookie is read locally, HttpOnly cookies are excl
   const stored = (await context.cookies(ORIGIN)).find((c) => c.name === 'ib_e2e_httponly_probe');
   expect(stored, 'the HttpOnly probe cookie was not stored — the claim below would be vacuous').toBeTruthy();
   expect(stored!.httpOnly, 'the probe cookie must actually be HttpOnly').toBe(true);
+
+  // The foreign cookie is really in the jar, against the other host, and the
+  // jar does NOT hand it to this origin. Without the first two checks the
+  // absence below would be an absence of the probe; without the third the
+  // test would be grading the tool for something the browser had already done.
+  const foreignStored = (await context.cookies()).find((c) => c.name === 'ib_e2e_foreign_probe');
+  expect(foreignStored, 'the foreign-host probe cookie was not stored — the host-scoping claim below would be vacuous').toBeTruthy();
+  expect(foreignStored!.domain.replace(/^\./, ''), 'the foreign probe was stored against the wrong host').toBe(FOREIGN_HOST);
+  expect(
+    (await context.cookies(ORIGIN)).find((c) => c.name === 'ib_e2e_foreign_probe'),
+    'the jar handed another host’s cookie to this origin — the browser is not scoping by host, so this test proves nothing',
+  ).toBeUndefined();
 
   const thisPageTab = page.getByRole('button', { name: 'This Page', exact: true });
   await waitForHydration(page, thisPageTab, 'the cookie scanner');
@@ -541,6 +591,10 @@ test('this-page mode: document.cookie is read locally, HttpOnly cookies are excl
     visibleToScripts,
     'the HttpOnly probe is readable from JS — the browser is not enforcing HttpOnly, so this test proves nothing',
   ).not.toContain(httpOnlySecret);
+  expect(
+    visibleToScripts,
+    'another host’s cookie is readable from this page — the jar is not scoped by host, so this test proves nothing',
+  ).not.toContain(foreignSecret);
 
   await page.getByRole('button', { name: 'Scan Cookies' }).click();
 
@@ -552,6 +606,13 @@ test('this-page mode: document.cookie is read locally, HttpOnly cookies are excl
   expect(body, 'an HttpOnly cookie was listed by a tool that reads document.cookie').not.toContain(httpOnlySecret);
   expect(body, 'the HttpOnly probe cookie name was listed').not.toContain('ib_e2e_httponly_probe');
 
+  // And so is the other host's cookie — name and value. This is the second
+  // clause of P1, "only cookies on the current host appear", asserted the one
+  // way it can be: the cookie was in the jar, script-readable on its own host,
+  // and the tool did not show it.
+  expect(body, 'a cookie belonging to another host was listed by This Page').not.toContain(foreignSecret);
+  expect(body, 'the foreign-host probe cookie name was listed').not.toContain('ib_e2e_foreign_probe');
+
   await flushAndSettle(page, wire);
   expect(wire.seen.length, 'the request watcher recorded nothing at all').toBeGreaterThan(0);
 
@@ -561,6 +622,11 @@ test('this-page mode: document.cookie is read locally, HttpOnly cookies are excl
   // the cross-origin check below closes the hole that exemption opens.
   expect(wire.hits(jsSecret, { ignoreHeaders: ['cookie'] }), "this page's cookies left the browser").toEqual([]);
   expect(wire.hits('SENTINEL_JS_SESSION', { ignoreHeaders: ['cookie'] }), 'a cookie NAME left the browser').toEqual([]);
+
+  // The foreign cookie gets no exemption at all: it is not a cookie on this
+  // origin, so there is no browser behaviour that could legitimately put it on
+  // this origin's wire, and this page never requests its host.
+  expect(wire.hits(foreignSecret), "another host's cookie left the browser from this page").toEqual([]);
 
   // Nothing off this origin may carry them anywhere — cookie header included.
   const offOrigin = wire.seen.filter((s) => !s.url.startsWith(ORIGIN) && /^https?:/.test(s.url));
@@ -721,6 +787,18 @@ test('CONTROL: the watcher sees the one mode that does call the server — url, 
   );
 
   await flushAndSettle(page, wire);
+
+  // (0) the browser never requested the scanned host itself. The scan is done
+  //     by our server; a tool that embedded example.com in a frame to read its
+  //     cookies would have made the context load it, and the context-level
+  //     listener records frame loads along with everything else. This is the
+  //     runtime half of P3 — tests/audit-2bc-client.test.ts reads spellings
+  //     and says in its header that spellings are all it can read.
+  const toTarget = wire.seen.filter((s) => /^https?:\/\/(?:[^/?#]*\.)?example\.com(?:[:/?#]|$)/i.test(s.url));
+  expect(
+    toTarget.map((s) => `${s.method} ${s.url} [${s.kind}]`),
+    'the browser itself requested the scanned site — the scan is supposed to happen on the server, never by loading the target here',
+  ).toEqual([]);
 
   // (a) the watcher saw the scanner API being called at all
   const calls = wire.scannerCalls();

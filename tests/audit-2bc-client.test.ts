@@ -1,57 +1,69 @@
 /**
  * Audit group 2BC-client: the cookie analyzer's two client-only modes.
  *
- * The owner's claims for this tool, and what this file adds to each:
+ * WHAT A SOURCE GUARD IS, said first because the last version of this file said
+ * otherwise. Every guard below reads source text and looks for spellings. That
+ * catches the ordinary regression — an <iframe> written inline, a
+ * `parent.document` read, a helper one import away — and it catches nothing
+ * else. `'ifr' + 'ame'`, `el[key]`, `Reflect.get(doc, 'cookie')`, a nested
+ * destructure, a helper two imports deep, markup pushed through innerHTML and
+ * read back through a computed key: each walks through every regex here, and
+ * no list of regexes will close that, because the list is finite and the ways
+ * JavaScript can name a property are not. The verifier of the last version
+ * proved it — three edits that left the tool embedding the scanned site and
+ * reading its cookies, every test green — while that version's header called
+ * its receiver list "closed-world". It was not. This one does not claim to be.
+ *
+ * What covers the claims at RUNTIME is e2e/pro-client-only.spec.ts, which
+ * drives the deployed page with a real cookie jar and a request watcher, and
+ * does not care how a read is spelled:
+ *   - a cookie planted for ANOTHER host must never appear in the This Page
+ *     result — the only honest test of "only cookies on the current host";
+ *   - an HttpOnly cookie planted on THIS host must never appear;
+ *   - a URL scan must produce no request from the browser to the scanned
+ *     host — a tool that embedded the target would have to load it, and the
+ *     context-level watcher records every frame load.
+ * This file is the cheap tripwire that runs on every `vitest run`. That file is
+ * the proof, and it runs with the deployed suite.
+ *
+ * The owner's claims, and what this file adds to each:
  *
  *   P1  "Only cookies on the current host appear; HttpOnly ones are hidden."
- *       The HttpOnly half is asserted in three places already (the e2e spec
- *       plants a real HttpOnly cookie, proves the browser is enforcing it, and
- *       proves it is absent from the rendered list). The FIRST half rested on
- *       one line — `expect(src).not.toMatch(/cookieStore|chrome\.cookies|
- *       browser\.cookies/)` — and a count of `document.cookie` that allows TWO
- *       because one of the two is the comment above the read.
+ *       The old assertion was one line — `not.toMatch(/cookieStore|chrome\.
+ *       cookies|browser\.cookies/)` — and a count of `document.cookie` that
+ *       allowed TWO because one of the two was the comment above the read. A
+ *       guard that reads its own explanatory comment is a guard that fails
+ *       when the comment moves and passes when the code does. Nothing in this
+ *       file is allowed to see a comment: every guard runs over the repo's
+ *       own comment-stripped view of the source.
  *
- *       Both of those are graded here by running the old shape and the new one
- *       over the SAME mutant: a second cookie source that the three spellings
- *       do not name, and a second read that the comment budget makes room for.
- *       The old shape passes both. That is the hole, demonstrated rather than
- *       asserted, and it is why every guard below runs over comment-stripped
- *       and string-stripped code instead of over the file as it reads.
- *
- *       That count is a guard reading its own explanatory comment — the test
- *       says so in its own words, "the line above it is a comment, which
- *       counts too". Nothing in this file is allowed to see a comment.
+ *       Two tests that used to sit here were deleted on 2026-09-22. Each built
+ *       a mutant string in this file and asserted a predicate from this file
+ *       over it — both sides authored by the test, and the shipped tool
+ *       touched only through a string anchor. They passed while the tool read
+ *       another document's cookies and failed when a comment was edited. The
+ *       fact they demonstrated (the old three-spelling guard had holes) is
+ *       true and is stated in this paragraph, which is where it belonged.
  *
  *   P3  "Does not attempt to read cookies from an embedded iframe of the
- *       target site." This had no assertion of any kind, anywhere: no test,
- *       no e2e spec and no SAST check in scripts/security/checks/ mentions
- *       iframe, contentDocument, contentWindow or postMessage for this tool.
- *       A same-origin frame adds nothing over document.cookie and a
- *       cross-origin one is unreadable, so today's residual is a refactor —
- *       which is exactly what a tripwire is for.
+ *       target site." This had no assertion of any kind before the audit. The
+ *       guard now scans the component AND every first-level local import it
+ *       has (`@/…`, `./…`), because moving code into a helper is the most
+ *       ordinary refactor there is and the last version read one of the
+ *       component's eight local imports. `parent` and `top` were missing from
+ *       the channel list; they are in it. Second-level imports are NOT
+ *       followed: lib/in-app.ts, two hops away, legitimately calls postMessage
+ *       on the Android bridge, and an exemption list is where a guard goes to
+ *       rot. A helper two hops deep walks through — see the first paragraph.
  *
- *   C2  the missing size cap. Reported, not closed: there is nothing to guard
- *       yet. What this file does add is an honestly sized probe. The last time
- *       a check in this repo sized its probe politely it wrote "the app-side
- *       caps are what actually bind today and they are correct" about a
- *       service one POST could OOM, so the cost is measured here at a size a
- *       clipboard really holds, and the render multiplier is read out of the
- *       component's own JSX rather than guessed.
+ *   C2  the missing size cap. Three caps landed (textarea maxLength, a
+ *       character slice, a piece slice) and the guards import the constants,
+ *       so a raised cap is still a cap and a removed one goes red.
  *
- *   C4  Expires=/Path= counted as cookies. The claim is false — the parser
- *       does treat them as cookies, and tests/pro-client-only.test.ts already
- *       pins that. What is NOT pinned is the mitigating half the owner's
- *       phrasing rests on: "in a way that breaks the page". The guard here is
- *       that the mis-parse stays cosmetic — the verdict a visitor is given
- *       must not move when attributes are present.
- *
- * WHAT THIS FILE CANNOT DO, said plainly so nobody counts it as done: "only
- * cookies on the current host appear" is settled by the browser's cookie
- * store (RFC 6265 §5.4), and the one honest way to assert it is to plant a
- * cookie belonging to another host and watch it not appear. That needs a real
- * cookie jar. vitest runs `environment: 'node'` here and jsdom is not a
- * dependency, so it belongs in e2e/pro-client-only.spec.ts beside the
- * HttpOnly plant that is already there. Reported, not faked.
+ *   C4  Expires=/Path= counted as cookies. The parser now drops RFC 6265
+ *       attribute names after the first piece, and the mitigating half the
+ *       owner's phrasing rests on — "not in a way that breaks the page" — is
+ *       pinned: the verdict must not move when attributes are present.
  */
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
@@ -88,9 +100,6 @@ const CODE = stripComments(SRC);
 /** Comments blanked, literals kept: for spellings that hide inside a string. */
 const TEXT = stripComments(SRC, { strings: false });
 
-const CLIENT_SRC = readSrc(SCAN_CLIENT);
-const CLIENT_TEXT = stripComments(CLIENT_SRC, { strings: false });
-
 // The stripper must really have stripped, or every "not found" below is a
 // sentence about an empty string.
 if (!/parseCookieList/.test(CODE)) throw new Error('stripComments blanked the code itself — every guard here would pass vacuously');
@@ -105,8 +114,11 @@ if (/HttpOnly cookies never appear in it/.test(CODE)) throw new Error('stripComm
 /**
  * Every `x.cookie` / `x.cookies` / `x.cookieStore` property read in executable
  * code, as `receiver.property`. Optional chaining is included: `document
- * ?.cookie` is the same read with a different spelling, and a guard that reads
- * spellings is the thing this file exists to replace.
+ * ?.cookie` is the same read with a different spelling.
+ *
+ * This sees the syntactic form `identifier.property` and nothing else. A
+ * destructure is caught by DESTRUCTURED_COOKIE_READ, a computed key by
+ * COMPUTED_COOKIE_ACCESS, and everything past those by nothing in this file.
  */
 function cookiePropertyReads(code: string): string[] {
   const out: string[] = [];
@@ -117,7 +129,7 @@ function cookiePropertyReads(code: string): string[] {
 }
 
 /**
- * The receivers this file is allowed to read a cookie property from.
+ * The receivers the component is allowed to read a cookie property from.
  *
  *   document.cookie  the one browser source, and the whole basis of the
  *                    HttpOnly sentence beside the button.
@@ -125,6 +137,11 @@ function cookiePropertyReads(code: string): string[] {
  *                    the URL-scan payload's own array. That scan happens on
  *                    our server against a URL the visitor typed; it is not a
  *                    cookie store and it cannot reach this browser's.
+ *
+ * Its imports get a stricter rule: no `.cookie` (singular) read on anything.
+ * `.cookies` plural is the scan payload's array (lib/site-grade.ts reads
+ * `r.cookies`); `.cookie` singular is a document's jar, and as of 2026-09-22
+ * nothing else in lib/, components/ or app/ has a property by that name.
  */
 const ALLOWED_COOKIE_READS = ['document.cookie', 'result.cookies', 'urlResult.cookies'];
 
@@ -132,115 +149,147 @@ const ALLOWED_COOKIE_READS = ['document.cookie', 'result.cookies', 'urlResult.co
  * Cookie sources that are not a property read: the CookieStore API, the
  * extension APIs, and the Android app's injected bridge.
  *
- * IncognitoBrowserApp is the interesting one and it is absent from the old
- * three-spelling list. It is an @JavascriptInterface the app's WebView puts on
- * our origins (lib/in-app.ts:186), which means it is the one object on this
- * page NOT bound by the same-origin policy. Its surface today is postMessage,
- * openUpgrade and saveImage — no cookie method. The day it grows one, "only
- * cookies on the current host appear" stops being a fact about the browser and
- * starts being a fact about an Android build nobody reviews here.
+ * IncognitoBrowserApp is the interesting one. It is an @JavascriptInterface
+ * the app's WebView puts on our origins (lib/in-app.ts), which means it is the
+ * one object on this page NOT bound by the same-origin policy. Its surface
+ * today is postMessage, openUpgrade and saveImage — no cookie method. The day
+ * it grows one, "only cookies on the current host appear" stops being a fact
+ * about the browser and starts being a fact about an Android build nobody
+ * reviews here.
  *
- * document.requestStorageAccess is here for the same reason one step removed:
- * it is the call that asks for unpartitioned cookie access from inside an
- * embedded context, so it belongs beside the frame guards below.
+ * document.requestStorageAccess is the call that asks for unpartitioned cookie
+ * access from inside an embedded context, so it belongs beside the frame
+ * guards below.
+ *
+ * Every entry carries the sample it must match, so a typo in one regex cannot
+ * leave a quiet hole in the list.
  */
-const FOREIGN_COOKIE_SOURCES: Array<{ re: RegExp; name: string }> = [
-  { re: /\bcookieStore\b/, name: 'the CookieStore API (cookieStore)' },
-  { re: /\bchrome\s*\??\s*\.\s*cookies\b/, name: 'chrome.cookies' },
-  { re: /\bbrowser\s*\??\s*\.\s*cookies\b/, name: 'browser.cookies' },
-  { re: /\bIncognitoBrowserApp\b/, name: "the Android app's injected bridge (IncognitoBrowserApp)" },
-  { re: /\bdocument\s*\??\s*\.\s*requestStorageAccess\b/, name: 'document.requestStorageAccess()' },
+const FOREIGN_COOKIE_SOURCES: Array<{ re: RegExp; name: string; sample: string }> = [
+  { re: /\bcookieStore\b/, name: 'the CookieStore API (cookieStore)', sample: 'const all = await cookieStore.getAll();' },
+  { re: /\bchrome\s*\??\s*\.\s*cookies\b/, name: 'chrome.cookies', sample: 'chrome.cookies.getAll({}, cb);' },
+  { re: /\bbrowser\s*\??\s*\.\s*cookies\b/, name: 'browser.cookies', sample: 'browser?.cookies.getAll({});' },
+  { re: /\bIncognitoBrowserApp\b/, name: "the Android app's injected bridge (IncognitoBrowserApp)", sample: 'IncognitoBrowserApp.getAllCookies()' },
+  { re: /\bdocument\s*\??\s*\.\s*requestStorageAccess\b/, name: 'document.requestStorageAccess()', sample: 'await document.requestStorageAccess();' },
 ];
 
 /** Cookie access written as a computed key, which blanking strings would hide. */
 const COMPUTED_COOKIE_ACCESS = /\[\s*['"`]\s*(?:cookies?|cookieStore)\s*['"`]\s*\]/i;
 
 /**
- * Ways to read, or talk to, a document that is not this one. An embedded frame
- * of the scanned site is the shape P3 names; the rest are the same idea with
- * different plumbing, and `postMessage` is how a frame would answer.
+ * Cookie access written as a destructure: `const { cookie } = theirDoc` names
+ * no receiver, so cookiePropertyReads() cannot see it. This was one of the
+ * verifier's three walks through the last version. Only the one-level
+ * `const/let/var { … cookie … } =` shape is caught; a nested pattern or a
+ * parameter destructure is not.
  */
-const CROSS_DOCUMENT_CHANNELS: Array<{ re: RegExp; name: string }> = [
-  { re: /<\s*iframe\b/i, name: 'an <iframe> element' },
-  { re: /\bcreateElement\s*\(\s*['"`]\s*(?:iframe|frame|object|embed)\b/i, name: 'createElement("iframe")' },
-  { re: /\bsrcdoc\b/i, name: 'srcdoc' },
-  { re: /\bcontentDocument\b/, name: 'contentDocument' },
-  { re: /\bcontentWindow\b/, name: 'contentWindow' },
-  { re: /\bframes\s*\[/, name: 'window.frames[]' },
-  { re: /\bopener\b/, name: 'window.opener' },
-  { re: /\bpostMessage\b/, name: 'postMessage' },
-  { re: /\bdocument\s*\??\s*\.\s*domain\b/, name: 'document.domain' },
+const DESTRUCTURED_COOKIE_READ = /\b(?:const|let|var)\s*\{[^}]*\bcookies?\b[^}]*\}\s*=/;
+
+/**
+ * Ways to reach, or talk to, a document that is not this one. An embedded
+ * frame of the scanned site is the shape P3 names; the rest are the same idea
+ * with different plumbing, and `postMessage` is how a frame would answer.
+ *
+ * Two entries exist because the verifier walked past their absence:
+ *   - `parent` / `top` are the frame's OWN handles on the documents above it;
+ *     `const { cookie } = parent.document` read another document with
+ *     nothing on the old list spelled.
+ *   - createElement() with anything but a plain quoted tag: `const tag =
+ *     'ifr' + 'ame'; document.createElement(tag)` is a frame that the literal
+ *     regex cannot see. The component's one createElement is `('a')`, for the
+ *     CSV download, and stays allowed.
+ * Every entry carries the sample it must match.
+ */
+const CROSS_DOCUMENT_CHANNELS: Array<{ re: RegExp; name: string; sample: string }> = [
+  { re: /<\s*iframe\b/i, name: 'an <iframe> element', sample: '<iframe src={url} />' },
+  { re: /\bcreateElement\s*\(\s*['"`]\s*(?:iframe|frame|object|embed)\b/i, name: 'createElement("iframe")', sample: "const f = document.createElement('iframe');" },
+  { re: /\bcreateElement\s*\(\s*(?!['"][a-z][a-z0-9-]*['"]\s*[,)])/, name: 'createElement() with anything but a plain literal tag', sample: "const tag = 'ifr' + 'ame'; const el = document.createElement(tag);" },
+  { re: /\bcreateElementNS\s*\(/, name: 'createElementNS()', sample: "document.createElementNS(ns, 'iframe')" },
+  { re: /\bsrcdoc\b/i, name: 'srcdoc', sample: '<div srcdoc={html} />' },
+  { re: /\bcontentDocument\b/, name: 'contentDocument', sample: 'const d = f.contentDocument;' },
+  { re: /\bcontentWindow\b/, name: 'contentWindow', sample: 'const w = f.contentWindow;' },
+  { re: /\bframes\s*\[/, name: 'window.frames[]', sample: 'const d = frames[0];' },
+  { re: /\bopener\b/, name: 'window.opener', sample: 'const o = opener;' },
+  {
+    re: /(?<![\w$.])(?:parent|top)\s*\??\s*\.\s*(?:document|frames|location|window|self|opener|parent|top|postMessage)\b|\b(?:window|self|globalThis)\s*\??\s*\.\s*(?:parent|top)\b/,
+    name: 'window.parent / window.top',
+    sample: 'const { cookie: alsoTheirs } = parent.document;',
+  },
+  { re: /\bpostMessage\b/, name: 'postMessage', sample: 'w.postMessage("give me your cookies", "*");' },
+  { re: /\bdocument\s*\??\s*\.\s*domain\b/, name: 'document.domain', sample: 'document.domain = "example.com";' },
 ];
 
 const crossDocumentChannels = (text: string) => CROSS_DOCUMENT_CHANNELS.filter((c) => c.re.test(text)).map((c) => c.name);
 const foreignCookieSources = (code: string) => FOREIGN_COOKIE_SOURCES.filter((s) => s.re.test(code)).map((s) => s.name);
+
+/**
+ * The local modules a file imports at first level — `@/…`, `./…`, `../…` —
+ * as written. Packages are not this repo's code and are skipped; `import
+ * type` ships nothing and is skipped. Each match is kept inside one statement
+ * by `[^;'"]*?`, so a side-effect import with no `from` cannot borrow the next
+ * statement's specifier.
+ */
+function localImportSpecifiers(text: string): string[] {
+  const out: string[] = [];
+  for (const m of text.matchAll(/\b(?:import|export)\s+(type\s+)?[^;'"]*?\bfrom\s*['"]([^'"]+)['"]/g)) {
+    if (m[1]) continue;
+    out.push(m[2]);
+  }
+  for (const m of text.matchAll(/\bimport\s*['"]([^'"]+)['"]/g)) out.push(m[1]);
+  return out.filter((s) => s.startsWith('@/') || s.startsWith('./') || s.startsWith('../'));
+}
+
+/** Those specifiers resolved to repo-relative files. */
+function localImportsOf(rel: string): string[] {
+  const out: string[] = [];
+  for (const spec of localImportSpecifiers(stripComments(readSrc(rel), { strings: false }))) {
+    const base = spec.startsWith('@/')
+      ? spec.slice(2)
+      : path.posix.normalize(path.posix.join(path.posix.dirname(rel), spec));
+    const candidates = [base, `${base}.ts`, `${base}.tsx`, `${base}/index.ts`, `${base}/index.tsx`];
+    const found = candidates.find((c) => {
+      const abs = path.join(ROOT, c);
+      return fs.existsSync(abs) && fs.statSync(abs).isFile();
+    });
+    // A helper the scan cannot find is a helper the scan does not guard, and
+    // that must be loud rather than a quietly shorter list.
+    if (!found) throw new Error(`${rel} imports '${spec}' and this scan cannot resolve it`);
+    out.push(found);
+  }
+  return [...new Set(out)];
+}
+
+/** The component's first-level local imports: every file this scan reads besides the component. */
+const COMPONENT_IMPORTS = localImportsOf(COOKIE_TOOL);
 
 /** A copy of the component with one edit applied, and proof the edit landed. */
 function mutate(edits: Array<[string, string]>): string {
   let out = SRC;
   for (const [from, to] of edits) {
     const next = out.replace(from, to);
-    if (next === out) throw new Error(`mutation target not found: ${from.slice(0, 70)} — this demonstration is no longer demonstrating anything`);
+    if (next === out) throw new Error(`mutation target not found: ${from.slice(0, 70)} — this detector self-test no longer exercises the real file`);
     out = next;
   }
   return out;
 }
 
-/** The three assertions this file replaces, run as one predicate over raw source. */
-function oldGuardPasses(src: string): boolean {
-  return (src.match(/document\.cookie/g) || []).length <= 2
-    && !/cookieStore|chrome\.cookies|browser\.cookies/.test(src)
-    && src.includes('parseCookieList(document.cookie)');
-}
-
-const COMMENT_ANCHOR = '  // document.cookie lists only the cookies scripts may read: HttpOnly cookies never appear in it.\n';
+/** The one line that reads the browser's cookies. Code, not a comment: if it moves, every self-test below must be re-read. */
 const READ_ANCHOR = '    setCookies(parseCookieList(document.cookie));';
 
 // ────────────── P1: document.cookie is the only cookie source ─────────────
 
 describe('P1 — only cookies on the current host appear', () => {
-  it('document.cookie is read exactly once in CODE, and a comment is not part of that count', () => {
+  it('document.cookie is read exactly once in the component, counted over code with comments blanked', () => {
     // The old assertion allowed two `document.cookie` and said so: "One in the
     // code; the line above it is a comment, which counts too." Half the budget
     // was spent on prose, which means a second real read fits inside it as
-    // soon as anyone tidies the comment away.
+    // soon as anyone tidies the comment away. This count cannot see prose.
     const inCode = (CODE.match(/document\.cookie/g) || []).length;
-    const inFile = (SRC.match(/document\.cookie/g) || []).length;
     expect(inCode, 'document.cookie is read more than once — each read needs grading on its own').toBe(1);
-    expect(inFile, 'the count over the raw file is the one that includes the comment').toBe(2);
     // …and the single read goes straight into the pure parser.
     expect(CODE).toContain('parseCookieList(document.cookie)');
   });
 
-  it('the old guard passes a second cookie read that this one catches', () => {
-    // Delete one comment line, add a read of the opener's cookies. The budget
-    // of two is now free, the three spellings do not name `opener`, and the
-    // `parseCookieList(document.cookie)` line is untouched.
-    const mutant = mutate([
-      [COMMENT_ANCHOR, ''],
-      [READ_ANCHOR, `    const alsoTheirs = opener.document.cookie;\n${READ_ANCHOR}\n    void alsoTheirs;`],
-    ]);
-    expect(oldGuardPasses(mutant), 'the old guard caught this — the hole being demonstrated is not there').toBe(true);
-
-    const mutantCode = stripComments(mutant);
-    expect((mutantCode.match(/document\.cookie/g) || []).length).toBe(2);
-    expect(crossDocumentChannels(stripComments(mutant, { strings: false }))).toContain('window.opener');
-  });
-
-  it("the old guard passes a cookie source it does not know the name of, and this one does not", () => {
-    // Nothing here is spelled cookieStore, chrome.cookies or browser.cookies,
-    // document.cookie is still read once into the parser, and the file still
-    // contains the exact string the old assertion looked for. It passes.
-    const mutant = mutate([
-      [READ_ANCHOR, `    const fromApp = IncognitoBrowserApp.getAllCookies();\n${READ_ANCHOR}\n    setCookies((cs) => [...cs, ...parseCookieList(fromApp)]);`],
-    ]);
-    expect(oldGuardPasses(mutant), 'the old guard caught the bridge — the hole being demonstrated is not there').toBe(true);
-
-    const found = foreignCookieSources(stripComments(mutant));
-    expect(found).toContain("the Android app's injected bridge (IncognitoBrowserApp)");
-  });
-
-  it('every cookie property read in this file is one of three known receivers', () => {
+  it('every cookie property read in the component is one of three known receivers', () => {
     const reads = cookiePropertyReads(CODE);
     // Non-vacuity first: if the scan cannot even see the one read everybody
     // knows about, its silence about the others means nothing.
@@ -249,11 +298,54 @@ describe('P1 — only cookies on the current host appear', () => {
     expect([...new Set(reads)].sort()).toEqual([...ALLOWED_COOKIE_READS].sort());
   });
 
-  it('a second receiver, however it is spelled, is reported', () => {
+  it("no first-level import reads a document's cookie jar, names a second source, or hides a read in a key or a destructure", () => {
+    // The verifier moved the read into lib/cookie-peek.ts, imported it, and
+    // the last version of this file — which read the component and one
+    // hard-coded helper — stayed green. Every local import is read now.
+    expect(COMPONENT_IMPORTS, 'the import scan found nothing — it is resolving nothing').toEqual(
+      expect.arrayContaining([SCAN_CLIENT, 'lib/scanner.ts', 'components/tools/ResultContext.tsx']),
+    );
+    for (const rel of COMPONENT_IMPORTS) {
+      const code = stripComments(readSrc(rel));
+      const text = stripComments(readSrc(rel), { strings: false });
+      const singular = cookiePropertyReads(code).filter((r) => r.endsWith('.cookie'));
+      expect(singular, `${rel}, imported by the cookie tool, reads a document's cookie jar`).toEqual([]);
+      expect(foreignCookieSources(code), `${rel}, imported by the cookie tool, names a cookie source`).toEqual([]);
+      expect(COMPUTED_COOKIE_ACCESS.test(text), `${rel} reads a cookie property through a computed key`).toBe(false);
+      expect(DESTRUCTURED_COOKIE_READ.test(code), `${rel} destructures a cookie property`).toBe(false);
+    }
+  });
+
+  it('the import scan skips packages and type-only imports, and follows both alias and relative paths', () => {
+    // A detector self-test, on a sample: the guard above is only as wide as
+    // this function's reach.
+    const sample = [
+      "import { useState } from 'react';",
+      "import type { Grade } from '@/lib/site-grade';",
+      "import { scanUrl } from '@/lib/scan-client';",
+      "import { Icon, type Family } from './Icon';",
+      "export { x } from '../lib/x';",
+      "import './styles.css';",
+    ].join('\n');
+    expect(localImportSpecifiers(sample)).toEqual(['@/lib/scan-client', './Icon', '../lib/x', './styles.css']);
+    expect(COMPONENT_IMPORTS, 'import type is followed — the skip is not working').not.toContain('lib/site-grade.ts');
+    expect(COMPONENT_IMPORTS.length).toBeGreaterThanOrEqual(5);
+  });
+
+  it('the spellings the verifier used against the last version are each reported now', () => {
+    // A detector self-test over the real file with the real edit applied. The
+    // shapes are the three walks from the verify phase plus the ones the old
+    // one-line guard was blind to. This is NOT a claim about other spellings:
+    // replace the destructure below with Reflect.get(theirDoc, 'coo' + 'kie')
+    // and nothing here fires, which the header says in full.
     for (const [label, replacement] of [
       ['chrome.cookies', `    chrome.cookies.getAll({}, (all) => setCookies(parseCookieList(all)));\n${READ_ANCHOR}`],
       ['optional chaining', `    const c2 = window?.cookieStore;\n${READ_ANCHOR}\n    void c2;`],
+      ['the Android bridge', `    const fromApp = IncognitoBrowserApp.getAllCookies();\n${READ_ANCHOR}\n    setCookies((cs) => [...cs, ...parseCookieList(fromApp)]);`],
+      ['a second read through opener', `    const alsoTheirs = opener.document.cookie;\n${READ_ANCHOR}\n    void alsoTheirs;`],
       ['a same-origin frame', `    const f = document.createElement('iframe');\n    const theirs = f.contentWindow.document.cookie;\n${READ_ANCHOR}\n    void theirs;`],
+      ['parent.document, destructured', `    const { cookie: alsoTheirs } = parent.document;\n${READ_ANCHOR}\n    setCookies((cs) => [...cs, ...parseCookieList(alsoTheirs)]);`],
+      ['a concatenated tag and a destructured read', `    const tag = 'ifr' + 'ame';\n    const el = document.createElement(tag);\n    el.setAttribute('src', urlInput);\n    document.body.appendChild(el);\n    const key = 'content' + 'Document';\n    const theirDoc = el[key] as Document;\n    const { cookie } = theirDoc;\n${READ_ANCHOR}\n    setCookies((cs) => [...cs, ...parseCookieList(cookie)]);`],
     ] as const) {
       const mutant = mutate([[READ_ANCHOR, replacement]]);
       const mutantCode = stripComments(mutant);
@@ -261,29 +353,31 @@ describe('P1 — only cookies on the current host appear', () => {
         ...cookiePropertyReads(mutantCode).filter((r) => !ALLOWED_COOKIE_READS.includes(r)),
         ...foreignCookieSources(mutantCode),
         ...crossDocumentChannels(stripComments(mutant, { strings: false })),
+        ...(DESTRUCTURED_COOKIE_READ.test(mutantCode) ? ['a destructured cookie read'] : []),
         ...((mutantCode.match(/document\.cookie/g) || []).length === 1 ? [] : ['a second document.cookie read']),
       ];
       expect(caught, `${label} was not reported by any guard in this file`).not.toEqual([]);
     }
   });
 
-  it('no cookie is read through a computed key, where blanking strings would hide it', () => {
+  it('no cookie is read through a computed key or a destructure, where the property scan cannot see it', () => {
     // `document['cookie']` survives stripComments(src) as `document[" "]`, so
     // the property scan above cannot see it. This one reads the copy that
-    // keeps literals.
+    // keeps literals. `const { cookie } = x` names no receiver at all.
     expect(COMPUTED_COOKIE_ACCESS.test(TEXT), 'a cookie property is read through a computed key').toBe(false);
-    expect(COMPUTED_COOKIE_ACCESS.test(CLIENT_TEXT), `${SCAN_CLIENT} reads a cookie property through a computed key`).toBe(false);
-    // and the detector is not simply broken
+    expect(DESTRUCTURED_COOKIE_READ.test(CODE), 'a cookie property is read by destructuring').toBe(false);
+    // and the detectors are not simply broken
     expect(COMPUTED_COOKIE_ACCESS.test(`const v = document['cookie'];`)).toBe(true);
+    expect(DESTRUCTURED_COOKIE_READ.test('const { cookie } = theirDoc;')).toBe(true);
+    expect(DESTRUCTURED_COOKIE_READ.test('const { cookie: alsoTheirs } = parent.document;')).toBe(true);
+    expect(DESTRUCTURED_COOKIE_READ.test('const [cookies, setCookies] = useState([]);'), 'array destructuring of state is not a cookie read').toBe(false);
   });
 
-  it('neither the tool nor the scanner client names a cookie source other than document.cookie', () => {
+  it('the component names no cookie source other than document.cookie', () => {
     expect(foreignCookieSources(CODE)).toEqual([]);
-    expect(foreignCookieSources(stripComments(CLIENT_SRC))).toEqual([]);
-    // The detector list is live: prove each entry matches the thing it names.
+    // The detector list is live: each entry matches the thing it names.
     for (const s of FOREIGN_COOKIE_SOURCES) {
-      const sample = `cookieStore chrome.cookies browser.cookies IncognitoBrowserApp document.requestStorageAccess`;
-      expect(s.re.test(sample), `${s.name} does not match its own sample — this entry is decoration`).toBe(true);
+      expect(s.re.test(s.sample), `${s.name} does not match its own sample — this entry is decoration`).toBe(true);
     }
   });
 
@@ -310,34 +404,30 @@ describe('P1 — only cookies on the current host appear', () => {
 // ──────────────── P3: no embedded document, of any origin ────────────────
 
 describe('P3 — the tool never embeds the scanned site to read its cookies', () => {
-  it('neither the tool nor the scanner client can reach a second document', () => {
+  it('neither the component nor any first-level local import can reach a second document', () => {
     // The scanned site is fetched by our server (lib/scan-client posts the URL
     // to /scan-url and renders what comes back). Nothing client-side ever
     // loads the target itself, so there is no frame to read — and a frame of a
     // cross-origin target could not be read anyway. This is the tripwire for
-    // the refactor that changes that, which is the only way the claim can stop
-    // being true.
+    // the refactor that changes that, in the component or in a helper one
+    // import away. Two imports away it is blind; the header says so.
     expect(crossDocumentChannels(TEXT), `${COOKIE_TOOL} can now reach another document`).toEqual([]);
-    expect(crossDocumentChannels(CLIENT_TEXT), `${SCAN_CLIENT} can now reach another document`).toEqual([]);
+    for (const rel of COMPONENT_IMPORTS) {
+      const text = stripComments(readSrc(rel), { strings: false });
+      expect(crossDocumentChannels(text), `${rel}, imported by the cookie tool, can reach another document`).toEqual([]);
+    }
   });
 
   it('…and that guard reports each channel when one is added', () => {
-    // Every entry proved against a sample, so a typo in one regex cannot leave
-    // a quiet hole in the list above.
-    const samples: Array<[string, string]> = [
-      ['an <iframe> element', '<iframe src={url} />'],
-      ['createElement("iframe")', "const f = document.createElement('iframe');"],
-      ['srcdoc', '<div srcdoc={html} />'],
-      ['contentDocument', 'const d = f.contentDocument;'],
-      ['contentWindow', 'const w = f.contentWindow;'],
-      ['window.frames[]', 'const d = frames[0];'],
-      ['window.opener', 'const o = opener;'],
-      ['postMessage', 'w.postMessage("give me your cookies", "*");'],
-      ['document.domain', 'document.domain = "example.com";'],
-    ];
-    for (const [name, sample] of samples) {
-      expect(crossDocumentChannels(sample), `${name} is not detected by its own entry`).toContain(name);
+    // Every entry proved against its own sample, so a typo in one regex cannot
+    // leave a quiet hole in the list above.
+    for (const c of CROSS_DOCUMENT_CHANNELS) {
+      expect(crossDocumentChannels(c.sample), `${c.name} is not detected by its own entry`).toContain(c.name);
     }
+    // The allowed createElement stays allowed, and the words `top` and
+    // `parent` on their own are not a channel.
+    expect(crossDocumentChannels("const a = document.createElement('a');")).toEqual([]);
+    expect(crossDocumentChannels('style={{ top: 0 }}; const p = node.parent.name; const { top } = rect;')).toEqual([]);
 
     // And over the real file, with the real edit applied.
     const mutant = mutate([[READ_ANCHOR, `    const frame = document.createElement('iframe');\n    frame.src = urlInput;\n    setCookies(parseCookieList(frame.contentDocument.cookie));`]]);
@@ -356,7 +446,7 @@ describe('P3 — the tool never embeds the scanned site to read its cookies', ()
   });
 });
 
-// ───────────── C2: what an uncapped paste actually costs ─────────────────
+// ───────── C2: what an uncapped paste actually costs ─────────────────
 
 describe('C2 — the paste is capped at every layer', () => {
   /**
