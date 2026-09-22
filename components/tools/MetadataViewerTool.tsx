@@ -100,12 +100,24 @@ export function MetadataViewerTool() {
   // cleaning (a whole folder at once) happens in the app, not on this page,
   // so picking more than one file here just explains that rather than
   // unlocking anything on the web itself.
+  //
+  // The explanation is in two places. batchNotice is an inline line under the
+  // picker that everyone gets, set by handleFile itself; the overlay below is
+  // the upgrade ask on top of it, which useUpgradeGate shows to a visitor
+  // without Pro INSTEAD of running the guarded action. Until 2026-09-22 the
+  // guarded action was `() => {}` and there was no inline line, so a confirmed
+  // subscriber who picked ten photos got one read and complete silence, while
+  // a free visitor at least got the overlay's explanation. The guard now wraps
+  // the same notice, so the subscriber's path through it is what everyone
+  // else already got rather than nothing.
+  const [batchNotice, setBatchNotice] = useState(false);
+  const showBatchNotice = () => setBatchNotice(true);
   const { guard: guardBatch, overlay: batchGate } = useUpgradeGate({
     engine: 'metadata-viewer',
     gate: 'metadata-multi-file',
     ...GATE_COPY['metadata-multi-file'],
   });
-  const noteBatchAttempt = guardBatch(() => {});
+  const noteBatchAttempt = guardBatch(showBatchNotice);
 
   // Revoke object URLs on unmount or replacement. One effect per URL: a shared
   // effect's cleanup revoked the live preview every time a clean copy was made.
@@ -117,7 +129,12 @@ export function MetadataViewerTool() {
     const picked = e.target.files;
     const file = picked?.[0];
     if (!file) return;
-    // Picking more than one at once is the gated gesture; file 1 still reads free below.
+    // Several at once: everyone is told so, inline, whatever the gate below
+    // decides (and a later single pick clears the line). File 1 still reads
+    // free below either way.
+    setBatchNotice(picked.length > 1);
+    // Picking more than one at once is the gated gesture: a visitor without
+    // Pro is shown the upgrade overlay on top of the notice.
     if (picked.length > 1) noteBatchAttempt();
     if (file.size > 50 * 1024 * 1024) {
       alert('File too large. Maximum size is 50MB.');
@@ -253,6 +270,11 @@ export function MetadataViewerTool() {
           onChange={handleFile}
           className="w-full text-sm text-t2 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-medium file:bg-white/10 file:text-white hover:file:bg-white/20"
         />
+        {batchNotice && (
+          <p className="mt-2 text-sm text-warn" role="status">
+            One photo at a time here: the first one you picked is the one read. Whole folders are cleaned in the app.
+          </p>
+        )}
         {reading && <p className="mt-2 text-sm text-t2">Reading this file…</p>}
         {error && !reading && <p className="mt-2 text-sm text-warn">{error}</p>}
         <p className="mt-2 text-xs text-t3">{METADATA_VIEWER_READS}</p>
