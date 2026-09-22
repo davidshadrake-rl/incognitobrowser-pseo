@@ -33,10 +33,57 @@
  * second proxying vhost (an http:// one, say) without the log configuration is
  * caught rather than masked by the :443 one being correct.
  *
- * Read-only: one grep, shared with the rest of the cnast batch.
+ * THE OTHER HALF OF THE SAME REQUIREMENT. The owner's cutover condition has
+ * two clauses: never log the client's address (above), AND keep an audit log
+ * of what the server fetched — the scan target and the address it resolved
+ * to. Those are different addresses belonging to different parties, and they
+ * are not in tension: `2026-09-22T12:00:00 scan example.com -> 93.184.216.34`
+ * satisfies the second clause completely and identifies no visitor. What
+ * breaks the promise is JOINING a target to a client, which is exactly what
+ * the field guard below forbids. So this check also grades the ABSENCE of
+ * the target log: api.log records %r only — `POST /api/scan-url HTTP/1.1` —
+ * and the scanned URL travels in the POST body, so nothing on this box
+ * records what was fetched. On a company target that is a medium finding
+ * with the two ways to close it named; on the demo it is the current,
+ * deliberate behaviour and is recorded at info, never silently.
+ *
+ * Read-only: one grep, shared with the rest of the cnast batch — plus, on a
+ * COMPANY target only, one further grep for mod_security's audit directives.
+ * The cnast discipline is built around a single session per night for a
+ * reason (cnast-lib.mjs), and the demo's nightly still gets exactly that; the
+ * second read is spent only where the finding it informs is a real grade.
  */
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { check, finding } from '../lib/harness.mjs';
 import { droplet, section } from './cnast-lib.mjs';
+import { stripComments } from './sast-lib.mjs';
+import { deployTarget, sev, cutover } from './pro-deploy-host.mjs';
+
+/**
+ * What a route-side scan-target audit sink looks like, when one exists. Today
+ * none does — app/scan-url/route.ts holds the resolved addresses in `resolved`
+ * right after dnsLookup() and discards them once the allowlist has judged
+ * them. The names here are the contract: a sink called one of these, or a raw
+ * file append in the route, is what this check will recognise as the audit
+ * log, and it then reads the sink's arguments for a client address.
+ */
+const AUDIT_SINK_RE = /\b(?:scanAudit\w*|auditScan\w*|logScanTarget|appendFile(?:Sync)?|createWriteStream)\s*\(/g;
+/** Anything in a sink's argument list that is, or derives from, the caller's address. */
+const CLIENT_ADDRESS_RE = /\b(?:clientIP|getClientIP|getIpBucket|bucket|remoteAddress|request\.headers|req\.headers|x-forwarded-for|cf-connecting-ip|x-real-ip|true-client-ip)\b/i;
+/** The one extra read, company target only. */
+const MODSEC_CMD = "grep -rhoE '^[[:space:]]*Sec(AuditEngine|AuditLog|RuleEngine)[[:space:]]+[^[:space:]]+' /etc/apache2/ /etc/modsecurity/ 2>/dev/null | sort -u; echo '---IB:MODSEC-END---'";
+
+/** The text between the parentheses of a call whose `(` is at `openIdx`. */
+function callArgs(text, openIdx) {
+  let depth = 0;
+  for (let i = openIdx; i < text.length; i++) {
+    if (text[i] === '(') depth++;
+    else if (text[i] === ')') { depth--; if (depth === 0) return text.slice(openIdx + 1, i); }
+  }
+  return text.slice(openIdx + 1);
+}
+const lineOf = (src, index) => src.slice(0, index).split('\n').length;
 
 /** grep -n output, grouped by file. */
 function byFile(text) {
@@ -160,6 +207,95 @@ export default check({
       detail: 'Vhosts that do not proxy /api/ are deliberately out of scope — their logging is the team\'s WordPress configuration, which this project has no authority over.',
       evidence: `sites-enabled proxying /api/: ${proxying.map(([f]) => f).join(', ')}; all enabled: ${(sections.SITESENABLED || '').split('\n').join(', ')}`,
     }));
+
+    // ---- the positive half: is what the server FETCHED recorded anywhere? --
+    const t = deployTarget(ctx);
+
+    // (1) A route-side sink. The route is where the target and its resolved
+    // addresses exist together and the client address does not have to.
+    const routeRel = 'app/scan-url/route.ts';
+    const routePath = join(ctx.repoRoot, routeRel);
+    const routeSinks = [];
+    let routeNote = `${routeRel} not present in this checkout`;
+    if (existsSync(routePath)) {
+      checked++;
+      const code = stripComments(readFileSync(routePath, 'utf-8'), { strings: false });
+      for (const m of code.matchAll(AUDIT_SINK_RE)) {
+        const args = callArgs(code, m.index + m[0].length - 1);
+        routeSinks.push({ line: lineOf(code, m.index), call: m[0].replace(/\s*\($/, ''), args: args.replace(/\s+/g, ' ').slice(0, 160), joinsClient: CLIENT_ADDRESS_RE.test(args) });
+      }
+      routeNote = routeSinks.length
+        ? `${routeRel} audit sink(s): ${routeSinks.map((s) => `:${s.line} ${s.call}(${s.args})`).join(' | ')}`
+        : `${routeRel} has no audit sink (no scanAudit*/auditScan*/logScanTarget/appendFile/createWriteStream call)`;
+    }
+
+    // (2) mod_security's audit log, read only on a company target — see the
+    // header for why the demo's nightly is not charged a second session.
+    let modsec = null;
+    if (t.kind === 'company') {
+      const out = String(ctx.ssh(MODSEC_CMD, { timeoutMs: 20_000 }));
+      if (!out.includes('---IB:MODSEC-END---')) {
+        modsec = { inspected: false, note: `the mod_security grep did not complete: ${out.slice(-160).replace(/\n/g, ' ')}` };
+      } else {
+        checked++;
+        const kv = {};
+        for (const line of out.split('\n')) {
+          const m = /^\s*(SecAuditEngine|SecAuditLog|SecRuleEngine)\s+(\S+)/.exec(line);
+          if (m) kv[m[1]] = m[2];
+        }
+        modsec = { inspected: true, ...kv, note: Object.keys(kv).length ? Object.entries(kv).map(([k, v]) => `${k} ${v}`).join(', ') : 'no Sec* directive under /etc/apache2 or /etc/modsecurity' };
+      }
+    }
+    const modsecFull = Boolean(modsec && modsec.inspected && /^on$/i.test(modsec.SecAuditEngine || '') && modsec.SecAuditLog);
+
+    // What api.log itself records, quoted so the reader can see there is no
+    // body token in it (Apache has none; the target cannot be in this line).
+    const formats = proxying.map(([file, lines]) => {
+      const f = lines.find((l) => /LogFormat\s+".*"\s+ib_api_noip/.test(l.text));
+      return f ? `${file}:${f.line} ${f.text}` : `${file}: (no ib_api_noip LogFormat)`;
+    });
+    const layout = [
+      ...formats,
+      routeNote,
+      `mod_security: ${modsec ? (modsec.inspected ? modsec.note : `NOT inspected — ${modsec.note}`) : 'not inspected on the demo target (one ssh session per night; see header)'}`,
+    ].join('\n  ');
+
+    if (!routeSinks.length && !modsecFull) {
+      findings.push(finding({
+        severity: sev(t, 'info', 'medium'),
+        title: t.kind === 'company'
+          ? 'No audit log of scan targets exists: api.log records the request line only, and the scanned URL is in the POST body'
+          : 'No audit log of scan targets — the demo\'s current behaviour, by design, and the cutover requirement it does not meet',
+        detail: `${cutover(t)}The owner's cutover condition has two clauses. The no-client-address half is graded above. The other half — keep a record of what the server FETCHED, the target and the address it resolved to — has nothing on this box that satisfies it: Apache's ib_api_noip format is %t %r %>s %b %D, and %r is \`POST /api/scan-url HTTP/1.1\`, which names the route and never the target; the target and its resolved addresses exist only in app/scan-url/route.ts (\`resolved\`, right after dnsLookup) and are discarded once the allowlist has judged them. On a company deployment that means an incident on the internal network — a scan that reached something it should not have — cannot be reconstructed from anything the server kept. The two clauses are not in tension: a line of target -> resolved address identifies no visitor. What must never happen is joining that line to a client address, which this check's field guard above would then catch on the Apache side and the audit-sink argument read here catches on the route side.`,
+        evidence: layout,
+        remediation: 'Two ways to close it, either one is enough. (a) In app/scan-url/route.ts, right after the allowlist has judged `resolved`, append one line per scan — timestamp, target host, resolved address(es), outcome — to a SEPARATE file (not journald, not api.log) through a sink named scanAuditLog(...), with NO client address, bucket or request header in its arguments; this check reads those arguments and grades any client-address token in them high. (b) A mod_security audit log (SecAuditEngine On, SecAuditLog <path>) on the /api/ vhost, which captures the POST body and so the target — but note that mod_security\'s mandatory A section records the client address, so that option turns the privacy promise into a retention-and-access question on that one file, and this check will say so rather than go green.',
+      }));
+    } else {
+      for (const s of routeSinks) {
+        findings.push(finding({
+          severity: s.joinsClient ? 'high' : 'info',
+          file: routeRel,
+          line: s.line,
+          title: s.joinsClient
+            ? `The scan-target audit sink at ${routeRel}:${s.line} is handed a client address — the target is joined to the caller`
+            : `A route-side scan-target audit sink exists at ${routeRel}:${s.line}, and its arguments carry no client address`,
+          detail: s.joinsClient
+            ? 'This is the one join the whole promise is about. api.log omits %h so that no file on this box says which person scanned which site; an audit sink that takes the client address (or the /24 bucket, or the request headers it is derived from) beside the target recreates exactly that record under a different name.'
+            : 'Recorded so the requirement reads as met for a reason that can be re-checked: the sink is named, its line is named, and its argument list was read for clientIP / getClientIP / bucket / request.headers and the four forwarding headers.',
+          evidence: `${routeRel}:${s.line} ${s.call}(${s.args})`,
+          remediation: s.joinsClient ? 'Remove the client address, bucket and request-header arguments from the audit sink; log target and resolved address only.' : 'No action. Keep it this way.',
+        }));
+      }
+      if (modsecFull) {
+        findings.push(finding({
+          severity: sev(t, 'low', 'medium'),
+          title: 'The scan-target audit log is mod_security\'s, whose mandatory A section records the client address',
+          detail: `${cutover(t)}SecAuditEngine On with a SecAuditLog captures the POST body and so the scanned URL — the audit requirement is met — but every entry's A section carries the client address and port, so target and caller sit in one file. That is not the "never log the client" promise as written; it is that promise reduced to who can read one file and for how long. Say so in the runbook, restrict and rotate that file, or prefer the route-side sink, which needs no such caveat.`,
+          evidence: layout,
+          remediation: 'Prefer option (a): a route-side scanAuditLog() with no client address. If mod_security stays, document the A-section address, restrict the file to root, and rotate it on the same schedule as api.log.',
+        }));
+      }
+    }
 
     return { findings, checked };
   },

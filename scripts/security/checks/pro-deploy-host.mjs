@@ -1,5 +1,5 @@
 /**
- * The four things that have to be true about the HOST the Pro site is served
+ * The five things that have to be true about the HOST the Pro site is served
  * from — asked about the company server the owner actually cares about, not
  * about this droplet.
  *
@@ -28,21 +28,51 @@
  *                                   an unrecognised host gets the harder grade,
  *                                   never the softer one).
  *
+ * WHERE THE PROBER IS STANDING. pro_vhost_noindex_but_no_login is an in-band
+ * prober: it asks the vhost a question and reads the answer. The two controls
+ * the owner names first — a corporate VPN and an IP allowlist — work by making
+ * the host unreachable from OUTSIDE, and from inside the perimeter they are
+ * invisible to it. Run the nightly from a runner on the company network against
+ * a correctly VPN-gated host and it would report "no authentication at all" at
+ * critical every night, which is how a check gets switched off. So the runner
+ * declares where it stands and the check grades what it can actually see:
+ *
+ *   IB_PROBE_VANTAGE=outside   the runner is on the public internet. An open
+ *                              answer from a company host is a live hole.
+ *   IB_PROBE_VANTAGE=inside    the runner is on the company network. An open
+ *                              answer proves only that nothing in-band gates
+ *                              the surface; a VPN or allowlist may still be in
+ *                              front of it. Graded medium, with that caveat in
+ *                              the title, never silently dropped.
+ *   unset                      'unknown': graded as outside (the strict side),
+ *                              and the finding says which declaration it needs.
+ *
+ * AND WHAT THE REPO DECLARES. The same check scans every config-shaped file in
+ * the repo (.conf, .htaccess, .sh) for an auth or allow directive. That scan is
+ * an ESCALATOR, never a suppressor: an open company surface with no such
+ * directive anywhere is critical (nothing this repo ships would close the door
+ * either); with one it is high (there is at least something to deploy, and it
+ * is not in force). It never turns a finding off — a directive in a file is not
+ * a gate on a vhost, and the earlier version of this check that merely narrated
+ * the value into the evidence string was reported as a gap for exactly that.
+ *
  * PRODUCTION SAFETY. Seven single GETs per nightly run across the whole file,
  * paced, redirect:manual, no credentials, no POST, nothing that reaches
  * /scan-url or /challenge and nothing that touches Redis. The API limits
  * (10 scans/min per /24, 30 challenges/min, 20 concurrent scans) are nowhere
  * near in play, so none of these needs opt-in. The WordPress probes are GETs on
  * the team's public front door and are never followed by a POST: we are guests
- * in that web root, exactly as dast-wordpress-untouched puts it.
+ * in that web root, exactly as dast-wordpress-untouched puts it. The one ssh
+ * check (wp_not_on_pro_machine) is three read-only listings: `ls`, `ls -d` and
+ * `systemctl is-active`. Nothing writes, nothing reloads.
  *
  * WHAT EACH CHECK REFUSES TO DO. Every one of them throws Skip rather than
  * report a clean pass over nothing: a vhost that did not answer, a source file
  * that is not there, a constant that could not be parsed. `checked` is the real
  * count of things inspected.
  */
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { join, relative, sep } from 'node:path';
 import { check, finding, Skip } from '../lib/harness.mjs';
 import { pace, httpOnce } from './dast-shared.mjs';
 
@@ -58,25 +88,41 @@ import { pace, httpOnce } from './dast-shared.mjs';
  */
 const DEMO_HOST_RE = /(?:^|\.)nip\.io(?::\d+)?$|^\d{1,3}-\d{1,3}-\d{1,3}-\d{1,3}\./;
 
-function deployTarget(ctx) {
+/**
+ * Where the runner stands relative to the company perimeter. Read beside the
+ * target, never inferred: a prober cannot tell from a 200 whether there is a
+ * VPN behind it. Anything other than the two declared values is 'unknown'.
+ */
+function probeVantage() {
+  const v = String(process.env.IB_PROBE_VANTAGE || '').trim().toLowerCase();
+  return v === 'outside' || v === 'inside' ? v : 'unknown';
+}
+
+/**
+ * Exported (not only used here) so a check in another file can grade the same
+ * property by the same rule instead of carrying its own copy of it.
+ * cnast-api-log-no-ip imports it; dast-wp-user-enum predates the export.
+ */
+export function deployTarget(ctx) {
   let host = '';
   try { host = new URL(ctx.origin).host.toLowerCase(); } catch { host = String(ctx.origin || '').toLowerCase(); }
+  const vantage = probeVantage();
 
   const declared = String(process.env.IB_DEPLOY_TARGET || '').trim().toLowerCase();
   if (declared === 'demo' || declared === 'company') {
-    return { kind: declared, host, companyHost: declared === 'company' ? (String(process.env.IB_COMPANY_HOST || '').trim().toLowerCase() || host) : null, why: `IB_DEPLOY_TARGET=${declared}` };
+    return { kind: declared, host, vantage, companyHost: declared === 'company' ? (String(process.env.IB_COMPANY_HOST || '').trim().toLowerCase() || host) : null, why: `IB_DEPLOY_TARGET=${declared}` };
   }
   const companyHost = String(process.env.IB_COMPANY_HOST || '').trim().toLowerCase() || null;
-  if (companyHost) return { kind: 'company', host, companyHost, why: `IB_COMPANY_HOST=${companyHost}` };
-  if (DEMO_HOST_RE.test(host)) return { kind: 'demo', host, companyHost: null, why: `target host ${host} is the public demo droplet` };
-  return { kind: 'company', host, companyHost: host || null, why: `target host ${host || '(unparsed origin)'} is not the demo droplet, so it is graded as a company deployment` };
+  if (companyHost) return { kind: 'company', host, vantage, companyHost, why: `IB_COMPANY_HOST=${companyHost}` };
+  if (DEMO_HOST_RE.test(host)) return { kind: 'demo', host, vantage, companyHost: null, why: `target host ${host} is the public demo droplet` };
+  return { kind: 'company', host, vantage, companyHost: host || null, why: `target host ${host || '(unparsed origin)'} is not the demo droplet, so it is graded as a company deployment` };
 }
 
 /** Severity for a property that is accepted on the demo and not on a company box. */
-const sev = (t, demo, company) => (t.kind === 'company' ? company : demo);
+export const sev = (t, demo, company) => (t.kind === 'company' ? company : demo);
 
 /** Prefix that makes the demo-target grade legible in the report. */
-const cutover = (t) =>
+export const cutover = (t) =>
   t.kind === 'company'
     ? 'LIVE ON THIS TARGET. '
     : `DEPLOY REQUIREMENT, graded medium because this run is pointed at the public demo (${t.why}) where it is a deliberate state, not a defect. The same finding is graded high/critical the moment this suite runs against a company host — the text below is what has to change at cutover. `;
@@ -223,7 +269,7 @@ const wpNotOnProVhost = check({
         title: `WordPress ${p.path} answers on the same vhost that serves /resources-pro`,
         detail: `${cutover(t)}The Pro product surface and a PHP application share one hostname, so every visitor, scanner and bot that can reach the Pro tools can also reach ${p.why}. On the company deployment /resources-pro must be its own virtual host — a document root with the static export in it and no PHP application mounted anywhere under it — and any WordPress must live on a different name with its own access control. Nothing in this repo can fix it: it is a server-layout requirement for the cutover, which is why it is written here as one.`,
         evidence: `GET ${url} → ${res.status}${verdict.note ? ` (${verdict.note})` : ''}, ${(res.text || '').length} bytes${verdict.signals.length ? `; WordPress signals: ${verdict.signals.join('; ')}` : '; no WordPress marker in the response, but the endpoint answered'}`,
-        remediation: 'At cutover: serve the Pro export from a dedicated vhost/document root, and confirm this check reports 404 (or no answer) for all four paths against the company host.',
+        remediation: 'At cutover: serve the Pro export from a dedicated vhost/document root, and confirm this check reports 404 (or no answer) for all four paths against the company host. A vhost split alone is NOT the requirement: WordPress has to be off the MACHINE that runs the API, which wp_not_on_pro_machine grades separately over ssh — this check going green while that one is red is half the job.',
       }));
     }
 
@@ -421,8 +467,63 @@ const proAuditWebrtcStunAllowlist = check({
 // 3. pro_vhost_noindex_but_no_login
 // ===========================================================================
 
-/** Grep the one file that declares the static site's server config for auth. */
-const AUTH_DIRECTIVE_RE = /^\s*(AuthType|AuthName|AuthUserFile|Require\s+(?!all granted)|Allow\s+from|Deny\s+from|<RequireAll)/im;
+/**
+ * A line that declares access control in Apache or nginx config.
+ *
+ * `Require all granted` AND `Require all denied` are both excluded: the first
+ * opens a path and the second closes one (the body cap in API-ON-DROPLET.md is
+ * a `Require all denied` inside an <If>), and neither authenticates anyone.
+ * The earlier form excluded only `all granted`, so a deny-all on a dotfile
+ * path would have read as "the repo declares auth" — a softer grade earned by
+ * a directive that gates nothing.
+ */
+const AUTH_DIRECTIVE_RE = /^\s*(?:AuthType|AuthName|AuthUserFile|AuthGroupFile|AuthBasicProvider|AuthLDAPURL|AuthFormProvider|Require\s+(?!all\b)|Allow\s+from|Deny\s+from|<RequireAll|<RequireAny|auth_basic\b|auth_request\b|auth_jwt\b)/im;
+
+/** Directories that are never repo-declared config. */
+const NOT_CONFIG_DIRS = new Set(['node_modules', '.next', '.git', 'out', 'out-pro', 'reports', '.claude', 'coverage', 'test-results', 'playwright-report']);
+/** File names that can carry an Apache or nginx access-control directive. */
+const CONFIG_FILE_RE = /(?:^|\.)htaccess(?:\.|$)|\.(?:conf|vhost|sh)$|^nginx/i;
+
+/**
+ * Every access-control directive declared in any config-shaped file in the
+ * repo, with where it is. "Anywhere in the repo" has to mean the repo: the
+ * previous version read exactly one file, scripts/droplet-htaccess.conf, and
+ * wrote "there is no access control declared anywhere in the repo" into the
+ * evidence on the strength of that one grep.
+ *
+ * Returns { scanned, declarations }. `scanned` is how many files were read, so
+ * a caller can tell "no directive in 3 files" from "no directive in 0 files".
+ */
+export function authDeclarations(repoRoot, maxDepth = 6) {
+  const declarations = [];
+  let scanned = 0;
+  const walk = (dir, depth) => {
+    if (depth > maxDepth) return;
+    let names = [];
+    try { names = readdirSync(dir); } catch { return; }
+    for (const name of names) {
+      const abs = join(dir, name);
+      let st;
+      try { st = statSync(abs); } catch { continue; }
+      if (st.isDirectory()) {
+        if (!NOT_CONFIG_DIRS.has(name)) walk(abs, depth + 1);
+        continue;
+      }
+      if (!CONFIG_FILE_RE.test(name) || st.size > 512 * 1024) continue;
+      let text = '';
+      try { text = readFileSync(abs, 'utf-8'); } catch { continue; }
+      scanned++;
+      const lines = text.split('\n');
+      for (let i = 0; i < lines.length; i++) {
+        if (AUTH_DIRECTIVE_RE.test(lines[i])) {
+          declarations.push({ file: relative(repoRoot, abs).split(sep).join('/'), line: i + 1, text: lines[i].trim().slice(0, 120) });
+        }
+      }
+    }
+  };
+  walk(repoRoot, 0);
+  return { scanned, declarations };
+}
 
 const proVhostNoindexButNoLogin = check({
   id: 'pro_vhost_noindex_but_no_login',
@@ -451,7 +552,14 @@ const proVhostNoindexButNoLogin = check({
     const api = await httpOnce(ctx, apiUrl, { redirect: 'manual', timeoutMs: 15_000 });
 
     if (!page.ok && !api.ok) {
-      throw new Skip(`neither ${pageUrl} nor ${apiUrl} answered (${page.error} / ${api.error}) — nothing was graded`);
+      // From a declared OUTSIDE vantage an unreachable company host is what a
+      // VPN or IP allowlist looks like — and also what a typo in --origin or a
+      // box that is down looks like. It is recorded as SKIPPED with that said,
+      // never as a pass: this check grades answers, and there was none.
+      const outsideNote = t.kind === 'company' && t.vantage === 'outside'
+        ? ' From IB_PROBE_VANTAGE=outside that is consistent with a VPN or IP allowlist doing its job, but it is equally consistent with a wrong origin, so it is recorded as skipped rather than as a pass.'
+        : '';
+      throw new Skip(`neither ${pageUrl} nor ${apiUrl} answered (${page.error} / ${api.error}) — nothing was graded.${outsideNote}`);
     }
 
     // ---- a. the noindex header is NOT graded here, on purpose -------------
@@ -470,10 +578,14 @@ const proVhostNoindexButNoLogin = check({
     // ignore it, so it is deleted rather than duplicated.
 
     // ---- b. the sentence that matters -------------------------------------
-    const confPath = join(ctx.repoRoot, 'scripts', 'droplet-htaccess.conf');
-    const conf = existsSync(confPath) ? readFileSync(confPath, 'utf-8') : '';
-    const confHasAuth = conf ? AUTH_DIRECTIVE_RE.test(conf) : null;
-    if (conf) checked++;
+    //
+    // What the repo declares, used to ESCALATE and never to suppress. A
+    // directive in a file in this checkout is not a gate on the vhost that
+    // just answered; it only changes whether the fix is "deploy what is
+    // written" (high) or "nothing is written" (critical).
+    const auth = authDeclarations(ctx.repoRoot);
+    checked += auth.scanned;
+    const confHasAuth = auth.declarations.length > 0;
 
     /**
      * A redirect to a DIFFERENT host is a gate, not an open door.
@@ -502,17 +614,44 @@ const proVhostNoindexButNoLogin = check({
     if (api.ok) checked++;
 
     if (pageOpen || apiOpen) {
+      const company = t.kind === 'company';
+      const inside = company && t.vantage === 'inside';
+
+      // The grade, in one place so a test can pin every cell of it:
+      //   demo                         medium  (the deliberate public state)
+      //   company, inside              medium  (open in-band; VPN/allowlist unseen)
+      //   company, outside|unknown     critical, or high if the repo at least
+      //                                declares an auth directive somewhere
+      const severity = !company ? 'medium' : inside ? 'medium' : (confHasAuth ? 'high' : 'critical');
+
+      const title = inside
+        ? 'The Pro tools and /api answer without authentication FROM INSIDE the perimeter — an in-band prober cannot see a VPN or IP allowlist, so this is graded medium, not critical'
+        : 'Anyone who can reach this vhost gets the Pro tools and /api with no authentication at all — noindex is not access control';
+
+      const vantageNote = !company ? ''
+        : inside
+          ? ' THIS RUN DECLARED IB_PROBE_VANTAGE=inside: it is on the company network, so a VPN or an IP allowlist at the perimeter would not be visible to it. What it has established is that nothing IN-BAND (SSO, Basic auth, a 401 or a redirect to an identity provider) gates either surface. If the perimeter control is the whole gate, that is a design the owner has to be able to point at; if it is not there either, this is the critical finding wearing a medium label.'
+          : t.vantage === 'outside'
+            ? ' THIS RUN DECLARED IB_PROBE_VANTAGE=outside: it is on the public internet, so the open answer above is a live hole — nothing at the perimeter stopped it and nothing in-band did.'
+            : ' IB_PROBE_VANTAGE IS NOT DECLARED, so this run does not know where it stands and is graded as if from outside (the strict side). It needs one of two declarations: IB_PROBE_VANTAGE=outside when the runner is on the public internet (an open answer is then a real hole, and an unreachable host is the gate working), or IB_PROBE_VANTAGE=inside when the runner is on the company network (a VPN or IP allowlist is then invisible to it, and this finding is graded medium with that caveat in its title).';
+
+      const authNote = !company ? ''
+        : confHasAuth
+          ? ` The repo does declare access control — ${auth.declarations.slice(0, 3).map((d) => `${d.file}:${d.line} ${d.text}`).join('; ')} — and the surface still answered, so what is written is not in force on this vhost. Graded high rather than critical only because there is something to deploy.`
+          : ` No AuthType / AuthUserFile / Require / Allow-from / auth_basic directive is declared in ANY of the ${auth.scanned} config-shaped file(s) in this repo (.conf, .htaccess, .sh), so nothing this repo ships would close the door either.${inside ? '' : ' Graded critical.'}`;
+
       findings.push(finding({
-        severity: sev(t, 'medium', 'critical'),
+        severity,
         file: 'scripts/droplet-htaccess.conf',
-        title: 'Anyone who can reach this vhost gets the Pro tools and /api with no authentication at all — noindex is not access control',
-        detail: `${cutover(t)}Say it plainly: an internal deployment of this code with nothing in front of it is a free, unauthenticated, self-service intranet crawler for anyone who can route to the host. /api answers unauthenticated requests, the Pro tools drive it, and the whole point of those tools is to fetch a URL you name, resolve it, follow what it returns and hand you the result — from inside the company network perimeter, with the server's own network position, attributed to the server rather than to the caller. The X-Robots-Tag: noindex header keeps the pages out of Google; it does not keep one person out of the pages, and it is the only thing currently in front of them. The company deployment needs a real gate in front of BOTH /resources-pro AND /api — VPN, SSO, or an IP allowlist at the vhost, terminated before the application sees the request. Note what it CANNOT be: the entitlement in this codebase is document.documentElement.hasAttribute('data-ib-pro') (lib/in-app.ts, components/useUpgradeGate.tsx), which is a client-side product gate for three UI actions and is not, and was never intended as, an authentication boundary.`,
+        title,
+        detail: `${cutover(t)}Say it plainly: an internal deployment of this code with nothing in front of it is a free, unauthenticated, self-service intranet crawler for anyone who can route to the host. /api answers unauthenticated requests, the Pro tools drive it, and the whole point of those tools is to fetch a URL you name, resolve it, follow what it returns and hand you the result — from inside the company network perimeter, with the server's own network position, attributed to the server rather than to the caller. The X-Robots-Tag: noindex header keeps the pages out of Google; it does not keep one person out of the pages, and it is the only thing currently in front of them. The company deployment needs a real gate in front of BOTH /resources-pro AND /api — VPN, SSO, or an IP allowlist at the vhost, terminated before the application sees the request. Note what it CANNOT be: the entitlement in this codebase is document.documentElement.hasAttribute('data-ib-pro') (lib/in-app.ts, components/useUpgradeGate.tsx), which is a client-side product gate for three UI actions and is not, and was never intended as, an authentication boundary.${vantageNote}${authNote}`,
         evidence: [
           `GET ${pageUrl} → ${page.ok ? `${page.status}${hdr(page, 'www-authenticate') ? `, WWW-Authenticate: ${hdr(page, 'www-authenticate')}` : ', no WWW-Authenticate'}, X-Robots-Tag: ${hdr(page, 'x-robots-tag') || '(absent)'}` : page.error}`,
           `GET ${apiUrl} → ${api.ok ? `${api.status}${hdr(api, 'www-authenticate') ? `, WWW-Authenticate: ${hdr(api, 'www-authenticate')}` : ', no WWW-Authenticate'} (POST-only route; a 405/403 still proves the API answers this vhost)` : api.error}`,
-          `scripts/droplet-htaccess.conf: ${conf ? (confHasAuth ? 'contains an auth/allow directive' : 'contains NO AuthType / AuthUserFile / Require / Allow-from directive — there is no access control declared anywhere in the repo') : '(file not present in this checkout)'}`,
+          `vantage: IB_PROBE_VANTAGE=${t.vantage === 'unknown' ? '(unset → unknown)' : t.vantage}; target: ${t.kind} (${t.why})`,
+          `repo auth scan: ${auth.scanned} config-shaped file(s) read; ${auth.declarations.length ? `${auth.declarations.length} access-control directive(s): ${auth.declarations.slice(0, 5).map((d) => `${d.file}:${d.line} ${d.text}`).join(' | ')}` : 'NO access-control directive declared in any of them'}`,
         ].join('\n  '),
-        remediation: 'At cutover: put VPN/SSO/IP-allowlist termination in front of the Pro vhost and the API, and re-run this check against the company host — it must then find the gate (a 401/403 before the application, or an unreachable host from outside).',
+        remediation: 'At cutover: put VPN/SSO/IP-allowlist termination in front of the Pro vhost and the API, declare IB_PROBE_VANTAGE for the runner, and re-run this check against the company host — from outside it must then find the gate (a 401/403 before the application, or an unreachable host); from inside it must find an in-band gate or the owner must be able to name the perimeter control.',
       }));
     }
 
@@ -674,6 +813,122 @@ const proHostCutoverNotNipIo = check({
   },
 });
 
+// ===========================================================================
+// 5. wp_not_on_pro_machine
+// ===========================================================================
+
+/**
+ * WordPress off the MACHINE, not merely off the vhost.
+ *
+ * wp_not_on_pro_vhost (check 1) asks the vhost four questions over HTTP and is
+ * vhost-scoped by construction: move WordPress to a second ServerName on the
+ * same box and it goes green while the owner's requirement is still violated.
+ * That is the worse outcome — a green check certifying a violated
+ * requirement — and it was reported as a gap for exactly that reason. The
+ * three cnast checks that DO see the consequences of machine co-tenancy
+ * (webroot-ownership, unit-sandbox, env-file-perms) record it as a standing
+ * fact of this droplet at info, not as a state that has to end.
+ *
+ * Why the machine is the unit that matters here: the API fetches URLs a
+ * stranger names, runs as www-data — the same uid as the WordPress PHP
+ * workers — shares /tmp, disk, CPU and the kernel with them, and the owner's
+ * two named fears are DDoS and server infiltration. A flood aimed at /api
+ * takes WordPress down with it; a compromise of either application is a
+ * compromise of the other. No vhost boundary changes any of that.
+ *
+ * Three read-only listings over ssh, batched into one session with marker
+ * lines so a truncated answer is a Skip and not a clean box:
+ *
+ *   ls /etc/apache2/sites-enabled/                what Apache serves
+ *   ls -d /var/www/{*,html}/wp-config.php         a WordPress install, by its
+ *                                                 one unmistakable file
+ *   systemctl is-active mysql mariadb             its database
+ *
+ * Nothing writes, nothing reloads, nothing scans.
+ */
+const WP_MACHINE_DB_UNITS = ['mysql', 'mariadb'];
+const WP_MACHINE_CMD = [
+  "echo '---IB:SITES---'; ls -1 /etc/apache2/sites-enabled/ 2>&1",
+  "echo '---IB:WPCONFIG---'; ls -d /var/www/*/wp-config.php /var/www/html/wp-config.php 2>/dev/null",
+  `echo '---IB:DB---'; systemctl is-active ${WP_MACHINE_DB_UNITS.join(' ')} 2>/dev/null`,
+  "echo '---IB:END---'",
+].join('; ');
+
+/** Marker-delimited sections; an empty section stays an empty string. */
+function wpMachineSections(out) {
+  const sections = {};
+  let current = null;
+  for (const line of String(out).split('\n')) {
+    const m = /^---IB:([A-Z]+)---$/.exec(line.trim());
+    if (m) { current = m[1]; sections[current] = []; continue; }
+    if (current) sections[current].push(line);
+  }
+  return Object.fromEntries(Object.entries(sections).map(([k, v]) => [k, v.join('\n').trim()]));
+}
+
+const wpNotOnProMachine = check({
+  id: 'wp_not_on_pro_machine',
+  discipline: 'cnast',
+  cadence: 'nightly',
+  severity: 'high',
+  safeAgainstProd: true,
+  needsOptIn: false,
+  requires: ['ssh'],
+  describe: 'No WordPress install (wp-config.php) and no MySQL/MariaDB service is co-resident on the MACHINE that runs the API — a vhost split is not the requirement.',
+
+  async run(ctx) {
+    const t = deployTarget(ctx);
+    const out = String(ctx.ssh(WP_MACHINE_CMD, { timeoutMs: 30_000 }));
+    const s = wpMachineSections(out);
+    if (!('END' in s) || !('WPCONFIG' in s) || !('DB' in s)) {
+      // No end marker: the session died part way through, and a truncated
+      // answer reads exactly like a machine with no WordPress on it.
+      throw new Skip(`the ssh batch did not complete (missing ${['WPCONFIG', 'DB', 'END'].filter((k) => !(k in s)).join('/')} marker); last 200 chars: ${out.slice(-200).replace(/\n/g, ' ')}`);
+    }
+
+    const findings = [];
+    let checked = 0;
+
+    const sites = (s.SITES || '').split('\n').map((l) => l.trim()).filter(Boolean);
+    checked++;
+
+    const wpConfigs = [...new Set((s.WPCONFIG || '').split('\n').map((l) => l.trim()).filter((l) => /wp-config\.php$/.test(l)))];
+    checked++;
+
+    // `systemctl is-active a b` answers one line per unit, in argument order.
+    const dbLines = (s.DB || '').split('\n').map((l) => l.trim());
+    const db = WP_MACHINE_DB_UNITS.map((unit, i) => ({ unit, state: dbLines[i] || '(no answer)' }));
+    const dbActive = db.filter((d) => d.state === 'active');
+    checked += db.length;
+
+    const layout = [
+      `sites-enabled: ${sites.join(', ') || '(none / unreadable)'}`,
+      `wp-config.php: ${wpConfigs.join(', ') || '(none under /var/www)'}`,
+      `database units: ${db.map((d) => `${d.unit}=${d.state}`).join(', ')}`,
+    ].join('\n  ');
+
+    if (wpConfigs.length) {
+      findings.push(finding({
+        severity: sev(t, 'medium', 'high'),
+        title: `WordPress is installed on the same machine as the API (${wpConfigs.join(', ')})`,
+        detail: `${cutover(t)}The API that fetches stranger-named URLs and the team's WordPress share one kernel, one disk, one CPU budget and — on this box — one uid, www-data. A flood aimed at /api takes WordPress down with it, and a compromise of either application is a compromise of the other; those are the owner's two named fears, and no vhost boundary answers either. wp_not_on_pro_vhost going green is NOT this requirement met: a second ServerName on the same box passes that check and fails this one. On the company deployment the API host runs the reverse proxy, ib-api and Redis, and nothing else; WordPress and its database live on a different machine. Nothing in this repo can fix it — it is a server-layout requirement for the cutover, which is why it is written here as one.`,
+        evidence: `${layout}${dbActive.length ? `\n  its database is running here too: ${dbActive.map((d) => d.unit).join(', ')}` : ''}`,
+        remediation: 'At cutover: build the API host with no PHP application and no MySQL/MariaDB unit on it, put WordPress on its own machine, and re-run this check — it must then find no wp-config.php under /var/www and no active database unit.',
+      }));
+    } else if (dbActive.length) {
+      findings.push(finding({
+        severity: sev(t, 'low', 'medium'),
+        title: `A database service is active on the API machine (${dbActive.map((d) => d.unit).join(', ')}) with no WordPress install found`,
+        detail: `${cutover(t)}The API needs Redis and nothing else. A MySQL/MariaDB unit on the same machine is serving some other application, and whatever it is shares the box with a service that fetches URLs a stranger names. Not the WordPress finding, but the same shape: a co-tenant on the API host.`,
+        evidence: layout,
+        remediation: 'At cutover: no database unit on the API host; whatever it serves moves with it.',
+      }));
+    }
+
+    return { findings, checked };
+  },
+});
+
 /** The runner accepts an array default export and drops anything without an id. */
-const CHECKS = [wpNotOnProVhost, proAuditWebrtcStunAllowlist, proVhostNoindexButNoLogin, proHostCutoverNotNipIo];
+const CHECKS = [wpNotOnProVhost, proAuditWebrtcStunAllowlist, proVhostNoindexButNoLogin, proHostCutoverNotNipIo, wpNotOnProMachine];
 export default CHECKS;
