@@ -31,10 +31,20 @@
  *       it is rendered and the href is read.
  *
  *   E8  "a company deploy must FAIL while the demo host is in the bundle."
- *       The audit's gap was "there is no CI, so something still has to run
- *       it". There is no CI — but the gate is not CI, it is scripts/deploy.sh
- *       itself, and the chain that makes that work had never been asserted
- *       anywhere. It is asserted below, link by link.
+ *       REFUTED, and the refutation stands: the audit's gap was "there is no
+ *       CI, so something still has to run it". There is no CI — but the gate
+ *       is not CI, it is scripts/deploy.sh itself, and the chain that makes
+ *       that work had never been asserted anywhere. It is asserted below,
+ *       link by link. Two of those links (1 and 4) were first asserted as
+ *       regexes over source text and a verifier broke both without either
+ *       going red — details at the E8 block. They are now asserted by
+ *       executing the script and the module they describe.
+ *
+ *   V3  the self-grant finding in scripts/security/checks/pro-entitlement.mjs
+ *       named one way of granting the Pro mark (a forged bridge object before
+ *       boot) and not the other (the attribute itself, set from the DevTools
+ *       console after load). The report now names both, and that is graded
+ *       on the check's OUTPUT, not its source.
  *
  * Two house rules this file follows.
  *
@@ -46,10 +56,14 @@
  *     thing that side effect produced. The one module executed for effect is
  *     lib/in-app.ts's IN_APP_BOOT_SCRIPT, which is executed as TEXT, in a fake
  *     window, exactly as tests/in-app.test.ts does — it cannot touch anything
- *     this file later asserts on.
+ *     this file later asserts on. The E8 sandboxes run unmodified COPIES of
+ *     scripts/deploy.sh and scripts/security/lib/context.mjs in child
+ *     processes, inside temp trees that are deleted afterwards; they touch
+ *     nothing in this checkout and contact nothing outside it.
  */
-import { describe, expect, it, vi } from 'vitest';
+import { afterAll, describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createElement } from 'react';
@@ -81,24 +95,6 @@ const { stripComments } = await import('../scripts/security/checks/sast-lib.mjs'
   stripComments: (src: string, opts?: { strings?: boolean }) => string;
 };
 const code = (p: string) => stripComments(read(p), { strings: false });
-
-/**
- * Shell has no block comments and no regex literals, so "from an unquoted # to
- * end of line" is the whole rule. Quoted `#` is rare in scripts/deploy.sh but
- * the count of quotes before the hash is cheap insurance against eating one.
- */
-function stripShellComments(src: string): string {
-  return src.split('\n').map((line) => {
-    for (let i = 0; i < line.length; i++) {
-      if (line[i] !== '#') continue;
-      const before = line.slice(0, i);
-      const odd = (q: string) => (before.split(q).length - 1) % 2 === 1;
-      if (odd('"') || odd("'")) continue;
-      return before;
-    }
-    return line;
-  }).join('\n');
-}
 
 /* ------------------------------------------------------------------ *
  * fakes: the same shapes tests/in-app.test.ts and
@@ -429,27 +425,198 @@ describe('E8 — the company-deploy gate, link by link', () => {
    *                              production host
    *   scripts/security/lib/context.mjs   takes that target from SITE_ORIGIN in
    *                              .secrets — the SAME variable deploy.sh
-   *                              uploads to
+   *                              refuses to run without and builds both
+   *                              sites for
    *
    * The last link is the one that makes it work without anybody remembering to
    * set SECURITY_TARGET: point .secrets at incognitobrowser.io and the suite
    * starts grading as a company deploy on its own. Not one link of that chain
    * was asserted anywhere, so any of them could have been edited away in
    * silence. Each is asserted below.
+   *
+   * Links 1 and 4 were first written as regexes over the SOURCE of deploy.sh
+   * and context.mjs, and a verifier broke both without either going red:
+   *
+   *   link 1 compared String.indexOf positions of 'npm test', 'next build'
+   *   and 'rsync'. Text order is not execution order. Wrapping the test line
+   *   in `run_tests() { … }` and invoking `run_tests` as the LAST line of the
+   *   script left all three positions where they were and the test green,
+   *   while the deploy now built and uploaded first and ran the suite after —
+   *   precisely the regression the test is named for. An `if`, a `case` or
+   *   any function body defeats indexOf the same way.
+   *
+   *   link 4 matched /opts\.origin \|\| secrets\?\.SITE_ORIGIN \|\|/ in
+   *   context.mjs. `const legacyOrigin = opts.origin || secrets?.SITE_ORIGIN
+   *   || …; void legacyOrigin; const siteOrigin = opts.origin || '…'` keeps
+   *   that text alive as dead code, stops reading SITE_ORIGIN, and the test
+   *   stayed green. Its behavioural half compared buildContext({}).origin to
+   *   this clone's real .secrets, whose SITE_ORIGIN is byte-identical to the
+   *   hard-coded fallback — so it passed with .secrets unread — and in a clone
+   *   with no .secrets at all it graded nothing.
+   *
+   * Both are now measured by EXECUTING the thing they describe. deploy.sh is
+   * run, unmodified, from a sandbox whose PATH puts stubs of npm, npx, node,
+   * git, ssh and rsync first; each stub appends its own invocation to a log,
+   * so the log IS the execution order, and nothing real is built, contacted
+   * or uploaded. context.mjs is imported, unmodified, from a sandbox whose
+   * .secrets names an origin that exists nowhere else, and the origin it
+   * returns is read back. Neither can be satisfied by text that does not run.
    */
 
-  it('link 1 — deploy.sh runs the unit suite before it builds or uploads anything', () => {
-    const sh = stripShellComments(read('scripts/deploy.sh'));
-    const test = sh.indexOf('npm test');
-    const build = sh.indexOf('next build');
-    const upload = sh.indexOf('rsync');
-    expect(test, 'scripts/deploy.sh no longer runs the unit suite — the only company-deploy gate in this repo is gone').toBeGreaterThan(-1);
-    expect(build, 'no build step found in scripts/deploy.sh').toBeGreaterThan(-1);
-    expect(upload, 'no rsync found in scripts/deploy.sh').toBeGreaterThan(-1);
-    expect(test, 'the unit suite runs after the build in scripts/deploy.sh').toBeLessThan(build);
-    expect(test, 'the unit suite runs after the upload in scripts/deploy.sh').toBeLessThan(upload);
-    // …and it is a hard stop, not advisory.
-    expect(sh.slice(test, test + 120)).toMatch(/\|\|\s*\{[^}]*exit 1/);
+  /* ---------------- the deploy sandbox ---------------- */
+
+  /**
+   * The login deploy.sh insists on before it does anything. deploy.invalid is
+   * RFC 2606 reserved and cannot resolve, and the key does not exist, so even
+   * if a stub were somehow skipped the real ssh or rsync would have nowhere to
+   * go. Nothing in this sandbox names a real host.
+   */
+  const SANDBOX_SECRETS: Record<string, string> = {
+    DEPLOY_HOST: 'deploy.invalid',
+    DEPLOY_USER: 'nobody',
+    DEPLOY_SSH_KEY: '/nonexistent/sandbox-deploy-key',
+    SITE_ORIGIN: 'https://sandbox.example',
+  };
+
+  /**
+   * Every external command deploy.sh runs that could build, contact or ship
+   * something. Everything else it runs (sed, find, grep, cp, rm, mktemp, date)
+   * is real and confined to the sandbox tree.
+   */
+  const STUBBED = ['npm', 'npx', 'node', 'git', 'ssh', 'rsync'] as const;
+
+  /**
+   * One stub for all six, keyed on the name it was invoked as. It records the
+   * call, touches nothing real, and does the least each name needs for the
+   * real script to carry on past it.
+   *
+   * ONE file, not six, on purpose: this Mac assesses every freshly written
+   * executable on its first exec (measured at ~0.3s each, cached per file,
+   * a symlink to an assessed file is free). Six fresh stubs per sandbox made
+   * each run cost two seconds; one dispatcher linked under six names costs
+   * that once per run of this file. deploy.sh itself is read by the shell,
+   * not exec'd, so its per-sandbox copy pays nothing.
+   */
+  const DISPATCHER = [
+    '#!/bin/sh',
+    'name="${0##*/}"',
+    'printf \'%s\\n\' "$name $*" >> "$DEPLOY_CALL_LOG"',
+    'case "$name" in',
+    // `npm test` exits as the sandbox says; anything else npm is asked for succeeds.
+    '  npm) if [ "$1" = test ]; then exit "${DEPLOY_STUB_NPM_TEST_EXIT:-0}"; fi ;;',
+    // `next build` records the origins it was handed, and leaves an out/ for
+    // the find/cp/grep steps that follow it in the real script.
+    '  npx) if [ "$1" = next ] && [ "$2" = build ]; then',
+    '         printf \'%s\\n\' "build-env BASE_PATH=${BASE_PATH:-} NEXT_PUBLIC_TIER=${NEXT_PUBLIC_TIER:-} NEXT_PUBLIC_FREE_URL=${NEXT_PUBLIC_FREE_URL:-} NEXT_PUBLIC_PRO_URL=${NEXT_PUBLIC_PRO_URL:-}" >> "$DEPLOY_CALL_LOG"',
+    '         mkdir -p out',
+    '       fi ;;',
+    '  git) if [ "$1" = rev-parse ]; then echo sandbox0; fi ;;',
+    // Whatever it is asked, ssh answers with the managed block the script is
+    // about to compare against, so the live-headers check passes on its real
+    // path rather than through DEPLOY_SKIP_HTACCESS_CHECK.
+    '  ssh) cat "$DEPLOY_SANDBOX_ROOT/scripts/droplet-htaccess.conf" ;;',
+    'esac',
+    'exit 0',
+    '',
+  ].join('\n');
+
+  let stubBin: string | null = null;
+  function sharedStubBin(): string {
+    if (stubBin) return stubBin;
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-deploy-stubs-'));
+    const dispatcher = path.join(dir, 'dispatch.sh');
+    fs.writeFileSync(dispatcher, DISPATCHER, { mode: 0o755 });
+    stubBin = path.join(dir, 'bin');
+    fs.mkdirSync(stubBin);
+    for (const name of STUBBED) fs.symlinkSync(dispatcher, path.join(stubBin, name));
+    return stubBin;
+  }
+  afterAll(() => {
+    if (stubBin) fs.rmSync(path.dirname(stubBin), { recursive: true, force: true });
+  });
+
+  type DeployRun = { status: number | null; stdout: string; stderr: string; calls: string[] };
+
+  /**
+   * Run scripts/deploy.sh AS IT IS IN THE REPO, from a sandbox tree. The
+   * script does `cd "$(dirname "$0")/.."`, so a byte-for-byte copy at
+   * <sandbox>/scripts/deploy.sh runs against <sandbox>: its `rm -rf out
+   * .next`, its .secrets, its out/ are all there and nowhere else.
+   */
+  function deployRun(opts: { secrets: Record<string, string>; npmTestFails?: boolean }): DeployRun {
+    const bin = sharedStubBin();
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-deploy-sandbox-'));
+    try {
+      fs.mkdirSync(path.join(root, 'scripts'));
+      const script = path.join(root, 'scripts', 'deploy.sh');
+      fs.copyFileSync(path.join(ROOT, 'scripts', 'deploy.sh'), script);
+      // The two repo files it reads besides .secrets. The conf carries no
+      // __HTTPS_HOST__ placeholder, so `want` is the file verbatim and the ssh
+      // stub can answer with the same bytes.
+      fs.writeFileSync(path.join(root, 'scripts', 'droplet-htaccess.conf'),
+        '# BEGIN pseo-security-headers\nHeader always set X-Sandbox "1"\n# END pseo-security-headers\n');
+      fs.writeFileSync(path.join(root, 'scripts', 'site.htaccess'), '# sandbox site.htaccess\n');
+      fs.writeFileSync(path.join(root, '.secrets'),
+        Object.entries(opts.secrets).map(([k, v]) => `${k}=${v}`).join('\n') + '\n');
+      const log = path.join(root, 'calls.log');
+
+      const env: NodeJS.ProcessEnv = { ...process.env };
+      delete env.DEPLOY_SKIP_HTACCESS_CHECK; // the real path, not the escape hatch
+      delete env.DEPLOY_WEB_ROOT;
+      const r = spawnSync('bash', [script], {
+        cwd: root, encoding: 'utf-8', timeout: 60_000,
+        env: {
+          ...env,
+          PATH: `${bin}${path.delimiter}${env.PATH || '/usr/bin:/bin'}`,
+          DEPLOY_SANDBOX_ROOT: root,
+          DEPLOY_CALL_LOG: log,
+          DEPLOY_STUB_NPM_TEST_EXIT: opts.npmTestFails ? '1' : '0',
+        },
+      });
+      if (r.error) throw r.error;
+      const calls = fs.existsSync(log) ? fs.readFileSync(log, 'utf-8').split('\n').filter(Boolean) : [];
+      return { status: r.status, stdout: r.stdout, stderr: r.stderr, calls };
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  }
+
+  const first = (calls: string[], re: RegExp) => calls.findIndex((c) => re.test(c));
+  const TESTS = /^npm test\b/;
+  const BUILD = /^npx next build\b/;
+  const UPLOAD = /^rsync\b/;
+
+  it('link 1 — a failing unit suite stops deploy.sh before it builds or uploads anything', () => {
+    const run = deployRun({ secrets: SANDBOX_SECRETS, npmTestFails: true });
+    expect(first(run.calls, TESTS), `deploy.sh never ran the unit suite — the only company-deploy gate in this repo is gone:\n${run.stdout}${run.stderr}`).toBeGreaterThan(-1);
+    expect(run.status, 'the unit suite failed and deploy.sh still exited 0 — the gate is advisory').not.toBe(0);
+    expect(run.calls.filter((c) => BUILD.test(c)), `deploy.sh built a site after the unit suite had already failed — the suite runs after the build, or its failure does not stop the script:\n${run.calls.join('\n')}`).toEqual([]);
+    expect(run.calls.filter((c) => UPLOAD.test(c)), `deploy.sh uploaded after the unit suite had already failed:\n${run.calls.join('\n')}`).toEqual([]);
+  });
+
+  it('link 1 — with the suite passing, the order of execution is tests, then build, then upload, for both sites', () => {
+    // The control for the test above: a sandbox in which deploy.sh could not
+    // get past `npm test` for some reason of its own would pass "nothing was
+    // built after the failure" while proving nothing. So the same sandbox,
+    // with the suite passing, has to run the whole script to the end.
+    const run = deployRun({ secrets: SANDBOX_SECRETS });
+    expect(run.status, `deploy.sh did not complete in the sandbox:\n${run.stdout}${run.stderr}`).toBe(0);
+    const tests = first(run.calls, TESTS);
+    const build = first(run.calls, BUILD);
+    const upload = first(run.calls, UPLOAD);
+    expect(tests, 'no `npm test` in the execution log').toBeGreaterThan(-1);
+    expect(build, 'no `npx next build` in the execution log').toBeGreaterThan(-1);
+    expect(upload, 'no rsync in the execution log').toBeGreaterThan(-1);
+    expect(tests, `the unit suite ran after the first build:\n${run.calls.join('\n')}`).toBeLessThan(build);
+    expect(build, `the first upload ran before the first build:\n${run.calls.join('\n')}`).toBeLessThan(upload);
+    // The whole script, not the first half of it: two tiers, two builds, two uploads.
+    expect(run.calls.filter((c) => BUILD.test(c))).toHaveLength(2);
+    expect(run.calls.filter((c) => UPLOAD.test(c))).toHaveLength(2);
+    // Every remote command was aimed at the login from the sandbox .secrets:
+    // the script read OUR file, and nothing here could ever reach a real host.
+    const remote = run.calls.filter((c) => /^(ssh|rsync)\b/.test(c));
+    expect(remote.length).toBeGreaterThan(0);
+    for (const c of remote) expect(c).toContain('nobody@deploy.invalid');
   });
 
   it('link 2 — the demo-paywall check is inside the suite that deploy runs', async () => {
@@ -498,41 +665,138 @@ describe('E8 — the company-deploy gate, link by link', () => {
     }
   });
 
-  it('link 4 — the origin the suite grades is the SITE_ORIGIN the deploy uploads to', async () => {
+  it('link 4 — buildContext() takes its origin from SITE_ORIGIN in .secrets: the value, read back, not the text', () => {
     // This is the link that makes the gate automatic. buildContext() with no
-    // options is exactly how tests/security-suite.test.ts builds its context,
-    // and it reads SITE_ORIGIN out of .secrets — the same variable
-    // scripts/deploy.sh insists on before it will run.
-    const ctxSrc = code('scripts/security/lib/context.mjs');
-    expect(ctxSrc, 'buildContext no longer derives its origin from SITE_ORIGIN — the deploy suite and the deploy now aim at different hosts').toMatch(/opts\.origin \|\| secrets\?\.SITE_ORIGIN \|\|/);
-
-    const sh = stripShellComments(read('scripts/deploy.sh'));
-    expect(sh, 'scripts/deploy.sh no longer requires SITE_ORIGIN').toMatch(/SITE_ORIGIN:\?/);
-
-    const { buildContext } = await import('../scripts/security/lib/context.mjs' as string) as {
-      buildContext: (o?: Record<string, unknown>) => { origin: string };
-    };
-    const origin = buildContext({}).origin;
-    expect(origin, 'buildContext returned no origin at all').toMatch(/^https?:\/\//);
-
-    const secretsPath = path.join(ROOT, '.secrets');
-    if (fs.existsSync(secretsPath)) {
-      const declared = /^\s*(?:export\s+)?SITE_ORIGIN\s*=\s*(.*)$/m.exec(fs.readFileSync(secretsPath, 'utf-8'));
-      if (declared) {
-        expect(origin, 'the security context grades a different origin than the one .secrets deploys to').toBe(declared[1].trim().replace(/^["']|["']$/g, ''));
+    // options is exactly how tests/security-suite.test.ts builds its context.
+    //
+    // context.mjs resolves .secrets three directories above itself, so an
+    // unmodified copy at the same depth in a sandbox reads the sandbox's
+    // .secrets. The probe origin below exists nowhere else — not in the
+    // environment, not in any fallback — so if it comes back, it came from
+    // that file. Run in a child node process, from the sandbox, so neither
+    // vitest's module cache nor this checkout's cwd can feed it anything.
+    const PROBE = 'https://link4-probe.example';
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ib-context-sandbox-'));
+    try {
+      const lib = path.join(root, 'scripts', 'security', 'lib');
+      fs.mkdirSync(lib, { recursive: true });
+      for (const f of ['context.mjs', 'harness.mjs']) {
+        fs.copyFileSync(path.join(ROOT, 'scripts', 'security', 'lib', f), path.join(lib, f));
       }
+      fs.writeFileSync(path.join(root, '.secrets'), `SITE_ORIGIN=${PROBE}\n`);
+      fs.writeFileSync(path.join(root, 'probe.mjs'), [
+        "import { buildContext } from './scripts/security/lib/context.mjs';",
+        'const fromSecrets = buildContext({});',
+        "const explicit = buildContext({ origin: 'https://explicit.example' });",
+        'console.log(JSON.stringify({',
+        '  hasSecrets: fromSecrets.hasSecrets, origin: fromSecrets.origin,',
+        '  freeBase: fromSecrets.freeBase, proBase: fromSecrets.proBase, apiBase: fromSecrets.apiBase,',
+        '  explicit: explicit.origin,',
+        '}));',
+        '',
+      ].join('\n'));
+      const env: NodeJS.ProcessEnv = { ...process.env };
+      delete env.SITE_ORIGIN;
+      delete env.SECURITY_TARGET;
+      const r = spawnSync(process.execPath, [path.join(root, 'probe.mjs')], { cwd: root, encoding: 'utf-8', env, timeout: 30_000 });
+      expect(r.status, `the probe did not run:\n${r.stdout}${r.stderr}`).toBe(0);
+      const got = JSON.parse(r.stdout.trim().split('\n').pop()!) as Record<string, unknown>;
+      expect(got.hasSecrets, 'buildContext() did not find the sandbox .secrets — it no longer reads .secrets from the directory above scripts/').toBe(true);
+      expect(got.origin, 'buildContext() no longer derives its origin from SITE_ORIGIN — the deploy suite and the deploy now aim at different hosts').toBe(PROBE);
+      expect(got.freeBase).toBe(`${PROBE}/resources`);
+      expect(got.proBase).toBe(`${PROBE}/resources-pro`);
+      expect(got.apiBase).toBe(`${PROBE}/api`);
+      // An explicit origin still wins over the file — that is how link 3 aims
+      // the check at the company host from a clone whose .secrets says demo.
+      expect(got.explicit).toBe('https://explicit.example');
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
     }
-    // And the gate, closed round the other way. This clone deploys to the
-    // droplet, which is legitimately a demo target, so the demo paywall is
-    // allowed to be in its bundle. The day .secrets is repointed at the
-    // company host while that switch is still set, THIS goes red — before
-    // anything is built, and before anything is uploaded.
-    if (/export const DEMO_UPGRADE_URL = '[^']+'/.test(code('components/UpgradeButtons.tsx'))) {
-      const COMPANY_HOSTS = ['incognitobrowser.io', 'www.incognitobrowser.io'];
-      expect(
-        COMPANY_HOSTS.includes(new URL(origin).host),
-        `this clone is configured to deploy to ${origin}, a company production host, while DEMO_UPGRADE_URL is still set in components/UpgradeButtons.tsx — clear the switch or repoint .secrets`,
-      ).toBe(false);
+  });
+
+  it('link 4 — deploy.sh reads the same SITE_ORIGIN: it will not start without one, and builds both sites for the one it finds', () => {
+    // Without it, nothing runs at all — not the live-headers check, not the
+    // suite, not a build. A default slipped in (`SITE_ORIGIN="${SITE_ORIGIN:-…}"`)
+    // would let a deploy proceed for an origin the security context never saw.
+    const without = Object.fromEntries(Object.entries(SANDBOX_SECRETS).filter(([k]) => k !== 'SITE_ORIGIN'));
+    const bare = deployRun({ secrets: without });
+    expect(bare.status, 'deploy.sh ran with no SITE_ORIGIN in .secrets').not.toBe(0);
+    expect(bare.stderr).toMatch(/SITE_ORIGIN/);
+    expect(bare.calls, 'deploy.sh executed something before discovering SITE_ORIGIN was missing').toEqual([]);
+
+    // With it, the value from .secrets — and only that value — is what both
+    // builds are told the site's origin is, and what the script reports live.
+    const PROBE = 'https://link4-probe.example';
+    const run = deployRun({ secrets: { ...SANDBOX_SECRETS, SITE_ORIGIN: PROBE } });
+    expect(run.status, `deploy.sh did not complete:\n${run.stdout}${run.stderr}`).toBe(0);
+    const builds = run.calls
+      .filter((c) => c.startsWith('build-env '))
+      .map((c) => Object.fromEntries(c.slice('build-env '.length).split(' ').map((kv) => {
+        const i = kv.indexOf('=');
+        return [kv.slice(0, i), kv.slice(i + 1)];
+      })));
+    expect(builds, 'expected exactly two `next build` invocations, free and Pro').toHaveLength(2);
+    expect(builds.map((b) => b.BASE_PATH).sort()).toEqual(['/resources', '/resources-pro']);
+    for (const b of builds) {
+      expect(b.NEXT_PUBLIC_FREE_URL, `the ${b.BASE_PATH} build was told a free-site origin that is not the .secrets SITE_ORIGIN`).toBe(`${PROBE}/resources`);
+      expect(b.NEXT_PUBLIC_PRO_URL, `the ${b.BASE_PATH} build was told a Pro-site origin that is not the .secrets SITE_ORIGIN`).toBe(`${PROBE}/resources-pro`);
     }
+    expect(run.stdout).toContain(`${PROBE}/resources-pro/tools/`);
+  });
+});
+
+/* ================================================================== *
+ * V3. The second way in is on the record, and the severity still moves.
+ * ================================================================== */
+
+describe('V3 — the self-grant finding names the console path, and its severity follows the target', () => {
+  /**
+   * The first pass found that the self-grant finding described one bypass — a
+   * script that plants window.IncognitoBrowserApp BEFORE the boot script runs
+   * — and left the other unsaid. The mark is a plain attribute on <html>;
+   * inAppPro() reads it and nothing about who wrote it; nothing re-checks it
+   * after boot. So `document.documentElement.setAttribute('data-ib-pro', '')`
+   * in the DevTools console of a page that has already loaded is the same
+   * grant with no handshake at all. tests/pro-entitlement.test.ts already
+   * runs the real inAppPro() and shouldGate() against exactly that document;
+   * what was missing was the report SAYING so, and a finding that names one
+   * of two doors reads as if the other is shut.
+   *
+   * Graded on the check's OUTPUT, by running it — not on its source, where
+   * the same words also appear in a comment.
+   */
+  const CHECK = 'pro_gate_not_trusted_as_server_auth';
+  const selfGrant = (r: { findings: Array<Record<string, string>> }) => r.findings.find((f) => /self-grant the Pro mark/.test(f.title));
+
+  /** resolveTarget() reads SECURITY_TARGET before the origin; a stray one would grade the wrong deploy. */
+  async function withoutTargetEnv<T>(body: () => Promise<T>): Promise<T> {
+    const before = process.env.SECURITY_TARGET;
+    delete process.env.SECURITY_TARGET;
+    try {
+      return await body();
+    } finally {
+      if (before === undefined) delete process.env.SECURITY_TARGET; else process.env.SECURITY_TARGET = before;
+    }
+  }
+
+  it('the finding names both doors: the forged bridge before boot, and the console after load', async () => {
+    const { result } = await withoutTargetEnv(() => runCheck(CHECK, { origin: 'https://206-189-186-34.nip.io' }));
+    const f = selfGrant(result);
+    expect(f, 'the self-grant statement is no longer reported').toBeTruthy();
+    // Door one, as before.
+    expect(f!.detail).toMatch(/window\.IncognitoBrowserApp = \{ postMessage\(\)\{\} \} before the boot script runs/);
+    // Door two: the statement, the exact incantation, and when it works.
+    expect(f!.detail).toMatch(/DevTools console/);
+    expect(f!.detail).toMatch(/document\.documentElement\.setAttribute\('data-ib-pro', ''\)/);
+    expect(f!.detail).toMatch(/after the page has loaded/);
+    // And the acceptance the existing suite pins now covers both doors.
+    expect(f!.detail).toMatch(/both are ACCEPTABLE AS IT STANDS/);
+  });
+
+  it('the 2026-09-22 target-aware severity is still there: info for the demo, high for the company host', async () => {
+    const demo = await withoutTargetEnv(() => runCheck(CHECK, { origin: 'https://206-189-186-34.nip.io' }));
+    const company = await withoutTargetEnv(() => runCheck(CHECK, { origin: 'https://incognitobrowser.io' }));
+    expect(selfGrant(demo.result)?.severity).toBe('info');
+    expect(selfGrant(company.result)?.severity, 'a company-host run no longer escalates the self-grant statement — it would sail through the deploy suite at cutover').toBe('high');
   });
 });
