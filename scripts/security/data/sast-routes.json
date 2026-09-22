@@ -26,7 +26,7 @@
     {
       "path": "app/scan-url/route.ts",
       "endpoint": "POST /scan-url",
-      "gates": ["origin", "rateLimit", "pow", "powReplay"],
+      "gates": ["origin", "pow", "rateLimit", "powReplay"],
       "bodyCap": true,
       "note": "The one route that makes an outbound fetch. If any gate moves below `await request.text()` or below fetch(targetUrl), this endpoint becomes a free unauthenticated fetch proxy on the box that also serves the team's WordPress."
     },

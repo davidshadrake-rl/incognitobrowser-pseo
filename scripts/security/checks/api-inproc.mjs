@@ -405,8 +405,16 @@ async function run() {
       out.order.push({
         label: 'scan-url: no PoW + invalid JSON', status: res.status, expectStatus: 401,
         reason: body && body.reason, expectReason: 'no_solution',
-        rateLimitHeader: res.headers.get('x-ratelimit-limit'), expectRateLimitHeader: 'present',
-        why: 'proof-of-work must gate the body parse; the rate-limit header proves the limiter already ran',
+        // null, not 'present', since 2026-09-22. This row used to REQUIRE the
+        // rate-limit header on a tokenless request — "proves the limiter
+        // already ran" — which is the same defect row (a) forbids for the
+        // origin gate: a caller an earlier gate refuses must not have spent a
+        // bucket. A tokenless flood spent every /24's allowance for free;
+        // pow-before-ratelimit-order reported it at medium while this row
+        // enforced it at high. The proof-of-work is a local HMAC compare and
+        // now runs before the Redis round trip.
+        rateLimitHeader: res.headers.get('x-ratelimit-limit'), expectRateLimitHeader: null,
+        why: 'the proof-of-work gate must run before the rate limiter, so a tokenless caller cannot spend a bucket — and must gate the body parse, so this is 401 and not 400',
       });
     }
 

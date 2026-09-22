@@ -78,9 +78,15 @@ export default check({
     const ufw = section('UFW');
     if (!ufw || /unavailable/.test(ufw)) {
       // Not knowing is its own finding. It must not read like "firewall fine".
+      // But "not installed" is knowing, and it is graded — at high — by
+      // ufw-default-deny; this used to blame sudo for a missing binary and
+      // double-count the same fact as a second, wrong finding.
+      const notInstalled = /command not found|not found|UNAVAILABLE/i.test(ufw || '');
       findings.push(finding({
-        severity: 'medium',
-        title: 'Could not read ufw status (needs root, and sudo -n was refused)',
+        severity: notInstalled ? 'info' : 'medium',
+        title: notInstalled
+          ? 'ufw is not installed on this box (graded at high by ufw-default-deny; not double-counted here)'
+          : 'Could not read ufw status (needs root, and sudo -n was refused)',
         detail: 'The firewall state is unverified, which is a different thing from verified-good. It is the control that keeps a localhost-bind mistake from becoming an open Redis.',
         evidence: `ufw status → ${ufw || '(no output)'}`,
         remediation: 'Give the deploy user NOPASSWD sudo for `ufw status` alone, or run `sudo ufw status` by hand and record it.',

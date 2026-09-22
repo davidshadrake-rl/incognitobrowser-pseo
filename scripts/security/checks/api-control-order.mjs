@@ -34,7 +34,7 @@ export default check({
   safeAgainstProd: true,
   needsOptIn: false,
   requires: [],
-  describe: 'Origin, rate limit, proof-of-work, body parse and the outbound fetch still run in that order.',
+  describe: 'Origin, proof-of-work, rate limit, body parse and the outbound fetch still run in that order — and no gate that refuses a request lets a later one charge for it.',
   async run() {
     const o = await observe();
     const findings = [];
@@ -46,7 +46,7 @@ export default check({
       if (r.expectStatus !== undefined && r.status !== r.expectStatus) problems.push(`status ${r.status}, expected ${r.expectStatus}`);
       if (r.expectReason !== undefined && r.reason !== r.expectReason) problems.push(`reason ${JSON.stringify(r.reason)}, expected ${JSON.stringify(r.expectReason)}`);
       if (r.expectRateLimitHeader === null && r.rateLimitHeader !== null) {
-        problems.push(`X-RateLimit-Limit: ${r.rateLimitHeader} was emitted, so the limiter ran for a request the origin gate refused`);
+        problems.push(`X-RateLimit-Limit: ${r.rateLimitHeader} was emitted, so the limiter charged a bucket for a request an earlier gate refused`);
       }
       if (r.expectRateLimitHeader === 'present' && r.rateLimitHeader === null) {
         problems.push('no X-RateLimit-Limit header, so the rate limiter did not run before the proof-of-work check');
@@ -84,7 +84,7 @@ export default check({
         title: `Security controls ran out of order: ${r.label}`,
         detail: `${r.why}. The handler was invoked in-process with the real route module, so this is what the route did, not what its source says.`,
         evidence: `${r.label} => ${problems.join('; ')}`,
-        remediation: 'Restore the order: origin gate, rate limit, proof-of-work, body size, body parse, SSRF guard, in-flight cap, fetch.',
+        remediation: 'Restore the order: origin gate, proof-of-work, rate limit, single-use claim, body size, body parse, SSRF guard, in-flight cap, fetch.',
         file: 'app/scan-url/route.ts',
         line: null,
       }));

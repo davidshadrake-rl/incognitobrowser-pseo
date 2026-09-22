@@ -160,13 +160,33 @@ const saveImageCheck = check({
       // report "no gaps" about nothing at all.
       throw new Skip(`${IN_APP} has no top-level saveImageInApp( … ) body this check can read — it would otherwise grade an empty string`);
     }
-    const body = stripComments(fn.text);
+    const ownBody = stripComments(fn.text);
+
+    // Since 2026-09-22 the validation is DELEGATED: saveImageInApp calls
+    // safeImageFilename(filename, mime), refuses on null, and sends the
+    // validated name. A check that grades only saveImageInApp's own body
+    // reported "no validation at all" against a function that refuses every
+    // shape it names — the same mistake pro_paste_parser_robustness made the
+    // same day. So: if the body delegates AND gates the send on the result,
+    // the validator's body is what gets graded, and the send must use the
+    // validated name rather than the raw argument.
+    const delegate = /const\s+(\w+)\s*=\s*(\w+)\(\s*filename\s*,\s*mime\s*\)/.exec(ownBody);
+    const gated = delegate && new RegExp(`if\\s*\\(\\s*!${delegate[1]}\\s*\\)\\s*return\\s+false`).test(ownBody);
+    const sendsValidated = delegate && new RegExp(`filename:\\s*${delegate[1]}\\b`).test(ownBody)
+      && new RegExp(`saveImage!?\\(\\s*base64\\s*,\\s*${delegate[1]}\\s*,`).test(ownBody)
+      && !/filename:\s*filename\b|saveImage!?\(\s*base64\s*,\s*filename\s*,/.test(ownBody);
+    let body = ownBody;
+    if (delegate && gated && sendsValidated) {
+      const v = topLevelBody(src, new RegExp(`export\\s+function\\s+${delegate[2]}\\b`));
+      if (v) body = stripComments(v.text) + '\n' + ownBody;
+    }
 
     // Three named properties, each graded separately so the evidence says which
-    // one is missing rather than "the function is unsafe".
-    const hasBasename = /\bbasename\b|replace\([^)]*[\\/][^)]*\)|split\(\s*['"`][\\/]/.test(body) && /filename/.test(body);
-    const hasExtensionRule = /filename[\s\S]{0,200}?\.(test|match)\(|\/\\?\.\((?:png|jpe?g|webp)/i.test(body);
-    const mimeAllowlisted = /image\/(png|jpe?g|webp)[\s\S]{0,120}?(includes|has|test)\(|ALLOWED_MIME|MIME_ALLOW/i.test(body);
+    // one is missing rather than "the function is unsafe". Both the quoted
+    // split('/') and the regex split(/[\\/]/) forms count as a basename strip.
+    const hasBasename = /\bbasename\b|replace\([^)]*[\\/][^)]*\)|split\(\s*['"`][\\/]|split\(\s*\/\[[^\]]*[\\/][^\]]*\]\/\)/.test(body) && /filename/.test(body);
+    const hasExtensionRule = /filename[\s\S]{0,200}?\.(test|match)\(|\/\\?\.\((?:png|jpe?g|webp)|ext\.test\(/i.test(body);
+    const mimeAllowlisted = /image\/(png|jpe?g|webp)[\s\S]{0,120}?(includes|has|test)\(|ALLOWED_MIME|ALLOWED_IMAGE_MIME|MIME_ALLOW/i.test(body);
 
     // What the function actually does with each value today, quoted verbatim so
     // a reader can re-check without running anything.

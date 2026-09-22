@@ -24,7 +24,7 @@ export default check({
   safeAgainstProd: true,
   needsOptIn: true,
   requires: ['ssh'],
-  describe: '/etc/ib-api.env stays 0640 root:www-data, and no env file has been left inside /opt/ib-api.',
+  describe: '/etc/ib-api.env stays 0640 root:ib-api — readable by the service uid, NOT by www-data (the WordPress uid) — and no env file has been left inside /opt/ib-api.',
   /**
    * Read-only by construction: one `stat`, one `find`, one `ls`. No writes, no
    * service restart, no `cat` of the file itself — this check never needs to
@@ -34,7 +34,7 @@ export default check({
    *
    * The second half covers a different route to the same exposure.
    * scripts/deploy-api.sh rsyncs the repo's build output into /opt/ib-api and
-   * then chowns the whole tree to www-data. An .env that found its way into
+   * then chowns the whole tree root:ib-api. An .env that found its way into
    * that directory would be handed to the web user by the deploy itself.
    */
   async run(ctx) {
@@ -79,13 +79,13 @@ export default check({
       if (other !== 0) {
         findings.push(finding({
           severity: 'high',
-          title: `/etc/ib-api.env is readable beyond root and www-data (mode ${mode})`,
+          title: `/etc/ib-api.env is readable beyond root and ib-api (mode ${mode})`,
           detail:
             'The "other" permission bits are not zero, so every local account on this box can read the file. '
             + 'That box also runs the team\'s WordPress and MySQL, so this hands ALTCHA_HMAC_KEY and STATS_TOKEN to anything that gets even low-privilege execution through the WordPress stack. '
             + 'With the ALTCHA key, the proof-of-work gating /scan-url can be forged offline and the API\'s main abuse control stops meaning anything.',
           evidence: `ssh: stat -c '%a %U %G' /etc/ib-api.env → ${modeBlock}`,
-          remediation: 'chmod 640 /etc/ib-api.env && chown root:www-data /etc/ib-api.env, then rotate ALTCHA_HMAC_KEY and STATS_TOKEN — assume they were read.',
+          remediation: 'chmod 640 /etc/ib-api.env && chown root:ib-api /etc/ib-api.env, then rotate ALTCHA_HMAC_KEY and STATS_TOKEN — assume they were read.',
           file: '/etc/ib-api.env',
         }));
       } else if (Number(mode[1]) > 4) {
@@ -93,22 +93,27 @@ export default check({
           severity: 'medium',
           title: `/etc/ib-api.env is group-writable (mode ${mode})`,
           detail:
-            'The group can write the file, so anything running as www-data can rewrite the API\'s environment — point REDIS_URL elsewhere, replace ALTCHA_HMAC_KEY with a known value. '
-            + 'www-data is also the WordPress user on this box.',
+            'The group can write the file, so anything running as the service uid can rewrite the API\'s environment — point REDIS_URL elsewhere, replace ALTCHA_HMAC_KEY with a known value.',
           evidence: `ssh: stat -c '%a %U %G' /etc/ib-api.env → ${modeBlock}`,
           remediation: 'chmod 640 /etc/ib-api.env',
           file: '/etc/ib-api.env',
         }));
       }
-      if (owner !== 'root' || group !== 'www-data') {
+      // root:ib-api is the DELIBERATE state since the 2026-09-19 uid split: the
+      // API runs as its own user, and www-data — WordPress — must not be able
+      // to read ALTCHA_HMAC_KEY. This check used to expect root:www-data and
+      // its remediation was `chown root:www-data`, which would have handed the
+      // key straight back to the WordPress uid. Found 2026-09-22 when it
+      // reported the secure state as "drifted".
+      if (owner !== 'root' || group !== 'ib-api') {
         findings.push(finding({
           severity: 'medium',
           title: `/etc/ib-api.env ownership drifted to ${owner}:${group}`,
           detail:
-            'API-ON-DROPLET.md documents root:www-data — root owns it, the service group reads it. Different ownership usually means a wider reader set than intended, '
+            'API-ON-DROPLET.md documents root:ib-api — root owns it, the service group reads it, and www-data (WordPress) cannot. Different ownership usually means a wider reader set than intended, '
             + 'and it is the kind of change a troubleshooting session leaves behind.',
-          evidence: `ssh: stat -c '%a %U %G' /etc/ib-api.env → ${modeBlock} (expected owner root, group www-data)`,
-          remediation: 'chown root:www-data /etc/ib-api.env',
+          evidence: `ssh: stat -c '%a %U %G' /etc/ib-api.env → ${modeBlock} (expected owner root, group ib-api)`,
+          remediation: 'chown root:ib-api /etc/ib-api.env',
           file: '/etc/ib-api.env',
         }));
       }
@@ -121,7 +126,7 @@ export default check({
         severity: 'high',
         title: `${strays.length} env or key file left inside /opt/ib-api`,
         detail:
-          'scripts/deploy-api.sh rsyncs build output into /opt/ib-api and then chowns the whole tree to www-data. '
+          'scripts/deploy-api.sh rsyncs build output into /opt/ib-api and then chowns the whole tree root:ib-api. '
           + 'An env file or private key sitting there is therefore readable by the web user on a box that also serves WordPress, '
           + 'and it is not managed by anything — no deploy will ever remove it.',
         evidence: `ssh: find /opt/ib-api -maxdepth 2 ... → ${strays.join(', ')}`,

@@ -106,6 +106,31 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Altcha proof-of-work check. The client must have called /challenge, solved
+  // the SHA-256 puzzle, and put the solution in the Authorization header.
+  // This is what makes scripted abuse expensive — every call costs ~100ms of CPU.
+  //
+  // BEFORE the rate limiter, since 2026-09-22. Verifying is a local HMAC
+  // compare (~2us); the limiter is a Redis round trip and it charges a /24
+  // bucket. With the limiter first, a request carrying no token at all still
+  // spent the bucket before it was refused — so one host could exhaust the
+  // allowance of everyone behind the same prefix at no CPU cost, which is the
+  // exact thing the proof-of-work exists to prevent. Now a tokenless flood
+  // costs us an HMAC each and touches neither Redis nor anyone's budget.
+  // Single-use (the replay claim) still comes after the limiter, because it
+  // is the Redis write that a flood of VALID tokens would otherwise amplify.
+  const solution = parseAltchaAuthHeader(request.headers.get('authorization'));
+  const altchaResult = verifySolution(solution);
+  if (!altchaResult.valid) {
+    return NextResponse.json(
+      {
+        error:
+          'Missing or invalid proof-of-work token. Call /challenge first, solve it, and send the solution as the Authorization header.',
+        reason: altchaResult.reason,
+      },
+      { status: 401, headers: cors }
+    );
+  }
   // Rate limit by /24 IPv4 (or /64 IPv6) network bucket, not exact IP.
   // Why: VPN/CGN users rotate egress IPs per connection. Exact-IP limiting
   // gives them effectively unlimited requests. /24 bucketing catches the
@@ -124,21 +149,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Altcha proof-of-work check. The client must have called /challenge, solved
-  // the SHA-256 puzzle, and put the solution in the Authorization header.
-  // This is what makes scripted abuse expensive — every call costs ~100ms of CPU.
-  const solution = parseAltchaAuthHeader(request.headers.get('authorization'));
-  const altchaResult = verifySolution(solution);
-  if (!altchaResult.valid) {
-    return NextResponse.json(
-      {
-        error:
-          'Missing or invalid proof-of-work token. Call /challenge first, solve it, and send the solution as the Authorization header.',
-        reason: altchaResult.reason,
-      },
-      { status: 401, headers: allHeaders }
-    );
-  }
   // Single use: a solved token buys exactly one scan when Redis is configured
   // (SET NX on the signature for the token's remaining lifetime). Without
   // Redis the 90 s TTL + rate limit remain the only replay bound.
