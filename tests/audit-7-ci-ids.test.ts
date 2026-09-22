@@ -287,21 +287,23 @@ function walk(dir: string, out: string[] = []): string[] {
 }
 
 describe('pro_bridge_saveImage_filename_and_mime — the containment it leans on, made blocking', () => {
-  it('the function really is still unvalidated, so the containment is what is holding', () => {
-    // Stated first and checked first, so this section can never be read as
-    // "the gap is closed". If validation lands in saveImageInApp, this fails
-    // and the section below stops being load-bearing — which is the good
-    // outcome and should force a rewrite here.
+  it('the function validates both values itself, so the caller allowlist is defence in depth, not the control', () => {
+    // Rewritten 2026-09-22 when safeImageFilename() landed. This used to pin
+    // the function as unvalidated so the section below could never be read as
+    // "closed". Now the function refuses on its own — tests/pro-bridge.test.ts
+    // proves it behaviourally — and the caller allowlist below is a second
+    // layer, kept because a second caller passing visitor input is still a
+    // bug worth stopping at build time.
     const src = stripComments(read(DEFINITION));
     const start = src.indexOf('export async function saveImageInApp');
     expect(start, 'saveImageInApp is gone or renamed — re-read this whole section').toBeGreaterThan(-1);
     const body = src.slice(start, src.indexOf('\n}', start) + 2);
-
-    expect(body).toContain("const mime = blob.type || 'image/png'");
-    // The filename reaches the message untouched: no basename strip, no
-    // traversal rejection, no extension rule anywhere in the body.
-    expect(body).toMatch(/action: 'saveImage', filename, mime, base64/);
-    expect(body).not.toMatch(/basename|\.\.|\/\\?\.\((?:png|jpe?g|webp)/i);
+    expect(body).toMatch(/const name = safeImageFilename\(filename, mime\);/);
+    expect(body).toMatch(/if \(!name\) return false;/);
+    // The sanitised name is what crosses, on BOTH transports.
+    expect(body).toMatch(/action: 'saveImage', filename: name, mime, base64/);
+    expect(body).toMatch(/saveImage!\(base64, name, mime\)/);
+    expect(body).not.toMatch(/action: 'saveImage', filename, mime/);
   });
 
   it('saveImageInApp has exactly the callers the reviewed allowlist names', () => {

@@ -56,10 +56,10 @@
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import {
+import { MAX_PASTED_COOKIES, MAX_PASTE_CHARS,
   cookieListReport,
   parseCookieList,
-} from '../components/tools/CookieAnalyzerTool';
+ } from '../components/tools/CookieAnalyzerTool';
 
 const ROOT = path.join(__dirname, '..');
 const COOKIE_TOOL = 'components/tools/CookieAnalyzerTool.tsx';
@@ -358,81 +358,76 @@ describe('P3 — the tool never embeds the scanned site to read its cookies', ()
 
 // ───────────── C2: what an uncapped paste actually costs ─────────────────
 
-describe('C2 — the paste has no size cap at any layer', () => {
+describe('C2 — the paste is capped at every layer', () => {
   /**
-   * Reported in needsSourceChange, not closed: there is no cap to guard, so
-   * no assertion here can fail because one broke. What these two tests do is
-   * put the real number on the record at a size a clipboard really holds —
-   * the previous probe stopped at 1 MB — and read the render multiplier out of
-   * the component instead of estimating it.
+   * Until 2026-09-22 this block put the uncapped cost on the record: an 8 MB
+   * paste became ~560,000 cookie objects and asked React for millions of
+   * elements in one synchronous commit. Three caps landed — the textarea's
+   * maxLength, a character slice in parseCookieList, and a piece slice after
+   * filtering — and these are the guards. They import the constants rather
+   * than restating the numbers, so a cap that is raised is still a cap and a
+   * cap that is removed goes red.
    *
-   * The cost is the visitor's own tab. Nothing about this reaches the droplet:
-   * the paste never leaves the browser (pro_paste_not_posted_to_api, and the
-   * runtime network trap in tests/pro-client-only.test.ts), and there is no
-   * URL parameter, handoff or sessionStorage path that fills this textarea —
-   * the visitor has to paste it themselves. Saying that plainly matters: this
-   * is a usability failure in a privacy tool, not the DDoS the owner is
-   * worried about, and dressing it up as one would cost the next report its
-   * credibility.
+   * Still true, and still worth saying: the cost was the visitor's own tab.
+   * The paste never leaves the browser (pro_paste_not_posted_to_api), so this
+   * was a usability failure in a privacy tool, not the DDoS the owner is
+   * worried about.
    */
   const UNIT = 'ck=0123456789; ';
   const MB = 1024 * 1024;
 
-  it('an 8 MB paste is parsed in full, because nothing anywhere says not to', () => {
+  it('an 8 MB paste parses to at most MAX_PASTED_COOKIES cookies', () => {
     const pieces = Math.ceil((8 * MB) / UNIT.length);
     const big = UNIT.repeat(pieces);
     expect(big.length).toBeGreaterThan(8 * MB);
-
     const started = Date.now();
     const cookies = parseCookieList(big);
     const ms = Date.now() - started;
-
-    // Every piece becomes an object. This is the assertion that goes red the
-    // day a cap lands — which is the point: it is wired to the fix.
-    expect(cookies, `8 MB parsed to ${cookies.length} cookies in ${ms}ms`).toHaveLength(pieces);
-    expect(cookies.length).toBeGreaterThan(500_000);
-    // The parse itself is linear and is not the expensive half; recorded so
-    // the next reader does not have to re-measure it to find that out.
-    expect(ms, `parsing 8 MB took ${ms}ms`).toBeLessThan(20_000);
+    expect(cookies.length).toBe(MAX_PASTED_COOKIES);
+    expect(MAX_PASTED_COOKIES).toBeLessThanOrEqual(5000);
+    expect(ms, `parsing 8 MB took ${ms}ms`).toBeLessThan(5_000);
   });
 
-  it('and the component renders one card per cookie, with no slice in front of it', () => {
-    // The render multiplier, read from the source rather than remembered.
+  it('the character slice binds before the split, so one giant piece is bounded too', () => {
+    const onePiece = 'a=' + 'x'.repeat(8 * MB);
+    const [only] = parseCookieList(onePiece);
+    expect(only.value.length).toBeLessThanOrEqual(MAX_PASTE_CHARS);
+    expect(MAX_PASTE_CHARS).toBeLessThanOrEqual(256 * 1024);
+  });
+
+  it('the textarea refuses more than MAX_PASTE_CHARS at the element', () => {
+    expect(TEXT, 'the paste textarea has no maxLength bound to MAX_PASTE_CHARS').toMatch(/<textarea[\s\S]{0,600}?maxLength=\{MAX_PASTE_CHARS\}/);
+  });
+
+  it('the render is bounded by the parse', () => {
+    // The card loop maps over `cookies` with no slice of its own, and that is
+    // fine because every writer of that state goes through parseCookieList.
+    // A second, uncapped source of cookies is what would make this wrong.
     const start = SRC.indexOf('{cookies.map(');
-    expect(start, 'the paste/this-page result no longer maps over cookies — re-read this test').toBeGreaterThan(-1);
-    const end = SRC.indexOf('))}', start);
-    const card = SRC.slice(start, end);
-    expect(card, 'the extracted block is not the cookie card').toContain('c.description');
-    expect(card).toContain('c.name');
-
-    const elementsPerCard = [...card.matchAll(/<\s*[a-zA-Z]/g)].length;
-    expect(elementsPerCard, 'the card markup shrank to nothing — the arithmetic below would flatter it').toBeGreaterThanOrEqual(5);
-
-    // No cap between the parsed list and the DOM.
-    const mapped = SRC.slice(SRC.lastIndexOf('\n', start), end);
-    expect(mapped, 'there is now a .slice() before the map — flip this test and close C2').not.toMatch(/cookies\s*\.\s*slice\s*\(/);
-    // And none on the way in, either.
-    expect(TEXT, 'the textarea grew a maxLength — flip this test and close C2').not.toMatch(/<textarea[\s\S]{0,400}?maxLength/);
-
-    const cookiesFrom8MB = Math.ceil((8 * MB) / UNIT.length);
-    const elements = cookiesFrom8MB * elementsPerCard;
-    expect(
-      elements,
-      `an 8 MB paste asks React for ${elements.toLocaleString()} elements (${cookiesFrom8MB.toLocaleString()} cards × ${elementsPerCard}) on the main thread, in one synchronous commit`,
-    ).toBeGreaterThan(2_000_000);
+    expect(start).toBeGreaterThan(-1);
+    const elementsPerCard = [...SRC.slice(start, SRC.indexOf('))}', start)).matchAll(/<\s*[a-zA-Z]/g)].length;
+    expect(MAX_PASTED_COOKIES * elementsPerCard).toBeLessThan(100_000);
+    const writers = [...SRC.matchAll(/setCookies\(([^)]*)\)/g)].map((m) => m[1]);
+    expect(writers.length).toBeGreaterThan(0);
+    for (const w of writers) expect(w, `setCookies(${w}) bypasses parseCookieList`).toMatch(/parseCookieList\(|^\[\]$/);
   });
 });
 
 // ───────── C4: attributes are counted, but must stay cosmetic ────────────
 
-describe('C4 — Expires= and Path= are counted as cookies', () => {
+describe('C4 — Set-Cookie attributes are not cookies', () => {
   const SET_COOKIE = 'sid=abc123; Domain=.example.com; Path=/; Expires=Thu, 01 Jan 2099 00:00:00 GMT; Max-Age=3600; Secure; HttpOnly; SameSite=None';
 
-  it('the claim is false: a Set-Cookie line is reported as eight cookies', () => {
-    // Pinned again here, one line from the guard below, because the guard is
-    // only meaningful next to the behaviour it is mitigating.
-    expect(parseCookieList(SET_COOKIE).map((c) => c.name))
-      .toEqual(['sid', 'Domain', 'Path', 'Expires', 'Max-Age', 'Secure', 'HttpOnly', 'SameSite']);
+  it('a Set-Cookie line is reported as one cookie, not eight', () => {
+    // Was pinned at eight until 2026-09-22. The box's own label invites a
+    // Set-Cookie line from DevTools, and the parser now drops RFC 6265
+    // attribute names after the first piece.
+    expect(parseCookieList(SET_COOKIE).map((c) => c.name)).toEqual(['sid']);
+  });
+
+  it('only pieces AFTER the first are eligible to be attributes', () => {
+    expect(parseCookieList('path=/x; secure=1').map((c) => c.name)).toEqual(['path']);
+    expect(parseCookieList('a=1; b=2; Path=/').map((c) => c.name)).toEqual(['a', 'b']);
   });
 
   it('the mitigating half holds: the verdict does not move when attributes are present', () => {
@@ -456,13 +451,11 @@ describe('C4 — Expires= and Path= are counted as cookies', () => {
     expect(tally(eight), 'an attribute was counted as tracking, analytics or functional').toEqual(tally(one));
   });
 
-  it('…and what the visitor is shown is wrong by exactly the attribute count', () => {
-    // The full misleading surface, so the size of the cosmetic damage is on
-    // the record next to the proof that it is cosmetic: the headline, the
-    // "Cookies" tile and the console's `checks={cookies.length}` all read 8.
+  it('…and what the visitor is shown counts the cookie, not its attributes', () => {
     const report = cookieListReport(parseCookieList(SET_COOKIE), 'paste');
-    expect(report.result.headline).toContain('8 cookies');
-    expect(report.result.stats?.find((s) => s.label === 'Cookies')?.value).toBe('8');
+    expect(report.result.headline).toMatch(/\b1 cookie\b/);
+    expect(report.result.headline).not.toContain('8 cookies');
+    expect(report.result.stats?.find((s) => s.label === 'Cookies')?.value).toBe('1');
     expect(SRC, 'the console no longer counts cookies.length — re-read this test').toContain('checks={cookies.length}');
   });
 

@@ -806,14 +806,26 @@ describe('S27 — a corporate target on public address space', () => {
     // resolved. On a host with `search corp.example` it becomes
     // intranet.corp.example. Everything then depends on what that answers —
     // private space is refused (asserted here), public space is not (above).
+    // Rewritten 2026-09-22 when the route started refusing single-label names
+    // outright. The old version asserted the label WAS handed to the resolver
+    // and only then refused on the private answer — which left the public
+    // answer (intranet.corp.example on public space) fetchable. Now the name
+    // never reaches dns.lookup at all, so the search suffix has nothing to bite.
     const auth = await powHeader();
-    resolver = async () => [{ address: '10.20.30.40', family: 4 }];
+    resolver = async () => { throw new Error('the resolver must not be consulted for a single-label name'); };
     const { POST } = await loadRoute();
     const res = await POST(scanRequest('intranet', auth));
 
-    expect(dnsCalls, 'a single-label name is passed to the resolver as typed').toEqual(['intranet']);
-    expect(res.status, 'the answer was RFC 1918 and it was still fetched').toBe(400);
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/full website address/i);
+    expect(dnsCalls, 'a single-label name reached the resolver').toEqual([]);
     expect(fetchCalls).toEqual([]);
+    // A bracketed IPv6 literal has no dot either and must still be judged by
+    // address, not refused as a label.
+    resolver = async () => [{ address: '::1', family: 6 }];
+    const v6 = await POST(scanRequest('https://[::1]/', await powHeader()));
+    expect(v6.status).toBe(400);
+    expect((await v6.json()).error).not.toMatch(/full website address/i);
   });
 });
 

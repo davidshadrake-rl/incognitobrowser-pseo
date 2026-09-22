@@ -25,6 +25,7 @@
  *      what LIMITS said, which is the "test that cannot fail" failure mode.
  */
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanFileName } from '@/components/tools/MetadataViewerTool';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import zlib from 'node:zlib';
@@ -138,7 +139,7 @@ describe('the comment stripper (nothing below is trustworthy until this passes)'
     expect(stripComments("const u = 'https://example.test/a'; // gone")).toBe("const u = 'https://example.test/a'; ");
     expect(stripComments('const re = /[a-z/]+/g; // gone')).toBe('const re = /[a-z/]+/g; ');
     // ...and the real one from the metadata tool, which must survive intact.
-    expect(META).toContain("file.name.replace(/\\.[^.]+$/, '')");
+    expect(META).toContain("base.replace(/\\.[^.]+$/, '')");
   });
 });
 
@@ -602,40 +603,41 @@ describe('M4 a PNG decompression bomb is refused, not rendered', () => {
 });
 
 /* ══════════════════════════════════════════════════════════════════════ *
- * M5 — filenames handed out of the page (CHARACTERISATION, not a guard)
+ * M5 — filenames handed out of the page
  * ══════════════════════════════════════════════════════════════════════ */
 
-describe('M5 GAP: the clean-copy filename is not sanitised', () => {
+describe('M5: the clean-copy filename is sanitised', () => {
   /**
-   * This block pins what the code DOES, not what it should do — the same
-   * shape tests/pro-bridge.test.ts uses for the saveImage half of this
-   * finding ("GAP: the web side validates neither value"). It is reported in
-   * needsSourceChange, not counted as closed: nothing here would fail if the
-   * bug were exploited, only if it were FIXED, at which point these get
-   * rewritten as refusals. That is the point of pinning them — the
-   * strip-download half previously had no test of any kind.
+   * Until 2026-09-22 this block pinned what the code DID: one transformation,
+   * no basename strip. cleanFileName() now strips the path first; these are
+   * the refusals the characterisation said it would become. They import the
+   * real function rather than re-implementing it — a re-implementation can
+   * only ever agree with itself.
    */
-  it('cleanFileName applies exactly one transformation, and it is not a basename strip', () => {
-    const body = bodyFrom(META, 'function cleanFileName');
-    expect(body).toContain("return file.name.replace(/\\.[^.]+$/, '') + '-clean.jpg';");
-    // Nothing removes directory segments, and nothing rejects a name.
-    expect(body).not.toMatch(/split\(|basename|lastIndexOf|\.pop\(\)|replaceAll/);
-    // So a name carrying traversal carries it into the download attribute:
-    const cleanFileName = (name: string) => name.replace(/\.[^.]+$/, '') + '-clean.jpg';
-    expect(cleanFileName('../../Download/evil.html')).toBe('../../Download/evil-clean.jpg');
+  it('directory segments never survive, forward or back slashes', () => {
+    expect(cleanFileName({ name: '../../Download/evil.html' } as File)).toBe('evil-clean.jpg');
+    expect(cleanFileName({ name: '..\\..\\Download\\evil.html' } as File)).toBe('evil-clean.jpg');
+    expect(cleanFileName({ name: '/abs/path/IMG_4471.HEIC' } as File)).toBe('IMG_4471-clean.jpg');
   });
 
-  it('the one half that IS guarded: the extension is always forced to .jpg', () => {
-    // Worth separating out, because it is real containment rather than luck —
-    // the clean copy is re-encoded through a canvas to JPEG, and the name is
-    // rebuilt rather than reused. An .apk or .html name cannot survive this
-    // function, whatever the source file was called.
-    const cleanFileName = (name: string) => name.replace(/\.[^.]+$/, '') + '-clean.jpg';
+  it('a dotfile or an empty name still produces a usable image name', () => {
+    expect(cleanFileName({ name: '.hidden.png' } as File)).toBe('hidden-clean.jpg');
+    expect(cleanFileName({ name: '' } as File)).toBe('image-clean.jpg');
+    expect(cleanFileName({ name: '/' } as File)).toBe('image-clean.jpg');
+    expect(cleanFileName({ name: '...' } as File)).toBe('image-clean.jpg');
+  });
+
+  it('the extension is always forced to .jpg, whatever the source was called', () => {
     for (const n of ['update.apk', 'page.html', 'x.jpg.exe', 'IMG_4471.HEIC', 'noextension']) {
-      expect(cleanFileName(n).endsWith('-clean.jpg')).toBe(true);
+      expect(cleanFileName({ name: n } as File).endsWith('-clean.jpg')).toBe(true);
+      expect(cleanFileName({ name: n } as File)).not.toMatch(/\.(apk|html|exe|heic)/i);
     }
-    // And the value really is what the anchor is given, in both places.
+  });
+
+  it('and the sanitised value is what the anchor is given, in both places', () => {
     expect(META).toContain('a.download = cleanFileName(currentFile);');
     expect(META).toContain('download={strippedName}');
+    expect(bodyFrom(META, 'function cleanFileName')).toContain('.pop()');
+    expect(META).not.toMatch(/a\.download\s*=\s*(?:file|currentFile)\.name/);
   });
 });

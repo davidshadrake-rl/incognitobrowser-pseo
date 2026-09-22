@@ -273,7 +273,13 @@ const ALLOWED_IMAGE_MIME: Record<string, RegExp> = {
 export function safeImageFilename(filename: string, mime: string): string | null {
   const ext = ALLOWED_IMAGE_MIME[mime];
   if (!ext) return null;
+  // Any directory component refuses the whole name. The first version of this
+  // took the basename and then checked THAT for '..' — which a basename never
+  // contains — so '../../Download/evil.png' came out as 'evil.png': repaired,
+  // which is precisely what the docblock says this must never do. The
+  // comparison is against the original string, before anything is stripped.
   const base = filename.split(/[\\/]/).pop() ?? '';
+  if (base !== filename) return null;
   if (!base || base.length > 120) return null;
   if (base.includes('..') || base.startsWith('.')) return null;
   // eslint-disable-next-line no-control-regex

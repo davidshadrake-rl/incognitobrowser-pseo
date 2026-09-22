@@ -368,57 +368,35 @@ describe('pro_paste_parser_robustness', () => {
     const started = Date.now();
     const cookies = parseCookieList(big);
     const ms = Date.now() - started;
-    expect(cookies.length).toBeGreaterThan(50_000);
-    // The parse is not the problem — this is here so the number is on the
-    // record next to the one that is: the component renders one card per
-    // object, so this paste is ~70,000 cards on the main thread.
+    // Capped since 2026-09-22: MAX_PASTED_COOKIES pieces, MAX_PASTE_CHARS bytes.
+    expect(cookies.length).toBe(2000);
     expect(ms, `parsing 1 MB took ${ms}ms for ${cookies.length} cookies`).toBeLessThan(2000);
   });
 
-  /**
-   * SPECIFIED TO FAIL TODAY — the assertion is the owner's, the behaviour is
-   * not there yet. parseCookieList splits on [;\n] and keeps every piece, so a
-   * Set-Cookie line (exactly what the box's own label invites: "from DevTools >
-   * Application > Cookies") is reported as eight cookies instead of one, and
-   * the count the visitor reads is wrong. Reported by
-   * pro_paste_parser_robustness as "Cookie attributes are counted and scored as
-   * cookies". When a filter lands, this starts passing and `it.fails` goes red:
-   * flip it to `it` and delete this note.
-   */
-  it.fails('cookie attributes are not counted as extra cookies', () => {
+  // Landed 2026-09-22: RFC 6265 attribute names after the first piece are dropped.
+  it('cookie attributes are not counted as extra cookies', () => {
     const setCookie = 'sid=abc123; Domain=.example.com; Path=/; Expires=Thu, 01 Jan 2099 00:00:00 GMT; Max-Age=3600; Secure; HttpOnly; SameSite=None';
     expect(parseCookieList(setCookie).map((c) => c.name)).toEqual(['sid']);
   });
 
-  it('…and this is what it does instead, so the wrong number is on the record', () => {
+  it('…and the headline counts one cookie, not eight', () => {
     const setCookie = 'sid=abc123; Domain=.example.com; Path=/; Expires=Thu, 01 Jan 2099 00:00:00 GMT; Max-Age=3600; Secure; HttpOnly; SameSite=None';
     const cookies = parseCookieList(setCookie);
-    expect(cookies.map((c) => c.name)).toEqual(['sid', 'Domain', 'Path', 'Expires', 'Max-Age', 'Secure', 'HttpOnly', 'SameSite']);
-    // The score survives (attribute names land in "unknown", which costs no
-    // points) — it is the count, the tally and the list of "cookies" the
-    // visitor is shown that are wrong.
-    expect(cookieListReport(cookies, 'paste').result.headline).toContain('8 cookies');
+    expect(cookies.map((c) => c.name)).toEqual(['sid']);
+    expect(cookieListReport(cookies, 'paste').result.headline).toMatch(/\b1 cookie\b/);
   });
 
-  /**
-   * SPECIFIED TO FAIL TODAY. There is no size cap on the paste: no maxLength on
-   * the textarea, no slice in parseCookieList. Nothing leaves the browser, so
-   * the cost is the visitor's own tab — reported at medium by
-   * pro_paste_parser_robustness, not high. Same note as above: when a cap
-   * lands, flip this to `it`.
-   */
-  it.fails('an oversized paste is capped rather than parsed in full', () => {
+  // Landed 2026-09-22: MAX_PASTE_CHARS on the element and in the parser, MAX_PASTED_COOKIES pieces.
+  it('an oversized paste is capped rather than parsed in full', () => {
     const big = 'ck=0123456789; '.repeat(Math.ceil((1024 * 1024) / 15));
     expect(parseCookieList(big).length).toBeLessThanOrEqual(2000);
   });
 
-  it('the check reports exactly the three missing guards, at medium', async () => {
+  it('the check finds all three guards present, and still inspects all three', async () => {
+    // Until 2026-09-22 this asserted the three MISSING guards by name. They
+    // landed together; the check must now be clean AND must still have looked.
     const r = await runCheck('pro_paste_parser_robustness');
-    expect(r.findings.map((f) => `${f.severity}: ${f.title}`)).toEqual([
-      'medium: The Paste box accepts unbounded input and parses all of it',
-      'medium: Cookie attributes are counted and scored as cookies',
-      'medium: Every parsed cookie is rendered, however many there are',
-    ]);
+    expect(r.findings.map((f) => `${f.severity}: ${f.title}`)).toEqual([]);
     expect(r.checked).toBe(3);
   });
 });

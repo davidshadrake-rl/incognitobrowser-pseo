@@ -611,7 +611,18 @@ const pasteParserRobustness = check({
     // ---- D2. cookie attributes are not cookies ---------------------------
     checked++;
     const ATTRS = ['path', 'expires', 'max-age', 'domain', 'secure', 'httponly', 'samesite', 'partitioned'];
-    const filtersAttrs = ATTRS.filter((a) => parser.toLowerCase().includes(a)).length >= 2;
+    // The names may sit in a module-level Set the parser references rather than
+    // inline in its body — that is where they went on 2026-09-22. Accept either:
+    // ≥2 names inside the parser, or a referenced UPPER_CASE identifier whose
+    // definition in this file holds ≥4 of them.
+    const inline = ATTRS.filter((a) => parser.toLowerCase().includes(a)).length >= 2;
+    const referenced = [...parser.matchAll(/\b([A-Z][A-Z0-9_]{3,})\b/g)].map((m) => m[1]).some((id) => {
+      // f.text, not f.code: code has string literals BLANKED for call-shape
+      // matching, which erases the very names being looked for.
+      const def = new RegExp(`const\\s+${id}\\s*=([^;]*);`).exec(f.text);
+      return def && ATTRS.filter((a) => def[1].toLowerCase().includes(`'${a}'`)).length >= 4;
+    });
+    const filtersAttrs = inline || referenced;
     if (!filtersAttrs) {
       findings.push(finding({
         severity: 'medium', file: COOKIE_TOOL, line: parserLine,
@@ -626,7 +637,13 @@ const pasteParserRobustness = check({
     checked++;
     // The bare `cookies` state, not `urlResult.cookies` — a URL scan's list is
     // bounded by what the server returns, the pasted one by what was pasted.
-    const renderCap = /(?<![.\w])cookies\s*\.\s*slice\s*\(/.test(f.code) || /\bvisibleCookies\b/.test(f.code);
+    // A slice at render time, OR a piece cap inside the parser itself: every
+    // writer of the `cookies` state goes through parseCookieList, so a cap
+    // there bounds the render just as well. tests/audit-2bc-client.test.ts
+    // asserts that "every writer" premise, which is what makes this equivalence
+    // safe to accept.
+    const renderCap = /(?<![.\w])cookies\s*\.\s*slice\s*\(/.test(f.code) || /\bvisibleCookies\b/.test(f.code)
+      || /\.\s*slice\s*\(\s*0\s*,\s*MAX_PASTED_COOKIES\s*\)/.test(parser);
     if (!renderCap) {
       const at = f.code.search(/(?<![.\w])cookies\s*\.\s*map\s*\(/);
       findings.push(finding({
