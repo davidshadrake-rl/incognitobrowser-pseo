@@ -16,7 +16,6 @@ import {
   FETCH_TIMEOUT_MS,
   MAX_IN_FLIGHT_SCANS,
   MAX_IN_FLIGHT_PER_BUCKET,
-  BLOCKED_TARGET_HOSTS,
 } from '@/lib/tuning';
 
 // Tracker patterns, cookie classifier, SSRF guard, capped reader and the
@@ -27,7 +26,7 @@ import {
 // two can give the same site different grades. Validation, fetch policy and
 // error handling stay here.
 import { isBlockedHostname, readCappedText, analyzeScan } from '@/lib/scanner';
-import { isPublicUnicastAddress } from '@/lib/net-address';
+import { isPublicUnicastAddress, matchesBlockedTarget } from '@/lib/net-address';
 
 /** Resolve a hostname to every address it points at, so the SSRF check can judge them. */
 const dnsLookup = promisify(dnsLookupCb);
@@ -260,8 +259,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Only HTTP/HTTPS URLs are supported' }, { status: 400, headers: allHeaders });
     }
 
-    // SSRF Protection: block private/internal networks, plus any host named in
-    // BLOCKED_TARGET_HOSTS (by default this droplet itself — see lib/tuning.ts).
+    // SSRF Protection: block private/internal networks, plus any host, address
+    // or CIDR range in BLOCKED_TARGET_HOSTS (by default this droplet itself —
+    // see lib/tuning.ts). The range form exists for a corporate estate on
+    // public address space, which nothing else in the stack can refuse.
     const hostKey = parsedUrl.hostname.toLowerCase().replace(/\.+$/, '');
     // A name with no dot is not a public website. {"url":"intranet"} becomes
     // https://intranet by the convenience rewrite above and goes to dns.lookup
@@ -276,7 +277,7 @@ export async function POST(request: NextRequest) {
         { status: 400, headers: allHeaders }
       );
     }
-    if (isBlockedHostname(parsedUrl.hostname) || BLOCKED_TARGET_HOSTS.has(hostKey)) {
+    if (isBlockedHostname(parsedUrl.hostname) || matchesBlockedTarget(hostKey)) {
       return NextResponse.json(
         { error: 'Cannot scan private IP addresses, localhost, or internal networks.' },
         { status: 400, headers: allHeaders }
@@ -318,8 +319,11 @@ export async function POST(request: NextRequest) {
     // address on its merits instead.
     try {
       const resolved = await dnsLookup(parsedUrl.hostname, { all: true });
+      // Both judgements run on every answer: the allowlist for private and
+      // reserved space, the operator's list for anything it names — a host,
+      // or a whole range, on public space the allowlist rightly permits.
       const blocked = resolved.filter(
-        (r) => !isPublicUnicastAddress(r.address) || BLOCKED_TARGET_HOSTS.has(r.address.toLowerCase()),
+        (r) => !isPublicUnicastAddress(r.address) || matchesBlockedTarget(r.address),
       );
       if (blocked.length) {
         return NextResponse.json(

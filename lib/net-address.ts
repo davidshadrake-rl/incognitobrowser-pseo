@@ -21,7 +21,12 @@
  * 1. **Internal services on public IPs.** A corporate host at 52.94.236.10 is
  *    public unicast and this function allows it, correctly — a URL scanner
  *    that refused public addresses would not be a URL scanner. If the box can
- *    route to an internal service, so can the scanner.
+ *    route to an internal service, so can the scanner. The only thing that
+ *    can refuse such a host is BLOCKED_TARGET_HOSTS, and the estate that host
+ *    sits in is a RANGE — so the knob takes CIDRs, and matchesBlockedTarget()
+ *    at the bottom of this file is the one place they are judged. The kernel
+ *    policy cannot help here: scripts/droplet-egress-lockdown.sh only denies
+ *    private space.
  *
  * 2. **DNS rebinding.** The route resolves a name, judges the addresses, then
  *    calls fetch(), which resolves the name AGAIN. A name that answers
@@ -34,6 +39,7 @@
  * matters. See API-ON-DROPLET.md. Treat this function as defence in depth
  * behind that, never as the control itself.
  */
+import { BLOCKED_TARGET_HOSTS } from './tuning';
 
 /** Exactly four dotted decimal octets, no leading zeros, each 0-255. */
 function parseIPv4(s: string): number | null {
@@ -53,8 +59,9 @@ function parseIPv4(s: string): number | null {
 }
 
 const v4 = (s: string) => parseIPv4(s)!;
-const inBlock = (addr: number, base: string, bits: number) =>
-  bits === 0 || (addr >>> (32 - bits)) === (v4(base) >>> (32 - bits));
+/** Is `addr` inside base/bits? Both are 32-bit unsigned; /0 is everything. */
+const inBlock = (addr: number, base: number, bits: number) =>
+  bits === 0 || (addr >>> (32 - bits)) === (base >>> (32 - bits));
 
 /**
  * IANA IPv4 Special-Purpose Address Registry, in full. Anything matching one
@@ -126,6 +133,19 @@ const v6InBlock = (g: number[], prefix: number[], bits: number) => {
 };
 
 /**
+ * The IPv4 address an IPv4-mapped (::ffff:a.b.c.d) or IPv4-compatible
+ * (::a.b.c.d) IPv6 address carries, or null when it carries none. Such an
+ * address is an IPv4 address wearing a hat, and every judgement in this file
+ * judges the address under the hat by the IPv4 rules.
+ */
+function embeddedIPv4(g: number[]): number | null {
+  if (v6InBlock(g, [0, 0, 0, 0, 0, 0xffff], 96) || v6InBlock(g, [0, 0, 0, 0, 0, 0], 96)) {
+    return (((g[6] << 16) >>> 0) | g[7]) >>> 0;
+  }
+  return null;
+}
+
+/**
  * True only for an address the scanner may fetch: canonical, and public
  * unicast. Everything else — unparseable, private, reserved, multicast, a
  * tunnel prefix carrying an arbitrary inner address — is false.
@@ -135,7 +155,7 @@ export function isPublicUnicastAddress(address: string): boolean {
   if (!s) return false;
 
   const n4 = parseIPv4(s);
-  if (n4 !== null) return !V4_SPECIAL.some(([b, bits]) => inBlock(n4, b, bits));
+  if (n4 !== null) return !V4_SPECIAL.some(([b, bits]) => inBlock(n4, v4(b), bits));
 
   const g = parseIPv6(s);
   if (g === null) return false;
@@ -143,10 +163,8 @@ export function isPublicUnicastAddress(address: string): boolean {
   // An IPv4-mapped or IPv4-compatible address is an IPv4 address wearing a
   // hat. Judge the address it carries, by the IPv4 rules, rather than letting
   // the 2000::/3 test below decide on a v6 form of 127.0.0.1.
-  if (v6InBlock(g, [0, 0, 0, 0, 0, 0xffff], 96) || v6InBlock(g, [0, 0, 0, 0, 0, 0], 96)) {
-    const inner = (((g[6] << 16) >>> 0) | g[7]) >>> 0;
-    return !V4_SPECIAL.some(([b, bits]) => inBlock(inner, b, bits));
-  }
+  const inner = embeddedIPv4(g);
+  if (inner !== null) return !V4_SPECIAL.some(([b, bits]) => inBlock(inner, v4(b), bits));
 
   // Global unicast is 2000::/3 and nothing else. This is the allowlist: every
   // other IPv6 block — loopback, unique-local, link-local, multicast,
@@ -163,4 +181,139 @@ export function isPublicUnicastAddress(address: string): boolean {
     [[0x2002], 16],          // 6to4
   ];
   return !inside.some(([p, bits]) => v6InBlock(g, p, bits));
+}
+
+// ---------------------------------------------------------------------------
+// BLOCKED_TARGET_HOSTS — the operator's own denylist, with ranges
+// ---------------------------------------------------------------------------
+
+/**
+ * BLOCKED_TARGET_HOSTS, compiled. Hostnames are matched as text; addresses
+ * are matched by block, and a bare address is just a /32 or /128 block, so
+ * "one host" and "an estate" go through the same comparison.
+ */
+export interface BlockedTargets {
+  readonly hostnames: ReadonlySet<string>;
+  readonly v4: ReadonlyArray<readonly [base: number, bits: number]>;
+  readonly v6: ReadonlyArray<readonly [prefix: number[], bits: number]>;
+  /** Every entry that was refused, verbatim, so a caller can see what the warning named. */
+  readonly rejected: ReadonlyArray<string>;
+}
+
+const HOSTNAME = /^[a-z0-9_-]+(\.[a-z0-9_-]+)*$/;
+const PREFIX_LENGTH = /^(0|[1-9]\d{0,2})$/;
+
+/**
+ * Turn the entries of BLOCKED_TARGET_HOSTS into something matchesBlockedTarget
+ * can judge against. Accepted forms, one per comma-separated entry:
+ *
+ *   206.189.186.34          an IPv4 address (a /32)
+ *   20.30.40.0/24           an IPv4 range; host bits are masked off, so
+ *                           20.30.40.50/24 names the same range
+ *   2001:db8:aa::1          an IPv6 address (a /128), brackets optional
+ *   2001:db8:aa::/48        an IPv6 range
+ *   intranet.corp.example   a hostname, matched exactly (no suffix match)
+ *
+ * Anything else is dropped and reported with console.warn. Loud, for the same
+ * reason intEnv's fallback is loud: the failure mode of a typo here is that a
+ * corp range the operator believes is refused is quietly fetched, and nothing
+ * in the request path would ever say so. A malformed entry is dropped on its
+ * own; the rest of the list still holds. It is NOT reinterpreted as a
+ * hostname, which is what a naive split would do with "20.30.40.0/33" — an
+ * entry that matches nothing at all while looking configured.
+ */
+export function compileBlockedTargets(entries: Iterable<string>): BlockedTargets {
+  const hostnames = new Set<string>();
+  const v4: Array<readonly [number, number]> = [];
+  const v6: Array<readonly [number[], number]> = [];
+  const rejected: string[] = [];
+  const reject = (entry: string, why: string) => {
+    rejected.push(entry);
+    console.warn(`[tuning] BLOCKED_TARGET_HOSTS entry ${JSON.stringify(entry)} ignored: ${why}`);
+  };
+
+  for (const raw of entries) {
+    const s = raw.trim().toLowerCase().replace(/\.+$/, '');
+    if (!s) continue;
+
+    const slash = s.lastIndexOf('/');
+    if (slash !== -1) {
+      const prefix = s.slice(0, slash);
+      const bitsText = s.slice(slash + 1);
+      const bits = PREFIX_LENGTH.test(bitsText) ? Number(bitsText) : NaN;
+      const n4 = parseIPv4(prefix);
+      if (n4 !== null) {
+        if (bits >= 0 && bits <= 32) { v4.push([n4, bits]); continue; }
+        reject(raw, `an IPv4 prefix length must be 0-32, not ${JSON.stringify(bitsText)}`);
+        continue;
+      }
+      const g = parseIPv6(prefix);
+      if (g !== null) {
+        if (bits >= 0 && bits <= 128) { v6.push([g, bits]); continue; }
+        reject(raw, `an IPv6 prefix length must be 0-128, not ${JSON.stringify(bitsText)}`);
+        continue;
+      }
+      reject(raw, 'not a.b.c.d/nn or an IPv6 prefix/nn');
+      continue;
+    }
+
+    const n4 = parseIPv4(s);
+    if (n4 !== null) { v4.push([n4, 32]); continue; }
+    if (/^[\d.]+$/.test(s)) {
+      // All digits and dots but not four canonical octets: 20.30.40.256,
+      // 020.30.40.50, 20.30.40. None of these can ever equal a resolved
+      // address, so as a "hostname" it would be a dead entry.
+      reject(raw, 'not a canonical IPv4 address (four decimal octets, no leading zeros)');
+      continue;
+    }
+    if (s.includes(':') || s.startsWith('[')) {
+      const g = parseIPv6(s);
+      if (g !== null) { v6.push([g, 128]); continue; }
+      reject(raw, 'not an IPv6 address');
+      continue;
+    }
+    if (!HOSTNAME.test(s)) {
+      reject(raw, 'not a hostname');
+      continue;
+    }
+    hostnames.add(s);
+  }
+  return { hostnames, v4, v6, rejected };
+}
+
+// Compiled once, at module load, from the knob in lib/tuning.ts — so a bad
+// entry is reported when the route module loads, not on the first scan that
+// would have needed it. lib/tuning.ts imports nothing, so there is no cycle.
+const DEFAULT_BLOCKED_TARGETS: BlockedTargets = compileBlockedTargets(BLOCKED_TARGET_HOSTS);
+
+/**
+ * Is this hostname or address one the operator has refused outright?
+ *
+ * Used at BOTH legs of the scan route: on the hostname text before the
+ * resolver is asked, and on every address the resolver returns. Missing
+ * either one reopens the half it guards: without the address leg any
+ * third-party name that points into the range is fetched; without the text
+ * leg a listed name is resolved (and a listed address literal is judged only
+ * by what the resolver echoes back). A hostname matches exactly. An address
+ * matches if any configured block contains it, judged by the same canonical
+ * parsers the public-unicast allowlist uses — so an IPv4-mapped IPv6 answer
+ * carrying a blocked IPv4 is blocked too, and a spelling those parsers refuse
+ * matches nothing (isPublicUnicastAddress refuses it upstream anyway).
+ */
+export function matchesBlockedTarget(
+  addressOrHost: string,
+  targets: BlockedTargets = DEFAULT_BLOCKED_TARGETS,
+): boolean {
+  const s = addressOrHost.trim().toLowerCase().replace(/\.+$/, '');
+  if (!s) return false;
+  if (targets.hostnames.has(s)) return true;
+
+  const n4 = parseIPv4(s);
+  if (n4 !== null) return targets.v4.some(([base, bits]) => inBlock(n4, base, bits));
+
+  const g = parseIPv6(s);
+  if (g === null) return false;
+  const inner = embeddedIPv4(g);
+  if (inner !== null && targets.v4.some(([base, bits]) => inBlock(inner, base, bits))) return true;
+  return targets.v6.some(([prefix, bits]) => v6InBlock(g, prefix, bits));
 }

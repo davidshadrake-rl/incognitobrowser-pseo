@@ -758,6 +758,8 @@ describe('S22 — the security flags come from the response that was really fetc
 describe('S27 — a corporate target on public address space', () => {
   const CORP_ADDR = '20.30.40.50';      // public unicast, pretend it is corp
   const NEIGHBOUR = '20.30.40.51';      // the machine next to it, not listed
+  const CORP_RANGE = '20.30.40.0/24';   // the estate both of them sit in
+  const OUTSIDE = '20.30.41.1';         // one address past the estate's edge
 
   it('BLOCKED_TARGET_HOSTS denies a corp NAME and a corp ADDRESS the allowlist would pass', async () => {
     process.env.BLOCKED_TARGET_HOSTS = `intranet.corp.example,${CORP_ADDR}`;
@@ -784,20 +786,89 @@ describe('S27 — a corporate target on public address space', () => {
     expect(fetchCalls, 'an outbound request reached the corp address').toEqual([]);
   }, 15_000);
 
-  it('and denies NOTHING next to it — the knob is exact-match, which a deployment has to know', async () => {
-    // Not a bug being asserted as correct: a characterisation. One address is
-    // listed, the machine beside it in the same corp range is fetched. Anyone
-    // scoping a company deployment from the S27 line needs this to be visible
-    // rather than assumed, because BLOCKED_TARGET_HOSTS has no CIDR support and
-    // a corp estate is a range, not a list of hosts.
+  it('a bare address is still exact: the machine next to it is fetched', async () => {
+    // Kept from the pre-CIDR version of this file, where it was the
+    // characterisation "the knob is exact-match, which a deployment has to
+    // know". It is still true of the LITERAL form and still worth knowing —
+    // an operator who lists one host has listed one host. What changed is the
+    // next test: there is now a way to say the range.
     process.env.BLOCKED_TARGET_HOSTS = CORP_ADDR;
     const auth = await powHeader();
     resolver = async () => [{ address: NEIGHBOUR, family: 4 }];
     const { POST } = await loadRoute();
     const res = await POST(scanRequest('https://wiki.example/', auth));
 
-    expect(res.status, 'if this is now 400, CIDR support landed — update this test and the finding').toBe(200);
+    expect(res.status).toBe(200);
     expect(fetchCalls).toEqual(['https://wiki.example/']);
+  }, 15_000);
+
+  it('given the RANGE, the machine next to it is refused too — on both legs — and the one past the edge is not', async () => {
+    // Until 2026-09-22 this test asserted the opposite, with the message "if
+    // this is now 400, CIDR support landed — update this test and the
+    // finding". BLOCKED_TARGET_HOSTS was an exact-match Set, a corp estate is
+    // a range, and there was no way to say so: 20.30.40.50 refused,
+    // 20.30.40.51 fetched, both public unicast. Now the knob takes a CIDR and
+    // lib/net-address.ts judges it at both legs of this route. The control
+    // at the end is what keeps this from passing on a compile error that
+    // refuses everything.
+    process.env.BLOCKED_TARGET_HOSTS = CORP_RANGE;
+    const auth = await powHeader();
+    const { POST } = await loadRoute();
+    for (const ip of [NEIGHBOUR, OUTSIDE]) {
+      expect(isPublicUnicastAddress(ip), `${ip}: the address allowlist would refuse this on its own`).toBe(true);
+    }
+
+    // (a) the address leg: a name the operator never listed, resolving to
+    // the machine beside the one the audit found fetched.
+    resolver = async () => [{ address: NEIGHBOUR, family: 4 }];
+    const byAddress = await POST(scanRequest('https://wiki.example/', auth));
+    expect(byAddress.status, 'a name resolving INTO the configured corp range was not refused').toBe(400);
+    expect((await byAddress.json()).error).toMatch(/Cannot scan private IP addresses/);
+    expect(dnsCalls, 'the resolve leg never ran').toEqual(['wiki.example']);
+    expect(fetchCalls, 'an outbound request reached a machine the range covers').toEqual([]);
+
+    // (b) the text leg: the same machine typed as a literal, refused before
+    // the resolver is asked — a literal inside a range is judged as text.
+    dnsCalls = [];
+    const byText = await POST(scanRequest(`https://${NEIGHBOUR}/`, auth));
+    expect(byText.status, 'an address literal inside the configured range was not refused').toBe(400);
+    expect(dnsCalls, 'the text leg did not judge the literal against the range').toEqual([]);
+    expect(fetchCalls).toEqual([]);
+
+    // (c) the control: one address past the /24's edge is a scan target.
+    resolver = async () => [{ address: OUTSIDE, family: 4 }];
+    const outside = await POST(scanRequest('https://public.example/', auth));
+    expect(outside.status, 'the range refused an address it does not contain').toBe(200);
+    expect(fetchCalls).toEqual(['https://public.example/']);
+  }, 15_000);
+
+  it('a malformed range is dropped loudly and on its own; the entry beside it still holds', async () => {
+    // What a typo does is silent by nature — nothing in the request path can
+    // tell an operator their /33 was thrown away — so the throw-away is
+    // announced when the route module loads, and the valid entry next to it
+    // keeps working. The bad entry must not be read as a hostname either:
+    // that would look configured and match nothing.
+    process.env.BLOCKED_TARGET_HOSTS = `20.30.40.0/33,${CORP_ADDR}`;
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const auth = await powHeader();
+      const { POST } = await loadRoute();
+      const said = warn.mock.calls.map((c) => String(c[0])).filter((m) => m.includes('"20.30.40.0/33"'));
+      expect(said, 'the malformed entry was dropped without a word').toHaveLength(1);
+      expect(said[0]).toMatch(/BLOCKED_TARGET_HOSTS/);
+
+      resolver = async () => [{ address: CORP_ADDR, family: 4 }];
+      const listed = await POST(scanRequest('https://wiki.example/', auth));
+      expect(listed.status, 'the valid entry beside the typo stopped working').toBe(400);
+      expect(fetchCalls).toEqual([]);
+
+      resolver = async () => [{ address: NEIGHBOUR, family: 4 }];
+      const beside = await POST(scanRequest('https://wiki2.example/', auth));
+      expect(beside.status, 'the malformed /33 was read as a range after all').toBe(200);
+      expect(fetchCalls).toEqual(['https://wiki2.example/']);
+    } finally {
+      warn.mockRestore();
+    }
   }, 15_000);
 
   it('a single-label hostname still reaches the resolver, which is where a search suffix bites', async () => {

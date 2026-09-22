@@ -17,8 +17,51 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { MAX_IN_FLIGHT_SCANS, MAX_IN_FLIGHT_PER_BUCKET, BLOCKED_TARGET_HOSTS, FETCH_TIMEOUT_MS } from '../lib/tuning';
 import { EVENT_TTL_SECONDS, eventKeys } from '../lib/event-schema';
+import { matchesBlockedTarget } from '../lib/net-address';
 
 const src = (p: string) => readFileSync(join(__dirname, '..', p), 'utf-8');
+
+/**
+ * Source with its comments removed, for guards that assert on code.
+ *
+ * A guard in this repo has matched its own explanatory comment twice: the
+ * comment quoted the code the guard looked for, the code went, the guard
+ * stayed green. Quotes and template literals are walked past so that the
+ * `https://` in the route's convenience rewrite is not read as a line
+ * comment. Regex literals are not handled; app/scan-url/route.ts has none
+ * containing a slash pair or a quote, and if one ever mis-stripped code the
+ * positive assertions below go red, which is the safe direction.
+ */
+function stripComments(source: string): string {
+  let out = '';
+  for (let i = 0; i < source.length; ) {
+    const c = source[i];
+    const next = source[i + 1];
+    if (c === '/' && next === '/') {
+      while (i < source.length && source[i] !== '\n') i++;
+      continue;
+    }
+    if (c === '/' && next === '*') {
+      const end = source.indexOf('*/', i + 2);
+      i = end === -1 ? source.length : end + 2;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') {
+      out += c;
+      i++;
+      while (i < source.length && source[i] !== c) {
+        if (source[i] === '\\') out += source[i++];
+        out += source[i++] ?? '';
+      }
+      out += source[i] ?? '';
+      i++;
+      continue;
+    }
+    out += c;
+    i++;
+  }
+  return out;
+}
 
 describe('scan-url: a flood cannot outgrow the box', () => {
   const route = src('app/scan-url/route.ts');
@@ -96,12 +139,34 @@ describe('scan-url: a flood cannot outgrow the box', () => {
   });
 
   it('refuses to scan the host it runs on', () => {
+    // The knob still defaults to this droplet, and the compiled form of it —
+    // the thing the route actually consults — refuses that address and not
+    // the one beside it. The second half is what stops a "block everything"
+    // compile error from passing as "blocks the droplet".
     expect(BLOCKED_TARGET_HOSTS.size).toBeGreaterThan(0);
     expect(BLOCKED_TARGET_HOSTS.has('206.189.186.34')).toBe(true);
-    expect(route).toContain('BLOCKED_TARGET_HOSTS.has(hostKey)');
-    // ...and on the resolved addresses too, or a DNS name pointing back at us
-    // walks past the string check.
-    expect(route).toMatch(/BLOCKED_TARGET_HOSTS\.has\(r\.address/);
+    expect(matchesBlockedTarget('206.189.186.34')).toBe(true);
+    expect(matchesBlockedTarget('206.189.186.35')).toBe(false);
+
+    // Both legs of the route go through matchesBlockedTarget, which is the
+    // only reader that understands a range. Until 2026-09-22 they did
+    // `BLOCKED_TARGET_HOSTS.has(...)` — exact string match — so a corporate
+    // estate on public address space could be refused one host at a time or
+    // not at all. Asserted on comment-stripped source, and the stripper is
+    // checked first: a comment sentence must be gone and the rewrite's
+    // template literal, which contains `//`, must have survived.
+    const code = stripComments(route);
+    expect(route).toContain('A name with no dot is not a public website.');
+    expect(code).not.toContain('A name with no dot is not a public website.');
+    expect(code).toContain('`https://${url.trim()}`');
+    // The text leg, before the resolver is asked...
+    expect(code).toContain('matchesBlockedTarget(hostKey)');
+    // ...and every resolved address too, or a DNS name pointing back at us
+    // (or into the range) walks past the text check.
+    expect(code).toMatch(/matchesBlockedTarget\(r\.address\)/);
+    // A revert to the Set lookup would compile and pass every literal-only
+    // test while silently un-knowing ranges.
+    expect(code).not.toContain('BLOCKED_TARGET_HOSTS.has(');
   });
 
   it('reports the real timeout rather than a hard-coded one', () => {

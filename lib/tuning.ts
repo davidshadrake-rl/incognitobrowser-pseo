@@ -137,13 +137,26 @@ export const MAX_IN_FLIGHT_SCANS = intEnv('MAX_IN_FLIGHT_SCANS', 20, 1);
 export const MAX_IN_FLIGHT_PER_BUCKET = intEnv('MAX_IN_FLIGHT_PER_BUCKET', 2, 1);
 
 /**
- * Hosts the scanner refuses outright, beyond the private-range guard.
+ * Hosts and ranges the scanner refuses outright, beyond the private-range guard.
  *
  * Defaults to this project's own droplet. Scanning ourselves is free
  * self-amplification — one inbound request becomes two, one of which skips the
  * rate limiter because it arrives from our own address — and it can reach
  * vhosts on that address that were never meant to be a scan target.
- * Override with BLOCKED_TARGET_HOSTS as a comma-separated list.
+ * Override with BLOCKED_TARGET_HOSTS as a comma-separated list. Each entry is
+ * a hostname, an address, or a CIDR range — `20.30.40.0/24`, `2001:db8::/32`:
+ *
+ *   BLOCKED_TARGET_HOSTS=206.189.186.34,20.30.40.0/24,intranet.corp.example
+ *
+ * Ranges are what make this usable for a company deployment: a corporate
+ * estate on publicly-routable space is the one thing neither the address
+ * allowlist (lib/net-address.ts) nor the kernel egress policy can refuse,
+ * because both are about private space, and an estate is a range, not a list
+ * of hosts. Note the env REPLACES the default rather than adding to it.
+ *
+ * This is the raw list, normalised. lib/net-address.ts compiles it into
+ * hostnames and address blocks, warns loudly about any entry it cannot
+ * parse, and judges both legs of the scan route with matchesBlockedTarget().
  */
 export const BLOCKED_TARGET_HOSTS: ReadonlySet<string> = new Set(
   (process.env.BLOCKED_TARGET_HOSTS ?? '206.189.186.34')
