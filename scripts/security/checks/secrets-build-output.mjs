@@ -113,11 +113,15 @@ export default check({
     // Next does not load. If this check only ever read '.env' it would then have
     // SKIPPED, and the fix would have looked like the problem disappearing.
     // Any .env* the repo ignores can hold a real value, so all of them are read.
-    const env = { ...parseEnvFile(join(ctx.repoRoot, '.env')), ...parseEnvFile(join(ctx.repoRoot, '.env.generate')), ...parseEnvFile(join(ctx.repoRoot, '.env.local')) };
-    const secrets = parseEnvFile(join(ctx.repoRoot, '.secrets'));
+    //
+    // Each file is read under its OWN name. A merged bag labelled '.env' sent
+    // the 2026-09-22 finding to the wrong file: the value was in .env.generate,
+    // the finding said .env, and .env did not exist.
+    const bags = ['.env', '.env.generate', '.env.local', '.secrets']
+      .map((name) => [name, parseEnvFile(join(ctx.repoRoot, name))]);
 
     const needles = [];
-    for (const [source, bag] of [['.env', env], ['.secrets', secrets]]) {
+    for (const [source, bag] of bags) {
       for (const [name, value] of Object.entries(bag)) {
         if (PUBLIC_BY_CONSTRUCTION.has(name)) continue;
         if (name.startsWith('NEXT_PUBLIC_')) continue;
@@ -133,6 +137,21 @@ export default check({
         + `public-by-construction set (${[...PUBLIC_BY_CONSTRUCTION].join(', ')}) that is 16+ chars and not a placeholder`,
       );
     }
+
+    // .next/cache is Turbopack's local build cache. scripts/deploy-api.sh
+    // rsyncs .next with --exclude 'cache/', so a value that reaches ONLY the
+    // cache never reaches the host — verified 2026-09-22: one hit under
+    // .next/cache, zero elsewhere in .next, zero in out/, zero on the droplet.
+    // Grading that hit critical was a scope error that failed the every-commit
+    // gate for a file that is never uploaded.
+    //
+    // The downgrade is tied to the control that justifies it. If the exclude
+    // is ever removed from the deploy script, a cache hit is shipped output
+    // again and goes straight back to critical. The check reads the script
+    // rather than remembering that it was once there.
+    const deployApi = (() => { try { return readFileSync(join(ctx.repoRoot, 'scripts/deploy-api.sh'), 'utf-8'); } catch { return ''; } })();
+    const cacheExcludedFromDeploy = /rsync[^\n]*--exclude\s+'cache\/'[^\n]*\.next\//.test(deployApi);
+    const cachePrefix = join(ctx.repoRoot, '.next', 'cache') + '/';
 
     const dirs = ['out', '.next'].map((d) => join(ctx.repoRoot, d)).filter((d) => existsSync(d));
     if (!dirs.length) {
@@ -155,6 +174,21 @@ export default check({
         checked += 1;
         for (const n of needles) {
           if (buf.includes(n.buf)) {
+            const inLocalCache = f.startsWith(cachePrefix);
+            if (inLocalCache && cacheExcludedFromDeploy) {
+              findings.push(finding({
+                severity: 'low',
+                title: `${n.name} is in the local Turbopack cache (not shipped)`,
+                detail:
+                  `The value of ${n.name} (from ${n.source}) is inside .next/cache, which scripts/deploy-api.sh excludes from the rsync — so it is on this machine and nowhere else. `
+                  + 'It is still worth knowing: Next does not load ' + n.source + ', yet Turbopack read it into its cache anyway, which means the rename that keeps this value out of builds is relying on that exclude holding. This check re-reads the deploy script every run and returns to critical the moment the exclude is gone.',
+                evidence: `${f.slice(ctx.repoRoot.length + 1)} contains the literal value of ${n.name} (${n.buf.length} bytes, from ${n.source}); 0 hits outside .next/cache in this scan`,
+                remediation:
+                  `Nothing to ship. If you want the value out of the cache too, move ${n.name} out of any .env* file — Turbopack reads them all — into .secrets or the shell environment of the tool that needs it.`,
+                file: f.slice(ctx.repoRoot.length + 1),
+              }));
+              continue;
+            }
             findings.push(finding({
               severity: 'critical',
               title: `${n.name} appears verbatim in build output`,
