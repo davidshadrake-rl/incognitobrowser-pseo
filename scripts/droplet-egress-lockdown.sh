@@ -86,8 +86,20 @@ DENY_V6=(
 )
 
 rules_v4() {
-  # Order is the policy. The two ACCEPTs must precede the loopback REJECT, or
-  # the API loses DNS and Redis and the box looks like it is down.
+  # Order is the policy.
+  #
+  # FIRST: replies on connections somebody else opened. OUTPUT filters every
+  # packet the uid sends, and that includes the API answering Apache — those
+  # packets go to 127.0.0.1:<ephemeral port>, which the loopback REJECT below
+  # matches. Without this rule the API cannot reply to anyone and every route
+  # returns 503. That is exactly what happened on the first --apply, on
+  # 2026-09-22, and --verify said "ok" five times while it was happening,
+  # because every probe was a NEW outbound connection and none was an inbound
+  # request. A new connection from the API into the VPC is state NEW, so it
+  # falls straight past this rule to the REJECTs — the protection is intact.
+  echo "-A $CHAIN -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT"
+  # Then the two loopback services the process needs, ahead of the loopback
+  # REJECT, or the API loses DNS and Redis and the box looks like it is down.
   echo "-A $CHAIN -d $RESOLVER -p udp --dport 53 -j ACCEPT"
   echo "-A $CHAIN -d $RESOLVER -p tcp --dport 53 -j ACCEPT"
   echo "-A $CHAIN -d 127.0.0.1 -p tcp --dport $REDIS_PORT -j ACCEPT"
@@ -102,6 +114,7 @@ show() {
   echo
   rules_v4 | sed 's/^/    iptables /'
   echo
+  echo "    ip6tables -A $CHAIN -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT"
   for net in "${DENY_V6[@]}"; do echo "    ip6tables -A $CHAIN -d $net -j REJECT"; done
   echo
   echo "Effect: the ib-api process keeps DNS, Redis and the whole public internet."
@@ -127,6 +140,7 @@ set -e
 iptables -N $CHAIN 2>/dev/null || iptables -F $CHAIN
 ip6tables -N $CHAIN 2>/dev/null || ip6tables -F $CHAIN
 $(rules_v4 | sed 's/^/iptables /')
+ip6tables -A $CHAIN -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 $(for net in "${DENY_V6[@]}"; do echo "ip6tables -A $CHAIN -d $net -j REJECT"; done)
 # Jump from OUTPUT, once. -C tests for an existing identical rule.
 iptables  -C OUTPUT -m owner --uid-owner $UID_OWNER -j $CHAIN 2>/dev/null || iptables  -I OUTPUT 1 -m owner --uid-owner $UID_OWNER -j $CHAIN
@@ -154,6 +168,23 @@ probe() { # label, target, expect-ok(0/1)
   if [ "$got" = "$want" ]; then printf '  ok    %-34s %s\n' "$1" "$got"
   else printf '  FAIL  %-34s got %s, wanted %s\n' "$1" "$got" "$want"; fi
 }
+# The probe that was missing the first time. Everything below is the API
+# making NEW outbound connections; this is somebody else connecting TO the
+# API, which it must be able to answer. Run first, because if this fails the
+# rest of the output is describing a dead service.
+# POST, because /api/ip is POST-only and answers a GET with 405. The first
+# version of this probe sent a GET and expected 200, so it reported the API
+# down — and told the operator to --revert — while the smoke suite was passing
+# every route. A verification that can cry wolf with a destructive instruction
+# attached is its own outage.
+code=$(curl -s -o /dev/null -m 8 -w '%{http_code}' -X POST \
+     -H 'origin: https://206-189-186-34.nip.io' -H 'content-type: application/json' \
+     https://206-189-186-34.nip.io/api/ip 2>/dev/null)
+if [ "$code" = "200" ]; then
+  echo "  ok    the API answers an inbound request through Apache (200)"
+else
+  echo "  FAIL  the API does NOT answer through Apache (got '$code'). If every route is 503, run --revert."
+fi
 echo "as uid 999 (ib-api):"
 probe "the public internet"            "https://example.com/"      1
 probe "this VPC, eth0 10.10.0.5"       "http://10.10.0.5/"         0
