@@ -7,7 +7,7 @@
     "droplet as www-data, on the box that also serves the team's WordPress and MySQL. A",
     "postinstall in the production closure is arbitrary code execution as the web user,",
     "there. That is the whole npm supply-chain attack shape, and you do not have to be",
-    "compromised for it to land — only something you transitively depend on.",
+    "compromised for it to land \u2014 only something you transitively depend on.",
     "",
     "Two mitigations are in place today (.npmrc ignore-scripts=true, and an explicit",
     "--ignore-scripts on the remote npm ci) and the check asserts both, because this",
@@ -17,25 +17,19 @@
     "production closure changes WHO runs its script and on WHICH machine, which is a change",
     "worth seeing even though the package itself was already known."
   ],
-  "reviewed": "2026-09-18",
+  "reviewed": "2026-09-22",
   "allowed": [
     {
       "path": "node_modules/esbuild",
       "name": "esbuild",
-      "inProdClosure": true,
-      "why": "postinstall (node install.js) swaps the JS bin shim for the native binary. lib/main.js resolves @esbuild/<platform> at runtime without it. In the production closure only because tsx is misfiled in package.json dependencies — see sca-prod-dep-placement; fixing that removes esbuild from the droplet entirely."
-    },
-    {
-      "path": "node_modules/sharp",
-      "name": "sharp",
-      "inProdClosure": true,
-      "why": "install/check.js only builds from source when a global libvips is present. Since 0.33 sharp loads @img/sharp-<platform>/sharp.node directly. Unreachable anyway with images.unoptimized: true."
+      "inProdClosure": false,
+      "why": "postinstall (node install.js) swaps the JS bin shim for the native binary. lib/main.js resolves @esbuild/<platform> at runtime without it. Dev-only since tsx left package.json dependencies (2026-09-22); it no longer reaches the droplet."
     },
     {
       "path": "node_modules/fsevents",
       "name": "fsevents",
-      "inProdClosure": true,
-      "why": "macOS-only optional dependency, irrelevant on the Linux droplet. Native build step only."
+      "inProdClosure": false,
+      "why": "macOS-only optional dependency, dev-only in the lockfile and irrelevant on the Linux droplet either way. Native build step only."
     },
     {
       "path": "node_modules/unrs-resolver",
@@ -51,7 +45,7 @@
     }
   ],
   "guards": {
-    "npmrcIgnoreScripts": "ignore-scripts=true must stay in .npmrc — it is rsync'd to /opt/ib-api and covers a hand-run npm ci on the droplet.",
+    "npmrcIgnoreScripts": "ignore-scripts=true must stay in .npmrc \u2014 it is rsync'd to /opt/ib-api and covers a hand-run npm ci on the droplet.",
     "deployIgnoreScripts": "scripts/deploy-api.sh must keep passing --ignore-scripts to the remote npm ci, so the protection does not depend on .npmrc having arrived intact."
   }
-}
+}\n

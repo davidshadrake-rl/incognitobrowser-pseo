@@ -39,55 +39,6 @@
   },
   "suppressions": [
     {
-      "ghsa": "GHSA-26hh-7cqf-hhc6",
-      "package": "next",
-      "premise": "no-proxy-or-middleware",
-      "reason": "Middleware/Proxy bypass via segment-prefetch routes. There is no proxy or middleware layer to bypass; authorisation on this site is nothing, by design, and the Origin gate lives in the route handlers themselves.",
-      "expires": "2026-12-17"
-    },
-    {
-      "ghsa": "GHSA-267c-6grr-h53f",
-      "package": "next",
-      "premise": "no-proxy-or-middleware",
-      "reason": "The original segment-prefetch Middleware/Proxy bypass. Same reasoning as GHSA-26hh-7cqf-hhc6.",
-      "expires": "2026-12-17"
-    },
-    {
-      "ghsa": "GHSA-492v-c6pp-mqqv",
-      "package": "next",
-      "premise": "no-proxy-or-middleware",
-      "reason": "Middleware/Proxy bypass through dynamic route parameter injection. No proxy layer exists.",
-      "expires": "2026-12-17"
-    },
-    {
-      "ghsa": "GHSA-36qx-fr4f-26g5",
-      "package": "next",
-      "premise": "no-proxy-or-middleware",
-      "reason": "Pages Router + i18n Middleware bypass. This app is App Router only and declares no i18n, and there is no middleware.",
-      "expires": "2026-12-17"
-    },
-    {
-      "ghsa": "GHSA-6gpp-xcg3-4w24",
-      "package": "next",
-      "premise": "no-proxy-or-middleware",
-      "reason": "Middleware bypass with Turbopack and a single locale. No middleware, no locales.",
-      "expires": "2026-12-17"
-    },
-    {
-      "ghsa": "GHSA-3g8h-86w9-wvmq",
-      "package": "next",
-      "premise": "no-proxy-or-middleware",
-      "reason": "Middleware/Proxy redirects can be cache-poisoned. There are no proxy redirects.",
-      "expires": "2026-12-17"
-    },
-    {
-      "ghsa": "GHSA-m99w-x7hq-7vfj",
-      "package": "next",
-      "premise": "no-server-actions",
-      "reason": "Denial of Service in App Router Server Actions. No Server Action exists; the tools POST to route handlers, which have their own bounded bodies and rate limits.",
-      "expires": "2026-12-17"
-    },
-    {
       "ghsa": "GHSA-89xv-2m56-2m9x",
       "package": "next",
       "premise": "no-server-actions",
@@ -147,7 +98,7 @@
       "ghsa": "GHSA-c4j6-fc7j-m34r",
       "package": "next",
       "premise": "no-websocket-upgrades",
-      "reason": "SSRF in applications using WebSocket upgrades. ib-api is plain `next start` on 127.0.0.1:3100 behind an Apache reverse proxy that forwards /api/ only, with no upgrade handling, no custom server file and no ws/socket.io/engine.io package in the tree. There is no upgrade path to reach. Note this is the one place the system does fetch attacker-supplied URLs for real — /api/scan-url — and that has its own SSRF guard with its own checks in this suite; this advisory is about a different code path.",
+      "reason": "SSRF in applications using WebSocket upgrades. ib-api is plain `next start` on 127.0.0.1:3100 behind an Apache reverse proxy that forwards /api/ only, with no upgrade handling, no custom server file and no ws/socket.io/engine.io package in the tree. There is no upgrade path to reach. Note this is the one place the system does fetch attacker-supplied URLs for real \u2014 /api/scan-url \u2014 and that has its own SSRF guard with its own checks in this suite; this advisory is about a different code path.",
       "expires": "2026-12-17"
     },
     {
@@ -182,7 +133,7 @@
       "ghsa": "GHSA-g7r4-m6w7-qqqr",
       "package": "esbuild",
       "premise": "linux-host",
-      "reason": "Arbitrary file read when running the esbuild DEVELOPMENT SERVER on Windows. Nothing runs esbuild's dev server, and nothing here runs on Windows. esbuild is only in the production closure because tsx is misfiled in dependencies — see the sca-prod-dep-placement finding, which is the real fix.",
+      "reason": "Arbitrary file read when running the esbuild DEVELOPMENT SERVER on Windows. Nothing runs esbuild's dev server, and nothing here runs on Windows. esbuild is only in the production closure because tsx is misfiled in dependencies \u2014 see the sca-prod-dep-placement finding, which is the real fix.",
       "expires": "2026-12-17"
     },
     {

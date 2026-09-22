@@ -46,6 +46,33 @@ const DEV_MARKERS = ['vitest', 'typescript', 'eslint', '@playwright', '@vitejs',
 
 const md5 = (buf) => createHash('md5').update(buf).digest('hex');
 
+/**
+ * Which of the dev-marker packages found on the box are DRIFT (dev-only in the
+ * lockfile, so they cannot have come from --omit=dev) and which are DEAD
+ * WEIGHT (in the lockfile's production closure because a production
+ * dependency declares them — next@16.3.5 declares @playwright/test). Exported
+ * so the grading is testable on a fake lockfile without a droplet.
+ */
+export function gradeDevPackages(lock, devFound) {
+  const packages = lock.packages || {};
+  const names = [];
+  for (const { marker, members } of devFound) {
+    if (marker.startsWith('@')) for (const m of members) names.push(`${marker}/${m}`);
+    else names.push(marker);
+  }
+  const drift = [];
+  const deadWeight = [];
+  for (const name of names) {
+    const entry = packages[`node_modules/${name}`];
+    if (!entry || entry.dev) { drift.push(name); continue; }
+    const requiredBy = Object.entries(packages)
+      .filter(([k, v]) => k && !v.dev && ((v.dependencies || {})[name] || (v.optionalDependencies || {})[name] || (v.peerDependencies || {})[name]))
+      .map(([k]) => k.replace(/^node_modules\//, ''));
+    deadWeight.push({ name, requiredBy });
+  }
+  return { drift, deadWeight };
+}
+
 /** Pull out one FIELD:value line from the combined remote output. */
 function field(out, key) {
   const m = new RegExp(`^${key}:(.*)$`, 'm').exec(out);
@@ -77,7 +104,10 @@ const apiDrift = check({
       `echo MARKER:$(cat ${REMOTE_API}/.npm-ci-installed.md5 2>/dev/null | tr -d '[:space:]')`,
       `echo MODCOUNT:$(ls -1 ${REMOTE_API}/node_modules 2>/dev/null | wc -l | tr -d ' ')`,
       ...PINNED.map((p) => `echo VER_${p.replace(/-/g, '_')}:$(node -p "require('${REMOTE_API}/node_modules/${p}/package.json').version" 2>/dev/null)`),
-      ...DEV_MARKERS.map((d) => `[ -e ${REMOTE_API}/node_modules/${d} ] && echo DEVPKG:${d} || true`),
+      // A scope directory (@playwright, @vitejs) is reported with its contents,
+      // and only if it has any: npm leaves an empty @vitejs/ behind after an
+      // --omit=dev install, and an empty directory is not a package.
+      ...DEV_MARKERS.map((d) => `[ -e ${REMOTE_API}/node_modules/${d} ] && [ -n "$(ls -A ${REMOTE_API}/node_modules/${d} 2>/dev/null)" ] && echo DEVPKG:${d}:$(ls -A ${REMOTE_API}/node_modules/${d} 2>/dev/null | tr '\\n' ',') || true`),
     ].join('; ');
 
     const out = ctx.ssh(cmd); // throws Skip when .secrets has no droplet login
@@ -156,16 +186,27 @@ const apiDrift = check({
     // the production host is someone running a bare `npm install` there while
     // debugging. That silently invalidates sca-prod-path-audit's whole premise
     // for downgrading dev-only advisories to INFO: they would now be on the box.
-    const devFound = [...out.matchAll(/^DEVPKG:(.+)$/gm)].map((m) => m[1].trim());
+    const devFound = [...out.matchAll(/^DEVPKG:([^:\n]+):?(.*)$/gm)].map((m) => ({ marker: m[1].trim(), members: m[2].split(',').map((x) => x.trim()).filter(Boolean) }));
     checked += DEV_MARKERS.length;
-    if (devFound.length) {
+    const graded = gradeDevPackages(lock, devFound);
+    if (graded.drift.length) {
       findings.push(finding({
         severity: 'medium',
-        title: `Dev-only packages are installed on the production droplet: ${devFound.join(', ')}`,
-        detail: 'scripts/deploy-api.sh installs with --omit=dev, so these arrived some other way — almost certainly a bare `npm install` run on the box. Their advisories are reported as INFO by sca-prod-path-audit precisely because they are supposed to never reach production, and that premise no longer holds.',
-        evidence: `present under ${REMOTE_API}/node_modules: ${devFound.join(', ')} (module count ${field(out, 'MODCOUNT') || '?'})`,
+        title: `Dev-only packages are installed on the production droplet: ${graded.drift.join(', ')}`,
+        detail: 'scripts/deploy-api.sh installs with --omit=dev and the lockfile does not place these in the production closure, so they arrived some other way — almost certainly a bare `npm install` run on the box. Their advisories are reported as INFO by sca-prod-path-audit precisely because they are supposed to never reach production, and that premise no longer holds.',
+        evidence: `present under ${REMOTE_API}/node_modules and dev-only in package-lock.json: ${graded.drift.join(', ')} (module count ${field(out, 'MODCOUNT') || '?'})`,
         remediation: `rm -rf ${REMOTE_API}/node_modules and re-run scripts/deploy-api.sh, which reinstalls with --omit=dev --ignore-scripts.`,
         file: 'scripts/deploy-api.sh',
+      }));
+    }
+    if (graded.deadWeight.length) {
+      findings.push(finding({
+        severity: 'info',
+        title: `Test tooling in the production closure, pulled in by a production dependency: ${graded.deadWeight.map((d) => d.name).join(', ')}`,
+        detail: 'These are dev-only by any sensible reading, but package-lock.json puts them in the production closure because a production dependency declares them, so --omit=dev installs them correctly and no reinstall removes them. On 2026-09-22 this was graded as drift and the operator was told to wipe node_modules; the wipe changed nothing, because there was nothing to change. It is dead weight on the box, not a sign anyone ran npm install there. Removing it means an npm override or a Next release that stops declaring it.',
+        evidence: graded.deadWeight.map((d) => `${d.name} <- ${d.requiredBy.join(', ') || '(root)'}`).join('; '),
+        remediation: 'Nothing on the box. If it matters, add an `overrides` entry in package.json for the offending dependency and re-run the every-commit suite.',
+        file: 'package-lock.json',
       }));
     }
 
