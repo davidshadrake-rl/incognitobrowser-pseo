@@ -140,6 +140,6 @@ ORIGIN="-H origin:$SITE_ORIGIN -H content-type:application/json"
 for u in / /resources/ /resources-pro/tools/; do
   [ "$(code "$SITE_ORIGIN$u")" = 200 ] || { echo "   FAIL $u"; fail=1; }
 done
-[ "$fail" = 0 ] && echo "   /api/ip /api/challenge WordPress /resources/ /resources-pro/tools/ all 200"
+[ "$fail" = 0 ] && echo "   /api/ip /api/challenge WordPress /resources/ /resources-pro/tools/ all 200 · foreign Origin refused (403)"
 rm -f "$LOG"
 exit "$fail"
