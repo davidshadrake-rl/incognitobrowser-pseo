@@ -40,6 +40,12 @@ export default defineConfig({
     viewport: { width: 1280, height: 900 },
     /* Some tools need clipboard access (password gen, hash gen, etc.) */
     permissions: ['clipboard-read', 'clipboard-write'],
+    /* The Pro CSV export is graded on the file the browser saves
+       (e2e/cookie-csv-export.spec.ts). This is Playwright's default, written
+       down because that spec depends on it: set to false, Chromium cancels
+       every download and the spec times out waiting for an event that can
+       never come. */
+    acceptDownloads: true,
     /* Give pages a generous timeout — the cookie scanner hits a real third-party */
     actionTimeout: 30_000,
     navigationTimeout: 60_000,

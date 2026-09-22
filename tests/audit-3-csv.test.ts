@@ -17,6 +17,17 @@
  *     `const n = cookieCsvFilename(url); a.download = 'scan.csv';` satisfies.
  *     So this file EXECUTES the shipped body of downloadCsv verbatim against a
  *     stub DOM and reads back the bytes and the name the browser would save.
+ *     That closes two of the finding's three clauses: (a) a.download is
+ *     assigned FROM cookieCsvFilename, and (b) the blob's bytes are
+ *     buildCookieCsv's output. Clause (c), a real in-app Pro mark unlocking
+ *     the button and a browser saving a file, is NOT closed here and cannot
+ *     be: this harness grants no Pro mark on purpose, so nothing in it can
+ *     show the gate opening or staying shut, and a stub anchor's click() is
+ *     not a download. It is closed by e2e/cookie-csv-export.spec.ts, which
+ *     sets window.IncognitoBrowserApp (the bridge lib/in-app.ts trusts),
+ *     scans, clicks Export CSV, awaits the browser's download event and
+ *     reads the file back, with controls that make the same visit without
+ *     the bridge and must get the overlay and no file.
  *
  *  2. THE HEADER ASSERTION WAS A TAUTOLOGY. pro-csv-export.test.ts:156 is
  *     `expect(header).toEqual([...COOKIE_CSV_COLUMNS])` — the output compared
