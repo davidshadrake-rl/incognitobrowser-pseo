@@ -408,10 +408,40 @@ function bodyFrom(src: string, needle: string): string {
   throw new Error(`unbalanced braces after ${needle}`);
 }
 
-/** Every way this codebase has of reaching the network from a page. */
-const NETWORK_SINK = /\bfetch\s*\(|XMLHttpRequest|sendBeacon|new\s+WebSocket|EventSource|SCAN_API_BASE|['"`]\/api\/|navigator\.connection|importScripts/;
+/**
+ * Every way this codebase has of reaching the network from a page — and every
+ * way of pulling one in without writing it here.
+ *
+ * `track(`, `import(` and `require(` are in the set because of what the
+ * verifier did to the first version of this guard, twice, with the suite
+ * green both times: `import { track } from "@/lib/track"` (double quotes, so
+ * the single-quote allowlist below could not see it) plus one call; and
+ * `const { track } = await import('@/lib/track')`, which has no `from` at
+ * all. track() sendBeacons to /api/event (lib/track.ts), so either one posts
+ * the audio fingerprint to our API with no literal fetch in the file. The
+ * only imports this file may hold are the six static ones pinned below, so a
+ * dynamic or CommonJS import has no legitimate use here and is refused as a
+ * sink in its own right.
+ */
+const NETWORK_SINK = /\bfetch\s*\(|XMLHttpRequest|sendBeacon|new\s+WebSocket|EventSource|SCAN_API_BASE|['"`]\/api\/|navigator\.connection|importScripts|\btrack\s*\(|\bimport\s*\(|\brequire\s*\(/;
 
 describe('A5 the fingerprint probes never leave the page', () => {
+  it('the sink pattern sees the two routes that once walked past it', () => {
+    // The guard's own proof, the same way the comment stripper has one. These
+    // are the verifier's exact lines, byte for byte; a pattern loosened by a
+    // later edit fails here first, rather than passing quietly on the engine.
+    expect(NETWORK_SINK.test("track('privacy_audit_done', { fp: audioHash });")).toBe(true);
+    expect(NETWORK_SINK.test("const { track } = await import('@/lib/track');")).toBe(true);
+    expect(NETWORK_SINK.test("const { track } = require('@/lib/track');")).toBe(true);
+    // A static import is the allowlist's job, not this pattern's.
+    expect(NETWORK_SINK.test('import { track } from "@/lib/track";')).toBe(false);
+    // ...and none of the shapes the engine legitimately holds trip it: its
+    // own copy says "track" and "requires", and every import is `import ... from`.
+    expect(NETWORK_SINK.test("import type { Status } from '@/components/ui/StatusDot';")).toBe(false);
+    expect(NETWORK_SINK.test('requesting sites not track you.')).toBe(false);
+    expect(NETWORK_SINK.test('JavaScript is enabled (this tool requires it).')).toBe(false);
+  });
+
   it('the audio fingerprint — which sits OUTSIDE runAudit — makes no request', () => {
     // The existing assertion (tests/pro-entitlement.test.ts:398) scans
     // runAudit's body only. audioFingerprintHash is a module-level function,
@@ -434,12 +464,23 @@ describe('A5 the fingerprint probes never leave the page', () => {
   });
 
   it('the whole engine holds no sink, and cannot import one', () => {
-    // A body-scoped assertion is defeated by `import { track } from
-    // '@/lib/track'` plus one call — track() posts to /api/event over
-    // sendBeacon (lib/track.ts:64). So the file's import list is pinned too:
-    // every one of these is local UI or copy, and none can reach the network.
+    // A body-scoped assertion is defeated by importing lib/track and calling
+    // it: track() posts to /api/event over sendBeacon (lib/track.ts:64), and
+    // no literal fetch ever appears in this file. So the file's import list
+    // is pinned too: every one of these is local UI or copy, and none can
+    // reach the network.
+    //
+    // The first version of this pin captured `from '...'` with single quotes
+    // only. Nothing in the repo makes that assumption safe — there is no
+    // prettier config and eslint.config.mjs sets no `quotes` rule — and the
+    // verifier walked past it with `from "@/lib/track"`, then again with a
+    // dynamic import() that has no `from` at all, 22/22 green both times.
+    // Both quote styles are captured now; import() and require() are refused
+    // outright by NETWORK_SINK; and a side-effect import (`import
+    // '@/lib/track';` — no `from`, no binding, module code still runs) is
+    // caught by counting import statements against captured specifiers.
     expect(AUDIT).not.toMatch(NETWORK_SINK);
-    const imports = [...AUDIT.matchAll(/from\s+'([^']+)'/g)].map((m) => m[1]).sort();
+    const imports = [...AUDIT.matchAll(/from\s+['"]([^'"]+)['"]/g)].map((m) => m[1]).sort();
     expect(imports).toEqual([
       '@/components/ui/StatusDot',
       '@/components/useUpgradeGate',
@@ -448,6 +489,8 @@ describe('A5 the fingerprint probes never leave the page', () => {
       './ResultContext',
       'react',
     ].sort());
+    const statements = AUDIT.match(/^import\b/gm) ?? [];
+    expect(statements, 'an import statement with no `from` — a side-effect import — is in the file').toHaveLength(imports.length);
   });
 
   it('records the one thing the engine DOES send, so "all in-page" is not over-claimed', () => {

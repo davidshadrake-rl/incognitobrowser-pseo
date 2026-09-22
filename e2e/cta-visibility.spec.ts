@@ -16,6 +16,9 @@
  * are soft: reported and logged, and the rest of the case still runs.
  * Calculators have no result card: after a setting changes, their next-step
  * button ([data-next-step]) must be on screen instead.
+ * The three Pro-tools gates attempt a gated action instead: the overlay must
+ * open, be THAT action's gate (data-upgrade-gate), and put its own button on
+ * screen the same way.
  *
  * Run against the droplet:
  *   E2E_BASE_URL=https://206-189-186-34.nip.io npx playwright test e2e/cta-visibility.spec.ts
@@ -26,6 +29,7 @@
 import { test, expect, devices, type Page } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
+import type { GateAction } from '../lib/card-copy';
 
 const BASE = (process.env.E2E_BASE_URL || 'https://206-189-186-34.nip.io').replace(/\/$/, '');
 const FREE = `${BASE}/resources`;
@@ -43,8 +47,20 @@ const REPORT = '.rc-report';
 /** How the result arrives: after the visitor's own action, on page load, at the end of the quiz, built into the page, a calculator's next step, or a Pro-tools gate overlay. */
 type Kind = 'action' | 'on-load' | 'quiz' | 'report-card' | 'calculator' | 'gate';
 
-interface Run { label?: string; kind?: Kind; run: (page: Page) => Promise<void>; timeout?: number }
-interface Case { name: string; url: string; kind: Kind; run: (page: Page) => Promise<void>; timeout: number }
+interface Run { label?: string; kind?: Exclude<Kind, 'gate'>; run: (page: Page) => Promise<void>; timeout?: number }
+/**
+ * A gate case also names the gate its action must open, and the type makes
+ * that mandatory rather than optional. Until 2026-09-22 checkGate() waited on
+ * `.ug-panel[data-upgrade-gate]` — attribute present, any value — and read
+ * the value into the report row without asserting it, so an overlay from ANY
+ * of the three gates satisfied every gate case: a wiring slip that showed the
+ * CSV-export gate on the audit page would have passed all four devices.
+ */
+type Case = { name: string; url: string; run: (page: Page) => Promise<void>; timeout: number } & (
+  | { kind: Exclude<Kind, 'gate'>; gate?: undefined }
+  | { kind: 'gate'; gate: GateAction }
+);
+type GateCase = Extract<Case, { kind: 'gate' }>;
 
 /** Choose a file as a visitor would: the upload control is on screen first. */
 const upload = (file: string) => async (p: Page) => {
@@ -133,7 +149,7 @@ const TOOL_PAGES: Array<{ site: 'free' | 'pro'; path: string; engine: string }> 
  * (components/ui/UpgradeOverlay.tsx). Each `run` gets a real result first,
  * as a visitor would, then attempts the gated action.
  */
-const GATE_RUN: Record<string, () => (p: Page) => Promise<void>> = {
+const GATE_RUN: Record<GateAction, () => (p: Page) => Promise<void>> = {
   'cookie-csv-export': () => async (p) => {
     await p.locator('input[type="url"], input[type="text"]').first().fill('https://example.com');
     await p.getByRole('button', { name: 'Scan', exact: true }).click();
@@ -152,7 +168,7 @@ const GATE_RUN: Record<string, () => (p: Page) => Promise<void>> = {
     await input.setInputFiles([path.join(FIX, 'sample-gps.jpg'), path.join(FIX, 'sample.png')]);
   },
 };
-const GATE_ENGINE: Record<string, string> = { 'cookie-csv-export': 'cookie-analyzer', 'browser-privacy-rerun': 'browser-privacy', 'metadata-multi-file': 'metadata-viewer' };
+const GATE_ENGINE: Record<GateAction, string> = { 'cookie-csv-export': 'cookie-analyzer', 'browser-privacy-rerun': 'browser-privacy', 'metadata-multi-file': 'metadata-viewer' };
 const GATE_URL = (engine: string) => `${PRO}${TOOL_PAGES.find((t) => t.site === 'pro' && t.engine === engine)!.path}/`;
 
 /** One published report card per grade, A to F (first by file name), besides the two with their own words. */
@@ -187,11 +203,12 @@ const CASES: Case[] = [
   // A calculator's answer is a next step: change a setting so the result is "Your result".
   { name: 'calculator (GDPR risk)', url: `${FREE}/calculators/gdpr/gdpr-compliance-risk-calculator/`, kind: 'calculator', run: changeSetting, timeout: 10_000 },
   { name: 'calculator (browser privacy risk)', url: `${FREE}/calculators/browser-privacy/browser-privacy-risk-calculator/`, kind: 'calculator', run: changeSetting, timeout: 10_000 },
-  ...Object.entries(GATE_RUN).map(([gate, run]) => ({
+  ...(Object.keys(GATE_RUN) as GateAction[]).map((gate) => ({
     name: `gate: ${gate}`,
     url: GATE_URL(GATE_ENGINE[gate]),
     kind: 'gate' as const,
-    run: run(),
+    gate,
+    run: GATE_RUN[gate](),
     timeout: 30_000,
   })),
 ];
@@ -360,17 +377,25 @@ function measureOverlay(page: Page) {
   });
 }
 
-/** The gate overlay opens on the attempted action, its own button is fully on screen and tappable — the "magic moment" rule extended to a gate, since the visitor already committed to an action and got interrupted. */
-async function checkGate(page: Page, device: Device, c: Case) {
+/**
+ * The gate overlay opens on the attempted action, it is the gate THAT action
+ * opens (not one of the other two), and its own button is fully on screen and
+ * tappable — the "magic moment" rule extended to a gate, since the visitor
+ * already committed to an action and got interrupted. The wait below is
+ * attribute-present on purpose, so a wrong gate fails on the identity
+ * assertion with both names in the message, not as a locator timeout.
+ */
+async function checkGate(page: Page, device: Device, c: GateCase) {
   await page.locator('.ug-panel[data-upgrade-gate]').first().waitFor({ state: 'attached', timeout: c.timeout });
   await frames(page);
   const m = await measureOverlay(page);
-  rows.push({ device: device.label, ua: device.ua, case: c.name, kind: c.kind, url: c.url, ...m });
+  rows.push({ device: device.label, ua: device.ua, case: c.name, kind: c.kind, url: c.url, expectedGate: c.gate, ...m });
   await screenshot(page, device.slug, c.name);
 
   const at = `${c.name} @ ${device.label}`;
   expect(m.open, `${at}: the gate overlay opened`).toBe(true);
   expect(m.buttonInside, `${at}: the overlay's own upgrade button fully on screen`).toBe(true);
+  expect(m.gate, `${at}: the overlay is the gate the action should have opened`).toBe(c.gate);
   expect(m.buttonHit, `${at}: a tap at the overlay button's centre lands on it, not on ${m.hitBy}`).toBe(true);
 }
 
