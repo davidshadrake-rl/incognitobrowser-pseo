@@ -47,6 +47,12 @@ export default check({
       allow = readJson(listFile);
       lock = readJson(lockFile);
     } catch (err) {
+      // A lockfile that is not there is an environment; a data file in THIS repo that
+      // does not parse is a defect. On 2026-09-22 an editing slip left a literal
+      // backslash-n at the end of the allowlist, this check SKIPPED, and the
+      // every-commit gate stayed green — a skip is 'could not run', not red — so the
+      // install-script guard was off for the whole commit with nothing failing.
+      if (String(err && err.message || err).includes('JSON')) throw new Error(`a security data file in the repo does not parse: ${err.message}`);
       throw new ctx.Skip(`cannot read the lockfile or the allowlist: ${err.message}`);
     }
 
