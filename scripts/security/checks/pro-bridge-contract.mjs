@@ -70,8 +70,62 @@ function topLevelBody(src, signatureRe) {
   return { text: rest.slice(0, end + 2), line: lineOf(src, m.index) };
 }
 
-/** Comments are prose about the code, not the code. */
-const stripComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
+/**
+ * Comments are prose about the code, not the code.
+ *
+ * A block comment is replaced by its own newlines, not by nothing, so a line
+ * number computed over the stripped text is the line in the file. It used to
+ * be deleted whole, and every `lineOf(…)` in this file that took an index from
+ * the stripped text then pointed at the wrong line: the upgrade send in
+ * lib/in-app.ts is on line 213 and the evidence said 77. Evidence a reader
+ * cannot re-check is not evidence (harness.mjs, rule 2).
+ */
+const stripComments = (s) =>
+  s.replace(/\/\*[\s\S]*?\*\//g, (m) => m.replace(/[^\n]/g, '')).replace(/^[ \t]*\/\/.*$/gm, '');
+
+/**
+ * The body of the Kotlin `when (msg.optString("action")) { … }` block in
+ * IN-APP-BRIDGE.md, found by counting braces from its opening `{`.
+ *
+ * This was a regex, `\{([\s\S]*?)\n\s*\}` — non-greedy to the first
+ * newline-then-brace. Every branch in the contract was one line, so the first
+ * such brace happened to be the real closing one. Give one branch a multi-line
+ * body and the capture stopped at that branch's own `}`: the check graded a
+ * truncated block, and an `else ->` after it was never seen. The 2026-09-22
+ * audit pass demonstrated it live — a multi-line "upgrade" branch plus
+ * `else -> handleUnknown(msg)` produced a spurious low "no branch for
+ * saveImage" and a PASS, with the medium catch-all finding this check exists
+ * to emit gone.
+ *
+ * Braces inside a `// …` comment or a "…" string are skipped for counting
+ * only; the returned body is the raw text. Returns null when there is no block
+ * at all, and `{ body: null }` when the block never closes — the caller Skips
+ * on both, because grading a fragment is how the last parser passed.
+ */
+function whenBody(doc) {
+  const m = /when\s*\(\s*msg\.optString\("action"\)\s*\)\s*\{/.exec(doc);
+  if (!m) return null;
+  const open = m.index + m[0].length - 1;
+  const line = lineOf(doc, m.index);
+  let depth = 0;
+  for (let i = open; i < doc.length; i++) {
+    const ch = doc[i];
+    if (ch === '/' && doc[i + 1] === '/') {
+      const eol = doc.indexOf('\n', i);
+      if (eol === -1) break;
+      i = eol;
+    } else if (ch === '"') {
+      const close = doc.indexOf('"', i + 1);
+      if (close === -1) break;
+      i = close;
+    } else if (ch === '{') {
+      depth++;
+    } else if (ch === '}' && --depth === 0) {
+      return { body: doc.slice(open + 1, i), line };
+    }
+  }
+  return { body: null, line };
+}
 
 /** The origins lib/tiers.ts serves from, with the paths kept — the path is what differs today. */
 function tierBases(repoRoot) {
@@ -155,7 +209,16 @@ const saveImageCheck = check({
 });
 
 // ---------------------------------------------------------------------------
-// 2. Only two actions exist, and an unknown one does nothing.
+// 2. Only two actions exist, and the DOCUMENTED contract ignores an unknown one.
+//
+// The id is pro_bridge_unknown_action_ignored, and the id stays — the owner's
+// CI list names it. What the words below claim is narrower than the id reads:
+// this check verifies the Kotlin snippet in IN-APP-BRIDGE.md and the sends in
+// lib/in-app.ts. Whether the SHIPPED app ignores an unknown action cannot be
+// observed from this repo (no APK, no native source), and no describe or title
+// here says it can. The 2026-09-22 audit pass found the old wording — "the
+// contract the app implements", "tells the app to handle" — reading as a claim
+// about the app; it is a claim about a document the app team is asked to copy.
 // ---------------------------------------------------------------------------
 const unknownActionCheck = check({
   id: 'pro_bridge_unknown_action_ignored',
@@ -165,7 +228,7 @@ const unknownActionCheck = check({
   safeAgainstProd: true,
   needsOptIn: false,
   requires: [],
-  describe: 'The bridge protocol has exactly two actions — saveImage and upgrade — and the contract the app implements dispatches on them with no catch-all branch.',
+  describe: 'The page sends only the two documented bridge actions (upgrade, saveImage), and the documented contract ignores unknown actions: the Kotlin dispatch in IN-APP-BRIDGE.md §2 has those two named branches and no catch-all. Verified against the document and lib/in-app.ts only — there is no APK or Android source here, so whether the shipped app matches its contract is not something this check can see.',
   async run(ctx) {
     const src = readOr(ctx.repoRoot, IN_APP);
     const doc = readOr(ctx.repoRoot, DOC);
@@ -175,56 +238,85 @@ const unknownActionCheck = check({
     const findings = [];
     let checked = 0;
 
-    // (a) The sending side: every action literal this repo can put on the wire.
+    // (a) The sending side: every `action:` key this repo can put on the wire.
+    //     Two shapes are told apart. A single-quoted literal is graded against
+    //     the contract. Anything else after the key — a constant, a variable,
+    //     a template — is a value this check cannot read, and that is a finding
+    //     in its own right: the 2026-09-22 audit pass changed one send to
+    //     `action: ACTION_UP` and this check reported "4 checked", no findings,
+    //     because it counted only the literals it could see and Skipped only
+    //     when there were none at all.
     const KNOWN = new Set(['upgrade', 'saveImage']);
-    const sent = [...stripComments(src).matchAll(/action:\s*'([^']+)'/g)];
-    if (!sent.length) {
-      throw new Skip(`${IN_APP} emits no action: '…' literal — the message shape this check grades is not there`);
+    const code = stripComments(src);
+    const keys = [...code.matchAll(/\baction\s*:/g)];
+    const sent = [...code.matchAll(/\baction\s*:\s*'([^']+)'/g)];
+    if (!keys.length) {
+      throw new Skip(`${IN_APP} has no action: key at all — the message shape this check grades is not there`);
+    }
+    const literalAt = new Set(sent.map((m) => m.index));
+    for (const k of keys) {
+      checked++;
+      if (literalAt.has(k.index)) continue;
+      const n = lineOf(code, k.index);
+      findings.push(finding({
+        severity: 'medium', file: IN_APP, line: n,
+        title: 'The page builds a bridge action from something other than a string literal, so this check cannot tell what it sends',
+        detail: 'Every action that can reach the native dispatch has to be one of the two in IN-APP-BRIDGE.md §2, and the only way this check can know what the page sends is to read the literal. A computed value is precisely how a third capability reaches the native side without ever appearing in the document. Until this is a literal the sending half of this check is blind, and it says so rather than counting the literals it can see and passing.',
+        evidence: `${IN_APP}:${n}: ${code.split('\n')[n - 1].trim().slice(0, 160)}`,
+        remediation: "Send a single-quoted literal ('upgrade' or 'saveImage'). If this is a type annotation rather than a message, keep it out of the message-building code in lib/in-app.ts, or make it a literal union so it reads as the two names.",
+      }));
     }
     for (const m of sent) {
-      checked++;
       if (KNOWN.has(m[1])) continue;
-      const n = lineOf(src, m.index);
+      const n = lineOf(code, m.index);
       findings.push(finding({
         severity: 'medium', file: IN_APP, line: n,
         title: `The page sends a bridge action the contract does not define ("${m[1]}")`,
-        detail: 'IN-APP-BRIDGE.md §2 documents exactly two actions. A third one is either a native capability that was added without the security note that should come with it, or a message the app will silently drop — and a handoff that silently drops is how "Save image" came to fail for every app user in the first place.',
+        detail: 'IN-APP-BRIDGE.md §2 documents exactly two actions. A third one is either a native capability that was added without the security note that should come with it, or a message an app built from the document would silently drop — and a handoff that silently drops is how "Save image" came to fail for every app user in the first place.',
         evidence: `${IN_APP}:${n}: action: '${m[1]}'; the contract defines ${[...KNOWN].join(', ')}`,
         remediation: 'Document the new action in IN-APP-BRIDGE.md with what the native side must validate, and add it to this check.',
       }));
     }
 
-    // (b) The dispatch contract the app team copies. A Kotlin `when` with only
-    //     the two branches ignores anything else by construction; an `else ->`
-    //     that does work is where "unknown action" stops being a no-op.
-    const when = /when\s*\(\s*msg\.optString\("action"\)\s*\)\s*\{([\s\S]*?)\n\s*\}/.exec(doc);
+    // (b) The dispatch the document asks the app team to copy. A Kotlin `when`
+    //     statement with only named branches ignores anything else by
+    //     construction; an `else ->` is where "unknown action" stops being a
+    //     no-op. The body is read to its real closing brace (see whenBody), so
+    //     a branch that grows a multi-line block cannot hide what follows it.
+    const when = whenBody(doc);
     if (!when) {
-      throw new Skip(`${DOC} has no when(msg.optString("action")) block — the dispatch this check grades is not in the document any more`);
+      throw new Skip(`${DOC} has no when(msg.optString("action")) { block — the dispatch this check grades is not in the document any more`);
     }
-    const whenLine = lineOf(doc, when.index);
-    const branches = [...when[1].matchAll(/"([^"]+)"\s*->/g)].map((b) => b[1]);
+    if (when.body === null) {
+      throw new Skip(`${DOC}:${when.line}: the when(msg.optString("action")) block never closes — this check will not grade a fragment of it`);
+    }
+    const whenLine = when.line;
+    // Kotlin line comments are prose, not branches; a `"x" ->` or an `else ->`
+    // inside one must neither count nor be counted.
+    const dispatch = when.body.replace(/\/\/[^\n]*/g, '');
+    const branches = [...dispatch.matchAll(/"([^"]+)"\s*->/g)].map((b) => b[1]);
     checked += branches.length + 1;
 
     for (const b of branches) {
       if (!KNOWN.has(b)) {
         findings.push(finding({
           severity: 'medium', file: DOC, line: whenLine,
-          title: `The bridge contract tells the app to handle an undocumented action ("${b}")`,
-          detail: 'The app team implements this block verbatim. A branch here is a native capability reachable from any page on an allowlisted origin, so it needs a row in the §2 table and a note on what the native side must validate before it needs code.',
+          title: `The documented dispatch has a branch for an action §2 does not list ("${b}")`,
+          detail: 'This block is what the app team is asked to copy. A branch in it is a native capability reachable from any page on an allowlisted origin, so it needs a row in the §2 table and a note on what the native side must validate before it needs code. Whether the shipped app has the branch is not visible from here; that the document tells it to is.',
           evidence: `${DOC}:${whenLine} when(msg.optString("action")) branches: ${branches.join(', ')}`,
           remediation: 'Either document the action properly or take the branch out of the snippet.',
         }));
       }
     }
 
-    const elseBranch = /(^|\n)\s*else\s*->/.test(when[1]);
+    const elseBranch = /(^|\n)\s*else\s*->/.test(dispatch);
     if (elseBranch) {
       findings.push(finding({
         severity: 'medium', file: DOC, line: whenLine,
-        title: 'The bridge contract gives the app a catch-all branch for unknown actions',
-        detail: 'With only named branches, an unrecognised action is ignored by construction, which is the property we want: anything that gets script onto an allowlisted origin can post arbitrary JSON into this listener. An `else ->` turns "unknown" into "handled", and whatever it does becomes reachable from any page on that origin.',
-        evidence: `${DOC}:${whenLine} when(msg.optString("action")) contains an else -> branch: ${when[1].replace(/\s+/g, ' ').trim().slice(0, 200)}`,
-        remediation: 'Drop the else branch, or make it an explicit no-op and say in the document that it must stay one.',
+        title: 'The documented contract does not ignore unknown actions: the dispatch has an else -> branch',
+        detail: 'With only named branches, an unrecognised action is ignored by construction, which is the property this check verifies: anything that gets script onto an allowlisted origin can post arbitrary JSON into this listener. An `else ->` turns "unknown" into "handled", and whatever it does becomes reachable from any page on that origin. This check cannot tell a no-op else from a handler, so it treats every else as one.',
+        evidence: `${DOC}:${whenLine} when(msg.optString("action")) contains an else -> branch: ${dispatch.replace(/\s+/g, ' ').trim().slice(0, 200)}`,
+        remediation: 'Drop the else branch. A Kotlin `when` statement with only named branches already ignores everything else, and that is the property the document should carry.',
       }));
     }
 
@@ -232,7 +324,7 @@ const unknownActionCheck = check({
       if (!branches.includes(want)) {
         findings.push(finding({
           severity: 'low', file: DOC, line: whenLine,
-          title: `The bridge contract no longer dispatches "${want}"`,
+          title: `The documented contract has no branch for "${want}", which the page sends`,
           detail: 'The page still sends this action (lib/in-app.ts). An app built from the current document would drop it, which is a broken handoff rather than a vulnerability — but it is the same class of silent failure as the blob: download that started this file.',
           evidence: `${DOC}:${whenLine} branches: ${branches.join(', ')}; ${IN_APP} sends: ${sent.map((s) => s[1]).join(', ')}`,
           remediation: 'Put the branch back, or stop sending the action.',

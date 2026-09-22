@@ -29,10 +29,12 @@
  * comments stripped first — a guard that matches its own explanatory comment
  * has shipped twice here.
  */
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { NextRequest } from 'next/server';
-import { readdirSync, readFileSync, statSync, existsSync } from 'node:fs';
-import { join, relative, sep } from 'node:path';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, relative, sep } from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 const REPO = join(__dirname, '..');
 const read = (rel: string) => readFileSync(join(REPO, rel), 'utf-8');
@@ -344,49 +346,119 @@ describe('pro_bridge_saveImage_filename_and_mime — the containment it leans on
 // ===========================================================================
 // C. pro_bridge_unknown_action_ignored
 //
-// The id's name overclaims: nothing in this repo can assert that the shipped
-// Android app ignores an unknown action. The check's own describe is honest
-// about grading the web side and the contract text, and no finding it emits
-// claims otherwise, so the audit's substantive criticism is about the NAME.
+// The id's name overclaims, and the id stays: the owner's CI list names it.
+// Nothing in this repo can assert that the SHIPPED Android app ignores an
+// unknown action — there is no APK and no native source. What the check can
+// verify, and what its describe and every title it emits now say, is that the
+// DOCUMENTED contract ignores unknown actions: the Kotlin dispatch the app
+// team is asked to copy out of IN-APP-BRIDGE.md §2 has two named branches and
+// no catch-all, and lib/in-app.ts sends only those two names.
 //
-// What the check does grade is real, and it has two blind spots that a rename
-// would not fix. Both are closed here.
+// Rewritten 2026-09-22 when the check was fixed. The audit pass had shown,
+// live, that the check could not be trusted with its own property:
+//
+//   (1) It captured the `when` body with `\{([\s\S]*?)\n\s*\}` — non-greedy to
+//       the first newline-then-brace. A multi-line branch truncated the capture
+//       and an `else ->` after it was never seen. Under that mutation the check
+//       printed a spurious low ("no longer dispatches saveImage") and PASSed;
+//       the medium catch-all finding it exists for was gone.
+//   (2) It matched `action:\s*'…'` — single-quoted literals — and Skipped only
+//       when there were none. With one send changed to `action: ACTION_UP` it
+//       reported "4 checked", no findings.
+//   (3) Its describe said "the contract the app implements"; a title said the
+//       contract "tells the app to handle". Neither is observable from here.
+//
+// These tests drive the REAL check, imported from
+// scripts/security/checks/pro-bridge-contract.mjs, against copies of the two
+// files it reads with one thing broken, and require the finding — or the
+// Skip. The earlier version of this section kept a private brace-balanced
+// parser and compared the check's regex against it; that proved the regex was
+// wrong, not that the check was right. Now the check has the parser and this
+// file has the mutations.
+//
+// Why a source-level assertion (C1) survives beside the check-level ones: the
+// check's findings are `medium`, and tests/security-suite.test.ts blocks only
+// on high and critical. C1 and C2 are what stop the build.
 // ===========================================================================
 
 const DOC = 'IN-APP-BRIDGE.md';
 const KNOWN_ACTIONS = ['saveImage', 'upgrade'];
+const BRIDGE_CHECKS = 'scripts/security/checks/pro-bridge-contract.mjs';
 
-/** The `when (…) { … }` body, brace-balanced rather than regex-guessed. */
-function balancedWhenBody(doc: string): { body: string; open: number } {
-  const m = /when\s*\(\s*msg\.optString\("action"\)\s*\)\s*\{/.exec(doc);
-  if (!m) throw new Error(`${DOC} has no when(msg.optString("action")) { block`);
-  const open = m.index + m[0].length - 1;
-  let depth = 0;
-  for (let i = open; i < doc.length; i++) {
-    if (doc[i] === '{') depth++;
-    else if (doc[i] === '}') {
-      depth--;
-      if (depth === 0) return { body: doc.slice(open + 1, i), open };
-    }
+type BridgeFinding = { severity: string; title: string; detail: string; evidence: string; file: string | null; line: number | null };
+type BridgeCheck = {
+  id: string;
+  describe: string;
+  run: (ctx: { repoRoot: string }) => Promise<{ findings: BridgeFinding[]; checked: number }>;
+};
+
+const bridgeChecks: BridgeCheck[] = (await import(pathToFileURL(join(REPO, BRIDGE_CHECKS)).href)).default;
+const unknownAction = bridgeChecks.find((c) => c.id === 'pro_bridge_unknown_action_ignored');
+if (!unknownAction) throw new Error(`${BRIDGE_CHECKS} no longer exports pro_bridge_unknown_action_ignored — the owner's CI list names it`);
+const runUnknownAction = (repoRoot: string) => unknownAction.run({ repoRoot });
+
+/** One edit to one of the two files the check reads: a string or regex, and its replacement. */
+type Edit = [rel: string, from: string | RegExp, to: string];
+
+const mutantDirs: string[] = [];
+afterAll(() => { for (const d of mutantDirs) rmSync(d, { recursive: true, force: true }); });
+
+/**
+ * A copy of the two files the check reads, with the edits applied. An edit
+ * that changes nothing throws: a mutation test whose mutation stopped landing
+ * is a green test that proves nothing, and a code snippet in a Markdown file
+ * is exactly the kind of text that gets re-indented.
+ */
+function mutantTree(edits: Edit[]): string {
+  const dir = mkdtempSync(join(tmpdir(), 'ib-audit-7-bridge-'));
+  mutantDirs.push(dir);
+  for (const rel of [DEFINITION, DOC]) {
+    mkdirSync(dirname(join(dir, rel)), { recursive: true });
+    writeFileSync(join(dir, rel), read(rel));
   }
-  throw new Error(`${DOC}: the when block never closes`);
+  for (const [rel, from, to] of edits) {
+    const p = join(dir, rel);
+    const before = readFileSync(p, 'utf-8');
+    const after = before.replace(from, to);
+    if (after === before) throw new Error(`mutation target not found in ${rel}: ${String(from).slice(0, 60)} — this test is no longer mutating anything`);
+    writeFileSync(p, after);
+  }
+  return dir;
 }
 
-describe('pro_bridge_unknown_action_ignored — the two blind spots in the check', () => {
-  it('every action the page can put on the wire is a literal from the contract', () => {
-    // BLIND SPOT 1. The check matches `action:\s*'([^']+)'` — single-quoted
-    // literals only. `action: name`, `action: "x"` or a template literal is
-    // invisible to it, and a file with one literal plus one computed value
-    // still passes: the Skip only fires when there are NO literals at all.
-    // A computed action is precisely how a third capability reaches the native
-    // dispatch without ever appearing in IN-APP-BRIDGE.md.
+/** The two branch lines as the document has them today, matched loosely so a re-indent of the snippet cannot blind the mutations. */
+const UPGRADE_BRANCH = /"upgrade"\s*->\s*openUpgradeScreen\(msg\)[^\n]*/;
+const SAVE_IMAGE_BRANCH = /("saveImage"\s*->\s*saveImage\(msg\)[^\n]*)/;
+
+/** Every mutation this section grades, by name, so the last test can sweep all of their titles. */
+const MUTANTS: Record<string, Edit[]> = {
+  'a multi-line upgrade branch followed by else -> handleUnknown(msg)': [
+    [DOC, UPGRADE_BRANCH, '"upgrade" -> {\n            val from = msg.optString("from")\n            openUpgradeScreen(msg)\n        }'],
+    [DOC, SAVE_IMAGE_BRANCH, '$1\n        else -> handleUnknown(msg)'],
+  ],
+  'a one-line else -> handleUnknown(msg)': [[DOC, SAVE_IMAGE_BRANCH, '$1\n        else -> handleUnknown(msg)']],
+  'an explicit no-op else -> {}': [[DOC, SAVE_IMAGE_BRANCH, '$1\n        else -> {}']],
+  'a branch for an action §2 does not list': [[DOC, SAVE_IMAGE_BRANCH, '$1\n        "exportCsv" -> exportCsv(msg)']],
+  'the saveImage branch removed': [[DOC, /[ \t]*"saveImage"\s*->\s*saveImage\(msg\)[^\n]*\n/, '']],
+  'the upgrade send built from a constant': [[DEFINITION, "action: 'upgrade'", 'action: ACTION_UP']],
+};
+
+const CATCH_ALL = /does not ignore unknown actions/;
+
+describe('pro_bridge_unknown_action_ignored — the documented contract, graded by the real check', () => {
+  it('every action the page can put on the wire is a single-quoted literal from the contract', () => {
+    // Source-level, over the real tree, and BLOCKING: this file runs inside
+    // `npm run build`; the check's medium findings do not stop anything. A
+    // computed action (`action: name`, `action: "x"`, a template) is how a
+    // third capability reaches the native dispatch without ever appearing in
+    // IN-APP-BRIDGE.md — see (2) in the header.
     for (const rel of [DEFINITION, 'components/InAppBridge.tsx']) {
       const code = stripComments(read(rel));
       const keys = [...code.matchAll(/\baction\s*:/g)];
       const literals = [...code.matchAll(/\baction\s*:\s*'([^']+)'/g)].map((m) => m[1]);
       expect(
         literals.length,
-        `${rel} has ${keys.length} \`action:\` key(s) but ${literals.length} single-quoted literal(s) — the difference is a value the CI check cannot see`,
+        `${rel} has ${keys.length} \`action:\` key(s) but ${literals.length} single-quoted literal(s) — the difference is a value nobody can grade against the contract`,
       ).toBe(keys.length);
       for (const a of literals) {
         expect(KNOWN_ACTIONS, `${rel} sends an action the contract does not define`).toContain(a);
@@ -398,40 +470,141 @@ describe('pro_bridge_unknown_action_ignored — the two blind spots in the check
     expect(sent.sort()).toEqual([...KNOWN_ACTIONS].sort());
   });
 
-  it("the check's non-greedy when-capture still sees the whole dispatch block", () => {
-    // BLIND SPOT 2, and the dangerous one. The check captures the `when` body
-    // with `\{([\s\S]*?)\n\s*\}` — non-greedy to the FIRST newline-then-brace.
-    // Every branch in the contract is a single line today, so that happens to
-    // be the real closing brace. Give one branch a multi-line body and the
-    // capture stops early: the check then grades a truncated block, and any
-    // `else ->` after it becomes invisible. It would report "ok, 0 findings"
-    // about the exact catch-all it exists to catch.
-    const doc = read(DOC);
-    const naive = /when\s*\(\s*msg\.optString\("action"\)\s*\)\s*\{([\s\S]*?)\n\s*\}/.exec(doc);
-    expect(naive, `${DOC}: the dispatch snippet the CI check greps is gone`).not.toBeNull();
-    const balanced = balancedWhenBody(doc);
-
-    expect(
-      naive![1].trim(),
-      'the CI check\'s non-greedy capture no longer matches the real brace-balanced block: it is grading a truncated dispatch and can no longer see a trailing `else ->`. Fix the check\'s regex before landing a multi-line branch in the contract.',
-    ).toBe(balanced.body.trim());
-
-    // And, over the balanced body rather than the naive one: the two branches,
-    // and no catch-all. addWebMessageListener injects the bridge into every
-    // page on an allowed origin, so anything that gets script onto that host
-    // can post arbitrary JSON at this dispatch. With only named branches an
-    // unknown action is ignored by construction; an `else ->` makes whatever
-    // it does reachable from any such page.
-    expect([...balanced.body.matchAll(/"([^"]+)"\s*->/g)].map((m) => m[1])).toEqual(['upgrade', 'saveImage']);
-    expect(balanced.body).not.toMatch(/(^|\n)\s*else\s*->/);
+  it("today's contract passes the check outright: two branches, no catch-all, five things looked at", async () => {
+    // The property, on the real tree. This is the assertion that turns red
+    // the day someone lands an `else ->` in IN-APP-BRIDGE.md — and it is red
+    // at build time, which the check's own medium finding is not.
+    const r = await runUnknownAction(REPO);
+    expect(r.findings.map((f) => `[${f.severity}] ${f.title}`)).toEqual([]);
+    // Two sends, two branches, one dispatch. Not "more than zero": a change
+    // to the check's accounting should be a deliberate edit of this line.
+    expect(r.checked).toBe(5);
   });
 
-  it('the contract and the page agree on the action set, in both directions', () => {
-    // A branch the page never sends is a native capability with no caller; an
-    // action the page sends with no branch is a handoff that silently drops.
-    const balanced = balancedWhenBody(read(DOC));
-    const branches = [...balanced.body.matchAll(/"([^"]+)"\s*->/g)].map((m) => m[1]).sort();
-    const sent = [...stripComments(read(DEFINITION)).matchAll(/\baction\s*:\s*'([^']+)'/g)].map((m) => m[1]).sort();
-    expect(branches).toEqual(sent);
+  it('a multi-line branch is read to its real closing brace, so the else -> after it is the finding and nothing spurious is', async () => {
+    // (1) in the header, closed. The audit's live mutation: give the upgrade
+    // branch a block body and put an `else ->` after the last branch. The old
+    // regex stopped at the block's own `}`, graded a body containing only
+    // "upgrade", and reported a low "no longer dispatches saveImage" — which
+    // is the tell that the block was truncated, so its ABSENCE is asserted
+    // here as well as the catch-all's presence.
+    const r = await runUnknownAction(mutantTree(MUTANTS['a multi-line upgrade branch followed by else -> handleUnknown(msg)']));
+    const titles = r.findings.map((f) => f.title);
+    expect(
+      titles.some((t) => /no branch for "saveImage"/.test(t)),
+      'the truncated-parse tell is back: the check did not read past the multi-line branch',
+    ).toBe(false);
+    const catchAll = r.findings.filter((f) => CATCH_ALL.test(f.title));
+    expect(catchAll, `the else -> after a multi-line branch was not reported; findings: ${titles.join(' | ') || '(none)'}`).toHaveLength(1);
+    expect(catchAll[0].severity).toBe('medium');
+    expect(catchAll[0].file).toBe(DOC);
+    // The evidence shows the whole block: the branch AFTER the multi-line one
+    // and the else, not a fragment ending at the first `}`.
+    expect(catchAll[0].evidence).toContain('"saveImage" ->');
+    expect(catchAll[0].evidence).toContain('else -> handleUnknown(msg)');
+    expect(r.checked).toBe(5);
+  });
+
+  it('a contract that does not ignore unknown actions is a finding, whatever the else does', async () => {
+    // A one-line else, and an else that is visibly a no-op. Without a Kotlin
+    // parser the check cannot tell a no-op from a handler, so it reports both
+    // and its remediation says to drop the branch: `else -> {}` is one edit
+    // away from `else -> { handle(msg) }`, and nothing in the document would
+    // flag the second edit.
+    for (const name of ['a one-line else -> handleUnknown(msg)', 'an explicit no-op else -> {}']) {
+      const r = await runUnknownAction(mutantTree(MUTANTS[name]));
+      const catchAll = r.findings.filter((f) => CATCH_ALL.test(f.title));
+      expect(catchAll, `${name}: not reported`).toHaveLength(1);
+      expect(catchAll[0].severity).toBe('medium');
+    }
+  });
+
+  it('a branch §2 does not list, and a send §2 lists with no branch, are each still the finding they were', async () => {
+    // Both findings predate the fix. The parser they ran on changed, so they
+    // are proved again against the new one rather than assumed to survive.
+    {
+      const r = await runUnknownAction(mutantTree(MUTANTS['a branch for an action §2 does not list']));
+      const f = r.findings.filter((x) => /does not list \("exportCsv"\)/.test(x.title));
+      expect(f).toHaveLength(1);
+      expect(f[0].severity).toBe('medium');
+      expect(r.checked).toBe(6);
+    }
+    {
+      const r = await runUnknownAction(mutantTree(MUTANTS['the saveImage branch removed']));
+      const f = r.findings.filter((x) => /no branch for "saveImage"/.test(x.title));
+      expect(f).toHaveLength(1);
+      expect(f[0].severity).toBe('low');
+      // A missing branch is not a catch-all. The two findings must stay apart
+      // or the low one starts to look like the medium one it used to hide.
+      expect(r.findings.filter((x) => CATCH_ALL.test(x.title))).toHaveLength(0);
+    }
+  });
+
+  it('a send built from anything but a literal is a finding that names the real line', async () => {
+    // (2) in the header, closed in the check itself; the first test above
+    // closes it at build time. The line number is asserted because it was
+    // wrong: the check strips comments before matching and mapped the
+    // stripped index back onto the UNstripped file, so the evidence for this
+    // send said line 77 when the send is on line 213.
+    const dir = mutantTree(MUTANTS['the upgrade send built from a constant']);
+    const r = await runUnknownAction(dir);
+    const f = r.findings.filter((x) => /cannot tell what it sends/.test(x.title));
+    expect(f, `a computed action went unreported; findings: ${r.findings.map((x) => x.title).join(' | ') || '(none)'}`).toHaveLength(1);
+    expect(f[0].severity).toBe('medium');
+    expect(f[0].file).toBe(DEFINITION);
+    const realLine = readFileSync(join(dir, DEFINITION), 'utf-8').split('\n').findIndex((l) => l.includes('action: ACTION_UP')) + 1;
+    expect(realLine).toBeGreaterThan(0);
+    expect(f[0].line, 'the evidence line is not the line the send is on').toBe(realLine);
+    expect(f[0].evidence).toContain(`${DEFINITION}:${realLine}: `);
+    // The literal send that is still there is not reported alongside it.
+    expect(r.findings).toHaveLength(1);
+  });
+
+  it('a dispatch it cannot find, or cannot find the end of, is a Skip and never a pass', async () => {
+    // Rule 1 of the harness. The brace-balanced parser has a second way to
+    // come up short — a `{` with no matching `}` — and it must not grade the
+    // fragment it did read: a fragment is exactly what the old regex graded.
+    await expect(runUnknownAction(mutantTree([[DOC, 'msg.optString("action")', 'msg.optString("kind")']])))
+      .rejects.toMatchObject({ isSkip: true, message: expect.stringMatching(/has no when\(msg\.optString\("action"\)\)/) });
+    await expect(runUnknownAction(mutantTree([[DOC, /\}/g, '']])))
+      .rejects.toMatchObject({ isSkip: true, message: expect.stringMatching(/never closes/) });
+  });
+
+  it('an else -> or a quoted label inside a Kotlin comment is prose, not a branch', async () => {
+    // The other direction. A guard that matches its own explanatory comment
+    // has shipped twice in this repo. Two shapes, guarded by two different
+    // things: `// no else ->` is kept out by the else regex being anchored to
+    // the start of a line, and `// "legacy" ->` is kept out only because the
+    // check strips Kotlin comments from the dispatch body before it looks for
+    // branches — without that strip it reports an undocumented "legacy"
+    // branch. The first mutation pass found this test green with the strip
+    // removed, which is how the second line got here.
+    const r = await runUnknownAction(mutantTree([[DOC, SAVE_IMAGE_BRANCH, [
+      '$1',
+      '        // no else -> branch here, on purpose: an unknown action is ignored',
+      '        // "legacy" -> removed 2026-09; do not put it back',
+    ].join('\n')]]));
+    expect(r.findings.map((f) => f.title)).toEqual([]);
+  });
+
+  it('the describe and every title say what was verified — the document — and never what the app does', async () => {
+    // (3) in the header, pinned. The id cannot change (the owner's CI list),
+    // so the words under it carry the scope: "the documented contract", "the
+    // page", never "the app implements/ignores/handles".
+    expect(unknownAction.describe).toContain('the documented contract ignores unknown actions');
+    expect(unknownAction.describe).toMatch(/no APK or Android source/);
+    const overclaim = /\bthe (shipped )?app (implements|ignores|drops|handles|accepts|will)\b|tells the app to/i;
+    expect(unknownAction.describe).not.toMatch(overclaim);
+
+    const titles: string[] = [];
+    for (const edits of Object.values(MUTANTS)) {
+      const r = await runUnknownAction(mutantTree(edits));
+      titles.push(...r.findings.map((f) => f.title));
+    }
+    expect(titles.length, 'the sweep collected no titles — the mutants above stopped producing findings').toBeGreaterThanOrEqual(6);
+    for (const t of titles) {
+      expect(t, `overclaims the app: ${t}`).not.toMatch(overclaim);
+      expect(t, `does not say which side it verified: ${t}`).toMatch(/^The (page|documented (contract|dispatch))\b/);
+    }
   });
 });
